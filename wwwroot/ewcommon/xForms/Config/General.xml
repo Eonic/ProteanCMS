@@ -49,6 +49,7 @@
         <add key="LegacyRedirect" value="off" />
         <add key="PageURLFormat" value="" />
         <add key="AllowContentDetailAccess" value="" />
+		<add key="ContentDetailShowOnlyCascaded" value="on" />
         <add key="MenuContentCountTypes" value="" />
         <add key="MenuContentBriefTypes" value="" />
         <add key="CookieDomain" value="" />
@@ -130,6 +131,7 @@
     <bind id="ewLegacyRedirect" nodeset="web/add[@key='LegacyRedirect']/@value" required="true()" type="string" />
     <bind id="ewPageURLFormat" nodeset="web/add[@key='PageURLFormat']/@value" required="true()" type="string" />
     <bind id="ewAllowContentDetailAccess" nodeset="web/add[@key='AllowContentDetailAccess']/@value" required="false()" type="string" />
+	<bind id="ContentDetailShowOnlyCascaded" nodeset="web/add[@key='ContentDetailShowOnlyCascaded']/@value" required="false()" type="string" />
     <bind id="ewMenuContentCountTypes" nodeset="web/add[@key='MenuContentCountTypes']/@value" required="false()" type="string" />
     <bind id="ewMenuContentBriefTypes" nodeset="web/add[@key='MenuContentBriefTypes']/@value" required="false()" type="string" />
     <bind id="ewUserIntegrations" nodeset="web/add[@key='UserIntegrations']/@value" required="true()" type="string" />
@@ -609,7 +611,7 @@
           <value>off</value>
         </item>
         <value />
-      </select1>
+      </select1>	 
       <input bind="ewMenuContentCountTypes">
         <label>Menu Content Count Types</label>
         <value />
@@ -703,6 +705,21 @@
 			<value />
 		</input>
     </group>
+	  <group ref="performance" class="inline">
+		  <label>performance</label>
+		  <select1 bind="ContentDetailShowOnlyCascaded" appearance="full">
+			  <label>Content Detail Show Only Cascaded</label>
+			  <item>
+				  <label>On</label>
+				  <value>on</value>
+			  </item>
+			  <item>
+				  <label>Off</label>
+				  <value>off</value>
+			  </item>
+			  <value>on</value>
+		  </select1>
+	  </group>
     <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>
     </submit>

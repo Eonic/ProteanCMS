@@ -90,7 +90,7 @@
       </xsl:apply-templates>
       <xsl:choose>
         <xsl:when test="$lightbox='true'">
-          <a data-src="{Images/img[@class='detail']/@src}" data-fancybox="gallery-{@parentId}" class="lightbox-link">
+          <a data-src="{$lgImgSrc}" data-fancybox="gallery-{$parentId}" class="lightbox-link">
             <div class="thumbnail">
               <xsl:apply-templates select="." mode="displayThumbnail">
                 <xsl:with-param name="crop" select="$cropSetting" />
@@ -113,6 +113,9 @@
         <xsl:otherwise>
           <div class="thumbnail-wrapper">
             <div class="thumbnail">
+              <xsl:if test="@logo-size='square'">
+                <xsl:attribute name="class">thumbnail square-logo</xsl:attribute>
+              </xsl:if>
               <!--<xsl:attribute name="class">
 								<xsl:text>thumbnail text-</xsl:text>
 								<xsl:value-of select="$alignment"/>
@@ -138,6 +141,9 @@
                       </xsl:attribute>
                     </xsl:if>
                     <a href="{$linkURL}" title="{Name}">
+                      <xsl:if test="Url[@target='New Window']">
+                        <xsl:attribute name="target">_blank</xsl:attribute>
+                      </xsl:if>
                       <xsl:apply-templates select="." mode="displayThumbnail">
                         <xsl:with-param name="crop" select="$cropSetting" />
                         <xsl:with-param name="class" select="'img-responsive'" />

@@ -1099,7 +1099,7 @@
           </div>
         </div>
         <div class="col-md-9">
-          <form action="{$appPath}" method="get" class="ewXform">
+          <form action="{$appPath}" method="get" class="xform">
             <!--input type="hidden" name="ewCmd" value="BulkContentAction"/>
 					<input type="hidden" name="pgid" value="{$page/@id}"/-->
             <h4 >
@@ -1321,10 +1321,14 @@
         <xsl:apply-templates select="parent::*" mode="bulkActionForm"/>
       </th>
       <th>
-        <div class="checkbox checkbox-primary">
+        <div class="checkbox checkbox-primary input-group">
+			<div class="input-group-text">
           <input type="checkbox" class="styled select-all"/>
-          <label>
+				</div>
+			<label class="input-group-text">
+			
             <xsl:text>All</xsl:text>
+			
           </label>
         </div>
       </th>
@@ -1349,19 +1353,19 @@
       </td>
 
 
-      <td class="manufacturer">
+      <td class="manufacturer inner-cell">
         <xsl:value-of select="Manufacturer" />
       </td>
-      <td class="name">
+      <td class="name inner-cell">
         <xsl:value-of select="Name" />
       </td>
-      <td class="stockcode">
+      <td class="stockcode inner-cell">
         <xsl:value-of select="StockCode" />
       </td>
-      <td class="stock">
+      <td class="stock inner-cell">
         <xsl:value-of select="Stock" />
       </td>
-      <td class="price">
+      <td class="price inner-cell">
         <xsl:apply-templates select="." mode="displayPrice" />
       </td>
       <td class="optionsButton" nowrap="nowrap" rowspan="2">
@@ -1369,8 +1373,15 @@
           <xsl:with-param name="class" select="'list'"/>
         </xsl:apply-templates>
         <xsl:text> </xsl:text>
+		  <xsl:if test="Content[@type='Product']"><span class="edit-option-links-blue">
+		  <button class="btn btn-xs btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#subproduct-{@id}" aria-expanded="true" aria-controls="subproduct-{@id}">
+			 
+			 View <xsl:value-of select="count(Content[@type='Product'])"/> Sub Products  		&#160;	<i class="fa fa-chevron-down fa-white">&#160;</i>
+		  </button>
+			  </span>
+			  </xsl:if>
       </td>
-      <td>
+		<td rowspan="2">
         <div class="checkbox checkbox-primary">
           <input type="checkbox" name="id" value="{@id}" class="styled"/>
           <label>
@@ -1395,10 +1406,24 @@
         &#160;
       </td>
     </tr>
+	
     <xsl:apply-templates select="Content[@type='SKU']" mode="AdvancedMode">
       <xsl:with-param name="contentType" select="'SKU'"/>
       <xsl:with-param name="parId" select="@parId"/>
     </xsl:apply-templates>
+	  <xsl:if test="Content[@type='Product']">
+		  <tr>
+			  <td colspan="9">
+			
+					  <div id="subproduct-{@id}" class="accordion-collapse collapse" aria-labelledby="heading-{@id}" data-bs-parent="#sub-{@id}">
+						  <table class="table table-striped-2 accordion-body">
+							  <xsl:apply-templates select="Content[@type='Product']" mode="AdvancedMode"/>
+						  </table>
+					  </div>
+				 
+			  </td>
+		  </tr>
+	  </xsl:if>
   </xsl:template>
 
   <xsl:template match="Content[@type='SKU']" mode="AdvancedMode">
@@ -1443,6 +1468,7 @@
         </div>
       </td>
     </tr>
+	 
   </xsl:template>
 
 
@@ -1862,41 +1888,39 @@
   <!-- -->
   <xsl:template match="Page[@layout='ByType']" mode="Admin">
     <xsl:variable name="contentType" select="@ewCmd2"/>
-    <div id="tpltAdvancedMode" class="container-fluid">
-      <div class="row header-panels">
-        <div class="col-md-6">
-          <form action="{$appPath}?ewCmd=ByType.{@ewCmd2}.Search&amp;pgid={$page/@id}" method="post" class="ewXform card ">
-            <div class="card-body form-group">
+    <div id="tpltAdvancedMode" class="container-fluid inventory-container">
+      <div class="header-panels">
+		  <div class="row">
+        <div class="col-6">
+          <form action="{$appPath}?ewCmd=ByType.{@ewCmd2}.Search&amp;pgid={$page/@id}" method="post" class="xform">
+            <div class="form-group">
               <div class="input-group">
-                <label class="input-group-addon">
+                <label class="input-group-text">
                   Search All <xsl:value-of select="@ewCmd2"/>s
                 </label>
-                <input class="form-control" name="searchString" id="searchString" value="{Contents/Content[@type='SearchHeader']/@SearchString}"/>
-                <span class="input-group-btn">
-                  <button type="submit" class="btn btn-primary">Go</button>
-                </span>
+                <input class="form-control" name="searchString" id="searchString" value="{Contents/Content[@type='SearchHeader']/@SearchString}"/>               
+                  <button type="submit" class="btn btn-primary">Go</button>                
               </div>
             </div>
           </form>
         </div>
-        <div class="col-md-6">
-          <form method="post" action="/?ewCmd=ByType.{@ewCmd2}.Location" class="ewXform card" id="LocationFilter" name="LocationFilter">
-            <div class="card-body  form-group">
+        <div class="col-6">
+          <form method="post" action="/?ewCmd=ByType.{@ewCmd2}.Location" class="xform" id="LocationFilter" name="LocationFilter">
+            <div class="form-group">
               <div class="input-group">
-                <label for="Location" class="input-group-addon">Select Location</label>
-                <div class="control-wrapper select1-wrapper appearance-minimal ">
+                <label for="Location" class="input-group-text">Select Location</label>
                   <select name="Location" id="Location" class="form-control dropdown submit-on-select">
                     <xsl:apply-templates select="ContentDetail/Content[@type='xform']/select1[@ref='Location']/item" mode="xform_select">
                       <xsl:with-param name="selectedValue" select="@id"/>
                     </xsl:apply-templates>
                   </select>
-                </div>
               </div>
             </div>
           </form>
 
           <!--xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/-->
         </div>
+				</div>
       </div>
       <xsl:apply-templates select="/" mode="ListByContentTypeByPage">
         <xsl:with-param name="contentType" select="@ewCmd2"/>
@@ -1917,7 +1941,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <form action="{$appPath}" method="get" class="ewXform" id="BulkContentAction">
+    <form action="{$appPath}" method="get" class="xform" id="BulkContentAction">
       <input type="hidden" name="ewCmd" value="BulkContentAction"/>
       <input type="hidden" name="pgid" value="{$pgid}"/>
       <div class="card card-default">
@@ -1950,7 +1974,7 @@
 
         </div>
 
-        <form action="{$appPath}" method="get" class="ewXform">
+        <form action="{$appPath}" method="get" class="xform">
           <table class="table table-striped-2">
             <xsl:if test="not(Page/Contents/Content[@type=$contentType])">
               <tr>
@@ -1972,7 +1996,7 @@
   <xsl:template match="/" mode="ListByContentTypeByPage-SortBy">
     <span class="input-group list-control-select">
       <xsl:variable name="sortBy" select="$page/Request/*/Item[@name='sortby']/node()"/>
-      <label class="input-group-addon">Sort By</label>
+      <label class="input-group-text">Sort By</label>
       <select class="form-control submit-on-select" name="sortby" id="sortby" onchange="this.form.submit()">
         <option value="default">
           <xsl:if test="not($sortBy!='')">
@@ -2047,7 +2071,7 @@
             <form method="post" action="?ewCmd={$page/@ewCmd}.{$page/@ewCmd2}.{$page/@ewCmd3}&amp;Location={$page/Request/*/Item[@name='Location']/node()}" id="listReload">
               <div class="list-header-select">
                 <span class="input-group">
-                  <label class="input-group-addon">Items Per Page</label>
+                  <label class="input-group-text">Items Per Page</label>
                   <select class="form-control" name="PageCount" id="PageCount">
                     <option value="50">100</option>
                     <option value="100">100</option>
@@ -2075,7 +2099,7 @@
         </xsl:if>
       </div>
     </div>
-    <form action="{$appPath}" method="get" class="ewXform" id="BulkContentAction">
+    <form action="{$appPath}" method="get" class="xform" id="BulkContentAction">
       <input type="hidden" name="ewCmd" value="BulkContentAction"/>
       <input type="hidden" name="pgid" value="{$pgid}"/>
       <table class="table table-striped-2">
@@ -2106,8 +2130,8 @@
         </xsl:choose>
       </table>
     </form>
-    <div class="card-header">
-
+    <div class="container-fluid">
+<div class="row">
       <xsl:if test="$page/ContentDetail/@total > 0">
         <div class="float-end-stepper">
           <xsl:apply-templates select="/" mode="adminStepper">
@@ -2120,6 +2144,7 @@
         </div>
       </xsl:if>
     </div>
+	</div>
   </xsl:template>
 
   <xsl:template match="Page[@editContext='ByType.FAQ.UserUnRead']" mode="Admin">
@@ -2738,7 +2763,7 @@
             </div>
           </div>
         </div> <div class="col-md-9">
-        <form action="?ewCmd=LocateContent&amp;pgid={/Page/@id}&amp;id={/Page/Request/*/Item[@name='id']}" method="post" class="ewXform">
+        <form action="?ewCmd=LocateContent&amp;pgid={/Page/@id}&amp;id={/Page/Request/*/Item[@name='id']}" method="post" class="xform">
           <input type="hidden" name="id" value="{/Page/Request/*/Item[@name='id']}"/>
           <xsl:variable name="position">
             <xsl:choose>
@@ -3332,7 +3357,7 @@
           </div>
         </div>
         <div class="col-lg-9">
-          <form action="{$appPath}?ewCmd=DiscountRules" class="ewXform well well-default" name="addDiscountRule" id="addDiscountRule" method="post" onsubmit="return form_check(this)">
+          <form action="{$appPath}?ewCmd=DiscountRules" class="xform well well-default" name="addDiscountRule" id="addDiscountRule" method="post" onsubmit="return form_check(this)">
             <div class="input-group mb-3">
               <span class="input-group-text">Add Rule </span>
 
@@ -4173,7 +4198,22 @@
 
               </xsl:if>
               <xsl:if test="not(starts-with(/Page/Request/QueryString/Item[@name='fld']/node(),'\FreeStock'))">
-
+				  <xsl:if test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
+					  <li>
+						  <a id="SelectAll" class="btn btn-success" data-toggle="popover">
+							  <i class="fa fa-picture-o fa-white">
+								  <xsl:text> </xsl:text>
+							  </i><xsl:text> </xsl:text>SelectAll
+						  </a>
+					  </li>
+					  <li>
+						  <a href="javascript:;" onclick="getImagePaths();" class="btn btn-success">
+							  <i class="fa fa-picture-o fa-white">
+								  <xsl:text> </xsl:text>
+							  </i><xsl:text> </xsl:text>Add Selected
+						  </a>
+					  </li>
+				  </xsl:if>
                 <a href="{$submitPath}ewcmd={/Page/@ewCmd}{$pathonly}&amp;ewCmd2=addFolder&amp;fld={@path}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}" class="btn btn-sm btn-outline-primary">
                   <xsl:if test="$submitPath!='/?'">
                     <xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
@@ -4378,7 +4418,7 @@
 
     <script>
       <xsl:text>
-
+$(document).ready(function () {
         var uploadUrl = '/?ewCmd=</xsl:text><xsl:value-of select="$page/@ewCmd"/>\u0026<xsl:text>ewCmd2=FileUpload</xsl:text>\u0026<xsl:text>storageRoot=</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>'
 
         $('#fileupload').fileupload({
@@ -4444,12 +4484,12 @@
       $('.progress .loading-counter .count').html(progress);
       }
       });
-    </script>
 
-    <script>
       $(function() {
       $('.lazy').lazy();
       });
+	  
+	 });
     </script>
 
   </xsl:template>
@@ -4959,7 +4999,7 @@
           </div>
         </div>
         <div class="col-lg-9">
-          <form action="?ewCmd=DirPermissions" method="post" class="ewXform">
+          <form action="?ewCmd=DirPermissions" method="post" class="xform">
             <div class="card card-default">
               <div class="card-header">
                 <h4 >
@@ -5719,9 +5759,14 @@
           </div>
           <xsl:if test="ContentDetail/directory/@parType='User'">
             <form action="?ewCmd=ListUsers" method="post" id="userSearch" class="col-md-4">
-              <div class="input-group">
-                <input type="text" name="search" value="{$page/Request/Form/Item[@name='search']}" class="form-control"/>
-                <button type="submit" name="previous" value="Search" class="btn btn-primary">
+			
+              <div class="input-group">	<button type="submit" name="UserSearch" value="Clear" class="btn btn-outline-primary">
+					<i class="fa-solid fa-x">
+						<xsl:text> </xsl:text>
+					</i>
+				</button>
+                <input type="text" name="search" value="{ContentDetail/directory/@UserSearchTerm}" class="form-control"/>
+                <button type="submit" name="UserSearch" value="Search" class="btn btn-primary">
                   <i class="fa fa-search">
                     <xsl:text> </xsl:text>
                   </i>
@@ -6434,6 +6479,54 @@
 
   <!--   ##################  List Orders  ##############################   -->
   <!-- -->
+	<xsl:template name="getStatusTitle">
+		<xsl:param name="statusId"/>
+		<xsl:choose>
+			<xsl:when test="$statusId='0'">New</xsl:when>
+			<xsl:when test="$statusId='1'">Items Added</xsl:when>
+			<xsl:when test="$statusId='2'">Billing Address Added</xsl:when>
+			<xsl:when test="$statusId='3'">Delivery Address Added</xsl:when>
+			<xsl:when test="$statusId='4'">Confirmed</xsl:when>
+			<xsl:when test="$statusId='5'">Pass for Payment</xsl:when>
+			<xsl:when test="$statusId='6'">New Sale</xsl:when>
+			<xsl:when test="$statusId='7'">Refunded</xsl:when>
+			<xsl:when test="$statusId='8'">Failed</xsl:when>
+			<xsl:when test="$statusId='9'">Shipped</xsl:when>
+			<xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
+			<xsl:when test="$statusId='11'">Abandoned</xsl:when>
+			<xsl:when test="$statusId='12'">Deleted</xsl:when>
+			<xsl:when test="$statusId='13'">AwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='14'">Settlement Initiated</xsl:when>
+			<xsl:when test="$statusId='15'">Skip Address</xsl:when>
+			<xsl:when test="$statusId='16'">Archived</xsl:when>
+			<xsl:when test="$statusId='17'">In Progress</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="getStatusCmd">
+		<xsl:param name="statusId"/>
+		<xsl:choose>
+			<xsl:when test="$statusId='0'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='1'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='2'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='3'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='4'">OrdersSaved</xsl:when>
+			<xsl:when test="$statusId='5'">OrdersAwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='6'">Orders</xsl:when>
+			<xsl:when test="$statusId='7'">OrdersRefunded</xsl:when>
+			<xsl:when test="$statusId='8'">OrdersFailed</xsl:when>
+			<xsl:when test="$statusId='9'">OrdersShipped</xsl:when>
+			<xsl:when test="$statusId='10'">OrdersDeposit</xsl:when>
+			<xsl:when test="$statusId='11'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='12'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='13'">OrdersAwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='14'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='15'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='16'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='17'">OrdersInProgress</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
   <xsl:template match="Page[@layout='Orders']" mode="Admin">
     <xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>
     <xsl:variable name="itemCount" select="'100'"/>
@@ -6443,21 +6536,23 @@
       <xsl:call-template name="getQString"/>
     </xsl:variable>
     <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']"/>
-    <xsl:variable name="title">
-      <xsl:choose>
-        <xsl:when test="@ewCmd='Orders'">New Sales</xsl:when>
-        <xsl:when test="@ewCmd='OrdersInProgress'">In Progress</xsl:when>
-        <xsl:when test="@ewCmd='OrdersAwaitingPayment'">Awaiting Payment</xsl:when>
-        <xsl:when test="@ewCmd='OrdersShipped'">Shipped</xsl:when>
-        <xsl:when test="@ewCmd='OrdersFailed'">Failed Transactions</xsl:when>
-        <xsl:when test="@ewCmd='OrdersDeposit'">Deposit Paid</xsl:when>
-        <xsl:when test="@ewCmd='OrdersHistory'">Full Order History</xsl:when>
-      </xsl:choose>
+
+	  <xsl:variable name="statusId" select="ContentDetail/Content[@type='order']/@statusId"/>
+	<!--<xsl:variable name="statusId" select="/Page/ContentDetail/Content/model/instance/tblCartOrder/nCartStatus"/>-->
+    <xsl:variable name="backTitle">
+		<xsl:call-template name="getStatusTitle">
+			<xsl:with-param name="statusId" select="$statusId"/>
+		</xsl:call-template>     
     </xsl:variable>
+	  <xsl:variable name="backCmd">
+		  <xsl:call-template name="getStatusCmd">
+			<xsl:with-param name="statusId" select="$statusId"/>
+		</xsl:call-template>		 
+	  </xsl:variable>
     <div>
       <xsl:choose>
         <xsl:when test="ContentDetail/Content[@type='order'] and not(/Page/Request/QueryString/Item[@name='ewCmd2'])">
-          <form action="{$appPath}" method="get" class="ewXform">
+          <form action="{$appPath}" method="get" class="xform">
 
             <input type="hidden" name="ewCmd" value="BulkCartAction"/>
             <input type="hidden" name="pgid" value="{$page/@id}"/>
@@ -6481,7 +6576,7 @@
                   <xsl:with-param name="itemTotal" select="$total"/>
                   <xsl:with-param name="startPos" select="$startPos"/>
                   <xsl:with-param name="path" select="$queryString"/>
-                  <xsl:with-param name="itemName" select="$title"/>
+                  <xsl:with-param name="itemName" select="$backTitle"/>
                 </xsl:apply-templates>
               </div>
               <!--<h3>
@@ -6518,7 +6613,7 @@
                 <xsl:with-param name="itemTotal" select="$total"/>
                 <xsl:with-param name="startPos" select="$startPos"/>
                 <xsl:with-param name="path" select="$queryString"/>
-                <xsl:with-param name="itemName" select="$title"/>
+                <xsl:with-param name="itemName" select="$backTitle"/>
               </xsl:apply-templates>
             </div>
           </div>
@@ -6526,12 +6621,11 @@
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
-              <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-sm btn-outline-primary padded-btn">
-                <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
+              <a href="{$appPath}?ewCmd={$backCmd}&amp;startPos={$startPos}" class="btn btn-sm btn-outline-primary padded-btn">
+                <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$backTitle"/>
               </a>
               <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
               <xsl:variable name="currency" select="ContentDetail/Content[@type='order']/@currencySymbol"/>
-              <xsl:variable name="statusId" select="ContentDetail/Content[@type='order']/@statusId"/>
               <xsl:variable name="orderId" select="ContentDetail/Content[@type='order']/@id"/>
               <xsl:variable name="orderDate" select="ContentDetail/Content[@type='order']/@created"/>
               <xsl:for-each select="ContentDetail/Content[@type='order']/Order">
@@ -6547,7 +6641,7 @@
               <div class="container-fluid">
                 <div class="alert alert-danger">
                   <h4 class="text-center">
-                    No <xsl:value-of select="$title"/> Found
+                    No <xsl:value-of select="$backTitle"/> Found
                   </h4>
                 </div>
               </div>
@@ -6563,13 +6657,23 @@
   <xsl:template match="Content[@type='order']" mode="ListOrders">
     <xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>
     <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']"/>
+	  <xsl:variable name="backTitle">
+		  <xsl:call-template name="getStatusTitle">
+			  <xsl:with-param name="statusId" select="@statusId"/>
+		  </xsl:call-template>
+	  </xsl:variable>
+	  <xsl:variable name="backCmd">
+		  <xsl:call-template name="getStatusCmd">
+			  <xsl:with-param name="statusId" select="@statusId"/>
+		  </xsl:call-template>
+	  </xsl:variable>
     <tr>
       <td>
         <span class="xs-only">Order Id: </span>
         <xsl:value-of select="@id"/>
       </td>
       <td>
-        <xsl:value-of select="@statusId"/> - 	<xsl:choose>
+        [<xsl:value-of select="@statusId"/>]&#160;<xsl:choose>
           <xsl:when test="@statusId='0'">New</xsl:when>
           <xsl:when test="@statusId='1'">Items Added</xsl:when>
           <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
@@ -6584,6 +6688,10 @@
           <xsl:when test="@statusId='11'">Abandoned</xsl:when>
           <xsl:when test="@statusId='12'">Deleted</xsl:when>
           <xsl:when test="@statusId='13'">Awaiting Payment</xsl:when>
+			<xsl:when test="@statusId='14'">Settlement Initiated</xsl:when>
+			<xsl:when test="@statusId='15'">Skip Address</xsl:when>
+			<xsl:when test="@statusId='16'">Archived</xsl:when>
+			<xsl:when test="@statusId='17'">In Progress</xsl:when>
         </xsl:choose>
       </td>
       <td>
@@ -6634,13 +6742,13 @@
       </td>
       <td>
         <div class="btn-group-spaced">
-          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+          <a href="{$appPath}?ewCmd={$backCmd}&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
             <i class="fa fa-eye">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>view order
           </a>
           <xsl:if test="@statusId=6">
-            <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
+            <a href="{$appPath}?ewCmd={$backCmd}&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
               <i class="fa fa-print">
                 <xsl:text> </xsl:text>
               </i>
@@ -6701,7 +6809,7 @@
                     <xsl:value-of select="@id"/>
                   </td>
                   <td>
-                    <xsl:value-of select="@statusId"/> - 	<xsl:choose>
+                    [<xsl:value-of select="@statusId"/>]<xsl:choose>
                       <xsl:when test="@statusId='0'">New</xsl:when>
                       <xsl:when test="@statusId='1'">Items Added</xsl:when>
                       <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
@@ -6714,6 +6822,12 @@
                       <xsl:when test="@statusId='9'">Shipped</xsl:when>
                       <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
                       <xsl:when test="@statusId='11'">Abandoned</xsl:when>
+						<xsl:when test="@statusId='12'">Deleted</xsl:when>
+						<xsl:when test="@statusId='13'">AwaitingPayment</xsl:when>
+						<xsl:when test="@statusId='14'">Settlement Initiated</xsl:when>
+						<xsl:when test="@statusId='15'">Skip Address</xsl:when>
+						<xsl:when test="@statusId='16'">Archived</xsl:when>
+						<xsl:when test="@statusId='17'">In Progress</xsl:when>
                     </xsl:choose>
                   </td>
                   <td>
@@ -7003,9 +7117,9 @@
                 <table class="table collapse" id="paymentTable">
                   <thead>
                     <tr>
-                      <th scope="col">Provider</th>
                       <th scope="col">Date</th>
                       <th scope="col">Amount</th>
+                      <th scope="col">Provider</th>
                       <th scope="col">Other Info</th>
                     </tr>
                   </thead>
@@ -7027,8 +7141,11 @@
                           <xsl:value-of select="cPayMthdProviderName"/>
                         </td>
                         <td>
-                          AuthCode:
-                          <xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+							<xsl:if test="cPayMthdDetailXml/instance/Response/@AuthCode!=''">
+								AuthCode:
+								<xsl:value-of select="cPayMthdDetailXml/instance/Response/@AuthCode"/>
+							</xsl:if>			
+                          
                         </td>
                       </tr>
                     </xsl:for-each>
@@ -7551,6 +7668,13 @@
           <xsl:when test="$statusId='9'">Shipped</xsl:when>
           <xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
           <xsl:when test="$statusId='11'">Abandoned</xsl:when>
+
+			<xsl:when test="$statusId='12'">Deleted</xsl:when>
+			<xsl:when test="$statusId='13'">AwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='14'">Settlement Initiated</xsl:when>
+			<xsl:when test="$statusId='15'">Skip Address</xsl:when>
+			<xsl:when test="$statusId='16'">Archived</xsl:when>
+			<xsl:when test="$statusId='17'">In Progress</xsl:when>
         </xsl:choose> Quote<xsl:choose>
           <xsl:when test="@cmd='Add' or @cmd='Cart'"> - Contents</xsl:when>
           <xsl:when test="@cmd='Billing'"> - Enter the billing address</xsl:when>
@@ -8024,7 +8148,7 @@
             <div class="card-header">
               <h3 >List of Locations</h3>
             </div>
-            <form class="ewXform" action="?ewcmd=DeliveryMethods&amp;ewcmd2=locations&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" method="post">
+            <form class="xform" action="?ewcmd=DeliveryMethods&amp;ewcmd2=locations&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}" method="post">
               <div class="form-group">
                 <input type="hidden" name="nShpOptId" value="{/Page/Request/QueryString/Item[@name='id']/node()}"/>
                 <ul id="MenuTree" class="treeview">
@@ -10738,10 +10862,11 @@
                   <dd>
                     <xsl:value-of select="@startTime"/>
                   </dd>
+					<!--
                   <dt>End Time</dt>
                   <dd>
                     <xsl:value-of select="@endTime"/>
-                  </dd>
+                  </dd>-->
                   <dt>Pages Index</dt>
                   <dd>
                     <xsl:value-of select="@pagesIndexed"/>
@@ -10750,11 +10875,14 @@
                   <dd>
                     <xsl:value-of select="@pagesSkipped"/>
                   </dd>
-                  <dt>Articles Indexed</dt>
+                  <dt>
+					  Content Indexed</dt>
                   <dd>
                     <xsl:value-of select="@contentCount"/>
+					  <xsl:text> - </xsl:text>
+					  <xsl:value-of select="@IndexDetailTypes"/>
                   </dd>
-                  <dt>Articles Skipped</dt>
+                  <dt>Content Skipped</dt>
                   <dd>
                     <xsl:value-of select="@contentSkipped"/>
                   </dd>
@@ -12918,7 +13046,7 @@
 						<p class="btn-group headerButtons">
 							<xsl:if test="ContentDetail/Content[@type='xform']">
 								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
-									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to Filter Index List
 								</a>
 							</xsl:if>
 						</p>
@@ -13038,7 +13166,7 @@
 						<p class="btn-group headerButtons">
 							<xsl:if test="ContentDetail/Content[@type='xform']">
 								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
-									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to Filter Index List
 								</a>
 							</xsl:if>
 						</p>

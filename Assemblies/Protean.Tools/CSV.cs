@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Linq;
 using System.Xml;
-using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
 public partial class Csv : IDisposable
 {
 
@@ -67,7 +65,7 @@ public partial class Csv : IDisposable
         {
             string[] cRows = GetRows(Filebody);
             int i;
-            var loopTo = Information.UBound(cRows);
+            var loopTo = cRows.Length - 1;
             for (i = 0; i <= loopTo; i++)
             {
                 if (i == 0 & Columnnames)
@@ -91,7 +89,8 @@ public partial class Csv : IDisposable
 
         try
         {
-            return Strings.Split(Filebody, Constants.vbCrLf);
+            return Filebody.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+
         }
         catch (Exception ex)
         {
@@ -105,16 +104,18 @@ public partial class Csv : IDisposable
 
         try
         {
-            string[] cCols = Strings.Split(Rowcolumns, Delimiter);
+            string[] cCols = Rowcolumns.Split(Delimiter[0]);
+
+
             int i;
-            var loopTo = Information.UBound(cCols);
+            var loopTo = cCols.Length - 1;
             for (i = 0; i <= loopTo; i++)
             {
                 if (!((cCols[i] ?? "") == (Qualifier ?? "")) & cCols[i].Length > 0)
                 {
                     if ((cCols[i].Substring(0, 1) ?? "") == (Qualifier ?? ""))
                     {
-                        cCols[i] = Strings.Right(cCols[i], cCols[i].Length - 1);
+                        cCols[i] = cCols[i].Substring(1);
                     }
                 }
                 else
@@ -125,7 +126,7 @@ public partial class Csv : IDisposable
                 {
                     if ((cCols[i].Substring(cCols[i].Length - 1, 1) ?? "") == (Qualifier ?? ""))
                     {
-                        cCols[i] = Strings.Left(cCols[i], cCols[i].Length - 1);
+                        cCols[i] = cCols[i].Substring(0, cCols[i].Length - 1);
                     }
                 }
                 else
@@ -148,7 +149,7 @@ public partial class Csv : IDisposable
         try
         {
             int i;
-            var loopTo = Information.UBound(Cols);
+            var loopTo = Cols.Length - 1;
             for (i = 0; i <= loopTo; i++)
                 oTable.Columns.Add(new DataColumn(Cols[i]));
         }
@@ -164,7 +165,7 @@ public partial class Csv : IDisposable
         try
         {
             int i;
-            var loopTo = Information.UBound(Cols);
+            var loopTo = Cols.Length - 1;
             for (i = 0; i <= loopTo; i++)
             {
                 if (i >= oTable.Columns.Count)

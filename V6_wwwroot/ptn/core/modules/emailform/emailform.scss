@@ -4,4 +4,22 @@
             font-weight:700;
         }
     }
+
+    .form-margin {
+        margin-bottom: 1rem;
+    }
+
+    .form-label {
+        margin-bottom: 0.3rem;
+    }
+
+    .form-inline .form-check {
+        display: inline-block;
+        margin-right: 1rem;
+    }
+
+    .stacked .form-inline .form-check {
+        display: block;
+        margin-top: 0.3rem;
+    }
 }

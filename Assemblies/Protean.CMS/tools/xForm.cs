@@ -771,7 +771,7 @@ namespace Protean
                     {
 
                         System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-                        var recap = new Tools.RecaptchaV2.Recaptcha();
+                        var recap = new Tools.RecaptchaV2.Recaptcha(moConfig["ReCaptchaKey"], moConfig["ReCaptchaKeySecret"]);
                         var recapResult = recap.Validate(goRequest["g-recaptcha-response"], moConfig["ReCaptchaKeySecret"]);
 
                         if (Conversions.ToBoolean(Operators.OrObject(recapResult.Succeeded, Operators.ConditionalCompareObjectEqual(goSession["recaptcha"], 1, false))))
@@ -1443,7 +1443,7 @@ namespace Protean
                                                             }
                                                             catch
                                                             {
-                                                                oElmtTemp.InnerXml = Tools.Text.tidyXhtmlFrag((Tools.Xml.convertEntitiesToCodes(submittedValue) + "").Trim());
+                                                                oElmtTemp.InnerXml = stdTools.tidyXhtmlFrag((Tools.Xml.convertEntitiesToCodes(submittedValue) + "").Trim());
                                                             }
                                                             oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone(), oInstance.SelectSingleNode(sXpath, nsMgr));
                                                         }
@@ -3290,7 +3290,9 @@ namespace Protean
 
         public void addNote(ref XmlElement oNode, noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "")
         {
-            valid = false;
+            // TS: why would adding a note make the form false ?? Have changed wonder what this might break ?
+            //valid = false;
+
             XmlNode frmNode = (XmlNode)oNode;
             addNote(ref frmNode, nTypes, sMessage, bInsertFirst, sClass);
         }

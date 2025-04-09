@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic;
+﻿using Lucene.Net.Support;
+using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
 using System;
@@ -10,6 +11,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.stdTools;
@@ -612,6 +614,10 @@ namespace Protean
 
                 oElmt = oRXML.CreateElement("Search");
                 oElmt.InnerText = moConfig["Search"];
+                oResponseElmt.AppendChild(oElmt);
+
+                oElmt = oRXML.CreateElement("CompiledTransform");
+                oElmt.InnerText = moConfig["CompiledTransform"];
                 oResponseElmt.AppendChild(oElmt);
             }
 
@@ -1328,10 +1334,22 @@ namespace Protean
                             mcContentType = "text/html";
                             gcEwSiteXsl = moConfig["SiteXsl"];
                             moResponseType = pageResponseType.Page;
+                            Boolean bAllowCachePage = true;
+
                             // can we get a cached page
                             if (moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"] != null)
                             {
-                                if (gnResponseCode == 200L & moRequest.Form.Count == 0 & mnUserId == 0 & !moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
+                                //check if webgains links open cached pages
+                                if (moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
+                                {
+                                    bAllowCachePage = false;
+                                    if (moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("utm_source"))
+                                    {
+                                        bAllowCachePage = true;
+                                    }
+                                }
+
+                                if (gnResponseCode == 200L & moRequest.Form.Count == 0 & mnUserId == 0 & bAllowCachePage) //!moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
                                 {
                                     bPageCache = Strings.LCase(moConfig["PageCache"]) == "on" ? true : false;
                                 }
@@ -1663,6 +1681,11 @@ namespace Protean
                                 // TS 21-06-2017 Moved from New() as not required for cached pages I think.
                                 Open();
 
+                                if (!string.IsNullOrEmpty(msException))
+                                {
+                                    sProcessInfo = "we should stop now";
+                                }
+
                                 if (mbAdminMode & !ibIndexMode & !(gnResponseCode == 404L))
                                 {
                                     bPageCache = false;
@@ -1776,9 +1799,6 @@ namespace Protean
                                                     }
                                             }
                                         }
-
-
-
                                         else
                                         {
 
@@ -1811,7 +1831,6 @@ namespace Protean
                                                     styleFile = goServer.MapPath(mcEwSiteXsl);
                                                 }
                                             }
-
                                             else
                                             {
                                                 if (moResponseType == pageResponseType.Page)
@@ -1838,39 +1857,47 @@ namespace Protean
 
                                             if (!string.IsNullOrEmpty(moRequest["recompile"]))
                                             {
-
+                                                // Only recompile if compilemode is on
                                                 if (moRequest["recompile"] == "del")
                                                 {
 
                                                     if (RestoreRedirectSession(moRequest["SessionId"], 10, true) == true)
                                                     {
-
                                                         // Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
-
-                                                        var oFS = new Protean.fsHelper(moCtx);
-                                                        oFS.mcRoot = gcProjectPath;
-                                                        oFS.mcStartFolder = goServer.MapPath(@"\" + gcProjectPath) + "xsltc";
-
-                                                        oFS.DeleteFolderContents("", "");
-                                                        var argmyWeb = this;
-                                                        Protean.Config.UpdateConfigValue(ref argmyWeb, "protean/web", "CompiledTransform", "on");
-                                                        var argmyWeb1 = this;
-                                                        Protean.Config.UpdateConfigValue(ref argmyWeb1, "", "recompile", "false");
-                                                        msRedirectOnEnd = "/?rebundle=true&SessionId=" + SessionID;
+                                                        XmlHelper.Transform oTransformClear = new XmlHelper.Transform();
+                                                        oTransformClear.myWeb = this;
+                                                        oTransformClear.ClearXSLTassemblyCache();
+                                                        if (oTransformClear.bError)
+                                                        {
+                                                            moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L, 0L, 0L, oTransformClear.transformException.Message);
+                                                            throw new Exception(oTransformClear.transformException.Message);
+                                                        }
+                                                        else
+                                                        {
+                                                            //only redirect if able to delete
+                                                            Protean.Cms myWeb = this;
+                                                            Protean.Config.UpdateConfigValue(ref myWeb, "protean/web", "CompiledTransform", "on");
+                                                            Protean.Config.UpdateConfigValue(ref myWeb, "", "recompile", "false");
+                                                            msRedirectOnEnd = "/?rebundle=true&SessionId=" + SessionID;
+                                                        }
                                                     }
                                                 }
 
                                                 else if (mbAdminMode)
                                                 {
-                                                    var argmyWeb2 = this;
-                                                    Protean.Config.UpdateConfigValue(ref argmyWeb2, "protean/web", "CompiledTransform", "off");
-                                                    // just sent value as it might be true when user did ResetConfig
-                                                    // to avoid skipping update functionality, we are just set it differently
-                                                    var argmyWeb3 = this;
-                                                    Protean.Config.UpdateConfigValue(ref argmyWeb3, "", "recompile", "recompiling");
-                                                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L);
-                                                    // we log to the activity log this action
-                                                    msRedirectOnEnd = "/?recompile=del&SessionId=" + SessionID;
+                                                    //we only want to recompile if compiled transform is on
+                                                    if (gbCompiledTransform)
+                                                    {
+
+                                                        Cms myWeb = this;
+                                                        Protean.Config.UpdateConfigValue(ref myWeb, "protean/web", "CompiledTransform", "off");
+                                                        // just sent value as it might be true when user did ResetConfig
+                                                        // to avoid skipping update functionality, we are just set it differently
+                                                        Protean.Config.UpdateConfigValue(ref myWeb, "", "recompile", "recompiling");
+                                                        moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L, 0L, 0L, "Recompiling XSLT");
+                                                        // we log to the activity log this action
+                                                        msRedirectOnEnd = "/?recompile=del&SessionId=" + SessionID;
+                                                    }
                                                 }
                                             }
 
@@ -1892,8 +1919,8 @@ namespace Protean
                                                 textWriter = (StringWriterWithEncoding)argoWriter;
                                                 PerfMon.Log("Web", "GetPageHTML-endxsl");
 
-                                                // save the page
-                                                if (!oTransform.bError)
+                                                // save the page if not in error.
+                                                if (!oTransform.bError && string.IsNullOrEmpty(msException))
                                                 {
                                                     if (bPageCache)
                                                     {
@@ -2495,7 +2522,6 @@ namespace Protean
                         {
                             if (!string.IsNullOrEmpty(moRequest["artid"]))
                             {
-
                                 object sArtId = Regex.Replace("0" + moRequest["artid"], @"[^\d]", "");
                                 // check not too large for an int
                                 int argresult = 0;
@@ -2503,7 +2529,6 @@ namespace Protean
                                 {
                                     mnArtId = Conversions.ToInteger(sArtId);
                                 }
-
                             }
                         }
 
@@ -2544,25 +2569,18 @@ namespace Protean
                             // only get the detail if we are not on a system page and not at root
                             if (RootPageId == mnPageId | !((long)mnPageId == gnPageNotFoundId | (long)mnPageId == gnPageAccessDeniedId | (long)mnPageId == gnPageLoginRequiredId | (long)mnPageId == gnPageErrorId))
                             {
-
-
                                 long validatedVersion = 0L;
-
                                 if (mbPreview & !string.IsNullOrEmpty(moRequest["verId"]))
                                 {
                                     validatedVersion = Conversions.ToLong(moRequest["verId"]);
                                 }
-
                                 if (mbPreview == false & !string.IsNullOrEmpty(moRequest["verId"]))
                                 {
                                     if ((Tools.Encryption.RC4.Decrypt(moRequest["previewKey"], moConfig["SharedKey"]) ?? "") == (moRequest["verId"] ?? ""))
                                     {
-
                                         validatedVersion = Conversions.ToLong(moRequest["verId"]);
-
                                     }
                                 }
-
 
                                 if (Conversions.ToBoolean(validatedVersion))
                                 {
@@ -2616,7 +2634,6 @@ namespace Protean
                                                 msRedirectOnEnd = PathBefore + "/" + mnArtId + "-/" + cContentDetailName;
                                             }
                                         }
-
                                         else
                                         {
                                             string PathBefore = mcOriginalURL.Substring(0, mcOriginalURL.Length - RequestedContentName.Length);
@@ -2630,8 +2647,6 @@ namespace Protean
                                     }
                                 }
                             }
-
-
                             CheckMultiParents(ref oPageElmt, mnPageId);
                         }
                         else
@@ -4193,7 +4208,7 @@ namespace Protean
         private void ContentActions()
         {
 
-            PerfMon.Log("Web", "ContentActions");
+            PerfMon.Log("Web", "ContentActions - Start");
             string sProcessInfo = "";
             XmlElement ocNode;
 
@@ -4476,7 +4491,9 @@ namespace Protean
                 }
 
                 BespokeActions();
+                PerfMon.Log("Web", "ContentActions - End");
             }
+
 
 
 
@@ -6565,7 +6582,7 @@ namespace Protean
                             }
                             catch
                             {
-                                oElmt2.InnerXml = Tools.Text.tidyXhtmlFrag(sContent);
+                                oElmt2.InnerXml = stdTools.tidyXhtmlFrag(sContent);
                             }
                         }
                     }
@@ -7566,8 +7583,17 @@ namespace Protean
                                         }
                                     }
 
-                                    if (string.IsNullOrEmpty(pvUrlPrefix))
-                                        pvUrlPrefix = httpStart + goLangConfig.GetAttribute("defaultDomain");
+                                    if (string.IsNullOrEmpty(pvUrlPrefix)) {
+                                        if (string.IsNullOrEmpty(goLangConfig.GetAttribute("defaultDomain")))
+                                        {
+                                            pvUrlPrefix = "/";
+                                        }
+                                        else
+                                            pvUrlPrefix = httpStart + goLangConfig.GetAttribute("defaultDomain");
+                                    }
+
+                              
+                                       
                                     pvElmt.SetAttribute("url", pvUrlPrefix + sUrl);
 
                                 }
@@ -7824,6 +7850,7 @@ namespace Protean
                 var pageDict = new SortedDictionary<long, string>();
                 foreach (XmlElement MenuItem in oMenuElmt.SelectNodes("descendant-or-self::MenuItem"))
                     pageDict.Add(Conversions.ToLong(MenuItem.GetAttribute("id")), MenuItem.GetAttribute("url"));
+
                 // Dim keys As List(Of Long) = pageDict.KeyCollection
                 // keys.Sort()
 
@@ -7846,60 +7873,69 @@ namespace Protean
                     {
                         string cURL = "";
                         var oContElmt = moPageXml.CreateElement("MenuItem");
+                        cURL = GetDetailURL(Conversions.ToLong(oDR[0]), oDR[5].ToString(), oDR[1].ToString(), "", Conversions.ToLong(oDR[2]), pageDict);
 
-                        switch (moConfig["DetailPathType"] ?? "")
-                        {
-                            case "ContentType/ContentName":
-                                {
-                                    string[] prefixs = moConfig["DetailPrefix"].Split(',');
-                                    string thisPrefix = "";
-                                    string thisContentType = "";
-                                    int i;
-                                    var loopTo = prefixs.Length - 1;
-                                    for (i = 0; i <= loopTo; i++)
-                                    {
-                                        thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
-                                        thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
-                                        if ((thisContentType ?? "") == (oDR[5].ToString() ?? ""))
-                                        {
-                                            cURL = "/" + thisPrefix + "/" + oRe.Replace(oDR[1].ToString(), "-").Trim('-');
-                                            if (moConfig["DetailPathTrailingSlash"] == "on")
-                                            {
-                                                cURL = cURL + "/";
-                                            }
-                                            if (moConfig["LowerCaseUrl"] == "on")
-                                            {
-                                                cURL = cURL.ToLower();
-                                            }
-                                        }
-                                    }
+                        #region old code
+                        //switch (moConfig["DetailPathType"] ?? "")
+                        //{
+                        //    case "ContentType/ContentName":
+                        //        {
+                        //            string[] prefixs = moConfig["DetailPrefix"].Split(',');
+                        //            string thisPrefix = "";
+                        //            string thisContentType = "";
+                        //            int i;
+                        //            var loopTo = prefixs.Length - 1;
+                        //            for (i = 0; i <= loopTo; i++)
+                        //            {
+                        //                thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
+                        //                thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
+                        //                if ((thisContentType ?? "") == (oDR[5].ToString() ?? ""))
+                        //                {
+                        //                    string ItemIdPath = "";
+                        //                    if (moConfig["addPathArtId"] == "on")
+                        //                    {
+                        //                        ItemIdPath = oDR[0] + "-/";
+                        //                    }
+                        //                    cURL = "/" + thisPrefix + "/" + ItemIdPath + oRe.Replace(oDR[1].ToString(), "-").Trim('-');
+                        //                    if (moConfig["DetailPathTrailingSlash"] == "on")
+                        //                    {
+                        //                        cURL = cURL + "/";
+                        //                    }
+                        //                    if (moConfig["LowerCaseUrl"] == "on")
+                        //                    {
+                        //                        cURL = cURL.ToLower();
+                        //                    }
+                        //                }
+                        //            }
 
-                                    break;
-                                }
+                        //            break;
+                        //        }
 
-                            default:
-                                {
-                                    if (pageDict.ContainsKey(Conversions.ToLong(oDR[2])))
-                                    {
-                                        cURL = pageDict[Conversions.ToLong(oDR[2])];
-                                        // If moConfig("LegacyRedirect") = "on" Then
-                                        cURL += "/" + oDR[0].ToString() + "-/" + Tools.Text.CleanName(oDR[1].ToString(), false, true);
-                                    }
-                                    // Else
-                                    // cURL &= "/Item" & oDR(0).ToString
-                                    // End If
-                                    else
-                                    {
-                                        cProcessInfo = "orphan Content";
-                                    }
+                        //    default:
+                        //        {
+                        //            if (pageDict.ContainsKey(Conversions.ToLong(oDR[2])))
+                        //            {
+                        //                cURL = pageDict[Conversions.ToLong(oDR[2])];
+                        //                // If moConfig("LegacyRedirect") = "on" Then
+                        //                cURL += "/" + oDR[0].ToString() + "-/" + Tools.Text.CleanName(oDR[1].ToString(), false, true);
+                        //            }
+                        //            // Else
+                        //            // cURL &= "/Item" & oDR(0).ToString
+                        //            // End If
+                        //            else
+                        //            {
+                        //                cProcessInfo = "orphan Content";
+                        //            }
 
-                                    break;
-                                }
-                        }
-                        if (moConfig["LowerCaseUrl"] == "on")
-                        {
-                            cURL = cURL.ToLower();
-                        }
+                        //            break;
+                        //        }
+                        //}
+                        //if (moConfig["LowerCaseUrl"] == "on")
+                        //{
+                        //    cURL = cURL.ToLower();
+                        //}
+                        #endregion
+
                         if (!string.IsNullOrEmpty(cURL))
                         {
                             oContElmt.SetAttribute("url", cURL);
@@ -8238,7 +8274,6 @@ namespace Protean
                 }
 
                 string nCurrentPageId = nPageId.ToString();
-
                 // Adjust the page id if it's a cloned page.
                 if (Conversions.ToDouble(nCurrentPageId) != (double)mnPageId)
                 {
@@ -8247,6 +8282,22 @@ namespace Protean
                 }
                 else
                 {
+                    // If we have an article id we only want to show cascaded content
+                    if (moConfig["ContentDetailShowOnlyCascaded"] != null)
+                    {
+                        if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0)
+                        {
+                            if (ibIndexMode)
+                            {
+                                //when we are indexing we want to be able to index the brief because we use this as the abstract.
+                                sFilterSql += " and ((CL.bCascade = 1 and CL.bPrimary = 1) or nContentKey = " + mnArtId + ") ";
+                            }
+                            else
+                            {
+                                sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
+                            }
+                        }
+                    }
                     // we are pulling in located and native items but not cascaded
                 }
 
@@ -8275,7 +8326,6 @@ namespace Protean
                 }
 
                 sSql = "select " + cContentLimit + "c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c" + " inner join tblContentLocation CL on c.nContentKey = CL.nContentId" + " inner join tblAudit a on c.nAuditId = a.nAuditKey" + " where( CL.nStructId = " + nPageId;
-
                 sSql = sSql + sFilterSql + ") order by type, cl.nDisplayOrder";
 
                 var oDs = new DataSet();
@@ -11325,17 +11375,147 @@ namespace Protean
             string cProcessInfo = "";
             try
             {
-
-                moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" + gcProjectPath));
+                string result = moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" + gcProjectPath));
+                if (result == "1")
+                {
+                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.PageCacheDeleted, (long)mnUserId, 0L, 0L, 0L, "Successfully deleted ewCache folder" + mcPageCacheFolder);
+                }
+                else
+                {
+                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.PageCacheDeleted, (long)mnUserId, 0L, 0L, 0L, result);
+                }
             }
-
             catch (Exception ex)
             {
                 returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug);
             }
         }
+
+        //GetDetailURL(long ContentId, schemaType, contentName, pagePath of the primary location) (if more than one primary location then run for both)
+        public string GetDetailURL(long ContentId, string schemaType, string contentName, string pagePath, long cChildId, SortedDictionary<long, string> pageDict)
+        {
+            string cProcessInfo = string.Empty;
+            string cURL = "";
+            var oRe = new Regex("[^A-Z0-9]", RegexOptions.IgnoreCase);           
+
+            switch (moConfig["DetailPathType"] ?? "")
+            {
+                case "ContentType/ContentName":
+                    {
+                        string[] prefixs = moConfig["DetailPrefix"].Split(',');
+                        string thisPrefix = "";
+                        string thisContentType = "";
+                        int i;
+                        var loopTo = prefixs.Length - 1;
+                        for (i = 0; i <= loopTo; i++)
+                        {
+                            thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
+                            thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
+                            if ((thisContentType ?? "") == (schemaType ?? ""))
+                            {
+                                string ItemIdPath = "";
+                                if (moConfig["addPathArtId"] == "on")
+                                {
+                                    ItemIdPath = ContentId + "-/";
+                                }
+                                cURL = "/" + thisPrefix + "/" + ItemIdPath + oRe.Replace(contentName.ToString(), "-").Trim('-');
+                                if (moConfig["DetailPathTrailingSlash"] == "on")
+                                {
+                                    cURL = cURL + "/";
+                                }
+                                if (moConfig["LowerCaseUrl"] == "on")
+                                {
+                                    cURL = cURL.ToLower();
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+
+                default:
+                    {
+                        //This pageDict passed from addPageDetailLinksToStructure method.
+                        if (pageDict.ContainsKey(Conversions.ToLong(cChildId)))
+                        {
+                            cURL = pageDict[Conversions.ToLong(cChildId)];
+                            // If moConfig("LegacyRedirect") = "on" Then
+                            cURL += "/" + ContentId.ToString() + "-/" + Tools.Text.CleanName(contentName.ToString(), false, true);
+                        }
+                        // Else
+                        // cURL &= "/Item" & oDR(0).ToString
+                        // End If
+                        else
+                        {
+                            cProcessInfo = "orphan Content";
+                        }
+
+                        break;
+                    }
+            }
+            if (moConfig["LowerCaseUrl"] == "on")
+            {
+                cURL = cURL.ToLower();
+            }
+            return cURL;
+        }
+        public void ClearPageCache(string ContentId)
+        {
+            try
+            {
+                string filePath = goServer.MapPath("/") + mcPageCacheFolder;
+                // check startfolder exists
+                var rootDir = new DirectoryInfo(filePath);
+                string productUrl = string.Empty;//mcOriginalURL;
+                string sSql;
+                DataSet oDs;
+                string cChildID; string cContentSchemaName; string cContentName; string sPagePath;
+                string sProcessInfo; var pageDict = new SortedDictionary<long, string> ();
+                sProcessInfo = "ClearPageCache-Start";
+                PerfMon.Log("Web", sProcessInfo);
+              
+                if(Strings.LCase(moConfig["PageCache"]) == "on" && rootDir.Exists)
+                {       
+                    //spGetParentPagesForCache
+                    sSql = "EXEC spGetParentPagesForCache @nContentkey=" + ContentId + "";
+                    // Get the dataset
+                    oDs = moDbHelper.GetDataSet(sSql, "Content");
+                    if (oDs.Tables[0].Rows.Count > 0)
+                    {                        
+                        List<string> sFoldersUrlslist = new List<string>();
+                        GetStructureXML("Site");
+                        // Convert any text to xml
+                        foreach (DataRow oRow2 in oDs.Tables[0].Rows)
+                        {
+                            cContentName = Convert.ToString(oRow2["cContentName"]);
+                            cContentSchemaName = Convert.ToString(oRow2["cContentSchemaName"]);
+                            cChildID = Convert.ToString(oRow2["child_id"]);                           
+                            foreach (XmlElement oElmt3 in moPageXml.SelectNodes($"/Page/Menu/descendant-or-self::MenuItem[@id='{cChildID}']"))
+                            {
+                                //catch child id from dataset and match into the mopagfexml and get the exact url of pages and pass it to delete.
+                                string[] paths = oElmt3.SelectSingleNode("@url").InnerText.Split('?'); //split ? from urls
+                                sPagePath = paths[0];
+                                sFoldersUrlslist.Add(filePath + @"\" + sPagePath.Replace("/", @"\"));
+                                //Create Product Url here
+                                productUrl = GetDetailURL(Convert.ToInt32(ContentId), cContentSchemaName, cContentName, sPagePath, Conversions.ToLong(cChildID), pageDict);
+                                sFoldersUrlslist.Add(filePath + @"\" + productUrl.Replace("/", @"\"));
+                            }                          
+                         
+                        }
+                        // Remove duplicates using HashSet
+                        HashSet<string> uniqueFolderPaths = new HashSet<string>(sFoldersUrlslist);
+                        // delete all folders list which are exists 
+                        string FolderstoDeleteFromCache = moFSHelper.DeleteMultipleFolder(uniqueFolderPaths);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                stdTools.returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", "ClearPageCache", gbDebug);
+            }
+        }
         /// <summary>
-        /// get active productslist
+        /// get active productslist 
         /// </summary>
         /// <param name="nArtId"></param>
         /// <returns></returns>

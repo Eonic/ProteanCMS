@@ -6,7 +6,7 @@
   <!-- ## Variables for all EonicWeb XSLT   #######################################################   -->
 
   <!-- General node trees -->
- 
+
   <xsl:variable name="page" select="/Page"/>
   <xsl:variable name="pageId" select="/Page/@id"/>
   <xsl:variable name="artId" select="number(concat(0,/Page/Request/QueryString/Item[@name='artid']))"/>
@@ -420,18 +420,18 @@
             <xsl:attribute name="prefix">og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#</xsl:attribute>
           </xsl:otherwise>
         </xsl:choose>
-        
-		<xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
+
+        <xsl:if test="not(/Page/@adminMode) and Contents/Content[@name='metaRefresh']/node()!=''">
           <meta http-equiv="refresh" content="0;URL='{Contents/Content[@name='metaRefresh']/node()}'" />
         </xsl:if>
-		  
+
         <xsl:apply-templates select="." mode="metacharset"/>
-		<!-- common css -->
+        <!-- common css -->
         <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
-       
-      
-        
-		<xsl:apply-templates select="." mode="headerOnlyJS"/>
+
+
+
+        <xsl:apply-templates select="." mode="headerOnlyJS"/>
 
         <xsl:if test="$GoogleTagManagerID!=''">
 
@@ -447,7 +447,7 @@
           <!-- End Google Tag Manager -->
 
         </xsl:if>
-		  <xsl:if test="$GoogleOptimizeID!=''">
+        <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
         <xsl:if test="$PayPalTagManagerID!=''">
@@ -509,7 +509,7 @@
         <xsl:apply-templates select="/Page/Contents/Content[@type='FeedControl']" mode="feedLinks"/>
         <xsl:apply-templates select="//Content[@rss and @rss!='false']" mode="feedLinks"/>
 
-     
+
         <!--<xsl:apply-templates select="." mode="headerOnlyJS"/>-->
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
@@ -529,11 +529,11 @@
         <xsl:apply-templates select="." mode="criticalPathCSS"/>
       </xsl:otherwise>
     </xsl:choose>
-   <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentCSS"/>
-  
+    <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentCSS"/>
+
   </xsl:template>
-	
-	
+
+
 
   <xsl:template match="Page" mode="google-ga4-config-params">
     <!-- for overloading on specific actions -->
@@ -624,7 +624,7 @@
 
   <xsl:template match="Page" mode="headerOnlyJS">
     <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentJS"/>
-  
+
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
@@ -767,8 +767,12 @@
     <xsl:apply-templates select="." mode="resellerStyle"/>
     <xsl:if test="@cssFramework='bs3'">
       <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 8') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 7') or contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0')">
-        <script src="/ewcommon/js/respond.min.js" cookie-consent="strictly-necessary">/* */</script>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js" cookie-consent="strictly-necessary">/* */</script>
+        <script src="/ewcommon/js/respond.min.js" cookie-consent="strictly-necessary">
+          <xsl:text> </xsl:text>
+        </script>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js" cookie-consent="strictly-necessary">
+          <xsl:text> </xsl:text>
+        </script>
       </xsl:if>
     </xsl:if>
   </xsl:template>
@@ -798,21 +802,23 @@
     <!-- admin javascripts -->
     <xsl:if test="$adminMode">
       <xsl:apply-templates select="." mode="adminJs"/>
-    </xsl:if>
+     </xsl:if>
 
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
     <!-- IF IE6 apply PNG Fix as standard -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
-      <script type="{$scriptType}" src="/ewcommon/js/pngfix.js" defer="" cookie-consent="strictly-necessary">/* */</script>
+      <script type="{$scriptType}" src="/ewcommon/js/pngfix.js" defer="" cookie-consent="strictly-necessary">
+        <xsl:text> </xsl:text>
+      </script>
     </xsl:if>
 
   </xsl:template>
 
   <xsl:template match="Content" mode="headerOnlyContentJS">
   </xsl:template>
-	
-   <xsl:template match="Content" mode="headerOnlyContentCSS">
-   </xsl:template>
+
+  <xsl:template match="Content" mode="headerOnlyContentCSS">
+  </xsl:template>
 
   <xsl:template match="Content" mode="contentJS">
   </xsl:template>
@@ -905,36 +911,56 @@
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
+        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">
+          <xsl:text> </xsl:text>
+        </script>
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="@layout='Modules_Masonary'">
-          <script type="{$scriptType}" src="/ewcommon/js/jquery/isotope/jquery.isotope.min.js" cookie-consent="strictly-necessary">/* */</script>
+          <script type="{$scriptType}" src="/ewcommon/js/jquery/isotope/jquery.isotope.min.js" cookie-consent="strictly-necessary">
+            <xsl:text> </xsl:text>
+          </script>
         </xsl:if>
         <xsl:if test="//Content[@moduleType='SlideCarousel'] and not(/Page/@adminMode)">
-          <script src="/ewcommon/js/jquery/SlideCarousel/jquery.mousewheel.min.js">/* */</script>
-          <script src="/ewcommon/js/jquery/SlideCarousel/jquery.carousel-1.1.min.js">/* */</script>
+          <script src="/ewcommon/js/jquery/SlideCarousel/jquery.mousewheel.min.js">
+            <xsl:text> </xsl:text>
+          </script>
+          <script src="/ewcommon/js/jquery/SlideCarousel/jquery.carousel-1.1.min.js">
+            <xsl:text> </xsl:text>
+          </script>
         </xsl:if>
         <xsl:if test="//Content[@moduleType='ImageFader']">
-          <script src="/ewcommon/js/jquery/innerFade/jquery.innerfade.js">/* */</script>
+          <script src="/ewcommon/js/jquery/innerFade/jquery.innerfade.js">
+            <xsl:text> </xsl:text>
+          </script>
         </xsl:if>
         <xsl:if test="//Content[@carousel='true']">
-          <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">/* */</script>
+          <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">
+            <xsl:text> </xsl:text>
+          </script>
           <!-- !!! MIN VERSION CAUSES ERROR -->
         </xsl:if>
         <xsl:if test="//Content[@moduleType='SliderGallery' or @moduleType='Carousel'] and not(/Page/@adminMode)">
-          <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">/* */</script>
+          <script src="/ewcommon/js/jquery/SliderGallery/js/jquery.tn3.min.js">
+            <xsl:text> </xsl:text>
+          </script>
         </xsl:if>
         <!-- code formatting plugin -->
         <xsl:if test="//Content[@moduleType='FormattedCode' or @moduleType='EmbeddedHTML']">
-          <script type="text/javascript" src="/ewcommon/js/jquery/beautyOfCode/boc.js" >/* */</script>
+          <script type="text/javascript" src="/ewcommon/js/jquery/beautyOfCode/boc.js" >
+            <xsl:text> </xsl:text>
+          </script>
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
 
     <xsl:if test="//Content[@moduleType='Audio']/Path/node()!=''">
-      <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.min.js">/* */</script>
-      <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.inspector.js">/* */</script>
+      <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.min.js">
+        <xsl:text> </xsl:text>
+      </script>
+      <script type="text/javascript" src="/ewcommon/js/jquery/jplayer/jquery.jplayer.inspector.js">
+        <xsl:text> </xsl:text>
+      </script>
       <script type="text/javascript">
         <xsl:apply-templates select="." mode="initialiseJplayer"/>
       </script>
@@ -1215,7 +1241,7 @@
 
     <xsl:choose>
       <xsl:when test="/Page/ContentDetail/Content">
-		 
+
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="contentDetailJS"/>
         <xsl:apply-templates select="/Page/Contents/Content[@type='FreeCookieConsent']" mode="contentJS"/>
       </xsl:when>
@@ -1238,7 +1264,10 @@
           <xsl:apply-templates select="$page/Contents/Content[@type='Module' and @position = 'ExitModal']" mode="modalBox"/>
         </div>
       </div>
-      <script type="{$scriptType}" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js" async="async" cookie-consent="strictly-necessary">/* */</script>
+      <script type="{$scriptType}" src="/ewcommon/js/jquery/exitmodal/jquery.exit-modal.js"
+	cookie-consent="strictly-necessary">
+        <xsl:text> </xsl:text>
+      </script>
     </xsl:if>
 
     <xsl:if test="/Page/Contents/Content[@type='MetaData' and @name='MetaGoogleRemarketingConversionId']">
@@ -1251,7 +1280,9 @@
         var google_custom_params = window.google_tag_params;
         var google_remarketing_only = true;
       </script>
-      <script type="{$scriptType}" src="//www.googleadservices.com/pagead/conversion.js"  cookie-consent="tracking">/* */</script>
+      <script type="{$scriptType}" src="//www.googleadservices.com/pagead/conversion.js"  cookie-consent="tracking">
+        <xsl:text> </xsl:text>
+      </script>
       <noscript>
         <div style="display:inline;">
           <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/955616701/?value=0&amp;guid=ON&amp;script=0"/>
@@ -3093,7 +3124,9 @@
       <xsl:value-of select="node()"/>
     </xsl:variable>
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
-      <script type="{$scriptType}" src="https://secure.leadforensics.com/js/{$lfid}.js" async="async" cookie-consent="tracking">/* */</script>
+      <script type="{$scriptType}" src="https://secure.leadforensics.com/js/{$lfid}.js" async="async" cookie-consent="tracking">
+        <xsl:text> </xsl:text>
+      </script>
       <noscript>
         <img src="https://secure.leadforensics.com/{$lfid}.png" style="display:none;" />
       </noscript>
@@ -4235,7 +4268,6 @@
           <xsl:choose>
             <xsl:when test="$menu/descendant-or-self::MenuItem[@id=$contentParId]/@url='/'">
               <xsl:call-template name="getSiteURL"/>
-
             </xsl:when>
             <xsl:otherwise>
               <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
@@ -5551,8 +5583,8 @@
     </xsl:choose>
   </xsl:template>
 
-  
-    
+
+
   <xsl:template match="*" mode="reportHeader">
     <xsl:param name="sort"/>
     <xsl:param name="bSortFormMethod"/>
@@ -6341,7 +6373,6 @@
 
       </xsl:otherwise>
     </xsl:choose>
-
   </xsl:template>
 
 
@@ -6394,9 +6425,21 @@
           <xsl:text>');</xsl:text>
         </xsl:attribute>
       </xsl:if>
-
-      <xsl:apply-templates mode="cleanXhtml"/>
-      <xsl:text> </xsl:text>
+		<xsl:apply-templates mode="cleanXhtml"/>
+		<xsl:text> </xsl:text>
+		<!--
+     	<xsl:variable name="anchorText">
+			<xsl:apply-templates select="*" mode="cleanXhtml"/>
+		</xsl:variable>
+		<xsl:choose>
+			<xsl:when test="$anchorText!=''">
+				<xsl:value-of select="$anchorText"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text> </xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+    -->
     </xsl:element>
   </xsl:template>
 
@@ -10388,7 +10431,7 @@
             Returns a string. The First argument is the section from within the web.config.  The Second argument 
             is the key attribute name from the add node that you want the value of -->
 
-  
+
   <xsl:template name="getSettings">
     <xsl:param name="sectionName"/>
     <xsl:param name="valueName" />

@@ -1,218 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Content type="xform" name="EditContent">
-	<model>
-		<instance>
-			<tblContent>
-				<nContentKey/>
-				<nContentPrimaryId/>
-				<nVersion/>
-				<cContentForiegnRef/>
-				<cContentName/>
-				<cContentSchemaName>Module</cContentSchemaName>
-				<cContentXmlBrief>
-					<Content contentType="Contact" moduleType="ContactList" box="" title="" link="" linkType="internal" linkText="More contacts" sortBy="Company" order="ascending" cols="" stepBy="" stepCount="0" display="all" position="" listGroup="true" autoplay="true" autoPlaySpeed="2000" linkArticle="true"/>
-				</cContentXmlBrief>
-				<cContentXmlDetail/>
-				<nAuditId/>
-				<nAuditKey/>
-				<dPublishDate/>
-				<dExpireDate/>
-				<dInsertDate/>
-				<nInsertDirId/>
-				<dUpdateDate/>
-				<nUpdateDirId/>
-				<nStatus>1</nStatus>
-				<cDescription/>
-				<bCascade/>
-			</tblContent>
-		</instance>
-		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
-		<bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
-		<bind nodeset="tblContent/cContentXmlBrief/Content">
-			<bind id="cPosition" nodeset="@position" required="true()" type="string"/>
-			<bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
-			<bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
-			<bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
-			<bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
-			<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
-			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
-			<bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
-			<bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
-			<bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
-			<bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
-			<bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
-			<bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
-			<bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
-			<bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
-			<bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
-			<bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
-		</bind>
-		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
-		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
-		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@id='columnBind']"/>
-		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
-	</model>
-	<group ref="EditContent">
-		<label>Contact List Module</label>
-		<group class="tabs">
-			<group>
-				<label>
-					<i class="fas fa-pen"> </i>
-					<span class="space"> </span>
-					<span>Content</span>
-				</label>
-				<group>
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content contentType="Contact" moduleType="ContactList" box="" title="" link="" linkType="internal" linkText="More contacts" sortBy="Company" order="ascending" cols="" stepBy="" stepCount="0" display="all" position="" listGroup="true" autoplay="true" autoPlaySpeed="2000" linkArticle="true"/>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="cModuleLink" nodeset="@link" required="false()" type="string"/>
+      <bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+      <bind id="bLinkArticle" nodeset="@linkArticle" required="false()" type="string"/>
+      <bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
+      <bind id="nColumns" nodeset="@cols" required="false()" type="string"/>
+      <bind id="carousel" nodeset="@carousel" required="false()" type="string"/>
+      <bind id="nStepCount" nodeset="@stepCount" required="false()" type="string"/>
+      <bind id="cDisplay" nodeset="@display" required="false()" type="string"/>
+      <bind id="cSortBy" nodeset="@sortBy" required="false()" type="string"/>
+      <bind id="cStepBy" nodeset="@stepBy" required="false()" type="string"/>
+      <bind id="cPageOrder" nodeset="@order" required="false()" type="string"/>
+      <bind id="autoPlaySpeed" nodeset="@autoPlaySpeed" required="false()" type="string"/>
+      <bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
+      <bind id="cCrop" nodeset="@crop" required="false()" type="string"/>
+    </bind>
+    <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
+    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@id='columnBind']"/>
+    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent">
+    <label>Contact List Module</label>
+    <group class="tabs">
+      <group>
+        <label>
+          <i class="fas fa-pen"> </i>
+          <span class="space"> </span>
+          <span>Content</span>
+        </label>
+        <group>
 
-					<input bind="cModuleTitle" class="long">
-						<label>Title or Name</label>
-					</input>
-					<group class="form-section-wrapper">
-						<select1 bind="cDisplay" appearance="full">
-							<label>Show Items</label>
-							<item>
-								<label>All items on the current page</label>
-								<value>all</value>
-								<toggle case="cDisplay_1" event="DOMActivate"/>
-							</item>
-							<item>
-								<label>Related items specified below</label>
-								<value>related</value>
-								<toggle case="cDisplay_2" event="DOMActivate"/>
-							</item>
-						</select1>
-						<switch class="disable">
-							<case id="cDisplay_1"/>
-							<case id="cDisplay_2">
-								<relatedContent search="find add" type="Contact" relationType="Contact" direction="1way">
-									<label>Related Contacts</label>
-								</relatedContent>
-							</case>
-						</switch>
-					</group>
-				</group>
-				<group>
-					<select1 bind="cSortBy" appearance="full" class="inline-items">
-						<label>Order By</label>
-						<item>
-							<label>Company</label>
-							<value>Company</value>
-						</item>
-						<item>
-							<label>Department</label>
-							<value>Department</value>
-						</item>
-						<item>
-							<label>Surname</label>
-							<value>Surname</value>
-						</item>
-						<item>
-							<label>First name</label>
-							<value>GivenName</value>
-						</item>
-						<item>
-							<label>Job title</label>
-							<value>Title</value>
-						</item>
-						<item>
-							<label>Page position</label>
-							<value>Position</value>
-						</item>
-					</select1>
-				</group>
-				<group class="row">
-					<group class="col-lg-6">
-						<input bind="cPageOrder" class="hidden"/>
-						<select1 bind="nStepCount" appearance="full" class="inline-items">
-							<label>Contacts per page</label>
-							<item>
-								<label>All</label>
-								<value>0</value>
-							</item>
-							<item>
-								<label>3</label>
-								<value>3</value>
-							</item>
-							<item>
-								<label>5</label>
-								<value>5</value>
-							</item>
-							<item>
-								<label>10</label>
-								<value>10</value>
-							</item>
-							<item>
-								<label>25</label>
-								<value>25</value>
-							</item>
-							<item>
-								<label>Other</label>
-								<value></value>
-							</item>
-						</select1>
-					</group>
-					<group class="col-lg-6">
-						<select1 bind="cCrop" appearance="full" class="inline-items">
-							<label>Crop Images</label>
-							<item>
-								<label>Yes</label>
-								<value>true</value>
-							</item>
-							<item>
-								<label>No</label>
-								<value>false</value>
-							</item>
-						</select1>
-					</group>
-				</group>
-			</group>
-			<group>
-				<label>
-					<i class="fas fa-link"> </i>
-					<span class="space"> </span>
-					<span>Footer Links</span>
-				</label>
-				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
-			</group>
-			<group>
-				<label>
-					<i class="fas fa-brush"> </i>
-					<span class="space"> </span>
-					<span>Presentation</span>
-				</label>
-				<group>
-					<!-- These hidden fields and bindings are required for the component-->
-					<input bind="nContentKey" class="hidden">
-						<label>ContentId</label>
-					</input>
-					<input bind="cModuleType" class="hidden">
-						<label>ModuleType</label>
-					</input>
-					<!-- end of hidden fields -->
-					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
-				</group>
-				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='columns']"/>
-			</group>
-			<group>
-				<label>
-					<i class="fas fa-tachometer-alt"> </i>
-					<span class="space"> </span>
-					<span>Animate</span>
-				</label>
-				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
-			</group>
-			<group>
-				<label>
-					<i class="fas fa-cog"> </i>
-					<span class="space"> </span>
-					<span>Advanced Settings</span>
-				</label>
-				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
-			</group>
-		</group>
-	</group>
-	<group ref="submit" class="contentSubmit">
-		<submit submission="" ref="ewSubmit" class="principle">
-			<label>Save Contact List</label>
-		</submit>
-	</group>
+          <input bind="cModuleTitle" class="long">
+            <label>Title or Name</label>
+          </input>
+          <group class="form-section-wrapper">
+            <select1 bind="cDisplay" appearance="full">
+              <label>Show Items</label>
+              <item>
+                <label>All items on the current page</label>
+                <value>all</value>
+                <toggle case="cDisplay_1" event="DOMActivate"/>
+              </item>
+              <item>
+                <label>Related items specified below</label>
+                <value>related</value>
+                <toggle case="cDisplay_2" event="DOMActivate"/>
+              </item>
+            </select1>
+            <switch class="disable" for="cDisplay">
+              <case id="cDisplay_1"/>
+              <case id="cDisplay_2">
+                <relatedContent search="find add" type="Contact" relationType="Contact" direction="1way">
+                  <label>Related Contacts</label>
+                </relatedContent>
+              </case>
+            </switch>
+          </group>
+        </group>
+        <group>
+          <select1 bind="cSortBy" appearance="full" class="inline-items">
+            <label>Order By</label>
+            <item>
+              <label>Company</label>
+              <value>Company</value>
+            </item>
+            <item>
+              <label>Department</label>
+              <value>Department</value>
+            </item>
+            <item>
+              <label>Surname</label>
+              <value>Surname</value>
+            </item>
+            <item>
+              <label>First name</label>
+              <value>GivenName</value>
+            </item>
+            <item>
+              <label>Job title</label>
+              <value>Title</value>
+            </item>
+            <item>
+              <label>Page position</label>
+              <value>Position</value>
+            </item>
+          </select1>
+        </group>
+        <group class="row">
+          <group class="col-lg-6">
+            <input bind="cPageOrder" class="hidden"/>
+            <select1 bind="nStepCount" appearance="full" class="inline-items">
+              <label>Contacts per page</label>
+              <item>
+                <label>All</label>
+                <value>0</value>
+              </item>
+              <item>
+                <label>3</label>
+                <value>3</value>
+              </item>
+              <item>
+                <label>5</label>
+                <value>5</value>
+              </item>
+              <item>
+                <label>10</label>
+                <value>10</value>
+              </item>
+              <item>
+                <label>25</label>
+                <value>25</value>
+              </item>
+              <item>
+                <label>Other</label>
+                <value></value>
+              </item>
+            </select1>
+          </group>
+          <group class="col-lg-6">
+            <select1 bind="cCrop" appearance="full" class="inline-items">
+              <label>Crop Images</label>
+              <item>
+                <label>Yes</label>
+                <value>true</value>
+              </item>
+              <item>
+                <label>No</label>
+                <value>false</value>
+              </item>
+            </select1>
+          </group>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-link"> </i>
+          <span class="space"> </span>
+          <span>Footer Links</span>
+        </label>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
+        <group>
+          <select bind="bLinkArticle" appearance="full" class="multiline">
+            <item>
+              <label>Make whole article clickable</label>
+              <value>true</value>
+            </item>
+          </select>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-brush"> </i>
+          <span class="space"> </span>
+          <span>Presentation</span>
+        </label>
+        <group>
+          <!-- These hidden fields and bindings are required for the component-->
+          <input bind="nContentKey" class="hidden">
+            <label>ContentId</label>
+          </input>
+          <input bind="cModuleType" class="hidden">
+            <label>ModuleType</label>
+          </input>
+          <!-- end of hidden fields -->
+          <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+        </group>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='columns']"/>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-tachometer-alt"> </i>
+          <span class="space"> </span>
+          <span>Animate</span>
+        </label>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-cog"> </i>
+          <span class="space"> </span>
+          <span>Advanced Settings</span>
+        </label>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Contact List</label>
+    </submit>
+  </group>
 </Content>

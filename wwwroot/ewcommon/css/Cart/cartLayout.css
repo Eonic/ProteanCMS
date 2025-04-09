@@ -60,61 +60,52 @@
 {
 	width:100% !important;
 }
-#PayForm label.radio 
-{
-	display:inline-block;
-	padding-right:20px;
-
+.ccForm label.radio {
+	display: inline-block;
+	padding-right: 20px;
 	/*height:25px;  WHY THE HEIGHT??? Clips all descending characters and brackets !! WH 2009-01-06*/
 }
-#PayForm label.MC, #PayForm label.MasterCard,  #PayForm label.Master-Card
-{
+.ccForm label.MC, #PayForm label.MasterCard, #PayForm label.Master-Card {
 	background: transparent url(/ewcommon/images/icons/cc/mastercard.png) no-repeat left center;
-	padding-left:63px;
-    overflow: hidden;
-    width: 0;
+	padding-left: 63px;
+	overflow: hidden;
+	width: 0;
 }
-#PayForm label.VISA, #PayForm label.Visa
-{
+.ccForm label.VISA, #PayForm label.Visa {
 	background: transparent url(/ewcommon/images/icons/cc/visa.png) no-repeat left center;
-	padding-left:60px;
+	padding-left: 60px;
 	overflow: hidden;
-    width: 0;
+	width: 0;
 }
-#PayForm label.UKE, #PayForm label.Uke
-{
+.ccForm label.UKE, #PayForm label.Uke {
 	background: transparent url(/ewcommon/images/icons/cc/electron.gif) no-repeat left center;
-	padding-left:60px;
+	padding-left: 60px;
 	overflow: hidden;
-    width: 0;
+	width: 0;
 }
-#PayForm label.DELTA, #PayForm label.Delta
-{
+.ccForm label.DELTA, #PayForm label.Delta {
 	background: transparent url(/ewcommon/images/icons/cc/visadebit.png) no-repeat left center;
-	padding-left:60px;
+	padding-left: 60px;
 	overflow: hidden;
-    width: 0;
+	width: 0;
 }
-#PayForm label.SOLO, #PayForm label.Solo
-{
+.ccForm label.SOLO, #PayForm label.Solo {
 	background: transparent url(/ewcommon/images/icons/cc/solo.png) no-repeat left center;
-	padding-left:60px;
+	padding-left: 60px;
 	overflow: hidden;
-    width: 0;
+	width: 0;
 }
-#PayForm label.SWITCH, #PayForm label.Switch, #PayForm label.Switch-Maestro
-{
+.ccForm label.SWITCH, .ccForm label.Switch, .ccForm label.Switch-Maestro {
 	background: transparent url(/ewcommon/images/icons/cc/maestro.png) no-repeat left center;
-	padding-left:60px;
+	padding-left: 60px;
 	overflow: hidden;
-    width: 0;
+	width: 0;
 }
-#PayForm label.AMEX, #PayForm label.American-Express
-{
+.ccForm label.AMEX, .ccForm label.American-Express {
 	background: transparent url(/ewcommon/images/icons/cc/amex.png) no-repeat left center;
-	padding-left:60px;
+	padding-left: 60px;
 	overflow: hidden;
-    width: 0;
+	width: 0;
 }
 
 /*#cartLogonBox

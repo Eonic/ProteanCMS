@@ -64,3 +64,19 @@
 @mixin h4-style() {
     @include heading-style(18px)
 }
+//------------------------
+//UL
+//------------------------
+.tick-list {
+    li {
+        padding-left: 10px;
+        padding-bottom: 0.5rem;
+    }
+
+    li::marker {
+        content: '\f00c';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        color: $info;
+    }
+}

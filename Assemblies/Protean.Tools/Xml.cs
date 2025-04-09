@@ -1,12 +1,11 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using System.Xml;
-using System.Xml.XPath;
-using System.Xml.Serialization;
 using System.Text.RegularExpressions;
-using Microsoft.VisualBasic;
-using System.Collections;
+using System.Xml;
+using System.Xml.Serialization;
+using System.Xml.XPath;
 
 namespace Protean.Tools
 {
@@ -34,7 +33,7 @@ namespace Protean.Tools
             IsEmptyOrHasContents = 3
         }
 
-       private static void CombineInstance_Sub1(XmlElement oMasterElmt, XmlElement oExistingInstance, string cXPath)
+        private static void CombineInstance_Sub1(XmlElement oMasterElmt, XmlElement oExistingInstance, string cXPath)
         {
             // Looks for stuff with the same xpath
             try
@@ -97,7 +96,7 @@ namespace Protean.Tools
             {
                 string cXPath = "";
                 CombineInstance_GetXPath(oExisting, ref cXPath, cRootName);
-                string[] oParts = Strings.Split(cXPath, "/");
+                string[] oParts = cXPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                 XmlElement oRefPart = oMasterInstance;
                 var loopTo = oParts.Length - 2;
                 for (int i = 0; i <= loopTo; i++)
@@ -189,8 +188,8 @@ namespace Protean.Tools
             string sProcessInfo = "XmlToForm";
             try
             {
-                sString = Strings.Replace(sString, "<", "&lt;");
-                sString = Strings.Replace(sString, ">", "&gt;");
+                sString = sString.Replace("<", "&lt;");
+                sString = sString.Replace(">", "&gt;");
                 return sString + "";
             }
             catch (Exception ex)
@@ -200,30 +199,35 @@ namespace Protean.Tools
             }
         }
 
-        public static XmlDocument htmlToXmlDoc(string shtml)
+        public static class HtmlConverter
         {
-            XmlDocument oXmlDoc = new XmlDocument();
-            string sProcessInfo = "htmlToXmlDoc";
-
-            try
+            public static XmlDocument htmlToXmlDoc(string shtml)
             {
-                //shtml = Strings.Replace(shtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
-                string regexOfDoctype = "<!DOCTYPE((.|\n|\r)*?)\">";
-                shtml = Regex.Replace(shtml, regexOfDoctype, string.Empty, RegexOptions.IgnoreCase);
-                shtml = Strings.Replace(shtml, " Xmlns = \"http://www.w3.org/1999/xhtml\"", "");
-                shtml = Strings.Replace(shtml, " xmlns=\"http://www.w3.org/1999/xhtml\"", "");
-                shtml = Strings.Replace(shtml, " Xml:lang=\"\"", "");
-                shtml = Strings.Replace(shtml, " xml:lang=\"\"", "");
+                XmlDocument oXmlDoc = new XmlDocument();
+                string sProcessInfo = "htmlToXmlDoc";
 
-                oXmlDoc.LoadXml(shtml);
+                try
+                {
+                    //shtml = Strings.Replace(shtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
+                    string regexOfDoctype = "<!DOCTYPE((.|\n|\r)*?)\">";
+                    shtml = Regex.Replace(shtml, regexOfDoctype, string.Empty, RegexOptions.IgnoreCase);
+                    shtml = shtml.Replace(" Xmlns = \"http://www.w3.org/1999/xhtml\"", "");
+                    shtml = shtml.Replace(" xmlns=\"http://www.w3.org/1999/xhtml\"", "");
+                    shtml = shtml.Replace(" Xml:lang=\"\"", "");
+                    shtml = shtml.Replace(" xml:lang=\"\"", "");
 
-                return oXmlDoc;
+                    oXmlDoc.LoadXml(shtml);
+
+                    return oXmlDoc;
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, sProcessInfo, ex, ""));
+                    return null;
+                }
             }
-            catch (Exception ex)
-            {
-                OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, sProcessInfo, ex, ""));
-                return null;
-            }
+
+            public static event Action<object, Protean.Tools.Errors.ErrorEventArgs> OnError;
         }
 
         public static XmlNamespaceManager getNsMgr(ref XmlNode oNode, ref XmlDocument oXml)
@@ -286,7 +290,7 @@ namespace Protean.Tools
         {
             try
             {
-               
+
                 string cNsUri = "";
                 XmlNamespaceManager nsMgr = new XmlNamespaceManager(oXml.NameTable);
                 string cPrefix = "ews";
@@ -324,11 +328,11 @@ namespace Protean.Tools
             try
             {
                 // check namespace not allready specified
-                if (Strings.InStr(cXpath, "ews:") == 0)
+                if (!cXpath.Contains("ews:"))
                 {
                     if (nsMgr.HasNamespace("ews"))
                     {
-                        cXpath = "ews:" + Strings.Replace(cXpath, "/", "/ews:");
+                        cXpath = "ews:" + cXpath.Replace("/", "/ews:");
 
                         // find any [ not followed by number
                         string[] substrings = Regex.Split(cXpath, @"(\[(?!\d))");
@@ -347,10 +351,10 @@ namespace Protean.Tools
 
                         // undo any attributes
 
-                        cXpath = Strings.Replace(cXpath, "/ews:node()", "/node()");
-                        cXpath = Strings.Replace(cXpath, "/ews:@", "/@");
-                        cXpath = Strings.Replace(cXpath, "[ews:@", "[@");
-                        cXpath = Strings.Replace(cXpath, "[ews:position()", "[position()");
+                        cXpath = cXpath.Replace("/ews:node()", "/node()");
+                        cXpath = cXpath.Replace("/ews:@", "/@");
+                        cXpath = cXpath.Replace("[ews:@", "[@");
+                        cXpath = cXpath.Replace("[ews:position()", "[position()");
                     }
                 }
 
@@ -358,7 +362,7 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
-                OnError?.Invoke( null, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addNsToXpath", ex, ""));
+                OnError?.Invoke(null, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "addNsToXpath", ex, ""));
                 return "";
             }
         }
@@ -403,7 +407,7 @@ namespace Protean.Tools
 
         public static XmlElement firstElement(ref XmlElement oElement)
         {
-   
+
             XmlElement oReturnNode = null;
             try
             {
@@ -590,19 +594,20 @@ namespace Protean.Tools
                 {
                     case XmlDataType.TypeNumber:
                         {
-                            cValue = Information.IsNumeric(vDefaultValue)? vDefaultValue: 0;
+                            cValue = double.TryParse(Convert.ToString(vDefaultValue), out double parsedValue) ? parsedValue : 0;
                             break;
                         }
 
                     case XmlDataType.TypeDate:
                         {
-                            cValue = Information.IsDate(vDefaultValue)? vDefaultValue: DateTime.Now;
+                            cValue = DateTime.TryParse(Convert.ToString(vDefaultValue), out DateTime parsedDate) ? parsedDate : DateTime.Now;
+
                             break;
                         }
 
                     default:
                         {
-                            cValue = (string)vDefaultValue != "" ? vDefaultValue.ToString(): "";
+                            cValue = (string)vDefaultValue != "" ? vDefaultValue.ToString() : "";
                             break;
                         }
                 }
@@ -615,19 +620,24 @@ namespace Protean.Tools
                 {
                     case XmlDataType.TypeNumber:
                         {
-                            cValue = Information.IsNumeric(cValue)? cValue: Information.IsNumeric(vDefaultValue)? vDefaultValue: 0;
+                            cValue = double.TryParse(Convert.ToString(cValue), out double numberValue) ? numberValue :
+                                      double.TryParse(Convert.ToString(vDefaultValue), out numberValue) ? numberValue : 0;
                             break;
                         }
 
                     case XmlDataType.TypeDate:
                         {
-                            cValue = Information.IsDate(cValue)? cValue: Information.IsDate(vDefaultValue)? vDefaultValue: DateTime.Now;
+                            cValue = DateTime.TryParse(Convert.ToString(cValue), out DateTime dateValue) ? dateValue :
+                                      DateTime.TryParse(Convert.ToString(vDefaultValue), out dateValue) ? dateValue : DateTime.Now;
                             break;
                         }
 
                     default:
                         {
-                            cValue = (string)cValue != ""? cValue.ToString(): Convert.ToString(vDefaultValue) != "" ? Convert.ToString(vDefaultValue) : "";
+                            cValue = !string.IsNullOrEmpty(Convert.ToString(cValue)) ?
+                                      cValue.ToString() :
+                                      !string.IsNullOrEmpty(Convert.ToString(vDefaultValue)) ?
+                                      Convert.ToString(vDefaultValue) : "";
                             break;
                         }
                 }
@@ -713,7 +723,7 @@ namespace Protean.Tools
         {
             try
             {
-                return NodeStateWithReturns(ref oNode, xPath, populateAsText, populateAsXml, populateState,ref returnElement,ref returnAsXml,ref returnAsText, bCheckTrimmedInnerText);
+                return NodeStateWithReturns(ref oNode, xPath, populateAsText, populateAsXml, populateState, ref returnElement, ref returnAsXml, ref returnAsText, bCheckTrimmedInnerText);
 
             }
             catch (Exception ex)
@@ -724,18 +734,18 @@ namespace Protean.Tools
         }
 
 
-        public static Xml.XmlNodeState NodeState(ref XmlElement oNode, string xPath ,ref XmlElement returnElement)
+        public static Xml.XmlNodeState NodeState(ref XmlElement oNode, string xPath, ref XmlElement returnElement)
         {
-            string populateAsText = ""; 
-            string populateAsXml = ""; 
+            string populateAsText = "";
+            string populateAsXml = "";
             Xml.XmlNodeState populateState = XmlNodeState.IsEmpty;
-            string returnAsXml = ""; 
-            string returnAsText = ""; 
+            string returnAsXml = "";
+            string returnAsText = "";
             bool bCheckTrimmedInnerText = false;
 
             try
             {
-                return NodeStateWithReturns(ref oNode, xPath, populateAsText, populateAsXml, populateState,ref returnElement,ref returnAsXml,ref returnAsText, bCheckTrimmedInnerText);
+                return NodeStateWithReturns(ref oNode, xPath, populateAsText, populateAsXml, populateState, ref returnElement, ref returnAsXml, ref returnAsText, bCheckTrimmedInnerText);
             }
             catch (Exception ex)
             {
@@ -745,7 +755,7 @@ namespace Protean.Tools
         }
 
 
-        private static Xml.XmlNodeState NodeStateWithReturns(ref XmlElement oNode, string xPath, string populateAsText, string populateAsXml , Xml.XmlNodeState populateState,ref XmlElement returnElement,ref string returnAsXml,ref string returnAsText, bool bCheckTrimmedInnerText)
+        private static Xml.XmlNodeState NodeStateWithReturns(ref XmlElement oNode, string xPath, string populateAsText, string populateAsXml, Xml.XmlNodeState populateState, ref XmlElement returnElement, ref string returnAsXml, ref string returnAsText, bool bCheckTrimmedInnerText)
         {
             try
             {
@@ -823,282 +833,282 @@ namespace Protean.Tools
                     return "";
                 else
                 {
-                    sString = Strings.Replace(sString, "Xmlns=\"\"", "");
+                    sString = sString.Replace("Xmlns=\"\"", "");
 
-                    // sString = Strings.Replace(sString, "& ", "&amp; ")
-                    sString = Strings.Replace(sString, "’", "'");
+                    // sString = sString.Replace( "& ", "&amp; ")
+                    sString = sString.Replace("’", "'");
 
                     // strip out any empty tags left by tinyMCE as the complier converts the to <h1/>
-                    sString = Strings.Replace(sString, "<h1></h1>", "");
-                    sString = Strings.Replace(sString, "<h2></h2>", "");
-                    sString = Strings.Replace(sString, "<h3></h3>", "");
-                    sString = Strings.Replace(sString, "<h4></h4>", "");
-                    sString = Strings.Replace(sString, "<h5></h5>", "");
-                    sString = Strings.Replace(sString, "<h6></h6>", "");
-                    sString = Strings.Replace(sString, "<span></span>", "");
+                    sString = sString.Replace("<h1></h1>", "");
+                    sString = sString.Replace("<h2></h2>", "");
+                    sString = sString.Replace("<h3></h3>", "");
+                    sString = sString.Replace("<h4></h4>", "");
+                    sString = sString.Replace("<h5></h5>", "");
+                    sString = sString.Replace("<h6></h6>", "");
+                    sString = sString.Replace("<span></span>", "");
 
                     // re.Replace(sString, "&^(;)" "&amp;")
 
                     // xhtml Tidy
-                    sString = Strings.Replace(sString, "<o:p>", "<p>");
-                    sString = Strings.Replace(sString, "</o:p>", "</p>");
-                    sString = Strings.Replace(sString, "<o:p/>", "<p/>");
+                    sString = sString.Replace("<o:p>", "<p>");
+                    sString = sString.Replace("</o:p>", "</p>");
+                    sString = sString.Replace("<o:p/>", "<p/>");
 
-                    // sString = Strings.Replace(sString, "&lt;", "&#60;")
-                    // sString = Strings.Replace(sString, "&gt;", "&#92;")
+                    // sString = sString.Replace( "&lt;", "&#60;")
+                    // sString = sString.Replace( "&gt;", "&#92;")
 
-                    //sString = Strings.Replace(sString, "&amp;", "&");
+                    //sString = sString.Replace( "&amp;", "&");
 
-                    sString = Strings.Replace(sString, "&quot;", "&#34;");
-                    sString = Strings.Replace(sString, "&apos;", "&#39;");
-                    sString = Strings.Replace(sString, "&nbsp;", "&#160;");
-                    sString = Strings.Replace(sString, "&iexcl;", "&#161;");
-                    sString = Strings.Replace(sString, "&cent;", "&#162;");
-                    sString = Strings.Replace(sString, "&pound;", "&#163;");
-                    sString = Strings.Replace(sString, "&curren;", "&#164;");
-                    sString = Strings.Replace(sString, "&yen;", "&#165;");
-                    sString = Strings.Replace(sString, "&brvbar;", "&#166;");
-                    sString = Strings.Replace(sString, "&sect;", "&#167;");
-                    sString = Strings.Replace(sString, "&uml;", "&#168;");
-                    sString = Strings.Replace(sString, "&copy;", "&#169;");
-                    sString = Strings.Replace(sString, "&ordf;", "&#170;");
-                    sString = Strings.Replace(sString, "&laquo;", "&#171;");
-                    sString = Strings.Replace(sString, "&not;", "&#172;");
-                    sString = Strings.Replace(sString, "&shy;", "&#173;");
-                    sString = Strings.Replace(sString, "&reg;", "&#174;");
-                    sString = Strings.Replace(sString, "&macr;", "&#175;");
-                    sString = Strings.Replace(sString, "&deg;", "&#176;");
-                    sString = Strings.Replace(sString, "&plusmn;", "&#177;");
-                    sString = Strings.Replace(sString, "&sup2;", "&#178;");
-                    sString = Strings.Replace(sString, "&sup3;", "&#179;");
-                    sString = Strings.Replace(sString, "&acute;", "&#180;");
-                    sString = Strings.Replace(sString, "&micro;", "&#181;");
-                    sString = Strings.Replace(sString, "&para;", "&#182;");
-                    sString = Strings.Replace(sString, "&middot;", "&#183;");
-                    sString = Strings.Replace(sString, "&cedil;", "&#184;");
-                    sString = Strings.Replace(sString, "&sup1;", "&#185;");
-                    sString = Strings.Replace(sString, "&ordm;", "&#186;");
-                    sString = Strings.Replace(sString, "&raquo;", "&#187;");
-                    sString = Strings.Replace(sString, "&frac14;", "&#188;");
-                    sString = Strings.Replace(sString, "&frac12;", "&#189;");
-                    sString = Strings.Replace(sString, "&frac34;", "&#190;");
-                    sString = Strings.Replace(sString, "&iquest;", "&#191;");
-                    sString = Strings.Replace(sString, "&Agrave;", "&#192;");
-                    sString = Strings.Replace(sString, "&Aacute;", "&#193;");
-                    sString = Strings.Replace(sString, "&Acirc;", "&#194;");
-                    sString = Strings.Replace(sString, "&Atilde;", "&#195;");
-                    sString = Strings.Replace(sString, "&Auml;", "&#196;");
-                    sString = Strings.Replace(sString, "&Aring;", "&#197;");
-                    sString = Strings.Replace(sString, "&AElig;", "&#198;");
-                    sString = Strings.Replace(sString, "&Ccedil;", "&#199;");
-                    sString = Strings.Replace(sString, "&Egrave;", "&#200;");
-                    sString = Strings.Replace(sString, "&Eacute;", "&#201;");
-                    sString = Strings.Replace(sString, "&Ecirc;", "&#202;");
-                    sString = Strings.Replace(sString, "&Euml;", "&#203;");
-                    sString = Strings.Replace(sString, "&Igrave;", "&#204;");
-                    sString = Strings.Replace(sString, "&Iacute;", "&#205;");
-                    sString = Strings.Replace(sString, "&Icirc;", "&#206;");
-                    sString = Strings.Replace(sString, "&Iuml;", "&#207;");
-                    sString = Strings.Replace(sString, "&ETH;", "&#208;");
-                    sString = Strings.Replace(sString, "&Ntilde;", "&#209;");
-                    sString = Strings.Replace(sString, "&Ograve;", "&#210;");
-                    sString = Strings.Replace(sString, "&Oacute;", "&#211;");
-                    sString = Strings.Replace(sString, "&Ocirc;", "&#212;");
-                    sString = Strings.Replace(sString, "&Otilde;", "&#213;");
-                    sString = Strings.Replace(sString, "&Ouml;", "&#214;");
-                    sString = Strings.Replace(sString, "&times;", "&#215;");
-                    sString = Strings.Replace(sString, "&Oslash;", "&#216;");
-                    sString = Strings.Replace(sString, "&Ugrave;", "&#217;");
-                    sString = Strings.Replace(sString, "&Uacute;", "&#218;");
-                    sString = Strings.Replace(sString, "&Ucirc;", "&#219;");
-                    sString = Strings.Replace(sString, "&Uuml;", "&#220;");
-                    sString = Strings.Replace(sString, "&Yacute;", "&#221;");
-                    sString = Strings.Replace(sString, "&THORN;", "&#222;");
-                    sString = Strings.Replace(sString, "&szlig;", "&#223;");
-                    sString = Strings.Replace(sString, "&agrave;", "&#224;");
-                    sString = Strings.Replace(sString, "&aacute;", "&#225;");
-                    sString = Strings.Replace(sString, "&acirc;", "&#226;");
-                    sString = Strings.Replace(sString, "&atilde;", "&#227;");
-                    sString = Strings.Replace(sString, "&auml;", "&#228;");
-                    sString = Strings.Replace(sString, "&aring;", "&#229;");
-                    sString = Strings.Replace(sString, "&aelig;", "&#230;");
-                    sString = Strings.Replace(sString, "&ccedil;", "&#231;");
-                    sString = Strings.Replace(sString, "&egrave;", "&#232;");
-                    sString = Strings.Replace(sString, "&eacute;", "&#233;");
-                    sString = Strings.Replace(sString, "&ecirc;", "&#234;");
-                    sString = Strings.Replace(sString, "&euml;", "&#235;");
-                    sString = Strings.Replace(sString, "&igrave;", "&#236;");
-                    sString = Strings.Replace(sString, "&iacute;", "&#237;");
-                    sString = Strings.Replace(sString, "&icirc;", "&#238;");
-                    sString = Strings.Replace(sString, "&iuml;", "&#239;");
-                    sString = Strings.Replace(sString, "&eth;", "&#240;");
-                    sString = Strings.Replace(sString, "&ntilde;", "&#241;");
-                    sString = Strings.Replace(sString, "&ograve;", "&#242;");
-                    sString = Strings.Replace(sString, "&oacute;", "&#243;");
-                    sString = Strings.Replace(sString, "&ocirc;", "&#244;");
-                    sString = Strings.Replace(sString, "&otilde;", "&#245;");
-                    sString = Strings.Replace(sString, "&ouml;", "&#246;");
-                    sString = Strings.Replace(sString, "&divide;", "&#247;");
-                    sString = Strings.Replace(sString, "&oslash;", "&#248;");
-                    sString = Strings.Replace(sString, "&ugrave;", "&#249;");
-                    sString = Strings.Replace(sString, "&uacute;", "&#250;");
-                    sString = Strings.Replace(sString, "&ucirc;", "&#251;");
-                    sString = Strings.Replace(sString, "&uuml;", "&#252;");
-                    sString = Strings.Replace(sString, "&yacute;", "&#253;");
-                    sString = Strings.Replace(sString, "&thorn;", "&#254;");
-                    sString = Strings.Replace(sString, "&yuml;", "&#255;");
-                    sString = Strings.Replace(sString, "&OElig;", "&#338;");
-                    sString = Strings.Replace(sString, "&oelig;", "&#339;");
-                    sString = Strings.Replace(sString, "&Scaron;", "&#352;");
-                    sString = Strings.Replace(sString, "&scaron;", "&#353;");
-                    sString = Strings.Replace(sString, "&Yuml;", "&#376;");
-                    sString = Strings.Replace(sString, "&fnof;", "&#402;");
-                    sString = Strings.Replace(sString, "&circ;", "&#710;");
-                    sString = Strings.Replace(sString, "&tilde;", "&#732;");
-                    sString = Strings.Replace(sString, "&Alpha;", "&#913;");
-                    sString = Strings.Replace(sString, "&Beta;", "&#914;");
-                    sString = Strings.Replace(sString, "&Gamma;", "&#915;");
-                    sString = Strings.Replace(sString, "&Delta;", "&#916;");
-                    sString = Strings.Replace(sString, "&Epsilon;", "&#917;");
-                    sString = Strings.Replace(sString, "&Zeta;", "&#918;");
-                    sString = Strings.Replace(sString, "&Eta;", "&#919;");
-                    sString = Strings.Replace(sString, "&Theta;", "&#920;");
-                    sString = Strings.Replace(sString, "&Iota;", "&#921;");
-                    sString = Strings.Replace(sString, "&Kappa;", "&#922;");
-                    sString = Strings.Replace(sString, "&Lambda;", "&#923;");
-                    sString = Strings.Replace(sString, "&Mu;", "&#924;");
-                    sString = Strings.Replace(sString, "&Nu;", "&#925;");
-                    sString = Strings.Replace(sString, "&Xi;", "&#926;");
-                    sString = Strings.Replace(sString, "&Omicron;", "&#927;");
-                    sString = Strings.Replace(sString, "&Pi;", "&#928;");
-                    sString = Strings.Replace(sString, "&Rho;", "&#929;");
-                    sString = Strings.Replace(sString, "&Sigma;", "&#931;");
-                    sString = Strings.Replace(sString, "&Tau;", "&#932;");
-                    sString = Strings.Replace(sString, "&Upsilon;", "&#933;");
-                    sString = Strings.Replace(sString, "&Phi;", "&#934;");
-                    sString = Strings.Replace(sString, "&Chi;", "&#935;");
-                    sString = Strings.Replace(sString, "&Psi;", "&#936;");
-                    sString = Strings.Replace(sString, "&Omega;", "&#937;");
-                    sString = Strings.Replace(sString, "&alpha;", "&#945;");
-                    sString = Strings.Replace(sString, "&beta;", "&#946;");
-                    sString = Strings.Replace(sString, "&gamma;", "&#947;");
-                    sString = Strings.Replace(sString, "&delta;", "&#948;");
-                    sString = Strings.Replace(sString, "&epsilon;", "&#949;");
-                    sString = Strings.Replace(sString, "&zeta;", "&#950;");
-                    sString = Strings.Replace(sString, "&eta;", "&#951;");
-                    sString = Strings.Replace(sString, "&theta;", "&#952;");
-                    sString = Strings.Replace(sString, "&iota;", "&#953;");
-                    sString = Strings.Replace(sString, "&kappa;", "&#954;");
-                    sString = Strings.Replace(sString, "&lambda;", "&#955;");
-                    sString = Strings.Replace(sString, "&mu;", "&#956;");
-                    sString = Strings.Replace(sString, "&nu;", "&#957;");
-                    sString = Strings.Replace(sString, "&xi;", "&#958;");
-                    sString = Strings.Replace(sString, "&omicron;", "&#959;");
-                    sString = Strings.Replace(sString, "&pi;", "&#960;");
-                    sString = Strings.Replace(sString, "&rho;", "&#961;");
-                    sString = Strings.Replace(sString, "&sigmaf;", "&#962;");
-                    sString = Strings.Replace(sString, "&sigma;", "&#963;");
-                    sString = Strings.Replace(sString, "&tau;", "&#964;");
-                    sString = Strings.Replace(sString, "&upsilon;", "&#965;");
-                    sString = Strings.Replace(sString, "&phi;", "&#966;");
-                    sString = Strings.Replace(sString, "&chi;", "&#967;");
-                    sString = Strings.Replace(sString, "&psi;", "&#968;");
-                    sString = Strings.Replace(sString, "&omega;", "&#969;");
-                    sString = Strings.Replace(sString, "&thetasym;", "&#977;");
-                    sString = Strings.Replace(sString, "&upsih;", "&#978;");
-                    sString = Strings.Replace(sString, "&piv;", "&#982;");
-                    sString = Strings.Replace(sString, "&ensp;", "&#8194;");
-                    sString = Strings.Replace(sString, "&emsp;", "&#8195;");
-                    sString = Strings.Replace(sString, "&thinsp;", "&#8201;");
-                    sString = Strings.Replace(sString, "&zwnj;", "&#8204;");
-                    sString = Strings.Replace(sString, "&zwj;", "&#8205;");
-                    sString = Strings.Replace(sString, "&lrm;", "&#8206;");
-                    sString = Strings.Replace(sString, "&rlm;", "&#8207;");
-                    sString = Strings.Replace(sString, "&ndash;", "&#8211;");
-                    sString = Strings.Replace(sString, "&mdash;", "&#8212;");
-                    sString = Strings.Replace(sString, "&lsquo;", "&#8216;");
-                    sString = Strings.Replace(sString, "&rsquo;", "&#8217;");
-                    sString = Strings.Replace(sString, "&sbquo;", "&#8218;");
-                    sString = Strings.Replace(sString, "&ldquo;", "&#8220;");
-                    sString = Strings.Replace(sString, "&rdquo;", "&#8221;");
-                    sString = Strings.Replace(sString, "&bdquo;", "&#8222;");
-                    sString = Strings.Replace(sString, "&dagger;", "&#8224;");
-                    sString = Strings.Replace(sString, "&Dagger;", "&#8225;");
-                    sString = Strings.Replace(sString, "&bull;", "&#8226;");
-                    sString = Strings.Replace(sString, "&hellip;", "&#8230;");
-                    sString = Strings.Replace(sString, "&permil;", "&#8240;");
-                    sString = Strings.Replace(sString, "&prime;", "&#8242;");
-                    sString = Strings.Replace(sString, "&Prime;", "&#8243;");
-                    sString = Strings.Replace(sString, "&lsaquo;", "&#8249;");
-                    sString = Strings.Replace(sString, "&rsaquo;", "&#8250;");
-                    sString = Strings.Replace(sString, "&oline;", "&#8254;");
-                    sString = Strings.Replace(sString, "&frasl;", "&#8260;");
-                    sString = Strings.Replace(sString, "&euro;", "&#8364;");
-                    sString = Strings.Replace(sString, "&image;", "&#8465;");
-                    sString = Strings.Replace(sString, "&weierp;", "&#8472;");
-                    sString = Strings.Replace(sString, "&real;", "&#8476;");
-                    sString = Strings.Replace(sString, "&trade;", "&#8482;");
-                    sString = Strings.Replace(sString, "&alefsym;", "&#8501;");
-                    sString = Strings.Replace(sString, "&larr;", "&#8592;");
-                    sString = Strings.Replace(sString, "&uarr;", "&#8593;");
-                    sString = Strings.Replace(sString, "&rarr;", "&#8594;");
-                    sString = Strings.Replace(sString, "&darr;", "&#8595;");
-                    sString = Strings.Replace(sString, "&harr;", "&#8596;");
-                    sString = Strings.Replace(sString, "&crarr;", "&#8629;");
-                    sString = Strings.Replace(sString, "&lArr;", "&#8656;");
-                    sString = Strings.Replace(sString, "&uArr;", "&#8657;");
-                    sString = Strings.Replace(sString, "&rArr;", "&#8658;");
-                    sString = Strings.Replace(sString, "&dArr;", "&#8659;");
-                    sString = Strings.Replace(sString, "&hArr;", "&#8660;");
-                    sString = Strings.Replace(sString, "&forall;", "&#8704;");
-                    sString = Strings.Replace(sString, "&part;", "&#8706;");
-                    sString = Strings.Replace(sString, "&exist;", "&#8707;");
-                    sString = Strings.Replace(sString, "&empty;", "&#8709;");
-                    sString = Strings.Replace(sString, "&nabla;", "&#8711;");
-                    sString = Strings.Replace(sString, "&isin;", "&#8712;");
-                    sString = Strings.Replace(sString, "&notin;", "&#8713;");
-                    sString = Strings.Replace(sString, "&ni;", "&#8715;");
-                    sString = Strings.Replace(sString, "&prod;", "&#8719;");
-                    sString = Strings.Replace(sString, "&sum;", "&#8721;");
-                    sString = Strings.Replace(sString, "&minus;", "&#8722;");
-                    sString = Strings.Replace(sString, "&lowast;", "&#8727;");
-                    sString = Strings.Replace(sString, "&radic;", "&#8730;");
-                    sString = Strings.Replace(sString, "&prop;", "&#8733;");
-                    sString = Strings.Replace(sString, "&infin;", "&#8734;");
-                    sString = Strings.Replace(sString, "&ang;", "&#8736;");
-                    sString = Strings.Replace(sString, "&and;", "&#8743;");
-                    sString = Strings.Replace(sString, "&or;", "&#8744;");
-                    sString = Strings.Replace(sString, "&cap;", "&#8745;");
-                    sString = Strings.Replace(sString, "&cup;", "&#8746;");
-                    sString = Strings.Replace(sString, "&int;", "&#8747;");
-                    sString = Strings.Replace(sString, "&there4;", "&#8756;");
-                    sString = Strings.Replace(sString, "&sim;", "&#8764;");
-                    sString = Strings.Replace(sString, "&cong;", "&#8773;");
-                    sString = Strings.Replace(sString, "&asymp;", "&#8776;");
-                    sString = Strings.Replace(sString, "&ne;", "&#8800;");
-                    sString = Strings.Replace(sString, "&equiv;", "&#8801;");
-                    sString = Strings.Replace(sString, "&le;", "&#8804;");
-                    sString = Strings.Replace(sString, "&ge;", "&#8805;");
-                    sString = Strings.Replace(sString, "&sub;", "&#8834;");
-                    sString = Strings.Replace(sString, "&sup;", "&#8835;");
-                    sString = Strings.Replace(sString, "&nsub;", "&#8836;");
-                    sString = Strings.Replace(sString, "&sube;", "&#8838;");
-                    sString = Strings.Replace(sString, "&supe;", "&#8839;");
-                    sString = Strings.Replace(sString, "&oplus;", "&#8853;");
-                    sString = Strings.Replace(sString, "&otimes;", "&#8855;");
-                    sString = Strings.Replace(sString, "&perp;", "&#8869;");
-                    sString = Strings.Replace(sString, "&sdot;", "&#8901;");
-                    sString = Strings.Replace(sString, "&lceil;", "&#8968;");
-                    sString = Strings.Replace(sString, "&rceil;", "&#8969;");
-                    sString = Strings.Replace(sString, "&lfloor;", "&#8970;");
-                    sString = Strings.Replace(sString, "&rfloor;", "&#8971;");
-                    sString = Strings.Replace(sString, "&lang;", "&#9001;");
-                    sString = Strings.Replace(sString, "&rang;", "&#9002;");
-                    sString = Strings.Replace(sString, "&loz;", "&#9674;");
-                    sString = Strings.Replace(sString, "&spades;", "&#9824;");
-                    sString = Strings.Replace(sString, "&clubs;", "&#9827;");
-                    sString = Strings.Replace(sString, "&hearts;", "&#9829;");
-                    sString = Strings.Replace(sString, "&diams;", "&#9830;");
+                    sString = sString.Replace("&quot;", "&#34;");
+                    sString = sString.Replace("&apos;", "&#39;");
+                    sString = sString.Replace("&nbsp;", "&#160;");
+                    sString = sString.Replace("&iexcl;", "&#161;");
+                    sString = sString.Replace("&cent;", "&#162;");
+                    sString = sString.Replace("&pound;", "&#163;");
+                    sString = sString.Replace("&curren;", "&#164;");
+                    sString = sString.Replace("&yen;", "&#165;");
+                    sString = sString.Replace("&brvbar;", "&#166;");
+                    sString = sString.Replace("&sect;", "&#167;");
+                    sString = sString.Replace("&uml;", "&#168;");
+                    sString = sString.Replace("&copy;", "&#169;");
+                    sString = sString.Replace("&ordf;", "&#170;");
+                    sString = sString.Replace("&laquo;", "&#171;");
+                    sString = sString.Replace("&not;", "&#172;");
+                    sString = sString.Replace("&shy;", "&#173;");
+                    sString = sString.Replace("&reg;", "&#174;");
+                    sString = sString.Replace("&macr;", "&#175;");
+                    sString = sString.Replace("&deg;", "&#176;");
+                    sString = sString.Replace("&plusmn;", "&#177;");
+                    sString = sString.Replace("&sup2;", "&#178;");
+                    sString = sString.Replace("&sup3;", "&#179;");
+                    sString = sString.Replace("&acute;", "&#180;");
+                    sString = sString.Replace("&micro;", "&#181;");
+                    sString = sString.Replace("&para;", "&#182;");
+                    sString = sString.Replace("&middot;", "&#183;");
+                    sString = sString.Replace("&cedil;", "&#184;");
+                    sString = sString.Replace("&sup1;", "&#185;");
+                    sString = sString.Replace("&ordm;", "&#186;");
+                    sString = sString.Replace("&raquo;", "&#187;");
+                    sString = sString.Replace("&frac14;", "&#188;");
+                    sString = sString.Replace("&frac12;", "&#189;");
+                    sString = sString.Replace("&frac34;", "&#190;");
+                    sString = sString.Replace("&iquest;", "&#191;");
+                    sString = sString.Replace("&Agrave;", "&#192;");
+                    sString = sString.Replace("&Aacute;", "&#193;");
+                    sString = sString.Replace("&Acirc;", "&#194;");
+                    sString = sString.Replace("&Atilde;", "&#195;");
+                    sString = sString.Replace("&Auml;", "&#196;");
+                    sString = sString.Replace("&Aring;", "&#197;");
+                    sString = sString.Replace("&AElig;", "&#198;");
+                    sString = sString.Replace("&Ccedil;", "&#199;");
+                    sString = sString.Replace("&Egrave;", "&#200;");
+                    sString = sString.Replace("&Eacute;", "&#201;");
+                    sString = sString.Replace("&Ecirc;", "&#202;");
+                    sString = sString.Replace("&Euml;", "&#203;");
+                    sString = sString.Replace("&Igrave;", "&#204;");
+                    sString = sString.Replace("&Iacute;", "&#205;");
+                    sString = sString.Replace("&Icirc;", "&#206;");
+                    sString = sString.Replace("&Iuml;", "&#207;");
+                    sString = sString.Replace("&ETH;", "&#208;");
+                    sString = sString.Replace("&Ntilde;", "&#209;");
+                    sString = sString.Replace("&Ograve;", "&#210;");
+                    sString = sString.Replace("&Oacute;", "&#211;");
+                    sString = sString.Replace("&Ocirc;", "&#212;");
+                    sString = sString.Replace("&Otilde;", "&#213;");
+                    sString = sString.Replace("&Ouml;", "&#214;");
+                    sString = sString.Replace("&times;", "&#215;");
+                    sString = sString.Replace("&Oslash;", "&#216;");
+                    sString = sString.Replace("&Ugrave;", "&#217;");
+                    sString = sString.Replace("&Uacute;", "&#218;");
+                    sString = sString.Replace("&Ucirc;", "&#219;");
+                    sString = sString.Replace("&Uuml;", "&#220;");
+                    sString = sString.Replace("&Yacute;", "&#221;");
+                    sString = sString.Replace("&THORN;", "&#222;");
+                    sString = sString.Replace("&szlig;", "&#223;");
+                    sString = sString.Replace("&agrave;", "&#224;");
+                    sString = sString.Replace("&aacute;", "&#225;");
+                    sString = sString.Replace("&acirc;", "&#226;");
+                    sString = sString.Replace("&atilde;", "&#227;");
+                    sString = sString.Replace("&auml;", "&#228;");
+                    sString = sString.Replace("&aring;", "&#229;");
+                    sString = sString.Replace("&aelig;", "&#230;");
+                    sString = sString.Replace("&ccedil;", "&#231;");
+                    sString = sString.Replace("&egrave;", "&#232;");
+                    sString = sString.Replace("&eacute;", "&#233;");
+                    sString = sString.Replace("&ecirc;", "&#234;");
+                    sString = sString.Replace("&euml;", "&#235;");
+                    sString = sString.Replace("&igrave;", "&#236;");
+                    sString = sString.Replace("&iacute;", "&#237;");
+                    sString = sString.Replace("&icirc;", "&#238;");
+                    sString = sString.Replace("&iuml;", "&#239;");
+                    sString = sString.Replace("&eth;", "&#240;");
+                    sString = sString.Replace("&ntilde;", "&#241;");
+                    sString = sString.Replace("&ograve;", "&#242;");
+                    sString = sString.Replace("&oacute;", "&#243;");
+                    sString = sString.Replace("&ocirc;", "&#244;");
+                    sString = sString.Replace("&otilde;", "&#245;");
+                    sString = sString.Replace("&ouml;", "&#246;");
+                    sString = sString.Replace("&divide;", "&#247;");
+                    sString = sString.Replace("&oslash;", "&#248;");
+                    sString = sString.Replace("&ugrave;", "&#249;");
+                    sString = sString.Replace("&uacute;", "&#250;");
+                    sString = sString.Replace("&ucirc;", "&#251;");
+                    sString = sString.Replace("&uuml;", "&#252;");
+                    sString = sString.Replace("&yacute;", "&#253;");
+                    sString = sString.Replace("&thorn;", "&#254;");
+                    sString = sString.Replace("&yuml;", "&#255;");
+                    sString = sString.Replace("&OElig;", "&#338;");
+                    sString = sString.Replace("&oelig;", "&#339;");
+                    sString = sString.Replace("&Scaron;", "&#352;");
+                    sString = sString.Replace("&scaron;", "&#353;");
+                    sString = sString.Replace("&Yuml;", "&#376;");
+                    sString = sString.Replace("&fnof;", "&#402;");
+                    sString = sString.Replace("&circ;", "&#710;");
+                    sString = sString.Replace("&tilde;", "&#732;");
+                    sString = sString.Replace("&Alpha;", "&#913;");
+                    sString = sString.Replace("&Beta;", "&#914;");
+                    sString = sString.Replace("&Gamma;", "&#915;");
+                    sString = sString.Replace("&Delta;", "&#916;");
+                    sString = sString.Replace("&Epsilon;", "&#917;");
+                    sString = sString.Replace("&Zeta;", "&#918;");
+                    sString = sString.Replace("&Eta;", "&#919;");
+                    sString = sString.Replace("&Theta;", "&#920;");
+                    sString = sString.Replace("&Iota;", "&#921;");
+                    sString = sString.Replace("&Kappa;", "&#922;");
+                    sString = sString.Replace("&Lambda;", "&#923;");
+                    sString = sString.Replace("&Mu;", "&#924;");
+                    sString = sString.Replace("&Nu;", "&#925;");
+                    sString = sString.Replace("&Xi;", "&#926;");
+                    sString = sString.Replace("&Omicron;", "&#927;");
+                    sString = sString.Replace("&Pi;", "&#928;");
+                    sString = sString.Replace("&Rho;", "&#929;");
+                    sString = sString.Replace("&Sigma;", "&#931;");
+                    sString = sString.Replace("&Tau;", "&#932;");
+                    sString = sString.Replace("&Upsilon;", "&#933;");
+                    sString = sString.Replace("&Phi;", "&#934;");
+                    sString = sString.Replace("&Chi;", "&#935;");
+                    sString = sString.Replace("&Psi;", "&#936;");
+                    sString = sString.Replace("&Omega;", "&#937;");
+                    sString = sString.Replace("&alpha;", "&#945;");
+                    sString = sString.Replace("&beta;", "&#946;");
+                    sString = sString.Replace("&gamma;", "&#947;");
+                    sString = sString.Replace("&delta;", "&#948;");
+                    sString = sString.Replace("&epsilon;", "&#949;");
+                    sString = sString.Replace("&zeta;", "&#950;");
+                    sString = sString.Replace("&eta;", "&#951;");
+                    sString = sString.Replace("&theta;", "&#952;");
+                    sString = sString.Replace("&iota;", "&#953;");
+                    sString = sString.Replace("&kappa;", "&#954;");
+                    sString = sString.Replace("&lambda;", "&#955;");
+                    sString = sString.Replace("&mu;", "&#956;");
+                    sString = sString.Replace("&nu;", "&#957;");
+                    sString = sString.Replace("&xi;", "&#958;");
+                    sString = sString.Replace("&omicron;", "&#959;");
+                    sString = sString.Replace("&pi;", "&#960;");
+                    sString = sString.Replace("&rho;", "&#961;");
+                    sString = sString.Replace("&sigmaf;", "&#962;");
+                    sString = sString.Replace("&sigma;", "&#963;");
+                    sString = sString.Replace("&tau;", "&#964;");
+                    sString = sString.Replace("&upsilon;", "&#965;");
+                    sString = sString.Replace("&phi;", "&#966;");
+                    sString = sString.Replace("&chi;", "&#967;");
+                    sString = sString.Replace("&psi;", "&#968;");
+                    sString = sString.Replace("&omega;", "&#969;");
+                    sString = sString.Replace("&thetasym;", "&#977;");
+                    sString = sString.Replace("&upsih;", "&#978;");
+                    sString = sString.Replace("&piv;", "&#982;");
+                    sString = sString.Replace("&ensp;", "&#8194;");
+                    sString = sString.Replace("&emsp;", "&#8195;");
+                    sString = sString.Replace("&thinsp;", "&#8201;");
+                    sString = sString.Replace("&zwnj;", "&#8204;");
+                    sString = sString.Replace("&zwj;", "&#8205;");
+                    sString = sString.Replace("&lrm;", "&#8206;");
+                    sString = sString.Replace("&rlm;", "&#8207;");
+                    sString = sString.Replace("&ndash;", "&#8211;");
+                    sString = sString.Replace("&mdash;", "&#8212;");
+                    sString = sString.Replace("&lsquo;", "&#8216;");
+                    sString = sString.Replace("&rsquo;", "&#8217;");
+                    sString = sString.Replace("&sbquo;", "&#8218;");
+                    sString = sString.Replace("&ldquo;", "&#8220;");
+                    sString = sString.Replace("&rdquo;", "&#8221;");
+                    sString = sString.Replace("&bdquo;", "&#8222;");
+                    sString = sString.Replace("&dagger;", "&#8224;");
+                    sString = sString.Replace("&Dagger;", "&#8225;");
+                    sString = sString.Replace("&bull;", "&#8226;");
+                    sString = sString.Replace("&hellip;", "&#8230;");
+                    sString = sString.Replace("&permil;", "&#8240;");
+                    sString = sString.Replace("&prime;", "&#8242;");
+                    sString = sString.Replace("&Prime;", "&#8243;");
+                    sString = sString.Replace("&lsaquo;", "&#8249;");
+                    sString = sString.Replace("&rsaquo;", "&#8250;");
+                    sString = sString.Replace("&oline;", "&#8254;");
+                    sString = sString.Replace("&frasl;", "&#8260;");
+                    sString = sString.Replace("&euro;", "&#8364;");
+                    sString = sString.Replace("&image;", "&#8465;");
+                    sString = sString.Replace("&weierp;", "&#8472;");
+                    sString = sString.Replace("&real;", "&#8476;");
+                    sString = sString.Replace("&trade;", "&#8482;");
+                    sString = sString.Replace("&alefsym;", "&#8501;");
+                    sString = sString.Replace("&larr;", "&#8592;");
+                    sString = sString.Replace("&uarr;", "&#8593;");
+                    sString = sString.Replace("&rarr;", "&#8594;");
+                    sString = sString.Replace("&darr;", "&#8595;");
+                    sString = sString.Replace("&harr;", "&#8596;");
+                    sString = sString.Replace("&crarr;", "&#8629;");
+                    sString = sString.Replace("&lArr;", "&#8656;");
+                    sString = sString.Replace("&uArr;", "&#8657;");
+                    sString = sString.Replace("&rArr;", "&#8658;");
+                    sString = sString.Replace("&dArr;", "&#8659;");
+                    sString = sString.Replace("&hArr;", "&#8660;");
+                    sString = sString.Replace("&forall;", "&#8704;");
+                    sString = sString.Replace("&part;", "&#8706;");
+                    sString = sString.Replace("&exist;", "&#8707;");
+                    sString = sString.Replace("&empty;", "&#8709;");
+                    sString = sString.Replace("&nabla;", "&#8711;");
+                    sString = sString.Replace("&isin;", "&#8712;");
+                    sString = sString.Replace("&notin;", "&#8713;");
+                    sString = sString.Replace("&ni;", "&#8715;");
+                    sString = sString.Replace("&prod;", "&#8719;");
+                    sString = sString.Replace("&sum;", "&#8721;");
+                    sString = sString.Replace("&minus;", "&#8722;");
+                    sString = sString.Replace("&lowast;", "&#8727;");
+                    sString = sString.Replace("&radic;", "&#8730;");
+                    sString = sString.Replace("&prop;", "&#8733;");
+                    sString = sString.Replace("&infin;", "&#8734;");
+                    sString = sString.Replace("&ang;", "&#8736;");
+                    sString = sString.Replace("&and;", "&#8743;");
+                    sString = sString.Replace("&or;", "&#8744;");
+                    sString = sString.Replace("&cap;", "&#8745;");
+                    sString = sString.Replace("&cup;", "&#8746;");
+                    sString = sString.Replace("&int;", "&#8747;");
+                    sString = sString.Replace("&there4;", "&#8756;");
+                    sString = sString.Replace("&sim;", "&#8764;");
+                    sString = sString.Replace("&cong;", "&#8773;");
+                    sString = sString.Replace("&asymp;", "&#8776;");
+                    sString = sString.Replace("&ne;", "&#8800;");
+                    sString = sString.Replace("&equiv;", "&#8801;");
+                    sString = sString.Replace("&le;", "&#8804;");
+                    sString = sString.Replace("&ge;", "&#8805;");
+                    sString = sString.Replace("&sub;", "&#8834;");
+                    sString = sString.Replace("&sup;", "&#8835;");
+                    sString = sString.Replace("&nsub;", "&#8836;");
+                    sString = sString.Replace("&sube;", "&#8838;");
+                    sString = sString.Replace("&supe;", "&#8839;");
+                    sString = sString.Replace("&oplus;", "&#8853;");
+                    sString = sString.Replace("&otimes;", "&#8855;");
+                    sString = sString.Replace("&perp;", "&#8869;");
+                    sString = sString.Replace("&sdot;", "&#8901;");
+                    sString = sString.Replace("&lceil;", "&#8968;");
+                    sString = sString.Replace("&rceil;", "&#8969;");
+                    sString = sString.Replace("&lfloor;", "&#8970;");
+                    sString = sString.Replace("&rfloor;", "&#8971;");
+                    sString = sString.Replace("&lang;", "&#9001;");
+                    sString = sString.Replace("&rang;", "&#9002;");
+                    sString = sString.Replace("&loz;", "&#9674;");
+                    sString = sString.Replace("&spades;", "&#9824;");
+                    sString = sString.Replace("&clubs;", "&#9827;");
+                    sString = sString.Replace("&hearts;", "&#9829;");
+                    sString = sString.Replace("&diams;", "&#9830;");
 
                     if (sString == null)
                         return "";
@@ -1125,7 +1135,7 @@ namespace Protean.Tools
                     return "";
                 else
                 {
-                    sString = Strings.Replace(sString, "Xmlns=\"\"", "");
+                    sString = sString.Replace("Xmlns=\"\"", "");
 
                     char[] chars = sString.ToCharArray();
                     StringBuilder result = new StringBuilder(sString.Length + System.Convert.ToInt32((sString.Length * 0.1)));
@@ -1165,7 +1175,7 @@ namespace Protean.Tools
                 sString = sString.Replace("&lt;", "<");
                 sString = sString.Replace("&gt;", ">");
 
-                return sString == null? "": sString;
+                return sString == null ? "" : sString;
             }
             catch (Exception ex)
             {
@@ -1179,9 +1189,9 @@ namespace Protean.Tools
             try
             {
 
-                sString = sString.Replace(Strings.Chr(0), Strings.Chr(32));
-                sString = sString.Replace(Strings.Chr(8), Strings.Chr(32));
-                sString = sString.Replace(Strings.Chr(20), Strings.Chr(32));
+                sString = sString.Replace(((char)0).ToString(), ((char)32).ToString());
+                sString = sString.Replace(((char)8).ToString(), ((char)32).ToString());
+                sString = sString.Replace(((char)20).ToString(), ((char)32).ToString());
                 sString = sString.Replace("&nbsp;", "&#160;");
                 sString = sString.Replace("¢", "&#162;");
                 sString = sString.Replace("£", "&#163;");
@@ -1216,6 +1226,13 @@ namespace Protean.Tools
                 sString = sString.Replace("≥", "&#8805;");
                 sString = sString.Replace("≠", "&#8800;");
 
+
+                sString = sString.Replace("�", "&#8211;");
+                
+
+                ConvertEmojiToEntities(sString);
+               
+
                 return sString == null ? "" : sString;
             }
             catch (Exception ex)
@@ -1225,15 +1242,39 @@ namespace Protean.Tools
             }
         }
 
+        public static string ConvertEmojiToEntities(string input)
+        {
+            var builder = new StringBuilder();
+
+            foreach (var ch in input)
+            {
+                int codePoint = char.ConvertToUtf32(input, input.IndexOf(ch));
+
+                // Emoji range: above basic ASCII/Unicode characters
+                if (codePoint > 127)
+                {
+                    builder.Append("&#" + codePoint + ";");
+                }
+                else
+                {
+                    builder.Append(ch);
+                }
+            }
+
+            return builder.ToString();
+        }
+
+
         public static string XmlDate(object dDate, bool bIncludeTime = false)
         {
             try
             {
                 string cReturn;
 
-                if (Information.IsDBNull(dDate) | !(Information.IsDate(dDate)))
+                if (dDate == DBNull.Value || !DateTime.TryParse(Convert.ToString(dDate), out _))
                     cReturn = "";
-                else if(dDate is DateTime){
+                else if (dDate is DateTime)
+                {
                     string cFormat = "yyyy-MM-dd";
                     if (bIncludeTime)
                         cFormat += "THH:mm:ss";
@@ -1287,10 +1328,10 @@ namespace Protean.Tools
 
         public static string encodeAllHTML(string shtml)
         {
-            shtml = Strings.Replace(shtml, "&", "&amp;");
-            shtml = Strings.Replace(shtml, "\"", "&quot;");
-            shtml = Strings.Replace(shtml, "<", "&lt;");
-            shtml = Strings.Replace(shtml, ">", "&gt;");
+            shtml = shtml.Replace("&", "&amp;");
+            shtml = shtml.Replace("\"", "&quot;");
+            shtml = shtml.Replace("<", "&lt;");
+            shtml = shtml.Replace(">", "&gt;");
             return shtml;
         }
 
@@ -1384,7 +1425,7 @@ namespace Protean.Tools
                 }
                 catch (XmlException ex)
                 {
-                    OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SetInnerXmlThenInnerText", ex, ""));
+                   OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "SetInnerXmlThenInnerText", ex, ""));
                     element.InnerText = value;
                 }
 
@@ -1395,7 +1436,7 @@ namespace Protean.Tools
             }
         }
 
-        public static System.Collections.Generic.Dictionary<string, string> XmltoDictionary(XmlElement oXml,bool skipPrefix =false)
+        public static System.Collections.Generic.Dictionary<string, string> XmltoDictionary(XmlElement oXml, bool skipPrefix = false)
         {
             try
             {
@@ -1431,11 +1472,12 @@ namespace Protean.Tools
                 }
                 else
                 {
-                        foreach (XmlElement oElmt in oThisElmt.SelectNodes("*")) { 
-                            XmltoDictionaryNode(oElmt, ref myDict, Prefix + "." + oElmt.Name);
+                    foreach (XmlElement oElmt in oThisElmt.SelectNodes("*"))
+                    {
+                        XmltoDictionaryNode(oElmt, ref myDict, Prefix + "." + oElmt.Name);
                     }
                 }
-                }
+            }
             catch (Exception ex)
             {
                 OnError?.Invoke(null/* TODO Change to default(_) if this is not a reference type */, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "XmltoDictionaryNode", ex, ""));

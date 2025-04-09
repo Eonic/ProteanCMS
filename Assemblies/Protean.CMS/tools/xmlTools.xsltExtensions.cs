@@ -1,35 +1,29 @@
-﻿using System;
+﻿using BundleTransformer.Core.Builders;
+using BundleTransformer.Core.Bundles;
+using BundleTransformer.Core.Orderers;
+using BundleTransformer.Core.Transformers;
+using Imazen.WebP;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
-using static System.Globalization.CultureInfo;
 using System.IO;
-
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
+using System.Web.Optimization;
 using System.Windows.Media.Imaging;
 using System.Xml;
 using System.Xml.XPath;
-
-using BundleTransformer.Core.Builders;
-using BundleTransformer.Core.Orderers;
-using BundleTransformer.Core.Transformers;
-
-using Imazen.WebP;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
-using Protean.Tools.Integration.Twitter;
-using System.Web.UI;
-using System.Web.Optimization;
-using BundleTransformer.Core.Bundles;
-using static Lucene.Net.Index.SegmentReader;
+using static System.Globalization.CultureInfo;
 
 namespace Protean
 {
@@ -63,17 +57,22 @@ namespace Protean
             // RaiseEvent OnError(sender, e)
             // End Sub
 
+            public string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
+
             #endregion
 
             #region Initialisation/Private
             public xsltExtensions(ref Cms aWeb)
             {
                 myWeb = aWeb;
+                if (myWeb.bs5)
+                    awaitingImgPath = "/ptn/core/images/img-missing.png";
+
             }
 
             public xsltExtensions()
             {
-
+                myWeb = null;
             }
             #endregion
 
@@ -195,7 +194,8 @@ namespace Protean
             {
 
                 string[] results;
-                if (resultIndex == "") {
+                if (resultIndex == "")
+                {
                     resultIndex = "0";
                 }
 
@@ -211,7 +211,8 @@ namespace Protean
                         return ex.Message;
                     }
                 }
-                else {
+                else
+                {
                     return "input or pattern not defined";
                 }
             }
@@ -785,7 +786,7 @@ namespace Protean
                 {
                     string cTheString = Strings.Replace(Strings.Replace(cHTMLString, "&gt;", ">"), "&lt;", "<");
                     cTheString = convertEntitiesToCodes(cTheString);
-                    cTheString = Tools.Text.tidyXhtmlFrag(cTheString, true);
+                    cTheString = stdTools.tidyXhtmlFrag(cTheString, true);
                     return cTheString;
                 }
                 catch (Exception)
@@ -815,7 +816,11 @@ namespace Protean
 
                         cHtml = Strings.Replace(cHtml, "&amp;", "&");
 
+
+
                         cHtml = convertEntitiesToCodes(cHtml);
+                        cHtml = convertStringToEntityCodes(cHtml);
+
                         cHtml = Strings.Replace(Strings.Replace(cHtml, "&gt;", ">"), "&lt;", "<");
                         cHtml = cHtml.Replace("&amp;#", "&#");
                         cHtml = "<div>" + cHtml + "</div>";
@@ -827,7 +832,7 @@ namespace Protean
                             //cHtml = cHtml;
                         }
 
-                        cHtmlOut = Tools.Text.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
+                        cHtmlOut = stdTools.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
 
                         cHtmlOut = Strings.Replace(cHtmlOut, "&#x0;", "");
                         cHtmlOut = Strings.Replace(cHtmlOut, " &#0;", "");
@@ -876,6 +881,7 @@ namespace Protean
                 var oXML = new XmlDocument();
                 string cHtml;
                 string cHtmlOut;
+                string cError;
 
                 if (oContextNode is null)
                 {
@@ -891,7 +897,9 @@ namespace Protean
                     cHtml = Strings.Replace(Strings.Replace(cHtml, "&gt;", ">"), "&lt;", "<");
                     cHtml = "<div>" + cHtml + "</div>";
 
-                    cHtmlOut = Tools.Text.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
+
+
+                    cHtmlOut = stdTools.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
 
                     cHtmlOut = Strings.Replace(cHtmlOut, "&#x0;", "");
                     cHtmlOut = Strings.Replace(cHtmlOut, " &#0;", "");
@@ -911,19 +919,21 @@ namespace Protean
                             oXML.LoadXml(cHtmlOut);
                             return oXML.DocumentElement;
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
                             // Lets try option 2 first before we raise an error
                             // RaiseEvent XSLTError(ex.ToString)
                             try
                             {
+                                cError = ex.Message; //for breakpoint
                                 oXML = new XmlDocument();
                                 oXML.AppendChild(oXML.CreateElement("div"));
                                 oXML.DocumentElement.InnerXml = cHtmlOut;
                                 return oXML.DocumentElement;
                             }
-                            catch (Exception)
+                            catch (Exception ex2)
                             {
+                                cError = ex2.Message; //for breakpoint
                                 return cHtmlOut;
                             }
                         }
@@ -1089,11 +1099,13 @@ namespace Protean
 
 
             }
-            public XmlElement GetSpecsOnPageItems(string pageId, string artId) {
-                try {
+            public XmlElement GetSpecsOnPageItems(string pageId, string artId)
+            {
+                try
+                {
 
                     int nPgId = Convert.ToInt16(pageId);
-                  
+
 
                     Protean.Cms myCMS = new Protean.Cms(myWeb.moCtx);
                     myCMS.InitializeVariables();
@@ -1103,19 +1115,23 @@ namespace Protean
                     XmlDocument myPageXml = myCMS.GetPageXML();
 
                     XmlElement grpElmt = myPageXml.CreateElement("group");
-                    foreach (XmlElement SpecElmt in myPageXml.SelectNodes("descendant-or-self::Spec")) {
-                        string name  = SpecElmt.GetAttribute("name");
-                        if (name != "") {                       
-                            if (grpElmt.SelectSingleNode($"Spec[@name='{name}']") == null){
+                    foreach (XmlElement SpecElmt in myPageXml.SelectNodes("descendant-or-self::Spec"))
+                    {
+                        string name = SpecElmt.GetAttribute("name");
+                        if (name != "")
+                        {
+                            if (grpElmt.SelectSingleNode($"Spec[@name='{name}']") == null)
+                            {
                                 SpecElmt.InnerText = "";
                                 grpElmt.AppendChild(SpecElmt);
                             }
                         }
                     }
 
-                    if (artId != "") { 
-                    
-                    
+                    if (artId != "")
+                    {
+
+
                     };
 
 
@@ -1125,7 +1141,7 @@ namespace Protean
                 {
                     return null;
                 }
-    }
+            }
             public string GetDirIdFromFref(string fRef)
             {
 
@@ -1146,11 +1162,12 @@ namespace Protean
             //GetContentIdFromOrder(string orderRef, string ContentName)
             public string GetContentIdFromOrder(string orderRef, string ContentName)
             {
-                if (orderRef.Contains("V4-")) {
+                if (orderRef.Contains("V4-"))
+                {
                     orderRef = orderRef.Replace("V4-", "");
                 }
                 string nContentID = myWeb.moDbHelper.getContentIdFromOrder(orderRef, ContentName);
-               
+
                 if (nContentID != "")
                 {
                     return nContentID.ToString();
@@ -1309,6 +1326,10 @@ namespace Protean
                     var newDir = new DirectoryInfo(imgPath);
                     oFS.mcStartFolder = newDir.Parent.FullName;
 
+                    //handling for a mapped folder of a different name
+                    if (newDir.Name != "images") {
+                        cVirtualPath = cVirtualPath.Replace("images", newDir.Name);
+                    }
                     // 'check to see if images path is mapped.
                     // If cVirtualPath.StartsWith("/images/") Then
                     // Dim imgPath As String = goServer.MapPath("/images/")
@@ -1318,7 +1339,12 @@ namespace Protean
                     // oFS.mcStartFolder = goServer.MapPath("/")
                     // End If
 
-                    return oFS.SaveFile(imageUrl, cVirtualPath);
+                    string savedFile = oFS.SaveFile(imageUrl, cVirtualPath);
+                    if (newDir.Name != "images")
+                    {
+                        savedFile = savedFile.Replace(newDir.Name, "images");
+                    }
+                        return savedFile;
                 }
                 catch (Exception)
                 {
@@ -1333,9 +1359,9 @@ namespace Protean
                 {
                     // Encrypt password.
                     sPassword = Tools.Encryption.HashString(sPassword, (myWeb.moConfig["MembershipEncryption"]).ToLower(), true); // plain - md5 - sha1
-                                                                                                                             // RJP removed the following two lines as they appear to be doing nothing  the encrypted string.
-                                                                                                                             // sPassword = Protean.Tools.Xml.EncodeForXml(sPassword)
-                                                                                                                             // sPassword = Protean.Tools.Xml.convertEntitiesToCodes(sPassword)
+                                                                                                                                  // RJP removed the following two lines as they appear to be doing nothing  the encrypted string.
+                                                                                                                                  // sPassword = Protean.Tools.Xml.EncodeForXml(sPassword)
+                                                                                                                                  // sPassword = Protean.Tools.Xml.convertEntitiesToCodes(sPassword)
                     return sPassword;
                 }
                 catch (Exception)
@@ -1556,9 +1582,7 @@ namespace Protean
             {
                 string newFilepath = "";
                 string cProcessInfo = "Resizing - " + cVirtualPath;
-                string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
-                if (this.myWeb.bs5)
-                    awaitingImgPath = "/ptn/images/awaiting-image-thumbnail.gif";
+
 
                 try
                 {
@@ -1650,12 +1674,12 @@ namespace Protean
                                 case "pdf":
                                     {
 
-                                        var ihelp = new Tools.Image("");
+                                        var ihelp = new Tools.PDF();
 
                                         System.Threading.ThreadPool.SetMaxThreads(10, 10);
                                         var doneEvents = new System.Threading.ManualResetEvent[2];
 
-                                        var newThumbnail = new Tools.Image.PDFThumbNail();
+                                        var newThumbnail = new Tools.PDF.PDFThumbNail();
                                         newThumbnail.FilePath = cVirtualPath;
                                         newThumbnail.newImageFilepath = newFilepath;
                                         newThumbnail.goServer = goServer;
@@ -1663,7 +1687,7 @@ namespace Protean
                                         ihelp.GeneratePDFThumbNail(newThumbnail);
 
 
-                                       // System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
+                                        // System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
                                         newThumbnail = null;
                                         ihelp.Close();
                                         ihelp = null;
@@ -1711,10 +1735,10 @@ namespace Protean
                 catch (Exception ex)
                 {
                     // PerfMon.Log("xmlTools", "ResizeImage - End")
-                    if ((myWeb.moConfig["Debug"]).ToLower() == "on")
+                    if (gbDebug)
                     {
                         stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
-                        return awaitingImgPath + "?error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
+                        return awaitingImgPath + "?error=" + ex.Message + " - " + ex.StackTrace;
                     }
                     else
                     {
@@ -1734,15 +1758,12 @@ namespace Protean
             public string CreateWebPAlt(string cVirtualPath, bool forceCheck)
             {
                 string cProcessInfo = string.Empty;
-
                 try
                 {
 
                     if (string.IsNullOrEmpty(cVirtualPath))
                     {
-                        string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
-                        if (this.myWeb.bs5)
-                            awaitingImgPath = "/ptn/images/awaiting-image-thumbnail.gif";
+
                         return awaitingImgPath;
                     }
                     else
@@ -1789,11 +1810,11 @@ namespace Protean
                     if ((myWeb.moConfig["Debug"]).ToLower() == "on")
                     {
                         // reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message + " - " + ex.StackTrace;
+                        return awaitingImgPath + "?Error=" + ex.Message + " - " + ex.StackTrace;
                     }
                     else
                     {
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message;
+                        return awaitingImgPath + "?Error=" + ex.Message;
                     }
 
                 }
@@ -1811,11 +1832,11 @@ namespace Protean
                     if ((myWeb.moConfig["Debug"]).ToLower() == "on")
                     {
                         // reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message + " - " + ex.StackTrace;
+                        return awaitingImgPath + "?Error=" + ex.Message + " - " + ex.StackTrace;
                     }
                     else
                     {
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message;
+                        return awaitingImgPath + "?Error=" + ex.Message;
                     }
                 }
             }
@@ -1900,21 +1921,21 @@ namespace Protean
                                 case "pdf":
                                     {
 
-                                        var ihelp = new Tools.Image("");
+                                        //var ihelp = new Tools.PDF.PDFThumbNail();
 
-                                        System.Threading.ThreadPool.SetMaxThreads(10, 10);
-                                        var doneEvents = new System.Threading.ManualResetEvent[2];
+                                        //System.Threading.ThreadPool.SetMaxThreads(10, 10);
+                                        //var doneEvents = new System.Threading.ManualResetEvent[2];
 
-                                        var newThumbnail = new Tools.Image.PDFThumbNail();
-                                        newThumbnail.FilePath = cVirtualPath;
-                                        newThumbnail.newImageFilepath = newFilepath;
-                                        newThumbnail.goServer = goServer;
-                                        newThumbnail.maxWidth = (short)maxWidth;
+                                        //var newThumbnail = new Tools.PDF.PDFThumbNail();
+                                        //newThumbnail.FilePath = cVirtualPath;
+                                        //newThumbnail.newImageFilepath = newFilepath;
+                                        //newThumbnail.goServer = goServer;
+                                        //newThumbnail.maxWidth = (short)maxWidth;
 
-                                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
-                                        newThumbnail = null;
-                                        ihelp.Close();
-                                        ihelp = null;
+                                        //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
+                                        //newThumbnail = null;
+                                        //ihelp.Close();
+                                        //ihelp = null;
                                         break;
                                     }
 
@@ -1957,7 +1978,7 @@ namespace Protean
                     else
                     {
                         // PerfMon.Log("xmlTools", "ResizeImage - End")
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif";
+                        return awaitingImgPath;
 
                     }
                 }
@@ -1969,11 +1990,11 @@ namespace Protean
                     if ((myWeb.moConfig["Debug"]).ToLower() == "on")
                     {
                         stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
+                        return awaitingImgPath + "?Error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
                     }
                     else
                     {
-                        return "/ewcommon/images/awaiting-image-thumbnail.gif?Error=" + ex.Message;
+                        return awaitingImgPath + "?Error=" + ex.Message;
                     }
 
                 }
@@ -2502,7 +2523,7 @@ namespace Protean
                         case "availableIcons":
                             {
                                 string iconPath = "/ewcommon/icons/icons.xml";
-                                if (this.myWeb.bs5)
+                                if (myWeb.bs5)
                                     iconPath = "/ptn/core/icons/icons.xml";
 
                                 if (File.Exists(goServer.MapPath(iconPath)))
@@ -2714,7 +2735,7 @@ namespace Protean
                     }
                     newWeb = default;
                     return oNodelist;
-                    
+
                 }
 
                 catch (Exception ex)
@@ -2857,17 +2878,16 @@ namespace Protean
 
                         if (myWeb.moCtx.Application.Get(AppVariableName.ToString()) != null & bReset == false)
                         {
-
                             sReturnString = Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName.ToString()));
                         }
                         else
                         {
                             string appPath = myWeb.moRequest.ApplicationPath;
-                            if (appPath.EndsWith("ewcommon"))
+                            if (appPath.EndsWith("ewcommon") || appPath.EndsWith("ptn"))
                             {
                                 CommaSeparatedFilenames = CommaSeparatedFilenames.Replace("~/", "~/../");
                             }
-
+                          
                             CommaSeparatedFilenames = CommaSeparatedFilenames.TrimEnd(',');
 
                             string[] bundleFilePaths = Strings.Split(CommaSeparatedFilenames, ",");
@@ -2886,8 +2906,6 @@ namespace Protean
                             for (cntFile = 0; cntFile <= loopTo; cntFile++)
                             {
                                 url = Convert.ToString(bundleFilePaths[cntFile]);
-
-
                                 if (!string.IsNullOrEmpty(url) & url.Contains("https"))
                                 {
                                     fileNameToSave = url.Substring(url.LastIndexOf("/") + 1);
@@ -2941,13 +2959,18 @@ namespace Protean
 
                             if (info.Length < 10)
                             {
-                                string emptyerror = "This file is empty: " + bundleFilePaths.ToString();
-                                info = new System.Text.UTF8Encoding(true).GetBytes(emptyerror);
-                                strFileName = "empty.js";
-                                scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);
+                                sReturnString = CommaSeparatedFilenames.Replace("~", "");
+
+                                //string emptyerror = "This file is empty: " + bundleFilePaths.ToString();
+                                //info = new System.Text.UTF8Encoding(true).GetBytes(emptyerror);
+                                //strFileName = "empty.js";
+                                //scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);//
+                                //myWeb.moCtx.Application.Set(AppVariableName.ToString(), null);
+
                             }
-                            else {
-                                scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info); 
+                            else
+                            {
+                                scriptFile = fsh.SaveFile(ref strFileName, TargetPath, info);
                             }
                             if (scriptFile.StartsWith("ERROR: "))
                             {
@@ -2989,7 +3012,7 @@ namespace Protean
                 catch (IOException ex)    // New changes on 9/12/21'
                 {
                     myWeb.bPageCache = false;
-                    sReturnString = TargetPath + "/script.js?error=" + ex.Message ;
+                    sReturnString = TargetPath + "/script.js?error=" + ex.Message;
                     // Return ioex.StackTrace
                     return sReturnString;
                 }
@@ -3015,9 +3038,11 @@ namespace Protean
                 string sReturnError = "";
                 bool bReset = false;
                 string cProjectPath = string.Empty;
-                if(myWeb.moConfig["ProjectPath"]!=null)
-                {
-                    cProjectPath = myWeb.moConfig["ProjectPath"];
+                if (myWeb != null) { 
+                    if (myWeb.moConfig["ProjectPath"] != null)
+                    {
+                        cProjectPath = myWeb.moConfig["ProjectPath"];
+                    }
                 }
                 string AppVariableName = Strings.LCase("css" + TargetPath.Replace("~", ""));
                 do
@@ -3074,7 +3099,7 @@ namespace Protean
                             {
                                 // check to see if the filename is saved in the application variable.
 
-                                sReturnString =Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName));
+                                sReturnString = Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName));
 
                                 if (!sReturnString.StartsWith("/" + cProjectPath + "css" + TargetPath.TrimStart('~')))
                                 {
@@ -3091,12 +3116,12 @@ namespace Protean
                                     if (oImp.ImpersonateValidUser(myWeb.moConfig["AdminAcct"], myWeb.moConfig["AdminDomain"], myWeb.moConfig["AdminPassword"], true, myWeb.moConfig["AdminGroup"]) == false)
                                     {
                                         sReturnString = "Admin-Account-Logon-Failure";
-                                        return sReturnString;                                        
+                                        return sReturnString;
                                     }
                                 }
 
                                 string appPath = myWeb.moRequest.ApplicationPath;
-                                if (appPath.EndsWith("ewcommon"))
+                                if (appPath.EndsWith("ewcommon") || appPath.EndsWith("ptn"))
                                 {
                                     CommaSeparatedFilenames = CommaSeparatedFilenames.Replace("~/", "~/../");
                                 }
@@ -3215,7 +3240,7 @@ namespace Protean
                             }
                         }
                         //sReturnString = null;
-                        return sReturnString.Replace("~", "");                        
+                        return sReturnString.Replace("~", "");
                     }
                     catch (IOException ioex)    // New changes on 9/12/21'
                     {

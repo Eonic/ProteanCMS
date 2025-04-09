@@ -2,12 +2,12 @@
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.24.0"
-    Public Shared ptnAppStartAssemblyVersion As String = "6.1.0.0"
+    Public Shared ewAssemblyVersion As String = "6.1.43.0"
+    Public Shared ptnAppStartAssemblyVersion As String = "6.1.1.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
     Public Shared bundleSassAssemblyVersion As String = "1.14.2.0"
-    Public Shared DartSassHostAssemblyVersion As String = "1.0.13.0"
+    Public Shared DartSassHostAssemblyVersion As String = "1.1.0.0"
     Public Shared jsSwitcherAssemblyVersion As String = "3.24.1.0"
     Public Shared jsSwitcherV8AssemblyVersion As String = "3.24.2.0"
     Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.23.2.0"
@@ -18,6 +18,7 @@ Public Class CustomActions
     Public Shared MicrosoftAjaxAssemblyVersion As String = "1.14.0.0"
     Public Shared AjaxMinAssemblyVersion As String = "5.14.5506.26196"
     Public Shared ECMAAssemblyVersion As String = "1.0.1.0"
+    Public Shared DynamicImageAssemblyVersion As String = "3.1.1.1"
     Public Shared DynamicImagePDFAssemblyVersion As String = "1.0.0.4"
     Public Shared SystemNetFTPClientAssemblyVersion As String = "1.0.5824.34026"
     'We have real problems with this specific DLL' the one PreMailer.Net references is 4.6.0.0 but installs as 4.0.2.0 in GAC therefore old version encompasses 4.6.0.0 to scale back to 4.0.2.0
@@ -26,29 +27,31 @@ Public Class CustomActions
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.4.5.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "13.8.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "13.8.0.0"
+    Public Shared MagickNETCoreAssemblyVersion As String = "14.5.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "14.5.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
-    Public Shared SystemBuffersVersion As String = "4.0.3.0"
-    Public Shared SystemMemoryVersion As String = "4.0.1.2"
-    Public Shared DocumentFormatOpenXmlVersion As String = "2.9.1.0"
-    Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.0.0"
+    Public Shared SystemBuffersVersion As String = "4.0.4.0"
+    Public Shared SystemMemoryVersion As String = "4.0.2.0"
+    Public Shared DocumentFormatOpenXmlVersion As String = "3.2.0.0"
+    Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.1.0"
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
     Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.0.1"
-    Public Shared SystemTextJsonVersion As String = "8.0.0.0"
-    Public Shared MicrosoftBclAsyncInterfacesVersion As String = "8.0.0.0"
-    Public Shared SystemTextEncodingsWebVersion As String = "8.0.0.0"
-    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "8.0.0.0"
-
-    Public Shared SystemNumericsVectorsVersion As String = "4.1.4.0"
-
-    Public Shared AngleSharpVersion As String = "1.1.2.0"
+    Public Shared SystemTextJsonVersion As String = "9.0.0.0"
+    Public Shared MicrosoftBclAsyncInterfacesVersion As String = "9.0.0.2"
+    Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.2"
+    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.0.0"
+    Public Shared SystemNumericsVectorsVersion As String = "4.1.5.0"
+    Public Shared AngleSharpVersion As String = "1.2.0.0"
     Public Shared PreMailerVersion As String = "2.6.0.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
-
-    Public Shared iTextSharpVersion As String = "3.4.21.0"
-    Public Shared SkiaSharpVersion As String = "2.88.0.0"
+    Public Shared iTextSharpVersion As String = "3.7.1.0"
+    Public Shared SkiaSharpVersion As String = "3.116.0.0"
+    Public Shared BouncyCastleCrypto As String = "2.0.0.0"
+    Public Shared SystemIOPipelines As String = "9.0.0.2"
+    Public Shared SystemDataSQLClient As String = "4.6.2.0" 'lib version 4.8.6
+    Public Shared SystemDrawingCommon As String = "9.0.0.0"
+    '  Public Shared SystemWebAdaptors As String = "2.0.0.0"
 
 
     'do not use as no SNK - Public Shared ImazenWebPVersion As String = "10.0.1.0"
@@ -98,7 +101,7 @@ Public Class CustomActions
             Dim machineWebConfig As System.Configuration.Configuration = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration(Nothing)
 
             Dim WebFilePaths(1) As String
-            Dim errstr As String = "Successful Install " & Now() & vbCrLf
+            Dim errstr As String = "Successful Install " & ewAssemblyVersion & " - " & Now() & vbCrLf
 
             WebFilePaths(0) = machineWebConfig.FilePath.Replace("Framework64", "Framework")
             WebFilePaths(1) = machineWebConfig.FilePath
@@ -235,7 +238,7 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "ICSharpCode.SharpZipLib, Version=" & SharpZipLibAssemblyVersion & ", Culture=neutral, PublicKeyToken=1b03e6acf1164f73")
                     ' UpdateAssemblyRef(oAssembliesSect, "Google.Protobuf, Version=" & GoogleProtoBufAssemblyVersion & ", Culture=neutral, PublicKeyToken=a7d26565bac4d604")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET.Core, Version=" & MagickNETCoreAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
-                    UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-AnyCPU, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
+                    UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-x64, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Memory, Version=" & SystemMemoryVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
@@ -254,8 +257,15 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "System.Text.Encodings.Web, Version=" & SystemTextEncodingsWebVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Numerics.Vectors, Version=" & SystemNumericsVectorsVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 
-                    UpdateAssemblyRef(oAssembliesSect, "iTextSharp.LGPLv2.Core, Version=" & iTextSharpVersion & ", Culture=neutral, PublicKeyToken=c1e5d94ab6402b0b")
+                    UpdateAssemblyRef(oAssembliesSect, "iTextSharp.LGPLv2.Core, Version=" & iTextSharpVersion & ", Culture=neutral, PublicKeyToken=51d712e21b66ad36")
                     UpdateAssemblyRef(oAssembliesSect, "SkiaSharp, Version=" & SkiaSharpVersion & ", Culture=neutral, PublicKeyToken=0738eb9f132ed756")
+
+                    UpdateAssemblyRef(oAssembliesSect, "BouncyCastle.Cryptography, Version=" & BouncyCastleCrypto & ", Culture=neutral, PublicKeyToken=072edcf4a5328938")
+                    UpdateAssemblyRef(oAssembliesSect, "System.Data.SqlClient, Version=" & SystemDataSQLClient & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
+                    UpdateAssemblyRef(oAssembliesSect, "System.IO.Pipelines, Version=" & SystemIOPipelines & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "System.Drawing.Common, Version=" & SystemDrawingCommon & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    ' UpdateAssemblyRef(oAssembliesSect, "Microsoft.AspNetCore.SystemWebAdapters, Version=" & SystemWebAdaptors & ", Culture=neutral, PublicKeyToken=adb9793829ddae60")
+
 
 
 
@@ -545,6 +555,7 @@ Public Class CustomActions
 
             UpdateDependantAssembly(oSectXml, "WebGrease", "31bf3856ad364e35", WebGreaseAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "AdvancedStringBuilder", "e818a2fc08933ddb", AdvancedStringBuilderVersion)
+            UpdateDependantAssembly(oSectXml, "SoundInTheory.DynamicImage", "fa44558110383067", DynamicImageAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "SoundInTheory.DynamicImage.Extensions.Pdf", "fa44558110383067", DynamicImagePDFAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "System.Net.FTPClient", "fa4be07daa57c2b7", SystemNetFTPClientAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "createsend-dotnet", "0e5e11efc3341916", CreateSendAssemblyVersion)
@@ -553,7 +564,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Text.Encoding.CodePages", "b03f5f7f11d50a3a", SystemTextEncodingCodePagesAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "AlphaFS", "4d31a58f7d7ad5c9", AlphaFSAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET.Core", "2004825badfa91ec", MagickNETCoreAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-AnyCPU", "2004825badfa91ec", MagickNETAssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-x64", "2004825badfa91ec", MagickNETAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "System.Buffers", "cc7b13ffcd2ddd51", SystemBuffersVersion)
             UpdateDependantAssembly(oSectXml, "System.Memory", "cc7b13ffcd2ddd51", SystemMemoryVersion)
             UpdateDependantAssembly(oSectXml, "ICSharpCode.SharpZipLib", "1b03e6acf1164f73", SharpZipLibAssemblyVersion)
@@ -564,7 +575,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Runtime.CompilerServices.Unsafe", "b03f5f7f11d50a3a", SystemRuntimeCompilerServicesUnsafeVersion)
 
             UpdateDependantAssembly(oSectXml, "System.Threading.Tasks.Extensions", "cc7b13ffcd2ddd51", SystemThreadingTasksExtensionsVersion)
-            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", SystemTextJsonVersion)
+            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", SystemTextJsonVersion, "0.0.0.0", "9.0.0.2")
             UpdateDependantAssembly(oSectXml, "Microsoft.Bcl.AsyncInterfaces", "cc7b13ffcd2ddd51", MicrosoftBclAsyncInterfacesVersion)
             UpdateDependantAssembly(oSectXml, "System.Text.Encodings.Web", "cc7b13ffcd2ddd51", SystemTextEncodingsWebVersion)
             UpdateDependantAssembly(oSectXml, "System.Numerics.Vectors", "b03f5f7f11d50a3a", SystemNumericsVectorsVersion)
@@ -572,6 +583,12 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "iTextSharp.LGPLv2.Core", "c1e5d94ab6402b0b", iTextSharpVersion)
             UpdateDependantAssembly(oSectXml, "SkiaSharp", "0738eb9f132ed756", SkiaSharpVersion)
 
+            UpdateDependantAssembly(oSectXml, "System.IO.Pipelines", "cc7b13ffcd2ddd51", SystemIOPipelines)
+            UpdateDependantAssembly(oSectXml, "System.Data.SqlClient", "b03f5f7f11d50a3a", SystemDataSQLClient)
+            'UpdateDependantAssembly(oSectXml, "Microsoft.AspNetCore.SystemWebAdapters", "adb9793829ddae60", SystemWebAdaptors)
+
+            UpdateDependantAssembly(oSectXml, "QRCoder", "c4ed5b9ae8358a28", QRCoderVersion)
+            UpdateDependantAssembly(oSectXml, "System.Drawing.Common", "cc7b13ffcd2ddd51", SystemDrawingCommon)
 
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
@@ -684,10 +701,10 @@ Public Class CustomActions
             Dim System32Folder As String = "C:\Windows\System32"
             Dim fs As New FileIO.FileSystem
 
-            If Not System.IO.File.Exists(GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll") Then
-                System.IO.Directory.CreateDirectory(GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\")
-                System.IO.File.Move(installFolder & "\Libraries\NewtonSoft.Json.dll", GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll")
-            End If
+            ' If Not System.IO.File.Exists(GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll") Then
+            ' System.IO.Directory.CreateDirectory(GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\")
+            ' System.IO.File.Move(installFolder & "\Libraries\NewtonSoft.Json.dll", GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll")
+            '   End If
 
             If System.IO.Directory.Exists(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\") Then
                 '64bit files

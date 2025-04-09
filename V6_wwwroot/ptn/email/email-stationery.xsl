@@ -2,9 +2,9 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <!--<xsl:import href="../../../../../ewcommon_v5-1/xsl/Tools/Functions.xsl"/>-->
+  <xsl:import href="../core/functions.xsl"/>
   <xsl:import href="email-styles.xsl"/>
-  
+	
   <xsl:template match="*" mode="emailBody">
     <xsl:if test="@adminMode='false'">
       <xsl:attribute name="class">normalMode</xsl:attribute>

@@ -18,10 +18,12 @@ Public Class keepalive : Implements IHttpHandler, IRequiresSessionState
         End If
         oEw = Nothing
 
+        Dim timeoutSec As String = Convert.ToString(((context.Session.Timeout / 2) * 60) - 60)
+
         context.Response.ContentType = "text/html"
-        context.Response.AddHeader("Refresh", Convert.ToString((context.Session.Timeout * 60) - 120))
+        context.Response.AddHeader("Refresh", timeoutSec)
         ' This overcomes a problem with zero length content not giving out a content type, which can cause browser to treat the file as a download
-        context.Response.Write(" ")
+        context.Response.Write("refresh every " + timeoutSec + "secs")
     End Sub
 
     Public ReadOnly Property IsReusable() As Boolean Implements IHttpHandler.IsReusable

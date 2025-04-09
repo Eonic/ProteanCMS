@@ -1,8 +1,4 @@
-﻿using System;
-using System.Drawing;
-using System.IO;
-using Microsoft.VisualBasic;
-using static Protean.stdTools;
+﻿using System.Drawing;
 using static Protean.Tools.Text;
 
 namespace Protean
@@ -63,7 +59,7 @@ namespace Protean
 
             var ci = new Tools.Image.CaptchaImage();
 
-            var b = ci.RenderImage();
+            System.Drawing.Bitmap b = ci.RenderImage();
 
             goSession["imgVerification"] = ci.Text;
 

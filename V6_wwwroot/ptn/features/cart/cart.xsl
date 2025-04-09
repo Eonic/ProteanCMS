@@ -390,7 +390,7 @@
 				</div>
 				<div class="col-lg-4">
 					<form method="post" id="cart" class="ewXform">
-						<div class="basket card">
+						<div class="basket card rhs-cart-card ">
 							<div class="card-body">
 								<xsl:if test="@cmd='Add' or @cmd='Cart'">
 									<xsl:apply-templates select="." mode="suggestedItems"/>
@@ -484,13 +484,13 @@
 			</div>
 			<div class="col-lg-4">
 				<xsl:if test="$page/User/@status='-1'">
-					<div class="card">
+					<div class="card checkout-card rhs-cart-card ">
 						<div class="card-body">
 							Thank you for registering, please check your email to activate your account.
 						</div>
 					</div>
 				</xsl:if>
-				<div class="card">
+				<div class="card checkout-card rhs-cart-card ">
 					<div class="card-body">
 						<xsl:for-each select="Item">
 							<div class="clearfix cart-item">
@@ -783,16 +783,16 @@
 				</xsl:if>
 			</div>
 			<div class="col-lg-4">
-				<div class="card account-options-card">
+				<div class="card account-options-card rhs-cart-card ">
 					<div class="card-body">
 						<div class="aoc-inner">
 							<xsl:apply-templates select="." mode="orderTotals"/>
-							<a data-bs-toggle="modal" data-bs-target="#cartRegisterBox" role="button" class="btn btn-custom btn-block">
+							<button data-bs-toggle="modal" data-bs-target="#cartRegisterBox" role="button" class="btn btn-custom btn-block">
 								Create a new account
-							</a>
-							<a data-bs-toggle="modal" data-bs-target="#cartLogonBox" role="button" class="btn btn-outline-primary btn-block">
+							</button>
+              <button data-bs-toggle="modal" data-bs-target="#cartLogonBox" role="button" class="btn btn-outline-primary btn-block">
 								Sign in
-							</a>
+							</button>
 							<xsl:choose>
 								<xsl:when test="Item/productDetail[@type='Subscription']">
 									<br/>
@@ -883,9 +883,18 @@
 	<xsl:template match="Cart[Order[@cmd='Logon']]" mode="cartJS">
 		<script type="text/javascript">
 			$(function () {
-			if ($('#cartLogonBox .alert').exists()){
-				$('#cartLogonBox').modal('show');
-			}
+			if ($('#cartLogonBox .alert-warning').exists()){
+			$('#cartLogonBox').modal('show');
+			};
+			if ($('#cartLogonBox .alert-danger').exists()){
+			$('#cartLogonBox').modal('show');
+			};
+			if ($('#cartRegisterBox .alert-warning').exists()){
+			$('#cartRegisterBox').modal('show');
+			};
+			if ($('#cartRegisterBox .alert-danger').exists()){
+			$('#cartRegisterBox').modal('show');
+			};
 			});
 		</script>
 	</xsl:template>
@@ -1061,7 +1070,7 @@
 			</div>
 			<div class="col-lg-4">
 				<div class="cart-summary">
-					<div class="card cartBox payment-tcs">
+					<div class="card cartBox payment-tcs rhs-cart-card ">
 						<div class="card-body">
 							<xsl:apply-templates select="." mode="orderItems">
 								<xsl:with-param name="editQty">false</xsl:with-param>
@@ -1411,7 +1420,7 @@
 
 	<xsl:template match="label[parent::item and ancestor::select[@ref='confirmterms']]" mode="xform-label">
 		I agree to the
-		<a class="" data-bs-toggle="modal" data-bs-target="#terms-modal">
+		<a class="" data-bs-toggle="modal" data-bs-target="#terms-modal" href="#">
 			terms and conditions
 		</a>
 	</xsl:template>
@@ -2383,7 +2392,7 @@
 				</div>
 			</div>
 			<div class="col-lg-4">
-				<div id="cartInvoice" class="card cart-receipt-card">
+				<div id="cartInvoice" class="card cart-receipt-card rhs-cart-card ">
 					<div class="card-body">
 						<!--Invoice Date-->
 						<div class="product-totals">
@@ -2776,6 +2785,7 @@
 	
 	<xsl:template match="Page" mode="google-ga4-transaction">
 		{
+		transaction_id: "<xsl:value-of select="Cart/Order/@cartId"/>",
 		currency: "<xsl:value-of select="Cart/@currency"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
 		items: [
@@ -2786,6 +2796,7 @@
 
 	<xsl:template match="Page[Cart/Order/@cmd='EnterPaymentDetails' or Cart/Order/@cmd='SubmitPaymentDetails']" mode="google-ga4-transaction">
 		{
+		transaction_id: "<xsl:value-of select="Cart/Order/@cartId"/>",
 		currency: "<xsl:value-of select="Cart/@currency"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
 		shipping: "<xsl:value-of select="Cart/Order/@shippingCost"/>",
@@ -2802,7 +2813,7 @@
 
 	<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="google-ga4-transaction">
 		{
-		transaction_id: "<xsl:value-of select="Cart/Order/@invoiceRef"/>",
+		transaction_id: "<xsl:value-of select="Cart/Order/@cartId"/>",
 		currency: "<xsl:value-of select="Cart/@currency"/>",
 		value: <xsl:value-of select="Cart/Order/@total"/>,
 		shipping: "<xsl:value-of select="Cart/Order/@shippingCost"/>",

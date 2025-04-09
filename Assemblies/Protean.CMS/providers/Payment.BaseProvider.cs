@@ -9,16 +9,19 @@
 // ***********************************************************************
 
 
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Reflection;
 using System.Web.Configuration;
 using System.Xml;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Protean.Tools.Integration.Twitter;
 using static Protean.Cms;
 using static Protean.Cms.Cart;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
+using System.Dynamic;
+using Protean.Providers.Membership;
 
 namespace Protean.Providers
 {
@@ -32,14 +35,14 @@ namespace Protean.Providers
             IPaymentActivities Activities { get; set; }
         }
         public interface IPaymentAdminXforms
-        {
+        {            
         }
 
         public interface IPaymentAdminProcess
-        {
+        {           
         }
         public interface IPaymentActivities
-        {
+        {            
             Protean.xForm GetPaymentForm(ref Cms myWeb, ref Protean.Cms.Cart oCart, ref XmlElement oOrder, string returnCmd = "cartCmd=SubmitPaymentDetails");
             Protean.xForm GetRedirect3dsForm(ref Cms myWeb);
             string CheckStatus(ref Cms oWeb, ref string nPaymentProviderRef);
@@ -52,14 +55,11 @@ namespace Protean.Providers
             string CollectPayment(ref Cms myWeb, long nPaymentMethodId, double Amount, string CurrencyCode, string PaymentDescription, ref Cms.Cart oCart);
             string UpdateOrderWithPaymentResponse(string AuthNumber, string validGroup = "");
             string ProcessNewPayment(string orderId, decimal amount, string cardNumber, string cV2, string expiryDate, String startDate, String cardHolderName, string address1, string address2, string town, string postCode, string cCounty = "", string cCountry = "", string validGroup = "");
-
-            XmlElement GetWalletPaymentDetails(XmlElement opElmt);
-
         }
         public class ReturnProvider
         {
             private const string mcModuleName = "Protean.Providers.Payment.GetProvider";
-            protected XmlNode moPaymentCfg;
+            protected XmlNode moPaymentCfg;            
             //private IPaymentAdminXforms AdminXforms;
             //private IPaymentAdminProcess AdminProcess;
             //private IPaymentActivities Activities;           
@@ -232,11 +232,11 @@ namespace Protean.Providers
                     try
                     {
 
-                        oEwProv.mcCurrency = Convert.ToString(Interaction.IIf(oCart.mcCurrencyCode == "", oCart.mcCurrency, oCart.mcCurrencyCode));
+                        oEwProv.mcCurrency =Convert.ToString(Interaction.IIf(oCart.mcCurrencyCode == "", oCart.mcCurrency, oCart.mcCurrencyCode));
                         oEwProv.mcCurrencySymbol = oCart.mcCurrencySymbol;
                         if (string.IsNullOrEmpty(oOrder.GetAttribute("payableType")))
                         {
-                            oEwProv.mnPaymentAmount = Convert.ToDouble(oOrder.GetAttribute("total"));
+                            oEwProv.mnPaymentAmount =Convert.ToDouble(oOrder.GetAttribute("total"));
                         }
                         else
                         {
@@ -278,7 +278,7 @@ namespace Protean.Providers
                         oEwProv.moBillingContact = (XmlElement)oOrder.SelectSingleNode("Contact[@type='Billing Address']");
 
                         XmlNode argoParent = oOrder;
-                        oEwProv.mcCardHolderPostcode = Convert.ToString(getNodeValueByType(ref argoParent, "Contact[@type='Billing Address']/PostalCode"));
+                        oEwProv.mcCardHolderPostcode =Convert.ToString(getNodeValueByType(ref argoParent, "Contact[@type='Billing Address']/PostalCode"));
                         oOrder = (XmlElement)argoParent;
 
                         // check products for a fullfillment date.
@@ -311,58 +311,7 @@ namespace Protean.Providers
 
                         switch (mcPaymentMethod ?? "")
                         {
-                            // Case "ePDQ"
-                            // ccPaymentXform = oEwProv.PayePDQ(oOrder, oCart.mcPagePath & "cartCmd=SubmitPaymentDetails")
-                            //case "SecPay":
-                            //case "PayPoint": // Paypoint.Net
-                            //    {
-                            //        ccPaymentXform = oEwProv.paySecPay(ref oOrder, oCart.mcPagePath + returnCmd, oCart.mcPaymentProfile);
-                            //        break;
-                            //    }
-                            //case "PremiumCredit":
-                            //    {
-                            //        ccPaymentXform = oEwProv.payPremiumCredit(ref oOrder, oCart.mcPagePath + returnCmd);
-                            //        break;
-                            //    }
-                            //case "SecPayUkash":
-                            //    {
-                            //        ccPaymentXform = oEwProv.paySecPayUkash(ref oOrder, oCart.mcPagePath + returnCmd);
-                            //        break;
-                            //    }
-                            //case "WorldPay":
-                            //    {
-                            //        ccPaymentXform = oEwProv.payWorldPay(ref oOrder, oCart.mcPagePath + returnCmd, oCart.myWeb.mnPageId);
-                            //        break;
-                            //    }
-                            //case "NetBanx":
-                            //    {
-                            //        ccPaymentXform = oEwProv.payNetBanx(oOrder, oCart.mcPagePath + returnCmd, oCart.myWeb.mnPageId);
-                            //        break;
-                            //    }
-                            //case "SagePay":
-                            //case "ProTx":
-                            //    {
-                            //        ccPaymentXform = oEwProv.paySagePay(ref oOrder, oCart.mcPagePath + returnCmd);
-                            //        break;
-                            //    }
-                            //case "SecureTrading":
-                            //    {
-                            //        string cReturnMethod = "";
-                            //        string cReturnParentTransRef = "";
-                            //        ccPaymentXform = oEwProv.paySecureTrading(ref oOrder, oCart.mcPagePath + returnCmd, ref cReturnMethod, ref cReturnParentTransRef);
-                            //        if (!string.IsNullOrEmpty(cReturnMethod))
-                            //        {
-                            //            ccPaymentXform = oEwProv.paySecureTrading(ref oOrder, oCart.mcPagePath + returnCmd, ref cReturnMethod,ref cReturnParentTransRef);
-                            //        }
-
-                            //        break;
-                            //    }
-                            //case "MetaCharge":
-                            //case "PayPointMetaCharge":
-                            //    {
-                            //        ccPaymentXform = oEwProv.payMetaCharge(ref oOrder, oCart.mcPagePath + returnCmd);
-                            //        break;
-                            //    }
+                            
                             case "Secure Email":
                             case "SecureEmail":
                                 {
@@ -393,42 +342,13 @@ namespace Protean.Providers
 
                                     break;
                                 }
-                            //case "AuthorizeNet":
-                            //    {
-                            //        ccPaymentXform = oEwProv.payAuthorizeNet(oOrder, oCart.mcPagePath + returnCmd);
-                            //        break;
-                            //    }
-                            //case "DirectDebitSecureEmail":
-                            //    {
-                            //        ccPaymentXform = oEwProv.payDirectDebitSecureEmail(ref oOrder, oCart.mcPagePath + returnCmd);
-                            //        break;
-                            //    }
+
 
                             case "Cheque":
                                 {
                                     break;
                                 }
-                            // to be done
-                            // Case "PayPalPro"(MOVED To PROVIDER Lib)
-                            // ccPaymentXform = oEwProv.payPayPalPro(oOrder, oCart.mcPagePath & "cartCmd=SubmitPaymentDetails", oCart.mcPaymentProfile)
 
-                            //case "PayPalExpress":
-                            //  {
-                            //      if (myWeb.moRequest["ppCmd"] == "cancel")
-                            //      {
-                            //           oCart.mcPaymentMethod = null;
-                            //           var ccXform = new Protean.xForm(myWeb.moCtx, ref myWeb.msException);
-                            //           ccXform.NewFrm("Return");
-                            //         ccXform.valid = false;
-                            //          return ccXform;
-                            //       }
-                            //       else
-                            //       {
-                            //          ccPaymentXform = oEwProv.payPayPalExpress(ref oOrder, oCart.mcPagePath + returnCmd, oCart.mcPaymentProfile);
-                            //      }
-                            //
-                            //      break;
-                            //  }
 
                             default:
                                 {
@@ -448,7 +368,7 @@ namespace Protean.Providers
                                         if (string.IsNullOrEmpty(cOld) | nStart + (i - 1) >= mcPaymentMethod.Length)
                                             cOld = cNew;
                                         // ok, cOld is the new id
-                                        ccPaymentXform = oEwProv.RepeatConfirmation(Convert.ToInt32(cOld), ref oOrder, oCart.mcPagePath + returnCmd, ref cRepeatPaymentError);
+                                        ccPaymentXform = oEwProv.RepeatConfirmation(Convert.ToInt32(cOld),ref oOrder, oCart.mcPagePath + returnCmd, ref cRepeatPaymentError);
                                         if (ccPaymentXform.valid == true)
                                         {
                                             oEwProv.ValidatePaymentByCart(oCart.mnCartId, true);
@@ -466,7 +386,7 @@ namespace Protean.Providers
                                 }
                         }
 
-                        oCart.mnPaymentId = Convert.ToInt32(oEwProv.savedPaymentId);
+                        oCart.mnPaymentId =Convert.ToInt32(oEwProv.savedPaymentId);
 
                         if (!string.IsNullOrEmpty(cRepeatPaymentError))
                         {
@@ -486,7 +406,7 @@ namespace Protean.Providers
 
                         }
                         oEwProv = default;
-                        return ccPaymentXform;
+                        return ccPaymentXform;                        
                     }
 
                     catch (Exception ex)
@@ -618,7 +538,7 @@ namespace Protean.Providers
                     }
 
                     // allow html in description node...
-                    // bool bXmlLabel = false;
+                   // bool bXmlLabel = false;
 
                     LabelNode = configXml.SelectSingleNode("description/@value");
                     if (LabelNode != null)
@@ -694,14 +614,6 @@ namespace Protean.Providers
                 {
                     throw new NotImplementedException();
                 }
-
-
-                public XmlElement GetWalletPaymentDetails(XmlElement opElemt)
-                {
-                    //throw new NotImplementedException();
-                    return null;
-                }
-
             }
         }
 

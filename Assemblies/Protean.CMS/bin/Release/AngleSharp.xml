@@ -9815,6 +9815,11 @@
             Gets or sets the callback once a new element was created.
             </summary>
         </member>
+        <member name="P:AngleSharp.Html.Parser.HtmlParserOptions.OnToken">
+            <summary>
+            Gets or sets the callback once a new token is read.
+            </summary>
+        </member>
         <member name="P:AngleSharp.Html.Parser.HtmlParserOptions.DisableElementPositionTracking">
             <summary>
             Prevents the tokenizer from tracking the position of elements.
@@ -9994,6 +9999,11 @@
             <summary>
             Gets or sets if XML processing instructions should
             be parsed into DOM nodes.
+            </summary>
+        </member>
+        <member name="P:AngleSharp.Html.Parser.HtmlTokenizer.OnToken">
+            <summary>
+            Gets or sets the callback once a new token is read.
             </summary>
         </member>
         <member name="M:AngleSharp.Html.Parser.HtmlTokenizer.Get">
@@ -14331,10 +14341,15 @@
         </member>
         <member name="M:AngleSharp.Dom.ElementExtensions.IsHovered(AngleSharp.Dom.IElement)">
             <summary>
-            Checks if the element is currently hovered.
+            Checks if the element is currently hovered. Not implemented, and
+            will always return false.
             </summary>
             <param name="element">The element to check.</param>
             <returns>True if the element is currently hovered, otherwise false.</returns>
+            <remarks>
+            Calls to this method will always return false as there is no renderer
+            and, therefore, the element can never be hovered.
+            </remarks>
         </member>
         <member name="M:AngleSharp.Dom.ElementExtensions.IsOnlyOfType(AngleSharp.Dom.IElement)">
             <summary>
@@ -14437,17 +14452,27 @@
         </member>
         <member name="M:AngleSharp.Dom.ElementExtensions.CheckActive(AngleSharp.Dom.IElement)">
             <summary>
-            Checks if the given element is currently active.
+            Checks if the given element is currently active. Not implemented, and
+            will always return false.
             </summary>
             <param name="element">The element to inspect.</param>
             <returns>True if the element is active, otherwise false.</returns>
+            <remarks>
+            Calls to this method will always return false as there is no renderer
+            and, therefore, the element is never active.
+            </remarks>
         </member>
         <member name="M:AngleSharp.Dom.ElementExtensions.CheckVisited(AngleSharp.Dom.IElement)">
             <summary>
-            Checks if the given element was visited previously.
+            Checks if the given element was visited previously. Not implemented, and
+            will always return false.
             </summary>
             <param name="element">The element to inspect.</param>
             <returns>True if the element was previously visited, otherwise false.</returns>
+            <remarks>
+            Calls to this method will always return false as there is no renderer
+            and, therefore, the element can never have been visisted.
+            </remarks>
         </member>
         <member name="M:AngleSharp.Dom.ElementExtensions.IsLink(AngleSharp.Dom.IElement)">
             <summary>
@@ -14472,10 +14497,15 @@
         </member>
         <member name="M:AngleSharp.Dom.ElementExtensions.IsVisible(AngleSharp.Dom.IElement)">
             <summary>
-            Checks if the element is visible on screen.
+            Checks if the element is visible on screen. Not implemented, and
+            will always return false.
             </summary>
             <param name="element">The element to check.</param>
             <returns>True if the element is visible, otherwise false.</returns>
+            <remarks>
+            Calls to this method will always return false as there is no renderer
+            and, therefore, the element is never visible.
+            </remarks>
         </member>
         <member name="M:AngleSharp.Dom.ElementExtensions.IsRequired(AngleSharp.Dom.IElement)">
             <summary>
@@ -14869,6 +14899,20 @@
             </summary>
             <param name="element">The starting node to create the selector path from.</param>
             <returns>The unique selector path for this element.</returns>
+        </member>
+        <member name="M:AngleSharp.Dom.ElementExtensions.GetProperty(AngleSharp.Html.Dom.IHtmlMetaElement)">
+            <summary>
+            Returns the property attribute. Widely used for meta tags for Open Graph protocols
+            </summary>
+            <param name="element"></param>
+            <returns>The value of property attribute</returns>
+        </member>
+        <member name="M:AngleSharp.Dom.ElementExtensions.SetProperty(AngleSharp.Html.Dom.IHtmlMetaElement,System.String)">
+            <summary>
+            Sets the property value
+            </summary>
+            <param name="element"></param>
+            <param name="value"></param>
         </member>
         <member name="M:AngleSharp.Dom.ElementExtensions.ParseHtmlSubtree(AngleSharp.Dom.Element,System.String)">
             <summary>
@@ -26454,6 +26498,13 @@
             Provides a pool of used / recycled resources.
             </summary>
         </member>
+        <member name="P:AngleSharp.Text.StringBuilderPool.IsPoolingDisabled">
+            <summary>
+            Gets or sets whether string builder pooling is disabled.  When disabled, Obtain() will always return a new instance.
+            Disabling will increase memory usage and GC pressure, but may improve performance in scenarios with high
+            parallel processing.
+            </summary>
+        </member>
         <member name="P:AngleSharp.Text.StringBuilderPool.MaxCount">
             <summary>
             Gets or sets the maximum number of instances - at least 1.
@@ -26466,7 +26517,7 @@
         </member>
         <member name="M:AngleSharp.Text.StringBuilderPool.Obtain">
             <summary>
-            Either creates a fresh stringbuilder or gets a (cleaned) used one.
+            Either creates a fresh stringbuilder or gets a (cleaned) used one.  If <see cref="P:AngleSharp.Text.StringBuilderPool.IsPoolingDisabled"/> is set to true, a new instance is always returned."/>
             </summary>
             <returns>A stringbuilder to use.</returns>
         </member>
@@ -26477,6 +26528,12 @@
             </summary>
             <param name="sb">The stringbuilder to recycle.</param>
             <returns>The string that is created in the stringbuilder.</returns>
+        </member>
+        <member name="M:AngleSharp.Text.StringBuilderPool.CreateStringBuilder">
+            <summary>
+            Creates a new StringBuilder with a default capacity of 1024.
+            </summary>
+            <returns>A StringBuilder instance.</returns>
         </member>
         <member name="M:AngleSharp.Text.StringBuilderPool.ReturnToPool(System.Text.StringBuilder)">
             <summary>

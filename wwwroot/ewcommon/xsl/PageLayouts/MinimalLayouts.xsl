@@ -8,7 +8,7 @@
 		<xsl:choose>
 			<!-- IF QUOTE CMD SHOW QUOTE -->
 			<xsl:when test="Cart[@type='quote']/Quote/@cmd!=''">
-				<div class="container">
+				<div class="container">				
 					<xsl:apply-templates select="Cart[@type='quote']/Quote" mode="cartFull"/>
 				</div>
 			</xsl:when>
@@ -2575,30 +2575,40 @@
 		<xsl:variable name="image">
 			<xsl:apply-templates select="." mode="displayBrief" />
 		</xsl:variable>
-		<xsl:variable name="src">
-			<xsl:choose>
-				<xsl:when test="$lazy='on'">
-					<xsl:value-of select="ms:node-set($image)/*/@data-src"/>
-				</xsl:when>
-				<xsl:otherwise>
-				  <xsl:value-of select="ms:node-set($image)/*/@src"/>
-				</xsl:otherwise>
-			</xsl:choose>			
-		</xsl:variable>
-		<xsl:variable name="MimeType">
-			<xsl:choose>
-				<xsl:when test="contains($src,'.png')">
-					<xsl:text>image/png</xsl:text>
-				</xsl:when>
-				<xsl:when test="contains($src,'.jpg')">
-					<xsl:text>image/jpeg</xsl:text>
-				</xsl:when>
-				<xsl:when test="contains($src,'.gif')">
-					<xsl:text>image/gif</xsl:text>
-				</xsl:when>
-			</xsl:choose>
-		</xsl:variable>
-		<link rel="preload" href="{$src}" as="image" type="{$MimeType}" />
+
+		<xsl:if test="ms:node-set($image)/descendant-or-self::*[local-name() != 'picture']">
+			
+			<xsl:variable name="src">
+				<xsl:choose>
+					<xsl:when test="ms:node-set($image)/descendant-or-self::*[local-name()='img']/@data-src!=''">
+						<xsl:value-of select="ms:node-set($image)/descendant-or-self::*[local-name()='img']/@data-src"/>
+					</xsl:when>
+					<xsl:otherwise>
+					  <xsl:value-of select="ms:node-set($image)/descendant-or-self::*[local-name()='img']/@src"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>			
+			<xsl:variable name="MimeType">
+				<xsl:choose>
+					<xsl:when test="contains($src,'.png')">
+						<xsl:text>image/png</xsl:text>
+					</xsl:when>
+					<xsl:when test="contains($src,'.jpg')">
+						<xsl:text>image/jpeg</xsl:text>
+					</xsl:when>
+					<xsl:when test="contains($src,'.gif')">
+						<xsl:text>image/gif</xsl:text>
+					</xsl:when>
+				</xsl:choose>
+			</xsl:variable>
+			<link rel="preload" href="{$src}" as="image" type="{$MimeType}" />
+			<xsl:if test="not($src!='')">
+				<xsl:copy-of select="."/>
+			</xsl:if>
+		</xsl:if>	
+		<xsl:for-each select="ms:node-set($image)/descendant-or-self::*[local-name() = 'picture']/*[local-name() = 'source' and @type='image/webp']">
+			<link rel="preload" href="{@srcset}" as="image" type="image/webp" />
+		</xsl:for-each>
 	</xsl:template>
 
 	<xsl:template match="Content[@moduleType='Image']" mode="displayBrief">
@@ -2631,7 +2641,9 @@
 					<xsl:apply-templates select="." mode="resize-image">
 						<xsl:with-param name="crop" select="$crop"/>
 						<xsl:with-param name="no-stretch" select="$no-stretch"/>
-					</xsl:apply-templates>
+						<xsl:with-param name="maxWidth" select="@width"/>
+						<xsl:with-param name="maxHeight" select="@height"/>
+					</xsl:apply-templates>			
 				</xsl:when>
 				<xsl:when test="$maxWidth!='' or $maxHeight!=''">
 					<xsl:apply-templates select="." mode="resize-image">
@@ -3006,16 +3018,15 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-
 		<xsl:if test="not(following-sibling::Content[@type='Module' and @moduleType='GoogleMapv3'])">
-			<script type="text/javascript">
-				<xsl:text>function initialiseGMaps(){</xsl:text>
-				<xsl:apply-templates select="$page/Contents/Content[@type='Module' and @moduleType='GoogleMapv3']" mode="initialiseGoogleMap"/>
-				<xsl:text>};</xsl:text>
-			</script>
-			<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}&amp;callback=initialiseGMaps">&#160;</script>
+			<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}&amp;callback=initialiseGMaps" async="async">&#160;</script>
+			  <script type="text/javascript">
+		            <xsl:text>function initialiseGMaps(){</xsl:text>
+		            <xsl:apply-templates select="$page/Contents/Content[@type='Module' and @moduleType='GoogleMapv3']" mode="initialiseGoogleMap"/>
+		            <xsl:text>};</xsl:text>
+		          </script>
 		</xsl:if>
-	</xsl:template>
+  </xsl:template>
 
 	<xsl:template match="Content[@type='Organisation' and descendant-or-self::latitude[node()!='']]" mode="contentDetailJS">
 		<!-- Initialise any Google Maps -->
@@ -3029,7 +3040,7 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}">&#160;</script>
+		<script type="text/javascript" src="//maps.google.com/maps/api/js?v=3&amp;key={$apiKey}&amp;callback=initialiseGMaps"  async="async">&#160;</script>
 		<script type="text/javascript">
 			<xsl:text>function initialiseGMaps(){</xsl:text>
 			<xsl:apply-templates select="." mode="initialiseGoogleMap"/>

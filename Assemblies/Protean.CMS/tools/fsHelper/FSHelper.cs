@@ -8,9 +8,6 @@
 // $Copyright:   Copyright (c) 2002 - 2011 Eonicweb Ltd.
 // ***********************************************************************
 
-using DelegateWrappers;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -21,6 +18,10 @@ using System.Threading;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using AngleSharp.Io;
+using DelegateWrappers;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 namespace Protean
@@ -669,8 +670,49 @@ namespace Protean
             while (false);
 
         }
-
-
+        public string DeleteMultipleFolder(HashSet<string> folderPaths)
+        {
+            string result = string.Empty;
+            do
+            {
+                try
+                {                   
+                    foreach (var folderPath in folderPaths)
+                    {
+                        Tools.Security.Impersonate oImp = null;
+                        if (ImpersonationMode)
+                        {
+                            oImp = new Tools.Security.Impersonate();
+                            if (oImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]) == false)
+                            {
+                                result = "Server admin permissions are not configured";
+                                //break;
+                            }
+                        }
+                        if (Directory.Exists(folderPath))
+                        {
+                            Directory.Delete(folderPath, true); // true for recursive delete
+                            result = "1";
+                        }
+                        else
+                        {
+                            result = "this folder does not exist - " + folderPath;
+                        }
+                        if (ImpersonationMode)
+                        {
+                            oImp.UndoImpersonation();
+                            oImp = null;
+                        } 
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return ex.Message;
+                }
+                return result;
+            }
+            while (false);
+        }
         public int VirtualFileExists(string cVirtualPath)
         {
             try
@@ -950,42 +992,44 @@ namespace Protean
                         CreatePath(cFolderPath + @"\");
 
                         var dir = new DirectoryInfo(mcStartFolder + cFolderPath + @"\");
-                        if (dir.Exists)
+                        if (img != null)
                         {
-                            switch (Strings.Right(httpURL, httpURL.Length - httpURL.LastIndexOf(".") - 1) ?? "")
+                            if (dir.Exists)
                             {
-                                case "gif":
-                                    {
-                                        img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Gif);
-                                        return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
-                                    }
-                                case "jpg":
-                                    {
-                                        img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                        return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
-                                    }
-                                case "jpeg":
-                                    {
-                                        img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                        return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
-                                    }
-                                case "png":
-                                    {
-                                        img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Png);
-                                        return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
-                                    }
+                                switch (Strings.Right(httpURL, httpURL.Length - httpURL.LastIndexOf(".") - 1) ?? "")
+                                {
+                                    case "gif":
+                                        {
+                                            img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Gif);
+                                            return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
+                                        }
+                                    case "jpg":
+                                    case "jpeg":
+                                        {
+                                            img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Jpeg);
+                                            return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
+                                        }
+                                    case "png":
+                                        {
+                                            img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Png);
+                                            return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
+                                        }
 
-                                default:
-                                    {
-                                        return "filetype not handled:" + filename;
-                                    }
+                                    default:
+                                        {
+                                            return "filetype not handled:" + filename;
+                                        }
+                                }
+                            }
+                            else
+                            {
+                                return "this root folder does not exist:" + mcStartFolder;
                             }
                         }
                         else
                         {
-                            return "this root folder does not exist:" + mcStartFolder;
+                            return httpURL + "?err=filenotfound";
                         }
-
                     }
                     response.Close();
                     remoteStream.Close();
@@ -1629,8 +1673,8 @@ namespace Protean
                                             if (fileCount < 100)
                                             {
                                                 var oWebFile = new fsHelper.WebFile(fi.FullName, sVirtualPath + "/" + fi.Name, true);
-                                                fileElem.Attributes.Append(XmlAttribute("height", oWebFile.ExtendedProperties.Height.ToString()));
-                                                fileElem.Attributes.Append(XmlAttribute("width", oWebFile.ExtendedProperties.Width.ToString()));
+                                                fileElem.Attributes.Append(this.XmlAttribute("height", oWebFile.ExtendedProperties.Height.ToString()));
+                                                fileElem.Attributes.Append(this.XmlAttribute("width", oWebFile.ExtendedProperties.Width.ToString()));
                                             }
 
                                             // check and return the thumbnail path

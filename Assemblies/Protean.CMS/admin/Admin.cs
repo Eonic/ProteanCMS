@@ -21,6 +21,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.FeedHandler;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
@@ -233,7 +234,7 @@ namespace Protean
                     // Else
                     // mbPreviewMode = False
                     // End If
-
+                                                          
                     string[] EwCmd = Strings.Split(myWeb.moRequest["ewCmd"], ".");
                     mcEwCmd = EwCmd[0];
                     if (Information.UBound(EwCmd) > 0)
@@ -683,7 +684,7 @@ namespace Protean
                             }
 
 
-                        case "adminDenied":
+                        case "AdminDenied":
                             {
 
                                 sAdminLayout = "adminDenied";
@@ -1361,8 +1362,11 @@ namespace Protean
                                     bAdminMode = false;
                                     sAdminLayout = "";
                                     mcEwCmd = Conversions.ToString(myWeb.moSession["ewCmd"]);
-
-                                    myWeb.ClearPageCache();
+                                    //clear cache when item is live only
+                                    if(myWeb.moRequest.Params["nStatus"] == "1")
+                                    {
+                                        myWeb.ClearPageCache(myWeb.moRequest["id"]);
+                                    }                                    
 
                                     // if we have a parent releationship lets add it
                                     if (!string.IsNullOrEmpty(myWeb.moRequest["contentParId"]) && Information.IsNumeric(myWeb.moRequest["contentParId"]))
@@ -2842,6 +2846,7 @@ namespace Protean
                         case "Orders":
                         case "OrdersShipped":
                         case "OrdersFailed":
+                        case "OrdersConfirmed":
                         case "OrdersDeposit":
                         case "OrdersRefunded":
                         case "OrdersHistory":
@@ -3652,7 +3657,10 @@ namespace Protean
                     // RJP 7 Nov 2012. Added LCase to MembershipEncryption.
                     if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(myWeb.moSession["ewAuth"], Encryption.HashString(myWeb.moSession.SessionID + moConfig["AdminPassword"], Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true), false)))
                     {
-
+                        if (oUserXml is null) {
+                            mcEwCmd = "AdminDenied";
+                            return;
+                        }
                         // Are you an administrator user with no AdminRights yet set then you too are god ! this to cater for existing sites
                         if (oUserXml.SelectSingleNode("Role[@name='Administrator' and @isMember='yes' and not(AdminRights)]") is null)
                         {
@@ -3680,7 +3688,7 @@ namespace Protean
                                         if ((mcEwCmd ?? "") == (ewCmd ?? ""))
                                         {
                                             // Set the ewCmd to "adminDenied"
-                                            mcEwCmd = "adminDenied";
+                                            mcEwCmd = "AdminDenied";
                                             return;
                                         }
                                         else
@@ -3718,7 +3726,7 @@ namespace Protean
                                             // do nothing alls good
                                             case "Add":
                                                 {
-                                                    switch (ewCmd ?? "")
+                                                    switch (ewCmd)
                                                     {
                                                         case "EditContent":
                                                         case "DeleteContent":
@@ -3728,10 +3736,10 @@ namespace Protean
                                                         case "LocateContent":
                                                         case "MoveContent":
                                                             {
-                                                                if ((mcEwCmd ?? "") == (ewCmd ?? ""))
+                                                                if (mcEwCmd  == ewCmd)
                                                                 {
                                                                     moDeniedAdminMenuElmt = (XmlElement)oMenuElmt.CloneNode(false);
-                                                                    mcEwCmd = "adminDenied";
+                                                                    mcEwCmd = "AdminDenied";
                                                                     return;
                                                                 }
                                                                 if (deleteCmds[ewCmd] is null)
@@ -3745,7 +3753,7 @@ namespace Protean
 
                                             default:
                                                 {
-                                                    switch (ewCmd ?? "")
+                                                    switch (ewCmd)
                                                     {
                                                         case "EditContent":
                                                         case "AddContent":
@@ -3756,10 +3764,10 @@ namespace Protean
                                                         case "LocateContent":
                                                         case "MoveContent":
                                                             {
-                                                                if ((mcEwCmd ?? "") == (ewCmd ?? ""))
+                                                                if (mcEwCmd == ewCmd )
                                                                 {
                                                                     moDeniedAdminMenuElmt = (XmlElement)oMenuElmt.CloneNode(false);
-                                                                    mcEwCmd = "adminDenied";
+                                                                    mcEwCmd = "AdminDenied";
                                                                     return;
                                                                 }
                                                                 if (deleteCmds[ewCmd] is null)
@@ -4002,6 +4010,8 @@ namespace Protean
                     sAdminLayout = "FileImport";
                     string sImportLoaction = @"..\imports\";
 
+                    string itemNodeName = "";
+
 
                     oPageDetail.AppendChild(moAdXfm.xFrmImportFile(sImportLoaction));
                     if (moAdXfm.valid)
@@ -4057,6 +4067,8 @@ namespace Protean
                                     case "mssql":
                                         {
                                             DBConn = "Data Source=" + oImportRootElmt.GetAttribute("databaseServer") + "; " + "Initial Catalog=" + oImportRootElmt.GetAttribute("databaseName") + "; " + "user id=" + oImportRootElmt.GetAttribute("databaseUsername") + "; password=" + oImportRootElmt.GetAttribute("databasePassword");
+
+                                            itemNodeName = oImportRootElmt.GetAttribute("tableName");
 
                                             var newDb = new Cms.dbHelper(DBConn, (long)mnAdminUserId, myWeb.moCtx);
                                             if (newDb.ConnectionValid == false)
@@ -4134,9 +4146,7 @@ namespace Protean
                             {
 
                                 // lets just output our source xml
-                                var oPreviewElmt = moPageXML.CreateElement("PreviewFileXml");
-                                oPreviewElmt.InnerXml = oImportXml.OuterXml;
-                                oPageDetail.AppendChild(oPreviewElmt);
+                             
 
                                 // NB: Old Tools Transform----------------
                                 // then we transform to our standard import XML
@@ -4152,34 +4162,54 @@ namespace Protean
 
                                 // NB: New (Web) Transform
                                 string styleFile = myWeb.goServer.MapPath("/xsl/import/" + cXsltPath);
-                                var oTransform = new Protean.XmlHelper.Transform(ref myWeb, styleFile, false);
-                                myWeb.PerfMon.Log("Admin", "FileImportProcess-startxsl");
-                                oTransform.mbDebug = gbDebug;
-                                oTransform.ProcessDocument(oImportXml);
-                                myWeb.PerfMon.Log("Admin", "FileImportProcess-endxsl");
-                                // We display the results
-                                var oPreviewElmt2 = moPageXML.CreateElement("PreviewImport");
-                                if (oTransform.HasError)
+
+                                if (moConfig["AsyncFileImport"] == "on")
                                 {
-                                    oPreviewElmt2.SetAttribute("errorMsg", oTransform.currentError.Message);
-                                    oPreviewElmt2.InnerText = oTransform.currentError.StackTrace;
-                                }
-                                else
-                                {
-                                    oPreviewElmt2.InnerXml = oImportXml.InnerXml;
+                                    var oResElmt = myWeb.moPageXml.OwnerDocument.CreateElement("Response");
+                                    FeedHandler oFeeder = new FeedHandler(null, styleFile, 0, 2, ref oResElmt, itemNodeName);
+                                    oFeeder.cFeedData = oImportXml.OuterXml;
+                                    oFeeder.ImportStream();
 
                                 }
-                                oPageDetail.AppendChild(oPreviewElmt2);
-                                oTransform = (Protean.XmlHelper.Transform)null;
+                                else {
+                                    var oPreviewElmt = moPageXML.CreateElement("PreviewFileXml");
+                                    oPreviewElmt.InnerXml = oImportXml.OuterXml;
+                                    oPageDetail.AppendChild(oPreviewElmt);
 
-                                // We save to database if OK
-                                string cOppMode = moAdXfm.Instance.SelectSingleNode("file/@opsMode").InnerText;
-                                if (cOppMode == "import")
-                                {
-                                    // here we go lets do the do...!! whoah!
-                                    myWeb.moDbHelper.importObjects((XmlElement)oPreviewElmt2.FirstChild);
+
+
+                                    var oTransform = new Protean.XmlHelper.Transform(ref myWeb, styleFile, false);
+                                    myWeb.PerfMon.Log("Admin", "FileImportProcess-startxsl");
+                                    oTransform.mbDebug = gbDebug;
+                                    oTransform.ProcessDocument(oImportXml);
+                                    myWeb.PerfMon.Log("Admin", "FileImportProcess-endxsl");
+                                    // We display the results
+                                    var oPreviewElmt2 = moPageXML.CreateElement("PreviewImport");
+                                    if (oTransform.HasError)
+                                    {
+                                        oPreviewElmt2.SetAttribute("errorMsg", oTransform.currentError.Message);
+                                        oPreviewElmt2.InnerText = oTransform.currentError.StackTrace;
+                                    }
+                                    else
+                                    {
+                                        oPreviewElmt2.InnerXml = oImportXml.InnerXml;
+
+                                    }
+                                    oPageDetail.AppendChild(oPreviewElmt2);
+                                    oTransform = (Protean.XmlHelper.Transform)null;
+
+                                    // We save to database if OK
+                                    string cOppMode = moAdXfm.Instance.SelectSingleNode("file/@opsMode").InnerText;
+                                    if (cOppMode == "import")
+                                    {
+                                        // here we go lets do the do...!! whoah!
+                                        myWeb.moDbHelper.importObjects((XmlElement)oPreviewElmt2.FirstChild);
+
+                                    }
 
                                 }
+
+                                    
                             }
 
                             else
@@ -4427,209 +4457,7 @@ namespace Protean
                         // If oMenuRoot IsNot Nothing Then Exit For
                     }
 
-                    // TS believe this can be fully deprecated. 25-03-2020
-
-                    // If oMenuRoot Is Nothing Then
-                    // 'build the old way 
-                    // oMenuRoot = moPageXML.CreateElement("AdminMenu")
-                    // oElmt1 = appendMenuItem(oMenuRoot, "Admin Home", "AdmHome")
-                    // oElmt2 = appendMenuItem(oElmt1, "Content", "Content")
-                    // oElmt3 = appendMenuItem(oElmt2, "By Page", "ByPage")
-                    // If mcEwCmd = "ByPage" Or mcEwCmd = "Normal" Or mcEwCmd = "AddContent" Or mcEwCmd = "AddModule" Or mcEwCmd = "ContentVersions" Or mcEwCmd = "RollbackContent" Or mcEwCmd = "RelateSearch" Or mcEwCmd = "EditContent" Or mcEwCmd = "Advanced" Or mcEwCmd = "EditPage" Or mcEwCmd = "EditPageLayout" Or mcEwCmd = "EditPagePermissions" Or mcEwCmd = "EditPageRights" Or mcEwCmd = "LocateContent" Or mcEwCmd = "LocateSearch" Or mcEwCmd = "MoveContent" Or mcEwCmd = "admin" Or mcEwCmd = "AddScheduledItem" Then
-                    // oElmt4 = appendMenuItem(oElmt3, "Normal Mode", "Normal", myWeb.mnPageId)
-                    // appendMenuItem(oElmt4, "Edit Content", "EditContent", myWeb.mnPageId, False)
-                    // appendMenuItem(oElmt4, "Add Module", "AddModule", myWeb.mnPageId, False)
-                    // appendMenuItem(oElmt4, "Add Content", "AddContent", myWeb.mnPageId, False)
-                    // appendMenuItem(oElmt4, "Move Content", "MoveContent", myWeb.mnPageId, False)
-                    // appendMenuItem(oElmt4, "Locate Content", "LocateContent", myWeb.mnPageId, False)
-                    // appendMenuItem(oElmt4, "Relate Search", "RelateSearch", myWeb.mnPageId, False)
-                    // appendMenuItem(oElmt4, "Locate Search", "LocateSearch", myWeb.mnPageId, False)
-                    // appendMenuItem(oElmt4, "Content Versions", "ContentVersions", myWeb.mnPageId, False)
-                    // appendMenuItem(oElmt4, "Rollback Content", "RollbackContent", myWeb.mnPageId, False)
-                    // appendMenuItem(oElmt3, "Advanced Mode", "Advanced", myWeb.mnPageId)
-                    // appendMenuItem(oElmt3, "Page Settings", "EditPage", myWeb.mnPageId)
-                    // appendMenuItem(oElmt3, "Page Layout", "EditPageLayout", myWeb.mnPageId)
-                    // If moConfig("Membership") = "on" Then
-                    // appendMenuItem(oElmt3, "Permissions", "EditPagePermissions", myWeb.mnPageId)
-                    // appendMenuItem(oElmt3, "Rights", "EditPageRights", myWeb.mnPageId)
-                    // End If
-                    // appendMenuItem(oElmt3, "Preview", "PreviewOn", myWeb.mnPageId)
-                    // End If
-                    // oElmt3 = appendMenuItem(oElmt2, "Edit Menu", "EditStructure")
-                    // appendMenuItem(oElmt3, "Move Page", "MovePage", myWeb.mnPageId, False)
-                    // appendMenuItem(oElmt3, "Add Page", "AddPage", myWeb.mnPageId, False)
-                    // oElmt3 = appendMenuItem(oElmt2, "Resource Library", "ImageLib")
-                    // If mcEwCmd = "Library" Or mcEwCmd = "ImageLib" Or mcEwCmd = "DocsLib" Or mcEwCmd = "MediaLib" Then
-                    // appendMenuItem(oElmt3, "Image Library", "ImageLib")
-                    // appendMenuItem(oElmt3, "Document Library", "DocsLib")
-                    // appendMenuItem(oElmt3, "Media Library", "MediaLib")
-                    // End If
-
-                    // oElmt3 = appendMenuItem(oElmt2, "Web Settings", "WebSettings")
-                    // appendMenuItem(oElmt3, "Select Skin", "SelectSkin")
-                    // appendMenuItem(oElmt3, "Scheduled Items", "ScheduledItems")
-                    // appendMenuItem(oElmt3, "System Pages", "SystemPages")
-                    // appendMenuItem(oElmt3, "System Pages", "ViewSystemPages", , False)
-                    // 'ViewSystemPages
-                    // If moConfig("SiteSearch") = "on" Then
-                    // appendMenuItem(oElmt3, "Index Site", "SiteIndex")
-                    // End If
-                    // ' oElmt3 = appendMenuItem(oElmt2, "By Type", "ByType")
-                    // ' If mcEwCmd = "ByType" Then
-                    // '    appendMenuItem(oElmt3, "ListAll", "List All Quizzes")
-                    // '    appendMenuItem(oElmt3, "AddContent", "Add New Quiz")
-                    // 'End If
-
-                    // If moConfig("VersionControl") = "on" Then
-                    // oElmt3 = appendMenuItem(oElmt2, "Awaiting Approval", "AwaitingApproval")
-                    // End If
-
-                    // If moConfig("Import") = "on" Then
-                    // oElmt3 = appendMenuItem(oElmt2, "Import Files", "FileImport")
-                    // End If
-
-                    // ' RJP 21 Nov 2012 Added ImpersonateUser to list
-                    // If moConfig("Membership") = "on" Then
-                    // oElmt2 = appendMenuItem(oElmt1, "Membership", "ListGroups")
-                    // If mcEwCmd = "ListUsers" Or mcEwCmd = "EditDirItem" Or mcEwCmd = "ListCompanies" Or mcEwCmd = "ListGroups" Or mcEwCmd = "ListRoles" Or mcEwCmd = "ListMailingLists" Or mcEwCmd = "Permissions" Or mcEwCmd = "DirPermissions" _
-                    // Or mcEwCmd = "Subscriptions" Or mcEwCmd = "AddSubscriptionGroup" Or mcEwCmd = "EditSubscriptionGroup" Or mcEwCmd = "AddSubscription" Or mcEwCmd = "EditSubscription" Or mcEwCmd = "MoveSubscription" Or mcEwCmd = "LocateSubscription" Or mcEwCmd = "UpSubscription" Or mcEwCmd = "DownSubscription" _
-                    // Or mcEwCmd = "MemberActivity" Or mcEwCmd = "MemberCodes" Or mcEwCmd = "DeleteDirItem" Or mcEwCmd = "DirPermissions" Or mcEwCmd = "ResetUserPwd" Or mcEwCmd = "MaintainRelations" Or mcEwCmd = "ListUserContacts" Or mcEwCmd = "AddUserContact" Or mcEwCmd = "EditUserContact" Or mcEwCmd = "ImpersonateUser" Then
-                    // appendMenuItem(oElmt2, "Groups", "ListGroups")
-                    // appendMenuItem(oElmt2, "All Users", "ListUsers")
-                    // appendMenuItem(oElmt2, "Roles", "ListRoles")
-                    // appendMenuItem(oElmt2, "Edit Item", "EditDirItem", , False)
-                    // ' RJP 21 Nov 2012 Added ImpersonateUser to list
-                    // appendMenuItem(oElmt2, "Impersonate User", "ImpersonateUser", , False)
-                    // appendMenuItem(oElmt2, "ResetPwd", "ResetUserPwd", , False)
-                    // appendMenuItem(oElmt2, "DirPermissions", "DirPermissions", , False)
-                    // appendMenuItem(oElmt2, "Maintain Relations", "MaintainRelations", , False)
-                    // appendMenuItem(oElmt2, "ListUserContacts", "ListUserContacts", , False)
-                    // appendMenuItem(oElmt2, "AddUserContact", "AddUserContact", , False)
-                    // appendMenuItem(oElmt2, "EditUserContact", "EditUserContact", , False)
-                    // 'appendMenuItem(oElmt2, "Companies", "ListCompanies")
-                    // appendMenuItem(oElmt2, "Access Permission", "Permissions")
-                    // If moConfig("Subscriptions") = "on" Then
-                    // oElmt3 = appendMenuItem(oElmt2, "Subscriptions", "Subscriptions")
-                    // End If
-                    // If moConfig("ActivityReporting") = "on" Then
-                    // appendMenuItem(oElmt2, "Activity Reporting", "MemberActivity")
-                    // End If
-                    // If moConfig("MemberCodes") = "on" Then
-                    // appendMenuItem(oElmt2, "Member Codes", "MemberCodes")
-                    // End If
-                    // End If
-
-                    // If moConfig("MailingList") = "on" Then
-                    // oElmt2 = appendMenuItem(oElmt1, "Mailing List", "MailingList")
-                    // If mcEwCmd = "MailingList" Or mcEwCmd = "NewMail" Or mcEwCmd = "AdvancedMail" Or mcEwCmd = "NormalMail" Or mcEwCmd = "MailHistory" Or mcEwCmd = "ProcessMailbox" Or mcEwCmd = "MailOptOut" Or mcEwCmd = "PreviewMail" Or mcEwCmd = "AddContentMail" Or mcEwCmd = "NormalMail" Or mcEwCmd = "AdvancedMail" Or mcEwCmd = "EditMail" Or mcEwCmd = "EditMailLayout" Or mcEwCmd = "PreviewMail" Or mcEwCmd = "SendMail" Or mcEwCmd = "AddContentMail" Then
-                    // oElmt3 = appendMenuItem(oElmt2, "Mail Items", "MailingList")
-                    // If mcEwCmd = "NormalMail" Or mcEwCmd = "AdvancedMail" Or mcEwCmd = "EditMail" Or mcEwCmd = "EditMailLayout" Or mcEwCmd = "PreviewMail" Or mcEwCmd = "SendMail" Or mcEwCmd = "AddContentMail" Then
-                    // appendMenuItem(oElmt3, "Normal Mode", "NormalMail", myWeb.mnPageId)
-                    // appendMenuItem(oElmt3, "Advanced Mode", "AdvancedMail", myWeb.mnPageId)
-                    // appendMenuItem(oElmt3, "Mail Settings", "EditMail", myWeb.mnPageId)
-                    // appendMenuItem(oElmt3, "Mail Layout", "EditMailLayout", myWeb.mnPageId)
-                    // appendMenuItem(oElmt3, "Send Preview", "PreviewMail", myWeb.mnPageId)
-                    // appendMenuItem(oElmt3, "Send Mail", "SendMail", myWeb.mnPageId)
-                    // End If
-                    // appendMenuItem(oElmt2, "History", "MailHistory")
-                    // 'appendMenuItem(oElmt2, "ProcessMailbox", "ProcessMailbox")
-                    // appendMenuItem(oElmt2, "Opt-Out", "MailOptOut")
-                    // End If
-                    // End If
-                    // Else
-                    // oElmt2 = appendMenuItem(oElmt1, "Membership", "ListGroups")
-                    // If mcEwCmd = "ListUsers" Or mcEwCmd = "EditDirItem" Or mcEwCmd = "ListCompanies" Or mcEwCmd = "ListGroups" Or mcEwCmd = "ListRoles" Or mcEwCmd = "ListMailingLists" Or mcEwCmd = "Permissions" Or mcEwCmd = "DirPermissions" Then
-                    // appendMenuItem(oElmt2, "All Users", "ListUsers")
-                    // appendMenuItem(oElmt2, "Roles", "ListRoles")
-                    // End If
-                    // End If
-                    // If moConfig("Cart") = "on" Or moConfig("Quote") = "on" Then
-                    // oElmt2 = appendMenuItem(oElmt1, "Ecommerce", "Ecommerce")
-                    // If moConfig("Cart") = "on" Then
-                    // oElmt3 = appendMenuItem(oElmt2, "Orders", "Orders")
-                    // If mcEwCmd = "Orders" Or mcEwCmd = "OrdersShipped" Or mcEwCmd = "OrdersAwaitingPayment" Or mcEwCmd = "OrdersFailed" Or mcEwCmd = "OrdersDeposit" Or mcEwCmd = "OrdersHistory" Then
-                    // appendMenuItem(oElmt3, "New Sales", "Orders")
-                    // appendMenuItem(oElmt3, "Awaiting Payment", "OrdersAwaitingPayment")
-                    // appendMenuItem(oElmt3, "Shipped", "OrdersShipped")
-                    // appendMenuItem(oElmt3, "Failed Transactions", "OrdersFailed")
-                    // appendMenuItem(oElmt3, "Deposit Paid", "OrdersDeposit")
-                    // appendMenuItem(oElmt3, "History", "OrdersHistory")
-                    // End If
-                    // End If
-                    // If moConfig("Quote") = "on" Then
-                    // oElmt3 = appendMenuItem(oElmt2, "Quotes", "Quotes")
-                    // If mcEwCmd = "Quotes" Or mcEwCmd = "QuotesFailed" Or mcEwCmd = "QuotesDeposit" Or mcEwCmd = "QuotesHistory" Then
-                    // appendMenuItem(oElmt3, "New Sales", "Quotes")
-                    // appendMenuItem(oElmt3, "Failed Transactions", "QuotesFailed")
-                    // appendMenuItem(oElmt3, "Deposit Paid", "QuotesDeposit")
-                    // appendMenuItem(oElmt3, "History", "QuotesHistory")
-                    // End If
-                    // End If
-
-
-                    // oElmt3 = appendMenuItem(oElmt2, "Shipping Locations", "ShippingLocations")
-                    // oElmt3 = appendMenuItem(oElmt2, "Delivery Methods", "DeliveryMethods")
-
-
-                    // oElmt3 = appendMenuItem(oElmt2, "Discounts", "Discounts")
-                    // If mcEwCmd = "Discounts" Or mcEwCmd = "ProductGroups" Or mcEwCmd = "DiscountRules" _
-                    // Or mcEwCmd = "DiscountGroupRelations" Or mcEwCmd = "EditProductGroups" Or mcEwCmd = "AddProductGroupsProduct" _
-                    // Or mcEwCmd = "AddDiscountRules" Or mcEwCmd = "EditDiscountRules" Or mcEwCmd = "ApplyDirDiscountRules" _
-                    // Or mcEwCmd = "ApplyGrpDiscountRules" Then
-                    // appendMenuItem(oElmt3, "Product Groups", "ProductGroups")
-                    // appendMenuItem(oElmt3, "Discount Rules", "DiscountRules")
-                    // 'These are all hidden menu items
-                    // 'the menu builder looks for cmdn to match to display the menu
-                    // appendMenuItem(oElmt3, "Discounts", "Discounts", , False)
-                    // appendMenuItem(oElmt3, "ProductGroups", "ProductGroups", , False)
-                    // appendMenuItem(oElmt3, "DiscountRules", "DiscountRules", , False)
-                    // appendMenuItem(oElmt3, "DiscountGroupRelations", "DiscountGroupRelations", , False)
-                    // appendMenuItem(oElmt3, "EditProductGroups", "EditProductGroups", , False)
-                    // appendMenuItem(oElmt3, "AddProductGroupsProduct", "AddProductGroupsProduct", , False)
-                    // appendMenuItem(oElmt3, "AddDiscountRules", "AddDiscountRules", , False)
-                    // appendMenuItem(oElmt3, "EditDiscountRules", "EditDiscountRules", , False)
-                    // appendMenuItem(oElmt3, "ApplyDirDiscountRules", "ApplyDirDiscountRules", , False)
-                    // appendMenuItem(oElmt3, "ApplyGrpDiscountRules", "ApplyGrpDiscountRules", , False)
-                    // appendMenuItem(oElmt3, "AddProductGroups", "AddProductGroups", , False)
-                    // End If
-
-                    // 'oElmt3 = appendMenuItem(oElmt2, "Reports", "CartReports")
-                    // 'oElmt3 = appendMenuItem(oElmt2, "Settings", "CartSettings")
-                    // 'If mcEwCmd = "CartSettings" Or mcEwCmd = "PaymentProviders" Or mcEwCmd = "CartTandC" Or mcEwCmd = "ProductCategories" Or mcEwCmd = "CartDiscounts" Then
-                    // '    appendMenuItem(oElmt3, "Payment Providers", "PaymentProviders")
-                    // '    appendMenuItem(oElmt3, "Terms & Conditions", "CartTandC")
-                    // '    appendMenuItem(oElmt3, "Product Categories", "ProductCategories")
-                    // '    appendMenuItem(oElmt3, "Discounts", "CartDiscounts")
-                    // 'End If
-
-                    // 'Cart Settings
-                    // oElmt3 = appendMenuItem(oElmt2, "Settings", "CartSettings")
-                    // If mcEwCmd = "CartSettings" Or mcEwCmd = "PaymentProviders" Or mcEwCmd = "editProvider" Then
-                    // appendMenuItem(oElmt3, "General Settings", "CartSettings")
-                    // appendMenuItem(oElmt3, "Payment Providers", "PaymentProviders")
-                    // End If
-
-                    // If moConfig("Sync") = "on" Then
-                    // oElmt3 = appendMenuItem(oElmt2, "Synchronisation", "Sync")
-                    // End If
-                    // End If
-
-                    // 'Cart Reports
-                    // oElmt3 = appendMenuItem(oElmt2, "Reports", "CartReportsMain")
-                    // appendMenuItem(oElmt3, "Order Download", "CartDownload")
-                    // appendMenuItem(oElmt3, "Sales by Product", "CartReports")
-                    // appendMenuItem(oElmt3, "Sales by Page", "CartActivityDrilldown")
-                    // appendMenuItem(oElmt3, "Sales by Period", "CartActivityPeriod")
-
-                    // oElmt2 = appendMenuItem(oElmt1, "Reports", "Reports")
-                    // 'oElmt3 = appendMenuItem(oElmt2, "By Company", "RptCompanies")
-                    // 'oElmt3 = appendMenuItem(oElmt2, "Courses", "RptCourses")
-                    // 'oElmt3 = appendMenuItem(oElmt2, "All Certificates", "RptCertificates")
-                    // 'oElmt3 = appendMenuItem(oElmt2, "All Exam Activity", "RptExamActivity")
-                    // 'oElmt3 = appendMenuItem(oElmt2, "All Page Activity", "RptPageActivity")
-                    // 'oElmt3 = appendMenuItem(oElmt2, "Company Activity", "RptCompActivity")
-
-                    // End If
+                  
 
                     // Add any options in Manifests
 
@@ -5146,6 +4974,7 @@ namespace Protean
                                                 break;
                                             }
                                         case "OrdersSaved":
+                                        case "OrdersConfirmed":
                                             {
                                                 oCart.ListOrders(0.ToString(), true, (int)Cms.Cart.cartProcess.Confirmed, ref oPageDetail);
                                                 break;
@@ -6117,6 +5946,14 @@ from tblContentIndexDef";
 
                         ThemeLessFile = Protean.fsHelper.checkLeadingSlash(ThemeLessFile);
                         ThemeLessFile = ThemePath + ThemeName + "/" + ThemeLessFile;
+
+                        Boolean IsScss = false;
+
+                        if (ThemeLessFile.EndsWith(".scss")) {
+                            IsScss = true;
+                        }
+
+
                         if (Conversions.ToBoolean(oFsH.VirtualFileExists(ThemeLessFile)))
                         {
 
@@ -6145,7 +5982,9 @@ from tblContentIndexDef";
                             foreach (XmlElement oElmt in settingsXml.SelectNodes("theme/add[starts-with(@key,'" + ThemeName + ".')]"))
                             {
                                 string variableName = oElmt.GetAttribute("key").Replace(ThemeName + ".", "");
+
                                 string searchText = "(?<=" + VariablePrefix + variableName + ":).*(?=;)";
+
                                 string replaceText = oElmt.GetAttribute("value").Trim();
 
                                 // handle image files in CSS

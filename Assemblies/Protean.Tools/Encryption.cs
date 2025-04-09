@@ -1,12 +1,17 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.VisualBasic;
+using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Parameters;
 using System;
+using System.Configuration;
 using System.IO;
-using System.Security;
+using System.Management;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web.Configuration;
+using System.Threading;
+using System.Xml;
 
 namespace Protean.Tools
 {
@@ -69,7 +74,8 @@ namespace Protean.Tools
                             if (RemoveLineBreaks)
                             {
                                 cResult = oEnc.Text.Replace(Constants.vbNewLine, ""); //Replace(oEnc.Text, Constants.vbNewLine, "");
-                                cResult = oEnc.Text.Replace(Strings.Chr(13).ToString(), "");
+                                cResult = System.Text.RegularExpressions.Regex.Replace(oEnc.Text, @"\r\n?|\n", "");
+
                             }
 
                             break;
@@ -91,7 +97,7 @@ namespace Protean.Tools
 
             try
             {
-                switch (Strings.LCase(Provider))
+                switch (Provider.ToLower())
                 {
                     case "":
                     case "plain":
@@ -106,6 +112,15 @@ namespace Protean.Tools
                             cResult = MD5Hash(OriginalString);
                             break;
                         }
+                    case "sha2_512":
+
+                        //TS - Untested.
+                        Byte[] inputBytes = Encoding.UTF8.GetBytes(OriginalString);
+                        SHA512 shaM = new SHA512Managed();
+                        Byte[] hashedBytes = shaM.ComputeHash(inputBytes);
+                        //cResult = BitConverter.ToString(hashedBytes);
+                        cResult = Convert.ToBase64String(hashedBytes);
+                        break;
 
                     default:
                         {
@@ -174,7 +189,8 @@ namespace Protean.Tools
                     strBuilderResult.Append(newVal);
                 }
 
-                return Strings.LCase(strBuilderResult.ToString());
+                return strBuilderResult.ToString().ToLower();
+
             }
             catch (Exception ex)
             {
@@ -191,16 +207,18 @@ namespace Protean.Tools
                 StringBuilder strResult = new StringBuilder();
                 int nCount;
                 int nBaseTen;
-                VBMath.Randomize();
+                System.Random rnd = new System.Random();
 
                 for (nCount = 0; nCount <= 1; nCount++)
                 {
-                    nBaseTen = System.Convert.ToInt32(Math.Ceiling(VBMath.Rnd() * 15)); // random number between 0 and 15
+                    nBaseTen = rnd.Next(0, 16); // random number between 0 and 15
+
                     //strResult.Append(Conversion.Hex(nBaseTen));
                     strResult.Append(String.Format("0x{0:X}", nBaseTen));
                 }
 
-                return Strings.LCase(strResult.ToString());
+                return strResult.ToString().ToLowerInvariant();
+
             }
             catch (Exception ex)
             {
@@ -273,7 +291,8 @@ namespace Protean.Tools
             // //	The first 5 character of the string is formatted to store the actual length of the data.
             // //	This is the simplest way to remember to original length of the data, without resorting to complicated computations.
             // //	If anyone figure a good way to 'remember' the original length to facilite the decryption without having to use additional function parameters, pls let me know.
-            strData = Strings.Format(strData.Length, "00000") + strData;
+            strData = strData.Length.ToString("D5") + strData;
+
 
 
             // //4. Encrypt the Data
@@ -346,6 +365,7 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
+                strResult = ex.Message;
                 strResult = "Error. Input Data is not base64 encoded.";
                 return strResult;
             }
@@ -1486,15 +1506,12 @@ namespace Protean.Tools
                 {
                     _rsa.FromXmlString(keyXml);
                 }
-                catch (XmlSyntaxException ex)
+                catch (XmlException ex)
                 {
-                    string stringFormat;
-                    if (isPrivate)
-                        stringFormat = "private";
-                    else
-                        stringFormat = "public";
-                    throw new System.Security.XmlSyntaxException(string.Format("The provided {0} encryption key Xml does not appear to be valid.", stringFormat), ex);
+                    string stringFormat = isPrivate ? "private" : "public";
+                    throw new System.Security.SecurityException($"The provided {stringFormat} encryption key XML does not appear to be valid.", ex);
                 }
+
             }
 
             private EncData DecryptPrivate(EncData encryptedData)
@@ -1524,10 +1541,25 @@ namespace Protean.Tools
                 }
                 catch (CryptographicException ex)
                 {
-                    if (ex.Message.ToLower(System.Globalization.CultureInfo.CurrentCulture).IndexOf("csp for this implementation could not be acquired", System.StringComparison.CurrentCulture) > -1)
-                        throw new Exception("Unable to obtain Cryptographic Service Provider. " + "Either the permissions are incorrect on the " + @"'C:\Documents and Settings\All Users\Application EncData\Microsoft\Crypto\RSA\MachineKeys' " + "folder, or the current security context '" + System.Security.Principal.WindowsIdentity.GetCurrent().Name + "'" + " does not have access to this folder.", ex);
+                    // Check if the exception message contains the specific error
+                    if (ex.Message.ToLower(System.Globalization.CultureInfo.CurrentCulture)
+                        .IndexOf("csp for this implementation could not be acquired", StringComparison.CurrentCulture) > -1)
+                    {
+                        // Create a detailed error message
+                        string currentUser = "WindowsIdentity.GetCurrent().Name";
+                        string errorMessage = $"Unable to obtain Cryptographic Service Provider. " +
+                                              $"Either the permissions are incorrect on the " +
+                                              @"'C:\Documents and Settings\All Users\Application EncData\Microsoft\Crypto\RSA\MachineKeys' " +
+                                              $"folder, or the current security context '{currentUser}' does not have access to this folder.";
+
+                        // Throw a new exception with the detailed message
+                        throw new Exception(errorMessage, ex);
+                    }
                     else
+                    {
+                        // Rethrow the original exception for other cases
                         throw;
+                    }
                 }
                 finally
                 {
@@ -1903,7 +1935,7 @@ namespace Protean.Tools
             internal static string GetConfigString(string key, bool isRequired = true)
             {
                 string strReturn = "";
-                string s = System.Convert.ToString(WebConfigurationManager.AppSettings.Get(key));
+                string s = System.Convert.ToString(ConfigurationManager.AppSettings.Get(key));
                 if (s == null)
                 {
                     if (isRequired)
@@ -1964,16 +1996,15 @@ namespace Protean.Tools
 
                 if (key == null || key.Length == 0)
                     throw new ArgumentNullException("key");
-
                 try
                 {
+
                     string returnValue = string.Empty;
                     StringBuilder sb = new StringBuilder();
-                   
 
-                    returnValue =EnDeCrypt(message, key);
-                   
-                    returnValue =StringToHex(returnValue);
+                    returnValue = EnDeCrypt(message, key);
+
+                    returnValue = StringToHex(returnValue);
                     returnValue = returnValue.Replace("-", "");
                     return returnValue;
                 }
@@ -2035,9 +2066,15 @@ namespace Protean.Tools
                 int a = 0;
                 while (a <= 255)
                 {
-                    char ctmp = (password.Substring((a % intLength), 1).ToCharArray()[0]);
+                    //char ctmp = password[(a % intLength)];
+                    //key[a] = (int)ctmp;
 
-                    key[a] = Microsoft.VisualBasic.Strings.Asc(ctmp);
+                    char ctmp = (password.Substring((a % intLength), 1).ToCharArray()[0]);
+                   // key[a] = (int)ctmp;
+                   key[a] = Asc(ctmp);
+
+
+
                     sbox[a] = a;
                     System.Math.Max(System.Threading.Interlocked.Increment(ref a), a - 1);
                 }
@@ -2070,11 +2107,21 @@ namespace Protean.Tools
 
                     char ctmp = message.Substring(a - 1, 1).ToCharArray()[0];
 
-                    itmp = Strings.Asc(ctmp);
+                    itmp = Asc(ctmp);
 
                     int cipherby = itmp ^ k;
 
-                    cipher.Append(Strings.Chr(cipherby));
+                    cipher.Append(Chr(cipherby));
+
+
+                    //char ctmp = message[a - 1];
+
+                    //itmp = (int)ctmp;
+
+                    //int cipherby = itmp ^ k;
+
+                   // cipher.Append((char)cipherby);
+                   
                     System.Math.Max(System.Threading.Interlocked.Increment(ref a), a - 1);
                 }
 
@@ -2097,7 +2144,7 @@ namespace Protean.Tools
                 StringBuilder hexSb = new StringBuilder();
                 string hexOut = string.Empty;
 
-                maxIndex = Strings.Len(message);
+                maxIndex = message.Length;
 
                 //for (index = 1; index <= maxIndex; index++)
                 //    //hexSb.Append(Strings.Right("0" + Conversion.Hex(Strings.Asc(Strings.Mid(message, System.Convert.ToInt32(index), 1))), 2));
@@ -2106,7 +2153,7 @@ namespace Protean.Tools
                 byte[] ba = Encoding.Default.GetBytes(message);
                 hexOut = BitConverter.ToString(ba);
 
-               // hexOut = hexSb.ToString();
+                // hexOut = hexSb.ToString();
                 hexSb.Length = 0;
 
                 return hexOut;
@@ -2120,16 +2167,19 @@ namespace Protean.Tools
             ///         ''' <remarks></remarks>
             private static string HexToString(string hex)
             {
-                try {
+                try
+                {
                     int index;
                     long maxIndex;
                     StringBuilder sb = new StringBuilder();
                     string returnString = string.Empty;
 
-                    maxIndex = Strings.Len(hex)/2;
+                    maxIndex = hex.Length / 2;
 
                     for (index = 0; index < maxIndex; index++)
-                        sb.Append(Strings.Chr(System.Convert.ToInt32(hex.Substring(index * 2, 2), 16)));
+                    {
+                        sb.Append(Chr(Convert.ToInt32(hex.Substring(index * 2, 2), 16)));
+                    }
 
 
                     //byte[] raw = new byte[hex.Length / 2];
@@ -2145,12 +2195,112 @@ namespace Protean.Tools
                     return returnString;
 
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return ex.Message;
                 }
-                
+
             }
+
+            /// <summary>
+            /// Returns the character associated with the specified character code.
+            /// </summary>
+            /// 
+            /// <returns>
+            /// Returns the character associated with the specified character code.
+            /// </returns>
+            /// <param name="CharCode">Required. An Integer expression representing the <paramref name="code point"/>, or character code, for the character.</param><exception cref="T:System.ArgumentException"><paramref name="CharCode"/> &lt; 0 or &gt; 255 for Chr.</exception><filterpriority>1</filterpriority>
+ 
+            
+            public static char Chr(int CharCode)
+            {
+                if (CharCode < (int)short.MinValue || CharCode > (int)ushort.MaxValue)
+                    throw new ArgumentNullException("message");
+                if (CharCode >= 0 && CharCode <= (int)sbyte.MaxValue)
+                    return Convert.ToChar(CharCode);
+                try
+                {
+                    Encoding encoding = Encoding.GetEncoding(GetLocaleCodePage());
+                    if (encoding.IsSingleByte && (CharCode < 0 || CharCode > (int)byte.MaxValue))
+                        throw new ArgumentNullException("message");
+                    char[] chars = new char[2];
+                    byte[] bytes = new byte[2];
+                    Decoder decoder = encoding.GetDecoder();
+                    if (CharCode >= 0 && CharCode <= (int)byte.MaxValue)
+                    {
+                        bytes[0] = checked((byte)(CharCode & (int)byte.MaxValue));
+                        decoder.GetChars(bytes, 0, 1, chars, 0);
+                    }
+                    else
+                    {
+                        bytes[0] = checked((byte)((CharCode & 65280) >> 8));
+                        bytes[1] = checked((byte)(CharCode & (int)byte.MaxValue));
+                        decoder.GetChars(bytes, 0, 2, chars, 0);
+                    }
+                    return chars[0];
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+
+            /// <summary>
+            /// Returns an Integer value representing the character code corresponding to a character.
+            /// </summary>
+            /// 
+            /// <returns>
+            /// Returns an Integer value representing the character code corresponding to a character.
+            /// </returns>
+            /// <param name="String">Required. Any valid Char or String expression. If <paramref name="String"/> is a String expression, only the first character of the string is used for input. If <paramref name="String"/> is Nothing or contains no characters, an <see cref="T:System.ArgumentException"/> error occurs.</param><filterpriority>1</filterpriority>
+            internal static Encoding GetFileIOEncoding()
+            {
+                return Encoding.Default;
+            }
+
+            internal static int GetLocaleCodePage()
+            {
+                return Thread.CurrentThread.CurrentCulture.TextInfo.ANSICodePage;
+            }
+
+
+            public static int Asc(char String)
+            {
+                int num1 = Convert.ToInt32(String);
+                if (num1 < 128)
+                    return num1;
+                try
+                {
+                    Encoding fileIoEncoding = GetFileIOEncoding();
+                    char[] chars = new char[1]
+                    {
+      String
+                    };
+                    if (fileIoEncoding.IsSingleByte)
+                    {
+                        byte[] bytes = new byte[1];
+                        fileIoEncoding.GetBytes(chars, 0, 1, bytes, 0);
+                        return (int)bytes[0];
+                    }
+                    byte[] bytes1 = new byte[2];
+                    if (fileIoEncoding.GetBytes(chars, 0, 1, bytes1, 0) == 1)
+                        return (int)bytes1[0];
+                    if (BitConverter.IsLittleEndian)
+                    {
+                        byte num2 = bytes1[0];
+                        bytes1[0] = bytes1[1];
+                        bytes1[1] = num2;
+                    }
+                    return (int)BitConverter.ToInt16(bytes1, 0);
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+            }
+
+
         }
     }
 }

@@ -24,7 +24,7 @@
     }
 }
 .card {
-    @include card-contrast($light);
+   // @include card-contrast($light);
 }
 @mixin card-color-bg {
     .card-header,
@@ -43,7 +43,6 @@
 
     .card.bg-info {
         @include card-contrast($info);
-
     }
 
     .card.bg-light {
@@ -71,6 +70,10 @@
         .card-header {
             padding-bottom: 0;
 
+            @include media-breakpoint-down(lg) {
+                padding: $card-spacer-y-xs $card-spacer-x-xs 0;
+            }
+
             .card-title {
                 margin-bottom: 0;
             }
@@ -86,16 +89,34 @@
             }
         }
 
+        .card-body {
+            @include media-breakpoint-down(lg) {
+                padding: $card-spacer-y-xs $card-spacer-x-xs;
+            }
+        }
+
         .card-body-w-head {
-            padding-top: 1rem;
+            padding-top: ($card-spacer-y /2);
+
+            @include media-breakpoint-down(lg) {
+                padding-top: ($card-spacer-y-xs /2);
+            }
         }
 
         .card-body-w-footer {
-            padding-bottom: 1rem;
+            padding-bottom: ($card-spacer-y /2);
+
+            @include media-breakpoint-down(lg) {
+                padding-top: ($card-spacer-y-xs /2);
+            }
         }
 
         .card-footer {
-            padding-top:0;
+            padding-top: 0;
+
+            @include media-breakpoint-down(lg) {
+                padding: 0 $card-spacer-x-xs $card-spacer-y-xs;
+            }
         }
     }
 

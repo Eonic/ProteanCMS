@@ -469,17 +469,17 @@ namespace Protean
 
                             }
                         }
-                        string cShowMore = string.Empty;
-                        if (myWeb.moRequest.Form["cShowMore"] != null)
-                        {
-                            cShowMore = Convert.ToString(myWeb.moRequest.Form["cShowMore"]);
-                        }
-                        bool bShowMoreFilterButton = false;
+                        //string cShowMore = string.Empty;
+                        //if (myWeb.moRequest.Form["cShowMore"] != null)
+                        //{
+                        //    cShowMore = Convert.ToString(myWeb.moRequest.Form["cShowMore"]);
+                        //}
+                        //bool bShowMoreFilterButton = false;
 
-                        oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "main-group");
-                        XmlElement oXml = filterForm.moPageXML.CreateElement("ShowMore");
-                        oXml.InnerText = cShowMore;
-                        filterForm.Instance.AppendChild(oXml);
+                        oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "", "filter-main");
+                        // XmlElement oXml = filterForm.moPageXML.CreateElement("ShowMore");
+                        // oXml.InnerText = cShowMore;
+                        // filterForm.Instance.AppendChild(oXml);
                         foreach (XmlElement currentOFilterElmt in oContentNode.SelectNodes("Content[@type='Filter' and @providerName!='']"))
                         {
                             oFilterElmt = currentOFilterElmt;
@@ -523,16 +523,16 @@ namespace Protean
                                     }
                                 }
 
-                                if (oFilterElmt.Attributes["hideByDefault"] != null)
-                                {
-                                    if (Convert.ToString(oFilterElmt.Attributes["hideByDefault"].Value).ToLower() == "true")
-                                    {
-                                        if (bShowMoreFilterButton == false)
-                                        {
-                                            bShowMoreFilterButton = true;
-                                        }
-                                    }
-                                }
+                                //if (oFilterElmt.Attributes["hideByDefault"] != null)
+                                //{
+                                //    if (Convert.ToString(oFilterElmt.Attributes["hideByDefault"].Value).ToLower() == "true")
+                                //    {
+                                //        if (bShowMoreFilterButton == false)
+                                //        {
+                                //            bShowMoreFilterButton = true;
+                                //        }
+                                //    }
+                                //}
 
                                 string methodname = "AddControl";
 
@@ -556,19 +556,19 @@ namespace Protean
                         string whereSQL = string.Empty;
                         string orderBySql = string.Empty;
                         string cCssClassName = "hidden";
-                        filterForm.addBind("cShowMore", "ShowMore", ref filterForm.model, "false()", "string");
+                        //  filterForm.addBind("cShowMore", "ShowMore", ref filterForm.model, "false()", "string");
 
-                        filterForm.addInput(ref oFrmGroup, "cShowMore", true, "ShowMore", "hidden");
-                        if (cShowMore == string.Empty)
-                        {
-                            if (bShowMoreFilterButton == true)
-                            {
-                                cCssClassName = string.Empty;
-                            }
-                        }
-                        filterForm.addInput(ref oFrmGroup, "", false, "More +", cCssClassName + " btnShowMoreFilter");
-                        filterForm.addSubmit(ref oFrmGroup, "< Less", "< Less ", "Submit", "hidden filter-xs-btn btnHideFilter");
-                        filterForm.addSubmit(ref oFrmGroup, "Show " + cFilterTarget, "Show " + cFilterTarget, "Show " + cFilterTarget, "hidden-sm hidden-md hidden-lg filter-xs-btn showfiltertarget");
+                        // filterForm.addInput(ref oFrmGroup, "cShowMore", true, "ShowMore", "hidden");
+                        //if (cShowMore == string.Empty)
+                        //{
+                        //    if (bShowMoreFilterButton == true)
+                        //    {
+                        //        cCssClassName = string.Empty;
+                        //    }
+                        //}
+                        // filterForm.addInput(ref oFrmGroup, "", false, "More +", cCssClassName + " btnShowMoreFilter");
+                        //  filterForm.addSubmit(ref oFrmGroup, "< Less", "< Less ", "Submit", "hidden filter-xs-btn btnHideFilter");
+                        filterForm.addSubmit(ref oFrmGroup, "ContentFilter", "Show " + cFilterTarget, "ContentFilter", "hidden-sm hidden-md hidden-lg filter-xs-btn showfiltertarget");
 
 
 
@@ -642,19 +642,28 @@ namespace Protean
                                             parentPageId = oFilterElmt.Attributes["parId"].Value;
 
                                         }
-                                        orderBySql = GetFilterOrderByClause(calledType, "");
+                                        orderBySql = GetFilterOrderByClause(calledType, "", ref myWeb);
+                                        if (orderBySql != "")
+                                        {
+                                            cOrderBySql = orderBySql + "," + cOrderBySql;
+                                        }
 
-                                        cOrderBySql = cOrderBySql + orderBySql;
 
                                         if (orderBySql.Length > 0)
 
                                         {
-                                            string cAlies = className.Replace("Filter", "");
-                                            cAdditionalColumns += "," + orderBySql.ToLower().Replace(",", "").Replace("asc", "").Replace("desc", "");
-                                            cAdditionalJoins += "inner join tblContentIndex cii" + cAlies + " on cii" + cAlies + ".nContentId=c.nContentKey inner join tblContentIndexDef cid" + cAlies;
-                                            cAdditionalJoins += " on cii" + cAlies + ".nContentIndexDefinitionKey=cid" + cAlies + ".nContentIndexDefKey ";
-                                            cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cAlies + "'";
+                                            cAdditionalColumns += "," + orderBySql.ToLower().Replace("asc", "").Replace("desc", "");
+                                            if (myWeb.moConfig["ExcludeFilterForJoin"] != className)
+                                            {
+                                                string cAlies = className.Replace("Filter", "");
+                                                cAdditionalJoins += "inner join tblContentIndex cii" + cAlies + " on cii" + cAlies + ".nContentId=c.nContentKey inner join tblContentIndexDef cid" + cAlies;
+                                                cAdditionalJoins += " on cii" + cAlies + ".nContentIndexDefinitionKey=cid" + cAlies + ".nContentIndexDefKey ";
+                                                cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cAlies + "'";
+
+
+                                            }
                                         }
+
 
                                     }
 
@@ -739,7 +748,7 @@ namespace Protean
                     }
                 }
 
-                public string GetFilterOrderByClause(Type calledType, string existingOrderBy)
+                public string GetFilterOrderByClause(Type calledType, string existingOrderBy, ref Cms myWeb)
                 {
                     string filterOrderByClause = string.Empty;
 
@@ -748,7 +757,9 @@ namespace Protean
                         string methodname = "GetFilterOrderByClause";
 
                         var o = Activator.CreateInstance(calledType);
-                        filterOrderByClause = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, null));
+                        var args = new object[1];
+                        args[0] = myWeb;
+                        filterOrderByClause = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
                     }
 
                     if (!string.IsNullOrEmpty(existingOrderBy))

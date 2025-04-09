@@ -325,20 +325,20 @@ namespace Protean
 
                         // add Eonic Bespoke Functions
                         var xsltArgs = new System.Xml.Xsl.XsltArgumentList();
-                        //Protean.Cms errWeb;
-                        //if (System.Web.HttpContext.Current != null)
-                        //{
-                        //    // so we compile errors out of debug mode too.
-                        //    errWeb = new Protean.Cms(System.Web.HttpContext.Current);
-                        //    errWeb.InitializeVariables();
-                        //    var ewXsltExt = new Protean.xmlTools.xsltExtensions(ref errWeb);
-                        //    xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
-                        //}
-                        //else
-                        //{
-                        //    var ewXsltExt = new Protean.xmlTools.xsltExtensions();
-                        //    xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
-                        //}
+                        Protean.Cms errWeb;
+                        if (System.Web.HttpContext.Current != null)
+                        {
+                            // so we compile errors out of debug mode too.
+                            errWeb = new Protean.Cms(System.Web.HttpContext.Current);
+                            errWeb.InitializeVariables();
+                            var ewXsltExt = new Protean.xmlTools.xsltExtensions(ref errWeb);
+                            xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
+                        }
+                        else
+                        {
+                            var ewXsltExt = new Protean.xmlTools.xsltExtensions();
+                            xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
+                        }
 
 
                         sProcessInfo = "Transform";
@@ -1437,6 +1437,76 @@ namespace Protean
                 }
             }
 
+        }
+
+        public static string tidyXhtmlFrag(string shtml, bool bReturnNumbericEntities = false, bool bEncloseText = true, string removeTags = "")
+        {
+
+            // PerfMon.Log("Web", "tidyXhtmlFrag")
+            // string sProcessInfo = "tidyXhtmlFrag";
+            string sTidyXhtml = "";
+            int crResult = 0;
+
+            if (!(removeTags == ""))
+                shtml = removeTagFromXml(shtml, removeTags);
+                TidyManaged.Document oTdyManaged;
+                // Using 
+            try
+            {
+                // clear some nasties I haven't allready captured.
+                shtml = shtml.Replace("&amp;nbsp;", "&#160;");
+                shtml = Regex.Replace(shtml, "<\\?xml.*\\?>", "", RegexOptions.IgnoreCase);
+
+                //temp fix for dirty VMH data
+                shtml = Strings.Replace(shtml, ":=", "=");
+
+
+                oTdyManaged = TidyManaged.Document.FromString(shtml);
+                oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes;
+                oTdyManaged.MakeClean = true;
+                oTdyManaged.DropFontTags = true;
+                //oTdyManaged.ErrorBuffer = true;
+                oTdyManaged.ShowWarnings = true;
+                oTdyManaged.OutputXhtml = true;
+                oTdyManaged.MakeBare = true;//removed word tags
+                oTdyManaged.CleanWord2000 = true;//removed word tags
+
+                oTdyManaged.InputCharacterEncoding = TidyManaged.EncodingType.Utf8;
+
+                oTdyManaged.CharacterEncoding = TidyManaged.EncodingType.Utf16;
+
+
+
+                if (bReturnNumbericEntities)
+                {
+                    oTdyManaged.OutputNumericEntities = true;
+                }
+                oTdyManaged.CleanAndRepair();
+                try
+                {
+                    sTidyXhtml = oTdyManaged.Save();
+                }
+                catch (Exception)
+                {
+                    sTidyXhtml = "<div>html import conversion error result=" + " <br/></div>";
+                }
+
+                oTdyManaged.Dispose();
+                oTdyManaged = null/* TODO Change to default(_) if this is not a reference type */;
+                // End Using
+
+                return sTidyXhtml;
+            }
+            catch (Exception ex)
+            {
+                // It is the desired behaviour for this to return nothing if not valid html don't turn this on apart from in development.            Return Nothing
+                return crResult + " - " + ex.Message + ex.StackTrace;
+            }
+            // Return Nothing
+            finally
+            {
+                sTidyXhtml = null;
+            }
         }
 
         #region Deprecated
