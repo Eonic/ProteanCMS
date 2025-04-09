@@ -477,3 +477,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\Pro
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanCMS.IntegrationTests.pdb
 D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\obj\Debug\ProteanC.82C1B10C.Up2Date
+D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Memory.dll
+D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Buffers.dll
+D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\ProteanCMS.IntegrationTests\bin\Debug\System.Numerics.Vectors.dll

@@ -1365,7 +1365,7 @@ namespace Protean
                                     //clear cache when item is live only
                                     if(myWeb.moRequest.Params["nStatus"] == "1")
                                     {
-                                        myWeb.ClearPageCache();
+                                        myWeb.ClearPageCache(myWeb.moRequest["id"]);
                                     }                                    
 
                                     // if we have a parent releationship lets add it
