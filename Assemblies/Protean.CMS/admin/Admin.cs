@@ -4168,9 +4168,9 @@ namespace Protean
                                     var oResElmt = myWeb.moPageXml.CreateElement("Response");
                                     FeedHandler oFeeder = new FeedHandler(null, styleFile, 0, 2, ref oResElmt, itemNodeName);
                                     oFeeder.cFeedData = oImportXml.OuterXml;
-                                    oFeeder.ImportStream();
+                                    string returnmsg = oFeeder.ImportStream();
 
-                                    moAdXfm.addNote(ref moAdXfm.moXformElmt, Protean.xForm.noteTypes.Alert, oFeeder.oResultElmt.ToString());
+                                    moAdXfm.addNote(ref moAdXfm.moXformElmt, Protean.xForm.noteTypes.Alert, returnmsg);
 
                                 }
                                 else {
