@@ -383,7 +383,7 @@ function preparePickImageModal(CurrentModalPath) {
     var currentModal = $(CurrentModalPath);
     var multiple = "";
 
-    if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
+     if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
        multiple = "&multiple=true"        
     };
         //activateTreeview
@@ -407,8 +407,8 @@ function preparePickImageModal(CurrentModalPath) {
                 return currentModal.prev('.popoverContent').html();
         }
     });
-    currentModal.find("a[data-bs-toggle!='popover']").click(function (ev) {
-        
+    currentModal.find("a[data-bs-toggle!='popover']").off("click").click(function (ev) {
+
         ev.preventDefault();
             currentModal.find('.modal-dialog').addClass('loading')
             currentModal.find('.modal-content div').html('<div><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
@@ -416,10 +416,15 @@ function preparePickImageModal(CurrentModalPath) {
         // load the url and call this again on success
         if (target != '#') {
         
-            currentModal.find(".modal-content div").load(target, function () {
+            currentModal.find(".modal-content div").first().load(target, function () {
                 currentModal.find('.modal-dialog').removeClass('loading')
-                preparePickImageModal(CurrentModalPath)
-                currentModal.find('.lazy').lazy();
+                currentModal.find('.lazy').lazy({
+                    visibleOnly: true,
+                    delay:500,
+                    effect: 'fadeIn'
+                });
+              //  alert(target);
+               // preparePickImageModal(CurrentModalPath);
                 primeFileUpload();
             });
         };

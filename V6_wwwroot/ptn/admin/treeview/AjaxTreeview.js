@@ -373,7 +373,8 @@ Original preload function has been kept but is unused.
                                     currentModal.modal("show");
                                 });
                        
-                            });          
+                            });         
+                        
                             preparePickImageModal("#" + modalId)
                         }
                         loadNode.remove();
