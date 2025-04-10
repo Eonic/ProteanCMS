@@ -239,7 +239,10 @@ namespace Protean
 
                     logId = oDBH.logActivity(Cms.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage + " Started using " + cXSLTransformPath);
 
-                    string cDeleteTempTableName = "tmp-" + cFeedURL.Substring(cFeedURL.LastIndexOf("/") + 1).Replace(".xml", "").Replace(".ashx", "");
+                    string cDeleteTempTableName = FeedItemNode;
+                    if (cFeedURL != null) {
+                        cDeleteTempTableName = "tmp-" + cFeedURL.Substring(cFeedURL.LastIndexOf("/") + 1).Replace(".xml", "").Replace(".ashx", "");
+                    }
                     var eventsDoneEvt = new System.Threading.ManualResetEvent(false);
                     Cms.dbImport Tasks = new Cms.dbImport(oDBH.oConn.ConnectionString, 0);
                     int workerThreads = 0;
@@ -397,6 +400,10 @@ namespace Protean
                             {
                                 reader.Read();
                             }
+                        }
+                        else {
+                            //force read to end
+                            reader.Read();
                         }
                         eventsDoneEvt.Set();
 
