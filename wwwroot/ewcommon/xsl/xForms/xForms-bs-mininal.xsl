@@ -112,6 +112,11 @@
 			<xsl:if test="descendant::upload">
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 			</xsl:if>
+			<xsl:for-each select="model/submission/@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
+			</xsl:for-each>
 
 			<!--<xsl:copy-of select="/" />-->
 			<!--xsl:apply-templates select="self::Content" mode="tinyMCEinit"/-->
@@ -1175,7 +1180,13 @@
 		<xsl:variable name="value">
 			<xsl:apply-templates select="." mode="xform_value"/>
 		</xsl:variable>
-		<input type="hidden" name="{$ref}" id="{$ref}" value="{$value}"/>
+		<input type="hidden" name="{$ref}" id="{$ref}" value="{$value}">
+			<xsl:for-each select="@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
+			</xsl:for-each>
+		</input>
 	</xsl:template>
 
   <xsl:template match="input[contains(@class,'configValue')]" mode="xform">
@@ -1248,13 +1259,10 @@
 					<xsl:attribute name="class">textbox form-control</xsl:attribute>
 				</xsl:otherwise>
 			</xsl:choose>
-			<xsl:for-each select="@*">
-				<xsl:variable name="nodename" select="name()"/>
-				<xsl:if test="starts-with($nodename,'data-fv')">
-					<xsl:attribute name="{name()}">
-						<xsl:value-of select="." />
-					</xsl:attribute>
-				</xsl:if>
+			<xsl:for-each select="@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
 			</xsl:for-each>
 			<xsl:choose>
 				<xsl:when test="$value!=''">
@@ -4083,6 +4091,11 @@
 			</xsl:call-template>
 		</xsl:variable>
 		<div class="g-recaptcha" data-sitekey="{$key}">
+			<xsl:for-each select="@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
+			</xsl:for-each>
 			<xsl:text> </xsl:text>
 		</div>
 	</xsl:template>
