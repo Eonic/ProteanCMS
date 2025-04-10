@@ -4842,9 +4842,9 @@ namespace Protean
 
 
                 sSql = "SET ARITHABORT ON ";
-                sSql = sSql + " SELECT  c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
+                //sSql = sSql + " SELECT  c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
 
-                //sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
+                sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
                 sSql = sSql + "CAST(" + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
 
                 // if distinct flag true and order by clause is also enabled then  required to bring all this column in select query too. 
