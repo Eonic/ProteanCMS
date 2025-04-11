@@ -1471,9 +1471,9 @@ namespace Protean
                 oTdyManaged.MakeBare = true;//removed word tags
                 oTdyManaged.CleanWord2000 = true;//removed word tags
 
-                oTdyManaged.InputCharacterEncoding = TidyManaged.EncodingType.Utf8;
+               // oTdyManaged.InputCharacterEncoding = TidyManaged.EncodingType.Latin1;
 
-                oTdyManaged.CharacterEncoding = TidyManaged.EncodingType.Utf16;
+                oTdyManaged.CharacterEncoding = TidyManaged.EncodingType.Utf8;
 
 
 
