@@ -645,7 +645,15 @@ namespace Protean
                                         orderBySql = GetFilterOrderByClause(calledType, "", ref myWeb);
                                         if (orderBySql != "")
                                         {
-                                            cOrderBySql = orderBySql + "," + cOrderBySql;
+                                            if(cOrderBySql !="")
+                                            {
+                                                cOrderBySql = orderBySql + "," + cOrderBySql;
+                                            }
+                                            else
+                                            {
+                                                cOrderBySql = orderBySql;
+                                            }
+                                           
                                         }
 
 
@@ -660,6 +668,11 @@ namespace Protean
                                                 cAdditionalJoins += " on cii" + cAlies + ".nContentIndexDefinitionKey=cid" + cAlies + ".nContentIndexDefKey ";
                                                 cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cAlies + "'";
 
+
+                                            }
+                                            else
+                                            {
+                                                    bDistinct = false;
 
                                             }
                                         }
@@ -724,7 +737,7 @@ namespace Protean
 
 
                                 }
-
+                               
                                 myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail,
                                 cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns);
 
