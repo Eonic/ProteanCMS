@@ -5677,8 +5677,8 @@
 												<span class="image-description-name">
 													<xsl:value-of select="@name"/>
 												</span>
-												<br/>
 												<xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or $Extension='.tif' or $Extension='.webp'">
+													<br/>
 													<xsl:value-of select="@width"/>
 													<xsl:text> x </xsl:text>
 													<xsl:value-of select="@height"/>
@@ -5778,6 +5778,7 @@
 							</span>
 							<xsl:choose>
 								<xsl:when test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tif'  or  @Extension='.tiff'">
+									<br/>
 									<xsl:value-of select="@width"/>
 									<xsl:text> x </xsl:text>
 									<xsl:value-of select="@height"/>

@@ -470,8 +470,9 @@
                                                       <span class="image-description-name">
                                                         <xsl:value-of select="@name"/>
                                                       </span>
-                                                      <br/>
+                                          
                                                       <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif' ">
+														  <br/>
                                                         <xsl:value-of select="@width"/>
                                                         <xsl:text> x </xsl:text>
                                                         <xsl:value-of select="@height"/>
@@ -574,6 +575,7 @@
 									<label>
 										<xsl:value-of select="@name"/>
 										<xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
+											<br/>
 											<xsl:value-of select="@width"/>
 											<xsl:text> x </xsl:text>
 											<xsl:value-of select="@height"/>
@@ -583,6 +585,7 @@
 							</xsl:when>
 							  <xsl:otherwise> <xsl:value-of select="@name"/>
 								  <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.tiff' or @Extension='.tif'">
+									  <br/>
 									  <xsl:value-of select="@width"/>
 									  <xsl:text> x </xsl:text>
 									  <xsl:value-of select="@height"/>
