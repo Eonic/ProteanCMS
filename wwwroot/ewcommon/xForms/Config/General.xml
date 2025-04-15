@@ -719,6 +719,19 @@
 			  </item>
 			  <value>on</value>
 		  </select1>
+		 
+		  <select1 bind="AllowContentSpecificClearCache" appearance="full">
+			  <label>Allow Content Specific Clear Cache</label>
+			  <item>
+				  <label>On</label>
+				  <value>on</value>
+			  </item>
+			  <item>
+				  <label>Off</label>
+				  <value>off</value>
+			  </item>
+			  <value>on</value>
+		  </select1>
 	  </group>
     <submit submission="" ref="submit" class="principle">
       <label>Save Settings</label>
