@@ -152,6 +152,9 @@
               <xsl:if test="@fullWidth='narrow'">
                 <xsl:text> narrow-container </xsl:text>
               </xsl:if>
+              <xsl:if test="@custom-css and @custom-css!=''">
+                <xsl:value-of select="@custom-css"/>
+              </xsl:if>
             </xsl:attribute>
             <xsl:if test="@data-stellar-background-ratio!='10'">
               <xsl:attribute name="data-parallax-speed">
@@ -1149,6 +1152,12 @@
                     <xsl:attribute name="style">
                       background-image: url('<xsl:value-of select="@backgroundImage"/>');
                     </xsl:attribute>
+
+                    <xsl:if test="@custom-css and @custom-css!=''">
+                      <xsl:attribute name="class">
+                        <xsl:value-of select="@custom-css"/>
+                      </xsl:attribute>
+                    </xsl:if>
                   </xsl:if>
                 </xsl:otherwise>
               </xsl:choose>
@@ -1587,15 +1596,15 @@
           </div>
         </xsl:if>
         <!--<xsl:if test="node()"> TS this hides donate button-->
-          <div class="{$thisClass}">
-            <xsl:if test="not(@title!='')">
-              <xsl:apply-templates select="." mode="inlinePopupOptions">
-                <xsl:with-param name="class" select="$thisClass"/>
-              </xsl:apply-templates>
-            </xsl:if>
-            <xsl:apply-templates select="." mode="displayBrief"/>
-            <xsl:text> </xsl:text>
-          </div>
+        <div class="{$thisClass}">
+          <xsl:if test="not(@title!='')">
+            <xsl:apply-templates select="." mode="inlinePopupOptions">
+              <xsl:with-param name="class" select="$thisClass"/>
+            </xsl:apply-templates>
+          </xsl:if>
+          <xsl:apply-templates select="." mode="displayBrief"/>
+          <xsl:text> </xsl:text>
+        </div>
         <!--</xsl:if>-->
       </xsl:if>
       <xsl:if test="@listGroup='true'">
