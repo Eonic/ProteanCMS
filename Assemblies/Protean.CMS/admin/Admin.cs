@@ -1365,7 +1365,19 @@ namespace Protean
                                     //clear cache when item is live only
                                     if(myWeb.moRequest.Params["nStatus"] == "1")
                                     {
-                                        myWeb.ClearPageCache(myWeb.moRequest["id"]);
+                                        //'AllowContentSpecificClearCache' if on then clear contentid related cache pages.
+                                        if (moConfig["AllowContentSpecificClearCache"]!=null && moConfig["AllowContentSpecificClearCache"].ToLower() == "on")
+                                        {
+                                            if(myWeb.moRequest["id"] != null)
+                                            {
+                                                string nContentID = Convert.ToString(myWeb.moRequest["id"]);
+                                                myWeb.ClearPageCache(nContentID);
+                                            }                                           
+                                        }
+                                        else
+                                        {                                            
+                                            myWeb.ClearPageCache(); //clear all cache
+                                        }                                        
                                     }                                    
 
                                     // if we have a parent releationship lets add it
@@ -4165,10 +4177,12 @@ namespace Protean
 
                                 if (moConfig["AsyncFileImport"] == "on")
                                 {
-                                    var oResElmt = myWeb.moPageXml.OwnerDocument.CreateElement("Response");
+                                    var oResElmt = myWeb.moPageXml.CreateElement("Response");
                                     FeedHandler oFeeder = new FeedHandler(null, styleFile, 0, 2, ref oResElmt, itemNodeName);
                                     oFeeder.cFeedData = oImportXml.OuterXml;
-                                    oFeeder.ImportStream();
+                                    string returnmsg = oFeeder.ImportStream();
+
+                                    moAdXfm.addNote(ref moAdXfm.moXformElmt, Protean.xForm.noteTypes.Alert, returnmsg);
 
                                 }
                                 else {

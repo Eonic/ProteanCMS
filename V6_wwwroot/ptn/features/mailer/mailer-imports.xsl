@@ -14,6 +14,7 @@
 
 	<xsl:import href="modules/news/news.xsl"/>
 	<xsl:import href="modules/image/image.xsl"/>
+  <xsl:import href="modules/columns/columns.xsl"/>
 
   <xsl:template match="Page" mode="footerJs"></xsl:template>
 
