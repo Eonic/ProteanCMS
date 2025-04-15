@@ -104,6 +104,7 @@ namespace Protean.Providers
                                 oXform.addOption(ref pageFilterSelect, name, value, true);
 
                             }
+                            oXform.addSubmit(ref oPageGroup, "", "Apply", "PageFilter", "  btnPageSubmit hidden", "");
                         }
 
                     }
