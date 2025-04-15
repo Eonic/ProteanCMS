@@ -1365,7 +1365,19 @@ namespace Protean
                                     //clear cache when item is live only
                                     if(myWeb.moRequest.Params["nStatus"] == "1")
                                     {
-                                        myWeb.ClearPageCache(myWeb.moRequest["id"]);
+                                        //'AllowContentSpecificClearCache' if on then clear contentid related cache pages.
+                                        if (moConfig["AllowContentSpecificClearCache"]!=null && moConfig["AllowContentSpecificClearCache"].ToLower() == "on")
+                                        {
+                                            if(myWeb.moRequest["id"] != null)
+                                            {
+                                                string nContentID = Convert.ToString(myWeb.moRequest["id"]);
+                                                myWeb.ClearPageCache(nContentID);
+                                            }                                           
+                                        }
+                                        else
+                                        {                                            
+                                            myWeb.ClearPageCache(); //clear all cache
+                                        }                                        
                                     }                                    
 
                                     // if we have a parent releationship lets add it

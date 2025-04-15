@@ -7374,8 +7374,7 @@
             Listing <xsl:value-of select="count(ContentDetail/directory/*)"/> Active <xsl:value-of select="ContentDetail/directory/@displayName"/>
           </h4-->
 			<form action="?ewCmd=SaveDirectoryRelations" method="post">
-				<input name="childId" type="hidden" value="{ContentDetail/directory/@childId}"/>
-        <input id="SupplierType" type="hidden" value="{ContentDetail/directory/Company/Type}"/>
+				<input name="childId" type="hidden" value="{ContentDetail/directory/@childId}"/>        
 				<input name="parentList" type="hidden">
 					<xsl:attribute name="value">
 						<xsl:for-each select="ContentDetail/directory/*">
