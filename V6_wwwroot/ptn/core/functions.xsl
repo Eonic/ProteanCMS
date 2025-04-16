@@ -4065,6 +4065,7 @@
     <xsl:param name="homeLink"/>
     <xsl:param name="span"/>
     <xsl:param name="hover"/>
+    <xsl:param name="accessible-hover"/>
     <xsl:param name="mobileDD"/>
     <xsl:param name="class"/>
     <xsl:param name="overviewLink"/>
@@ -4144,6 +4145,44 @@
             </xsl:if>
             <xsl:apply-templates select="." mode="getDisplayName"/>
           </a>
+        </xsl:when>
+        <xsl:when test="$accessible-hover='true'">
+          <xsl:attribute name="class">
+            <xsl:value-of select="$liClass"/>
+            <xsl:text> dropdown dropdown-hover-menu-accessible</xsl:text>
+          </xsl:attribute>
+          
+          <button href="{@url}" id="mainNavDD{@id}" data-hover="dropdown">
+            <xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
+
+            <xsl:attribute name="class">
+              <xsl:text>nav-link dropdown-toggle </xsl:text>
+              <xsl:choose>
+                <xsl:when test="self::MenuItem[@id=/Page/@id]">
+                  <xsl:text>active</xsl:text>
+                </xsl:when>
+                <xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+                  <xsl:text>on</xsl:text>
+                </xsl:when>
+              </xsl:choose>
+            </xsl:attribute>
+            <xsl:if test="DisplayName[@icon!='']">
+              <i>
+                <xsl:attribute name="class">
+                  <xsl:text>fa </xsl:text>
+                  <xsl:value-of select="DisplayName/@icon"/>
+                </xsl:attribute>
+                <xsl:text> </xsl:text>
+              </i>
+              <span class="space">&#160;</span>
+            </xsl:if>
+            <xsl:if test="DisplayName[@uploadIcon!='']">
+              <span class="nav-icon">
+                <img src="{DisplayName/@uploadIcon}" alt="icon"/>
+              </span>
+            </xsl:if>
+            <xsl:apply-templates select="." mode="getDisplayName"/>
+          </button>
         </xsl:when>
         <xsl:otherwise>
           <button href="{@url}" id="mainNavDD{@id}" role="button">
