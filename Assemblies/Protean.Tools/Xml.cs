@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -1192,6 +1193,9 @@ namespace Protean.Tools
                 sString = sString.Replace(((char)0).ToString(), ((char)32).ToString());
                 sString = sString.Replace(((char)8).ToString(), ((char)32).ToString());
                 sString = sString.Replace(((char)20).ToString(), ((char)32).ToString());
+
+                sString = sString.Replace("&amp;amp;", "&#38;");
+                sString = sString.Replace("&amp;nbsp;", "&#160;");
                 sString = sString.Replace("&nbsp;", "&#160;");
                 sString = sString.Replace("¢", "&#162;");
                 sString = sString.Replace("£", "&#163;");

@@ -441,6 +441,8 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Newtonsoft.Json.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\PreMailer.Net.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\QRCoder.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\SoundInTheory.DynamicImage.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\SoundInTheory.DynamicImage.Extensions.Pdf.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Buffers.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Data.SqlClient.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Drawing.Common.dll
@@ -502,5 +504,5 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\Protean.CMS.csproj.
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\Protean..4E1E49F9.Up2Date
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.pdb
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\SoundInTheory.DynamicImage.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\SoundInTheory.DynamicImage.Extensions.Pdf.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\SoundInTheory.DynamicImage.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\SoundInTheory.DynamicImage.Extensions.Pdf.dll

@@ -991,10 +991,6 @@
                       <label>Centre</label>
                       <value>center center</value>
                     </item>
-                    <item>
-                      <label>Bottom</label>
-                      <value>center bottom</value>
-                    </item>
                   </select1>
                   <!--<select1 bind="backgroundOpacity" appearance="minimal">
               <label>Background Image Opacity</label>

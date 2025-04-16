@@ -893,7 +893,8 @@ namespace Protean
                     oContextNode.MoveNext();
 
                     cHtml = Conversions.ToString(oContextNode.Current.InnerXml);
-                    cHtml = convertEntitiesToCodes(cHtml);
+                    cHtml = convertStringToEntityCodes(cHtml);
+                    cHtml = convertEntitiesToCodesFast(cHtml);
                     cHtml = Strings.Replace(Strings.Replace(cHtml, "&gt;", ">"), "&lt;", "<");
                     cHtml = "<div>" + cHtml + "</div>";
 
@@ -904,7 +905,7 @@ namespace Protean
                     cHtmlOut = Strings.Replace(cHtmlOut, "&#x0;", "");
                     cHtmlOut = Strings.Replace(cHtmlOut, " &#0;", "");
 
-                    cHtmlOut = convertEntitiesToCodes(cHtmlOut);
+                    cHtmlOut = convertEntitiesToCodesFast(cHtmlOut);
 
                     if (string.IsNullOrEmpty(cHtmlOut) | string.IsNullOrEmpty(cHtmlOut) | (cHtmlOut ?? "") == Constants.vbCrLf)
                     {
@@ -1627,7 +1628,8 @@ namespace Protean
 
                     cVirtualPath2 = Strings.Replace(cVirtualPath2, "//", "/");
 
-                    // Save any resized freestock to local appart from standard thumbnails
+                    // Save any resized
+                    // to local appart from standard thumbnails
                     if (!(sPrefix == "~ew/tn-" & maxWidth == 100L & maxHeight == 100L))
                     {
                         if (cVirtualPath2.StartsWith("/images/FreeStock"))
