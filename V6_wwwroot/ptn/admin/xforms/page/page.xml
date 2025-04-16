@@ -8,7 +8,6 @@
 				<cStructForiegnRef/>
 				<cStructName/>
 				<cStructDescription>
-					<!-- SEE COMMENTS IN BIND -->
 					<DisplayName title="" linkType="internal" exclude="false" noindex="false" nonav="false" navpad="true" showRedirectModal="false" banner="basic" menu="default"/>
 					<Images>
 						<img class="icon" />
@@ -40,16 +39,6 @@
 		<bind id="nStructParId" nodeset="tblContentStructure/nStructParId" required="true()" type="string"/>
 		<bind id="cStructName" nodeset="tblContentStructure/cStructName" required="true()" type="string"/>
 		<bind nodeset="tblContentStructure/cStructDescription">
-			<!-- DISPLAY NAME!! 
-            Due to a considerable Content upgrade across all v4 DB's,
-            and large component changes across the board.
-            All Page settings are being added as Attributes on DisplayName.
-            This is not ideal, and will be addressed in the next componant version of EW.
-            CONS - DisplayName has multiple nodes in 'samepage/multi-language' sites, 
-            so multiple binds for all Page settings will need to be duplicated for each language variation.
-            Does not effect different 'directorybased/multilanguage' sites.
-            WH - 2011-02-23
-      -->
 			<bind id="cDisplayName" nodeset="DisplayName" required="false()" type="string"/>
 			<bind nodeset="DisplayName">
 				<bind id="cLinkTitle" nodeset="@title" required="false()" type="string"/>
