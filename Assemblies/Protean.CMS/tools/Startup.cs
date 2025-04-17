@@ -1,8 +1,16 @@
-﻿using System;
+﻿using JavaScriptEngineSwitcher.Core;
+using System;
 using System.Web.Configuration;
 
 namespace Protean
 {
+    public class ApplicationStart
+    {
+        public static void InitialiseJSEngine()
+        {
+            JSStart.InitialiseJSEngine();
+        }
+    }
 
     public static class Startup
     {
@@ -12,7 +20,17 @@ namespace Protean
 
             JSStart.InitialiseJSEngine();
 
-            ClearXSLCache();
+            System.Collections.Specialized.NameValueCollection myConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+            if (myConfig["CompiledTransform"] == "on") {
+
+                //XmlHelper.Transform oTransformClear = new XmlHelper.Transform();
+               // oTransformClear.myWeb = new Protean.Cms();
+               // oTransformClear.myWeb.moConfig = myConfig;
+               // oTransformClear.ClearXSLTassemblyCache();
+
+
+               // ClearXSLCache();
+            }
 
         }
 
@@ -40,6 +58,10 @@ namespace Protean
                         var oFileInfo = new System.IO.FileInfo(fi.FullName);
                         oFileInfo.IsReadOnly = false;
                         System.IO.File.Delete(fi.FullName);
+
+                        // clear app variable for that file.
+
+
                     }
                     catch (Exception)
                     {

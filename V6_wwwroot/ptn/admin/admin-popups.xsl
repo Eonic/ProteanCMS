@@ -942,7 +942,7 @@ function primeFileUpload(){
 			});
 
 			});
-			preparePickImageModal('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>');
+			//preparePickImageModal('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>');
 
 			},
 
@@ -961,7 +961,10 @@ function primeFileUpload(){
 
 		<script>
 			$(function() {
-			$('.lazy').lazy();
+			$('.lazy').lazy({
+			visibleOnly: true,
+			delay:500,
+			effect: 'fadeIn'});
 			});
 		</script>
 

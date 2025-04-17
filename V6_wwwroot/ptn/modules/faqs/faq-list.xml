@@ -86,51 +86,7 @@
 						</switch>
 					</group>
 				</group>
-				<group>
-					<switch class="disable" for="cSortBy">
-						<case id="cSortBy_1">
-							<select1 bind="cPageOrder" appearance="minimal" class="form-group">
-								<label>Order</label>
-								<item>
-									<label>Newest to Oldest</label>
-									<value>descending</value>
-								</item>
-								<item>
-									<label>Oldest to Newest</label>
-									<value>ascending</value>
-								</item>
-							</select1>
-						</case>
-						<case id="cSortBy_2">
-							<select1 bind="cPageOrder" appearance="minimal" class="form-group">
-								<label>Order</label>
-								<item>
-									<label>A to Z</label>
-									<value>ascending</value>
-								</item>
-								<item>
-									<label>Z to A</label>
-									<value>descending</value>
-								</item>
-							</select1>
-						</case>
-						<case id="cSortBy_3" />
-					</switch>
-
-					<group class="form-section-wrapper">
-						<select1 bind="cPresentationType" appearance="full" class="required ">
-							<label>Presentation Type</label>
-							<item>
-								<label>List</label>
-								<value>list</value>
-							</item>
-							<item>
-								<label>Accordian</label>
-								<value>accordian</value>
-							</item>
-						</select1>
-					</group>
-				</group>
+				
 			</group>
 			<group>
 				<label>
@@ -240,6 +196,7 @@
 							</case>
 							<case id="cSortBy_3" />
 						</switch>
+            
 					</group>
 					<group class="col-lg-6">
 						<select1 bind="nStepCount" appearance="full" class="required ">
@@ -291,6 +248,19 @@
 							</item>
 						</select1>
 					</group>
+          <group class="form-section-wrapper">
+            <select1 bind="cPresentationType" appearance="full" class="required ">
+              <label>Presentation Type</label>
+              <item>
+                <label>List</label>
+                <value>list</value>
+              </item>
+              <item>
+                <label>Accordian</label>
+                <value>accordian</value>
+              </item>
+            </select1>
+          </group>
 				</group>
 			</group>
 			<group>

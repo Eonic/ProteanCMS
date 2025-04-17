@@ -10108,6 +10108,11 @@
               <xsl:if test="@data-stellar-background-ratio!='10'">
                 <xsl:text> parallax-wrapper </xsl:text>
               </xsl:if>
+              <xsl:if test="@custom-css and @custom-css!=''">
+                <xsl:attribute name="class">
+                  <xsl:value-of select="@custom-css"/>
+                </xsl:attribute>
+              </xsl:if>
             </xsl:attribute>
             <xsl:if test="@data-stellar-background-ratio!='10'">
               <xsl:attribute name="data-parallax-speed">
