@@ -373,7 +373,7 @@ namespace Protean
                                 }
 
                                 // ok if the user is valid we then need to handle what happens next.
-                                if (Conversions.ToBoolean(oAdXfm.valid))
+                                if (Conversions.ToBoolean(oAdXfm.valid) && oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText != "")
                                 {
                                     myWeb.mnUserId = Conversions.ToInteger(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
                                     var oMembership = new Membership(ref myWeb);

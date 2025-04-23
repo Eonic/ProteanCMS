@@ -1423,7 +1423,7 @@
     </xsl:variable>
     <meta property="og:type" content="website" />
     <xsl:choose>
-      <xsl:when test="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']">
+      <xsl:when test="Contents/Content[@type='MetaData' and @name='ogTitle']">
         <meta property="og:title">
           <xsl:attribute name="content">
             <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']/node()"/>
@@ -1443,16 +1443,36 @@
         <xsl:with-param name="length" select="160"/>
       </xsl:call-template>
     </xsl:variable>
-    <meta property="og:description" content="{$contentMetaDescription}"/>
+    <meta property="og:description" content="{$contentMetaDescription}"/>	  
+	
     <xsl:choose>
-      <xsl:when test="/Page/Contents/Content[@type='MetaData' and @name='ogImage']">
+      <xsl:when test="Contents/Content[@type='MetaData' and @name='ogImage']">
         <meta property="og:image">
           <xsl:attribute name="content">
             <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogImage']/node()"/>
           </xsl:attribute>
         </meta>
       </xsl:when>
+		<xsl:when test="Contents/Content[@type='Image' and @position='Banner']">
+			<meta property="og:image">
+				<xsl:attribute name="content">
+						<xsl:text>http</xsl:text>
+						<xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+						<xsl:text>://</xsl:text>
+						<xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>				
+					<xsl:value-of select="Contents/Content[@type='Image' and @name='Banner']/img/@src"/>
+				</xsl:attribute>
+			</meta>
+		</xsl:when>
+		<xsl:when test="Contents/Content[@type='MetaData' and @name='ogImage-fallback']">
+        <meta property="og:image">
+          <xsl:attribute name="content">
+            <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogImage-fallback']/node()"/>
+          </xsl:attribute>
+        </meta>
+      </xsl:when>
       <xsl:otherwise>
+		  
         <xsl:if test="$currentPage/Images/img[@class='display']/@src and $currentPage/Images/img[@class='display']/@src!=''">
           <meta property="og:image">
             <xsl:attribute name="content">
