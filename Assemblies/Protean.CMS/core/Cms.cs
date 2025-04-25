@@ -3517,6 +3517,7 @@ namespace Protean
                     case "GetLocateNode":
                     case "GetAdvNode":
                     case "editStructurePermissions":
+                    case "GetSEOReport":
                         {
 
                             // Make sure admin mode is true and we don't need to check for permissions
@@ -5015,12 +5016,12 @@ namespace Protean
                         }
                         else
                         {
-                            sSql = sSql + ", c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
                         }
                     }
                     else
                     {
-                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                       // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
                         sSql += cOrderBy;
                     }
@@ -11509,6 +11510,10 @@ namespace Protean
                         HashSet<string> uniqueFolderPaths = new HashSet<string>(sFoldersUrlslist);
                         // delete all folders list which are exists 
                         string FolderstoDeleteFromCache = moFSHelper.DeleteMultipleFolder(uniqueFolderPaths);
+                        if (!mbSuppressLastPageOverrides)
+                        {
+                            moSession["lastPage"] = "/" + Cms.gcProjectPath + mcPagePath.TrimStart('/') + "?ewCmd=Normal&pgid=" + mnPageId; // myWeb.mcOriginalURL
+                        }
                     }
                 }
             }
