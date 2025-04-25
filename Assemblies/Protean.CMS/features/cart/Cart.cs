@@ -5428,6 +5428,12 @@ namespace Protean
                                 {
                                     moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
                                 }
+                                if (oXform.Instance.SelectSingleNode("tblCartContact/bEmailOptOut").InnerText != null)
+                                {
+                                    sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
+                                    string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
+                                    moDBHelper.AddOptOutEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/bEmailOptOut").InnerText);
+                                }
                                
                             }
 
