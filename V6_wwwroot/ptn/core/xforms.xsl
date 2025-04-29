@@ -32,7 +32,7 @@
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
-    <xsl:apply-templates select="descendant-or-self::*[alert]" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::*[alert][0]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::select1[item[toggle]]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::submit" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::button" mode="xform_control_script"/>
