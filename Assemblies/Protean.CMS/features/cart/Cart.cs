@@ -11026,11 +11026,34 @@ namespace Protean
                         // Go and collect the valid shipping options available for this order
                         oDS = moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
                     }
+
+                    //// fix for bOverrideForWholeOrder mot required as SP now does this.
+                    //if (oDS.Tables["Option"].Columns["bOverrideForWholeOrder"] != null)
+                    //{
+                    //    bool hasOverideForWholeOrder = false;
+                    //    foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                    //    {
+                    //        if (Convert.ToInt16(oRow["bOverrideForWholeOrder"]) == 1) {
+                    //            hasOverideForWholeOrder = true;
+                    //        }
+                    //    }
+                    //    if (hasOverideForWholeOrder) {
+                    //        foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                    //        {
+                    //            if (Convert.ToInt16(oRow["bOverrideForWholeOrder"]) != 1)
+                    //            {
+                    //                oRow.Delete();
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
                     if (oDS.Tables["Option"].Columns["cLocationNameShort"] != null)
                     {
                         string overiddenLocations = "";
                         foreach (DataRow oRow in oDS.Tables["Option"].Rows)
                         {
+                           
                             // Calculate any shipping cost overage
                             double nShippingCost;
                             nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
