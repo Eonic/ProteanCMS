@@ -12462,20 +12462,20 @@ namespace Protean
                     string cSQL = "Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
                     if (!((ExeProcessSqlScalar(cSQL) ?? "") == (cEmailAddress ?? "")))
                     {
-                        cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,userid,optout_reason,status,optout_date) VALUES ('" + cEmailAddress + "','" + cUserId + "','','" + nStatus + "'," + SqlDate(DateTime.Now, true) + ")";
-                        ExeProcessSql(cSQL);
-                        return true;
-                    }
-                    else
-                    {
-                        string cSQL1 = "Select status FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
-                        if (!((ExeProcessSqlScalar(cSQL) ?? "") == (nStatus ?? "")))
+                        if(nStatus=="true")
                         {
-                            cSQL = "update tblOptOutAddresses set status='"+ nStatus +  "' ,userid=" + cUserId + ", optout_date="+ SqlDate(DateTime.Now, true) +" WHERE (EmailAddress = '" + cEmailAddress + "')";
+                            cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,userid,optout_reason,status,optout_date) VALUES ('" + cEmailAddress + "','" + cUserId + "','','" + nStatus + "'," + SqlDate(DateTime.Now, true) + ")";
                             ExeProcessSql(cSQL);
                             return true;
                         }
-                        return false;
+                        
+                    }
+                    else
+                    {
+                            cSQL = "update tblOptOutAddresses set status='"+ nStatus +  "' ,userid=" + cUserId + ", optout_date="+ SqlDate(DateTime.Now, true) +" WHERE (EmailAddress = '" + cEmailAddress + "')";
+                            ExeProcessSql(cSQL);
+                            return true;
+                       
                     }
                 }
                 catch (Exception ex)
@@ -12582,7 +12582,7 @@ namespace Protean
                     if (!string.IsNullOrEmpty(nCheckAddress))
                     {
                         bool bReturn;
-                        cSQL = "SELECT EmailAddress FROM tblOptOutAddresses WHERE EmailAddress = '" + nCheckAddress + "'";
+                        cSQL = "SELECT EmailAddress FROM tblOptOutAddresses WHERE status=1 and EmailAddress = '" + nCheckAddress + "'";
                         using (var oDRe = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                         {
                             bReturn = oDRe.HasRows;

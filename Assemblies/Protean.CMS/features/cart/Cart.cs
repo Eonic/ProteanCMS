@@ -2643,12 +2643,19 @@ namespace Protean
                             Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                             IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
                             string xsltPath = string.Empty;
+                            string OptOutFlag = string.Empty;
                             if (string.IsNullOrEmpty(Email))
                                 Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
                             if (string.IsNullOrEmpty(Name))
                                 Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
                             if (valDict is null)
                                 valDict = new Dictionary<string, string>();
+
+                            if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut")!=null)
+                            {
+                                OptOutFlag = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut").InnerText;
+                            }
+                            
                             foreach (XmlAttribute Attribute in oCartElmt.Attributes)
                             {
                                 if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
@@ -2720,7 +2727,16 @@ namespace Protean
                                 }
                                 if (oMessaging.Activities != null)
                                 {
-                                    oMessaging.Activities.AddToList(ListId, firstName, Email, valDict);
+                                    if(OptOutFlag=="True")
+                                    {
+                                        oMessaging.Activities.OptOutFromList(Email);
+                                       
+                                    }
+                                    else
+                                    {
+                                        oMessaging.Activities.AddToList(ListId, firstName, Email, valDict);
+                                    }
+                                   
                                 }
                             }
 

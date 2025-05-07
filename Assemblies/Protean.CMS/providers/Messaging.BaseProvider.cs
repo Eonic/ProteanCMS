@@ -82,7 +82,7 @@ namespace Protean.Providers
         {
             bool AddToList(string ListId, string Name, string Email, IDictionary values);
             bool RemoveFromList(string ListId, string Email);
-            bool OptOutFromList(string ListId, string Email);
+            bool OptOutFromList(string Email);
         }
 
         public class ReturnProvider
@@ -1171,7 +1171,7 @@ namespace Protean.Providers
                         return default;
                     }
                 }
-                public virtual bool OptOutFromList(string ListId, string Email)
+                public virtual bool OptOutFromList(string Email)
                 {
                     // PerfMon.Log("Activities", "RemoveFromList")
                     try
