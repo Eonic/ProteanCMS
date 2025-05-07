@@ -506,3 +506,5 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Debug\ProteanCMS.pdb
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\SoundInTheory.DynamicImage.dll
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\SoundInTheory.DynamicImage.Extensions.Pdf.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Data.SqlClient.dll
+C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Data.SqlClient.xml

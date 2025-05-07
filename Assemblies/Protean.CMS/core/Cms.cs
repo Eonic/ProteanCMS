@@ -3517,6 +3517,7 @@ namespace Protean
                     case "GetLocateNode":
                     case "GetAdvNode":
                     case "editStructurePermissions":
+                    case "GetSEOReport":
                         {
 
                             // Make sure admin mode is true and we don't need to check for permissions
@@ -11509,6 +11510,10 @@ namespace Protean
                         HashSet<string> uniqueFolderPaths = new HashSet<string>(sFoldersUrlslist);
                         // delete all folders list which are exists 
                         string FolderstoDeleteFromCache = moFSHelper.DeleteMultipleFolder(uniqueFolderPaths);
+                        if (!mbSuppressLastPageOverrides)
+                        {
+                            moSession["lastPage"] = "/" + Cms.gcProjectPath + mcPagePath.TrimStart('/') + "?ewCmd=Normal&pgid=" + mnPageId; // myWeb.mcOriginalURL
+                        }
                     }
                 }
             }
