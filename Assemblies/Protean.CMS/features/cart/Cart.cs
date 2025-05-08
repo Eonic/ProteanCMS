@@ -5441,9 +5441,13 @@ namespace Protean
                                 }
                                 if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail") != null)
                                 {
-                                    sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
-                                    string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
-                                    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
+                                    if(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut") !=null)
+                                    {
+                                        sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
+                                        string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
+                                        moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
+
+                                    }
 
                                 }
                                 //if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
