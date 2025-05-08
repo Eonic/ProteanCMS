@@ -621,15 +621,15 @@
 		<Sub2 Number="75">
 			<Sub3 Number="0">
 				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetPriceRange"/>
-				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.75.0/spGetPriceRange.sql"/>
-				<Action Order="3" Type="Drop" ObjectType="Procedure" ObjectName="spGetParentPagesForCache"/>
-				<Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.0.75.0/spGetParentPagesForCache.sql"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.75.0/spGetPriceRange.sql"/>				
 			</Sub3>
 		</Sub2>
 		<Sub2 Number="76">
 			<Sub3 Number="0">				
 				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetValidShippingOptions"/>
 				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.76.0/spGetValidShippingOptions.sql"/>
+			    <Action Order="3" Type="Drop" ObjectType="Procedure" ObjectName="spGetParentPagesForCache"/>
+				<Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.0.75.0/spGetParentPagesForCache.sql"/>
 			</Sub3>
 		</Sub2>
     </Sub1>
