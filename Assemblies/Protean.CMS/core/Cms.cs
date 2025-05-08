@@ -3516,8 +3516,7 @@ namespace Protean
                     case "GetMoveContent":
                     case "GetLocateNode":
                     case "GetAdvNode":
-                    case "editStructurePermissions":
-                    case "GetSEOReport":
+                    case "editStructurePermissions":                    
                         {
 
                             // Make sure admin mode is true and we don't need to check for permissions
