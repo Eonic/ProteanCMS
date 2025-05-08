@@ -2412,6 +2412,7 @@ namespace Protean
                                     oPageDetail.RemoveAll();
                                     mcEwCmd = "ListUserContacts";
                                     myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" + myWeb.moRequest["id"];
+                                   
                                     goto ProcessFlow;
                                 }
 
@@ -2427,6 +2428,13 @@ namespace Protean
                                 oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Conversions.ToInteger("0" + sContactKey)));
                                 if (moAdXfm.valid)
                                 {
+                                    //get cart shouldupdat the cartXml.
+                                    var oCart = new Cms.Cart(ref myWeb);
+                                    oCart.mnCartId = Convert.ToInt32(myWeb.moRequest["orderid"]);
+                                    XmlElement cartelmt = myWeb.moPageXml.CreateElement("Order");
+                                    oCart.GetCart(ref cartelmt, oCart.mnCartId);
+                                    cartelmt = null;
+                                    oCart = null;
                                     oPageDetail.RemoveAll();
                                     mcEwCmd = "Orders";
                                     myWeb.msRedirectOnEnd = "/?ewCmd=Orders&ewCmd2=Display&id=" + myWeb.moRequest["orderid"];

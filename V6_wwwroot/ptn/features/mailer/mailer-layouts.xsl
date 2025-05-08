@@ -772,10 +772,10 @@
   </xsl:template>
 
   <!-- NewsArticle Brief -->
-  <xsl:template match="Content[@type='NewsArticle']" mode="displayBrief">
+  <!--<xsl:template match="Content[@type='NewsArticle']" mode="displayBrief">
     <xsl:param name="sortBy"/>
     <xsl:param name="colCount"/>
-    <!-- articleBrief -->
+    --><!-- articleBrief --><!--
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="." mode="getHref"/>
     </xsl:variable>
@@ -845,7 +845,7 @@
         </td>
       </tr>
     </table>
-  </xsl:template>
+  </xsl:template>-->
 
   <!-- -->
   <!-- Event Brief -->
@@ -1746,6 +1746,101 @@
         </tr>
       </table>
     </xsl:if>
+  </xsl:template>
+
+  <xsl:template match="Content[@type='Module']" mode="displayBrief">
+    <!-- Set Variables -->
+    <xsl:variable name="contentType" select="@contentType" />
+    <xsl:variable name="queryStringParam" select="concat('startPos',@id)"/>
+    <xsl:variable name="startPos" select="number(concat('0',/Page/Request/QueryString/Item[@name=$queryStringParam]))"/>
+    <xsl:variable name="contentList">
+      <xsl:apply-templates select="." mode="getContent">
+        <xsl:with-param name="contentType" select="$contentType" />
+        <xsl:with-param name="startPos" select="$startPos" />
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="@crop='true'">
+          <xsl:text>true</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>false</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="totalCount">
+      <xsl:choose>
+        <xsl:when test="@display='related'">
+          <xsl:value-of select="count(Content[@type=$contentType])"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="count(/Page/Contents/Content[@type=$contentType])"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="heading">
+      <xsl:choose>
+        <xsl:when test="@heading">
+          <xsl:value-of select="@heading"/>
+        </xsl:when>
+        <xsl:otherwise>h3</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <table class="clearfix {@moduleType}">
+      <!--<xsl:apply-templates select="." mode="module-header"/>-->
+      <tr>
+        <!--responsive columns -->
+        <!--<xsl:apply-templates select="." mode="contentColumns"/>-->
+        <!--end responsive columns-->
+        <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
+          <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="parentId" select="@id"/>
+          <xsl:with-param name="crop" select="$cropSetting"/>
+          <xsl:with-param name="linked" select="@linkArticle"/>
+          <xsl:with-param name="itemLayout" select="@itemLayout"/>
+          <xsl:with-param name="heading" select="$heading"/>
+          <xsl:with-param name="title" select="@title"/>
+        </xsl:apply-templates>
+        <!--<xsl:if test="@stepCount != '0'">
+          <xsl:apply-templates select="/" mode="genericStepper">
+            <xsl:with-param name="articleList" select="$contentList"/>
+            <xsl:with-param name="noPerPage" select="@stepCount"/>
+            <xsl:with-param name="startPos" select="$startPos"/>
+            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
+            <xsl:with-param name="totalCount" select="$totalCount"/>
+          </xsl:apply-templates>
+        </xsl:if>-->
+        <xsl:text> </xsl:text>
+      </tr>
+    </table>
+  </xsl:template>
+
+  <!-- Display Name for a piece of content -->
+  <xsl:template match="Content" mode="getDisplayName">
+    <xsl:choose>
+      <xsl:when test="Name/node()">
+        <xsl:value-of select="Name/node()"/>
+      </xsl:when>
+      <xsl:when test="Headline/node()">
+        <xsl:value-of select="Headline/node()"/>
+      </xsl:when>
+      <xsl:when test="Title/node()">
+        <xsl:value-of select="Title/node()"/>
+      </xsl:when>
+      <xsl:when test="DisplayName/node()">
+        <xsl:value-of select="DisplayName/node()"/>
+      </xsl:when>
+      <xsl:when test="JobTitle/node()">
+        <xsl:value-of select="JobTitle/node()"/>
+      </xsl:when>
+      <xsl:when test="SourceName/node()">
+        <xsl:value-of select="SourceName/node()"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="@name"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
 </xsl:stylesheet>

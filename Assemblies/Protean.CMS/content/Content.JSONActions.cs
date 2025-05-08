@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.IO;
 using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
@@ -417,12 +418,89 @@ namespace Protean
 
 
 
+   
+
+            public string ConvertXFormToJSON(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+            {
+                try
+                {
+                    // Validate input
+                    if (jObj == null || !jObj.ContainsKey("xFormXml"))
+                    {
+                        throw new ArgumentException("Missing xFormXml input in the JSON request.");
+                    }
+
+                    // Extract XML string from JSON
+                    string xFormXml = jObj["xFormXml"].ToString();
+
+                    // Load XML document
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(xFormXml);
+
+                    // Wrap specific HTML tags in CDATA
+                    WrapHtmlTagsInCData(xmlDoc, new[] { "div", "span", "p" });
+
+                    // Convert XML to JSON
+                    string jsonString = JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.Indented);
+
+                    return jsonString;
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertXFormToJSON", ex, ""));
+                    return JsonConvert.SerializeObject(new { error = ex.Message });
+                }
             }
 
+                public string ConvertJSONToXForm(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                {
+                    try
+                    {
+                        // Validate input
+                        if (jObj == null || !jObj.ContainsKey("xFormJson"))
+                        {
+                            throw new ArgumentException("Missing xFormJson input in the JSON request.");
+                        }
 
+                        // Extract JSON string from the input object
+                        string xFormJson = jObj["xFormJson"].ToString();
 
-            #endregion
+                        // Convert JSON string to XML
+                        XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(xFormJson, "form");
 
+                        // Return the XML as a string
+                        using (StringWriter stringWriter = new StringWriter())
+                        using (XmlTextWriter xmlTextWriter = new XmlTextWriter(stringWriter))
+                        {
+                            xmlDoc.WriteTo(xmlTextWriter);
+                            return stringWriter.ToString();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertJSONToXForm", ex, ""));
+                        return JsonConvert.SerializeObject(new { error = ex.Message });
+                    }
+                }
+
+                private void WrapHtmlTagsInCData(XmlDocument xmlDoc, string[] tagsToWrap)
+            {
+                foreach (string tag in tagsToWrap)
+                {
+                    XmlNodeList nodes = xmlDoc.GetElementsByTagName(tag);
+                    foreach (XmlNode node in nodes)
+                    {
+                        if (node.InnerText != null && !node.InnerText.StartsWith("<![CDATA["))
+                        {
+                            // Wrap content in CDATA
+                            node.InnerXml = $"<![CDATA[{node.InnerXml}]]>";
+                        }
+                    }
+                }
+            }
+
+                #endregion
+            }
         }
 
     }
