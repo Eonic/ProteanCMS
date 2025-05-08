@@ -1464,15 +1464,14 @@
 				</xsl:attribute>
 			</meta>
 		</xsl:when>
-		<xsl:when test="Contents/Content[@type='MetaData' and @name='ogImage-fallback']">
+		<xsl:when test="Contents/Content[@type='MetaData' and @name='ogimage-fallback']">
         <meta property="og:image">
           <xsl:attribute name="content">
-            <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogImage-fallback']/node()"/>
+            <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogimage-fallback']/node()"/>
           </xsl:attribute>
         </meta>
       </xsl:when>
-      <xsl:otherwise>
-		  
+      <xsl:otherwise>		  
         <xsl:if test="$currentPage/Images/img[@class='display']/@src and $currentPage/Images/img[@class='display']/@src!=''">
           <meta property="og:image">
             <xsl:attribute name="content">
