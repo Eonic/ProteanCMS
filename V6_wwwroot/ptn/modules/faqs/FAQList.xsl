@@ -315,11 +315,24 @@
 						</div>
 					</xsl:if>
 					<xsl:if test="Body/node()!=''">
-						<xsl:apply-templates select="Body" mode="cleanXhtml"/>
+						<xsl:apply-templates select="Body/div/div" mode="cleanXhtml"/>
 					</xsl:if>
 				</div>
 			</div>
 		</div>
 	</xsl:template>
 
+
+	<xsl:template match="Body" mode="cleanXhtml">
+		<xsl:element name="{name()}">
+			<!-- process attributes -->
+			<xsl:for-each select="@*">
+				<!-- remove attribute prefix (if any) -->
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="." />
+				</xsl:attribute>
+			</xsl:for-each>
+			<xsl:apply-templates mode="cleanXhtml"/>
+		</xsl:element>
+	</xsl:template>
 </xsl:stylesheet>

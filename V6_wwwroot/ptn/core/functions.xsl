@@ -1423,7 +1423,7 @@
     </xsl:variable>
     <meta property="og:type" content="website" />
     <xsl:choose>
-      <xsl:when test="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']">
+      <xsl:when test="Contents/Content[@type='MetaData' and @name='ogTitle']">
         <meta property="og:title">
           <xsl:attribute name="content">
             <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogTitle']/node()"/>
@@ -1443,16 +1443,35 @@
         <xsl:with-param name="length" select="160"/>
       </xsl:call-template>
     </xsl:variable>
-    <meta property="og:description" content="{$contentMetaDescription}"/>
+    <meta property="og:description" content="{$contentMetaDescription}"/>	  
+	
     <xsl:choose>
-      <xsl:when test="/Page/Contents/Content[@type='MetaData' and @name='ogImage']">
+      <xsl:when test="Contents/Content[@type='MetaData' and @name='ogImage']">
         <meta property="og:image">
           <xsl:attribute name="content">
             <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogImage']/node()"/>
           </xsl:attribute>
         </meta>
       </xsl:when>
-      <xsl:otherwise>
+		<xsl:when test="Contents/Content[@type='Image' and @position='Banner']">
+			<meta property="og:image">
+				<xsl:attribute name="content">
+						<xsl:text>http</xsl:text>
+						<xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+						<xsl:text>://</xsl:text>
+						<xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>				
+					<xsl:value-of select="Contents/Content[@type='Image' and @name='Banner']/img/@src"/>
+				</xsl:attribute>
+			</meta>
+		</xsl:when>
+		<xsl:when test="Contents/Content[@type='MetaData' and @name='ogimage-fallback']">
+        <meta property="og:image">
+          <xsl:attribute name="content">
+            <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogimage-fallback']/node()"/>
+          </xsl:attribute>
+        </meta>
+      </xsl:when>
+      <xsl:otherwise>		  
         <xsl:if test="$currentPage/Images/img[@class='display']/@src and $currentPage/Images/img[@class='display']/@src!=''">
           <meta property="og:image">
             <xsl:attribute name="content">
@@ -4065,6 +4084,7 @@
     <xsl:param name="homeLink"/>
     <xsl:param name="span"/>
     <xsl:param name="hover"/>
+    <xsl:param name="accessible-hover"/>
     <xsl:param name="mobileDD"/>
     <xsl:param name="class"/>
     <xsl:param name="overviewLink"/>
@@ -4144,6 +4164,44 @@
             </xsl:if>
             <xsl:apply-templates select="." mode="getDisplayName"/>
           </a>
+        </xsl:when>
+        <xsl:when test="$accessible-hover='true'">
+          <xsl:attribute name="class">
+            <xsl:value-of select="$liClass"/>
+            <xsl:text> dropdown dropdown-hover-menu-accessible</xsl:text>
+          </xsl:attribute>
+          
+          <button href="{@url}" id="mainNavDD{@id}" data-hover="dropdown">
+            <xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
+
+            <xsl:attribute name="class">
+              <xsl:text>nav-link dropdown-toggle </xsl:text>
+              <xsl:choose>
+                <xsl:when test="self::MenuItem[@id=/Page/@id]">
+                  <xsl:text>active</xsl:text>
+                </xsl:when>
+                <xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+                  <xsl:text>on</xsl:text>
+                </xsl:when>
+              </xsl:choose>
+            </xsl:attribute>
+            <xsl:if test="DisplayName[@icon!='']">
+              <i>
+                <xsl:attribute name="class">
+                  <xsl:text>fa </xsl:text>
+                  <xsl:value-of select="DisplayName/@icon"/>
+                </xsl:attribute>
+                <xsl:text> </xsl:text>
+              </i>
+              <span class="space">&#160;</span>
+            </xsl:if>
+            <xsl:if test="DisplayName[@uploadIcon!='']">
+              <span class="nav-icon">
+                <img src="{DisplayName/@uploadIcon}" alt="icon"/>
+              </span>
+            </xsl:if>
+            <xsl:apply-templates select="." mode="getDisplayName"/>
+          </button>
         </xsl:when>
         <xsl:otherwise>
           <button href="{@url}" id="mainNavDD{@id}" role="button">

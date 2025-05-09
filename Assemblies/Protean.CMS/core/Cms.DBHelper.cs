@@ -12436,7 +12436,7 @@ namespace Protean
                     string cSQL = "Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
                     if (!((ExeProcessSqlScalar(cSQL) ?? "") == (cEmailAddress ?? "")))
                     {
-                        cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress) VALUES ('" + cEmailAddress + "')";
+                        cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,status) VALUES ('" + cEmailAddress + "')";
                         ExeProcessSql(cSQL);
                         return true;
                     }
@@ -12452,9 +12452,9 @@ namespace Protean
 
                 return default;
             }
-            public bool AddOptOutEmail(string cEmailAddress, string cUserId, string nStatus)
+            public bool AddInvalidEmail(string cEmailAddress, string cUserId, string nStatus)
             {
-                PerfMonLog("DBHelper", "AddOptOutEmail");
+                PerfMonLog("DBHelper", "AddInvalidEmail");
                 try
                 {
                     if (string.IsNullOrEmpty(cEmailAddress))
@@ -12480,7 +12480,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddOptOutEmail", ex, ""));
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddInvalidEmail", ex, ""));
                 }
 
                 return default;

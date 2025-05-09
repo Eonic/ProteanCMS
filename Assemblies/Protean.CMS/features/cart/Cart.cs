@@ -737,12 +737,12 @@ namespace Protean
                             mnProcessError = (short)Conversions.ToInteger(myWeb.moRequest.QueryString["cartErr"]);
 
                         if (mbBlockCartCmd == false)
-                        { 
-                        mcCartCmd = myWeb.moRequest.QueryString["cartCmd"];
-                        if (string.IsNullOrEmpty(mcCartCmd))
                         {
-                            mcCartCmd = myWeb.moRequest.Form["cartCmd"];
-                        }
+                            mcCartCmd = myWeb.moRequest.QueryString["cartCmd"];
+                            if (string.IsNullOrEmpty(mcCartCmd))
+                            {
+                                mcCartCmd = myWeb.moRequest.Form["cartCmd"];
+                            }
                         }
                         mcPaymentMethod = Conversions.ToString(myWeb.moSession["mcPaymentMethod"]);
                         mmcOrderType = Conversions.ToString(myWeb.moSession["mmcOrderType"]);
@@ -2643,7 +2643,7 @@ namespace Protean
                             Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                             IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
                             string xsltPath = string.Empty;
-                            string OptOutFlag = string.Empty;
+                            string bOptOut = string.Empty;
                             if (string.IsNullOrEmpty(Email))
                                 Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
                             if (string.IsNullOrEmpty(Name))
@@ -2651,11 +2651,11 @@ namespace Protean
                             if (valDict is null)
                                 valDict = new Dictionary<string, string>();
 
-                            if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut")!=null)
+                            if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut") != null)
                             {
-                                OptOutFlag = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut").InnerText;
+                                bOptOut = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut").InnerText;
                             }
-                            
+
                             foreach (XmlAttribute Attribute in oCartElmt.Attributes)
                             {
                                 if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
@@ -2727,16 +2727,16 @@ namespace Protean
                                 }
                                 if (oMessaging.Activities != null)
                                 {
-                                    if(OptOutFlag=="True")
+                                    if (bOptOut == "True")
                                     {
                                         oMessaging.Activities.OptOutFromList(Email);
-                                       
+
                                     }
                                     else
                                     {
                                         oMessaging.Activities.AddToList(ListId, firstName, Email, valDict);
                                     }
-                                   
+
                                 }
                             }
 
@@ -3425,12 +3425,12 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(oCartElmt.GetAttribute("bDiscountIsPercent")))
                                 {
-                                    shipCost = -1;                                    
+                                    shipCost = -1;
                                 }
 
                                 // Default Shipping Country.
                                 string cDestinationCountry = moCartConfig["DefaultCountry"];
-                                
+
                                 string cDestinationPostalCode = "";
                                 if (oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") != null)
                                 {
@@ -3455,7 +3455,7 @@ namespace Protean
                                             if (lowestShipCost == 0)
                                             {
                                                 lowestShipCost = shipCost;
-                                            }                                          
+                                            }
 
                                             bool bCollection = false;
                                             if (!(oRowSO["bCollection"] is DBNull))
@@ -3505,7 +3505,7 @@ namespace Protean
                                                 else if (IsPromocodeValid = true & Convert.ToString(oRowSO["NonDiscountedShippingCost"]) != "0")
                                                 {
                                                     if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
-                                                    {                                                        
+                                                    {
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                         oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3514,7 +3514,7 @@ namespace Protean
                                                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oRowSO["NonDiscountedShippingCost"], "0", false)))
                                                         {
                                                             oCartElmt.SetAttribute("NonDiscountedShippingCost", Conversions.ToString(Operators.ConcatenateObject(oRowSO["NonDiscountedShippingCost"], "")));
-                                                        }                                                       
+                                                        }
                                                     }
                                                 }
                                             }
@@ -3537,13 +3537,13 @@ namespace Protean
                                     shipCost = lowestShipCost;
                                     //code added for delivery promocode if it is applied then price set to 0 for selected delivery option.
                                     //condition for ITB
-                                    if(oCartElmt.GetAttribute("freeShippingMethods") != "" && oCartElmt.GetAttribute("freeShippingMethods")!=null)
+                                    if (oCartElmt.GetAttribute("freeShippingMethods") != "" && oCartElmt.GetAttribute("freeShippingMethods") != null)
                                     {
                                         if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
                                         {
                                             shipCost = 0;
                                         }
-                                    }                                    
+                                    }
                                 }
 
                                 if (shipCost == -1)
@@ -5439,18 +5439,24 @@ namespace Protean
                                         }
                                     }
                                 }
+                                if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail") != null)
+                                {
+                                    if(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut") !=null)
+                                    {
+                                        sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
+                                        string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
+                                        moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
 
-                                if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
-                                {
-                                    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
+                                    }
+
                                 }
-                                if (oXform.Instance.SelectSingleNode("tblCartContact/bEmailOptOut").InnerText != null)
-                                {
-                                    sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
-                                    string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
-                                    moDBHelper.AddOptOutEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/bEmailOptOut").InnerText);
-                                }
+                                //if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
+                                //{
+                                //    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
+
+                                //}
                                
+
                             }
 
                             else
@@ -10943,7 +10949,8 @@ namespace Protean
                             string PostcodePrefix = System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1];
                             sCountryList = getParentCountries(ref PostcodePrefix, ref argnIndex);
                         }
-                        catch {
+                        catch
+                        {
                             sCountryList = "";
                         }
 
@@ -11048,11 +11055,34 @@ namespace Protean
                         // Go and collect the valid shipping options available for this order
                         oDS = moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
                     }
+
+                    //// fix for bOverrideForWholeOrder mot required as SP now does this.
+                    //if (oDS.Tables["Option"].Columns["bOverrideForWholeOrder"] != null)
+                    //{
+                    //    bool hasOverideForWholeOrder = false;
+                    //    foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                    //    {
+                    //        if (Convert.ToInt16(oRow["bOverrideForWholeOrder"]) == 1) {
+                    //            hasOverideForWholeOrder = true;
+                    //        }
+                    //    }
+                    //    if (hasOverideForWholeOrder) {
+                    //        foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                    //        {
+                    //            if (Convert.ToInt16(oRow["bOverrideForWholeOrder"]) != 1)
+                    //            {
+                    //                oRow.Delete();
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
                     if (oDS.Tables["Option"].Columns["cLocationNameShort"] != null)
                     {
                         string overiddenLocations = "";
                         foreach (DataRow oRow in oDS.Tables["Option"].Rows)
                         {
+                           
                             // Calculate any shipping cost overage
                             double nShippingCost;
                             nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
