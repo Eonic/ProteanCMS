@@ -69,7 +69,8 @@
 				<xsl:value-of select="./@class"/>
 			</xsl:attribute>
 		</xsl:if>
-		<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+		
+		<xsl:apply-templates select="." mode="cleanXhtml"/>
 	</xsl:template>
 
 	<!-- -->

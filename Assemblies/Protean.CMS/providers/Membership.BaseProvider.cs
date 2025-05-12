@@ -255,6 +255,12 @@ namespace Protean.Providers
                 {
 
                     // Called to get XML for the User Logon.
+                    string btnClass = "btn btn-default btn-block";
+                    string btnIcon = "fa fa-sign-in";
+                    if (myWeb.bs5) {
+                        btnClass = "btn btn-default btn-block";
+                        btnIcon = "fa-solid fa-right-to-bracket";
+                    }
 
                     XmlElement oFrmElmt = null;
                     XmlElement oSelElmt;
@@ -301,8 +307,19 @@ namespace Protean.Providers
                         XmlElement pwdIpt = base.addSecret(ref oFrmElmt, "cPassword", true, "Password", ref cClass);
                         base.addClientSideValidation(ref pwdIpt, true, "Please enter Password");
                         base.addBind("cPassword", "user/password", ref oBindParent, "true()");
+                        base.addDiv(ref oFrmElmt, "", "password-reminder");
 
-                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Sign In", default, default, "fa-solid fa-right-to-bracket");
+                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign In", "UserLogon", default, "fa-solid fa-right-to-bracket");
+
+                        base.addDiv(ref oFrmElmt, "OR", "separator");
+
+                        base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With Google", "google", "btn btn-default btn-block", "fa-solid fa-right-to-bracket");
+
+                        base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With Microsoft", "microsoft", "btn btn-default btn-block", "fa-solid fa-right-to-bracket");
+
+
+                        base.addDiv(ref oFrmElmt, "", "footer-override");
+
 
                         base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
                     Check:

@@ -345,11 +345,10 @@
 	<xsl:template match="Page[@layout='Logon']" mode="Admin">
 		<div class="adminTemplate" id="template_Logon">
 			<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-			<xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
 		</div>
 	</xsl:template>
 
-	<xsl:template match="submit[ancestor::Content[@name='UserLogon'] and ancestor::Page/@adminMode='true']" mode="xform">
+	<xsl:template match="submit[ancestor::Content[@name='UserLogon'] and ancestor::Page/@adminMode='true' and @ref='UserLogon']" mode="xform">
 		<xsl:variable name="class">
 			<xsl:text>adminButton</xsl:text>
 			<xsl:if test="@class!=''">
@@ -357,28 +356,31 @@
 				<xsl:value-of select="@class"/>
 			</xsl:if>
 		</xsl:variable>
-		<a href="{$appPath}?ewCmd=LogOff" class="btn btn-primary">
-			<i class="fa fa-reply">
-				<xsl:text> </xsl:text>
-			</i> Back to Site
-		</a>
 
-		<button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-success {$class}"  onclick="disableButton(this);">
+		<button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-primary btn-block"  onclick="disableButton(this);">
 			Login<xsl:text> </xsl:text>
-			<i class="fa fa-check">
+			<i class="fa fa-sign-in">
 				<xsl:text> </xsl:text>
 			</i>
 		</button>
-		<br/>
-		<br/>
-		<!--a href="/?ewCmd=PasswordReminder" class="text-muted">
-        <i class="fa fa-chevron-right">
-          <xsl:text> </xsl:text>
-        </i>
-        Password Reminder
-      </a-->
+	
 	</xsl:template>
 
+
+	<xsl:template match="div[@class='footer-override']" mode="xform">
+		<xsl:if test="./@class">
+			<xsl:attribute name="class">
+				<xsl:value-of select="./@class"/>
+			</xsl:attribute>
+		</xsl:if>
+		<div>
+			<a href="{$appPath}?ewCmd=LogOff" >
+				<i class="fa fa-reply">
+					<xsl:text> </xsl:text>
+				</i> Back to Site
+			</a>
+		</div>
+	</xsl:template>
 
 	<xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
 
@@ -447,7 +449,6 @@
 					<xsl:value-of select="/Page/@editContext"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="/Page/@ewCmd"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
