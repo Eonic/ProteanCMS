@@ -7947,6 +7947,12 @@ namespace Protean
                                 UniqueProduct = Convert.ToBoolean(myWeb.moRequest["UniqueProduct"]);
 
                             }
+                            if (myWeb.moRequest["overideUrl"] != null)
+                            {
+
+                                overideUrl = Convert.ToString(myWeb.moRequest["overideUrl"]);
+
+                            }
 
                             // loop through the parent rows to check the product
                             if (oDS.Tables["CartItems"].Rows.Count > 0 & UniqueProduct == false)
