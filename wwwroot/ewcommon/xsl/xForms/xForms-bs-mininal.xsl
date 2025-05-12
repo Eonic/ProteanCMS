@@ -2434,6 +2434,14 @@
 					<xsl:value-of select="@onChange"/>
 				</xsl:attribute>
 			</xsl:if>
+
+			<xsl:for-each select="@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
+			</xsl:for-each>
+			
+			
 			<xsl:if test="not(contains(@class,'keep_empty'))">
 				<option value="">
 					<xsl:apply-templates select="." mode="getInlineHint"/>
@@ -2871,6 +2879,11 @@
 					<xsl:value-of select="@size"/>
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:for-each select="@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
+			</xsl:for-each>
 
 			<option value="">
 				<xsl:variable name="label_low" select="translate(label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
@@ -4171,7 +4184,7 @@
 				const telinput = document.querySelector("#<xsl:value-of select="$ref"/>-temp");
 
 				window.intlTelInput(telinput, {
-				initialCountry: "auto",
+				initialCountry: "gb",
 				preferredCountries: ["gb"],
 				separateDialCode: true,
 				utilsScript: "/ewcommon/js/intlTelInput/js/utils.js",

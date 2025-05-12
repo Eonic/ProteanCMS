@@ -12,7 +12,7 @@
   <xsl:import href="mailer-layouts.xsl"/>
   <xsl:import href="../../core/localisation.xsl"/>
 
-	<xsl:import href="modules/news/news.xsl"/>
+	<xsl:import href="modules/news/News.xsl"/>
 	<xsl:import href="modules/image/image.xsl"/>
   <xsl:import href="modules/columns/columns.xsl"/>
 

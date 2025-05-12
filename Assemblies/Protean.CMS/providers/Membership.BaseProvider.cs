@@ -2807,12 +2807,18 @@ namespace Protean.Providers
                                 Protean.Cms.dbHelper argodbHelper = null;
                                 sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
                             }
-                            // send an email to the webadmin
-                            recipientEmail = moConfig["SiteAdminEmail"];
-                            if (File.Exists(goServer.MapPath(moConfig["ProjectPath"] + "/xsl/email/registrationAlert.xsl")))
+                            // send an email to the webadmin                            
+
+                            string registrationAlertPath = "/xsl/email/registrationAlert.xsl";
+                            if (myWeb.bs5)
                             {
-                                Protean.Cms.dbHelper argodbHelper1 = null;
-                                sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + "/xsl/email/registrationAlert.xsl", "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
+                                registrationAlertPath = "/features/membership/email/registration-alert.xsl";
+                            }
+                            if (File.Exists(goServer.MapPath(moConfig["ProjectPath"] + registrationAlertPath)))
+                            {
+                                recipientEmail = moConfig["SiteAdminEmail"];
+                                Protean.Cms.dbHelper nulldbhelper = null;
+                                sProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, moConfig["ProjectPath"] + registrationAlertPath, "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref nulldbhelper, "Message Sent", "Message Failed"));
                             }
                             oMsg = (Protean.Messaging)null;
                         }

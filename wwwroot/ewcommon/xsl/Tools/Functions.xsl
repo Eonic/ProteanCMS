@@ -5202,7 +5202,7 @@
             <xsl:attribute name="class">btn btn-default btn-xs pull-left</xsl:attribute>
             <i class="fa fa-chevron-left">
               <xsl:text> </xsl:text>
-            </i>&#160;
+            </i>
           </xsl:if>
           <xsl:choose>
             <xsl:when test="$linkText!=''">

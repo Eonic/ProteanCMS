@@ -10816,7 +10816,12 @@ namespace Protean
                         if (oDs.Tables[0].Columns.Count >= 13)
                         {
                             // This is added to remove extra column for price and location filter
-                          
+                            if (oDs.Tables[0].Columns.Count == 15)
+                            {
+                                oDs.Tables[0].Columns.RemoveAt(14);
+
+                            }
+
                             if (oDs.Tables[0].Columns.Count == 14)
                             {
                                 oDs.Tables[0].Columns.RemoveAt(13);
@@ -12432,7 +12437,7 @@ namespace Protean
                     string cSQL = "Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
                     if (!((ExeProcessSqlScalar(cSQL) ?? "") == (cEmailAddress ?? "")))
                     {
-                        cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress) VALUES ('" + cEmailAddress + "')";
+                        cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,status) VALUES ('" + cEmailAddress + "')";
                         ExeProcessSql(cSQL);
                         return true;
                     }
@@ -12448,7 +12453,39 @@ namespace Protean
 
                 return default;
             }
-           
+            public bool AddInvalidEmail(string cEmailAddress, string cUserId, string nStatus)
+            {
+                PerfMonLog("DBHelper", "AddInvalidEmail");
+                try
+                {
+                    if (string.IsNullOrEmpty(cEmailAddress))
+                        return false;
+                    string cSQL = "Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
+                    if (!((ExeProcessSqlScalar(cSQL) ?? "") == (cEmailAddress ?? "")))
+                    {
+                        if(nStatus=="true")
+                        {
+                            cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,userid,optout_reason,status,optout_date) VALUES ('" + cEmailAddress + "','" + cUserId + "','','" + nStatus + "'," + SqlDate(DateTime.Now, true) + ")";
+                            ExeProcessSql(cSQL);
+                            return true;
+                        }
+                        
+                    }
+                    else
+                    {
+                            cSQL = "update tblOptOutAddresses set status='"+ nStatus +  "' ,userid=" + cUserId + ", optout_date="+ SqlDate(DateTime.Now, true) +" WHERE (EmailAddress = '" + cEmailAddress + "')";
+                            ExeProcessSql(cSQL);
+                            return true;
+                       
+                    }
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddInvalidEmail", ex, ""));
+                }
+
+                return default;
+            }
             public void RemoveInvalidEmail(string cEmailAddressesCSV)
             {
                 PerfMonLog("DBHelper", "RemoveInvalidEmail");
@@ -12546,7 +12583,7 @@ namespace Protean
                     if (!string.IsNullOrEmpty(nCheckAddress))
                     {
                         bool bReturn;
-                        cSQL = "SELECT EmailAddress FROM tblOptOutAddresses WHERE EmailAddress = '" + nCheckAddress + "'";
+                        cSQL = "SELECT EmailAddress FROM tblOptOutAddresses WHERE status=1 and EmailAddress = '" + nCheckAddress + "'";
                         using (var oDRe = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                         {
                             bReturn = oDRe.HasRows;

@@ -737,12 +737,12 @@ namespace Protean
                             mnProcessError = (short)Conversions.ToInteger(myWeb.moRequest.QueryString["cartErr"]);
 
                         if (mbBlockCartCmd == false)
-                        { 
-                        mcCartCmd = myWeb.moRequest.QueryString["cartCmd"];
-                        if (string.IsNullOrEmpty(mcCartCmd))
                         {
-                            mcCartCmd = myWeb.moRequest.Form["cartCmd"];
-                        }
+                            mcCartCmd = myWeb.moRequest.QueryString["cartCmd"];
+                            if (string.IsNullOrEmpty(mcCartCmd))
+                            {
+                                mcCartCmd = myWeb.moRequest.Form["cartCmd"];
+                            }
                         }
                         mcPaymentMethod = Conversions.ToString(myWeb.moSession["mcPaymentMethod"]);
                         mmcOrderType = Conversions.ToString(myWeb.moSession["mmcOrderType"]);
@@ -1563,26 +1563,6 @@ namespace Protean
 
                                 // info to display the cart
                                 GetCart(ref oElmt);
-
-                                GetWalletDetails(ref oElmt);
-
-                                //if (myWeb.moSession["paymentRecieved"] != null)
-                                //{
-                                //    if (Convert.ToString(myWeb.moSession["paymentReceived"]) != String.Empty)
-                                //    {
-                                //        string sPaymentId = myWeb.moSession["paymentRecieved"].ToString();
-                                //        mnPaymentId = Int32.Parse(sPaymentId);
-                                //        myWeb.moSession["paymentRecieved"] = null;
-                                //        mnProcessId = (short)cartProcess.Complete;
-                                //        mcCartCmd = "ShowInvoice";
-                                //        goto processFlow;
-                                //    }
-                                //}
-
-
-                                //we need have another method to getWallet details
-                                //extra node for wallets/wallet with @provider=judopay, @type=applepay /googlepay
-
                                 break;
                             }
 
@@ -2659,90 +2639,104 @@ namespace Protean
 
                         if (!string.IsNullOrEmpty(sMessagingProvider) | !string.IsNullOrEmpty(moMailConfig["InvoiceList"]) & !string.IsNullOrEmpty(moMailConfig["QuoteList"]))
                         {
-                            if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email") != null)
+
+                            Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                            IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
+                            string xsltPath = string.Empty;
+                            string bOptOut = string.Empty;
+                            if (string.IsNullOrEmpty(Email))
+                                Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
+                            if (string.IsNullOrEmpty(Name))
+                                Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
+                            if (valDict is null)
+                                valDict = new Dictionary<string, string>();
+
+                            if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut") != null)
                             {
-                                Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
-                                IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
-                                string xsltPath = string.Empty;
-                                if (string.IsNullOrEmpty(Email))
-                                    Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
-                                if (string.IsNullOrEmpty(Name))
-                                    Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
-                                if (valDict is null)
-                                    valDict = new Dictionary<string, string>();
-                                foreach (XmlAttribute Attribute in oCartElmt.Attributes)
+                                bOptOut = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut").InnerText;
+                            }
+
+                            foreach (XmlAttribute Attribute in oCartElmt.Attributes)
+                            {
+                                if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
                                 {
-                                    if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
+                                    valDict.Add(Attribute.Name, Attribute.Value);
+                                }
+                            }
+                            string[] fullName = Name.Split(' ');
+                            string firstName = "";
+                            string lastName = "";
+                            if (fullName.Length >= 3)
+                            {
+                                firstName = fullName[1];
+                                lastName = fullName[2];
+                            }
+
+                            string ListId = "";
+                            switch (StepName ?? "")
+                            {
+                                case "Invoice":
                                     {
-                                        valDict.Add(Attribute.Name, Attribute.Value);
+                                        ListId = moMailConfig["InvoiceList"];
+                                        xsltPath = moMailConfig["GetDictionaryForInvoiceListXsl"];
+                                        if (!string.IsNullOrEmpty(moMailConfig["QuoteList"]))
+                                        {
+                                            // if we have invoiced the customer we don't want to send them quote reminders
+                                            if (oMessaging.Activities != null)
+                                            {
+                                                oMessaging.Activities.RemoveFromList(moMailConfig["QuoteList"], Email);
+                                            }
+                                        }
+
+                                        break;
                                     }
-                                }
-                                string[] fullName = Name.Split(' ');
-                                string firstName = "";
-                                string lastName = "";
-                                if (fullName.Length >= 3)
-                                {
-                                    firstName = fullName[1];
-                                    lastName = fullName[2];
-                                }
-
-                                string ListId = "";
-                                switch (StepName ?? "")
-                                {
-                                    case "Invoice":
-                                        {
-                                            ListId = moMailConfig["InvoiceList"];
-                                            xsltPath = moMailConfig["GetDictionaryForInvoiceListXsl"];
-                                            if (!string.IsNullOrEmpty(moMailConfig["QuoteList"]))
-                                            {
-                                                // if we have invoiced the customer we don't want to send them quote reminders
-                                                if (oMessaging.Activities != null)
-                                                {
-                                                    oMessaging.Activities.RemoveFromList(moMailConfig["QuoteList"], Email);
-                                                }
-                                            }
-
-                                            break;
-                                        }
-                                    case "Quote":
-                                        {
-                                            ListId = moMailConfig["QuoteList"];
-                                            xsltPath = moMailConfig["GetDictionaryForQuoteListXsl"];
-                                            break;
-                                        }
-                                    case "Deposit":
-                                        {
-                                            ListId = moMailConfig["DepositList"];
-                                            break;
-                                        }
-                                    case "Newsletter":
-                                        {
-                                            ListId = moMailConfig["NewsletterList"];
-                                            if (!string.IsNullOrEmpty(moMailConfig["NewsletterList"]))
-                                            {
-                                                oMessaging.Activities.RemoveFromList(moMailConfig["NewsletterList"].ToString(), Email);
-                                            }
-
-                                            break;
-                                        }
-                                }
-                                if (!string.IsNullOrEmpty(ListId))
-                                {
-
-                                    if (!string.IsNullOrEmpty(xsltPath))
+                                case "Quote":
                                     {
-                                        valDict = GetDictionaryForCampaign(xsltPath, ref oCartElmt, valDict);
+                                        ListId = moMailConfig["QuoteList"];
+                                        xsltPath = moMailConfig["GetDictionaryForQuoteListXsl"];
+                                        break;
+                                    }
+                                case "Deposit":
+                                    {
+                                        ListId = moMailConfig["DepositList"];
+                                        break;
+                                    }
+                                case "Newsletter":
+                                    {
+                                        ListId = moMailConfig["NewsletterList"];
+                                        if (!string.IsNullOrEmpty(moMailConfig["NewsletterList"]))
+                                        {
+                                            oMessaging.Activities.RemoveFromList(moMailConfig["NewsletterList"].ToString(), Email);
+                                        }
+
+                                        break;
+                                    }
+                            }
+                            if (!string.IsNullOrEmpty(ListId))
+                            {
+
+                                if (!string.IsNullOrEmpty(xsltPath))
+                                {
+                                    valDict = GetDictionaryForCampaign(xsltPath, ref oCartElmt, valDict);
+                                }
+                                else
+                                {
+                                    valDict.Add("email", Email);
+                                    valDict.Add("FirstName", firstName);
+                                    valDict.Add("LastName", lastName);
+                                }
+                                if (oMessaging.Activities != null)
+                                {
+                                    if (bOptOut == "True")
+                                    {
+                                        oMessaging.Activities.OptOutFromList(Email);
+
                                     }
                                     else
                                     {
-                                        valDict.Add("email", Email);
-                                        valDict.Add("FirstName", firstName);
-                                        valDict.Add("LastName", lastName);
-                                    }
-                                    if (oMessaging.Activities != null)
-                                    {
                                         oMessaging.Activities.AddToList(ListId, firstName, Email, valDict);
                                     }
+
                                 }
                             }
 
@@ -3431,12 +3425,12 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(oCartElmt.GetAttribute("bDiscountIsPercent")))
                                 {
-                                    shipCost = -1;                                    
+                                    shipCost = -1;
                                 }
 
                                 // Default Shipping Country.
                                 string cDestinationCountry = moCartConfig["DefaultCountry"];
-                                
+
                                 string cDestinationPostalCode = "";
                                 if (oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") != null)
                                 {
@@ -3461,7 +3455,7 @@ namespace Protean
                                             if (lowestShipCost == 0)
                                             {
                                                 lowestShipCost = shipCost;
-                                            }                                          
+                                            }
 
                                             bool bCollection = false;
                                             if (!(oRowSO["bCollection"] is DBNull))
@@ -3511,7 +3505,7 @@ namespace Protean
                                                 else if (IsPromocodeValid = true & Convert.ToString(oRowSO["NonDiscountedShippingCost"]) != "0")
                                                 {
                                                     if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
-                                                    {                                                        
+                                                    {
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                         oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3520,7 +3514,7 @@ namespace Protean
                                                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oRowSO["NonDiscountedShippingCost"], "0", false)))
                                                         {
                                                             oCartElmt.SetAttribute("NonDiscountedShippingCost", Conversions.ToString(Operators.ConcatenateObject(oRowSO["NonDiscountedShippingCost"], "")));
-                                                        }                                                       
+                                                        }
                                                     }
                                                 }
                                             }
@@ -3543,13 +3537,13 @@ namespace Protean
                                     shipCost = lowestShipCost;
                                     //code added for delivery promocode if it is applied then price set to 0 for selected delivery option.
                                     //condition for ITB
-                                    if(oCartElmt.GetAttribute("freeShippingMethods") != "" && oCartElmt.GetAttribute("freeShippingMethods")!=null)
+                                    if (oCartElmt.GetAttribute("freeShippingMethods") != "" && oCartElmt.GetAttribute("freeShippingMethods") != null)
                                     {
                                         if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
                                         {
                                             shipCost = 0;
                                         }
-                                    }                                    
+                                    }
                                 }
 
                                 if (shipCost == -1)
@@ -3835,57 +3829,6 @@ namespace Protean
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug);
-                }
-
-            }
-
-
-            //this is a method to display wallet buttons on cart screen.
-            //input parameter is CartElement which will have values in 
-            //node with 'Wallets/Wallet with attributes to it
-            // which will be used to get data for rendering button with paymentdetails on cartprocess.xsl
-
-            public bool GetWalletDetails(ref XmlElement oCartElmt)
-
-            {
-                try
-                {
-
-
-                    decimal nPaymentAmount = Conversions.ToDecimal("0" + oCartElmt.GetAttribute("total"));
-                    if (nPaymentAmount <= 0)
-                    {
-                        return false;
-                    }
-
-
-                    Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
-
-                    XmlElement xElmtPaymentProvider = oEwProv.GetValidPaymentProviders();
-
-                    if (xElmtPaymentProvider != null)
-                    {
-
-                        foreach (XmlElement opElmt in xElmtPaymentProvider)
-                        {
-
-                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
-                            XmlElement oWallets = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
-                            //just check if wallets object is empty.
-                            if (oWallets.InnerXml != string.Empty)
-                            {
-                                oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oWallets, true));
-                            }
-                        }
-
-                    }
-                    return true;
-
-                }
-                catch (Exception ex)
-                {
-                    return false;
                 }
 
             }
@@ -5496,12 +5439,24 @@ namespace Protean
                                         }
                                     }
                                 }
-
-                                if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
+                                if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail") != null)
                                 {
-                                    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
+                                    if(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut") !=null)
+                                    {
+                                        sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
+                                        string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
+                                        moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
+
+                                    }
+
                                 }
+                                //if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
+                                //{
+                                //    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
+
+                                //}
                                
+
                             }
 
                             else
@@ -10994,7 +10949,8 @@ namespace Protean
                             string PostcodePrefix = System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1];
                             sCountryList = getParentCountries(ref PostcodePrefix, ref argnIndex);
                         }
-                        catch {
+                        catch
+                        {
                             sCountryList = "";
                         }
 
@@ -11099,11 +11055,34 @@ namespace Protean
                         // Go and collect the valid shipping options available for this order
                         oDS = moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
                     }
+
+                    //// fix for bOverrideForWholeOrder mot required as SP now does this.
+                    //if (oDS.Tables["Option"].Columns["bOverrideForWholeOrder"] != null)
+                    //{
+                    //    bool hasOverideForWholeOrder = false;
+                    //    foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                    //    {
+                    //        if (Convert.ToInt16(oRow["bOverrideForWholeOrder"]) == 1) {
+                    //            hasOverideForWholeOrder = true;
+                    //        }
+                    //    }
+                    //    if (hasOverideForWholeOrder) {
+                    //        foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                    //        {
+                    //            if (Convert.ToInt16(oRow["bOverrideForWholeOrder"]) != 1)
+                    //            {
+                    //                oRow.Delete();
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
                     if (oDS.Tables["Option"].Columns["cLocationNameShort"] != null)
                     {
                         string overiddenLocations = "";
                         foreach (DataRow oRow in oDS.Tables["Option"].Rows)
                         {
+                           
                             // Calculate any shipping cost overage
                             double nShippingCost;
                             nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
