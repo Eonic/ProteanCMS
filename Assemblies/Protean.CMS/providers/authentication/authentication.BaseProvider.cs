@@ -1,0 +1,132 @@
+﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Net.Http;
+using System.Security.Policy;
+using System.Text;
+using System.Threading.Tasks;
+using System.Collections.Specialized;
+using System.Web.Configuration;
+using Newtonsoft.Json.Linq;
+using System.Security.Authentication;
+using Protean.Providers.Payment;
+using System.Reflection;
+using static Protean.stdTools;
+using Protean.Tools;
+using Microsoft.VisualBasic.CompilerServices;
+using Microsoft.Ajax.Utilities;
+using System.Configuration.Provider;
+using Microsoft.VisualBasic;
+using System.Xml;
+using System.Web.Security;
+
+
+namespace Protean.Providers
+{
+    namespace authentication
+    {
+        public interface IauthenticaitonProvider
+        {
+            IauthenticaitonProvider Initiate(ref Cms myWeb);
+     
+            string name { get; }
+
+        }
+
+        public class ReturnProvider
+        {
+            private const string mcModuleName = "Protean.Providers.CDN.GetProvider";
+          
+            public IEnumerable<IauthenticaitonProvider> Get(ref Cms myWeb)
+            {
+                try
+                {
+
+                                      
+                    Type calledType;
+                    string ProviderClass = "";
+                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/authenticationProviders");
+
+                    ICollection<IauthenticaitonProvider> providerList = new IauthenticaitonProvider[0];
+                    var modifiable = providerList.ToList();
+
+                    if (moPrvConfig != null)
+                    {
+                        foreach (System.Configuration.ProviderSettings authProvider in moPrvConfig.Providers) { 
+                        
+                            ProviderClass = Convert.ToString(authProvider.Name);
+
+                            if (string.IsNullOrEmpty(ProviderClass))
+                            {
+                                ProviderClass = "Protean.Providers.authentication.DefaultProvider";
+                                calledType = Type.GetType(ProviderClass, true);
+                            }
+                            else
+                            {
+                                if (authProvider.Type != "")
+                                {
+                                    var assemblyInstance = Assembly.Load(authProvider.Type);
+                                    calledType = assemblyInstance.GetType("Protean.Providers.authentication." + ProviderClass, true);
+                                }
+                                else
+                                {
+                                    calledType = Type.GetType("Protean.Providers.authentication." + ProviderClass, true);
+                                }
+                            }
+
+                            var o = Activator.CreateInstance(calledType);
+                            var args = new object[1];
+                            args[0] = myWeb;
+                            
+                            modifiable.Add((IauthenticaitonProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args));
+
+                        }
+
+                        providerList = modifiable;
+                        return providerList;
+
+                    }else
+                    {
+                        return null;
+                    }
+                    
+                }
+                catch (Exception ex)
+                {
+                    // TS commented this out as if we have an old payment provider that has been retired we do not want errors.
+                    //stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", ProviderName + " Could Not be Loaded", gbDebug);
+                    return null;
+                }
+            }
+
+        }
+        public class Default : IauthenticaitonProvider
+        {
+            private string _Name = "Default";
+            public Default()
+            {
+                // do nothing
+            }
+
+            string IauthenticaitonProvider.name
+            {
+                get
+                {
+                    return _Name;
+                }
+            }
+
+            public IauthenticaitonProvider Initiate(ref Cms myWeb)
+            {
+                return this;
+            }
+
+            IauthenticaitonProvider IauthenticaitonProvider.Initiate(ref Cms myWeb)
+            {
+                throw new NotImplementedException();
+            }
+        }
+    }
+}

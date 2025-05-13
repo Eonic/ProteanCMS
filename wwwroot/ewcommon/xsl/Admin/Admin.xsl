@@ -66,7 +66,7 @@
 				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebSupportTelephone']/@value"/>
 			</xsl:when>
 			<xsl:otherwise>
-				+44 (0)1892 534044
+				+44 (0)1273 761 586
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -77,7 +77,7 @@
 				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebWebsite']/@value"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text>eonic.com</xsl:text>
+				<xsl:text>eonic.digital</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -88,7 +88,7 @@
 				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebSupportEmail']/@value"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text>support@eonic.com</xsl:text>
+				<xsl:text>support@eonic.digital</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -358,7 +358,7 @@
 		</xsl:variable>
 
 		<button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-primary btn-block"  onclick="disableButton(this);">
-			Login<xsl:text> </xsl:text>
+			Sign In<xsl:text> </xsl:text>
 			<i class="fa fa-sign-in">
 				<xsl:text> </xsl:text>
 			</i>
@@ -374,6 +374,7 @@
 			</xsl:attribute>
 		</xsl:if>
 		<div>
+			<br/>
 			<a href="{$appPath}?ewCmd=LogOff" >
 				<i class="fa fa-reply">
 					<xsl:text> </xsl:text>

@@ -243,7 +243,7 @@
 			<xsl:for-each select="group">
 				<div class="panel-body">
 					<xsl:apply-templates select="label" mode="legend"/>
-<p>Welcome back, please login to your account.</p>
+<p>Welcome back, please sign in to your account</p>
 					<xsl:choose>
 						<xsl:when test="contains(@class,'2col') or contains(@class,'2Col') ">
 							<div class="row">

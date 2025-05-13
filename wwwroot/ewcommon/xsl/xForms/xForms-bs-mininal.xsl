@@ -934,6 +934,12 @@
 					<xsl:value-of select="@data-pleasewaitdetail"/>
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="@icon-left!=''">
+				<i class="{@icon-left} iconleft">
+					<xsl:text> </xsl:text>
+				</i>
+				<xsl:text> </xsl:text>
+			</xsl:if>
 			<xsl:if test="not(contains($class,'icon-right'))">
 				<i class="fa {$icon} fa-white">
 					<xsl:text> </xsl:text>
@@ -947,6 +953,8 @@
 					<xsl:text> </xsl:text>
 				</i>
 			</xsl:if>
+
+			
 		</button>
 	</xsl:template>
 
@@ -4072,6 +4080,12 @@
 				<xsl:attribute name="data-pleasewaitdetail">
 					<xsl:value-of select="@data-pleasewaitdetail"/>
 				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@icon-left!=''">
+				<i class="fa {@icon-left} fa-white">
+					<xsl:text> </xsl:text>
+				</i>
+				<xsl:text> </xsl:text>
 			</xsl:if>
 			<xsl:if test="not(contains($class,'icon-right'))">
 				<i class="fa {$icon} fa-white">

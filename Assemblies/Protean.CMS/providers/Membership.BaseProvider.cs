@@ -12,12 +12,15 @@
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.AdminProxy;
+using Protean.Providers.authentication;
+using Protean.Providers.CDN;
 using Protean.Tools;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.AccessControl;
 using System.Web;
@@ -255,7 +258,7 @@ namespace Protean.Providers
                 {
 
                     // Called to get XML for the User Logon.
-                    string btnClass = "btn btn-default btn-block";
+                    string btnClass = "btn btn-default btn-block icon-right";
                     string btnIcon = "fa fa-sign-in";
                     if (myWeb.bs5) {
                         btnClass = "btn btn-default btn-block";
@@ -299,23 +302,38 @@ namespace Protean.Providers
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "UserDetails", "", "Sign in to ProteanCMS");
 
-                        XmlElement userIpt = base.addInput(ref oFrmElmt, "cUserName", true, "Email");
+                        XmlElement userIpt = base.addInput(ref oFrmElmt, "cUserName", true, "");
+                        userIpt.SetAttribute("placeholder", "Email");
                         base.addClientSideValidation(ref userIpt, true, "Please enter Email");
                         XmlElement oBindParent = null;
                         base.addBind("cUserName", "user/username", ref oBindParent, "true()");
                         string cClass = "";
-                        XmlElement pwdIpt = base.addSecret(ref oFrmElmt, "cPassword", true, "Password", ref cClass);
+                        XmlElement pwdIpt = base.addSecret(ref oFrmElmt, "cPassword", true, "", ref cClass);
+                        pwdIpt.SetAttribute("placeholder", "Password");
                         base.addClientSideValidation(ref pwdIpt, true, "Please enter Password");
                         base.addBind("cPassword", "user/password", ref oBindParent, "true()");
                         base.addDiv(ref oFrmElmt, "", "password-reminder");
 
-                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign In", "UserLogon", default, "fa-solid fa-right-to-bracket");
+                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign In", "UserLogon", btnClass, btnIcon);
 
-                        base.addDiv(ref oFrmElmt, "OR", "separator");
 
-                        base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With Google", "google", "btn btn-default btn-block", "fa-solid fa-right-to-bracket");
 
-                        base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With Microsoft", "microsoft", "btn btn-default btn-block", "fa-solid fa-right-to-bracket");
+                        //TODO - this need to be optional based on auth provider config
+                        Protean.Providers.authentication.ReturnProvider oAuthProv = new Protean.Providers.authentication.ReturnProvider();
+                        IEnumerable<IauthenticaitonProvider> oAuthProviders = oAuthProv.Get(ref myWeb);
+                        if (oAuthProviders.Count() > 0)
+                        {
+                            base.addDiv(ref oFrmElmt, "OR", "separator");
+                            foreach (IauthenticaitonProvider authProvider in oAuthProviders) {
+                                string provName = authProvider.name;
+                                XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With " + provName, provName.ToLower(), btnClass + " btn-"+ provName.ToLower(), btnIcon);
+                                thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
+                            }
+                        }
+                    
+
+
+                        //END TODO
 
 
                         base.addDiv(ref oFrmElmt, "", "footer-override");
