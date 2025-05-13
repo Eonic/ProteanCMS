@@ -264,6 +264,18 @@
     </body>
   </xsl:template>
 
+
+	<xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
+		<xsl:choose>
+			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+				<xsl:call-template name="eonicwebAdminSystemName"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<img src="/ptn/admin/skin/protean-admin-black-logon.png" alt="ProteanCMS" width="320px" height="57px"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
   <xsl:template match="Page[@layout='Logon']" mode="Admin">
     <div class="adminTemplate container" id="template_Logon">
 		<span class="text-light logo-text login-logo">
@@ -271,45 +283,28 @@
 			<strong>protean</strong>CMS
 		</span>
 		<div class="card">
-			<div class="card-header">
-				<h5>Sign in</h5>
-			</div>
 			<div class="card-body">
 				<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-				<xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
 			</div>
 		</div>
     </div>
   </xsl:template>
 
-  <xsl:template match="submit[ancestor::Content[@name='UserLogon'] and ancestor::Page/@adminMode='true']" mode="xform">
-    <xsl:variable name="class">
-      <xsl:text>adminButton</xsl:text>
-      <xsl:if test="@class!=''">
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="@class"/>
-      </xsl:if>
-    </xsl:variable>
-    <a href="{$appPath}?ewCmd=LogOff" class="btn btn-outline-primary">
-      <i class="fa fa-reply">
-        <xsl:text> </xsl:text>
-      </i> Back to Site
-    </a>
-
-    <button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-primary float-end"  onclick="disableButton(this);">
-      Sign In<xsl:text> </xsl:text>
-		&#160;<i class="fa-solid fa-right-to-bracket">&#160;</i>
-
-    </button>
-
-    <!--a href="/?ewCmd=PasswordReminder" class="text-muted">
-        <i class="fa fa-chevron-right">
-          <xsl:text> </xsl:text>
-        </i>
-        Password Reminder
-      </a-->
-  </xsl:template>
-
+	<xsl:template match="div[@class='footer-override']" mode="xform">
+		<xsl:if test="./@class">
+			<xsl:attribute name="class">
+				<xsl:value-of select="./@class"/>
+			</xsl:attribute>
+		</xsl:if>
+		<div>
+			<br/>
+			<a href="{$appPath}?ewCmd=LogOff" >
+				<i class="fa fa-reply">
+					<xsl:text> </xsl:text>
+				</i> Back to Site
+			</a>
+		</div>
+	</xsl:template>
 
   <xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
 

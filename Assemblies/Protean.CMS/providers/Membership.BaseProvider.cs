@@ -260,9 +260,11 @@ namespace Protean.Providers
                     // Called to get XML for the User Logon.
                     string btnClass = "btn btn-default btn-block icon-right";
                     string btnIcon = "fa fa-sign-in";
+                    string grpClass = "d-grid gap-2";
                     if (myWeb.bs5) {
-                        btnClass = "btn btn-default btn-block";
+                        btnClass = "btn btn-primary";
                         btnIcon = "fa-solid fa-right-to-bracket";
+                        grpClass = "";
                     }
 
                     XmlElement oFrmElmt = null;
@@ -300,7 +302,7 @@ namespace Protean.Providers
 
                         base.submission("UserLogon", "", "post", "form_check(this)");
 
-                        oFrmElmt = base.addGroup(ref base.moXformElmt, "UserDetails", "", "Sign in to ProteanCMS");
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "UserDetails", grpClass, "Sign in to ProteanCMS");
 
                         XmlElement userIpt = base.addInput(ref oFrmElmt, "cUserName", true, "");
                         userIpt.SetAttribute("placeholder", "Email");
