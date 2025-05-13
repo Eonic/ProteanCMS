@@ -321,16 +321,18 @@ namespace Protean.Providers
                         //TODO - this need to be optional based on auth provider config
                         Protean.Providers.authentication.ReturnProvider oAuthProv = new Protean.Providers.authentication.ReturnProvider();
                         IEnumerable<IauthenticaitonProvider> oAuthProviders = oAuthProv.Get(ref myWeb);
-                        if (oAuthProviders.Count() > 0)
-                        {
-                            base.addDiv(ref oFrmElmt, "OR", "separator");
-                            foreach (IauthenticaitonProvider authProvider in oAuthProviders) {
-                                string provName = authProvider.name;
-                                XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With " + provName, provName.ToLower(), btnClass + " btn-"+ provName.ToLower(), btnIcon);
-                                thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
+                        if (oAuthProviders != null){
+                            if (oAuthProviders.Count() > 0)
+                            {
+                                base.addDiv(ref oFrmElmt, "OR", "separator");
+                                foreach (IauthenticaitonProvider authProvider in oAuthProviders) {
+                                    string provName = authProvider.name;
+                                    XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With " + provName, provName.ToLower(), btnClass + " btn-"+ provName.ToLower(), btnIcon);
+                                    thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
+                                }
                             }
                         }
-                    
+
 
 
                         //END TODO
@@ -340,6 +342,8 @@ namespace Protean.Providers
 
 
                         base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
+
+
                     Check:
                         ;
                         XmlElement xmlGroupElmt = (XmlElement)base.moXformElmt.SelectSingleNode("group");
