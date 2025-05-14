@@ -25,34 +25,30 @@ using System.Web.Security;
 
 namespace Protean.Providers
 {
-    namespace authentication
+    namespace Authentication
     {
      
-        public class Google : authentication.Default, IauthenticaitonProvider
+        public class Google : Authentication.Default, IauthenticaitonProvider
         {
-            private string _Name = "Google";
+        
             
             public Google()
             {
                 // do nothing
             }
 
-            string IauthenticaitonProvider.name {
-                get
-                {
-                    return _Name;
-                }
-            }
 
             public IauthenticaitonProvider Initiate(ref Cms myWeb)
             {
                 return this;
             }
 
-            IauthenticaitonProvider IauthenticaitonProvider.Initiate(ref Cms myWeb)
+            public string GetAuthenticationURL()
             {
-                throw new NotImplementedException();
+
+                return GetSamlLoginUrl(base.config["ssoUrl"].ToString(),_myWeb.mcOriginalURL, _myWeb.mcOriginalURL);
             }
+
         }
     }
 }

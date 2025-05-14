@@ -25,12 +25,11 @@ using System.Web.Security;
 
 namespace Protean.Providers
 {
-    namespace authentication
+    namespace Authentication
     {
      
-        public class Microsoft : authentication.Default, IauthenticaitonProvider
+        public class Microsoft : Authentication.Default, IauthenticaitonProvider
         {
-            private string _Name = "Microsoft";
 
             public Microsoft()
             {
@@ -38,23 +37,16 @@ namespace Protean.Providers
             }
 
 
-            string IauthenticaitonProvider.name
-            {
-                get
-                {
-                    return _Name;
-                }
-            }
-
             public IauthenticaitonProvider Initiate(ref Cms myWeb)
             {
                 return this;
             }
-
-            IauthenticaitonProvider IauthenticaitonProvider.Initiate(ref Cms myWeb)
+            public string GetAuthenticationURL()
             {
-                throw new NotImplementedException();
+
+                return "";
             }
+
         }
     }
 }

@@ -21,23 +21,31 @@ using System.Configuration.Provider;
 using Microsoft.VisualBasic;
 using System.Xml;
 using System.Web.Security;
+using System.IO.Compression;
+using System.IO;
+using System.Web;
 
 
 namespace Protean.Providers
 {
-    namespace authentication
+    namespace Authentication
     {
         public interface IauthenticaitonProvider
         {
             IauthenticaitonProvider Initiate(ref Cms myWeb);
-     
+
+            string GetAuthenticationURL();
+
+            System.Collections.Specialized.NameValueCollection config
+            { get; }
+
             string name { get; }
 
         }
 
         public class ReturnProvider
         {
-            private const string mcModuleName = "Protean.Providers.CDN.GetProvider";
+            private const string mcModuleName = "Protean.Providers.Authentication.GetProvider";
           
             public IEnumerable<IauthenticaitonProvider> Get(ref Cms myWeb)
             {
@@ -60,7 +68,7 @@ namespace Protean.Providers
 
                             if (string.IsNullOrEmpty(ProviderClass))
                             {
-                                ProviderClass = "Protean.Providers.authentication.DefaultProvider";
+                                ProviderClass = "Protean.Providers.Authentication.DefaultProvider";
                                 calledType = Type.GetType(ProviderClass, true);
                             }
                             else
@@ -68,18 +76,19 @@ namespace Protean.Providers
                                 if (authProvider.Type != "")
                                 {
                                     var assemblyInstance = Assembly.Load(authProvider.Type);
-                                    calledType = assemblyInstance.GetType("Protean.Providers.authentication." + ProviderClass, true);
+                                    calledType = assemblyInstance.GetType("Protean.Providers.Authentication." + ProviderClass, true);
                                 }
                                 else
                                 {
-                                    calledType = Type.GetType("Protean.Providers.authentication." + ProviderClass, true);
+                                    calledType = Type.GetType("Protean.Providers.Authentication." + ProviderClass, true);
                                 }
                             }
 
                             var o = Activator.CreateInstance(calledType);
-                            var args = new object[1];
+                            var args = new object[2];
                             args[0] = myWeb;
-                            
+                            args[1] = authProvider.Parameters;
+
                             modifiable.Add((IauthenticaitonProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args));
 
                         }
@@ -105,6 +114,9 @@ namespace Protean.Providers
         public class Default : IauthenticaitonProvider
         {
             private string _Name = "Default";
+            public Protean.Cms _myWeb;
+
+            private NameValueCollection _Config;
             public Default()
             {
                 // do nothing
@@ -114,12 +126,27 @@ namespace Protean.Providers
             {
                 get
                 {
-                    return _Name;
+                    return GetType().Name; ;
                 }
             }
 
-            public IauthenticaitonProvider Initiate(ref Cms myWeb)
+            public NameValueCollection config
             {
+                get
+                {
+                    return _Config; 
+                }
+            }
+
+            public string GetAuthenticationURL() {
+
+                return "";
+            }
+
+            public IauthenticaitonProvider Initiate(ref Cms myWeb, ref NameValueCollection config)
+            {
+                _myWeb = myWeb;
+                _Config = config;
                 return this;
             }
 
@@ -127,6 +154,44 @@ namespace Protean.Providers
             {
                 throw new NotImplementedException();
             }
+
+            public static string GetSamlLoginUrl(string idpSsoUrl, string issuer, string assertionConsumerServiceUrl)
+            {
+                var authRequest = GenerateSamlRequestXml(issuer, assertionConsumerServiceUrl);
+
+                var compressedRequest = CompressAndEncode(authRequest);
+                var samlRequest = HttpUtility.UrlEncode(compressedRequest);
+
+                return $"{idpSsoUrl}?SAMLRequest={samlRequest}";
+            }
+
+            private static string GenerateSamlRequestXml(string issuer, string assertionConsumerServiceUrl)
+            {
+                var id = "_" + Guid.NewGuid().ToString("N");
+                var issueInstant = DateTime.UtcNow.ToString("o");
+
+                return $@"
+<samlp:AuthnRequest xmlns:samlp='urn:oasis:names:tc:SAML:2.0:protocol' 
+    ID='{id}' Version='2.0' IssueInstant='{issueInstant}' 
+    AssertionConsumerServiceURL='{assertionConsumerServiceUrl}' 
+    ProtocolBinding='urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'>
+    <saml:Issuer xmlns:saml='urn:oasis:names:tc:SAML:2.0:assertion'>{issuer}</saml:Issuer>
+</samlp:AuthnRequest>";
+            }
+
+            private static string CompressAndEncode(string input)
+            {
+                var bytes = Encoding.UTF8.GetBytes(input);
+                using (var output = new MemoryStream())
+                {
+                    using (var compress = new DeflateStream(output, CompressionMode.Compress, true))
+                    {
+                        compress.Write(bytes, 0, bytes.Length);
+                    }
+                    return Convert.ToBase64String(output.ToArray());
+                }
+            }
         }
     }
 }
+

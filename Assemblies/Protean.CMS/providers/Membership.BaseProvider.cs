@@ -12,7 +12,7 @@
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.AdminProxy;
-using Protean.Providers.authentication;
+using Protean.Providers.Authentication;
 using Protean.Providers.CDN;
 using Protean.Tools;
 using System;
@@ -320,31 +320,30 @@ namespace Protean.Providers
 
 
 
-                        //TODO - this need to be optional based on auth provider config
-                        Protean.Providers.authentication.ReturnProvider oAuthProv = new Protean.Providers.authentication.ReturnProvider();
+                        //this need to be optional based on auth provider config
+                        Protean.Providers.Authentication.ReturnProvider oAuthProv = new Protean.Providers.Authentication.ReturnProvider();
                         IEnumerable<IauthenticaitonProvider> oAuthProviders = oAuthProv.Get(ref myWeb);
                         if (oAuthProviders != null){
                             if (oAuthProviders.Count() > 0)
                             {
                                 base.addDiv(ref oFrmElmt, "OR", "separator");
                                 foreach (IauthenticaitonProvider authProvider in oAuthProviders) {
-                                    string provName = authProvider.name;
-                                    XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With " + provName, provName.ToLower(), btnClass + " btn-"+ provName.ToLower(), btnIcon);
-                                    thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
+                                    Boolean bUse = false;
+                                    if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin") {
+                                        bUse = true;
+                                    }
+                                    if (bUse) {
+                                        string provName = authProvider.name;
+                                        XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With " + provName, provName.ToLower(), btnClass + " btn-"+ provName.ToLower(), btnIcon);
+                                        thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
+                                    }
                                 }
                             }
                         }
-
-
-
-                        //END TODO
-
+                        //END auth provider
 
                         base.addDiv(ref oFrmElmt, "", "footer-override");
-
-
                         base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
-
 
                     Check:
                         ;
