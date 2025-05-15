@@ -9753,7 +9753,13 @@
     <xsl:value-of select="ew:GetPageIdFromFref($fRef)"/>
   </xsl:template>
 
-  <xsl:template name="DeletePage">
+	<xsl:template name="GetDirIdFromFref">
+		<xsl:param name="fRef"/>
+		<xsl:value-of select="ew:GetDirIdFromFref($fRef)"/>
+	</xsl:template>
+
+
+	<xsl:template name="DeletePage">
     <xsl:param name="id"/>
     <xsl:value-of select="ew:DeletePage($id)"/>
   </xsl:template>

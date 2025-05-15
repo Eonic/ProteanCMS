@@ -272,8 +272,15 @@ namespace Protean.Providers
                     string sValidResponse;
                     string cProcessInfo = "";
                     bool bRememberMe = false;
+
+
                     try
                     {
+                        //this need to be optional based on auth provider config
+                        Protean.Providers.Authentication.ReturnProvider oAuthProv = new Protean.Providers.Authentication.ReturnProvider();
+                        IEnumerable<IauthenticaitonProvider> oAuthProviders = oAuthProv.Get(ref myWeb);
+
+
                         base.NewFrm("UserLogon");
 
                         if (mbAdminMode & myWeb.mnUserId == 0)
@@ -320,9 +327,7 @@ namespace Protean.Providers
 
 
 
-                        //this need to be optional based on auth provider config
-                        Protean.Providers.Authentication.ReturnProvider oAuthProv = new Protean.Providers.Authentication.ReturnProvider();
-                        IEnumerable<IauthenticaitonProvider> oAuthProviders = oAuthProv.Get(ref myWeb);
+                     
                         if (oAuthProviders != null){
                             if (oAuthProviders.Count() > 0)
                             {
@@ -416,6 +421,10 @@ namespace Protean.Providers
 
                             if (base.isSubmitted())
                             {
+
+                                //check for 
+
+
                                 base.validate();
                                 if (base.valid)
                                 {
