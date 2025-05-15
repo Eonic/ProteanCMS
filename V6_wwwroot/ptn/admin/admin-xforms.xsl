@@ -3825,7 +3825,7 @@
 				</xsl:attribute>
 			</xsl:if>
 			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
-			<div class="permission-button-wrapper">
+			<div class="permission-button-wrapper d-grid gap-2">
 				<xsl:if test="not(submit[contains(@class,'hideRequired')])">
 					<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
 						<label class="required">

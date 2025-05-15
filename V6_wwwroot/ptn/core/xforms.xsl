@@ -828,6 +828,12 @@
     </xsl:choose>
   </xsl:template>
 
+	<xsl:template match="div" mode="control-outer">
+		
+		<xsl:apply-templates select="." mode="xform"/>
+	
+	</xsl:template>
+
 	<xsl:template match="submit" mode="control-outer">
 		<div class="d-grid gap-2">
 			<xsl:apply-templates select="." mode="xform"/>

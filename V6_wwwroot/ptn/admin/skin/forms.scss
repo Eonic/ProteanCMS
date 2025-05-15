@@ -1215,14 +1215,10 @@ form .form-actions .required {
         text-align: center;
 
         button {
-            margin: 0 0.5rem 0.5rem;
 
             @include media-breakpoint-up(lg) {
                 float: none;
                 display: block;
-                margin: 0 auto 0.5rem;
-                min-width: 175px;
-                max-width: 100%;
             }
 
             &:before {
