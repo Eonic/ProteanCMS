@@ -2727,15 +2727,12 @@ namespace Protean
                                 }
                                 if (oMessaging.Activities != null)
                                 {
-                                    if (bOptOut == "True")
-                                    {
-                                        oMessaging.Activities.OptOutFromList(Email);
-
-                                    }
-                                    else
+                                    if (bOptOut != "True")
                                     {
                                         oMessaging.Activities.AddToList(ListId, firstName, Email, valDict);
+
                                     }
+                                    
 
                                 }
                             }
@@ -5445,7 +5442,7 @@ namespace Protean
                                     {
                                         sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
                                         string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
-                                        moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
+                                        moDBHelper.AddOptOutEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
 
                                     }
 
@@ -7945,6 +7942,12 @@ namespace Protean
                             {
 
                                 UniqueProduct = Convert.ToBoolean(myWeb.moRequest["UniqueProduct"]);
+
+                            }
+                            if (myWeb.moRequest["overideUrl"] != null)
+                            {
+
+                                overideUrl = Convert.ToString(myWeb.moRequest["overideUrl"]);
 
                             }
 

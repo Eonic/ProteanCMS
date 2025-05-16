@@ -651,7 +651,7 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                cOrderBySql = orderBySql;
+                                                cOrderBySql = orderBySql +",";
                                             }
                                            
                                         }
@@ -672,7 +672,8 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                    bDistinct = false;
+                                                cOrderBySql = orderBySql;
+                                                bDistinct = false;
 
                                             }
                                         }
