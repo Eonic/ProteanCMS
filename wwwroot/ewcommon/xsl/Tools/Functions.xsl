@@ -9265,7 +9265,7 @@
           <xsl:value-of select="@maxDisplay"/>
         </xsl:when>
         <xsl:otherwise>
-          0
+			<xsl:text>0</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:param>
