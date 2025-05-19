@@ -12472,7 +12472,7 @@ namespace Protean
                     {
                         string cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,userid,optout_reason,status,optout_date) VALUES ('" + cEmailAddress + "','" + cUserId + "','','" + nStatus + "'," + SqlDate(DateTime.Now, true) + ")";
                         ExeProcessSql(cSQL);
-                        return true;
+                       
 
                     }
                     if (nStatus == "true")
@@ -12490,6 +12490,7 @@ namespace Protean
                                 Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                                 IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
                                 oMessaging.Activities.OptOutFromList(cEmailAddress);
+                                return true;
                             }
                         }
 
