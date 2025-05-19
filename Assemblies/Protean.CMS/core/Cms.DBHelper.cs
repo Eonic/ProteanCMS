@@ -12489,7 +12489,7 @@ namespace Protean
                             {
                                 Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                                 IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
-                                oMessaging.Activities.OptOutFromList(cEmailAddress);
+                                oMessaging.Activities.OptOutAll(cEmailAddress);
                                 return true;
                             }
                         }
