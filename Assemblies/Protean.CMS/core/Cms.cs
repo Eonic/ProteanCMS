@@ -4773,7 +4773,7 @@ namespace Protean
         /// <param name="bShowContentDetails"></param>
         ///
 
-        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "")
+        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string groupBySql="")
         {
             PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -5020,18 +5020,12 @@ namespace Protean
                     }
                     else
                     {
-                        if (cAdditionalColumns.Contains("tblCartCatProductRelations.nDisplayOrder"))
+                        if (groupBySql != string.Empty)
                         {
-                            sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition , tblCartCatProductRelations.nDisplayOrder ";
-
-                        }
-                        else
-                        {
-                            sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition";
-
+                            sSql = sSql + groupBySql;
                         }
 
-                       // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition"+ cAdditionalColumns;
+                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition"+ cAdditionalColumns;
                         sSql = sSql + " ORDER BY ";
                         sSql += cOrderBy;
                     }
