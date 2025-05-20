@@ -12600,7 +12600,7 @@ namespace Protean
                     if (!string.IsNullOrEmpty(nCheckAddress))
                     {
                         bool bReturn;
-                        if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nOptOutId"))
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "status"))
                         {
                             cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE status=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
                         }
