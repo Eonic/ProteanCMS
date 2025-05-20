@@ -12599,6 +12599,7 @@ namespace Protean
                     string cSQL;
                     if (!string.IsNullOrEmpty(nCheckAddress))
                     {
+                        if (checkTableColumnExists("tblOptOutAddresses","status")) {
                         bool bReturn;
                         cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE status=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
                         using (var oDRe = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
@@ -12606,6 +12607,11 @@ namespace Protean
                             bReturn = oDRe.HasRows;
                             oDRe.Close();
                             return bReturn;
+                        }
+                        }
+                        else
+                        {
+                            return false;
                         }
                     }
                     else
