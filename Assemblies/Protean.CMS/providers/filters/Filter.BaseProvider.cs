@@ -264,6 +264,10 @@ namespace Protean.Providers
             {
                 return null;
             }
+            public virtual string GetFilterGroupByClause(ref Cms myWeb)
+            {
+                return null;
+            }
 
             public void SaveFilterInSession(ref Cms aWeb, string filterDetails)
             {
