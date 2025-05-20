@@ -12601,7 +12601,15 @@ namespace Protean
                     {
                         if (checkTableColumnExists("tblOptOutAddresses","status")) {
                         bool bReturn;
-                        cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE status=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "status"))
+                        {
+                            cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE status=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
+                        }
+                        else
+                        {
+                            cSQL = "SELECT EmailAddress FROM tblOptOutAddresses WHERE EmailAddress = '" + nCheckAddress + "'";
+                        }
+
                         using (var oDRe = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                         {
                             bReturn = oDRe.HasRows;
