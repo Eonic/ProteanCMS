@@ -747,7 +747,7 @@ namespace Protean
                                 }
                                
                                 myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail,
-                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns,groupBySql: cGroupBySql);
+                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns,cGroupBySql: cGroupBySql);
 
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
                                 {
