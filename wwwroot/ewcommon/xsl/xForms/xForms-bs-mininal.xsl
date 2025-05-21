@@ -4184,7 +4184,7 @@
 				const telinput = document.querySelector("#<xsl:value-of select="$ref"/>-temp");
 
 				window.intlTelInput(telinput, {
-				initialCountry: "auto",
+				initialCountry: "gb",
 				preferredCountries: ["gb"],
 				separateDialCode: true,
 				utilsScript: "/ewcommon/js/intlTelInput/js/utils.js",
