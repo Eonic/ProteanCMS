@@ -6281,7 +6281,7 @@ namespace Protean
 
 
                     string cOrderBy = "";
-                    string cAdditionalColumn = ""; 
+                    string cAdditionalColumn = "";
 
                     // Get the parameters SortDirection
                     string cSchema = oContent.GetAttribute("contentType");
@@ -6306,7 +6306,7 @@ namespace Protean
                         // Get Related Items
                         XmlElement argoPageDetail = null;
                         int nCount = 0;
-                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail,cAdditionalColumns: cAdditionalColumn);
+                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail, cAdditionalColumns: cAdditionalColumn);
                         foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
                         {
                             XmlElement xmloContentElmt = oContentElmt;
@@ -12459,7 +12459,7 @@ namespace Protean
 
                 return default;
             }
-            public bool AddOptOutEmail(string cEmailAddress, string cUserId, string nStatus)
+            public bool AddOptOutEmail(string cEmailAddress, string nContactKey, string cStatus)
             {
                 PerfMonLog("DBHelper", "AddOptOutEmail");
 
@@ -12467,15 +12467,32 @@ namespace Protean
                 {
                     if (string.IsNullOrEmpty(cEmailAddress))
                         return false;
+                    string cSQL = "Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
+                    string cSQLStatusCheck = "Select top 1 nStatus FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "') order by dOptOut desc";
+                    bool bstatus = Convert.ToBoolean(ExeProcessSqlScalar(cSQLStatusCheck));
 
-                    if ((cEmailAddress != ""))
+                    if (cStatus == "true")
                     {
-                        string cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,userid,optout_reason,status,optout_date) VALUES ('" + cEmailAddress + "','" + cUserId + "','','" + nStatus + "'," + SqlDate(DateTime.Now, true) + ")";
+                        cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,nCartContactId,optout_reason,nStatus,dOptOut) VALUES ('" + cEmailAddress + "','" + nContactKey + "','Cart Opt Out','" + cStatus + "'," + SqlDate(DateTime.Now, true) + ")";
                         ExeProcessSql(cSQL);
-                       
+                    }
+                    else
+                    {
+                        if (((ExeProcessSqlScalar(cSQL) ?? "") == (cEmailAddress ?? "")))
+                        {
+                            if (bstatus)
+                            {
+                                cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,nCartContactId,optout_reason,nStatus,dOptOut) VALUES ('" + cEmailAddress + "','" + nContactKey + "','Cart Opt In','" + cStatus + "'," + SqlDate(DateTime.Now, true) + ")";
+                                ExeProcessSql(cSQL);
+
+                            }
+
+                        }
 
                     }
-                    if (nStatus == "true")
+
+
+                    if (cStatus == "true")
                     {
                         System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
                         if (moMailConfig != null)
@@ -12498,7 +12515,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddInvalidEmail", ex, ""));
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddOptOutEmail", ex, ""));
                 }
 
                 return default;
@@ -12600,9 +12617,9 @@ namespace Protean
                     if (!string.IsNullOrEmpty(nCheckAddress))
                     {
                         bool bReturn;
-                        if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "status"))
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nStatus"))
                         {
-                            cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE status=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
+                            cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE nStatus=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
                         }
                         else
                         {
