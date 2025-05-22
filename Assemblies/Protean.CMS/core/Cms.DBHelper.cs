@@ -12599,6 +12599,7 @@ namespace Protean
                     string cSQL;
                     if (!string.IsNullOrEmpty(nCheckAddress))
                     {
+                        if (checkTableColumnExists("tblOptOutAddresses","status")) {
                         bool bReturn;
                         if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "status"))
                         {
@@ -12614,6 +12615,11 @@ namespace Protean
                             bReturn = oDRe.HasRows;
                             oDRe.Close();
                             return bReturn;
+                        }
+                        }
+                        else
+                        {
+                            return false;
                         }
                     }
                     else
