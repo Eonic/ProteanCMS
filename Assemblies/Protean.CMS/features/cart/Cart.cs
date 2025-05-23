@@ -7415,7 +7415,7 @@ namespace Protean
 
                             if (oGrpElmt.SelectSingleNode("*[@ref='terms']") is null)
                             {
-                                string argsClass1 = "readonly terms-and-condiditons";
+                                string argsClass1 = "readonly terms-and-conditons";
                                 int argnRows1 = 0;
                                 int argnCols1 = 0;
                                 oOptXform.addTextArea(ref oGrpElmt, "terms", false, cTermsTitle, ref argsClass1, nRows: ref argnRows1, nCols: ref argnCols1);
