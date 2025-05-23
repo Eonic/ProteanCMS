@@ -3516,7 +3516,7 @@ namespace Protean
                     case "GetMoveContent":
                     case "GetLocateNode":
                     case "GetAdvNode":
-                    case "editStructurePermissions":
+                    case "editStructurePermissions":                    
                         {
 
                             // Make sure admin mode is true and we don't need to check for permissions
@@ -4773,7 +4773,7 @@ namespace Protean
         /// <param name="bShowContentDetails"></param>
         ///
 
-        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "")
+        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string cGroupBySql="")
         {
             PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -4788,6 +4788,7 @@ namespace Protean
             long nAuthGroup;
             string cContentField = "";
             string cFilterTarget = string.Empty;
+            string sGroupByClause;
 
 
             try
@@ -4993,6 +4994,7 @@ namespace Protean
                     oContentsNode.SetAttribute("resultCount", nTotal.ToString());
                 }
 
+                sGroupByClause ="group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
 
                 if (!string.IsNullOrEmpty(cOrderBy))
                 {
@@ -5002,7 +5004,15 @@ namespace Protean
                     {
                         // additional column have agreegate function and distinct flag is true then group by needs to eanble with default column
                         // along with orderby clause
-                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+                        else
+                        {
+                            sSql = sSql + sGroupByClause;
+                        }
+                       // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
                         sSql += cOrderBy;
 
@@ -5020,6 +5030,12 @@ namespace Protean
                     }
                     else
                     {
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+
+                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition"+ cAdditionalColumns;
                         sSql = sSql + " ORDER BY ";
                         sSql += cOrderBy;
                     }
@@ -5032,9 +5048,17 @@ namespace Protean
                     // along with orderby clause
                     if (distinct)
                     {
-                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+                        else
+                        {
+                            sSql = sSql + sGroupByClause;
+                        }
+                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
-                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        sSql = sSql + "  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
 
                     }
                     else
@@ -5263,7 +5287,7 @@ namespace Protean
                         }
                         else
                         {
-                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                            sSql = sSql + " , c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
                         }
                     }
                     else
@@ -5281,7 +5305,7 @@ namespace Protean
                     {
                         sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
-                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        sSql = sSql + ", c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
 
                     }
                     else
@@ -11508,6 +11532,10 @@ namespace Protean
                         HashSet<string> uniqueFolderPaths = new HashSet<string>(sFoldersUrlslist);
                         // delete all folders list which are exists 
                         string FolderstoDeleteFromCache = moFSHelper.DeleteMultipleFolder(uniqueFolderPaths);
+                        if (!mbSuppressLastPageOverrides)
+                        {
+                            moSession["lastPage"] = "/" + Cms.gcProjectPath + mcPagePath.TrimStart('/') + "?ewCmd=Normal&pgid=" + mnPageId; // myWeb.mcOriginalURL
+                        }
                     }
                 }
             }
