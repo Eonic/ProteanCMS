@@ -2532,6 +2532,15 @@
 
     <xsl:if test="$BingTrackingID!=''">
       <script>
+		  <xsl:choose>
+			  <xsl:when test="Contents/Content[@type='CookieFirst']">
+				  <xsl:attribute name="type">text/plain</xsl:attribute>
+				  <xsl:attribute name="data-cookiefirst-script">bing_ads</xsl:attribute>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:attribute name="cookie-consent">tracking</xsl:attribute>
+			  </xsl:otherwise>
+		  </xsl:choose>
         (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
       </script>
       <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
@@ -8525,11 +8534,9 @@
     <xsl:if test="$parentClass!=''">
       <Parent class="{$parentClass}"/>
     </xsl:if>
-    test1
     <xsl:choose>
       <!-- When Page Order -->
       <xsl:when test="$sort='Position' or $sort='' or $order=''">
-        test2
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
             <xsl:copy-of select="."/>
@@ -8537,7 +8544,7 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        test3 <xsl:value-of select="$contentType"/>
+        <xsl:value-of select="$contentType"/>
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
           <xsl:sort select="@update" order="{$order}" data-type="text"/>
