@@ -82,7 +82,7 @@ namespace Protean.Providers
         {
             bool AddToList(string ListId, string Name, string Email, IDictionary values);
             bool RemoveFromList(string ListId, string Email);
-            bool OptOutFromList(string Email);
+            bool OptOutAll(string Email);
         }
 
         public class ReturnProvider
@@ -1171,7 +1171,7 @@ namespace Protean.Providers
                         return default;
                     }
                 }
-                public virtual bool OptOutFromList(string Email)
+                public virtual bool OptOutAll(string Email)
                 {
                     // PerfMon.Log("Activities", "RemoveFromList")
                     try
@@ -1181,7 +1181,7 @@ namespace Protean.Providers
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref Protean.Messaging.msException, this.mcModuleName, "OptOutFromList", ex, "", "", gbDebug);
+                        stdTools.returnException(ref Protean.Messaging.msException, this.mcModuleName, "OptOutAll", ex, "", "", gbDebug);
                         return default;
                     }
                 }

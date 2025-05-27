@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms.dbHelper;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using VB = Microsoft.VisualBasic;
@@ -2644,7 +2645,7 @@ namespace Protean
                             Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                             IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
                             string xsltPath = string.Empty;
-                            string bOptOut = string.Empty;
+                            bool bOptOut = false;
                             if (string.IsNullOrEmpty(Email))
                                 Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
                             if (string.IsNullOrEmpty(Name))
@@ -2654,7 +2655,7 @@ namespace Protean
 
                             if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut") != null)
                             {
-                                bOptOut = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut").InnerText;
+                                bOptOut = Convert.ToBoolean(oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut").InnerText);
                             }
 
                             foreach (XmlAttribute Attribute in oCartElmt.Attributes)
@@ -2728,16 +2729,11 @@ namespace Protean
                                 }
                                 if (oMessaging.Activities != null)
                                 {
-                                    if (bOptOut == "True")
-                                    {
-                                        oMessaging.Activities.OptOutFromList(Email);
-
-                                    }
-                                    else
+                                    if (!bOptOut)
                                     {
                                         oMessaging.Activities.AddToList(ListId, firstName, Email, valDict);
-                                    }
 
+                                    }
                                 }
                             }
 
@@ -5492,22 +5488,25 @@ namespace Protean
                                 }
                                 if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail") != null)
                                 {
-                                    if(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut") !=null)
+                                    if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nOptOutKey"))
                                     {
-                                        sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
-                                        string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
-                                        moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
+                                        if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut") != null)
+                                        {
+                                            sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
+                                            string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
+                                            moDBHelper.AddOptOutEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3,oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
 
+                                        }
                                     }
+                                    else
+                                    {
+                                        if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
+                                        {
+                                            moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
 
+                                        }
+                                    }
                                 }
-                                //if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
-                                //{
-                                //    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
-
-                                //}
-                               
-
                             }
 
                             else
@@ -5515,8 +5514,6 @@ namespace Protean
                                 // Throw an error to indicate that the user has timed out
                                 mnProcessError = 4;
                             }
-
-
                             if (!string.IsNullOrEmpty(myWeb.moRequest["cContactOpt-In"]))
                             {
                                 this.AddToLists("Newsletter", ref moCartXml, myWeb.moRequest["cContactName"], myWeb.moRequest["cContactEmail"]);
@@ -7996,6 +7993,12 @@ namespace Protean
                             {
 
                                 UniqueProduct = Convert.ToBoolean(myWeb.moRequest["UniqueProduct"]);
+
+                            }
+                            if (myWeb.moRequest["overideUrl"] != null)
+                            {
+
+                                overideUrl = Convert.ToString(myWeb.moRequest["overideUrl"]);
 
                             }
 
@@ -11133,7 +11136,7 @@ namespace Protean
                         string overiddenLocations = "";
                         foreach (DataRow oRow in oDS.Tables["Option"].Rows)
                         {
-                           
+
                             // Calculate any shipping cost overage
                             double nShippingCost;
                             nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);

@@ -447,6 +447,7 @@ namespace Protean
                         string cAdditionalJoins = string.Empty;
                         string cAdditionalColumns = string.Empty;
                         string cOrderBySql = string.Empty;
+                        string cGroupBySql = string.Empty;
                         string parentPageId = string.Empty;
                         string formName = "ContentFilter";
                         string cFilterTarget = "Product";
@@ -555,6 +556,7 @@ namespace Protean
 
                         string whereSQL = string.Empty;
                         string orderBySql = string.Empty;
+                        string groupBySql = string.Empty;
                         string cCssClassName = "hidden";
                         //  filterForm.addBind("cShowMore", "ShowMore", ref filterForm.model, "false()", "string");
 
@@ -642,6 +644,11 @@ namespace Protean
                                             parentPageId = oFilterElmt.Attributes["parId"].Value;
 
                                         }
+                                        groupBySql = GetFilterGroupByClause(calledType, "", ref myWeb);
+                                        if (groupBySql != "")
+                                        {
+                                            cGroupBySql = groupBySql;
+                                        }
                                         orderBySql = GetFilterOrderByClause(calledType, "", ref myWeb);
                                         if (orderBySql != "")
                                         {
@@ -651,7 +658,7 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                cOrderBySql = orderBySql;
+                                                cOrderBySql = orderBySql +",";
                                             }
                                            
                                         }
@@ -672,7 +679,8 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                    bDistinct = false;
+                                                cOrderBySql = orderBySql;
+                                                bDistinct = false;
 
                                             }
                                         }
@@ -739,7 +747,7 @@ namespace Protean
                                 }
                                
                                 myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail,
-                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns);
+                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns,cGroupBySql: cGroupBySql);
 
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
                                 {
@@ -788,6 +796,22 @@ namespace Protean
                     }
 
                     return filterOrderByClause;
+                }
+
+                public string GetFilterGroupByClause(Type calledType, string existingOrder, ref Cms myWeb)
+                {
+                    string filterGroupByClause = string.Empty;
+
+                    if (calledType != null)
+                    {
+                        string methodname = "GetFilterGroupByClause";
+
+                        var o = Activator.CreateInstance(calledType);
+                        var args = new object[1];
+                        args[0] = myWeb;
+                        filterGroupByClause = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
+                    }
+                    return filterGroupByClause;
                 }
 
                 public string GetFilterWhereClause(ref Cms myWeb, ref Cms.xForm filterForm, ref XmlElement oContentNode, string excludeClassName)
