@@ -724,6 +724,65 @@ namespace Protean
                         return ex.Message;
                     }
                 }
+
+                public string UpdateSeoMetatitleandDescription(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                {
+                    string JsonResult = string.Empty;
+                    string pagetitleId = string.Empty;
+                    string metadescId = string.Empty;
+                    string menuid =         string.Empty;
+                    string pagetitle = string.Empty;
+                    string metadescription = string.Empty;
+                    string pageName = string.Empty;
+                    string DisplayName = string.Empty;
+
+                    if (inputJson["pagetitleId"] != null)
+                    {
+                        pagetitleId = inputJson["pagetitleId"].ToObject<string>();
+                    }
+
+                    if (inputJson["metadescId"] != null)
+                    {
+                        metadescId = inputJson["metadescId"].ToObject<string>();
+                    }
+
+                    if (inputJson["menuid"] != null)
+                    {
+                        menuid = inputJson["menuid"].ToObject<string>();
+                    }
+
+                    if (inputJson["pagetitle"] != null)
+                    {
+                        pagetitle = inputJson["pagetitle"].ToObject<string>();
+                    }
+                    if (inputJson["metadescription"] != null)
+                    {
+                        metadescription = inputJson["metadescription"].ToObject<string>();
+                    }
+                    if (inputJson["pagename"] != null)
+                    {
+                        pageName = inputJson["pagename"].ToObject<string>();
+                    }
+                    if (inputJson["DisplayName"] != null)
+                    {
+                        DisplayName = inputJson["DisplayName"].ToObject<string>();
+                    }
+
+                    try
+                    {
+                        if (myApi.mbAdminMode)
+                        {
+                            JsonResult = myWeb.moDbHelper.UpdateSeoMetatitleandDescription(pagetitleId, metadescId, menuid, pagetitle, metadescription, pageName, DisplayName);
+                        }
+
+                        return JsonResult;
+                    }
+                    catch (Exception ex)
+                    {
+                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateSeoMetatitleandDescription", ex, ""));
+                        return ex.Message;
+                    }
+                }
             }
             #endregion
 

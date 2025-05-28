@@ -59,18 +59,21 @@ namespace Protean
                 public System.Web.HttpRequest moRequest;
                 public Tools.Security.Impersonate moImp = null;
                 public string ReportExportPath = "/ewcommon/tools/export.ashx?ewCmd=CartDownload";
-                List<string> sImageUrlslist = new List<string>();                
+                List<string> sImageUrlslist = new List<string>();
 
                 // Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
                 public new event OnErrorEventHandler OnError;
 
                 public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs err);
 
-                public string cModuleName {
-                    get {
+                public string cModuleName
+                {
+                    get
+                    {
                         return _moduleName;
                     }
-                    set {
+                    set
+                    {
                         _moduleName = value;
                     }
                 }
@@ -3115,7 +3118,7 @@ namespace Protean
 
                                     object PathPrefix = @"ptn\";
 
-                                    EnumberateManifest(ref ManifestDoc,"/" + Cms.gcProjectPath + PathPrefix +  @"features/mailer/modules", "manifest.xml");
+                                    EnumberateManifest(ref ManifestDoc, "/" + Cms.gcProjectPath + PathPrefix + @"features/mailer/modules", "manifest.xml");
 
                                     var rootFolder = new DirectoryInfo(myWeb.goServer.MapPath("/" + Cms.gcProjectPath + PathPrefix + @"features/mailer/modules"));
                                     DirectoryInfo fld;
@@ -3763,11 +3766,14 @@ namespace Protean
                         {
                             if (goConfig["cssFramework"] == "bs5")
                             {
-                                if (_moduleName.Contains("Providers.Messaging")) {
+                                if (_moduleName.Contains("Providers.Messaging"))
+                                {
 
                                     cXformPath = GetMailModuleFormPath(cModuleType);
 
-                                } else {
+                                }
+                                else
+                                {
 
                                     cXformPath = GetModuleFormPath(cModuleType);
 
@@ -4980,19 +4986,19 @@ namespace Protean
                                 {
                                     DeleteAllInstancesOfOrigianlFile(cPath, cName, oFs);
                                     //Add method for deleteing images from cache
-                                    if(sImageUrlslist.Count != 0)
+                                    if (sImageUrlslist.Count != 0)
                                     {
-                                        string result = "Cached";                                      
-                                        string[] myString = sImageUrlslist.ToArray();                                       
+                                        string result = "Cached";
+                                        string[] myString = sImageUrlslist.ToArray();
                                         Protean.Providers.CDN.ReturnProvider oCdnProv = new Protean.Providers.CDN.ReturnProvider();
                                         ICDNProvider oCDNProvider = oCdnProv.Get(ref myWeb);
-                                        if(oCDNProvider!=null)
+                                        if (oCDNProvider != null)
                                         {
                                             result = Conversions.ToString(oCDNProvider.AdminXforms.PurgeImageCacheAsync(myString, ref myWeb));
-                                        }                                     
-                                        
+                                        }
+
                                         //DeleteFileFromCache(myString);
-                                    }                                    
+                                    }
                                 }
                             }
 
@@ -5017,7 +5023,7 @@ namespace Protean
                 }
 
                 private void DeleteAllInstancesOfOrigianlFile(string filePath, string fileName, Protean.fsHelper oFs)
-                {                    
+                {
                     filePath = filePath.Contains(oFs.mcStartFolder) ? filePath : oFs.mcStartFolder + filePath;
                     var subFolders = System.IO.Directory.GetDirectories(filePath, "~*");
                     try
@@ -5026,14 +5032,14 @@ namespace Protean
                         {
                             foreach (var sFolder in subFolders)
                             {
-                               DeleteAllInstancesOfOrigianlFile(sFolder, fileName, oFs);
+                                DeleteAllInstancesOfOrigianlFile(sFolder, fileName, oFs);
                             }
                         }
                         DeleteFiles(filePath, fileName, oFs);
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, _moduleName, "TryDeleteAllInstancesOfOrigianlFile", ex, "", "TryDeleteAllInstancesOfOrigianlFile", gbDebug);                        
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "TryDeleteAllInstancesOfOrigianlFile", ex, "", "TryDeleteAllInstancesOfOrigianlFile", gbDebug);
                     }
                 }
 
@@ -5044,21 +5050,21 @@ namespace Protean
                     var filesToDelete = System.IO.Directory.GetFiles(directoryPath, "*" + fileName);
                     string FilesToDeleteFromCache = string.Empty;
                     bool bFileExists = true;
-                    if(moCartConfig["SiteURL"]!=null && myWeb.moConfig["ImageRootPath"]!=null && myWeb.moConfig["EnableWebP"]!= null)
-                    {                   
+                    if (moCartConfig["SiteURL"] != null && myWeb.moConfig["ImageRootPath"] != null && myWeb.moConfig["EnableWebP"] != null)
+                    {
                         string WebPath = moCartConfig["SiteURL"]; // used it from web.config and cart.config
                         for (int i = 0; i < filesToDelete.Length; i++)
                         {
                             oFs.DeleteFile(filesToDelete[i]);
                             bFileExists = File.Exists(filesToDelete[i]);
-                            if(bFileExists)
+                            if (bFileExists)
                             {
                                 FilesToDeleteFromCache = filesToDelete[i].Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
                                 FilesToDeleteFromCache = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + FilesToDeleteFromCache;
                                 sImageUrlslist.Add(FilesToDeleteFromCache);
                             }
-                          
-                            if(Strings.LCase(myWeb.moConfig["EnableWebP"])=="on")
+
+                            if (Strings.LCase(myWeb.moConfig["EnableWebP"]) == "on")
                             {
                                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filesToDelete[i]);
                                 string newFilePath = Path.Combine(directoryPath, fileNameWithoutExtension + ".webp");
@@ -5068,13 +5074,13 @@ namespace Protean
                                     oFs.DeleteFile(newFilePath);
                                     newFilePath = newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
                                     newFilePath = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + newFilePath;
-                                    sImageUrlslist.Add(newFilePath);                                
+                                    sImageUrlslist.Add(newFilePath);
                                 }
-                            }                       
+                            }
                         }
                     }
-                    oFs.DeleteFile(originalFileNameFull);                    
-                } 
+                    oFs.DeleteFile(originalFileNameFull);
+                }
 
                 public XmlElement xFrmMoveFile(string cPath, string cName, Protean.fsHelper.LibraryType nType)
                 {
@@ -8143,7 +8149,8 @@ namespace Protean
                             string replaceWith = " ";
                             string removedBreaks = convertEntitiesToCodes(aSellerNotes[snCount]).Replace("\r\n", replaceWith).Replace("\n", replaceWith).Replace("\r", replaceWith).Replace("\\n", replaceWith);
                             cSellerNotesHtml = cSellerNotesHtml + "<li>" + removedBreaks + "</li>";
-                        };
+                        }
+                        ;
                         tempElement.InnerXml = cSellerNotesHtml + "</ul>";
 
                         string argsClass = "";
@@ -8454,8 +8461,8 @@ namespace Protean
                     {
                         string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(nParentID)));
 
-                        base.NewFrm("FindRelatedContent");                      
-                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";                        
+                        base.NewFrm("FindRelatedContent");
+                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
 
                         // MyBase.submission("AddRelated", "?ewCmd=RelateSearch&Type=Document&xml=x", "post", "form_check(this)")
                         base.submission("AddRelated", "", "post", "form_check(this)");
@@ -8505,7 +8512,7 @@ namespace Protean
                             }
                             cNameString += oMenuElmt.SelectSingleNode("cStructName").InnerText;
                             base.addOption(ref oSelElmt1, cNameString, oMenuElmt.SelectSingleNode("nStructKey").InnerText);
-                               
+
                         }
                         XmlElement argoBindParent4 = null;
                         base.addBind("cSection", "cSection", oBindParent: ref argoBindParent4, "true()");
@@ -8544,7 +8551,7 @@ namespace Protean
                                 bool bChilds = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nSearchChildren").InnerText == "1", true, false));
                                 string cExpression = base.Instance.SelectSingleNode("cSearch").InnerText;
                                 bool bIncRelated = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nIncludeRelated").InnerText == "1", true, false));
-                               
+
                                 string sSQL = "Select " + cSelectField + " From " + cTableName + " WHERE " + cFilterField + " = " + nParId;
                                 using (var oDre = moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                                 {
@@ -8564,13 +8571,13 @@ namespace Protean
                         {
                             if (myWeb.moRequest["pgid"] != null)
                             {
-                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>"+ myWeb.moRequest["pgid"].ToString() + "</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
+                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>" + myWeb.moRequest["pgid"].ToString() + "</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
                             }
                             else
                             {
                                 base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>0</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
                             }
-                                
+
                             base.addValues();
                         }
                         return base.moXformElmt;
@@ -8837,7 +8844,7 @@ namespace Protean
                         if (!base.load(DiscountFormPath + cTypePath, myWeb.maCommonFolders))
                         {
                             // not allot we can do really except try defaults
-                            if (!base.load(DiscountFormPath+"DiscountRule.xml", myWeb.maCommonFolders))
+                            if (!base.load(DiscountFormPath + "DiscountRule.xml", myWeb.maCommonFolders))
                             {
                                 // not allot we can do really 
                             }
@@ -11846,6 +11853,22 @@ namespace Protean
                     }
                 }
 
+                public XmlElement GetAllMenuMetaDetails()
+                {
+                    string cProcessInfo = "";                    
+                    try
+                    {
+                        // get menu
+                        var oMenuElmt = myWeb.GetStructureXML("Site");
+                        oMenuElmt = myWeb.moDbHelper.GetMenuMetaTitleDescriptionDetailsXml(oMenuElmt);
+                        return oMenuElmt;
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "GetAllMenuMetaDetails", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
                 public XmlElement xFrmLookup(int nLookupId, string Category = "", long ParentId = 0L)
                 {
                     XmlElement oFrmElmt;

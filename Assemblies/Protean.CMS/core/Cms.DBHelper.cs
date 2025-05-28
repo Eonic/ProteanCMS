@@ -14774,6 +14774,92 @@ namespace Protean
                     return nContentID;
                 }
             }
+
+            public XmlElement GetMenuMetaTitleDescriptionDetailsXml(XmlElement oMenuElmt)
+            {
+                string menuid = string.Empty;
+                string PageId = string.Empty;
+                string PageTitle = string.Empty;
+                string MetaDescription = string.Empty;
+                string cContentName = string.Empty;
+                string sSql = string.Empty;
+                DataSet oDs;
+                try
+                {
+                    sSql = "EXEC spGetAllMenusList";
+                    // Get the dataset
+                    //get all site detailed DS and then loop
+                    oDs = GetDataSet(sSql, "Content");
+                    if (oDs.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (DataRow oRow2 in oDs.Tables[0].Rows)
+                        {
+                            PageId = Convert.ToString(oRow2["parId"]);
+                            foreach (XmlElement oMenuItem in oMenuElmt.SelectNodes($"descendant-or-self::MenuItem[@id='{PageId}']"))
+                            {
+                                XmlElement pagetitle = moPageXml.CreateElement("PageTitle");
+                                XmlElement metadescription = moPageXml.CreateElement("MetaDescription");
+                                cContentName = Convert.ToString(oRow2["cContentName"]);
+                                if (cContentName == "PageTitle")
+                                {
+                                    PageTitle = Convert.ToString(oRow2["cContentXmlBrief"]);
+                                    pagetitle.InnerXml = PageTitle;
+                                    pagetitle.SetAttribute("id", Convert.ToString(oRow2["nContentid"]));
+                                    oMenuItem.AppendChild(pagetitle);
+                                }
+                                if (cContentName == "MetaDescription")
+                                {
+                                    MetaDescription = Convert.ToString(oRow2["cContentXmlBrief"]);
+                                    metadescription.InnerXml = MetaDescription;
+                                    metadescription.SetAttribute("id", Convert.ToString(oRow2["nContentid"]));
+                                    oMenuItem.AppendChild(metadescription);
+                                }
+                            }
+                        }
+                    }
+                    return oMenuElmt;
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetMenuMetaTitleDescriptionDetailsXml", ex, "", "", gbDebug);
+                    return null;
+                }
+
+            }
+
+            public string UpdateSeoMetatitleandDescription(string pagetitleId, string metadescId, string menuid, string pagetitle, string metadescription, string PageName, string DisplayName)
+            {
+                PerfMonLog("DBHelper", "ChangeParentRelation");
+                string result = "";
+
+                try
+                {
+                    // single update staetment
+                    string cSQl;
+                    //cSQl = "UPDATE tblContent SET cContentXmlBrief = CASE WHEN nContentKey = " + pagetitleId + " THEN '" + pagetitle + "' WHEN nContentKey = " + metadescId + " THEN '" + metadescription + "' END WHERE nContentKey IN (" + pagetitleId + ", " + metadescId + ");";
+                    //result = Convert.ToString(ExeProcessSqlScalar(cSQl));
+
+                    System.Collections.Hashtable arrParms = new System.Collections.Hashtable
+                    {
+                        { "@pagetitleId", pagetitleId },
+                        { "@metadescId", metadescId },
+                        { "@pagetitle", pagetitle },
+                        { "@metadescription", metadescription },
+                        { "@PageName", PageName },
+                        { "@DisplayName", DisplayName },
+                        { "@menuid", menuid }
+                    };
+
+                    cSQl = "spUpdateMenuTitleandName";
+                    ExeProcessSql(cSQl, CommandType.StoredProcedure, arrParms);
+                    result = "success";
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateSeoMetatitleandDescription", ex, ""));
+                }
+                return result;
+            }
         }
 
 

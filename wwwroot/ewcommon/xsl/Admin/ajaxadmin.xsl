@@ -22,7 +22,18 @@
       </xsl:for-each>
 		</ul>
 	</xsl:template>
-
+	
+	<xsl:template match="Page[Request/*/Item[@name='ajaxCmd']/node()='GetSEOReport']">
+		<xsl:variable name="level" select="Menu/@level"/>
+		<xsl:variable name="pgid" select="Request/*/Item[@name='pgid']/node()"/>
+		<ul class="tree-folder-content">
+			<xsl:for-each select="Menu/MenuItem/MenuItem">
+				<xsl:apply-templates select="." mode="seoreport">
+					<xsl:with-param name="level" select="$level + 1"/>
+				</xsl:apply-templates>
+			</xsl:for-each>
+		</ul>
+	</xsl:template>
 
 	<xsl:template match="Page[Request/*/Item[@name='ajaxCmd']/node()='GetMoveNode']">
 		<xsl:variable name="pgid" select="Request/*/Item[@name='pgid']/node()"/>
