@@ -60,7 +60,7 @@ BEGIN
 
         INSERT INTO tblContent (nContentPrimaryId, nVersion, cContentForiegnRef, cContentName, cContentSchemaName, cContentXmlBrief, cContentXmlDetail, nAuditId)
         VALUES (0, 3, '', 'MetaDescription', 'MetaData', @metaXmlBrief, '', @newAuditId)
-        SET @metaContentId = SCOPE_IDENTITY()	        
+        SET @metaContentId = @@IDENTITY; 	        
 
         INSERT INTO tblContentLocation (nStructId, nContentId, bPrimary, bCascade, nDisplayOrder, nAuditId)
         VALUES (@menuid, @metaContentId, 1, 0, 0, @contentlocationAuditId)
@@ -81,7 +81,7 @@ BEGIN
 
         INSERT INTO tblContent (nContentPrimaryId, nVersion, cContentForiegnRef, cContentName, cContentSchemaName, cContentXmlBrief, cContentXmlDetail, nAuditId)
         VALUES (0, 3, '', 'PageTitle', 'PlainText', @pageXmlBrief, '', @newAuditId)
-        SET @pageContentId = SCOPE_IDENTITY()
+        SET @pageContentId = @@IDENTITY; 
 
         INSERT INTO tblContentLocation (nStructId, nContentId, bPrimary, bCascade, nDisplayOrder, nAuditId)
         VALUES (@menuid, @pageContentId, 1, 0, 0, @contentlocationAuditId)

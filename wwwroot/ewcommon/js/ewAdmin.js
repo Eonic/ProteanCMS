@@ -2200,10 +2200,14 @@ function saveTitle(pagetitleId, metadescId, menuid) {
     inputJson = { pagetitleId: pagetitleId, metadescId: metadescId, menuid: menuid, pagetitle: pagetitle, metadescription: metadescription, pagename: pagename, DisplayName: DisplayName };
     axios.post(UpdateSeoMetatitleandDescription, inputJson)
         .then(function (response) {
-            if (response.data == "success") {   
+            if (response.data == "success") { 
                                
                 $("#title-display-" + pagetitleId).text(pagetitle);
                 $("#MetaDescription-display-" + metadescId).text(metadescription);
+                if (pagetitleId == 0 && metadescId == 0) {
+                    $("#title-display-").text(pagetitle);
+                    $("#MetaDescription-display-").text(metadescription);
+                }
 
                 $("#Edit-btn-" + menuid).removeClass('hidden');
                 $("#save-btn-" + menuid).addClass('hidden');
