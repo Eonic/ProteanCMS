@@ -1031,7 +1031,7 @@
           <xsl:if test="@flex-cols='true'">
             <xsl:text> img-module-flex </xsl:text>
           </xsl:if>
-          <xsl:text>test justify-content-</xsl:text>
+          <xsl:text> justify-content-</xsl:text>
           <xsl:value-of select="@position-vertical"/>
           <xsl:text> align-items-</xsl:text>
           <xsl:value-of select="@position-horizontal"/>
@@ -1337,7 +1337,7 @@
         <xsl:text> hidden-sm</xsl:text>
       </xsl:if>
       <xsl:if test="contains(@screens,'xs')">
-        <xsl:text> hidden-xs</xsl:text>
+        <xsl:text> hidden-xs </xsl:text>
       </xsl:if>
     </xsl:if>
     <xsl:if test="@matchHeight='true'">

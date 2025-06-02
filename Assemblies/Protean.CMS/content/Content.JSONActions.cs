@@ -84,6 +84,25 @@ namespace Protean
                         //string xpath = "";
                         // Dim value As String 'JSON convert to XML and save ensure the xml schemas match.
 
+//                        The API needs to receive the following data
+
+//contentId - long or null or 0 - if null or 0 then a new record will be created
+//pageId - (can be null)  the location of the new content if created ignore if updated
+//position - (can be null)  string reflecting the position on the page for new content
+//relatedParent - (can be null) if no page id or position data provided then this will be the contentId of the parent only required for insert
+//relationType - (can be null) string to define the relationship type.
+
+//data array containing the following
+//{
+//                            "xpath to the location in the Xml to be updated",
+//,"the data itself",
+//1 - brief only / 2 - detail only / 3 - both}
+
+//                        The api needs to check the permission of the user to be able to update data on the page, see existing logic.
+
+
+
+
                         return JsonResult;
                     }
                     catch (Exception ex)
