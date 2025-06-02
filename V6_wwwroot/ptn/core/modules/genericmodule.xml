@@ -55,6 +55,7 @@
 			<bind id="heading" nodeset="@heading" required="false()" type="string"/>
 			<bind id="icon-options" nodeset="@icon-options" required="false()" type="string"/>
 			<bind id="icon-class" nodeset="@icon-class" required="false()" type="string"/>
+      <bind id="icon-name" nodeset="@icon-name" required="false()" type="string"/>
 			<bind id="icon-weight" nodeset="@icon-weight" required="false()" type="string"/>
 			<bind id="icon-offset" nodeset="@icon-offset" required="false()" type="string"/>
 			<bind id="module-padding" nodeset="@module-padding" required="false()" type="string"/>
@@ -277,6 +278,9 @@
 										</input>
 									</case>
 								</switch>
+                <input bind="icon-name" class="">
+                  <label>Icon description for screen readers</label>
+                </input>
 								<select1 bind="cIcon-size" class="bs-only" appearance="minimal">
 									<label>Icon Size</label>
 									<item>
@@ -798,6 +802,10 @@
 								<label>Heading 6</label>
 								<value>h6</value>
 							</item>
+              <item>
+                <label>No Heading</label>
+                <value>span</value>
+              </item>
 
 						</select1>
 
