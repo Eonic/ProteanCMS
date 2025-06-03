@@ -14373,7 +14373,20 @@
 	</xsl:template>
 
 	<xsl:template match="Page[@layout='SEOReport']" mode="Admin">
-		<div id="tpltSEOReport">
+		<div class="page-header" style="margin-top:20px;">
+			<table>
+				<thead>
+					<th style="width:10%;"></th>
+					<th style="width:20%;">Page</th>
+					<th style="width:27%;">Page Title</th>
+					<th style="width:25%;">Meta Description</th>
+					<th style="width:10%;">Page Name</th>
+					<th style="width:10%;">Display Name</th>
+					<th style="width:20%;"></th>
+				</thead>
+			</table>
+		</div>
+		<div id="tpltSEOReport">			
 			<ul id="MenuTree" class="list-group">
 				<xsl:apply-templates select="ContentDetail/Menu/MenuItem" mode="seoreport">
 					<xsl:with-param name="level">1</xsl:with-param>
@@ -14417,44 +14430,44 @@
 			</xsl:choose>
 		</xsl:variable>
 		
-			<xsl:variable name="pageTitleId">
-					<xsl:choose>
-					<xsl:when test="string-length(PageTitle/@id) &gt; 0">
-						<xsl:text>"</xsl:text>
-						<xsl:value-of select="PageTitle/@id"/>
-						<xsl:text>"</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>0 </xsl:text>
-					</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
+		<xsl:variable name="pageTitleId">
+				<xsl:choose>
+				<xsl:when test="string-length(PageTitle/@id) &gt; 0">
+					<xsl:text>"</xsl:text>
+					<xsl:value-of select="PageTitle/@id"/>
+					<xsl:text>"</xsl:text>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>0 </xsl:text>
+				</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
 
-				<xsl:variable name="metaId">
-					<xsl:choose>
-					<xsl:when test="string-length(MetaDescription/@id) &gt; 0">
-						<xsl:text>"</xsl:text>
-						<xsl:value-of select="MetaDescription/@id"/>
-						<xsl:text>"</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>0</xsl:text>
-					</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
+		<xsl:variable name="metaId">
+			<xsl:choose>
+			<xsl:when test="string-length(MetaDescription/@id) &gt; 0">
+				<xsl:text>"</xsl:text>
+				<xsl:value-of select="MetaDescription/@id"/>
+				<xsl:text>"</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>0</xsl:text>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 
-				<xsl:variable name="itemId">
-					<xsl:choose>
-					<xsl:when test="string-length(@id) &gt; 0">
-						<xsl:text>"</xsl:text>
-						<xsl:value-of select="@id"/>
-						<xsl:text>"</xsl:text>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:text>0</xsl:text>
-					</xsl:otherwise>
-					</xsl:choose>
-				</xsl:variable>
+		<xsl:variable name="itemId">
+			<xsl:choose>
+			<xsl:when test="string-length(@id) &gt; 0">
+				<xsl:text>"</xsl:text>
+				<xsl:value-of select="@id"/>
+				<xsl:text>"</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>0</xsl:text>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
 
 			<li id="node{@id}" data-tree-level="{$thislevel}">
@@ -14527,7 +14540,15 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</div>
-									<input type="text" class="form-control page-title-input hidden" id="title-input-{PageTitle/@id}" value="{PageTitle}" />
+									<xsl:choose>
+										<xsl:when test="$pageTitleId = 0">
+											<input type="text" class="form-control page-title-input hidden" id="title-input-{@id}" value="{PageTitle}" />
+										</xsl:when>
+										<xsl:otherwise>
+											<input type="text" class="form-control page-title-input hidden" id="title-input-{PageTitle/@id}" value="{PageTitle}" />
+										</xsl:otherwise>
+									</xsl:choose>
+									
 
 								</td>
 								<td style="width:30%;">
@@ -14543,7 +14564,15 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</div>
-									<input type="text" class="form-control meta-desc-input hidden" id="description-input-{MetaDescription/@id}" value="{MetaDescription}" />
+									<xsl:choose>
+										<xsl:when test="$metaId=0">
+											<input type="text" class="form-control meta-desc-input hidden" id="description-input-{@id}" value="{MetaDescription}" />
+										</xsl:when>
+										<xsl:otherwise>
+											<input type="text" class="form-control meta-desc-input hidden" id="description-input-{MetaDescription/@id}" value="{MetaDescription}" />
+										</xsl:otherwise>
+									</xsl:choose>
+									
 
 								</td>
 

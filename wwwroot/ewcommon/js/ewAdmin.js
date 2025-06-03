@@ -2183,8 +2183,8 @@ function editTitle(pagetitleId, metadescId, menuid) {
     //$("#displayname-input-" + menuid).removeClass('hidden');
     //$("#cDisplayName-" + menuid).addClass('hidden');
     if (pagetitleId== 0 && metadescId== 0) {
-        $("#title-input-").removeClass('hidden');
-        $("#description-input-").removeClass('hidden');
+        $("#title-input-"+menuid).removeClass('hidden');
+        $("#description-input-"+menuid).removeClass('hidden');
     }
 }
 
@@ -2223,8 +2223,8 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
     var pageId = menuid;
     var position = "header";
     if (pagetitleId == 0 && metadescId == 0) {
-       pagetitle = $("#title-input-").val();
-       metadescription = $("#description-input-").val();
+       pagetitle = $("#title-input-"+ menuid).val();
+       metadescription = $("#description-input-"+menuid).val();
     }
     var PageTitleInputJson = buildInputJson({
         contentId: pagetitleId,
@@ -2256,7 +2256,7 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
             $("#title-input-" + pagetitleId).addClass('hidden');
             $("#title-display-" + pagetitleId).removeClass('hidden');
             if (pagetitleId == 0 && metadescId == 0) {
-                $("#title-input-").addClass('hidden'); 
+                $("#title-input-"+menuid).addClass('hidden'); 
                 $("#title-display-").removeClass('hidden');
             }
         }
@@ -2268,7 +2268,7 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
             $("#description-input-" + metadescId).addClass('hidden');
             $("#MetaDescription-display-" + metadescId).removeClass('hidden');
             if (pagetitleId == 0 && metadescId == 0) {               
-                $("#description-input-").addClass('hidden');
+                $("#description-input-"+menuid).addClass('hidden');
                 $("#MetaDescription-display-").removeClass('hidden');
             }
         }
