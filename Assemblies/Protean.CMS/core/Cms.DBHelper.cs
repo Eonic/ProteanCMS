@@ -8,6 +8,7 @@
 // $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
+using AngleSharp.Dom;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
@@ -26,6 +27,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms.dbHelper;
 using static Protean.Cms.dbImport;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -14855,42 +14857,8 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "GetMenuMetaTitleDescriptionDetailsXml", ex, "", "", gbDebug);
                     return null;
                 }
-
             }
-
-            public string UpdateSeoMetatitleandDescription(string pagetitleId, string metadescId, string menuid, string pagetitle, string metadescription, string PageName, string DisplayName)
-            {
-                PerfMonLog("DBHelper", "ChangeParentRelation");
-                string result = "";
-
-                try
-                {
-                    // single update staetment
-                    string cSQl;
-                    //cSQl = "UPDATE tblContent SET cContentXmlBrief = CASE WHEN nContentKey = " + pagetitleId + " THEN '" + pagetitle + "' WHEN nContentKey = " + metadescId + " THEN '" + metadescription + "' END WHERE nContentKey IN (" + pagetitleId + ", " + metadescId + ");";
-                    //result = Convert.ToString(ExeProcessSqlScalar(cSQl));
-
-                    System.Collections.Hashtable arrParms = new System.Collections.Hashtable
-                    {
-                        { "@pagetitleId", pagetitleId },
-                        { "@metadescId", metadescId },
-                        { "@pagetitle", pagetitle },
-                        { "@metadescription", metadescription },
-                        { "@PageName", PageName },
-                        { "@DisplayName", DisplayName },
-                        { "@menuid", menuid }
-                    };
-
-                    cSQl = "spUpdateMenuTitleandName";
-                    ExeProcessSql(cSQl, CommandType.StoredProcedure, arrParms);
-                    result = "success";
-                }
-                catch (Exception ex)
-                {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateSeoMetatitleandDescription", ex, ""));
-                }
-                return result;
-            }
+            
         }
 
 

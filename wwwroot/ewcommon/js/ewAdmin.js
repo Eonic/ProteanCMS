@@ -1,6 +1,6 @@
 var redirectAPIUrl = '/ewapi/Cms.Admin/RedirectPage';
 var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
-var UpdateSeoMetatitleandDescription = '/ewapi/Cms.Admin/UpdateSeoMetatitleandDescription';
+var UpdateContentValue = '/ewapi/Cms.Content/UpdateContentValue';
 var checkiFrameLoaded;
 
 $(document).ready(function () {
@@ -2178,50 +2178,103 @@ function editTitle(pagetitleId, metadescId, menuid) {
     $("#MetaDescription-display-" + metadescId).addClass('hidden');   
     $("#Edit-btn-" + menuid).addClass('hidden');
     $("#save-btn-" + menuid).removeClass('hidden');
-    $("#pagename-input-" + menuid).removeClass('hidden');
-    $("#cPageName-" + menuid).addClass('hidden');
-    $("#displayname-input-" + menuid).removeClass('hidden');
-    $("#cDisplayName-" + menuid).addClass('hidden');
+    //$("#pagename-input-" + menuid).removeClass('hidden');
+    //$("#cPageName-" + menuid).addClass('hidden');
+    //$("#displayname-input-" + menuid).removeClass('hidden');
+    //$("#cDisplayName-" + menuid).addClass('hidden');
     if (pagetitleId== 0 && metadescId== 0) {
         $("#title-input-").removeClass('hidden');
         $("#description-input-").removeClass('hidden');
     }
 }
-function saveTitle(pagetitleId, metadescId, menuid) {
+
+function buildInputJson({ contentId, contentType, contentName, value, pageId, position, mode }) {
+    let values = [];
+
+    if (mode === 1) {
+        values.push({ xpath: "Content", value: value, pathType: "brief", mode: mode });
+    }
+    else if (mode === 2) {
+        values.push({ xpath: "", value: value, pathType: "detail", mode: mode });
+    }
+    else if (mode === 3) {
+        values.push(
+            {
+                xpath: "Content",
+                value: value,
+                pathType: "brief",
+                mode: mode
+            },
+            {
+                xpath: "",
+                value: value,
+                pathType: "detail",
+                mode:mode
+            }
+        );
+    }
+    return {
+        contentId: contentId, contentType: contentType, ContentName: contentName, pageId: pageId, position: position, values: values };
+}
+
+function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
     var pagetitle = $("#title-input-" + pagetitleId).val();
     var metadescription = $("#description-input-" + metadescId).val();
-    var pagename = $("#pagename-input-" + menuid).val();
-    var DisplayName = $("#displayname-input-" + menuid).val();
+    var pageId = menuid;
+    var position = "header";
     if (pagetitleId == 0 && metadescId == 0) {
-        var pagetitle = $("#title-input-").val();
-        var metadescription = $("#description-input-").val();       
+       pagetitle = $("#title-input-").val();
+       metadescription = $("#description-input-").val();
     }
+    var PageTitleInputJson = buildInputJson({
+        contentId: pagetitleId,
+        contentType: "PlainText",
+        contentName: "PageTitle",
+        value: pagetitle,
+        pageId: pageId,
+        position: position,
+        relatedParent: null,
+        relationType:null,
+        mode: mode        
+    });
 
-    inputJson = { pagetitleId: pagetitleId, metadescId: metadescId, menuid: menuid, pagetitle: pagetitle, metadescription: metadescription, pagename: pagename, DisplayName: DisplayName };
-    axios.post(UpdateSeoMetatitleandDescription, inputJson)
-        .then(function (response) {
-            if (response.data == "success") { 
-                               
-                $("#title-display-" + pagetitleId).text(pagetitle);
-                $("#MetaDescription-display-" + metadescId).text(metadescription);
-                if (pagetitleId == 0 && metadescId == 0) {
-                    $("#title-display-").text(pagetitle);
-                    $("#MetaDescription-display-").text(metadescription);
-                }
+    var MetaDescriptionInputJson = buildInputJson({
+        contentId: metadescId,
+        contentType: "MetaData",
+        contentName: "MetaDescription",
+        value: metadescription,
+        pageId: pageId,
+        position: position,
+        relatedParent: null,
+        relationType: null,
+        mode: mode
+    });
 
-                $("#Edit-btn-" + menuid).removeClass('hidden');
-                $("#save-btn-" + menuid).addClass('hidden');
-                $("#title-input-" + pagetitleId).addClass('hidden');
-                $("#title-display-" + pagetitleId).removeClass('hidden');
-                $("#description-input-" + metadescId).addClass('hidden');
-                $("#MetaDescription-display-" + metadescId).removeClass('hidden');   
-                $("#pagename-input-" + menuid).addClass('hidden');
-                $("#cPageName-" + menuid).removeClass('hidden');
-                $("#displayname-input-" + menuid).addClass('hidden');
-                $("#cDisplayName-" + menuid).removeClass('hidden');
-                $("#title-input-").addClass('hidden');
-                $("#description-input-").addClass('hidden');
+    axios.post(UpdateContentValue, PageTitleInputJson).then(function (response) {
+        if (response.data.result === "success") {
+            $("#title-display-" + pagetitleId).text(pagetitle);
+            $("#title-input-" + pagetitleId).addClass('hidden');
+            $("#title-display-" + pagetitleId).removeClass('hidden');
+            if (pagetitleId == 0 && metadescId == 0) {
+                $("#title-input-").addClass('hidden'); 
+                $("#title-display-").removeClass('hidden');
             }
-        });
+        }
+    });
+
+    axios.post(UpdateContentValue, MetaDescriptionInputJson).then(function (response) {
+        if (response.data.result === "success") {
+            $("#MetaDescription-display-" + metadescId).text(metadescription);
+            $("#description-input-" + metadescId).addClass('hidden');
+            $("#MetaDescription-display-" + metadescId).removeClass('hidden');
+            if (pagetitleId == 0 && metadescId == 0) {               
+                $("#description-input-").addClass('hidden');
+                $("#MetaDescription-display-").removeClass('hidden');
+            }
+        }
+    });
+
+    $("#Edit-btn-" + menuid).removeClass('hidden');
+    $("#save-btn-" + menuid).addClass('hidden');
 }
 
