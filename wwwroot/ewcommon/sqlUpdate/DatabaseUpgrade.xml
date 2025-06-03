@@ -641,8 +641,8 @@
 		</Sub2>
 		<Sub2 Number="78">
 			<Sub3 Number="0">
-				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spUpdateMenuTitleandName"/>
-				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.78.0/spUpdateMenuTitleandName.sql"/>
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetAllMenusList"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.78.0/spGetAllMenusList.sql"/>
 			</Sub3>
 		</Sub2>
     </Sub1>
