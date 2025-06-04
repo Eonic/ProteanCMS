@@ -1443,8 +1443,8 @@
         <xsl:with-param name="length" select="160"/>
       </xsl:call-template>
     </xsl:variable>
-    <meta property="og:description" content="{$contentMetaDescription}"/>	  
-	
+    <meta property="og:description" content="{$contentMetaDescription}"/>
+
     <xsl:choose>
       <xsl:when test="Contents/Content[@type='MetaData' and @name='ogImage']">
         <meta property="og:image">
@@ -1453,25 +1453,25 @@
           </xsl:attribute>
         </meta>
       </xsl:when>
-		<xsl:when test="Contents/Content[@type='Image' and @position='Banner']">
-			<meta property="og:image">
-				<xsl:attribute name="content">
-						<xsl:text>http</xsl:text>
-						<xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-						<xsl:text>://</xsl:text>
-						<xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>				
-					<xsl:value-of select="Contents/Content[@type='Image' and @name='Banner']/img/@src"/>
-				</xsl:attribute>
-			</meta>
-		</xsl:when>
-		<xsl:when test="Contents/Content[@type='MetaData' and @name='ogimage-fallback']">
+      <xsl:when test="Contents/Content[@type='Image' and @position='Banner']">
+        <meta property="og:image">
+          <xsl:attribute name="content">
+            <xsl:text>http</xsl:text>
+            <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+            <xsl:text>://</xsl:text>
+            <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+            <xsl:value-of select="Contents/Content[@type='Image' and @name='Banner']/img/@src"/>
+          </xsl:attribute>
+        </meta>
+      </xsl:when>
+      <xsl:when test="Contents/Content[@type='MetaData' and @name='ogimage-fallback']">
         <meta property="og:image">
           <xsl:attribute name="content">
             <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogimage-fallback']/node()"/>
           </xsl:attribute>
         </meta>
       </xsl:when>
-      <xsl:otherwise>		  
+      <xsl:otherwise>
         <xsl:if test="$currentPage/Images/img[@class='display']/@src and $currentPage/Images/img[@class='display']/@src!=''">
           <meta property="og:image">
             <xsl:attribute name="content">
@@ -2934,9 +2934,9 @@
           <span itemprop="name">
             <xsl:apply-templates select="." mode="getDisplayName"/>
           </span>
-			<meta itemprop="position" content="{count(parent::MenuItem)+1}">
-				<xsl:text> </xsl:text>
-			</meta>
+          <meta itemprop="position" content="{count(parent::MenuItem)+1}">
+            <xsl:text> </xsl:text>
+          </meta>
         </xsl:when>
         <xsl:otherwise>
           <a itemprop="item">
@@ -2981,9 +2981,9 @@
             <span itemprop="name">
               <xsl:apply-templates select="." mode="getDisplayName"/>
             </span>
-			  <meta itemprop="position" content="{count(parent::MenuItem)+1}" >
-				  <xsl:text> </xsl:text>
-			  </meta>
+            <meta itemprop="position" content="{count(parent::MenuItem)+1}" >
+              <xsl:text> </xsl:text>
+            </meta>
           </a>
 
         </xsl:otherwise>
@@ -4170,7 +4170,7 @@
             <xsl:value-of select="$liClass"/>
             <xsl:text> dropdown dropdown-hover-menu-accessible</xsl:text>
           </xsl:attribute>
-          
+
           <button href="{@url}" id="mainNavDD{@id}" data-hover="dropdown">
             <xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
 
@@ -4664,7 +4664,7 @@
             </xsl:when>
             <xsl:otherwise>
               <a title="{@linkText}" class="btn btn-custom {$class}">
-                
+
                 <xsl:choose>
                   <xsl:when test="$numbertest = 'number'">
                     <xsl:variable name="pageId" select="@link"/>
@@ -6102,7 +6102,7 @@
 
         <div class="center-block center-large">
           <xsl:if test="@icon!='' or @icon-class!=''">
-            <i role="img" aria-hidden="true">
+            <i role="img">
               <xsl:attribute name="class">
                 <xsl:text>fa center-block </xsl:text>
                 <xsl:if test="@icon-color and @icon-color!=''">
@@ -6129,7 +6129,7 @@
                 </xsl:choose>
                 <xsl:if test="@icon-weight='400'"> far </xsl:if>
               </xsl:attribute>
-              
+
 
               <!--<xsl:if test="@uploadIcon-w and @uploadIcon-w!='' or @uploadIcon-h and @uploadIcon-h!=''">
 								<xsl:attribute name="style">
@@ -6148,6 +6148,16 @@
 									</xsl:if>
 								</xsl:attribute>
 							</xsl:if>-->
+              <xsl:if test="@icon-name and @icon-name!=''">
+                <xsl:attribute name="aria-label">
+                  <xsl:value-of select="@icon-name"/>
+                </xsl:attribute>
+              </xsl:if>
+              <xsl:if test="@icon-name and @icon-name!=''">
+                <xsl:attribute name="aria-label">
+                  <xsl:value-of select="@icon-name"/>
+                </xsl:attribute>
+              </xsl:if>
               <xsl:text> </xsl:text>
             </i>
             <xsl:text> </xsl:text>
@@ -6198,6 +6208,11 @@
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:attribute>
+              <xsl:if test="@icon-name and @icon-name!=''">
+                <xsl:attribute name="aria-label">
+                  <xsl:value-of select="@icon-name"/>
+                </xsl:attribute>
+              </xsl:if>
               <xsl:text> </xsl:text>
             </i>
             <xsl:text> </xsl:text>
@@ -6255,6 +6270,12 @@
                   <xsl:text>;text-align:center;</xsl:text>
                 </xsl:attribute>
               </xsl:if>
+              <xsl:if test="@icon-name and @icon-name!=''">
+                <xsl:attribute name="aria-label">
+                  <xsl:value-of select="@icon-name"/>
+                </xsl:attribute>
+              </xsl:if>
+              <xsl:text> </xsl:text>
             </i>
             <xsl:text> </xsl:text>
           </xsl:if>
@@ -6308,10 +6329,12 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:attribute>
+            <xsl:if test="@icon-name and @icon-name!=''">
+              <xsl:attribute name="aria-label">
+                <xsl:value-of select="@icon-name"/>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:text> </xsl:text>
-
-
-
           </i>
           <span class="space">&#160;</span>
         </xsl:if>
@@ -10116,7 +10139,7 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
-	  
+
     <xsl:choose>
       <xsl:when test="/Page/Contents/Content[@position = $position]">
         <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
