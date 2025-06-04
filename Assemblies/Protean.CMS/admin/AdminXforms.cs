@@ -2920,8 +2920,12 @@ namespace Protean
                     string cProcessInfo = "";
                     try
                     {
-
-                        var oManifest = GetSiteManifest();
+                        string cssFramework = string.Empty;
+                        if(goConfig["cssFramework"] != null)
+                        {
+                            cssFramework = goConfig["cssFramework"];
+                        }
+                        var oManifest = GetSiteManifest(cssFramework);
                         XmlElement thisModule = (XmlElement)oManifest.SelectSingleNode("descendant-or-self::ContentType[@type='" + SchemaName + "']");
                         if (thisModule is null)
                         {
