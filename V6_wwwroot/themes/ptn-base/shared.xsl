@@ -292,6 +292,7 @@
 	<xsl:template match="/" mode="searchBrief">
 		<div class="searchBrief">
 			<form method="post" action="/information/search" id="searchInputxs" class="ewXform">
+        <label for="searchStringxs" class="visually-hidden">Search</label>
 				<input type="hidden" name="searchMode" value="REGEX" />
 				<input type="hidden" name="contentType" value="Product" />
 				<input type="hidden" name="searchFormId" value="8923" />
