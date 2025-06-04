@@ -3516,7 +3516,8 @@ namespace Protean
                     case "GetMoveContent":
                     case "GetLocateNode":
                     case "GetAdvNode":
-                    case "editStructurePermissions":                    
+                    case "editStructurePermissions":
+                    case "GetSEOReport":
                         {
 
                             // Make sure admin mode is true and we don't need to check for permissions
@@ -3554,6 +3555,10 @@ namespace Protean
                                 FullMenuXml.ReplaceChild(FullMenuXml.SelectSingleNode("descendant-or-self::MenuItem[@id = " + expId + "]"), FullMenuXml.FirstChild);
 
                                 FullMenuXml.SetAttribute("level", getLevel.ToString());
+                                if (moRequest["ajaxCmd"] == "GetSEOReport")
+                                {
+                                    FullMenuXml = moDbHelper.GetMenuMetaTitleDescriptionDetailsXml(FullMenuXml);
+                                }
                             }
 
                             oPageElmt.AppendChild(FullMenuXml);

@@ -8,6 +8,7 @@
 // $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
+using AngleSharp.Dom;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
@@ -26,6 +27,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms.dbHelper;
 using static Protean.Cms.dbImport;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -6281,7 +6283,7 @@ namespace Protean
 
 
                     string cOrderBy = "";
-                    string cAdditionalColumn = ""; 
+                    string cAdditionalColumn = "";
 
                     // Get the parameters SortDirection
                     string cSchema = oContent.GetAttribute("contentType");
@@ -6306,7 +6308,7 @@ namespace Protean
                         // Get Related Items
                         XmlElement argoPageDetail = null;
                         int nCount = 0;
-                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail,cAdditionalColumns: cAdditionalColumn);
+                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail, cAdditionalColumns: cAdditionalColumn);
                         foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
                         {
                             XmlElement xmloContentElmt = oContentElmt;
@@ -12459,7 +12461,7 @@ namespace Protean
 
                 return default;
             }
-            public bool AddOptOutEmail(string cEmailAddress, string cUserId, string nStatus)
+            public bool AddOptOutEmail(string cEmailAddress, string nContactKey, string cStatus)
             {
                 PerfMonLog("DBHelper", "AddOptOutEmail");
 
@@ -12467,15 +12469,32 @@ namespace Protean
                 {
                     if (string.IsNullOrEmpty(cEmailAddress))
                         return false;
+                    string cSQL = "Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
+                    string cSQLStatusCheck = "Select top 1 nStatus FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "') order by dOptOut desc";
+                    bool bstatus = Convert.ToBoolean(ExeProcessSqlScalar(cSQLStatusCheck));
 
-                    if ((cEmailAddress != ""))
+                    if (cStatus == "true")
                     {
-                        string cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,userid,optout_reason,status,optout_date) VALUES ('" + cEmailAddress + "','" + cUserId + "','','" + nStatus + "'," + SqlDate(DateTime.Now, true) + ")";
+                        cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,nCartContactId,optout_reason,nStatus,dOptOut) VALUES ('" + cEmailAddress + "','" + nContactKey + "','Cart Opt Out','" + cStatus + "'," + SqlDate(DateTime.Now, true) + ")";
                         ExeProcessSql(cSQL);
-                       
+                    }
+                    else
+                    {
+                        if (((ExeProcessSqlScalar(cSQL) ?? "") == (cEmailAddress ?? "")))
+                        {
+                            if (bstatus)
+                            {
+                                cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,nCartContactId,optout_reason,nStatus,dOptOut) VALUES ('" + cEmailAddress + "','" + nContactKey + "','Cart Opt In','" + cStatus + "'," + SqlDate(DateTime.Now, true) + ")";
+                                ExeProcessSql(cSQL);
+
+                            }
+
+                        }
 
                     }
-                    if (nStatus == "true")
+
+
+                    if (cStatus == "true")
                     {
                         System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
                         if (moMailConfig != null)
@@ -12498,7 +12517,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddInvalidEmail", ex, ""));
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddOptOutEmail", ex, ""));
                 }
 
                 return default;
@@ -12601,9 +12620,9 @@ namespace Protean
                     {
                         if (checkTableColumnExists("tblOptOutAddresses","status")) {
                         bool bReturn;
-                        if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "status"))
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nStatus"))
                         {
-                            cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE status=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
+                            cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE nStatus=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
                         }
                         else
                         {
@@ -14788,6 +14807,58 @@ namespace Protean
                     return nContentID;
                 }
             }
+
+            public XmlElement GetMenuMetaTitleDescriptionDetailsXml(XmlElement oMenuElmt)
+            {
+                string menuid = string.Empty;
+                string PageId = string.Empty;
+                string PageTitle = string.Empty;
+                string MetaDescription = string.Empty;
+                string cContentName = string.Empty;
+                string sSql = string.Empty;
+                DataSet oDs;
+                try
+                {
+                    sSql = "EXEC spGetAllMenusList";
+                    // Get the dataset
+                    //get all site detailed DS and then loop
+                    oDs = GetDataSet(sSql, "Content");
+                    if (oDs.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (DataRow oRow2 in oDs.Tables[0].Rows)
+                        {
+                            PageId = Convert.ToString(oRow2["parId"]);
+                            foreach (XmlElement oMenuItem in oMenuElmt.SelectNodes($"descendant-or-self::MenuItem[@id='{PageId}']"))
+                            {
+                                XmlElement pagetitle = moPageXml.CreateElement("PageTitle");
+                                XmlElement metadescription = moPageXml.CreateElement("MetaDescription");
+                                cContentName = Convert.ToString(oRow2["cContentName"]);
+                                if (cContentName == "PageTitle")
+                                {
+                                    PageTitle = Convert.ToString(oRow2["cContentXmlBrief"]);
+                                    pagetitle.InnerXml = PageTitle;
+                                    pagetitle.SetAttribute("id", Convert.ToString(oRow2["nContentid"]));
+                                    oMenuItem.AppendChild(pagetitle);
+                                }
+                                if (cContentName == "MetaDescription")
+                                {
+                                    MetaDescription = Convert.ToString(oRow2["cContentXmlBrief"]);
+                                    metadescription.InnerXml = MetaDescription;
+                                    metadescription.SetAttribute("id", Convert.ToString(oRow2["nContentid"]));
+                                    oMenuItem.AppendChild(metadescription);
+                                }
+                            }
+                        }
+                    }
+                    return oMenuElmt;
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetMenuMetaTitleDescriptionDetailsXml", ex, "", "", gbDebug);
+                    return null;
+                }
+            }
+            
         }
 
 
