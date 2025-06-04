@@ -78,6 +78,7 @@ namespace Protean
                 {
                     try
                     {
+                        long newContentId = 0;
                         if (myApi.mbAdminMode)
                         { 
                             // Extract fields from JSON
@@ -92,98 +93,33 @@ namespace Protean
                             string relationType = Convert.ToString(jObj["relationType"]);                      
 
                             XmlElement oContentInstance;
-                            Cms.xForm moXform = null;
+                            Cms.Admin.AdminXforms moXform = null;
                             string xRootBriefPath = "tblContent/cContentXmlBrief/";
                             string xRootDetailPath = "tblContent/cContentXmlDetail";
+                            
 
                             if (contentId > 0)
                             {
                                 // UPDATE existing content
                                 oContentInstance = myWeb.moDbHelper.moPageXml.CreateElement("instance");
                                 oContentInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Content , contentId);
-                                
-
-                                foreach (var data in values)
-                                {
-                                    var item = (JObject)data;
-                                    string xpath = item["xpath"]?.ToString() ?? "";
-                                    string value = item["value"]?.ToString() ?? "";
-                                    string pathType = item["pathType"]?.ToString() ?? "";
-                                    int mode = item["mode"]?.ToObject<int>() ?? 3;
-
-                                    string fullXPath = xpath;
-
-                                    if (mode == 1)
-                                    {
-                                        fullXPath = xRootBriefPath + xpath;
-                                        XmlNode node = oContentInstance.SelectSingleNode(fullXPath);
-                                        if (node != null) node.InnerXml = value;
-                                    }
-                                    else if (mode == 2)
-                                    {
-                                        fullXPath = xRootDetailPath + xpath;
-                                        XmlNode node = oContentInstance.SelectSingleNode(fullXPath);
-                                        if (node != null) node.InnerXml = value;
-                                    }
-                                    else if (mode == 3)
-                                    {
-                                        if (pathType == "brief") { fullXPath = xRootBriefPath + xpath; }
-                                        else if (pathType == "detail") { fullXPath = xRootDetailPath + xpath; } 
-
-                                        XmlNode node = oContentInstance.SelectSingleNode(fullXPath);
-                                        if (node != null) node.InnerXml = value;
-                                    }
-                                }
-
-                                myWeb.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, oContentInstance);
+                                ApplyValuesToXml(oContentInstance, values, xRootBriefPath, xRootDetailPath);
+                                newContentId= Convert.ToInt64(myWeb.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, oContentInstance));
                             }
                             else
                             {
                                 // INSERT new content
-                                moXform = (Cms.xForm)myWeb.getXform();                           
-                                string xformPath = $"/xforms/content/{contentType}.xml";
+                                moXform = (Admin.AdminXforms)myWeb.getAdminXform();                           
+                                string xformPath = moXform.GetContentFormPath(contentType);                               
                                 moXform.load(xformPath, myWeb.maCommonFolders);
 
                                 if (moXform.Instance != null)
                                 {  
                                     moXform.Instance.SelectSingleNode("tblContent/cContentName").InnerText = ContentName;
                                     moXform.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText = Protean.Tools.Xml.XmlDate(DateTime.Now);
-
-                                    foreach (var data in values)
-                                    {
-                                        var item = (JObject)data;
-                                        string xpath = item["xpath"]?.ToString() ?? "";
-                                        string value = item["value"]?.ToString() ?? "";
-                                        string pathType = item["pathType"]?.ToString() ?? "";
-                                        int mode = item["mode"]?.ToObject<int>() ?? 3;
-
-                                        string fullXPath = xpath;
-
-                                        if (mode == 1)
-                                        {
-                                            fullXPath = xRootBriefPath + xpath;
-                                            XmlNode node = moXform.Instance.SelectSingleNode(fullXPath);
-                                            if (node != null) node.InnerXml = value;
-                                        }
-                                        else if (mode == 2)
-                                        {
-                                            fullXPath = xRootDetailPath + xpath;
-                                            XmlNode node = moXform.Instance.SelectSingleNode(fullXPath);
-                                            if (node != null) node.InnerXml = value;
-                                        }
-                                        else if (mode == 3)
-                                        {
-                                            if (pathType == "brief") { fullXPath = xRootBriefPath + xpath; }
-                                            else if (pathType == "detail") { fullXPath = xRootDetailPath + xpath; }
-
-                                            XmlNode node = moXform.Instance.SelectSingleNode(fullXPath);
-                                            if (node != null) node.InnerXml = value;
-                                        }
-                                    }
-                                    oContentInstance = moXform.Instance;
-
+                                    ApplyValuesToXml(moXform.Instance, values, xRootBriefPath, xRootDetailPath); 
                                     // Save and link to page or parent
-                                    long newContentId = Convert.ToInt64(myWeb.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, oContentInstance, 0));
+                                    newContentId = Convert.ToInt64(myWeb.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, moXform.Instance, 0));
                                     if (newContentId > 0)
                                     {
                                         if (pageId > 0)
@@ -196,11 +132,9 @@ namespace Protean
                                         }
                                     }
                                 }
-
                             }
                         }
-                        return "{ \"result\": \"success\" }";
-                        
+                        return $"{{ \"id\": \"{newContentId}\" }}";
                     }
                     catch (Exception ex)
                     {
@@ -208,7 +142,47 @@ namespace Protean
                         return $"{{ \"error\": \"{ex.Message}\" }}";
                     }
                 }
-               
+                private void ApplyValuesToXml(XmlElement oContentInstance, JArray values, string xRootBriefPath, string xRootDetailPath)
+                {
+                    foreach (var data in values)
+                    {
+                        var item = (JObject)data;
+                        string xpath = item["xpath"]?.ToString() ?? "";
+                        string value = item["value"]?.ToString() ?? "";
+                        int mode = item["mode"]?.ToObject<int>() ?? 3;
+
+                        string fullXPath = xpath;
+
+                        if (mode == 1)
+                        {
+                            fullXPath = xRootBriefPath + xpath;
+                            XmlNode node = oContentInstance.SelectSingleNode(fullXPath);
+                            if (node != null) node.InnerXml = value;
+                        }
+                        else if (mode == 2)
+                        {
+                            fullXPath = xRootDetailPath + xpath;
+                            XmlNode node = oContentInstance.SelectSingleNode(fullXPath);
+                            if (node != null) node.InnerXml = value;
+                        }
+                        else if (mode == 3)
+                        {
+                            XmlNode node = oContentInstance.SelectSingleNode(xRootBriefPath + xpath);
+                            if (node != null) node.InnerXml = value;
+                            XmlNode node1 = oContentInstance.SelectSingleNode(xRootDetailPath + xpath);
+                            if (node1 != null) 
+                            { 
+                                node1.InnerXml = value;
+                            }
+                            else
+                            {
+                                node1 = oContentInstance.SelectSingleNode(xRootDetailPath);
+                                node1.InnerXml = value;
+                            }
+                        }
+                    }
+                }
+
                 public string GetContent(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try

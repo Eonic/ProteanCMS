@@ -2192,26 +2192,13 @@ function buildInputJson({ contentId, contentType, contentName, value, pageId, po
     let values = [];
 
     if (mode === 1) {
-        values.push({ xpath: "Content", value: value, pathType: "brief", mode: mode });
+        values.push({ xpath: "Content", value: value, mode: mode });
     }
     else if (mode === 2) {
-        values.push({ xpath: "", value: value, pathType: "detail", mode: mode });
+        values.push({ xpath: "", value: value, mode: mode });
     }
     else if (mode === 3) {
-        values.push(
-            {
-                xpath: "Content",
-                value: value,
-                pathType: "brief",
-                mode: mode
-            },
-            {
-                xpath: "",
-                value: value,
-                pathType: "detail",
-                mode:mode
-            }
-        );
+        values.push({xpath: "Content", value: value, mode: mode });
     }
     return {
         contentId: contentId, contentType: contentType, ContentName: contentName, pageId: pageId, position: position, values: values };
@@ -2250,8 +2237,8 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
         mode: mode
     });
 
-    axios.post(UpdateContentValue, PageTitleInputJson).then(function (response) {
-        if (response.data.result === "success") {
+    axios.post(UpdateContentValue, PageTitleInputJson).then(function (response) {       
+        if (response.data.id > 0) {
             $("#title-display-" + pagetitleId).text(pagetitle);
             $("#title-input-" + pagetitleId).addClass('hidden');
             $("#title-display-" + pagetitleId).removeClass('hidden');
@@ -2262,8 +2249,8 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
         }
     });
 
-    axios.post(UpdateContentValue, MetaDescriptionInputJson).then(function (response) {
-        if (response.data.result === "success") {
+    axios.post(UpdateContentValue, MetaDescriptionInputJson).then(function (response) {      
+        if (response.data.id > 0) {
             $("#MetaDescription-display-" + metadescId).text(metadescription);
             $("#description-input-" + metadescId).addClass('hidden');
             $("#MetaDescription-display-" + metadescId).removeClass('hidden');

@@ -3,14 +3,24 @@
         fakewaffle.responsiveTabs(['xs', 'sm']);
     })(jQuery);
 
-    $('.navbar-nav > .dropdown-hover-menu').hover(function () {
-        $(this).find('.dropdown-menu').show();
-        $(this).addClass('show dropdown-active');
-    }, function () {
-        $(this).find('.dropdown-menu').hide();
-        $(this).removeClass('show dropdown-active');
-        $(this).find('.dropdown-mobile-next > ul').hide();
+    //$('.navbar-nav > .dropdown-hover-menu').hover(function () {
+    //    $(this).find('.dropdown-menu').show();
+    //    $(this).addClass('show dropdown-active');
+    //}, function () {
+    //    $(this).find('.dropdown-menu').hide();
+    //    $(this).removeClass('show dropdown-active');
+    //    $(this).find('.dropdown-mobile-next > ul').hide();
+    //});
+
+    //accessible hover start
+    $('.dropdown').on('show.bs.dropdown', function (e) {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideDown(100);
     });
+
+    $('.dropdown').on('hide.bs.dropdown', function (e) {
+        $(this).find('.dropdown-menu').first().stop(true, true).slideUp(100);
+    });
+    //accessible hover end
     
     $('.mobile-dd-control').click(function () {
         $(this).parent().find(".dropdown-menu").toggle();

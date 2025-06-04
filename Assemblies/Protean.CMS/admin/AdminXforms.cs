@@ -2915,7 +2915,7 @@ namespace Protean
                     }
                 }
 
-                protected string GetContentFormPath(string SchemaName)
+                public string GetContentFormPath(string SchemaName)
                 {
                     string cProcessInfo = "";
                     try
