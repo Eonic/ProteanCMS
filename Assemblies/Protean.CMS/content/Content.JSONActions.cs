@@ -111,7 +111,7 @@ namespace Protean
                                 // INSERT new content
                                 moXform = (Admin.AdminXforms)myWeb.getAdminXform();                           
                                 string xformPath = moXform.GetContentFormPath(contentType);                               
-                                moXform.load(xformPath, myWeb.maCommonFolders);
+                                moXform.load(xformPath + ".xml", myWeb.maCommonFolders);
 
                                 if (moXform.Instance != null)
                                 {  
