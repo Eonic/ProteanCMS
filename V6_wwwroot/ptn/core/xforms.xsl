@@ -907,6 +907,74 @@
     </xsl:if>
   </xsl:template>
 
+
+  <xsl:template match="input[contains(@class,'form-floating')] | textarea[contains(@class,'form-floating')]" mode="xform">
+    <xsl:param name="nolabel"/>
+    <xsl:param name="dependantClass"/>
+
+    <!-- NB : the count(item)!=1 basically stops you from making a one checkbox field (ie a boolean) from being required -->
+   
+    <xsl:variable name="fmhz">
+      <xsl:if test="ancestor::group[contains(@class,'inline-labels')]">
+        <xsl:text>col-sm-9</xsl:text>
+        <xsl:if test="not(label)">
+          <xsl:text> col-md-offset-3</xsl:text>
+        </xsl:if>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:choose>
+      <xsl:when test="@prefixIcon!='' or @prefix!='' or @suffix!='' or @suffixIcon!=''">
+        <div class="input-group">
+          <xsl:if test="@prefixIcon!=''">
+            <span class="input-group-text">
+              <i class="{@prefixIcon}">&#160;</i>
+            </span>
+          </xsl:if>
+          <xsl:if test="@prefix!=''">
+            <div class="input-group-text">
+              <xsl:value-of select="@prefix"/>
+            </div>
+          </xsl:if>
+          <xsl:apply-templates select="." mode="xform_control">
+            <xsl:with-param select="$dependantClass" name="dependantClass"/>
+          </xsl:apply-templates>
+          <xsl:if test="@suffix!=''">
+            <div class="input-group-text">
+              <xsl:value-of select="@suffix"/>
+            </div>
+          </xsl:if>
+          <xsl:if test="@suffixIcon!=''">
+            <span class="input-group-text">
+              <i class="{@suffixIcon}">&#160;</i>
+            </span>
+          </xsl:if>
+          <!--xsl:if test="hint">
+            <xsl:apply-templates select="." mode="hintButton"/>
+
+          </xsl:if-->
+        </div>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="." mode="xform_control">
+          <xsl:with-param select="$dependantClass" name="dependantClass"/>
+        </xsl:apply-templates>
+      </xsl:otherwise>
+    </xsl:choose>
+    <xsl:if test="not($nolabel!='')">
+      <xsl:apply-templates select="label">
+        <xsl:with-param name="cLabel">
+          <xsl:apply-templates select="." mode="getRefOrBind"/>
+        </xsl:with-param>
+        <xsl:with-param name="bRequired">
+          <xsl:if test="contains(@class,'required') and count(item)!=1">true</xsl:if>
+        </xsl:with-param>
+      </xsl:apply-templates>
+    </xsl:if>
+    <xsl:if test="not(contains(@class,'pickImage'))">
+      <xsl:apply-templates select="self::node()[not(item[toggle]) and not(hint)]" mode="xform_legend"/>
+    </xsl:if>
+  </xsl:template>
+
   <xsl:template match="input[parent::*[contains(@class,'horizontal-form')]] | select1[parent::*[contains(@class,'horizontal-form')]]  | secret[parent::*[contains(@class,'horizontal-form')]] " mode="xform">
     <xsl:param name="nolabel"/>
     <xsl:param name="dependantClass"/>

@@ -248,9 +248,9 @@
                   <xsl:text>min-height:</xsl:text>
                   <xsl:value-of select="@minHeightxs"/>
                   <xsl:text>px!important;</xsl:text>
-                  <xsl:text>height:</xsl:text>
+                  <!--<xsl:text>height:</xsl:text>
                   <xsl:value-of select="@minHeightxs"/>
-                  <xsl:text>px!important;</xsl:text>
+                  <xsl:text>px!important;</xsl:text>-->
                 </xsl:if>
                 <xsl:if test="@padding-top-xs and @padding-top-xs!=''">
                   <xsl:text>padding-top:</xsl:text>
@@ -271,9 +271,9 @@
                   <xsl:text>min-height:</xsl:text>
                   <xsl:value-of select="@minHeight"/>
                   <xsl:text>px!important;</xsl:text>
-                  <xsl:text>height:</xsl:text>
+                  <!--<xsl:text>height:</xsl:text>
                   <xsl:value-of select="@minHeight"/>
-                  <xsl:text>px!important;</xsl:text>
+                  <xsl:text>px!important;</xsl:text>-->
                 </xsl:if>
                 <xsl:if test="@padding-top and @padding-top!=''">
                   <xsl:text>padding-top:</xsl:text>
@@ -357,9 +357,9 @@
                   <xsl:text>min-height:</xsl:text>
                   <xsl:value-of select="@minHeightxs"/>
                   <xsl:text>px!important;</xsl:text>
-                  <xsl:text>height:</xsl:text>
+                  <!--<xsl:text>height:</xsl:text>
                   <xsl:value-of select="@minHeightxs"/>
-                  <xsl:text>px!important;</xsl:text>
+                  <xsl:text>px!important;</xsl:text>-->
                 </xsl:if>}
                 @media(min-width:768px){
                 <xsl:text>.bg-video-wrapper-</xsl:text>
@@ -369,9 +369,9 @@
                   <xsl:text>min-height:</xsl:text>
                   <xsl:value-of select="@minHeight"/>
                   <xsl:text>px!important;</xsl:text>
-                  <xsl:text>height:</xsl:text>
+                  <!--<xsl:text>height:</xsl:text>
                   <xsl:value-of select="@minHeight"/>
-                  <xsl:text>px!important;</xsl:text>
+                  <xsl:text>px!important;</xsl:text>-->
                 </xsl:if>}}
               </style>
               <!--<xsl:attribute name="style">

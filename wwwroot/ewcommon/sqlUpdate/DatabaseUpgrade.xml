@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<DatabaseUpgrade LatestVersion="6.0.75.0">
+<DatabaseUpgrade LatestVersion="6.0.78.0">
 	<!-- Instructions	
 	   Add SQL scripts to the directory structure as below.
 	   Separate each "create" into its own file
@@ -621,18 +621,30 @@
 		<Sub2 Number="75">
 			<Sub3 Number="0">
 				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetPriceRange"/>
-				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.75.0/spGetPriceRange.sql"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.75.0/spGetPriceRange.sql"/>				
 			</Sub3>
 		</Sub2>
-
+		<Sub2 Number="76">
+			<Sub3 Number="0">				
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetValidShippingOptions"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.76.0/spGetValidShippingOptions.sql"/>
+			    <Action Order="3" Type="Drop" ObjectType="Procedure" ObjectName="spGetParentPagesForCache"/>
+				<Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.0.76.0/spGetParentPagesForCache.sql"/>
+                <Action Order="5" Type="File" ObjectType="" ObjectName="/v5/6.0.76.0/AlterQuery_tblOptOutAddresses.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="77">
+			<Sub3 Number="0">
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetValidShippingOptions"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.77.0/spGetValidShippingOptions.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="78">
+			<Sub3 Number="0">
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetAllMenusList"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.78.0/spGetAllMenusList.sql"/>
+			</Sub3>
+		</Sub2>
     </Sub1>
-	  <Sub1 Number="1">
-			<Sub2 Number="35">
-				<Sub3 Number="0">
-					<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetPriceRange"/>
-					<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.75.0/spGetPriceRange.sql"/>
-				</Sub3>
-			</Sub2>
-		</Sub1>
   </Version>
 </DatabaseUpgrade>
