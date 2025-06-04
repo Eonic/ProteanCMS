@@ -7435,9 +7435,7 @@ $(document).ready(function () {
           <xsl:when test="$editQty!='true'">&#160;</xsl:when>
           <xsl:otherwise>
             <a href="{$parentURL}?cartCmd=Remove&amp;id={@id}" title="click here to remove this item from the list">
-              <!--BJR - This either doesnt work or is wrong so i have changed it for the moment to work-->
-              <!--<img src="{$secureURL}/ewCommon/images/icons/trash.gif" alt="delete icon - click here to remove this item from the list"/>-->
-              <img src="/ewCommon/images/icons/delete.png" width="20" height="20" alt="delete icon - click here to remove this item from the list"/>
+               <img src="/ewCommon/images/icons/delete.png" width="20" height="20" alt="delete icon - click here to remove this item from the list"/>
             </a>
           </xsl:otherwise>
         </xsl:choose>

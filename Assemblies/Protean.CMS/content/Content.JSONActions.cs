@@ -90,14 +90,52 @@ namespace Protean
                             long pageId = Convert.ToInt64(jObj["pageId"] ?? 0);
                             string position = Convert.ToString(jObj["position"]);
                             string relatedParent = Convert.ToString(jObj["relatedParent"]);
-                            string relationType = Convert.ToString(jObj["relationType"]);                      
+                            string relationType = Convert.ToString(jObj["relationType"]);
 
-                        string JsonResult = "";
-                        //string contentId = "";
-                        //string xpath = "";
-                        // Dim value As String 'JSON convert to XML and save ensure the xml schemas match.
+                            XmlElement oContentInstance;
+                            Cms.Admin.AdminXforms moXform = null;
+                            string xRootBriefPath = "tblContent/cContentXmlBrief/";
+                            string xRootDetailPath = "tblContent/cContentXmlDetail";
 
-                        return JsonResult;
+
+                            if (contentId > 0)
+                            {
+                                // UPDATE existing content
+                                oContentInstance = myWeb.moDbHelper.moPageXml.CreateElement("instance");
+                                oContentInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, contentId);
+                                ApplyValuesToXml(oContentInstance, values, xRootBriefPath, xRootDetailPath);
+                                newContentId = Convert.ToInt64(myWeb.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, oContentInstance));
+                            }
+                            else
+                            {
+                                // INSERT new content
+                                moXform = (Admin.AdminXforms)myWeb.getAdminXform();
+                                string xformPath = moXform.GetContentFormPath(contentType);
+                                moXform.load(xformPath + ".xml", myWeb.maCommonFolders);
+
+                                if (moXform.Instance != null)
+                                {
+                                    moXform.Instance.SelectSingleNode("tblContent/cContentName").InnerText = ContentName;
+                                    moXform.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText = Protean.Tools.Xml.XmlDate(DateTime.Now);
+                                    ApplyValuesToXml(moXform.Instance, values, xRootBriefPath, xRootDetailPath);
+                                    // Save and link to page or parent
+                                    newContentId = Convert.ToInt64(myWeb.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, moXform.Instance, 0));
+                                    if (newContentId > 0)
+                                    {
+                                        if (pageId > 0)
+                                        {
+                                            myWeb.moDbHelper.setContentLocation(pageId, newContentId, true, false, false, position, false);
+                                        }
+                                        else if (!string.IsNullOrEmpty(relatedParent))
+                                        {
+                                            myWeb.moDbHelper.insertContentRelation(Convert.ToInt32(relatedParent), Convert.ToString(newContentId), false, relationType ?? "default");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        return $"{{ \"id\": \"{newContentId}\" }}";
+
                     }
                     catch (Exception ex)
                     {
