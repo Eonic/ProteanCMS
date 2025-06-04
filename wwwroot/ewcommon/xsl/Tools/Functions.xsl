@@ -10806,6 +10806,7 @@
   <xsl:template name="bundle-css">
     <xsl:param name="comma-separated-files"/>
     <xsl:param name="bundle-path"/>
+	  
     <xsl:call-template name="render-css-files">
       <xsl:with-param name="list" select="ew:BundleCSS($comma-separated-files,$bundle-path)"/>
       <xsl:with-param name="ie8mode">
