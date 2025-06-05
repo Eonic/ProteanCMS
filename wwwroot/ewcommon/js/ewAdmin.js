@@ -2182,7 +2182,7 @@ function editTitle(pagetitleId, metadescId, menuid) {
     //$("#cPageName-" + menuid).addClass('hidden');
     //$("#displayname-input-" + menuid).removeClass('hidden');
     //$("#cDisplayName-" + menuid).addClass('hidden');
-    if (pagetitleId== 0 && metadescId== 0) {
+    if (pagetitleId== 0 || metadescId== 0) {
         $("#title-input-"+menuid).removeClass('hidden');
         $("#description-input-"+menuid).removeClass('hidden');
     }
@@ -2209,7 +2209,7 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
     var metadescription = $("#description-input-" + metadescId).val();
     var pageId = menuid;
     var position = "header";
-    if (pagetitleId == 0 && metadescId == 0) {
+    if (pagetitleId == 0 || metadescId == 0) {
        pagetitle = $("#title-input-"+ menuid).val();
        metadescription = $("#description-input-"+menuid).val();
     }
@@ -2239,24 +2239,28 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
 
     axios.post(UpdateContentValue, PageTitleInputJson).then(function (response) {       
         if (response.data.id > 0) {
+            debugger;
             $("#title-display-" + pagetitleId).text(pagetitle);
             $("#title-input-" + pagetitleId).addClass('hidden');
             $("#title-display-" + pagetitleId).removeClass('hidden');
-            if (pagetitleId == 0 && metadescId == 0) {
+            if (pagetitleId == 0 || metadescId == 0) {
                 $("#title-input-"+menuid).addClass('hidden'); 
                 $("#title-display-").removeClass('hidden');
+                $("#title-display-").text(pagetitle);
             }
         }
     });
 
     axios.post(UpdateContentValue, MetaDescriptionInputJson).then(function (response) {      
         if (response.data.id > 0) {
+            debugger;
             $("#MetaDescription-display-" + metadescId).text(metadescription);
             $("#description-input-" + metadescId).addClass('hidden');
             $("#MetaDescription-display-" + metadescId).removeClass('hidden');
-            if (pagetitleId == 0 && metadescId == 0) {               
+            if (pagetitleId == 0 || metadescId == 0) {               
                 $("#description-input-"+menuid).addClass('hidden');
                 $("#MetaDescription-display-").removeClass('hidden');
+                $("#MetaDescription-display-").text(metadescription);
             }
         }
     });
