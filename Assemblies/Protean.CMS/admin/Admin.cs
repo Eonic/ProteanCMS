@@ -222,7 +222,8 @@ namespace Protean
                     {
                         modalAlert = myWeb.moSession["modalAlert"].ToString();
                         myWeb.moSession.Remove("modalAlert");
-                    };
+                    }
+                    ;
 
                     oWeb.mbAdminMode = true;
                     moPageXML = oWeb.moPageXml;
@@ -234,7 +235,7 @@ namespace Protean
                     // Else
                     // mbPreviewMode = False
                     // End If
-                                                          
+
                     string[] EwCmd = Strings.Split(myWeb.moRequest["ewCmd"], ".");
                     mcEwCmd = EwCmd[0];
                     if (Information.UBound(EwCmd) > 0)
@@ -1363,22 +1364,22 @@ namespace Protean
                                     sAdminLayout = "";
                                     mcEwCmd = Conversions.ToString(myWeb.moSession["ewCmd"]);
                                     //clear cache when item is live only
-                                    if(myWeb.moRequest.Params["nStatus"] == "1")
+                                    if (myWeb.moRequest.Params["nStatus"] == "1")
                                     {
                                         //'AllowContentSpecificClearCache' if on then clear contentid related cache pages.
-                                        if (moConfig["AllowContentSpecificClearCache"]!=null && moConfig["AllowContentSpecificClearCache"].ToLower() == "on")
+                                        if (moConfig["AllowContentSpecificClearCache"] != null && moConfig["AllowContentSpecificClearCache"].ToLower() == "on")
                                         {
-                                            if(myWeb.moRequest["id"] != null)
+                                            if (myWeb.moRequest["id"] != null)
                                             {
                                                 string nContentID = Convert.ToString(myWeb.moRequest["id"]);
                                                 myWeb.ClearPageCache(nContentID);
-                                            }                                           
+                                            }
                                         }
                                         else
-                                        {                                            
+                                        {
                                             myWeb.ClearPageCache(); //clear all cache
-                                        }                                        
-                                    }                                    
+                                        }
+                                    }
 
                                     // if we have a parent releationship lets add it
                                     if (!string.IsNullOrEmpty(myWeb.moRequest["contentParId"]) && Information.IsNumeric(myWeb.moRequest["contentParId"]))
@@ -2412,7 +2413,7 @@ namespace Protean
                                     oPageDetail.RemoveAll();
                                     mcEwCmd = "ListUserContacts";
                                     myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" + myWeb.moRequest["id"];
-                                   
+
                                     goto ProcessFlow;
                                 }
 
@@ -3427,6 +3428,13 @@ namespace Protean
                                 ResetWebConfig();
                                 break;
                             }
+                        case "SEOReport":
+                            {
+                               // bLoadStructure = true;
+                                SEOReport(ref oPageDetail, ref sAdminLayout);                                
+                                //myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
+                                break;
+                            }
 
 
                     }
@@ -3551,7 +3559,7 @@ namespace Protean
 
 
                     // We have done all our updating lets get new pagexml
-                    if (mcEwCmd == "Normal" | mcEwCmd == "Advanced" | mcEwCmd == "PreviewOn" | mcEwCmd == "MailPreviewOn" | mcEwCmd == "EditXForm" | mcEwCmd == "EditPage" | mcEwCmd == "EditPageSEO" | mcEwCmd == "NormalMail" | mcEwCmd == "AdvancedMail" | mcEwCmd == "NewMail" | mcEwCmd == "MailingList" | mcEwCmd == "SystemPages" | mcEwCmd == "ViewSystemPages" | mcEwCmd == "LocateContent" | mcEwCmd == "MoveContent" | mcEwCmd == "LocateContentDetail")
+                    if (mcEwCmd == "Normal" | mcEwCmd == "Advanced" | mcEwCmd == "PreviewOn" | mcEwCmd == "MailPreviewOn" | mcEwCmd == "EditXForm" | mcEwCmd == "EditPage" | mcEwCmd == "EditPageSEO" | mcEwCmd == "NormalMail" | mcEwCmd == "AdvancedMail" | mcEwCmd == "NewMail" | mcEwCmd == "MailingList" | mcEwCmd == "SystemPages" | mcEwCmd == "ViewSystemPages" | mcEwCmd == "LocateContent" | mcEwCmd == "MoveContent" | mcEwCmd == "LocateContentDetail" | mcEwCmd == "SEOReport")
 
                     {
                         // TS: removed 4 jul 2014 do not need to load page content when editing
@@ -3677,7 +3685,8 @@ namespace Protean
                     // RJP 7 Nov 2012. Added LCase to MembershipEncryption.
                     if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(myWeb.moSession["ewAuth"], Encryption.HashString(myWeb.moSession.SessionID + moConfig["AdminPassword"], Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true), false)))
                     {
-                        if (oUserXml is null) {
+                        if (oUserXml is null)
+                        {
                             mcEwCmd = "AdminDenied";
                             return;
                         }
@@ -3756,7 +3765,7 @@ namespace Protean
                                                         case "LocateContent":
                                                         case "MoveContent":
                                                             {
-                                                                if (mcEwCmd  == ewCmd)
+                                                                if (mcEwCmd == ewCmd)
                                                                 {
                                                                     moDeniedAdminMenuElmt = (XmlElement)oMenuElmt.CloneNode(false);
                                                                     mcEwCmd = "AdminDenied";
@@ -3784,7 +3793,7 @@ namespace Protean
                                                         case "LocateContent":
                                                         case "MoveContent":
                                                             {
-                                                                if (mcEwCmd == ewCmd )
+                                                                if (mcEwCmd == ewCmd)
                                                                 {
                                                                     moDeniedAdminMenuElmt = (XmlElement)oMenuElmt.CloneNode(false);
                                                                     mcEwCmd = "AdminDenied";
@@ -4166,7 +4175,7 @@ namespace Protean
                             {
 
                                 // lets just output our source xml
-                             
+
 
                                 // NB: Old Tools Transform----------------
                                 // then we transform to our standard import XML
@@ -4193,7 +4202,8 @@ namespace Protean
                                     moAdXfm.addNote(ref moAdXfm.moXformElmt, Protean.xForm.noteTypes.Alert, returnmsg);
 
                                 }
-                                else {
+                                else
+                                {
                                     var oPreviewElmt = moPageXML.CreateElement("PreviewFileXml");
                                     oPreviewElmt.InnerXml = oImportXml.OuterXml;
                                     oPageDetail.AppendChild(oPreviewElmt);
@@ -4231,7 +4241,7 @@ namespace Protean
 
                                 }
 
-                                    
+
                             }
 
                             else
@@ -4479,7 +4489,7 @@ namespace Protean
                         // If oMenuRoot IsNot Nothing Then Exit For
                     }
 
-                  
+
 
                     // Add any options in Manifests
 
@@ -4511,7 +4521,8 @@ namespace Protean
                     {
                         moMessaging.AdminProcess.MailingListAdminMenu(ref oMenuRoot);
                         moMessaging = null;
-                    };
+                    }
+                    ;
 
 
                     // If this is a cloned page, then remove certain options under By Page
@@ -5971,7 +5982,8 @@ from tblContentIndexDef";
 
                         Boolean IsScss = false;
 
-                        if (ThemeLessFile.EndsWith(".scss")) {
+                        if (ThemeLessFile.EndsWith(".scss"))
+                        {
                             IsScss = true;
                         }
 
@@ -7056,6 +7068,21 @@ from tblContentIndexDef";
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "ReIndexing", ex, "", sProcessInfo, gbDebug);
+                }
+            }
+
+            private void SEOReport(ref XmlElement oPageDetail, ref string sAdminLayout)
+            {
+                string sProcessInfo = "";
+
+                try
+                {                   
+                    oPageDetail.AppendChild(moAdXfm.GetAllMenuMetaDetails());                   
+                }
+
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SEOReport", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
