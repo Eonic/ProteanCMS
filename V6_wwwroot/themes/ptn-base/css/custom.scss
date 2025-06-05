@@ -241,6 +241,10 @@ h1, h2, h3, h4 {
     color: $headings-color;
 }
 
+.title {
+    font-weight: $headings-font-weight;
+}
+
 .center-block,
 .center-block-footer,
 .center-nobox-footer {

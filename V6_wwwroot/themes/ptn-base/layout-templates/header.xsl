@@ -700,7 +700,7 @@
     <xsl:param name="nav-collapse" />
     <xsl:param name="cart-style" />
     <xsl:param name="social-links" />
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="Main Navigation">
       <xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
         <xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top</xsl:attribute>
       </xsl:if>
