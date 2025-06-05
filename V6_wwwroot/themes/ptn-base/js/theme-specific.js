@@ -30,6 +30,7 @@
     $('.mainnav-toggler').click(function () {
         $('body').toggleClass('active-menu');
         $('.mainnav-collapse').slideDown('fast');
+        $('.nav-close-btn').focus();
         $(this).toggleClass('active-nav-toggle');
 
         if ($(this).attr('aria-expanded') == 'true') {
@@ -43,11 +44,13 @@
         $('.navbar-collapse').slideUp('fast');
         $('body').toggleClass('active-menu');
         $(".dropdown-active").removeClass('dropdown-active');
+        $('.mainnav-toggler').focus();
     });
     $('.dropdown-mobile-btn').click(function () {
         var currentHeight = $(this).parent().find("> .nav-pills").height();
         var newHeight = $(this).parent().parent().height();
         $(this).parent().find("> .nav-pills").addClass('dropdown-active');
+        //$(this).parent().find("> .nav-pills").find('dropdown-active').attr("tabindex", 0)
         $(this).parent('li').parent('ul').addClass('menu-no-scroll');
         if (newHeight > currentHeight) {
             $(this).parent().find('.nav-pills').height(newHeight);
@@ -62,17 +65,23 @@
         $(this).parent('li').parent('ul').removeClass('menu-no-scroll');
     });
     $('[data-bs-toggle="popover"]').popover();
+    //moveFocus();
+});
+function moveFocus() {
+   
     $('.navbar-toggler').keypress(function (e) {
-            
-        var key = e.which;
-        
-        if (key == 13) {
 
+        var key = e.which;
+
+        if (key == 13) {
             $(this).parent().find('.nav-close-btn').addClass('test');
             $(this).parent().find('.nav-close-btn').focus();
         }
     });
-});
+}
+
+function closeBtnFocus() {
+}
 
 function trapFocus(element) {
     var focusableEls = element.querySelectorAll('a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])');
