@@ -436,7 +436,11 @@
                   </button>
                 </xsl:if>
                 <div class="navbar-collapse mainnav-collapse" id="navbarSupportedContent">
-                  <button type="button" class="nav-close-btn text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  <button type="button" class="nav-close-btn text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close">
+                    <i class="fa fa-times">
+                      <xsl:text> </xsl:text>
+                    </i>
+                  </button>
                   <!--SEARCH (MOBILE)-->
                   <xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
                     <div class="xs-only search-wrapper">
@@ -608,8 +612,6 @@
                   </i>
                 </button>
 
-                <button type="button" class="nav-close-btn text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-
                 <!-- MENU -->
                 <ul class="navbar-nav">
                   <xsl:if test="$HomeNav='true' or $HomeInfo='true'">
@@ -638,7 +640,10 @@
                     </xsl:when>
                     <xsl:when test="$nav-dropdown='hover'">
                       <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
-                        <xsl:with-param name="hover">self</xsl:with-param>
+                        <xsl:with-param name="overviewLink">self</xsl:with-param>
+                        <xsl:with-param name="hover">false</xsl:with-param>
+
+                        <xsl:with-param name="accessible-hover">true</xsl:with-param>
                         <xsl:with-param name="menu-back">true</xsl:with-param>
                       </xsl:apply-templates>
                     </xsl:when>

@@ -25,7 +25,7 @@
 	<xsl:variable name="HomeInfo">false</xsl:variable>
 	<xsl:variable name="HomeNav">true</xsl:variable>
 	<xsl:variable name="NavFix">false</xsl:variable>
-	<xsl:variable name="nav-dropdown">true</xsl:variable>
+	<xsl:variable name="nav-dropdown">hover</xsl:variable>
 	<xsl:variable name="sub-nav">false</xsl:variable>
 	<xsl:variable name="SideSubWidth">3</xsl:variable>
 	<xsl:variable name="SideSubWidthCustom"></xsl:variable>
@@ -109,6 +109,9 @@
 		<xsl:call-template name="bundle-js">
 			<xsl:with-param name="comma-separated-files">
 				<xsl:apply-templates select="." mode="commonJsFiles" />
+        <xsl:text>~/themes/</xsl:text>
+        <xsl:value-of select="$theme"/>
+        <xsl:text>/js/accessible-bootstrap-hover-dropdown.js,</xsl:text>
 				<xsl:text>~/themes/</xsl:text>
 				<xsl:value-of select="$theme"/>
 				<xsl:text>/js/jquery.appear.js,</xsl:text>

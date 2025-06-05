@@ -4143,6 +4143,7 @@
             <xsl:text> dropdown dropdown-hover-menu</xsl:text>
           </xsl:attribute>
           <a href="{@url}" id="mainNavDD{@id}">
+            <xsl:attribute name="aria-expanded">false</xsl:attribute>
             <xsl:if test="self::MenuItem[@id=/Page/@id]">
               <xsl:attribute name="aria-current">page</xsl:attribute>
             </xsl:if>
@@ -4183,7 +4184,7 @@
 
           <button href="{@url}" id="mainNavDD{@id}" data-hover="dropdown">
             <xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
-
+            <xsl:attribute name="aria-expanded">false</xsl:attribute>
             <xsl:if test="self::MenuItem[@id=/Page/@id]">
               <xsl:attribute name="aria-current">page</xsl:attribute>
             </xsl:if>
@@ -4219,7 +4220,7 @@
         <xsl:otherwise>
           <button href="{@url}" id="mainNavDD{@id}" role="button">
             <xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
-
+            <xsl:attribute name="aria-expanded">false</xsl:attribute>
             <xsl:if test="self::MenuItem[@id=/Page/@id]">
               <xsl:attribute name="aria-current">page</xsl:attribute>
             </xsl:if>
