@@ -1399,9 +1399,16 @@
         <xsl:if test="@rss and @rss!='false'">
           <xsl:apply-templates select="." mode="rssLink" />
         </xsl:if>
-        <h5>
-          <xsl:apply-templates select="." mode="moduleLink"/>
-        </h5>
+        <xsl:choose>
+          <xsl:when test="@heading">
+            <xsl:apply-templates select="." mode="moduleLink"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <h5>
+              <xsl:apply-templates select="." mode="moduleLink"/>
+            </h5>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:if>
       <xsl:if test="not(@listGroup='true')">
         <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
