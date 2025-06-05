@@ -2955,6 +2955,7 @@
             <xsl:choose>
               <xsl:when test="self::MenuItem[@id=/Page/@id]">
                 <xsl:attribute name="class">active</xsl:attribute>
+                <xsl:attribute name="aria-current">page</xsl:attribute>
               </xsl:when>
               <xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
                 <xsl:attribute name="class">on</xsl:attribute>
@@ -3853,6 +3854,8 @@
       <xsl:choose>
         <xsl:when test="@id=/Page/@artid">
           <xsl:attribute name="class">active</xsl:attribute>
+          <xsl:attribute name="aria-current">page</xsl:attribute>
+
         </xsl:when>
       </xsl:choose>
       <xsl:value-of select="$displayName"/>
@@ -3905,6 +3908,10 @@
         <xsl:text> </xsl:text>
         <xsl:value-of select="$class"/>
       </xsl:attribute>
+
+      <xsl:if test="self::MenuItem[@id=/Page/@id]">
+        <xsl:attribute name="aria-current">page</xsl:attribute>
+      </xsl:if>
       <xsl:if test="not($adminMode) and ($currentPage = ./parent::MenuItem and DisplayName/@paralaxLoad='true')">
         <xsl:attribute name="id">
           <xsl:text>slicelink-</xsl:text>
@@ -4136,6 +4143,9 @@
             <xsl:text> dropdown dropdown-hover-menu</xsl:text>
           </xsl:attribute>
           <a href="{@url}" id="mainNavDD{@id}">
+            <xsl:if test="self::MenuItem[@id=/Page/@id]">
+              <xsl:attribute name="aria-current">page</xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="class">
               <xsl:text>nav-link dropdown-toggle </xsl:text>
               <xsl:choose>
@@ -4174,6 +4184,9 @@
           <button href="{@url}" id="mainNavDD{@id}" data-hover="dropdown">
             <xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
 
+            <xsl:if test="self::MenuItem[@id=/Page/@id]">
+              <xsl:attribute name="aria-current">page</xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="class">
               <xsl:text>nav-link dropdown-toggle </xsl:text>
               <xsl:choose>
@@ -4207,6 +4220,9 @@
           <button href="{@url}" id="mainNavDD{@id}" role="button">
             <xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
 
+            <xsl:if test="self::MenuItem[@id=/Page/@id]">
+              <xsl:attribute name="aria-current">page</xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="class">
               <xsl:text>nav-link dropdown-toggle </xsl:text>
               <xsl:choose>
@@ -4262,6 +4278,9 @@
         <xsl:if test="$overviewLink='true'">
           <li>
             <a href="{@url}">
+              <xsl:if test="self::MenuItem[@id=/Page/@id]">
+                <xsl:attribute name="aria-current">page</xsl:attribute>
+              </xsl:if>
               <xsl:attribute name="class">
                 <xsl:text>dropdown-item</xsl:text>
                 <xsl:choose>
@@ -4280,6 +4299,9 @@
         <xsl:if test="$overviewLink='self'">
           <li>
             <a href="{@url}">
+              <xsl:if test="self::MenuItem[@id=/Page/@id]">
+                <xsl:attribute name="aria-current">page</xsl:attribute>
+              </xsl:if>
               <xsl:attribute name="class">
                 <xsl:text>dropdown-item</xsl:text>
                 <xsl:choose>
@@ -4403,6 +4425,9 @@
       <xsl:if test="$overviewLink='true'">
         <li class="nav-item">
           <a href="{@url}">
+            <xsl:if test="self::MenuItem[@id=/Page/@id]">
+              <xsl:attribute name="aria-current">page</xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="class">
               <xsl:value-of select="$class"/>
               <xsl:choose>
@@ -4421,6 +4446,9 @@
       <xsl:if test="$overviewLink='self'">
         <li class="nav-item">
           <a href="{@url}">
+            <xsl:if test="self::MenuItem[@id=/Page/@id]">
+              <xsl:attribute name="aria-current">page</xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="class">
               <xsl:value-of select="$class"/>
               <xsl:choose>
@@ -4528,6 +4556,9 @@
             </li>
             <li class="xs-only mobile-menu-heading">
               <a href="{@url}">
+                <xsl:if test="self::MenuItem[@id=/Page/@id]">
+                  <xsl:attribute name="aria-current">page</xsl:attribute>
+                </xsl:if>
                 <xsl:attribute name="class">
                   <xsl:text>dropdown-item</xsl:text>
                   <xsl:choose>
@@ -4585,6 +4616,7 @@
       <xsl:choose>
         <xsl:when test="self::MenuItem[@id=/Page/@id]">
           <xsl:attribute name="class">active</xsl:attribute>
+          <xsl:attribute name="aria-current">page</xsl:attribute>
         </xsl:when>
         <xsl:when test="descendant::MenuItem[@id=/Page/@id] and @url!='/'">
           <xsl:attribute name="class">on</xsl:attribute>
@@ -5410,6 +5442,9 @@
       </xsl:if>
     </xsl:variable>
     <a class="page-link {$active}" href="{$thisURL}={$startPos}" title="page {@step}">
+      <xsl:if test="$startPos = number(concat('0',$page/Request/QueryString/Item[@name=$queryStringParam]))">
+        <xsl:attribute name="aria-current">step</xsl:attribute>
+      </xsl:if>
       <xsl:value-of select="$step"/>
     </a>
     <xsl:if test="$step * $noPerPage &lt; $totalCount">
@@ -8548,11 +8583,9 @@
     <xsl:if test="$parentClass!=''">
       <Parent class="{$parentClass}"/>
     </xsl:if>
-    test1
     <xsl:choose>
       <!-- When Page Order -->
       <xsl:when test="$sort='Position' or $sort='' or $order=''">
-        test2
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
             <xsl:copy-of select="."/>
@@ -8560,7 +8593,7 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        test3 <xsl:value-of select="$contentType"/>
+        <xsl:value-of select="$contentType"/>
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
           <xsl:sort select="@update" order="{$order}" data-type="text"/>

@@ -60,7 +60,7 @@
 		<xsl:choose>
 			<xsl:when test="@layout='simple'">
 				<div class="clearfix SubPageListSimple">
-					<ul class="nav nav-module">
+					<ul class="nav nav-module" role="navigation">
 						<xsl:if test="@align='vertical'">
 							<xsl:attribute name="class">nav nav-module flex-column</xsl:attribute>
 						</xsl:if>
@@ -86,7 +86,7 @@
               <xsl:text>rem;</xsl:text>
             </xsl:attribute>
           </xsl:if>
-          <div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}" >
+          <div data-slidestoshow="{@cols}"  data-slideToShow="{$totalCount}" data-slideToScroll="1" data-dots="{@carouselBullets}" data-height="{@carouselHeight}"  role="navigation" aria-label="{@aria}"  >
             <xsl:if test="@gutter and @gutter!=''">
               <xsl:attribute name="style">
                 <xsl:text>margin-left:-</xsl:text>
@@ -119,6 +119,7 @@
 							<xsl:with-param name="parentId" select="@id"/>
 							<xsl:with-param name="linked" select="@linkArticle"/>
 							<xsl:with-param name="heading" select="@heading"/>
+							<xsl:with-param name="no-heading-content" select="@no-heading-content"/>
 						</xsl:apply-templates>
 					</div>
 				</div>
@@ -171,6 +172,7 @@
 		<xsl:param name="parentId"/>
 		<xsl:param name="linked"/>
 		<xsl:param name="heading"/>
+		<xsl:param name="no-heading-content"/>
 		<xsl:variable name="url">
 			<xsl:apply-templates select="." mode="getHref"/>
 		</xsl:variable>
@@ -209,13 +211,32 @@
 				<div class="lIinner">
 					<xsl:if test="$imagePosition='below'">
 						<xsl:choose>
+              <xsl:when test="$no-heading-content='true'">
+                <span class="title">
+                  <xsl:choose>
+                    <xsl:when test="$linked='true'">
+                      <xsl:apply-templates select="." mode="getDisplayName"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:apply-templates select="." mode="menuLink"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </span>
+              </xsl:when>
 							<xsl:when test="$heading='h2'">
 								<xsl:element name="{$heading}">
 									<xsl:attribute name="class">
 										<xsl:text>title text-</xsl:text>
 										<xsl:value-of select="$alignment"/>
 									</xsl:attribute>
-									<xsl:apply-templates select="." mode="menuLink"/>
+                  <xsl:choose>
+                    <xsl:when test="$linked='true'">
+                      <xsl:apply-templates select="." mode="getDisplayName"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:apply-templates select="." mode="menuLink"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
 								</xsl:element>
 							</xsl:when>
 							<xsl:otherwise>
@@ -224,7 +245,14 @@
 										<xsl:text>title text-</xsl:text>
 										<xsl:value-of select="$alignment"/>
 									</xsl:attribute>
-									<xsl:apply-templates select="." mode="menuLink"/>
+                  <xsl:choose>
+                    <xsl:when test="$linked='true'">
+                      <xsl:apply-templates select="." mode="getDisplayName"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:apply-templates select="." mode="menuLink"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
 								</h3>
 							</xsl:otherwise>
 						</xsl:choose>
@@ -243,13 +271,32 @@
           <div class="media-inner">
             <xsl:if test="not($imagePosition='below')">
               <xsl:choose>
+                <xsl:when test="$no-heading-content='true'">
+                  <span class="title">
+                    <xsl:choose>
+                      <xsl:when test="$linked='true'">
+                        <xsl:apply-templates select="." mode="getDisplayName"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:apply-templates select="." mode="menuLink"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </span>
+                </xsl:when>
                 <xsl:when test="$heading='h2'">
                   <xsl:element name="{$heading}">
                     <xsl:attribute name="class">
                       <xsl:text>title text-</xsl:text>
                       <xsl:value-of select="$alignment"/>
                     </xsl:attribute>
-                    <xsl:apply-templates select="." mode="menuLink"/>
+                    <xsl:choose>
+                      <xsl:when test="$linked='true'">
+                        <xsl:apply-templates select="." mode="getDisplayName"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:apply-templates select="." mode="menuLink"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </xsl:element>
                 </xsl:when>
                 <xsl:otherwise>
@@ -258,7 +305,14 @@
                       <xsl:text>title text-</xsl:text>
                       <xsl:value-of select="$alignment"/>
                     </xsl:attribute>
-                    <xsl:apply-templates select="." mode="menuLink"/>
+                    <xsl:choose>
+                      <xsl:when test="$linked='true'">
+                        <xsl:apply-templates select="." mode="getDisplayName"/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:apply-templates select="." mode="menuLink"/>
+                      </xsl:otherwise>
+                    </xsl:choose>
                   </h3>
                 </xsl:otherwise>
               </xsl:choose>
