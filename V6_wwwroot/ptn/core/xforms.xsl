@@ -80,12 +80,15 @@
   <!-- ========================== XFORM ========================== -->
   <!-- -->
   <xsl:template match="div" mode="xform">
-    <xsl:if test="./@class">
-      <xsl:attribute name="class">
-        <xsl:value-of select="./@class"/>
-      </xsl:attribute>
-    </xsl:if>
-    <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+	  <div>
+		  <!-- TS: div is required otherwise it breaks in compiled mode -->
+        <xsl:if test="./@class">
+          <xsl:attribute name="class">
+            <xsl:value-of select="./@class"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+	</div>
   </xsl:template>
 
   <!-- -->

@@ -267,8 +267,8 @@
 
 	<xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
 		<xsl:choose>
-			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
-				<xsl:call-template name="eonicwebAdminSystemName"/>
+			<xsl:when test="$page/Settings/add[@key='web.proteanProductName']/@value!=''">
+				<xsl:call-template name="proteanAdminSystemName"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<img src="/ptn/admin/skin/protean-admin-black-logon.png" alt="ProteanCMS" width="320px" height="57px"/>
@@ -291,12 +291,12 @@
   </xsl:template>
 
 	<xsl:template match="div[@class='footer-override']" mode="xform">
-		<xsl:if test="./@class">
+	
+		<div>	<xsl:if test="./@class">
 			<xsl:attribute name="class">
 				<xsl:value-of select="./@class"/>
 			</xsl:attribute>
 		</xsl:if>
-		<div>
 			<br/>
 			<a href="{$appPath}?ewCmd=LogOff" >
 				<i class="fa fa-reply">
