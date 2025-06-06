@@ -147,53 +147,50 @@
 
     //END MOBILE MENU
     $('[data-bs-toggle="popover"]').popover();
-    //moveFocus();
+    
 });
-function timesUP() {
-    alert('times up 3');
-}
-function moveFocus() {
+//function moveFocus() {
 
-    $('.navbar-toggler').keypress(function (e) {
+//    $('.navbar-toggler').keypress(function (e) {
 
-        var key = e.which;
+//        var key = e.which;
 
-        if (key == 13) {
-            $(this).parent().find('.nav-close-btn').addClass('test');
-            $(this).parent().find('.nav-close-btn').focus();
-        }
-    });
-}
+//        if (key == 13) {
+//            $(this).parent().find('.nav-close-btn').addClass('test');
+//            $(this).parent().find('.nav-close-btn').focus();
+//        }
+//    });
+//}
 
-function closeBtnFocus() {
-}
+//function closeBtnFocus() {
+//}
 
-function trapFocus(element) {
-    var focusableEls = element.querySelectorAll('a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])');
-    var firstFocusableEl = focusableEls[0];
-    var lastFocusableEl = focusableEls[focusableEls.length - 1];
-    var KEYCODE_TAB = 9;
+//function trapFocus(element) {
+//    var focusableEls = element.querySelectorAll('a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input[type="text"]:not([disabled]), input[type="radio"]:not([disabled]), input[type="checkbox"]:not([disabled]), select:not([disabled])');
+//    var firstFocusableEl = focusableEls[0];
+//    var lastFocusableEl = focusableEls[focusableEls.length - 1];
+//    var KEYCODE_TAB = 9;
 
-    element.addEventListener('keydown', function (e) {
-        var isTabPressed = (e.key === 'Tab' || e.keyCode === KEYCODE_TAB);
+//    element.addEventListener('keydown', function (e) {
+//        var isTabPressed = (e.key === 'Tab' || e.keyCode === KEYCODE_TAB);
 
-        if (!isTabPressed) {
-            return;
-        }
+//        if (!isTabPressed) {
+//            return;
+//        }
 
-        if (e.shiftKey) /* shift + tab */ {
-            if (document.activeElement === firstFocusableEl) {
-                lastFocusableEl.focus();
-                e.preventDefault();
-            }
-        } else /* tab */ {
-            if (document.activeElement === lastFocusableEl) {
-                firstFocusableEl.focus();
-                e.preventDefault();
-            }
-        }
-    });
-}
+//        if (e.shiftKey) /* shift + tab */ {
+//            if (document.activeElement === firstFocusableEl) {
+//                lastFocusableEl.focus();
+//                e.preventDefault();
+//            }
+//        } else /* tab */ {
+//            if (document.activeElement === lastFocusableEl) {
+//                firstFocusableEl.focus();
+//                e.preventDefault();
+//            }
+//        }
+//    });
+//}
 
 /*
 |--------------------------------------------------------------------------

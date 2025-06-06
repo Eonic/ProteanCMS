@@ -205,7 +205,9 @@
               <ul class="navbar-nav not-xs">
                 <xsl:if test="$HomeInfo='true'">
                   <li class="nav-item">
-                    <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
+                    <xsl:apply-templates select="Menu/MenuItem" mode="menuLink">
+                      <xsl:with-param name="class">nav-link</xsl:with-param>
+                    </xsl:apply-templates>
                   </li>
                 </xsl:if>
                 <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
@@ -384,7 +386,9 @@
                 <ul class="navbar-nav not-xs">
                   <xsl:if test="$HomeInfo='true'">
                     <li class="nav-item">
-                      <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
+                      <xsl:apply-templates select="Menu/MenuItem" mode="menuLink">
+                        <xsl:with-param name="class">nav-link</xsl:with-param>
+                      </xsl:apply-templates>
                     </li>
                   </xsl:if>
                   <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
@@ -554,7 +558,9 @@
               <ul class="navbar-nav not-xs">
                 <xsl:if test="$HomeInfo='true'">
                   <li class="nav-item">
-                    <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
+                    <xsl:apply-templates select="Menu/MenuItem" mode="menuLink">
+                      <xsl:with-param name="class">nav-link</xsl:with-param>
+                    </xsl:apply-templates>
                   </li>
                 </xsl:if>
                 <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
