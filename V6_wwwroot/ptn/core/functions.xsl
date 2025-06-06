@@ -1443,8 +1443,8 @@
         <xsl:with-param name="length" select="160"/>
       </xsl:call-template>
     </xsl:variable>
-    <meta property="og:description" content="{$contentMetaDescription}"/>	  
-	
+    <meta property="og:description" content="{$contentMetaDescription}"/>
+
     <xsl:choose>
       <xsl:when test="Contents/Content[@type='MetaData' and @name='ogImage']">
         <meta property="og:image">
@@ -1453,25 +1453,25 @@
           </xsl:attribute>
         </meta>
       </xsl:when>
-		<xsl:when test="Contents/Content[@type='Image' and @position='Banner']">
-			<meta property="og:image">
-				<xsl:attribute name="content">
-						<xsl:text>http</xsl:text>
-						<xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
-						<xsl:text>://</xsl:text>
-						<xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>				
-					<xsl:value-of select="Contents/Content[@type='Image' and @name='Banner']/img/@src"/>
-				</xsl:attribute>
-			</meta>
-		</xsl:when>
-		<xsl:when test="Contents/Content[@type='MetaData' and @name='ogimage-fallback']">
+      <xsl:when test="Contents/Content[@type='Image' and @position='Banner']">
+        <meta property="og:image">
+          <xsl:attribute name="content">
+            <xsl:text>http</xsl:text>
+            <xsl:if test="$page/Request/ServerVariables/Item[@name='HTTPS']='on'">s</xsl:if>
+            <xsl:text>://</xsl:text>
+            <xsl:value-of select="$page/Request/ServerVariables/Item[@name='SERVER_NAME']"/>
+            <xsl:value-of select="Contents/Content[@type='Image' and @name='Banner']/img/@src"/>
+          </xsl:attribute>
+        </meta>
+      </xsl:when>
+      <xsl:when test="Contents/Content[@type='MetaData' and @name='ogimage-fallback']">
         <meta property="og:image">
           <xsl:attribute name="content">
             <xsl:value-of select="/Page/Contents/Content[@type='MetaData' and @name='ogimage-fallback']/node()"/>
           </xsl:attribute>
         </meta>
       </xsl:when>
-      <xsl:otherwise>		  
+      <xsl:otherwise>
         <xsl:if test="$currentPage/Images/img[@class='display']/@src and $currentPage/Images/img[@class='display']/@src!=''">
           <meta property="og:image">
             <xsl:attribute name="content">
@@ -2934,9 +2934,9 @@
           <span itemprop="name">
             <xsl:apply-templates select="." mode="getDisplayName"/>
           </span>
-			<meta itemprop="position" content="{count(parent::MenuItem)+1}">
-				<xsl:text> </xsl:text>
-			</meta>
+          <meta itemprop="position" content="{count(parent::MenuItem)+1}">
+            <xsl:text> </xsl:text>
+          </meta>
         </xsl:when>
         <xsl:otherwise>
           <a itemprop="item">
@@ -2955,6 +2955,7 @@
             <xsl:choose>
               <xsl:when test="self::MenuItem[@id=/Page/@id]">
                 <xsl:attribute name="class">active</xsl:attribute>
+                <xsl:attribute name="aria-current">page</xsl:attribute>
               </xsl:when>
               <xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
                 <xsl:attribute name="class">on</xsl:attribute>
@@ -2981,9 +2982,9 @@
             <span itemprop="name">
               <xsl:apply-templates select="." mode="getDisplayName"/>
             </span>
-			  <meta itemprop="position" content="{count(parent::MenuItem)+1}" >
-				  <xsl:text> </xsl:text>
-			  </meta>
+            <meta itemprop="position" content="{count(parent::MenuItem)+1}" >
+              <xsl:text> </xsl:text>
+            </meta>
           </a>
 
         </xsl:otherwise>
@@ -3853,6 +3854,8 @@
       <xsl:choose>
         <xsl:when test="@id=/Page/@artid">
           <xsl:attribute name="class">active</xsl:attribute>
+          <xsl:attribute name="aria-current">page</xsl:attribute>
+
         </xsl:when>
       </xsl:choose>
       <xsl:value-of select="$displayName"/>
@@ -3905,6 +3908,10 @@
         <xsl:text> </xsl:text>
         <xsl:value-of select="$class"/>
       </xsl:attribute>
+
+      <xsl:if test="self::MenuItem[@id=/Page/@id]">
+        <xsl:attribute name="aria-current">page</xsl:attribute>
+      </xsl:if>
       <xsl:if test="not($adminMode) and ($currentPage = ./parent::MenuItem and DisplayName/@paralaxLoad='true')">
         <xsl:attribute name="id">
           <xsl:text>slicelink-</xsl:text>
@@ -4136,6 +4143,9 @@
             <xsl:text> dropdown dropdown-hover-menu</xsl:text>
           </xsl:attribute>
           <a href="{@url}" id="mainNavDD{@id}">
+            <xsl:if test="self::MenuItem[@id=/Page/@id]">
+              <xsl:attribute name="aria-current">page</xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="class">
               <xsl:text>nav-link dropdown-toggle </xsl:text>
               <xsl:choose>
@@ -4170,10 +4180,13 @@
             <xsl:value-of select="$liClass"/>
             <xsl:text> dropdown dropdown-hover-menu-accessible</xsl:text>
           </xsl:attribute>
-          
+
           <button href="{@url}" id="mainNavDD{@id}" data-hover="dropdown">
             <xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
 
+            <xsl:if test="self::MenuItem[@id=/Page/@id]">
+              <xsl:attribute name="aria-current">page</xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="class">
               <xsl:text>nav-link dropdown-toggle </xsl:text>
               <xsl:choose>
@@ -4207,6 +4220,9 @@
           <button href="{@url}" id="mainNavDD{@id}" role="button">
             <xsl:attribute name="data-bs-toggle">dropdown</xsl:attribute>
 
+            <xsl:if test="self::MenuItem[@id=/Page/@id]">
+              <xsl:attribute name="aria-current">page</xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="class">
               <xsl:text>nav-link dropdown-toggle </xsl:text>
               <xsl:choose>
@@ -4262,6 +4278,9 @@
         <xsl:if test="$overviewLink='true'">
           <li>
             <a href="{@url}">
+              <xsl:if test="self::MenuItem[@id=/Page/@id]">
+                <xsl:attribute name="aria-current">page</xsl:attribute>
+              </xsl:if>
               <xsl:attribute name="class">
                 <xsl:text>dropdown-item</xsl:text>
                 <xsl:choose>
@@ -4280,6 +4299,9 @@
         <xsl:if test="$overviewLink='self'">
           <li>
             <a href="{@url}">
+              <xsl:if test="self::MenuItem[@id=/Page/@id]">
+                <xsl:attribute name="aria-current">page</xsl:attribute>
+              </xsl:if>
               <xsl:attribute name="class">
                 <xsl:text>dropdown-item</xsl:text>
                 <xsl:choose>
@@ -4403,6 +4425,9 @@
       <xsl:if test="$overviewLink='true'">
         <li class="nav-item">
           <a href="{@url}">
+            <xsl:if test="self::MenuItem[@id=/Page/@id]">
+              <xsl:attribute name="aria-current">page</xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="class">
               <xsl:value-of select="$class"/>
               <xsl:choose>
@@ -4421,6 +4446,9 @@
       <xsl:if test="$overviewLink='self'">
         <li class="nav-item">
           <a href="{@url}">
+            <xsl:if test="self::MenuItem[@id=/Page/@id]">
+              <xsl:attribute name="aria-current">page</xsl:attribute>
+            </xsl:if>
             <xsl:attribute name="class">
               <xsl:value-of select="$class"/>
               <xsl:choose>
@@ -4528,6 +4556,9 @@
             </li>
             <li class="xs-only mobile-menu-heading">
               <a href="{@url}">
+                <xsl:if test="self::MenuItem[@id=/Page/@id]">
+                  <xsl:attribute name="aria-current">page</xsl:attribute>
+                </xsl:if>
                 <xsl:attribute name="class">
                   <xsl:text>dropdown-item</xsl:text>
                   <xsl:choose>
@@ -4585,6 +4616,7 @@
       <xsl:choose>
         <xsl:when test="self::MenuItem[@id=/Page/@id]">
           <xsl:attribute name="class">active</xsl:attribute>
+          <xsl:attribute name="aria-current">page</xsl:attribute>
         </xsl:when>
         <xsl:when test="descendant::MenuItem[@id=/Page/@id] and @url!='/'">
           <xsl:attribute name="class">on</xsl:attribute>
@@ -4664,7 +4696,7 @@
             </xsl:when>
             <xsl:otherwise>
               <a title="{@linkText}" class="btn btn-custom {$class}">
-                
+
                 <xsl:choose>
                   <xsl:when test="$numbertest = 'number'">
                     <xsl:variable name="pageId" select="@link"/>
@@ -5410,6 +5442,9 @@
       </xsl:if>
     </xsl:variable>
     <a class="page-link {$active}" href="{$thisURL}={$startPos}" title="page {@step}">
+      <xsl:if test="$startPos = number(concat('0',$page/Request/QueryString/Item[@name=$queryStringParam]))">
+        <xsl:attribute name="aria-current">step</xsl:attribute>
+      </xsl:if>
       <xsl:value-of select="$step"/>
     </a>
     <xsl:if test="$step * $noPerPage &lt; $totalCount">
@@ -6102,7 +6137,7 @@
 
         <div class="center-block center-large">
           <xsl:if test="@icon!='' or @icon-class!=''">
-            <i role="img" aria-hidden="true">
+            <i role="img">
               <xsl:attribute name="class">
                 <xsl:text>fa center-block </xsl:text>
                 <xsl:if test="@icon-color and @icon-color!=''">
@@ -6129,7 +6164,7 @@
                 </xsl:choose>
                 <xsl:if test="@icon-weight='400'"> far </xsl:if>
               </xsl:attribute>
-              
+
 
               <!--<xsl:if test="@uploadIcon-w and @uploadIcon-w!='' or @uploadIcon-h and @uploadIcon-h!=''">
 								<xsl:attribute name="style">
@@ -6148,6 +6183,16 @@
 									</xsl:if>
 								</xsl:attribute>
 							</xsl:if>-->
+              <xsl:if test="@icon-name and @icon-name!=''">
+                <xsl:attribute name="aria-label">
+                  <xsl:value-of select="@icon-name"/>
+                </xsl:attribute>
+              </xsl:if>
+              <xsl:if test="@icon-name and @icon-name!=''">
+                <xsl:attribute name="aria-label">
+                  <xsl:value-of select="@icon-name"/>
+                </xsl:attribute>
+              </xsl:if>
               <xsl:text> </xsl:text>
             </i>
             <xsl:text> </xsl:text>
@@ -6198,6 +6243,11 @@
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:attribute>
+              <xsl:if test="@icon-name and @icon-name!=''">
+                <xsl:attribute name="aria-label">
+                  <xsl:value-of select="@icon-name"/>
+                </xsl:attribute>
+              </xsl:if>
               <xsl:text> </xsl:text>
             </i>
             <xsl:text> </xsl:text>
@@ -6255,6 +6305,12 @@
                   <xsl:text>;text-align:center;</xsl:text>
                 </xsl:attribute>
               </xsl:if>
+              <xsl:if test="@icon-name and @icon-name!=''">
+                <xsl:attribute name="aria-label">
+                  <xsl:value-of select="@icon-name"/>
+                </xsl:attribute>
+              </xsl:if>
+              <xsl:text> </xsl:text>
             </i>
             <xsl:text> </xsl:text>
           </xsl:if>
@@ -6308,10 +6364,12 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:attribute>
+            <xsl:if test="@icon-name and @icon-name!=''">
+              <xsl:attribute name="aria-label">
+                <xsl:value-of select="@icon-name"/>
+              </xsl:attribute>
+            </xsl:if>
             <xsl:text> </xsl:text>
-
-
-
           </i>
           <span class="space">&#160;</span>
         </xsl:if>
@@ -8525,11 +8583,9 @@
     <xsl:if test="$parentClass!=''">
       <Parent class="{$parentClass}"/>
     </xsl:if>
-    test1
     <xsl:choose>
       <!-- When Page Order -->
       <xsl:when test="$sort='Position' or $sort='' or $order=''">
-        test2
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:if test="position() &gt; $startPos and position() &lt;= $endPos">
             <xsl:copy-of select="."/>
@@ -8537,7 +8593,7 @@
         </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
-        test3 <xsl:value-of select="$contentType"/>
+        <xsl:value-of select="$contentType"/>
         <xsl:for-each select="Content[@type=$contentType]">
           <xsl:sort select="@*[name()=$sort] | descendant-or-self::*[name()=$sort]" order="{$order}" data-type="{$sort-data-type}"/>
           <xsl:sort select="@update" order="{$order}" data-type="text"/>
@@ -10116,7 +10172,7 @@
     <xsl:param name="text"/>
     <xsl:param name="position"/>
     <xsl:param name="class"/>
-	  
+
     <xsl:choose>
       <xsl:when test="/Page/Contents/Content[@position = $position]">
         <xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>

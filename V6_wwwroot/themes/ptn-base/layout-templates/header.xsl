@@ -465,12 +465,14 @@
                     <xsl:choose>
                       <xsl:when test="$nav-dropdown='true'">
                         <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenudropdown">
-                          <xsl:with-param name="overviewLink">true</xsl:with-param>
+                          <xsl:with-param name="overviewLink">self</xsl:with-param>
+                          <xsl:with-param name="menu-back">true</xsl:with-param>
                         </xsl:apply-templates>
                       </xsl:when>
                       <xsl:when test="$nav-dropdown='hover'">
                         <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenudropdown">
-                          <xsl:with-param name="hover">true</xsl:with-param>
+                          <xsl:with-param name="hover">self</xsl:with-param>
+                          <xsl:with-param name="menu-back">true</xsl:with-param>
                         </xsl:apply-templates>
                       </xsl:when>
                       <xsl:otherwise>
@@ -630,12 +632,14 @@
                   <xsl:choose>
                     <xsl:when test="$nav-dropdown='true'">
                       <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
-                        <xsl:with-param name="overviewLink">true</xsl:with-param>
+                        <xsl:with-param name="overviewLink">self</xsl:with-param>
+                        <xsl:with-param name="menu-back">true</xsl:with-param>
                       </xsl:apply-templates>
                     </xsl:when>
                     <xsl:when test="$nav-dropdown='hover'">
                       <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
-                        <xsl:with-param name="hover">true</xsl:with-param>
+                        <xsl:with-param name="hover">self</xsl:with-param>
+                        <xsl:with-param name="menu-back">true</xsl:with-param>
                       </xsl:apply-templates>
                     </xsl:when>
                     <xsl:otherwise>
@@ -696,7 +700,7 @@
     <xsl:param name="nav-collapse" />
     <xsl:param name="cart-style" />
     <xsl:param name="social-links" />
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="Main Navigation">
       <xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
         <xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top</xsl:attribute>
       </xsl:if>
@@ -745,12 +749,14 @@
             <xsl:choose>
               <xsl:when test="$nav-dropdown='true'">
                 <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
-                  <xsl:with-param name="overviewLink">true</xsl:with-param>
+                  <xsl:with-param name="overviewLink">self</xsl:with-param>
+                  <xsl:with-param name="menu-back">true</xsl:with-param>
                 </xsl:apply-templates>
               </xsl:when>
               <xsl:when test="$nav-dropdown='hover'">
                 <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
-                  <xsl:with-param name="hover">true</xsl:with-param>
+                  <xsl:with-param name="hover">self</xsl:with-param>
+                  <xsl:with-param name="menu-back">true</xsl:with-param>
                 </xsl:apply-templates>
               </xsl:when>
               <xsl:otherwise>

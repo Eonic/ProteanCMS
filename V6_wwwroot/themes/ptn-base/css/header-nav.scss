@@ -217,6 +217,7 @@ header {
             color: color-contrast($dropdown-bg);
 
             &:hover,
+            &:focus,
             &:active,
             &.active {
                 background: none;

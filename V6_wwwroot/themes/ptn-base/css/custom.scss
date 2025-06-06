@@ -31,8 +31,12 @@ body {
     //padding-bottom: 2rem;
 
     @media(min-width:2000px) {
-        max-width: 2000px;
+        width: 2000px;
         margin: 0 auto;
+
+        .navbar-fixed-top {
+            width: 2000px;
+        }
     }
 
     .navbar-fixed-top {
@@ -235,6 +239,10 @@ h1, h2, h3, h4 {
 .title a {
     text-decoration: none;
     color: $headings-color;
+}
+
+.title {
+    font-weight: $headings-font-weight;
 }
 
 .center-block,

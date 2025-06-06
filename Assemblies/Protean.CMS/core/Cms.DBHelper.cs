@@ -8,6 +8,7 @@
 // $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
+using AngleSharp.Dom;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
@@ -26,6 +27,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms.dbHelper;
 using static Protean.Cms.dbImport;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -14805,6 +14807,58 @@ namespace Protean
                     return nContentID;
                 }
             }
+
+            public XmlElement GetMenuMetaTitleDescriptionDetailsXml(XmlElement oMenuElmt)
+            {
+                string menuid = string.Empty;
+                string PageId = string.Empty;
+                string PageTitle = string.Empty;
+                string MetaDescription = string.Empty;
+                string cContentName = string.Empty;
+                string sSql = string.Empty;
+                DataSet oDs;
+                try
+                {
+                    sSql = "EXEC spGetAllMenusList";
+                    // Get the dataset
+                    //get all site detailed DS and then loop
+                    oDs = GetDataSet(sSql, "Content");
+                    if (oDs.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (DataRow oRow2 in oDs.Tables[0].Rows)
+                        {
+                            PageId = Convert.ToString(oRow2["parId"]);
+                            foreach (XmlElement oMenuItem in oMenuElmt.SelectNodes($"descendant-or-self::MenuItem[@id='{PageId}']"))
+                            {
+                                XmlElement pagetitle = moPageXml.CreateElement("PageTitle");
+                                XmlElement metadescription = moPageXml.CreateElement("MetaDescription");
+                                cContentName = Convert.ToString(oRow2["cContentName"]);
+                                if (cContentName == "PageTitle")
+                                {
+                                    PageTitle = Convert.ToString(oRow2["cContentXmlBrief"]);
+                                    pagetitle.InnerXml = PageTitle;
+                                    pagetitle.SetAttribute("id", Convert.ToString(oRow2["nContentid"]));
+                                    oMenuItem.AppendChild(pagetitle);
+                                }
+                                if (cContentName == "MetaDescription")
+                                {
+                                    MetaDescription = Convert.ToString(oRow2["cContentXmlBrief"]);
+                                    metadescription.InnerXml = MetaDescription;
+                                    metadescription.SetAttribute("id", Convert.ToString(oRow2["nContentid"]));
+                                    oMenuItem.AppendChild(metadescription);
+                                }
+                            }
+                        }
+                    }
+                    return oMenuElmt;
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetMenuMetaTitleDescriptionDetailsXml", ex, "", "", gbDebug);
+                    return null;
+                }
+            }
+            
         }
 
 
