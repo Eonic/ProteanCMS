@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Runtime.CompilerServices;
@@ -1168,6 +1169,32 @@ namespace Protean
 
             HttpContext.Current.ApplicationInstance.CompleteRequest();
             
+        }
+        [WebMethod(Description = "git pull")]
+        public void RunGitCommand(string arguments, string workingDirectory)
+        {
+            var psi = new ProcessStartInfo
+            {
+                FileName = "git",
+                Arguments = arguments,
+                WorkingDirectory = workingDirectory,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false,
+                CreateNoWindow = true
+            };
+
+            using (var process = new Process { StartInfo = psi })
+            {
+                process.Start();
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
+                process.WaitForExit();
+
+                Console.WriteLine("Output: " + output);
+                if (!string.IsNullOrEmpty(error))
+                    Console.WriteLine("Error: " + error);
+            }
         }
 
         #endregion

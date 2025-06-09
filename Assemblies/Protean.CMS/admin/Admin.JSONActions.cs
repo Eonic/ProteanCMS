@@ -743,37 +743,15 @@ namespace Protean
                     try
                     {
                         if(impersonationMode)
-                        {
-
-                        
-                        var startInfo = new ProcessStartInfo
-                        {
-                            FileName = "powershell.exe",
-                            Arguments = "-ExecutionPolicy Bypass -File \"D:\\git-pull.ps1\"",
-                            RedirectStandardOutput = true,
-                            WorkingDirectory = "D:\\Test",
-                            RedirectStandardError = true,
-                            UseShellExecute = false,
-                            CreateNoWindow = true
+                        {//
+                            string repoPath = @"D:\Test";
+                            var objservices = new Services();
+                            objservices.RunGitCommand("config user.name \"Sonali Sonwane\"", repoPath);
+                            objservices.RunGitCommand("config user.email \"sonali.sonwane@infysion.com\"", repoPath);
+                            objservices.RunGitCommand("config --add safe.directory \"" + repoPath.Replace("\\", "/") + "\"", repoPath);
+                            objservices.RunGitCommand("pull", repoPath);
 
 
-                        };
-                        startInfo.EnvironmentVariables["GIT_CONFIG_GLOBAL"] = @"D:\temp\app_gitconfig";
-                        startInfo.RedirectStandardOutput = true;
-                        startInfo.RedirectStandardError = true;
-                        startInfo.UseShellExecute = false;
-                        startInfo.CreateNoWindow = true;
-                        startInfo.CreateNoWindow = true;
-                        using (var process = new Process { StartInfo = startInfo })
-                        {
-                            process.Start();
-                            string output = process.StandardOutput.ReadToEnd();
-                            string error = process.StandardError.ReadToEnd();
-                            process.WaitForExit();
-
-                            Console.WriteLine("Output:\n" + output);
-                            Console.WriteLine("Error:\n" + error);
-                        }
                         }
                         return JsonResult;
                         if (impersonationMode)
