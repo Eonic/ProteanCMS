@@ -743,7 +743,7 @@ namespace Protean
                     try
                     {
                         if(impersonationMode)
-                        {//
+                        {
                             string repoPath = @"D:\Test";
                             var objservices = new Services();
                             objservices.RunGitCommand("config user.name \"Sonali Sonwane\"", repoPath);
