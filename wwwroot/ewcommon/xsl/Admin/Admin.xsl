@@ -14436,7 +14436,7 @@
 					<xsl:value-of select="PageTitle/@id"/>					
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="@id"/>
+					<xsl:text>0</xsl:text>
 				</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
@@ -14447,7 +14447,7 @@
 				<xsl:value-of select="MetaDescription/@id"/>				
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="@id"/>
+				<xsl:text>0</xsl:text>
 			</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -14536,7 +14536,14 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</div>
-									<input type="text" class="form-control page-title-input hidden" id="title-input-{$pageTitleId}" value="{PageTitle}" />								
+									<xsl:choose>
+										<xsl:when test="$pageTitleId = 0">
+											<input type="text" class="form-control page-title-input hidden" id="title-input-{@id}" value="{PageTitle}" />
+										</xsl:when>
+										<xsl:otherwise>
+											<input type="text" class="form-control page-title-input hidden" id="title-input-{$pageTitleId}" value="{PageTitle}" />
+										</xsl:otherwise>
+									</xsl:choose>							
 
 								</td>
 								<td style="width:30%;">
@@ -14552,8 +14559,14 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</div>
-									<input type="text" class="form-control meta-desc-input hidden" id="description-input-{$metaId}" value="{MetaDescription}" />								
-
+									<xsl:choose>
+										<xsl:when test="$metaId=0">
+											<input type="text" class="form-control meta-desc-input hidden" id="description-input-{@id}" value="{MetaDescription}" />
+										</xsl:when>
+										<xsl:otherwise>
+											<input type="text" class="form-control meta-desc-input hidden" id="description-input-{$metaId}" value="{MetaDescription}" />
+										</xsl:otherwise>
+									</xsl:choose>
 								</td>
 
 								<td style="width:10%;">
