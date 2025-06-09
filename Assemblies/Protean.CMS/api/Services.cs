@@ -1173,29 +1173,36 @@ namespace Protean
         [WebMethod(Description = "git pull")]
         public void RunGitCommand(string arguments, string workingDirectory)
         {
-            var psi = new ProcessStartInfo
+            var startInfo = new ProcessStartInfo
             {
-                FileName = "git",
+                FileName = "powershell.exe",
                 Arguments = arguments,
-                WorkingDirectory = workingDirectory,
                 RedirectStandardOutput = true,
+                WorkingDirectory = workingDirectory,
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
-            };
 
-            using (var process = new Process { StartInfo = psi })
+
+            };
+            // startInfo.EnvironmentVariables["GIT_CONFIG_GLOBAL"] = @"D:\temp\app_gitconfig";
+            startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
+            startInfo.UseShellExecute = false;
+            startInfo.CreateNoWindow = true;
+            startInfo.CreateNoWindow = true;
+            using (var process = new Process { StartInfo = startInfo })
             {
                 process.Start();
                 string output = process.StandardOutput.ReadToEnd();
                 string error = process.StandardError.ReadToEnd();
                 process.WaitForExit();
 
-                Console.WriteLine("Output: " + output);
-                if (!string.IsNullOrEmpty(error))
-                    Console.WriteLine("Error: " + error);
+                Console.WriteLine("Output:\n" + output);
+                Console.WriteLine("Error:\n" + error);
             }
-        }
+        
+    }
 
         #endregion
 

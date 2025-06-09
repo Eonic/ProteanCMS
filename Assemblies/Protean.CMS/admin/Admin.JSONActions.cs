@@ -745,13 +745,10 @@ namespace Protean
                         if(impersonationMode)
                         {
                             string repoPath = @"D:\Test";
+                            string Arguments = "-ExecutionPolicy Bypass -File \"D:\\git-pull.ps1\"";
                             var objservices = new Services();
-                            objservices.RunGitCommand("config user.name \"Sonali Sonwane\"", repoPath);
-                            objservices.RunGitCommand("config user.email \"sonali.sonwane@infysion.com\"", repoPath);
-                            objservices.RunGitCommand("config --add safe.directory \"" + repoPath.Replace("\\", "/") + "\"", repoPath);
-                            objservices.RunGitCommand("pull", repoPath);
-
-
+                            objservices.RunGitCommand(Arguments,repoPath);
+                            
                         }
                         return JsonResult;
                         if (impersonationMode)
