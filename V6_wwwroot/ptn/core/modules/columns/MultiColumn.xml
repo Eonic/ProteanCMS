@@ -958,14 +958,9 @@
               <toggle case="cDisplay_1" event="DOMActivate"/>
             </item>
             <item>
-              <label>Background Video (MP4)</label>
+              <label>Background Video </label>
               <value>bg-mp4</value>
               <toggle case="cDisplay_2" event="DOMActivate"/>
-            </item>
-            <item>
-              <label>Background Video (WebM)</label>
-              <value>bg-webm</value>
-              <toggle case="cDisplay_3" event="DOMActivate"/>
             </item>
           </select1>
 
@@ -1051,8 +1046,6 @@
                   <label>Background Video (MP4)</label>
                 </input>
               </group>
-            </case>
-            <case id="cDisplay_3">
               <group class="form-section-wrapper">
                 <input bind="backgroundVideo-webm" class="pickMedia">
                   <label>Background Video (WebM)</label>

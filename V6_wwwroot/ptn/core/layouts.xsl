@@ -1015,6 +1015,7 @@
         <xsl:if test="@v-align='center'">
           <xsl:text> v-align-</xsl:text>
           <xsl:value-of select="@v-align"/>
+          <xsl:text> </xsl:text>
         </xsl:if>
 
         <xsl:if test="@panelImage!=''">
@@ -1478,6 +1479,7 @@
         <xsl:if test="@v-align='center' or @v-align='bottom'">
           <xsl:text> v-align-</xsl:text>
           <xsl:value-of select="@v-align"/>
+          <xsl:text> </xsl:text>
         </xsl:if>
         <xsl:if test="@panelImage!=''">
           <xsl:text> panelImage </xsl:text>
