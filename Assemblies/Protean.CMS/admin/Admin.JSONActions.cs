@@ -2,21 +2,28 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
 using static Protean.stdTools;
 
+
 namespace Protean
 {
 
     public partial class Cms
     {
-
+        
+        private System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+       
+       
         public partial class Admin
         {
 
+           
 
             #region JSON Actions
 
@@ -35,7 +42,7 @@ namespace Protean
                 public Admin.Redirects moAdminRedirect;
                 public System.Collections.Specialized.NameValueCollection goConfig;
                 public System.Web.HttpContext moCtx;
-
+                public bool impersonationMode = false;
 
 
 
@@ -724,7 +731,65 @@ namespace Protean
                         return ex.Message;
                     }
                 }
-               
+                public string RunGitOperations(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                {
+                    string JsonResult = "";
+                    Tools.Security.Impersonate oImp = null;
+                    oImp = new Tools.Security.Impersonate();
+                    if (!string.IsNullOrEmpty(goConfig["AdminAcct"]) & goConfig["AdminGroup"] != "AzureWebApp")
+                    {
+                        impersonationMode = true;
+                    }
+                    try
+                    {
+                        if(impersonationMode)
+                        {
+
+                        
+                        var startInfo = new ProcessStartInfo
+                        {
+                            FileName = "powershell.exe",
+                            Arguments = "-ExecutionPolicy Bypass -File \"D:\\git-pull.ps1\"",
+                            RedirectStandardOutput = true,
+                            WorkingDirectory = "D:\\Test",
+                            RedirectStandardError = true,
+                            UseShellExecute = false,
+                            CreateNoWindow = true
+
+
+                        };
+                        startInfo.EnvironmentVariables["GIT_CONFIG_GLOBAL"] = @"D:\temp\app_gitconfig";
+                        startInfo.RedirectStandardOutput = true;
+                        startInfo.RedirectStandardError = true;
+                        startInfo.UseShellExecute = false;
+                        startInfo.CreateNoWindow = true;
+                        startInfo.CreateNoWindow = true;
+                        using (var process = new Process { StartInfo = startInfo })
+                        {
+                            process.Start();
+                            string output = process.StandardOutput.ReadToEnd();
+                            string error = process.StandardError.ReadToEnd();
+                            process.WaitForExit();
+
+                            Console.WriteLine("Output:\n" + output);
+                            Console.WriteLine("Error:\n" + error);
+                        }
+                        }
+                        return JsonResult;
+                        if (impersonationMode)
+                        {
+                            oImp.UndoImpersonation();
+                            oImp = null;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""));
+                        return ex.Message;
+                    }
+                }
+
+
             }
             #endregion
 
