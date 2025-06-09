@@ -2244,8 +2244,8 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
             $("#title-display-" + pagetitleId).removeClass('hidden');
             if (pagetitleId == 0 || metadescId == 0) {
                 $("#title-input-" + menuid).addClass('hidden'); 
-                $("#title-display-" + pagetitleId).removeClass('hidden');
-                $("#title-display-" + pagetitleId).text(pagetitle);
+                $("#title-display-" + menuid).removeClass('hidden');
+                $("#title-display-" + menuid).text(pagetitle);
             }
         }
     });
@@ -2257,8 +2257,8 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
             $("#MetaDescription-display-" + metadescId).removeClass('hidden');
             if (pagetitleId == 0 || metadescId == 0) {               
                 $("#description-input-" + menuid).addClass('hidden');
-                $("#MetaDescription-display-" + metadescId).removeClass('hidden');
-                $("#MetaDescription-display-" + metadescId).text(metadescription);
+                $("#MetaDescription-display-" + menuid).removeClass('hidden');
+                $("#MetaDescription-display-" + menuid).text(metadescription);
             }
         }
     });
