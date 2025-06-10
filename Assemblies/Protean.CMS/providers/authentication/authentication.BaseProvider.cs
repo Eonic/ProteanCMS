@@ -155,6 +155,8 @@ namespace Protean.Providers
                 throw new NotImplementedException();
             }
 
+            //check ACS URL in google account- here need to pass exactly same
+            // issuer = Entity ID in google account
             public static string GetSamlLoginUrl(string idpSsoUrl, string issuer, string assertionConsumerServiceUrl)
             {
                 var authRequest = GenerateSamlRequestXml(issuer, assertionConsumerServiceUrl);

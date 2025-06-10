@@ -23,6 +23,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security.AccessControl;
+using System.Text;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
@@ -436,7 +437,7 @@ namespace Protean.Providers
                                             myWeb.moResponse.Redirect(redirectUrl); // Redirects browser to SAML login                                            
                                         }
                                     }
-                                }
+                                }                               
 
                                 base.validate();
                                 if (base.valid)

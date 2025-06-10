@@ -46,7 +46,7 @@ namespace Protean.Providers
             public string GetAuthenticationURL()
             {
 
-                return GetSamlLoginUrl(base.config["ssoUrl"].ToString(),_myWeb.mcOriginalURL, _myWeb.mcOriginalURL);
+                return GetSamlLoginUrl(base.config["ssoUrl"].ToString(), "ProteanCMS", "https://demo2019.intotheblue.co.uk/admin");
             }
 
         }
