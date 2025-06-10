@@ -175,6 +175,10 @@
 	<xsl:template match="Item" mode="cartThumbWidth">150</xsl:template>
 	<xsl:template match="Item" mode="cartThumbHeight">150</xsl:template>
 
+
+  <xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThWidth">500</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThHeight">500</xsl:template>
+
 	<!-- ############################################ CART ############################################### -->
 	<xsl:template match="/" mode="cartBrief">
 		<div id="cartBrief">
