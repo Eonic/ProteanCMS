@@ -25,7 +25,7 @@
 	<xsl:variable name="HomeInfo">false</xsl:variable>
 	<xsl:variable name="HomeNav">true</xsl:variable>
 	<xsl:variable name="NavFix">false</xsl:variable>
-	<xsl:variable name="nav-dropdown">hover</xsl:variable>
+	<xsl:variable name="nav-dropdown">true</xsl:variable>
 	<xsl:variable name="sub-nav">false</xsl:variable>
 	<xsl:variable name="SideSubWidth">3</xsl:variable>
 	<xsl:variable name="SideSubWidthCustom"></xsl:variable>

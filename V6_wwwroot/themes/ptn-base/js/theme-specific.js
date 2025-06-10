@@ -41,10 +41,6 @@
 
     });
 
-
-    
-
-
     //what does this bit do?
     $('.mobile-dd-control').click(function () {
         $(this).parent().find(".dropdown-menu").toggle();
