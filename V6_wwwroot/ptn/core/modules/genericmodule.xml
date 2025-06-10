@@ -53,6 +53,7 @@
 			<bind id="linkObject" nodeset="@linkObject" required="false()" type="string"/>
 			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
 			<bind id="heading" nodeset="@heading" required="false()" type="string"/>
+			<bind id="no-heading-content" nodeset="@no-heading-content" required="false()" type="string"/>
 			<bind id="icon-options" nodeset="@icon-options" required="false()" type="string"/>
 			<bind id="icon-class" nodeset="@icon-class" required="false()" type="string"/>
       <bind id="icon-name" nodeset="@icon-name" required="false()" type="string"/>
@@ -806,9 +807,13 @@
                 <label>No Heading</label>
                 <value>span</value>
               </item>
-
 						</select1>
-
+            <select bind="no-heading-content" appearance="full" class="multiline">
+              <item>
+                <label>No heading for content items</label>
+                <value>true</value>
+              </item>
+            </select>
 					</group>
 					<group class="col-lg-4">
 						<input bind="dPublishDate" class="calendar short">

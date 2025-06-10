@@ -109,6 +109,9 @@
 		<xsl:call-template name="bundle-js">
 			<xsl:with-param name="comma-separated-files">
 				<xsl:apply-templates select="." mode="commonJsFiles" />
+        <xsl:text>~/themes/</xsl:text>
+        <xsl:value-of select="$theme"/>
+        <xsl:text>/js/accessible-bootstrap-hover-dropdown.js,</xsl:text>
 				<xsl:text>~/themes/</xsl:text>
 				<xsl:value-of select="$theme"/>
 				<xsl:text>/js/jquery.appear.js,</xsl:text>
@@ -171,6 +174,10 @@
 
 	<xsl:template match="Item" mode="cartThumbWidth">150</xsl:template>
 	<xsl:template match="Item" mode="cartThumbHeight">150</xsl:template>
+
+
+  <xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThWidth">500</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThHeight">500</xsl:template>
 
 	<!-- ############################################ CART ############################################### -->
 	<xsl:template match="/" mode="cartBrief">

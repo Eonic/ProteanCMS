@@ -233,14 +233,25 @@
 					</h3>
 				</xsl:if>-->
 				<xsl:if test="Images/img/@src!=''">
-					<a href="{$linkURL}" title="{Name}" class="list-image-link">
-						<xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
-							<xsl:attribute name="rel">external</xsl:attribute>
-						</xsl:if>
-						<xsl:apply-templates select="." mode="displayThumbnail">
-							<xsl:with-param name="crop" select="$cropSetting" />
-						</xsl:apply-templates>
-					</a>
+          <xsl:choose>
+            <xsl:when test="$linked='true'">
+              <span class="list-image-link">
+                <xsl:apply-templates select="." mode="displayThumbnail">
+                  <xsl:with-param name="crop" select="$cropSetting" />
+                </xsl:apply-templates>
+              </span>
+            </xsl:when>
+            <xsl:otherwise>
+              <a href="{$linkURL}" title="{Name}" class="list-image-link">
+                <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
+                  <xsl:attribute name="rel">external</xsl:attribute>
+                </xsl:if>
+                <xsl:apply-templates select="." mode="displayThumbnail">
+                  <xsl:with-param name="crop" select="$cropSetting" />
+                </xsl:apply-templates>
+              </a>
+            </xsl:otherwise>
+          </xsl:choose>
 				</xsl:if>
 				<div class="media-inner">
 					<xsl:if test="not($imagePosition='below')">
@@ -257,13 +268,20 @@
 										<xsl:text>title text-</xsl:text>
 										<xsl:value-of select="$alignment"/>
 									</xsl:attribute>
-									<a href="{$linkURL}" title="{Name}">
-										<xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
-											<xsl:attribute name="rel">external</xsl:attribute>
-											<xsl:attribute name="class">extLink</xsl:attribute>
-										</xsl:if>
-										<xsl:value-of select="Name"/>
-									</a>
+                  <xsl:choose>
+                    <xsl:when test="$linked='true'">
+                      <xsl:value-of select="Name"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <a href="{$linkURL}" title="{Name}">
+                        <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
+                          <xsl:attribute name="rel">external</xsl:attribute>
+                          <xsl:attribute name="class">extLink</xsl:attribute>
+                        </xsl:if>
+                        <xsl:value-of select="Name"/>
+                      </a>
+                    </xsl:otherwise>
+                  </xsl:choose>
 								</xsl:element>
 							</xsl:when>
 							<xsl:otherwise>
@@ -274,13 +292,20 @@
 												<xsl:text>title text-</xsl:text>
 												<xsl:value-of select="$alignment"/>
 											</xsl:attribute>
-											<a href="{$linkURL}" title="{Name}">
-												<xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
-													<xsl:attribute name="rel">external</xsl:attribute>
-													<xsl:attribute name="class">extLink</xsl:attribute>
-												</xsl:if>
-												<xsl:value-of select="Name"/>
-											</a>
+                      <xsl:choose>
+                        <xsl:when test="$linked='true'">
+                          <xsl:value-of select="Name"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <a href="{$linkURL}" title="{Name}">
+                            <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
+                              <xsl:attribute name="rel">external</xsl:attribute>
+                              <xsl:attribute name="class">extLink</xsl:attribute>
+                            </xsl:if>
+                            <xsl:value-of select="Name"/>
+                          </a>
+                        </xsl:otherwise>
+                      </xsl:choose>
 										</h3>
 									</xsl:when>
 									<xsl:otherwise>
@@ -289,13 +314,20 @@
 												<xsl:text>title text-</xsl:text>
 												<xsl:value-of select="$alignment"/>
 											</xsl:attribute>
-											<a href="{$linkURL}" title="{Name}">
-												<xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
-													<xsl:attribute name="rel">external</xsl:attribute>
-													<xsl:attribute name="class">extLink</xsl:attribute>
-												</xsl:if>
-												<xsl:value-of select="Name"/>
-											</a>
+                      <xsl:choose>
+                        <xsl:when test="$linked='true'">
+                          <xsl:value-of select="Name"/>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <a href="{$linkURL}" title="{Name}">
+                            <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
+                              <xsl:attribute name="rel">external</xsl:attribute>
+                              <xsl:attribute name="class">extLink</xsl:attribute>
+                            </xsl:if>
+                            <xsl:value-of select="Name"/>
+                          </a>
+                        </xsl:otherwise>
+                      </xsl:choose>
 										</xsl:element>
 									</xsl:otherwise>
 								</xsl:choose>

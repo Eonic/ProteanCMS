@@ -205,7 +205,9 @@
               <ul class="navbar-nav not-xs">
                 <xsl:if test="$HomeInfo='true'">
                   <li class="nav-item">
-                    <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
+                    <xsl:apply-templates select="Menu/MenuItem" mode="menuLink">
+                      <xsl:with-param name="class">nav-link</xsl:with-param>
+                    </xsl:apply-templates>
                   </li>
                 </xsl:if>
                 <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
@@ -384,7 +386,9 @@
                 <ul class="navbar-nav not-xs">
                   <xsl:if test="$HomeInfo='true'">
                     <li class="nav-item">
-                      <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
+                      <xsl:apply-templates select="Menu/MenuItem" mode="menuLink">
+                        <xsl:with-param name="class">nav-link</xsl:with-param>
+                      </xsl:apply-templates>
                     </li>
                   </xsl:if>
                   <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
@@ -436,7 +440,11 @@
                   </button>
                 </xsl:if>
                 <div class="navbar-collapse mainnav-collapse" id="navbarSupportedContent">
-                  <button type="button" class="nav-close-btn text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                  <button type="button" class="nav-close-btn text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close">
+                    <i class="fa fa-times">
+                      <xsl:text> </xsl:text>
+                    </i>
+                  </button>
                   <!--SEARCH (MOBILE)-->
                   <xsl:if test="$search='on' and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
                     <div class="xs-only search-wrapper">
@@ -550,7 +558,9 @@
               <ul class="navbar-nav not-xs">
                 <xsl:if test="$HomeInfo='true'">
                   <li class="nav-item">
-                    <xsl:apply-templates select="Menu/MenuItem" mode="menuLink"/>
+                    <xsl:apply-templates select="Menu/MenuItem" mode="menuLink">
+                      <xsl:with-param name="class">nav-link</xsl:with-param>
+                    </xsl:apply-templates>
                   </li>
                 </xsl:if>
                 <xsl:for-each select="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem[not(DisplayName/@exclude='true')]">
@@ -608,8 +618,6 @@
                   </i>
                 </button>
 
-                <button type="button" class="nav-close-btn text-reset float-end xs-only" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-
                 <!-- MENU -->
                 <ul class="navbar-nav">
                   <xsl:if test="$HomeNav='true' or $HomeInfo='true'">
@@ -638,7 +646,10 @@
                     </xsl:when>
                     <xsl:when test="$nav-dropdown='hover'">
                       <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
-                        <xsl:with-param name="hover">self</xsl:with-param>
+                        <xsl:with-param name="overviewLink">self</xsl:with-param>
+                        <xsl:with-param name="hover">false</xsl:with-param>
+
+                        <xsl:with-param name="accessible-hover">true</xsl:with-param>
                         <xsl:with-param name="menu-back">true</xsl:with-param>
                       </xsl:apply-templates>
                     </xsl:when>
@@ -700,7 +711,7 @@
     <xsl:param name="nav-collapse" />
     <xsl:param name="cart-style" />
     <xsl:param name="social-links" />
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" aria-label="Main Navigation">
       <xsl:if test="not($adminMode or /Page[@previewMode='true']) and $NavFix='true'">
         <xsl:attribute name="class">navbar navbar-expand-lg navbar-fixed-top</xsl:attribute>
       </xsl:if>

@@ -1015,6 +1015,7 @@
         <xsl:if test="@v-align='center'">
           <xsl:text> v-align-</xsl:text>
           <xsl:value-of select="@v-align"/>
+          <xsl:text> </xsl:text>
         </xsl:if>
 
         <xsl:if test="@panelImage!=''">
@@ -1243,6 +1244,9 @@
                         <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
                           <xsl:text> module-with-icon</xsl:text>
                         </xsl:if>
+                        <xsl:if test="@title-vis='false'">
+                          <xsl:text> visually-hidden </xsl:text>
+                        </xsl:if>
                       </xsl:attribute>
                       <!--<xsl:if test="@icon!='' or @uploadIcon!=''">
 												<xsl:attribute name="class">title module-with-icon</xsl:attribute>
@@ -1258,9 +1262,15 @@
                   </xsl:when>
                   <xsl:otherwise>
                     <h3 class="title">
-                      <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
-                        <xsl:attribute name="class">title module-with-icon</xsl:attribute>
-                      </xsl:if>
+                      <xsl:attribute name="class">
+                         <xsl:text> title </xsl:text>
+                        <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
+                         <xsl:text>  module-with-icon </xsl:text>
+                        </xsl:if>
+                        <xsl:if test="@title-vis='false'">
+                          <xsl:text> visually-hidden </xsl:text>
+                        </xsl:if>
+                      </xsl:attribute>
                       <xsl:if test="@title-margin and @title-margin!=''">
                         <xsl:attribute name="style">
                           <xsl:text>margin-bottom:</xsl:text>
@@ -1399,9 +1409,16 @@
         <xsl:if test="@rss and @rss!='false'">
           <xsl:apply-templates select="." mode="rssLink" />
         </xsl:if>
-        <h5>
-          <xsl:apply-templates select="." mode="moduleLink"/>
-        </h5>
+        <xsl:choose>
+          <xsl:when test="@heading">
+            <xsl:apply-templates select="." mode="moduleLink"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <h5>
+              <xsl:apply-templates select="." mode="moduleLink"/>
+            </h5>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:if>
       <xsl:if test="not(@listGroup='true')">
         <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
@@ -1471,6 +1488,7 @@
         <xsl:if test="@v-align='center' or @v-align='bottom'">
           <xsl:text> v-align-</xsl:text>
           <xsl:value-of select="@v-align"/>
+          <xsl:text> </xsl:text>
         </xsl:if>
         <xsl:if test="@panelImage!=''">
           <xsl:text> panelImage </xsl:text>
