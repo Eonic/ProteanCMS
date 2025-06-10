@@ -2292,6 +2292,7 @@ namespace Protean.Providers
                                 case "md5":
                                 case "sha1":
                                 case "sha256":
+                                case "SHA2_512_SALT":
                                     {
                                         oXfmElmt = (XmlElement)adXfm.xFrmResetAccount();
                                         break;

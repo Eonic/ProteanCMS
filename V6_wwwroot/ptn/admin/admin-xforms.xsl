@@ -3906,6 +3906,7 @@
 	</xsl:template>
 
 	<xsl:template match="div[@class='orderNotes']" mode="xform">
+		<div>
 		<xsl:if test="./@class">
 			<xsl:attribute name="class">
 				<xsl:value-of select="./@class"/>
@@ -3946,7 +3947,7 @@
 			
 			</xsl:for-each></div>
 		</div>
-		
+		</div>
 	</xsl:template>
 
 	<xsl:template match="group[@class='getFilterButtons']" mode="xform">

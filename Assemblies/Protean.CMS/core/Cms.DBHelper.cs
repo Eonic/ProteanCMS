@@ -8126,9 +8126,14 @@ namespace Protean
                                             }
                                         }
                                         break;
-                                    case "SHA2_512_SALT": // to replicate VMH
-                                        cHashedPassword = Tools.Encryption.HashString(cPasswordForm, "sha2_512", true);
-
+                                    case "SHA2_512_SALT": // to replicate
+                                        string salt = oUserDetails["cDirSalt"].ToString().ToUpperInvariant();
+                                        string saltedPassword = salt + cPasswordForm.Trim().ToLowerInvariant();
+                                        cHashedPassword = Tools.Encryption.HashString(saltedPassword, "sha2_512", true);
+                                        if ((cPasswordDatabase ?? "") == cHashedPassword)
+                                        {
+                                            bValidPassword = true;
+                                        }
                                         break;
                                     default:
                                         var oConvDoc = new XmlDocument();

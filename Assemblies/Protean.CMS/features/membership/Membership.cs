@@ -18,6 +18,9 @@ using static Protean.Cms.Admin;
 using System.Web.UI.WebControls;
 using System.Web;
 using System.Linq.Expressions;
+using System.Drawing.Imaging;
+using Microsoft.Ajax.Utilities;
+using static Protean.Cms;
 
 namespace Protean
 {
@@ -194,7 +197,7 @@ namespace Protean
             {
                 try
                 {
-
+                    string savedSalt = "";
                     // cPassword = Protean.Tools.Encryption.HashString(cPassword, myWeb.moConfig("MembershipEncryption"), True)
 
                     // RJP 7 Nov 2012. Added LCase to MembershipEncryption. Note leave the value below for md5Password hard coded as md5.
@@ -206,6 +209,12 @@ namespace Protean
                         string md5Password = Tools.Encryption.HashString(inputPassword, "md5", true); // Md5 the marged string of the password and salt
                         string resultPassword = string.Concat(md5Password, ":", cSalt); // Adds the salt to the end of the hashed password
                         cPassword = resultPassword; // Store the resultant password with salt in the database
+                    }
+                    else if (myWeb.moConfig["MembershipEncryption"].ToLowerInvariant() == "SHA2_512_SALT".ToLowerInvariant())
+                    {
+                        savedSalt = Guid.NewGuid().ToString();
+                        string saltedPassword = savedSalt.ToUpperInvariant() + cPassword.Trim().ToLowerInvariant();
+                        cPassword = Tools.Encryption.HashString(saltedPassword, "sha2_512", true);
                     }
                     else
                     {
@@ -227,6 +236,9 @@ namespace Protean
                     }
 
                     string cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cPassword + "' WHERE nDirKey = " + AccountID;
+                    if (savedSalt != "") {
+                        cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cPassword + "', cDirSalt = '" + savedSalt + "' WHERE nDirKey = " + AccountID;
+                    }
                     if (myWeb.moDbHelper.ExeProcessSql(cSQL) > 0)
                     {
                         return true;
