@@ -162,7 +162,7 @@ namespace Protean.Providers
                 var compressedRequest = CompressAndEncode(authRequest);
                 var samlRequest = HttpUtility.UrlEncode(compressedRequest);
 
-                return $"{idpSsoUrl}?SAMLRequest={samlRequest}";
+                return $"{idpSsoUrl}&SAMLRequest={samlRequest}";
             }
 
             private static string GenerateSamlRequestXml(string issuer, string assertionConsumerServiceUrl)

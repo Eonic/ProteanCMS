@@ -339,7 +339,7 @@ namespace Protean.Providers
                                     }
                                     if (bUse) {
                                         string provName = authProvider.name;
-                                        XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With " + provName, provName.ToLower(), btnClass + " btn-"+ provName.ToLower(), btnIcon);
+                                        XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With " + provName, "AuthProvider", btnClass + " btn-"+ provName.ToLower(), btnIcon, provName.ToLower());
                                         thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
                                     }
                                 }
@@ -423,7 +423,20 @@ namespace Protean.Providers
                             {
 
                                 //check for 
+                                //Add code to redirect SAML Auth using Google                             
+                                if (!string.IsNullOrEmpty(myWeb.moRequest["AuthProvider"]))
+                                {
+                                    string selectedProvider = myWeb.moRequest["AuthProvider"];
+                                    foreach (IauthenticaitonProvider authProvider in oAuthProviders)
+                                    {
+                                        string redirectUrl = authProvider.GetAuthenticationURL();
 
+                                        if (!string.IsNullOrEmpty(redirectUrl))
+                                        {
+                                            myWeb.moResponse.Redirect(redirectUrl); // Redirects browser to SAML login                                            
+                                        }
+                                    }
+                                }
 
                                 base.validate();
                                 if (base.valid)
