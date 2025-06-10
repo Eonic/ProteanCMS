@@ -1118,7 +1118,7 @@
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
 
-    <xsl:apply-templates select="." mode="BingTrackingCode"/>
+
     <xsl:apply-templates select="." mode="FacebookTrackingCode"/>
     <xsl:apply-templates select="." mode="FeedOptimiseCode"/>
 
@@ -1200,6 +1200,7 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="metadata">
+      <xsl:apply-templates select="." mode="BingTrackingCode"/>
     <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
