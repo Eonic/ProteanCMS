@@ -1173,6 +1173,7 @@ namespace Protean
         [WebMethod(Description = "git pull")]
         public void RunGitCommand(string arguments, string workingDirectory)
         {
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = "powershell.exe",

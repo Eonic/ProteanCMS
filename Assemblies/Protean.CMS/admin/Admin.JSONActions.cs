@@ -3,6 +3,8 @@ using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.Net.Http;
+using System.Security.Authentication;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
@@ -16,14 +18,14 @@ namespace Protean
 
     public partial class Cms
     {
-        
+
         private System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-       
-       
+
+
         public partial class Admin
         {
 
-           
+
 
             #region JSON Actions
 
@@ -277,7 +279,7 @@ namespace Protean
                         return ex.Message;
                     }
 
-                   // return JsonResult;
+                    // return JsonResult;
                 }
 
                 public string DeleteUrls(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
@@ -733,7 +735,9 @@ namespace Protean
                 }
                 public string RunGitOperations(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
+
                     string JsonResult = "";
+
                     Tools.Security.Impersonate oImp = null;
                     oImp = new Tools.Security.Impersonate();
                     if (!string.IsNullOrEmpty(goConfig["AdminAcct"]) & goConfig["AdminGroup"] != "AzureWebApp")
@@ -742,13 +746,15 @@ namespace Protean
                     }
                     try
                     {
-                        if(impersonationMode)
+                        if (impersonationMode)
                         {
-                            string repoPath = @"D:\Test";
-                            string Arguments = "-ExecutionPolicy Bypass -File \"D:\\git-pull.ps1\"";
-                            var objservices = new Services();
-                            objservices.RunGitCommand(Arguments,repoPath);
-                            
+                            if (myApi.mbAdminMode)
+                            {
+                                string repoPath = goConfig["GitRepoPath"];
+                                string Arguments = "-ExecutionPolicy Bypass -File " + goConfig["GitCommandFile"];
+                                var objservices = new Services();
+                                objservices.RunGitCommand(Arguments, repoPath);
+                            }
                         }
                         return JsonResult;
                         if (impersonationMode)
@@ -756,15 +762,16 @@ namespace Protean
                             oImp.UndoImpersonation();
                             oImp = null;
                         }
+
                     }
                     catch (Exception ex)
                     {
                         OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""));
                         return ex.Message;
                     }
+
+
                 }
-
-
             }
             #endregion
 
