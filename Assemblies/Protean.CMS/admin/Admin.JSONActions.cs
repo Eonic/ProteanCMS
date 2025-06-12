@@ -3,6 +3,7 @@ using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Security.Authentication;
 using System.Web;
@@ -748,13 +749,22 @@ namespace Protean
                     {
                         if (impersonationMode)
                         {
-                            if (myApi.mbAdminMode)
-                            {
+                            //if (myApi.mbAdminMode)
+                            //{
+                                var objservices = new Services();
                                 string repoPath = goConfig["GitRepoPath"];
                                 string Arguments = "-ExecutionPolicy Bypass -File " + goConfig["GitCommandFile"];
-                                var objservices = new Services();
-                                objservices.RunGitCommand(Arguments, repoPath);
-                            }
+                                if (Directory.Exists(repoPath))
+                                { 
+                                    objservices.RunGitCommand("git config user.name "+ goConfig["GitUserName"], repoPath);
+                                    objservices.RunGitCommand("git config user.email"+ goConfig["GitEmail"], repoPath);
+                                    objservices.RunGitCommand("git config --add safe.directory \"" + repoPath.Replace("\\", "/") + "\"", repoPath);
+                                    if (File.Exists(goConfig["GitCommandFile"]))
+                                    {
+                                        objservices.RunGitCommand(Arguments, repoPath);
+                                    }
+                                }
+                            //}
                         }
                         return JsonResult;
                         if (impersonationMode)

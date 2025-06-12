@@ -1171,9 +1171,9 @@ namespace Protean
             
         }
         [WebMethod(Description = "git pull")]
-        public void RunGitCommand(string arguments, string workingDirectory)
+        public string RunGitCommand(string arguments, string workingDirectory)
         {
-
+            string result = "";
             var startInfo = new ProcessStartInfo
             {
                 FileName = "powershell.exe",
@@ -1198,9 +1198,17 @@ namespace Protean
                 string output = process.StandardOutput.ReadToEnd();
                 string error = process.StandardError.ReadToEnd();
                 process.WaitForExit();
-
-                Console.WriteLine("Output:\n" + output);
-                Console.WriteLine("Error:\n" + error);
+                
+                int exitCode = process.ExitCode;
+                if (exitCode == 0)
+                {
+                    result = output;
+                }
+                else
+                {
+                    result = error;
+                }
+                return output;
             }
         
     }

@@ -1029,7 +1029,8 @@ namespace Protean
                                 string repoPath = goConfig["GitRepoPath"];
                                 string Arguments = "-ExecutionPolicy Bypass -File " + goConfig["GitCommandFile"];
                                 var objservices = new Services();
-                                objservices.RunGitCommand(Arguments, repoPath);
+                               var result= objservices.RunGitCommand(Arguments, repoPath);
+                                AddResponse(result);
                                 
                                 break;
                             }
@@ -1096,7 +1097,7 @@ namespace Protean
                     oElmt12 = appendMenuItem(ref oElmt11, "Backup", "Backup", icon: "fa-save");
                     oElmt13 = appendMenuItem(ref oElmt11, "Restore", "Restore", icon: "fa-reply");
 
-                    oElmt13 = appendMenuItem(ref oElmt1, "Git Repository", "GitRepository", icon: "fab fa-git-alt");
+                    oElmt13 = appendMenuItem(ref oElmt1, "Git Repository", "GitRepository", icon: "fa fa-folder");
                 }
                 else
                 {
