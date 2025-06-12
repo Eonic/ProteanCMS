@@ -749,8 +749,8 @@ namespace Protean
                     {
                         if (impersonationMode)
                         {
-                            //if (myApi.mbAdminMode)
-                            //{
+                            if (myApi.mbAdminMode)
+                            {
                                 var objservices = new Services();
                                 string repoPath = goConfig["GitRepoPath"];
                                 string Arguments = "-ExecutionPolicy Bypass -File " + goConfig["GitCommandFile"];
@@ -764,7 +764,7 @@ namespace Protean
                                         objservices.RunGitCommand(Arguments, repoPath);
                                     }
                                 }
-                            //}
+                            }
                         }
                         return JsonResult;
                         if (impersonationMode)

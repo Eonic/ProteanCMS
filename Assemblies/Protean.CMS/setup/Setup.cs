@@ -1029,8 +1029,18 @@ namespace Protean
                                 string repoPath = goConfig["GitRepoPath"];
                                 string Arguments = "-ExecutionPolicy Bypass -File " + goConfig["GitCommandFile"];
                                 var objservices = new Services();
-                               var result= objservices.RunGitCommand(Arguments, repoPath);
-                                AddResponse(result);
+                                if (Directory.Exists(repoPath))
+                                {
+                                    objservices.RunGitCommand("git config user.name " + goConfig["GitUserName"], repoPath);
+                                    objservices.RunGitCommand("git config user.email" + goConfig["GitEmail"], repoPath);
+                                    objservices.RunGitCommand("git config --add safe.directory \"" + repoPath.Replace("\\", "/") + "\"", repoPath);
+                                    if (File.Exists(goConfig["GitCommandFile"]))
+                                    {
+                                        var result = objservices.RunGitCommand(Arguments, repoPath);
+                                        AddResponse(result);
+                                    }
+                                }
+                                
                                 
                                 break;
                             }
