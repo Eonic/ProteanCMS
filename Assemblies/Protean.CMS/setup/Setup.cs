@@ -1026,22 +1026,9 @@ namespace Protean
                             }
                         case "GitRepository":
                             {
-                                string repoPath = goConfig["GitRepoPath"];
-                                string Arguments = "-ExecutionPolicy Bypass -File " + goConfig["GitCommandFile"];
                                 var objservices = new Services();
-                                if (Directory.Exists(repoPath))
-                                {
-                                    objservices.RunGitCommand("git config user.name " + goConfig["GitUserName"], repoPath);
-                                    objservices.RunGitCommand("git config user.email" + goConfig["GitEmail"], repoPath);
-                                    objservices.RunGitCommand("git config --add safe.directory \"" + repoPath.Replace("\\", "/") + "\"", repoPath);
-                                    if (File.Exists(goConfig["GitCommandFile"]))
-                                    {
-                                        var result = objservices.RunGitCommand(Arguments, repoPath);
-                                        AddResponse(result);
-                                    }
-                                }
-                                
-                                
+                                string cResult = objservices.RunGitCommands();
+                                AddResponse(cResult);
                                 break;
                             }
                     }
@@ -2921,7 +2908,7 @@ namespace Protean
 
         }
 
-       
+
         #endregion
 
         internal int CommitToLog(Protean.Cms.dbHelper.ActivityType nEventType, int nUserId, string cSessionId, DateTime dDateTime, int nPrimaryId = 0, int nSecondaryId = 0, string cDetail = "")

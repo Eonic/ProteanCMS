@@ -752,18 +752,7 @@ namespace Protean
                             if (myApi.mbAdminMode)
                             {
                                 var objservices = new Services();
-                                string repoPath = goConfig["GitRepoPath"];
-                                string Arguments = "-ExecutionPolicy Bypass -File " + goConfig["GitCommandFile"];
-                                if (Directory.Exists(repoPath))
-                                { 
-                                    objservices.RunGitCommand("git config user.name "+ goConfig["GitUserName"], repoPath);
-                                    objservices.RunGitCommand("git config user.email"+ goConfig["GitEmail"], repoPath);
-                                    objservices.RunGitCommand("git config --add safe.directory \"" + repoPath.Replace("\\", "/") + "\"", repoPath);
-                                    if (File.Exists(goConfig["GitCommandFile"]))
-                                    {
-                                        objservices.RunGitCommand(Arguments, repoPath);
-                                    }
-                                }
+                                objservices.RunGitCommands();
                             }
                         }
                         return JsonResult;
