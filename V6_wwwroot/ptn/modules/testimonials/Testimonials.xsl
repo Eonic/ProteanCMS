@@ -47,7 +47,7 @@
 		</xsl:variable>
 		<xsl:if test="not(@noLink='true')">
 			<!-- Modal -->
-			<div class="modal fade" id="quoteModal{@id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal fade" id="quoteModal{@id}" tabindex="-1" aria-label="Testimonal from {SourceName/node()}" aria-hidden="true">
 				<div class="modal-dialog">
 					<div class="modal-content">
 						<div class="modal-header">

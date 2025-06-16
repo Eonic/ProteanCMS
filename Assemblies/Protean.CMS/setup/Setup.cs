@@ -6,6 +6,7 @@ using System.Collections;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -1023,6 +1024,13 @@ namespace Protean
 
                                 break;
                             }
+                        case "GitRepository":
+                            {
+                                var objservices = new Services();
+                                string cResult = objservices.RunGitCommands();
+                                AddResponse(cResult);
+                                break;
+                            }
                     }
                 }
                 // moPageXml.DocumentElement.SetAttribute("layout", mcEwCmd)
@@ -1085,6 +1093,8 @@ namespace Protean
                     oElmt11 = appendMenuItem(ref oElmt1, "Backup/Restore", "BackupRestore", icon: "fa-save");
                     oElmt12 = appendMenuItem(ref oElmt11, "Backup", "Backup", icon: "fa-save");
                     oElmt13 = appendMenuItem(ref oElmt11, "Restore", "Restore", icon: "fa-reply");
+
+                    oElmt13 = appendMenuItem(ref oElmt1, "Git Repository", "GitRepository", icon: "fa fa-folder");
                 }
                 else
                 {
@@ -2897,6 +2907,8 @@ namespace Protean
             }
 
         }
+
+
         #endregion
 
         internal int CommitToLog(Protean.Cms.dbHelper.ActivityType nEventType, int nUserId, string cSessionId, DateTime dDateTime, int nPrimaryId = 0, int nSecondaryId = 0, string cDetail = "")

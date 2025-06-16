@@ -2,11 +2,17 @@ using System;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
+using System.Security.Authentication;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
 using static Protean.stdTools;
+
 
 namespace Protean
 {
@@ -14,8 +20,12 @@ namespace Protean
     public partial class Cms
     {
 
+        private System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+
+
         public partial class Admin
         {
+
 
 
             #region JSON Actions
@@ -35,7 +45,7 @@ namespace Protean
                 public Admin.Redirects moAdminRedirect;
                 public System.Collections.Specialized.NameValueCollection goConfig;
                 public System.Web.HttpContext moCtx;
-
+                public bool impersonationMode = false;
 
 
 
@@ -270,7 +280,7 @@ namespace Protean
                         return ex.Message;
                     }
 
-                   // return JsonResult;
+                    // return JsonResult;
                 }
 
                 public string DeleteUrls(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
@@ -724,7 +734,43 @@ namespace Protean
                         return ex.Message;
                     }
                 }
-               
+                public string RunGitOperations(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                {
+
+                    string JsonResult = "";
+
+                    Tools.Security.Impersonate oImp = null;
+                    oImp = new Tools.Security.Impersonate();
+                    if (!string.IsNullOrEmpty(goConfig["AdminAcct"]) & goConfig["AdminGroup"] != "AzureWebApp")
+                    {
+                        impersonationMode = true;
+                    }
+                    try
+                    {
+                        if (impersonationMode)
+                        {
+                            if (myApi.mbAdminMode)
+                            {
+                                var objservices = new Services();
+                                objservices.RunGitCommands();
+                            }
+                        }
+                        return JsonResult;
+                        if (impersonationMode)
+                        {
+                            oImp.UndoImpersonation();
+                            oImp = null;
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""));
+                        return ex.Message;
+                    }
+
+
+                }
             }
             #endregion
 

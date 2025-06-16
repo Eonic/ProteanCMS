@@ -1078,7 +1078,18 @@
       </div>
     </div>
   </xsl:template>
-
+<xsl:template match="Page[@ewCmd='GitRepository']" mode="SetupBody">
+    <div id="mainLayout">
+      <div class="adminTemplate" id="template_1_Column">
+        <div id="header">
+          <h1>Git Pull</h1>
+        </div>
+        <div class="content">
+              <xsl:call-template name="ProgressResponses"/>
+        </div>
+      </div>
+    </div>
+  </xsl:template>
 
   <xsl:template match="text()"></xsl:template>
 </xsl:stylesheet>

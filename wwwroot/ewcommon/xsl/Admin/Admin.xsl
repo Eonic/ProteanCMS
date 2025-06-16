@@ -14436,7 +14436,7 @@
 					<xsl:value-of select="PageTitle/@id"/>					
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="@id"/>
+					<xsl:text>0</xsl:text>
 				</xsl:otherwise>
 				</xsl:choose>
 			</xsl:variable>
@@ -14447,21 +14447,39 @@
 				<xsl:value-of select="MetaDescription/@id"/>				
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:value-of select="@id"/>
+				<xsl:text>0</xsl:text>
 			</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 
 		<xsl:variable name="itemId">
 			<xsl:choose>
-			<xsl:when test="string-length(@id) &gt; 0">
-				<xsl:text>"</xsl:text>
-				<xsl:value-of select="@id"/>
-				<xsl:text>"</xsl:text>
+			<xsl:when test="string-length(@id) &gt; 0">				
+				<xsl:value-of select="@id"/>				
 			</xsl:when>
 			<xsl:otherwise>
 				<xsl:text>0</xsl:text>
 			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="pageidValue">
+			<xsl:choose>
+				<xsl:when test="$pageTitleId = 0">
+					<xsl:value-of select="$itemId"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$pageTitleId"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="metaidValue">
+			<xsl:choose>
+				<xsl:when test="$metaId = 0">
+					<xsl:value-of select="$itemId"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$metaId"/>
+				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
@@ -14524,10 +14542,10 @@
 
 								<td style="width:30%;">
 
-									<div id="title-display-{$pageTitleId}">
+									<div id="title-display-{$pageidValue}">
 										<xsl:choose>
 											<xsl:when test="/PageTitle!='' or string-length(PageTitle/node()) &gt; 50">
-												<div id="title-display-{$pageTitleId}" data-bs-toggle="popover" data-bs-placement="top" title="{$fullPageTitleContent}">
+												<div id="title-display-{$pageidValue}" data-bs-toggle="popover" data-bs-placement="top" title="{$fullPageTitleContent}">
 													<xsl:value-of select="substring(PageTitle/node(),0,50)"/>...
 												</div>
 											</xsl:when>
@@ -14536,14 +14554,14 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</div>
-									<input type="text" class="form-control page-title-input hidden" id="title-input-{$pageTitleId}" value="{PageTitle}" />								
+									<input type="text" class="form-control page-title-input hidden" id="title-input-{$pageidValue}" value="{PageTitle}" />				
 
 								</td>
 								<td style="width:30%;">
-									<div id="MetaDescription-display-{$metaId}">
+									<div id="MetaDescription-display-{$metaidValue}">
 										<xsl:choose>
 											<xsl:when test="/MetaDescription!='' or string-length(MetaDescription/node()) &gt; 50">
-												<div id="MetaDescription-display-{$metaId}" data-bs-toggle="popover" data-bs-placement="top" title="{$fullMetaDescriptionContent}">
+												<div id="MetaDescription-display-{$metaidValue}" data-bs-toggle="popover" data-bs-placement="top" title="{$fullMetaDescriptionContent}">
 													<xsl:value-of select="substring(MetaDescription/node(),0,50)"/>...
 												</div>
 											</xsl:when>
@@ -14552,8 +14570,7 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</div>
-									<input type="text" class="form-control meta-desc-input hidden" id="description-input-{$metaId}" value="{MetaDescription}" />								
-
+									<input type="text" class="form-control meta-desc-input hidden" id="description-input-{$metaidValue}" value="{MetaDescription}" />
 								</td>
 
 								<td style="width:10%;">

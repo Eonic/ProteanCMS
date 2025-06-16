@@ -2182,9 +2182,9 @@ function editTitle(pagetitleId, metadescId, menuid) {
     //$("#cPageName-" + menuid).addClass('hidden');
     //$("#displayname-input-" + menuid).removeClass('hidden');
     //$("#cDisplayName-" + menuid).addClass('hidden');
-    if (pagetitleId == menuid || metadescId == menuid) {
-        $("#title-input-"+menuid).removeClass('hidden');
-        $("#description-input-"+menuid).removeClass('hidden');
+    if (pagetitleId == 0 || metadescId == 0) {
+        $("#title-input-" + menuid).removeClass('hidden');
+        $("#description-input-" + menuid).removeClass('hidden');
     }
 }
 
@@ -2209,9 +2209,9 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
     var metadescription = $("#description-input-" + metadescId).val();
     var pageId = menuid;
     var position = "header";
-    if (pagetitleId == menuid || metadescId == menuid) {
-       pagetitle = $("#title-input-"+ menuid).val();
-       metadescription = $("#description-input-"+menuid).val();
+    if (pagetitleId == 0 || metadescId == 0) {
+        pagetitle = $("#title-input-" + menuid).val();
+        metadescription = $("#description-input-" + menuid).val();
     }
     var PageTitleInputJson = buildInputJson({
         contentId: pagetitleId,
@@ -2242,10 +2242,10 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
             $("#title-display-" + pagetitleId).text(pagetitle);
             $("#title-input-" + pagetitleId).addClass('hidden');
             $("#title-display-" + pagetitleId).removeClass('hidden');
-            if (pagetitleId == menuid || metadescId == menuid) {
-                $("#title-input-"+menuid).addClass('hidden'); 
+            if (pagetitleId == 0 || metadescId == 0) {
+                $("#title-input-" + menuid).addClass('hidden'); 
                 $("#title-display-" + menuid).removeClass('hidden');
-                $("#title-display-" +menuid).text(pagetitle);
+                $("#title-display-" + menuid).text(pagetitle);
             }
         }
     });
@@ -2255,8 +2255,8 @@ function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
             $("#MetaDescription-display-" + metadescId).text(metadescription);
             $("#description-input-" + metadescId).addClass('hidden');
             $("#MetaDescription-display-" + metadescId).removeClass('hidden');
-            if (pagetitleId == menuid || metadescId == menuid) {               
-                $("#description-input-"+menuid).addClass('hidden');
+            if (pagetitleId == 0 || metadescId == 0) {               
+                $("#description-input-" + menuid).addClass('hidden');
                 $("#MetaDescription-display-" + menuid).removeClass('hidden');
                 $("#MetaDescription-display-" + menuid).text(metadescription);
             }
