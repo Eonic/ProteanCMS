@@ -349,6 +349,10 @@ header {
         .navbar-nav .nav-link {
             padding-left: 1rem;
             padding-right: 1rem;
+
+            &:focus {
+                outline: 1px solid;
+            }
         }
 
         .btn-close {
@@ -452,7 +456,7 @@ header {
                 height: 100%;
                 overflow-y: scroll;
                 transform: translateX(100%);
-                display: block !important;
+                //display: block !important;
                 overflow-x: hidden;
                 transition: all ease 0.2s;
                 padding-top: 0;
@@ -499,6 +503,10 @@ header {
                 right: 0px;
                 top: 0px;
                 z-index: 1010;
+
+                &:focus {
+                    outline: 1px solid;
+                }
 
                 &:after {
                     display: none;

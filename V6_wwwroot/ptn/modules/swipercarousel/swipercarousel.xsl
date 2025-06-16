@@ -95,10 +95,10 @@
           </xsl:if>
         </div>
         <xsl:if test="@arrows!='true' or not(@arrows)">
-          <div class="swiper-button-prev" id="swiper-button-prev-{@id}">
+          <div class="swiper-button-prev" id="swiper-button-prev-{@id}" >
             <xsl:text> </xsl:text>
           </div>
-          <div class="swiper-button-next" id="swiper-button-next-{@id}">
+          <div class="swiper-button-next" id="swiper-button-next-{@id}" >
             <xsl:text> </xsl:text>
           </div>
         </xsl:if>

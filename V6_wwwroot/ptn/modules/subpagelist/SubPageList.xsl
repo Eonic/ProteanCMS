@@ -258,15 +258,30 @@
 						</xsl:choose>
 					</xsl:if>
 					<xsl:if test="Images/img[@src!=''] and not($showImg='false')">
-						<a href="{$url}" title="{$pageName}" class="list-image-link">
-							<xsl:attribute name="title">
-								<xsl:apply-templates select="." mode="getTitleAttr"/>
-							</xsl:attribute>
-							<xsl:apply-templates select="." mode="displaySubPageThumb">
-								<xsl:with-param name="crop" select="$cropSetting" />
-								<xsl:with-param name="fixedThumb" select="$fixedThumb" />
-							</xsl:apply-templates>
-						</a>
+            <xsl:choose>
+              <xsl:when test="$linked='true'">
+                <span class="list-image-link">
+                  <xsl:attribute name="title">
+                    <xsl:apply-templates select="." mode="getTitleAttr"/>
+                  </xsl:attribute>
+                  <xsl:apply-templates select="." mode="displaySubPageThumb">
+                    <xsl:with-param name="crop" select="$cropSetting" />
+                    <xsl:with-param name="fixedThumb" select="$fixedThumb" />
+                  </xsl:apply-templates>
+                </span>
+              </xsl:when>
+              <xsl:otherwise>
+                <a href="{$url}"  class="list-image-link">
+                  <xsl:attribute name="title">
+                    <xsl:apply-templates select="." mode="getTitleAttr"/>
+                  </xsl:attribute>
+                  <xsl:apply-templates select="." mode="displaySubPageThumb">
+                    <xsl:with-param name="crop" select="$cropSetting" />
+                    <xsl:with-param name="fixedThumb" select="$fixedThumb" />
+                  </xsl:apply-templates>
+                </a>
+              </xsl:otherwise>
+            </xsl:choose>
 					</xsl:if>
           <div class="media-inner">
             <xsl:if test="not($imagePosition='below')">

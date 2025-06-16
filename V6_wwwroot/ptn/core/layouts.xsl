@@ -1015,6 +1015,7 @@
         <xsl:if test="@v-align='center'">
           <xsl:text> v-align-</xsl:text>
           <xsl:value-of select="@v-align"/>
+          <xsl:text> </xsl:text>
         </xsl:if>
 
         <xsl:if test="@panelImage!=''">
@@ -1031,7 +1032,7 @@
           <xsl:if test="@flex-cols='true'">
             <xsl:text> img-module-flex </xsl:text>
           </xsl:if>
-          <xsl:text>test justify-content-</xsl:text>
+          <xsl:text> justify-content-</xsl:text>
           <xsl:value-of select="@position-vertical"/>
           <xsl:text> align-items-</xsl:text>
           <xsl:value-of select="@position-horizontal"/>
@@ -1243,6 +1244,9 @@
                         <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
                           <xsl:text> module-with-icon</xsl:text>
                         </xsl:if>
+                        <xsl:if test="@title-vis='false'">
+                          <xsl:text> visually-hidden </xsl:text>
+                        </xsl:if>
                       </xsl:attribute>
                       <!--<xsl:if test="@icon!='' or @uploadIcon!=''">
 												<xsl:attribute name="class">title module-with-icon</xsl:attribute>
@@ -1258,9 +1262,15 @@
                   </xsl:when>
                   <xsl:otherwise>
                     <h3 class="title">
-                      <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
-                        <xsl:attribute name="class">title module-with-icon</xsl:attribute>
-                      </xsl:if>
+                      <xsl:attribute name="class">
+                         <xsl:text> title </xsl:text>
+                        <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
+                         <xsl:text>  module-with-icon </xsl:text>
+                        </xsl:if>
+                        <xsl:if test="@title-vis='false'">
+                          <xsl:text> visually-hidden </xsl:text>
+                        </xsl:if>
+                      </xsl:attribute>
                       <xsl:if test="@title-margin and @title-margin!=''">
                         <xsl:attribute name="style">
                           <xsl:text>margin-bottom:</xsl:text>
@@ -1478,6 +1488,7 @@
         <xsl:if test="@v-align='center' or @v-align='bottom'">
           <xsl:text> v-align-</xsl:text>
           <xsl:value-of select="@v-align"/>
+          <xsl:text> </xsl:text>
         </xsl:if>
         <xsl:if test="@panelImage!=''">
           <xsl:text> panelImage </xsl:text>
