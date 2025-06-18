@@ -2681,7 +2681,7 @@ namespace Protean
                                     {
                                         ListId = moMailConfig["InvoiceList"];
                                         xsltPath = moMailConfig["GetDictionaryForInvoiceListXsl"];
-                                        if (!string.IsNullOrEmpty(moMailConfig["QuoteList"]))
+                                        if (!string.IsNullOrEmpty(moMailConfig["InvoiceList"]))
                                         {
                                             // if we have invoiced the customer we don't want to send them quote reminders
                                             if (oMessaging.Activities != null)
