@@ -1208,7 +1208,7 @@ namespace Protean
                 {
                     result = "Git failed -" + error;
                 }
-                return output;
+                return result;
             }
 
         }
