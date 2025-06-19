@@ -315,7 +315,7 @@
 						</div>
 					</xsl:if>
 					<xsl:if test="Body/node()!=''">
-						<xsl:apply-templates select="Body/div/div" mode="cleanXhtml"/>
+						<xsl:apply-templates select="Body" mode="cleanXhtml"/>
 					</xsl:if>
 				</div>
 			</div>
