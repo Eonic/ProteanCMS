@@ -479,10 +479,8 @@ namespace Protean.Providers
 
 
                             if (base.isSubmitted())
-                            {
-
-                                //check for 
-                                //Add code to redirect SAML Auth using Google                             
+                            {                                
+                                //Add code to redirect SAML Auth using Google and Microsoft                           
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["AuthProvider"]))
                                 {
                                     string selectedProvider = myWeb.moRequest["AuthProvider"];
