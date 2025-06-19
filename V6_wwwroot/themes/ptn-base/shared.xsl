@@ -121,6 +121,9 @@
 				<xsl:text>~/themes/</xsl:text>
 				<xsl:value-of select="$theme"/>
 				<xsl:text>/js/smoothproducts.js,</xsl:text>
+        <xsl:text>~/themes/</xsl:text>
+        <xsl:value-of select="$theme"/>
+        <xsl:text>/js/mobile-menu.js,</xsl:text>
 				<xsl:text>~/themes/</xsl:text>
 				<xsl:value-of select="$theme"/>
 				<xsl:text>/js/theme-specific.js,</xsl:text>

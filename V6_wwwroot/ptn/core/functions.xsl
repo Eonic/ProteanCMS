@@ -3847,7 +3847,7 @@
     <xsl:variable name="displayName">
       <xsl:apply-templates select="." mode="getDisplayName"/>
     </xsl:variable>
-    <a title="{$displayName}">
+    <a>
       <xsl:attribute name="href">
         <xsl:apply-templates select="." mode="getHref"/>
       </xsl:attribute>
@@ -3881,10 +3881,6 @@
         </xsl:choose>
       </xsl:attribute>
 
-      <!-- title attribute -->
-      <xsl:attribute name="title">
-        <xsl:apply-templates select="." mode="getTitleAttr"/>
-      </xsl:attribute>
 
       <xsl:if test="DisplayName/@linkType='popUp'">
         <xsl:attribute name="data-bs-toggle">modal</xsl:attribute>
@@ -4644,15 +4640,22 @@
     <xsl:param name="altText"/>
     <xsl:param name="linkType"/>
     <xsl:param name="stretchLink"/>
+    <xsl:param name="tabindex"/>
     <div class="morelink">
       <span>
-        <a href="{$link}" title="{$altText}" class="btn btn-custom" itemprop="mainEntityOfPage">
+        <a href="{$link}" class="btn btn-custom" itemprop="mainEntityOfPage">
           <xsl:if test="not(substring($link,1,1)='/') and ((contains($link,'http://') or contains($link,'tel:')) and $linkType='external')">
             <xsl:attribute name="rel">external</xsl:attribute>
             <xsl:attribute name="class">extLink</xsl:attribute>
           </xsl:if>
           <xsl:if test="$stretchLink='true'">
             <xsl:attribute name="class">btn btn-custom stretched-link</xsl:attribute>
+          </xsl:if>
+          <xsl:if test="$tabindex!=''">
+            <xsl:attribute name="tabindex">
+              <xsl:value-of select="$tabindex"/>
+              <xsl:text> </xsl:text>
+            </xsl:attribute>
           </xsl:if>
           <span>
             <xsl:choose>
@@ -4679,6 +4682,7 @@
     <xsl:param name="linkObject"/>
     <xsl:param name="stretchLink"/>
     <xsl:param name="accessibleText"/>
+    <xsl:param name="tabindex"/>
     <xsl:variable name="link" select="@link"/>
     <xsl:if test="$link!=''">
       <xsl:variable name="numbertest">
@@ -4696,8 +4700,13 @@
               </button>
             </xsl:when>
             <xsl:otherwise>
-              <a title="{@linkText}" class="btn btn-custom {$class}">
-
+              <a class="btn btn-custom {$class}">
+                <xsl:if test="$tabindex!=''">
+                  <xsl:attribute name="tabindex">
+                    <xsl:value-of select="$tabindex"/>
+                    <xsl:text> </xsl:text>
+                  </xsl:attribute>
+                </xsl:if>
                 <xsl:choose>
                   <xsl:when test="$numbertest = 'number'">
                     <xsl:variable name="pageId" select="@link"/>
@@ -4786,10 +4795,18 @@
     <xsl:param name="link"/>
     <xsl:param name="altText"/>
     <xsl:param name="stretchLink"/>
+    <xsl:param name="tabindex"/>
+    
 
     <div class="morelink">
       <span>
-        <a href="{$link}" title="Click here to go to {link}" class="extLink btn btn-custom">
+        <a href="{$link}" class="extLink btn btn-custom">
+          <xsl:if test="$tabindex!=''">
+            <xsl:attribute name="tabindex">
+              <xsl:value-of select="$tabindex"/>
+              <xsl:text> </xsl:text>
+            </xsl:attribute>
+          </xsl:if>
           <xsl:if test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
             <xsl:attribute name="rel">external</xsl:attribute>
           </xsl:if>
@@ -4833,7 +4850,7 @@
     <div class="backlink">
 
       <span>
-        <a href="{$link}" title="{$altText}">
+        <a href="{$link}">
           <xsl:attribute name="title">
             <xsl:choose>
               <xsl:when test="$altText != ''">
