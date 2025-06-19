@@ -24,6 +24,11 @@ using System.Web.Security;
 using System.IO.Compression;
 using System.IO;
 using System.Web;
+using System.Web.SessionState;
+using System.Data;
+using System.ServiceModel.Channels;
+using static Protean.Cms;
+using static Protean.Tools.Xml;
 
 
 namespace Protean.Providers
@@ -34,7 +39,8 @@ namespace Protean.Providers
         {
             IauthenticaitonProvider Initiate(ref Cms myWeb);
 
-            string GetAuthenticationURL();
+            string GetAuthenticationURL(string ProviderName);
+            long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response); // returns userid
 
             System.Collections.Specialized.NameValueCollection config
             { get; }
@@ -114,7 +120,7 @@ namespace Protean.Providers
         public class Default : IauthenticaitonProvider
         {
             private string _Name = "Default";
-            public Protean.Cms _myWeb;
+            public Protean.Cms _myWeb;            
 
             private NameValueCollection _Config;
             public Default()
@@ -138,11 +144,10 @@ namespace Protean.Providers
                 }
             }
 
-            public string GetAuthenticationURL() {
+            public string GetAuthenticationURL(string ProviderName) {
 
                 return "";
-            }
-
+            }  
             public IauthenticaitonProvider Initiate(ref Cms myWeb, ref NameValueCollection config)
             {
                 _myWeb = myWeb;
@@ -155,16 +160,31 @@ namespace Protean.Providers
                 throw new NotImplementedException();
             }
 
+            public virtual long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response)
+            {
+                // Default behavior — can throw or return 0
+                throw new NotImplementedException("CheckAuthenticationResponse must be implemented in the derived class.");
+            }
+
+
             //check ACS URL in google account- here need to pass exactly same
             // issuer = Entity ID in google account
-            public static string GetSamlLoginUrl(string idpSsoUrl, string issuer, string assertionConsumerServiceUrl)
+            public static string GetSamlLoginUrl(string idpSsoUrl, string issuer, string assertionConsumerServiceUrl, string ProviderName)
             {
                 var authRequest = GenerateSamlRequestXml(issuer, assertionConsumerServiceUrl);
 
                 var compressedRequest = CompressAndEncode(authRequest);
                 var samlRequest = HttpUtility.UrlEncode(compressedRequest);
-
-                return $"{idpSsoUrl}&SAMLRequest={samlRequest}";
+                var returnUrl = string.Empty;
+                if(ProviderName.ToLower() == "google")
+                {
+                    returnUrl = $"{idpSsoUrl}&SAMLRequest={samlRequest}";
+                }
+                else
+                {
+                    returnUrl = $"{idpSsoUrl}?SAMLRequest={samlRequest}";
+                }
+                return returnUrl;
             }
 
             private static string GenerateSamlRequestXml(string issuer, string assertionConsumerServiceUrl)
@@ -193,6 +213,66 @@ namespace Protean.Providers
                     return Convert.ToBase64String(output.ToArray());
                 }
             }
+
+            protected XmlDocument ParseSaml(string base64Saml)
+            {
+                byte[] bytes = Convert.FromBase64String(base64Saml);
+                string xml = Encoding.UTF8.GetString(bytes);
+
+                XmlDocument doc = new XmlDocument();
+                doc.PreserveWhitespace = true;
+                doc.LoadXml(xml);
+
+                return doc;
+            }
+
+            protected string ExtractIssuer(XmlDocument xmlDoc)
+            {
+                XmlNode issuerNode = xmlDoc.SelectSingleNode(
+                    "//*[local-name()='Issuer' and namespace-uri()='urn:oasis:names:tc:SAML:2.0:assertion']");
+
+                return issuerNode?.InnerText ?? string.Empty;
+            }
+
+            protected string ExtractEmail(XmlDocument xmlDoc)
+            {
+                XmlNodeList attributes = xmlDoc.SelectNodes(
+                    "//*[local-name()='Attribute' and namespace-uri()='urn:oasis:names:tc:SAML:2.0:assertion']");
+
+                foreach (XmlNode attr in attributes)
+                {
+                    string name = attr.Attributes["Name"]?.Value;
+                    if (!string.IsNullOrEmpty(name) && name.ToLower().Contains("email"))
+                    {
+                        XmlNode val = attr.SelectSingleNode("*[local-name()='AttributeValue']");
+                        return val?.InnerText.Trim();
+                    }
+                }
+                return string.Empty;
+            }
+
+            public long ValidateUser(string samlUserEmail)
+            {
+                long userid = 0;
+                if (!string.IsNullOrEmpty(samlUserEmail))
+                {
+                    string sSql = "select d.*, a.* from tblDirectory d inner join tblAudit a on a.nAuditkey = nAuditId where " + "cDirSchema = 'User' and cDirName = '" + SqlFmt(samlUserEmail) + "'";
+                    DataSet dsUsers = _myWeb.moDbHelper.GetDataSet(sSql, "tblTemp");
+                    int nNumberOfUsers = dsUsers.Tables[0].Rows.Count;
+
+                    if (nNumberOfUsers == 0)
+                    {
+                        userid = 0;
+                    }
+                    else
+                    {
+                        DataRow oUserDetails = dsUsers.Tables[0].Rows[0];
+                        userid = Conversions.ToLong(oUserDetails["nDirKey"]);                
+                    }
+                }
+                return userid;
+            }
+
         }
     }
 }

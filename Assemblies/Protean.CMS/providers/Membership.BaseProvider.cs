@@ -238,6 +238,7 @@ namespace Protean.Providers
             {
                 private const string mcModuleName = "Protean.Providers.Membership.Default.AdminXForms";
                 public bool maintainMembershipsOnAdd = true;
+                string samlUserEmail = string.Empty;
 
                 XmlElement IMembershipAdminXforms.moXformElmt
                 {
@@ -346,7 +347,7 @@ namespace Protean.Providers
                                 }
                             }
                         }
-                        //END auth provider
+                        //END auth provider                       
 
                         base.addDiv(ref oFrmElmt, "", "footer-override");
                         base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
@@ -419,6 +420,63 @@ namespace Protean.Providers
                         }
                         else
                         {
+                            // Check for SAML response                          
+
+                            if (oAuthProviders != null && oAuthProviders.Any())
+                            {
+                                string samlResponse = myWeb.moRequest["SAMLResponse"];
+                                string matchedProviderName = null;
+
+                                if (!string.IsNullOrEmpty(samlResponse))
+                                {
+                                    XmlDocument xmlDoc = new XmlDocument();
+                                    xmlDoc.PreserveWhitespace = true;
+                                    xmlDoc.LoadXml(Encoding.UTF8.GetString(Convert.FromBase64String(samlResponse)));
+
+                                    XmlNode issuerNode = xmlDoc.SelectSingleNode(
+                                        "//*[local-name()='Issuer' and namespace-uri()='urn:oasis:names:tc:SAML:2.0:assertion']");
+                                    string issuer = issuerNode?.InnerText;
+
+                                    if (!string.IsNullOrEmpty(issuer))
+                                    {
+                                        if (issuer.Contains("accounts.google.com"))
+                                            matchedProviderName = "Google";
+                                        else if (issuer.Contains("sts.windows.net"))
+                                            matchedProviderName = "Microsoft";
+                                    }
+                                    //checking for each provider
+                                    foreach (IauthenticaitonProvider authProvider in oAuthProviders)
+                                    {
+                                        Boolean bUse = false;
+                                        if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin")
+                                        {
+                                            bUse = true;
+                                        }
+                                        if (bUse && myWeb.moRequest["SAMLResponse"] != null && authProvider.name == matchedProviderName)
+                                        {
+                                            long userid = authProvider.CheckAuthenticationResponse(myWeb.moRequest, myWeb.moSession, myWeb.moResponse);
+                                            if (userid != 0)
+                                            {
+                                                myWeb.mnUserId = Convert.ToInt32(userid);
+                                                moDbHelper.mnUserId = Conversions.ToLong(userid);
+                                                valid = true;
+                                                if (goSession != null)
+                                                {
+                                                    goSession["nUserId"] = userid;
+                                                    XmlElement UserXml = myWeb.GetUserXML();
+                                                    if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
+                                                    {
+                                                        goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                
+                            }
+
 
                             if (base.isSubmitted())
                             {
@@ -429,23 +487,26 @@ namespace Protean.Providers
                                 {
                                     string selectedProvider = myWeb.moRequest["AuthProvider"];
                                     foreach (IauthenticaitonProvider authProvider in oAuthProviders)
-                                    {
-                                        string redirectUrl = authProvider.GetAuthenticationURL();
-
-                                        if (!string.IsNullOrEmpty(redirectUrl))
+                                    {                                        
+                                        if(authProvider.GetType().Name.ToLower().Contains(selectedProvider))
                                         {
-                                            myWeb.moResponse.Redirect(redirectUrl); // Redirects browser to SAML login                                            
-                                        }
+                                            string redirectUrl = authProvider.GetAuthenticationURL(selectedProvider);
+                                            if (!string.IsNullOrEmpty(redirectUrl))
+                                            {
+                                                //myWeb.msRedirectOnEnd = redirectUrl;
+                                                myWeb.moResponse.Redirect(redirectUrl);
+                                            }
+                                        }                                       
                                     }
                                 }                               
 
                                 base.validate();
                                 if (base.valid)
                                 {
-
+                                   
                                     // changed to get from instance rather than direct from querysting / form.
                                     string username = base.Instance.SelectSingleNode("user/username").InnerText;
-                                    string password = base.Instance.SelectSingleNode("user/password").InnerText;
+                                    string password = base.Instance.SelectSingleNode("user/password").InnerText;                                                                     
 
                                     sValidResponse = moDbHelper.validateUser(username, password);
 

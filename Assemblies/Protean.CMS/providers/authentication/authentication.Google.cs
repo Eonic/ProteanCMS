@@ -21,6 +21,13 @@ using System.Configuration.Provider;
 using Microsoft.VisualBasic;
 using System.Xml;
 using System.Web.Security;
+using System.Text.RegularExpressions;
+using System.Web.SessionState;
+using System.Web;
+using static Protean.Cms;
+using System.Net.PeerToPeer;
+using static QRCoder.PayloadGenerator;
+using System.Data;
 
 
 namespace Protean.Providers
@@ -30,8 +37,8 @@ namespace Protean.Providers
      
         public class Google : Authentication.Default, IauthenticaitonProvider
         {
-        
-            
+             
+            System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
             public Google()
             {
                 // do nothing
@@ -39,16 +46,32 @@ namespace Protean.Providers
 
 
             public IauthenticaitonProvider Initiate(ref Cms myWeb)
-            {
+            {               
                 return this;
             }
 
-            public string GetAuthenticationURL()
+            public new string GetAuthenticationURL(string ProviderName)
             {
-
-                return GetSamlLoginUrl(base.config["ssoUrl"].ToString(), "ProteanCMS", "https://demo2019.intotheblue.co.uk/admin");
+                string gcEwBaseUrl = moCartConfig["SecureURL"].TrimEnd('/');
+                return GetSamlLoginUrl(base.config["ssoUrl"].ToString(), "ProteanCMS", gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
             }
 
+            public new long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response)
+            {
+                XmlDocument xmlDoc = ParseSaml(request["SAMLResponse"]);
+                string issuer = ExtractIssuer(xmlDoc);
+                if (issuer.Contains("accounts.google.com"))
+                {
+                    string samlUserEmail = ExtractEmail(xmlDoc);
+                    return ValidateUser(samlUserEmail);
+                }
+                else {
+                    return 0;
+                }  
+                
+            }
+
+            
         }
     }
 }
