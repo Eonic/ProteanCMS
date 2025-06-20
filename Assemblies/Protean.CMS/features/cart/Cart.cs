@@ -11102,7 +11102,7 @@ namespace Protean
                                 }
                                 nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
                             }
-                            oRow["nShippingTotal"] = nShippingCost;
+                            oRow["nShipOptCost"] = nShippingCost;
 
                             // TODO delete any parent relations /  or remove if allready have child
                             string delLocation = oRow["cLocationNameShort"].ToString();
