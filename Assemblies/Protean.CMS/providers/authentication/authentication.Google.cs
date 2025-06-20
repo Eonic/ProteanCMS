@@ -56,20 +56,20 @@ namespace Protean.Providers
                 return GetSamlLoginUrl(base.config["ssoUrl"].ToString(), "ProteanCMS", gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
             }
 
-            public new long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response)
-            {
-                XmlDocument xmlDoc = ParseSaml(request["SAMLResponse"]);
-                string issuer = ExtractIssuer(xmlDoc);
-                if (issuer.Contains("accounts.google.com"))
-                {
-                    string samlUserEmail = ExtractEmail(xmlDoc);
-                    return ValidateUser(samlUserEmail);
-                }
-                else {
-                    return 0;
-                }  
+            //public new long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response)
+            //{
+            //    XmlDocument xmlDoc = ParseSaml(request["SAMLResponse"]);
+            //    string issuer = ExtractIssuer(xmlDoc);
+            //    if (issuer.Contains("accounts.google.com"))
+            //    {
+            //        string samlUserEmail = ExtractEmail(xmlDoc);
+            //        return ValidateUser(samlUserEmail);
+            //    }
+            //    else {
+            //        return 0;
+            //    }  
                 
-            }
+            //}
 
             
         }

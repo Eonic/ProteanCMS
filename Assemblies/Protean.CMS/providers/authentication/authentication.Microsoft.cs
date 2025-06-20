@@ -44,26 +44,26 @@ namespace Protean.Providers
             {
                 return this;
             }
-            public string GetAuthenticationURL(string ProviderName)
+            public new string GetAuthenticationURL(string ProviderName)
             {
                 string gcEwBaseUrl = moCartConfig["SecureURL"].TrimEnd('/');
                 return GetSamlLoginUrl(base.config["ssoUrl"].ToString(), "ProteanCMS", gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
             }
 
-            public new long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response)
-            {
-                XmlDocument xmlDoc = ParseSaml(request["SAMLResponse"]);
-                string issuer = ExtractIssuer(xmlDoc);
-                if (issuer.Contains("sts.windows.net"))
-                {
-                    string email = ExtractEmail(xmlDoc);
-                    return ValidateUser(email);
-                }
-                else
-                {
-                    return 0;
-                }  
-            }
+            //public new long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response)
+            //{
+            //    XmlDocument xmlDoc = ParseSaml(request["SAMLResponse"]);
+            //    string issuer = ExtractIssuer(xmlDoc);
+            //    if (issuer.Contains("sts.windows.net"))
+            //    {
+            //        string email = ExtractEmail(xmlDoc);
+            //        return ValidateUser(email);
+            //    }
+            //    else
+            //    {
+            //        return 0;
+            //    }  
+            //}
             
         }
     }

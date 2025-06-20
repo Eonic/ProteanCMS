@@ -21,6 +21,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Net.PeerToPeer;
 using System.Reflection;
 using System.Security.AccessControl;
 using System.Text;
@@ -274,7 +275,7 @@ namespace Protean.Providers
                     string sValidResponse;
                     string cProcessInfo = "";
                     bool bRememberMe = false;
-
+                    string samlUserEmail = string.Empty;
 
                     try
                     {
@@ -424,56 +425,52 @@ namespace Protean.Providers
 
                             if (oAuthProviders != null && oAuthProviders.Any())
                             {
-                                string samlResponse = myWeb.moRequest["SAMLResponse"];
-                                string matchedProviderName = null;
+                                string samlResponse = myWeb.moRequest["SAMLResponse"];                                
 
                                 if (!string.IsNullOrEmpty(samlResponse))
                                 {
                                     XmlDocument xmlDoc = new XmlDocument();
                                     xmlDoc.PreserveWhitespace = true;
-                                    xmlDoc.LoadXml(Encoding.UTF8.GetString(Convert.FromBase64String(samlResponse)));
-
-                                    XmlNode issuerNode = xmlDoc.SelectSingleNode(
-                                        "//*[local-name()='Issuer' and namespace-uri()='urn:oasis:names:tc:SAML:2.0:assertion']");
-                                    string issuer = issuerNode?.InnerText;
-
-                                    if (!string.IsNullOrEmpty(issuer))
-                                    {
-                                        if (issuer.Contains("accounts.google.com"))
-                                            matchedProviderName = "Google";
-                                        else if (issuer.Contains("sts.windows.net"))
-                                            matchedProviderName = "Microsoft";
-                                    }
+                                    xmlDoc.LoadXml(Encoding.UTF8.GetString(Convert.FromBase64String(samlResponse)));                                    
+                                 
                                     //checking for each provider
                                     foreach (IauthenticaitonProvider authProvider in oAuthProviders)
                                     {
+                                        string issuer = authProvider.ExtractIssuer(xmlDoc);
                                         Boolean bUse = false;
                                         if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin")
                                         {
                                             bUse = true;
                                         }
-                                        if (bUse && myWeb.moRequest["SAMLResponse"] != null && authProvider.name == matchedProviderName)
+                                        if (bUse && myWeb.moRequest["SAMLResponse"] != null && authProvider.config["entityId"] != null && authProvider.config["entityId"].ToString().Equals(issuer, StringComparison.OrdinalIgnoreCase))
                                         {
-                                            long userid = authProvider.CheckAuthenticationResponse(myWeb.moRequest, myWeb.moSession, myWeb.moResponse);
-                                            if (userid != 0)
+                                            //long userid = authProvider.CheckAuthenticationResponse(myWeb.moRequest, myWeb.moSession, myWeb.moResponse);
+                                            samlUserEmail = authProvider.ExtractEmail(xmlDoc);
+                                            //update Authprovider in existing tblDirectory against email address
+                                            string sSql = "update tblDirectory set cDirPassword ='"+ authProvider.name + "' where cDirName = '"+ samlUserEmail + "' or cDirEmail = '"+ samlUserEmail+"' " ;
+                                            sValidResponse = moDbHelper.ExeProcessSql(sSql).ToString();
+                                            if(sValidResponse == "1")
                                             {
-                                                myWeb.mnUserId = Convert.ToInt32(userid);
-                                                moDbHelper.mnUserId = Conversions.ToLong(userid);
-                                                valid = true;
-                                                if (goSession != null)
+                                                sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name);
+                                                if (Information.IsNumeric(sValidResponse))
                                                 {
-                                                    goSession["nUserId"] = userid;
-                                                    XmlElement UserXml = myWeb.GetUserXML();
-                                                    if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
+                                                    myWeb.mnUserId = Convert.ToInt32(sValidResponse);
+                                                    moDbHelper.mnUserId = Conversions.ToLong(sValidResponse);
+                                                    valid = true;
+                                                    if (goSession != null)
                                                     {
-                                                        goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
+                                                        goSession["nUserId"] = sValidResponse;
+                                                        XmlElement UserXml = myWeb.GetUserXML();
+                                                        if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
+                                                        {
+                                                            goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
                                     }
                                 }
-
                                 
                             }
 

@@ -8146,6 +8146,21 @@ namespace Protean
                                         {
                                             bValidPassword = true;
                                         }
+                                        else
+                                        {
+                                            if (myWeb.moRequest["SAMLResponse"] != null)
+                                            {
+                                                if(cPasswordForm == cPasswordDatabase)
+                                                {
+                                                    bValidPassword = true;
+                                                }
+                                                else
+                                                {
+                                                    sReturn = "<span class=\"msg-1015\">Login failed. Please use your Google or Microsoft account to sign in.</span>";
+                                                    break;
+                                                }
+                                            }
+                                        }
                                         break;
                                 }
                             }

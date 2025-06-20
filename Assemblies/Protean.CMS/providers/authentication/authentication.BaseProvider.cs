@@ -40,6 +40,8 @@ namespace Protean.Providers
             IauthenticaitonProvider Initiate(ref Cms myWeb);
 
             string GetAuthenticationURL(string ProviderName);
+            string ExtractEmail(XmlDocument xmlDoc);
+            string ExtractIssuer(XmlDocument xmlDoc);
             long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response); // returns userid
 
             System.Collections.Specialized.NameValueCollection config
@@ -226,7 +228,7 @@ namespace Protean.Providers
                 return doc;
             }
 
-            protected string ExtractIssuer(XmlDocument xmlDoc)
+            public string ExtractIssuer(XmlDocument xmlDoc)
             {
                 XmlNode issuerNode = xmlDoc.SelectSingleNode(
                     "//*[local-name()='Issuer' and namespace-uri()='urn:oasis:names:tc:SAML:2.0:assertion']");
@@ -234,7 +236,7 @@ namespace Protean.Providers
                 return issuerNode?.InnerText ?? string.Empty;
             }
 
-            protected string ExtractEmail(XmlDocument xmlDoc)
+            public string ExtractEmail(XmlDocument xmlDoc)
             {
                 XmlNodeList attributes = xmlDoc.SelectNodes(
                     "//*[local-name()='Attribute' and namespace-uri()='urn:oasis:names:tc:SAML:2.0:assertion']");
@@ -251,27 +253,27 @@ namespace Protean.Providers
                 return string.Empty;
             }
 
-            public long ValidateUser(string samlUserEmail)
-            {
-                long userid = 0;
-                if (!string.IsNullOrEmpty(samlUserEmail))
-                {
-                    string sSql = "select d.*, a.* from tblDirectory d inner join tblAudit a on a.nAuditkey = nAuditId where " + "cDirSchema = 'User' and cDirName = '" + SqlFmt(samlUserEmail) + "'";
-                    DataSet dsUsers = _myWeb.moDbHelper.GetDataSet(sSql, "tblTemp");
-                    int nNumberOfUsers = dsUsers.Tables[0].Rows.Count;
+            //public long ValidateUser(string samlUserEmail)
+            //{
+            //    long userid = 0;
+            //    if (!string.IsNullOrEmpty(samlUserEmail))
+            //    {
+            //        string sSql = "select d.*, a.* from tblDirectory d inner join tblAudit a on a.nAuditkey = nAuditId where " + "cDirSchema = 'User' and cDirName = '" + SqlFmt(samlUserEmail) + "'";
+            //        DataSet dsUsers = _myWeb.moDbHelper.GetDataSet(sSql, "tblTemp");
+            //        int nNumberOfUsers = dsUsers.Tables[0].Rows.Count;
 
-                    if (nNumberOfUsers == 0)
-                    {
-                        userid = 0;
-                    }
-                    else
-                    {
-                        DataRow oUserDetails = dsUsers.Tables[0].Rows[0];
-                        userid = Conversions.ToLong(oUserDetails["nDirKey"]);                
-                    }
-                }
-                return userid;
-            }
+            //        if (nNumberOfUsers == 0)
+            //        {
+            //            userid = 0;
+            //        }
+            //        else
+            //        {
+            //            DataRow oUserDetails = dsUsers.Tables[0].Rows[0];
+            //            userid = Conversions.ToLong(oUserDetails["nDirKey"]);                
+            //        }
+            //    }
+            //    return userid;
+            //}
 
         }
     }
