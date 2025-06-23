@@ -36,9 +36,8 @@ namespace Protean.Providers
     {
      
         public class Google : Authentication.Default, IauthenticaitonProvider
-        {
-             
-            System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
+        {             
+         
             public Google()
             {
                 // do nothing
@@ -50,11 +49,11 @@ namespace Protean.Providers
                 return this;
             }
 
-            public new string GetAuthenticationURL(string ProviderName)
-            {
-                string gcEwBaseUrl = moCartConfig["SecureURL"].TrimEnd('/');
-                return GetSamlLoginUrl(base.config["ssoUrl"].ToString(), "ProteanCMS", gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
-            }
+            //public new string GetAuthenticationURL(string ProviderName)
+            //{
+            //    string gcEwBaseUrl = moCartConfig["SecureURL"].TrimEnd('/');
+            //    return GetSamlLoginUrl(base.config["ssoUrl"].ToString(), "ProteanCMS", gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
+            //}
 
             //public new long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response)
             //{

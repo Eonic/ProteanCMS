@@ -11,6 +11,7 @@
 using AngleSharp.Dom;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Authentication;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using System;
@@ -8043,6 +8044,9 @@ namespace Protean
 
                 try
                 {
+                    //this need to be optional based on auth provider config
+                    Protean.Providers.Authentication.ReturnProvider oAuthProv = new Protean.Providers.Authentication.ReturnProvider();
+                    IEnumerable<IauthenticaitonProvider> oAuthProviders = oAuthProv.Get(ref myWeb);
 
                     // Does the configuration setting indicate that email addresses are allowed.
                     if (Strings.LCase(myWeb.moConfig["EmailUsernames"]) == "on")
@@ -8109,6 +8113,35 @@ namespace Protean
                             cPasswordDatabase = Conversions.ToString(oUserDetails["cDirPassword"]);
                             nUserId = Conversions.ToLong(oUserDetails["nDirKey"]);
 
+                            // here we are checking SAML login is from google or microsoft, if not return error message.
+                            if (oAuthProviders != null)
+                            {
+                                if (oAuthProviders.Count() > 0)
+                                {                                    
+                                    foreach (IauthenticaitonProvider authProvider in oAuthProviders)
+                                    {
+                                        Boolean bUse = false;
+                                        if (authProvider.config["scope"].ToString() == "admin")
+                                        {
+                                            bUse = true;
+                                        }
+                                        if (bUse && authProvider.name.ToLower() == cPasswordForm)  // this extra if added because direct checking available provider.
+                                        {                                           
+                                            if (myWeb.moRequest["SAMLResponse"] != null && authProvider.name == cPasswordDatabase)
+                                            {
+                                                bValidPassword = true;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                return sReturn = "<span class=\"msg-1036\">Login failed. Please use your "+ authProvider.name + " account to sign in.</span>";                                                
+                                            }
+                                        }                                       
+                                    }
+                                }
+                            }
+                            //End Auth Provider
+
                             if (!(Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "plain") & !string.IsNullOrEmpty(myWeb.moConfig["MembershipEncryption"]))
                             {
                                 string cHashedPassword = Tools.Encryption.HashString(cPasswordForm, Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true); // plain - md5 - sha1
@@ -8145,22 +8178,7 @@ namespace Protean
                                         if (cPasswordDatabase == cHashedPassword)
                                         {
                                             bValidPassword = true;
-                                        }
-                                        else
-                                        {
-                                            if (myWeb.moRequest["SAMLResponse"] != null)
-                                            {
-                                                if(cPasswordForm == cPasswordDatabase)
-                                                {
-                                                    bValidPassword = true;
-                                                }
-                                                else
-                                                {
-                                                    sReturn = "<span class=\"msg-1015\">Login failed. Please use your Google or Microsoft account to sign in.</span>";
-                                                    break;
-                                                }
-                                            }
-                                        }
+                                        }                                       
                                         break;
                                 }
                             }

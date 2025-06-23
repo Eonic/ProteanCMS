@@ -451,7 +451,7 @@ namespace Protean.Providers
                                             sValidResponse = moDbHelper.ExeProcessSql(sSql).ToString();
                                             if(sValidResponse == "1")
                                             {
-                                                sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name);
+                                                sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name); // Password as a Provider name here
                                                 if (Information.IsNumeric(sValidResponse))
                                                 {
                                                     myWeb.mnUserId = Convert.ToInt32(sValidResponse);

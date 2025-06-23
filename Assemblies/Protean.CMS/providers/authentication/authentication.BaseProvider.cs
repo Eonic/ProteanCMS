@@ -42,7 +42,7 @@ namespace Protean.Providers
             string GetAuthenticationURL(string ProviderName);
             string ExtractEmail(XmlDocument xmlDoc);
             string ExtractIssuer(XmlDocument xmlDoc);
-            long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response); // returns userid
+            //long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response); // returns userid
 
             System.Collections.Specialized.NameValueCollection config
             { get; }
@@ -122,7 +122,8 @@ namespace Protean.Providers
         public class Default : IauthenticaitonProvider
         {
             private string _Name = "Default";
-            public Protean.Cms _myWeb;            
+            public Protean.Cms _myWeb;
+            System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
 
             private NameValueCollection _Config;
             public Default()
@@ -145,11 +146,7 @@ namespace Protean.Providers
                     return _Config; 
                 }
             }
-
-            public string GetAuthenticationURL(string ProviderName) {
-
-                return "";
-            }  
+          
             public IauthenticaitonProvider Initiate(ref Cms myWeb, ref NameValueCollection config)
             {
                 _myWeb = myWeb;
@@ -162,13 +159,11 @@ namespace Protean.Providers
                 throw new NotImplementedException();
             }
 
-            public virtual long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response)
+            public string GetAuthenticationURL(string ProviderName)
             {
-                // Default behavior — can throw or return 0
-                throw new NotImplementedException("CheckAuthenticationResponse must be implemented in the derived class.");
+                string gcEwBaseUrl = moCartConfig["SecureURL"].TrimEnd('/');
+                return GetSamlLoginUrl(config["ssoUrl"].ToString(), "ProteanCMS", gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
             }
-
-
             //check ACS URL in google account- here need to pass exactly same
             // issuer = Entity ID in google account
             public static string GetSamlLoginUrl(string idpSsoUrl, string issuer, string assertionConsumerServiceUrl, string ProviderName)
