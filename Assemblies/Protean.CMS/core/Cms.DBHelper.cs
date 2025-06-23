@@ -8125,7 +8125,7 @@ namespace Protean
                                         {
                                             bUse = true;
                                         }
-                                        if (bUse && authProvider.name.ToLower() == cPasswordForm)  // this extra if added because direct checking available provider.
+                                        if (bUse && authProvider.name.ToLower() == cPasswordForm.ToLower())  // this extra if added because direct checking available provider.
                                         {                                           
                                             if (myWeb.moRequest["SAMLResponse"] != null && authProvider.name == cPasswordDatabase)
                                             {
