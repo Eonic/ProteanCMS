@@ -449,36 +449,31 @@ namespace Protean.Providers
                                             //update Authprovider in existing tblDirectory against email address
                                             string sSql = "update tblDirectory set cDirPassword ='"+ authProvider.name + "' where cDirName = '"+ samlUserEmail + "' or cDirEmail = '"+ samlUserEmail+"' " ;
                                             sValidResponse = moDbHelper.ExeProcessSql(sSql).ToString();
-                                            if(sValidResponse == "1")
+                                            
+                                            sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name); // Password as a Provider name here
+                                            if (Information.IsNumeric(sValidResponse))
                                             {
-                                                sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name); // Password as a Provider name here
-                                                if (Information.IsNumeric(sValidResponse))
+                                                myWeb.mnUserId = Convert.ToInt32(sValidResponse);
+                                                moDbHelper.mnUserId = Conversions.ToLong(sValidResponse);
+                                                valid = true;
+                                                if (goSession != null)
                                                 {
-                                                    myWeb.mnUserId = Convert.ToInt32(sValidResponse);
-                                                    moDbHelper.mnUserId = Conversions.ToLong(sValidResponse);
-                                                    valid = true;
-                                                    if (goSession != null)
+                                                    goSession["nUserId"] = sValidResponse;
+                                                    XmlElement UserXml = myWeb.GetUserXML();
+                                                    if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
                                                     {
-                                                        goSession["nUserId"] = sValidResponse;
-                                                        XmlElement UserXml = myWeb.GetUserXML();
-                                                        if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
-                                                        {
-                                                            goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
-                                                        }
+                                                        goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
                                                     }
                                                 }
-                                            }
-                                            else
+                                            }else
                                             {
-                                                //user not present in proteanCms
-                                                sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name);
+                                                //user not present in proteanCms                                               
                                                 base.valid = false;
                                                 base.addNote(ref xmlGroupElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
-                                            }
+                                            }                                            
                                         }
                                     }
-                                }
-                                
+                                }                                
                             }
 
 
