@@ -1,6 +1,7 @@
 ﻿using Lucene.Net.Support;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Models;
 using Protean.Providers.Membership;
 using System;
 using System.Collections;
@@ -1956,6 +1957,8 @@ namespace Protean
                                                 mcContentType = "application/pdf";
                                                 // Next we transform using into FO.Net Xml
 
+                                                moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "Create Pdf" , false);
+
 
                                                 string styleFile2 = goServer.MapPath(mcEwSiteXsl);
                                                 PerfMon.Log("Web", "ReturnPageHTML - loaded Style");
@@ -1972,6 +1975,9 @@ namespace Protean
 
                                                 string foNetXml = icPageWriter.ToString();
 
+                                                moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "Create Pdf Transformed", false);
+
+
 
                                                 if (foNetXml.StartsWith("<html"))
                                                 {
@@ -1979,6 +1985,9 @@ namespace Protean
                                                 }
                                                 else
                                                 {
+
+                                                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "FO.Net-Start", false);
+
                                                     // now we use FO.Net to generate our PDF
 
                                                     string strFileName = mcOutputFileName;
@@ -2049,8 +2058,7 @@ namespace Protean
                                                             }
                                                         }
                                                     }
-
-                                                    oFoNet.Options = rendererOpts;
+                                                     oFoNet.Options = rendererOpts;
                                                     oFoNet.Render(oTxtReader, ofileStream);
 
                                                     moResponse.Buffer = true;
@@ -2077,6 +2085,7 @@ namespace Protean
                                                     moCtx.Response.BinaryWrite(Buffer);
                                                     moCtx.Response.Flush();
 
+                                                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "FO.Net-End", false);
                                                     // objStream = Nothing
                                                     oFoNet = null;
                                                     oTxtReader = null;

@@ -10,6 +10,7 @@
   xmlns:ew="urn:ew">
   
   <xsl:import href="../../../../ewcommon_v5-1/xsl/tools/Functions.xsl"/>
+  <xsl:import href="../../../../ewcommon_v5-1/xsl/localisation/systemTranslations-EN.xsl"/>
   
   <xsl:output method="xml" omit-xml-declaration="no" indent="yes" cdata-section-elements="description content"/>
   
