@@ -468,6 +468,13 @@ namespace Protean.Providers
                                                     }
                                                 }
                                             }
+                                            else
+                                            {
+                                                //user not present in proteanCms
+                                                sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name);
+                                                base.valid = false;
+                                                base.addNote(ref xmlGroupElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
+                                            }
                                         }
                                     }
                                 }
