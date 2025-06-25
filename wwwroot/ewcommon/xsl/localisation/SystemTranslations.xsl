@@ -405,16 +405,32 @@
   </xsl:template>
 
 	<!-- 1036 login in using only google or microsoft -->
-	<xsl:template match="span[@class='msg-1036']" mode="term">		
+	<xsl:template match="span[@class='msg-1036']" mode="term">
 		<xsl:choose>
-			<xsl:when test="$lang='de'">Ihr benutzername wurde nicht gefunden</xsl:when>
-			<xsl:when test="$lang='en-pr'">Ya moniker were nay found</xsl:when>
-			<xsl:when test="$lang='es'">No se encontró el nombre de usuario</xsl:when>
-			<xsl:when test="$lang='fi'">Käyttäjätunnusta ei löydy</xsl:when>
-			<xsl:when test="$lang='fr'">Nom d'utilisateur introuvable</xsl:when>
-			<xsl:when test="$lang='it'">Nome utente non trovato</xsl:when>
-			<xsl:when test="$lang='nl'">Gebruikersnaam niet gevonden</xsl:when>
-			<xsl:otherwise>Login failed. Please use your <xsl:value-of select="span[@class='AuthName']/node()"/> account to sign in.</xsl:otherwise>
+			<xsl:when test="$lang='de'">
+				Anmeldung fehlgeschlagen. Bitte verwenden Sie Ihr <xsl:value-of select="span[@class='AuthName']/node()"/> Konto, um sich anzumelden.
+			</xsl:when>
+			<xsl:when test="$lang='en-pr'">
+				Login failed. Please use your <xsl:value-of select="span[@class='AuthName']/node()"/> account to sign in.
+			</xsl:when>
+			<xsl:when test="$lang='es'">
+				Error de inicio de sesión. Utilice su cuenta <xsl:value-of select="span[@class='AuthName']/node()"/> para iniciar sesión.
+			</xsl:when>
+			<xsl:when test="$lang='fi'">
+				Kirjautuminen epäonnistui. Käytä <xsl:value-of select="span[@class='AuthName']/node()"/> -tiliäsi kirjautuaksesi sisään.
+			</xsl:when>
+			<xsl:when test="$lang='fr'">
+				Échec de la connexion. Veuillez utiliser votre compte <xsl:value-of select="span[@class='AuthName']/node()"/> pour vous connecter.
+			</xsl:when>
+			<xsl:when test="$lang='it'">
+				Accesso non riuscito. Utilizza il tuo account <xsl:value-of select="span[@class='AuthName']/node()"/> per accedere.
+			</xsl:when>
+			<xsl:when test="$lang='nl'">
+				Aanmelden mislukt. Gebruik uw <xsl:value-of select="span[@class='AuthName']/node()"/> account om in te loggen.
+			</xsl:when>
+			<xsl:otherwise>
+				Login failed. Please use your <xsl:value-of select="span[@class='AuthName']/node()"/> account to sign in.
+			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
