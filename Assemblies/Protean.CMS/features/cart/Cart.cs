@@ -2647,9 +2647,16 @@ namespace Protean
                             string xsltPath = string.Empty;
                             bool bOptOut = false;
                             if (string.IsNullOrEmpty(Email))
-                                Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
+                                if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email") != null)
+                                {
+                                    Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
+                                }
                             if (string.IsNullOrEmpty(Name))
-                                Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
+                                if(oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName")!=null)
+                                {
+                                    Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
+                                }
+                                
                             if (valDict is null)
                                 valDict = new Dictionary<string, string>();
 
@@ -2686,7 +2693,7 @@ namespace Protean
                                             // if we have invoiced the customer we don't want to send them quote reminders
                                             if (oMessaging.Activities != null)
                                             {
-                                                oMessaging.Activities.RemoveFromList(moMailConfig["QuoteList"], Email);
+                                                oMessaging.Activities.RemoveFromList(moMailConfig["InvoiceList"], Email);
                                             }
                                         }
 
@@ -11293,7 +11300,7 @@ namespace Protean
                 }
             }
 
-            private string updateGCgetValidShippingOptionsDS(string nShipOptKey)
+            public string updateGCgetValidShippingOptionsDS(string nShipOptKey)
             {
                 try
                 {
