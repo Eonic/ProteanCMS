@@ -50,6 +50,13 @@ namespace Protean
                                 contentNode.SelectSingleNode("SubscriptionPrices/Price[@type='sale']").InnerText = subValue.ToString();
                                 contentNode.SelectSingleNode("Prices/Price[@type='sale']").InnerText = subValue.ToString();
 
+                                if (!string.IsNullOrEmpty(myWeb.moRequest.Form.Get("donationMessage")))
+                                {
+                                    XmlElement oMsg = contentNode.OwnerDocument.CreateElement("Message");
+                                    oMsg.InnerText = myWeb.moRequest.Form.Get("donationMessage");
+                                    contentNode.AppendChild(oMsg);
+                                }
+
                                 // Add subscription to cart
                                 myWeb.InitialiseCart();
                                 XmlElement xmlCart = myWeb.moCart.CreateCartElement(myWeb.moPageXml);

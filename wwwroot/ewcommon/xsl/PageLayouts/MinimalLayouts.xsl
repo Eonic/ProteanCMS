@@ -6164,6 +6164,7 @@
 			</xsl:choose>
 		</xsl:variable>
 		<!--end responsive columns variables-->
+		
 		<div class="clearfix EventsList">
 			<xsl:if test="@carousel='true'">
 				<xsl:attribute name="class">
