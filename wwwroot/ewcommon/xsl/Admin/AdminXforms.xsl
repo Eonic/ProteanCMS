@@ -208,6 +208,100 @@
 		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
 	</xsl:template>
 
+
+	<xsl:template match="Content[ancestor::Page[@adminMode='true'] and @name='UserLogon']" mode="xform">
+		<form method="{model/submission/@method}" action="">
+			<xsl:attribute name="class">
+				<xsl:text>ewXform panel panel-default</xsl:text>
+				<xsl:if test="model/submission/@class!=''">
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="model/submission/@class"/>
+				</xsl:if>
+			</xsl:attribute>
+			<xsl:if test="not(contains(model/submission/@action,'.asmx'))">
+				<xsl:attribute name="action">
+					<xsl:value-of select="model/submission/@action"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@id!=''">
+				<xsl:attribute name="id">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+				<xsl:attribute name="name">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@event!=''">
+				<xsl:attribute name="onsubmit">
+					<xsl:value-of select="model/submission/@event"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="descendant::upload">
+				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+			</xsl:if>
+
+			<xsl:for-each select="group">
+				<div class="panel-body">
+					<xsl:apply-templates select="label" mode="legend"/>
+<p>Welcome back, please sign in to your account</p>
+					<xsl:choose>
+						<xsl:when test="contains(@class,'2col') or contains(@class,'2Col') ">
+							<div class="row">
+								<xsl:for-each select="group | repeat">
+									<xsl:apply-templates select="." mode="xform">
+										<xsl:with-param name="class">
+											<xsl:text>col-md-</xsl:text>
+											<xsl:choose>
+												<xsl:when test="position()='1'">4</xsl:when>
+												<xsl:when test="position()='2'">8</xsl:when>
+											</xsl:choose>
+										</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:for-each>
+							</div>
+						</xsl:when>
+						<xsl:when test="contains(@class,'2col5050') or contains(@class,'2Col5050') ">
+							<div class="row">
+								<xsl:for-each select="group | repeat">
+									<xsl:apply-templates select="." mode="xform">
+										<xsl:with-param name="class">
+											<xsl:text>col-md-</xsl:text>
+											<xsl:choose>
+												<xsl:when test="position()='1'">6</xsl:when>
+												<xsl:when test="position()='2'">6</xsl:when>
+											</xsl:choose>
+										</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:for-each>
+							</div>
+						</xsl:when>
+						<xsl:when test="contains(@class,'3col') or contains(@class,'3Col') ">
+							<div class="row">
+								<xsl:for-each select="group | repeat">
+									<xsl:apply-templates select="." mode="xform">
+										<xsl:with-param name="class">
+											<xsl:text>col-md-4</xsl:text>
+										</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:for-each>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="group | repeat " mode="xform"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:apply-templates select="parent::*/alert" mode="xform"/>
+					<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div | submit" mode="xform"/>
+
+
+				</div>
+				
+			</xsl:for-each>
+		</form>
+		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
+	</xsl:template>
+	
+
 	<xsl:template match="group[(contains(@class,'2col') or contains(@class,'2Col')) and ancestor::Page[@adminMode='true']]" mode="xform">
 		<xsl:if test="label and not(parent::Content)">
 			<div class="panel-heading">
