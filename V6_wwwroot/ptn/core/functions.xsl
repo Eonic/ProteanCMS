@@ -1118,7 +1118,7 @@
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaA1WebStatsID']" mode="A1WebStatsCode"/>
     <xsl:apply-templates select="/Page/Contents/Content[@type='MetaData' and @name='MetaWhoIsVisitingID']" mode="MetaWhoIsVisitingCode"/>
 
-    <xsl:apply-templates select="." mode="BingTrackingCode"/>
+
     <xsl:apply-templates select="." mode="FacebookTrackingCode"/>
     <xsl:apply-templates select="." mode="FeedOptimiseCode"/>
 
@@ -1200,6 +1200,7 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="metadata">
+      <xsl:apply-templates select="." mode="BingTrackingCode"/>
     <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -2532,6 +2533,15 @@
 
     <xsl:if test="$BingTrackingID!=''">
       <script>
+		  <xsl:choose>
+			  <xsl:when test="Contents/Content[@type='CookieFirst']">
+				  <xsl:attribute name="type">text/plain</xsl:attribute>
+				  <xsl:attribute name="data-cookiefirst-script">bing_ads</xsl:attribute>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:attribute name="cookie-consent">tracking</xsl:attribute>
+			  </xsl:otherwise>
+		  </xsl:choose>
         (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
       </script>
       <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
@@ -9827,7 +9837,13 @@
     <xsl:value-of select="ew:GetPageIdFromFref($fRef)"/>
   </xsl:template>
 
-  <xsl:template name="DeletePage">
+	<xsl:template name="GetDirIdFromFref">
+		<xsl:param name="fRef"/>
+		<xsl:value-of select="ew:GetDirIdFromFref($fRef)"/>
+	</xsl:template>
+
+
+	<xsl:template name="DeletePage">
     <xsl:param name="id"/>
     <xsl:value-of select="ew:DeletePage($id)"/>
   </xsl:template>

@@ -80,12 +80,15 @@
   <!-- ========================== XFORM ========================== -->
   <!-- -->
   <xsl:template match="div" mode="xform">
-    <xsl:if test="./@class">
-      <xsl:attribute name="class">
-        <xsl:value-of select="./@class"/>
-      </xsl:attribute>
-    </xsl:if>
-    <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+	  <div>
+		  <!-- TS: div is required otherwise it breaks in compiled mode -->
+        <xsl:if test="./@class">
+          <xsl:attribute name="class">
+            <xsl:value-of select="./@class"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+	</div>
   </xsl:template>
 
   <!-- -->
@@ -119,20 +122,20 @@
       <xsl:if test="descendant::upload">
         <xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
       </xsl:if>
-
+      <!--<xsl:if test="descendant-or-self::*[contains(@class,'required')]">
+        <span class="required small">
+          <span class="req">
+            *<span class="visually-hidden"> (required)</span>
+          </span>
+          <xsl:text> </xsl:text>
+          <xsl:call-template name="msg_required"/>
+        </span>
+      </xsl:if>-->
       <xsl:apply-templates select="group | repeat | input | secret | select | select1 | switch | range | textarea | upload | hint | help | alert | div" mode="xform"/>
 
       <xsl:if test="count(submit) &gt; 0">
         <p class="buttons">
-          <xsl:if test="descendant-or-self::*[contains(@class,'required')]">
-            <span class="required">
-              <span class="req">
-                *<span class="visually-hidden"> (required)</span>
-              </span>
-              <xsl:text> </xsl:text>
-              <xsl:call-template name="msg_required"/>
-            </span>
-          </xsl:if>
+         
           <xsl:apply-templates select="submit" mode="xform"/>
 
         </p>
@@ -155,8 +158,6 @@
       <xsl:apply-templates select="hint | help " mode="xform"/>
 
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
-
-      <xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
       <xsl:if test="count(submit) &gt; 0">
         <xsl:if test="not(submit[contains(@class,'hide-required')])">
           <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
@@ -169,6 +170,12 @@
             </label>
           </xsl:if>
         </xsl:if>
+        <!-- For xFormQuiz change how these buttons work -->
+        <xsl:apply-templates select="submit" mode="xform"/>
+      </xsl:if>
+      <xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+      <xsl:if test="count(submit) &gt; 0">
+        
         <!-- For xFormQuiz change how these buttons work -->
         <xsl:apply-templates select="submit" mode="xform"/>
       </xsl:if>
@@ -201,7 +208,22 @@
           <xsl:text> </xsl:text>
         </xsl:attribute>
       </xsl:if>
+      <xsl:if test="not(submit[contains(@class,'hide-required')])">
+        <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+          <div class="FormattedText required small">
+            <p>
+              <span class="req">
+                *<span class="visually-hidden"> (asterisk)</span>
+              </span>
+              <xsl:text> </xsl:text>
+              <xsl:call-template name="msg_required"/>
+            </p>
+          </div>
+        </xsl:if>
+      </xsl:if>
+      
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
+     
       <xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat |  alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
       <xsl:if test="count(submit) &gt; 0">
         <xsl:choose>
@@ -210,17 +232,7 @@
           </xsl:when>
           <xsl:otherwise>
             <p class="buttons">
-              <xsl:if test="not(submit[contains(@class,'hide-required')])">
-                <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
-                  <label class="required">
-                    <span class="req">
-                      *<span class="visually-hidden"> (required)</span>
-                    </span>
-                    <xsl:text> </xsl:text>
-                    <xsl:call-template name="msg_required"/>
-                  </label>
-                </xsl:if>
-              </xsl:if>
+              
               <!-- For xFormQuiz change how these buttons work -->
               <xsl:apply-templates select="submit" mode="xform"/>
             </p>
@@ -827,6 +839,18 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+	<xsl:template match="div" mode="control-outer">
+		
+		<xsl:apply-templates select="." mode="xform"/>
+	
+	</xsl:template>
+
+	<xsl:template match="submit" mode="control-outer">
+		<div class="d-grid gap-2">
+			<xsl:apply-templates select="." mode="xform"/>
+		</div>		
+	</xsl:template>
 
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform">
     <xsl:param name="nolabel"/>

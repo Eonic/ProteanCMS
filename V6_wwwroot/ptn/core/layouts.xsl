@@ -1347,7 +1347,7 @@
         <xsl:text> hidden-sm</xsl:text>
       </xsl:if>
       <xsl:if test="contains(@screens,'xs')">
-        <xsl:text> hidden-xs</xsl:text>
+        <xsl:text> hidden-xs </xsl:text>
       </xsl:if>
     </xsl:if>
     <xsl:if test="@matchHeight='true'">

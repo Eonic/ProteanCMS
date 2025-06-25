@@ -1194,6 +1194,11 @@ namespace Protean.Tools
                 sString = sString.Replace(((char)8).ToString(), ((char)32).ToString());
                 sString = sString.Replace(((char)20).ToString(), ((char)32).ToString());
 
+                sString = sString.Replace("&amp;lsquo;", "&#8216;");
+                sString = sString.Replace("&amp;rsquo;", "&#8217;");
+                sString = sString.Replace("&amp;ldquo;", "&#8220;");
+                sString = sString.Replace("&amp;rdquo;", "&#8221;");
+
                 sString = sString.Replace("&amp;amp;", "&#38;");
                 sString = sString.Replace("&amp;nbsp;", "&#160;");
                 sString = sString.Replace("&nbsp;", "&#160;");
