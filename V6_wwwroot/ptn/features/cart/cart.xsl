@@ -1431,7 +1431,7 @@
 		</button>-->
 	</xsl:template>
 
-	<xsl:template match="textarea[contains(@class,'readonly terms-and-condiditons')]" mode="xform_control">
+	<xsl:template match="textarea[contains(@class,'readonly terms-and-conditons')]" mode="xform_control">
 		<div class="modal modal-xl" tabindex="-1" id="terms-modal">
 			<div class="modal-dialog">
 				<div class="modal-content">

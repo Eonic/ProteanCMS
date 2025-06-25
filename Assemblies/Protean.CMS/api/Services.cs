@@ -13,6 +13,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Lucene.Net.Documents.Field;
 using static Protean.stdTools;
+using static QRCoder.PayloadGenerator;
 
 namespace Protean
 {
@@ -209,6 +210,50 @@ namespace Protean
                     var oMsg = new Messaging(ref myWeb.msException);
                     Cms.dbHelper odbhelper = null;
                     sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "", "", "", ccRecipient, bccRecipient, cSeperator).ToString();
+                }
+                else
+                {
+                    sMessage = "<div class=\"error\">Please check SOAP IP Settings for " + GetIpAddress(moRequest) + "</div>";
+                }
+
+                return sMessage;
+            }
+
+            catch (Exception ex)
+            {
+                return ex.Message + " - " + ex.GetBaseException().Message + " - " + ex.StackTrace;
+            }
+
+        }
+
+
+        [WebMethod(Description = "Sends Email From Website xForm")]
+        public object emailerMultiSend(ref XmlElement oBodyXML, ref string xsltPath, ref string fromName, ref string fromEmail, ref string recipientEmail, ref string SubjectLine, string ccRecipient, string bccRecipient, string cSeperator, string Mode)
+        {
+
+            string sMessage = "";
+            //string cProcessInfo = "emailer";
+            try
+            {
+                if (CheckUserIP())
+                {
+                    var myWeb = new Cms(moCtx);
+                    var oMsg = new Messaging(ref myWeb.msException);
+                    Cms.dbHelper odbhelper = null;
+
+                    // using multiple addresses here
+                    if (recipientEmail.Contains(cSeperator))
+                    {
+                        string[] oTos = Strings.Split(recipientEmail, cSeperator);
+                        string[] oModes = Strings.Split(Mode, cSeperator);
+                        int i;
+                        var loopTo = oTos.Length - 1;
+                        for (i = 0; i <= loopTo; i++)
+                        {
+                            oBodyXML.SetAttribute("mode", oModes[i]);
+                            sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, oTos[i], SubjectLine, ref odbhelper, "", "", "", ccRecipient, bccRecipient, cSeperator).ToString();
+                        }
+                    }
                 }
                 else
                 {

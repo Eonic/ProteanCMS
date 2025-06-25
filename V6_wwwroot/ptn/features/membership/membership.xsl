@@ -73,6 +73,7 @@
         <xsl:text> </xsl:text>
       </div>
       <div id="column2" class="column2">
+		  TEST
         <xsl:apply-templates select="/Page/Contents/Content[@type='xform' and @name='UserLogon']" mode="xform"/>
         <xsl:apply-templates select="/Page" mode="inlinePopupSingle">
           <xsl:with-param name="type">FormattedText</xsl:with-param>
