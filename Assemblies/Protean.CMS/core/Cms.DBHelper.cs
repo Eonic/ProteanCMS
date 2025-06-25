@@ -27,6 +27,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.Cms.dbImport;
 using static Protean.stdTools;
@@ -14723,6 +14724,165 @@ namespace Protean
                         }
 
                     }
+                    return strReturn;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+
+            public string getCountryName(string sCountryCode)
+            {
+                // SqlDataReader oDr;
+                string sSql;
+                string strReturn = "";
+                try
+                {
+                    sSql = "select cLocationNameShort  from tblCartShippingLocations where cLocationISOnum Like '" + sCountryCode + "' or cLocationISOa2 Like '" + sCountryCode + "' or cLocationISOa3 Like '" + sCountryCode + "'";
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql)) //code added by sonali 13/7/22
+                    {
+                        if (oDr.HasRows)
+                        {
+                            while (oDr.Read())
+                                strReturn = oDr["cLocationNameShort"].ToString();
+                        }
+                        else
+                            strReturn = "";
+
+                        oDr.Close();
+                        // oDr = null;
+                    }
+
+                    return strReturn;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+
+            public string getCountryISO2Code(ref string sCountry)
+            {
+                myWeb.PerfMon.Log("PaymentProviders", "getCountryISO2Code");
+                // Dim oDr As SqlDataReader
+                string sSql;
+                string strReturn = "";
+                string cProcessInfo = "getCountryISO2Code";
+                try
+                {
+
+                    sSql = "select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '" + sCountry + "' or cLocationNameShort Like '" + sCountry + "'";
+                    using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                    {
+                        if (oDr.HasRows)
+                        {
+                            while (oDr.Read())
+                                strReturn = Conversions.ToString(oDr["cLocationISOa2"]);
+                        }
+                        else
+                        {
+                            strReturn = "";
+                        }
+
+                    }
+                    return strReturn;
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getCountryISO2Code", ex, "", cProcessInfo, gbDebug);
+                    return null;
+                }
+            }
+
+            public string getCountryISO3Code(ref string sCountry)
+            {
+                myWeb.PerfMon.Log("PaymentProviders", "getCountryISO2Code");
+                // Dim oDr As SqlDataReader
+                string sSql;
+                string strReturn = "";
+                string cProcessInfo = "getCountryISO2Code";
+                try
+                {
+
+                    sSql = "select cLocationISOa3 from tblCartShippingLocations where cLocationNameFull Like '" + sCountry + "' or cLocationNameShort Like '" + sCountry + "'";
+                    using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                    {
+                        if (oDr.HasRows)
+                        {
+                            while (oDr.Read())
+                                strReturn = Conversions.ToString(oDr["cLocationISOa3"]);
+                        }
+                        else
+                        {
+                            strReturn = "";
+                        }
+
+                    }
+                    return strReturn;
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getCountryISO3Code", ex, "", cProcessInfo, gbDebug);
+                    return null;
+                }
+            }
+
+            public string getCountryISONum(string sCountry)
+            {
+                // SqlDataReader oDr;
+                string sSql;
+                string strReturn = "";
+                try
+                {
+                    sSql = "select cLocationISOnum from tblCartShippingLocations where cLocationNameFull Like '" + sCountry + "' or cLocationNameShort Like '" + sCountry + "'";
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql)) //code added by sonali 13/7/22
+                    {
+                        if (oDr.HasRows)
+                        {
+                            while (oDr.Read())
+                                strReturn = oDr["cLocationISOnum"].ToString();
+                        }
+                        else
+                            strReturn = "";
+
+                        oDr.Close();
+                        // oDr = null;
+                    }
+
+                    return strReturn;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+
+
+
+
+            public string getCountyISONum(string sCounty)
+            {
+                // SqlDataReader oDr;
+                string sSql;
+                string strReturn = "";
+                try
+                {
+                    sSql = "select cLocationISOnum from tblCartShippingLocations where cLocationNameFull Like '" + sCounty + "' or cLocationNameShort Like '" + sCounty + "'";
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql)) //code added by sonali 13/7/22
+                    {
+                        if (oDr.HasRows)
+                        {
+                            while (oDr.Read())
+                                strReturn = oDr["cLocationISOnum"].ToString();
+                        }
+                        else
+                            strReturn = "";
+
+                        oDr.Close();
+
+                    }
+
                     return strReturn;
                 }
                 catch (Exception)
