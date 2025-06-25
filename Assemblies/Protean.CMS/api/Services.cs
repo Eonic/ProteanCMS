@@ -1170,40 +1170,7 @@ namespace Protean
             HttpContext.Current.ApplicationInstance.CompleteRequest();
 
         }
-        //[WebMethod(Description = "git pull")]
        
-        //public string RunGitCommands(string cArguments, string cRepositoryPath)
-        //{
-        //    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-
-        //    string cRepositoryPath = "";
-        //    string cArguments = "";
-        //    string cResult = "";
-        //    if (!string.IsNullOrEmpty(moConfig["GitRepoPath"]))
-        //    {
-        //        cRepositoryPath = moConfig["GitRepoPath"];
-        //        if (Directory.Exists(cRepositoryPath))
-        //        {
-        //            if (!string.IsNullOrEmpty(moConfig["GitUserName"]) && !string.IsNullOrEmpty(moConfig["GitEmail"]))
-        //            {
-        //                GitCommandExecution("git config user.name " + moConfig["GitUserName"], cRepositoryPath);
-        //                GitCommandExecution("git config user.email" + moConfig["GitEmail"], cRepositoryPath);
-        //            }
-        //            GitCommandExecution("git config --add safe.directory \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
-
-
-        //            if (!string.IsNullOrEmpty(moConfig["GitCommandFile"]))
-        //            {
-        //                cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitCommandFile"];
-        //                if (File.Exists(moConfig["GitCommandFile"]))
-        //                {
-        //                    cResult = GitCommandExecution(cArguments, cRepositoryPath);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return cResult;
-        //}
         #endregion
 
     }
