@@ -751,8 +751,37 @@ namespace Protean
                         {
                             if (myApi.mbAdminMode)
                             {
-                                var objservices = new Services();
-                                objservices.RunGitCommands();
+                                //var objservices = new Services();
+                                //objservices.RunGitCommands();
+                                System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                                Tools.GitHelper gitHelper = new Tools.GitHelper();
+
+                                string cRepositoryPath = "";
+                                string cArguments = "";
+                                string cResult = "";
+                                if (!string.IsNullOrEmpty(moConfig["GitRepoPath"]))
+                                {
+                                    cRepositoryPath = moConfig["GitRepoPath"];
+                                    if (Directory.Exists(cRepositoryPath))
+                                    {
+                                        if (!string.IsNullOrEmpty(moConfig["GitUserName"]) && !string.IsNullOrEmpty(moConfig["GitEmail"]))
+                                        {
+                                            gitHelper.GitCommandExecution("git config user.name " + moConfig["GitUserName"], cRepositoryPath);
+                                            gitHelper.GitCommandExecution("git config user.email" + moConfig["GitEmail"], cRepositoryPath);
+                                        }
+                                        gitHelper.GitCommandExecution("git config --add safe.directory \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
+
+
+                                        if (!string.IsNullOrEmpty(moConfig["GitCommandFile"]))
+                                        {
+                                            cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitCommandFile"];
+                                            if (File.Exists(moConfig["GitCommandFile"]))
+                                            {
+                                                cResult = gitHelper.GitCommandExecution(cArguments, cRepositoryPath);
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                         return JsonResult;
