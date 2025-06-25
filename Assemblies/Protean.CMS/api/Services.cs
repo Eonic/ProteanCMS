@@ -13,6 +13,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Lucene.Net.Documents.Field;
 using static Protean.stdTools;
+using static QRCoder.PayloadGenerator;
 
 namespace Protean
 {
@@ -209,6 +210,50 @@ namespace Protean
                     var oMsg = new Messaging(ref myWeb.msException);
                     Cms.dbHelper odbhelper = null;
                     sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "", "", "", ccRecipient, bccRecipient, cSeperator).ToString();
+                }
+                else
+                {
+                    sMessage = "<div class=\"error\">Please check SOAP IP Settings for " + GetIpAddress(moRequest) + "</div>";
+                }
+
+                return sMessage;
+            }
+
+            catch (Exception ex)
+            {
+                return ex.Message + " - " + ex.GetBaseException().Message + " - " + ex.StackTrace;
+            }
+
+        }
+
+
+        [WebMethod(Description = "Sends Email From Website xForm")]
+        public object emailerMultiSend(ref XmlElement oBodyXML, ref string xsltPath, ref string fromName, ref string fromEmail, ref string recipientEmail, ref string SubjectLine, string ccRecipient, string bccRecipient, string cSeperator, string Mode)
+        {
+
+            string sMessage = "";
+            //string cProcessInfo = "emailer";
+            try
+            {
+                if (CheckUserIP())
+                {
+                    var myWeb = new Cms(moCtx);
+                    var oMsg = new Messaging(ref myWeb.msException);
+                    Cms.dbHelper odbhelper = null;
+
+                    // using multiple addresses here
+                    if (recipientEmail.Contains(cSeperator))
+                    {
+                        string[] oTos = Strings.Split(recipientEmail, cSeperator);
+                        string[] oModes = Strings.Split(Mode, cSeperator);
+                        int i;
+                        var loopTo = oTos.Length - 1;
+                        for (i = 0; i <= loopTo; i++)
+                        {
+                            oBodyXML.SetAttribute("mode", oModes[i]);
+                            sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, oTos[i], SubjectLine, ref odbhelper, "", "", "", ccRecipient, bccRecipient, cSeperator).ToString();
+                        }
+                    }
                 }
                 else
                 {
@@ -1170,80 +1215,7 @@ namespace Protean
             HttpContext.Current.ApplicationInstance.CompleteRequest();
 
         }
-        [WebMethod(Description = "git pull")]
-        public string GitCommandExecution(string arguments, string workingDirectory)
-        {
-            string result = "";
-            var startInfo = new ProcessStartInfo
-            {
-                FileName = "powershell.exe",
-                Arguments = arguments,
-                RedirectStandardOutput = true,
-                WorkingDirectory = workingDirectory,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-
-
-            };
-            // startInfo.EnvironmentVariables["GIT_CONFIG_GLOBAL"] = @"D:\temp\app_gitconfig";
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
-            startInfo.UseShellExecute = false;
-            startInfo.CreateNoWindow = true;
-            startInfo.CreateNoWindow = true;
-            using (var process = new Process { StartInfo = startInfo })
-            {
-                process.Start();
-                string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
-                process.WaitForExit();
-
-                int exitCode = process.ExitCode;
-                if (exitCode == 0)
-                {
-                    result = "Git Pulled successfully";
-                }
-                else
-                {
-                    result = "Git failed -" + error;
-                }
-                return output;
-            }
-
-        }
-        public string RunGitCommands()
-        {
-            System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-
-            string cRepositoryPath = "";
-            string cArguments = "";
-            string cResult = "";
-            if (!string.IsNullOrEmpty(moConfig["GitRepoPath"]))
-            {
-                cRepositoryPath = moConfig["GitRepoPath"];
-                if (Directory.Exists(cRepositoryPath))
-                {
-                    if (!string.IsNullOrEmpty(moConfig["GitUserName"]) && !string.IsNullOrEmpty(moConfig["GitEmail"]))
-                    {
-                        GitCommandExecution("git config user.name " + moConfig["GitUserName"], cRepositoryPath);
-                        GitCommandExecution("git config user.email" + moConfig["GitEmail"], cRepositoryPath);
-                    }
-                    GitCommandExecution("git config --add safe.directory \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
-
-
-                    if (!string.IsNullOrEmpty(moConfig["GitCommandFile"]))
-                    {
-                        cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitCommandFile"];
-                        if (File.Exists(moConfig["GitCommandFile"]))
-                        {
-                            cResult = GitCommandExecution(cArguments, cRepositoryPath);
-                        }
-                    }
-                }
-            }
-            return cResult;
-        }
+       
         #endregion
 
     }

@@ -114,12 +114,20 @@ namespace Protean.Tools
                         }
                     case "sha2_512":
 
-                        //TS - Untested.
-                        Byte[] inputBytes = Encoding.UTF8.GetBytes(OriginalString);
-                        SHA512 shaM = new SHA512Managed();
-                        Byte[] hashedBytes = shaM.ComputeHash(inputBytes);
-                        //cResult = BitConverter.ToString(hashedBytes);
-                        cResult = Convert.ToBase64String(hashedBytes);
+                        using (SHA512 sha512 = SHA512.Create())
+                        {
+                            byte[] hashBytes = sha512.ComputeHash(Encoding.Unicode.GetBytes(OriginalString));
+                            cResult = Convert.ToBase64String(hashBytes);
+
+                            //StringBuilder sb = new StringBuilder(128);
+                            //foreach (byte b in hashBytes)
+                            //{
+                            //    sb.Append(b.ToString("x2")); // Lowercase hexadecimal
+                            //}
+                            //cResult =  sb.ToString();
+                            //sb = null;
+                        }
+
                         break;
 
                     default:

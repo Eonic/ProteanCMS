@@ -1183,6 +1183,82 @@ body.ewAdmin.layout-AdmHome {
     margin-right: auto;
     margin-left: auto;
     width: 380px;
+
+    button {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+
+    input, .input-group-btn button {
+        margin-top: 5px;
+        margin-bottom: 5px;
+    }
+
+    #cUserName, #cPassword {
+        padding-left: 30px;
+    }
+
+    .input-wrapper:has(> #cUserName):before, .input-group:has(> #cUserName):before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f0e0";
+        font-weight: 900;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        position: absolute;
+        padding-top: 18px;
+        padding-left: 10px;
+        font-style: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        line-height: 1;
+        z-index: 3;
+    }
+
+    .secret-wrapper:has(> #cPassword):before, .input-group:has(> #cPassword):before {
+        font-family: "Font Awesome 5 Free";
+        content: "\f023";
+        font-weight: 900;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        position: absolute;
+        padding-top: 18px;
+        padding-left: 10px;
+        font-style: normal;
+        font-variant: normal;
+        text-rendering: auto;
+        line-height: 1;
+        z-index: 3;
+    }
+
+
+
+
+    .btn-google:before {
+        font-family: "Font Awesome 5 Free";
+        content: '\f1a0';
+        padding-left: 5px;
+        position: relative;
+        font-size: 90%;
+    }
+
+    .btn-microsoft:before {
+        font-family: "Font Awesome 5 Free";
+        content: '\f17a';
+        padding-left: 5px;
+        position: relative;
+        font-size: 90%;
+    }
+
+
+    button i {
+        float: right;
+        padding-top: 4px;
+    }
+
+    button i.iconleft {
+        float: none;
+    }
 }
 
 .ewAdmin .stepper {
@@ -1506,4 +1582,24 @@ form#AddModule {
             }
         }
     }
+}
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #000;
+}
+
+.separator:not(:empty)::before {
+    margin-right: .25em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: .25em;
 }

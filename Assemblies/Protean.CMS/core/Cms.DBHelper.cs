@@ -11,6 +11,7 @@
 using AngleSharp.Dom;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Authentication;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using System;
@@ -8044,6 +8045,9 @@ namespace Protean
 
                 try
                 {
+                    //this need to be optional based on auth provider config
+                    Protean.Providers.Authentication.ReturnProvider oAuthProv = new Protean.Providers.Authentication.ReturnProvider();
+                    IEnumerable<IauthenticaitonProvider> oAuthProviders = oAuthProv.Get(ref myWeb);
 
                     // Does the configuration setting indicate that email addresses are allowed.
                     if (Strings.LCase(myWeb.moConfig["EmailUsernames"]) == "on")
@@ -8110,6 +8114,35 @@ namespace Protean
                             cPasswordDatabase = Conversions.ToString(oUserDetails["cDirPassword"]);
                             nUserId = Conversions.ToLong(oUserDetails["nDirKey"]);
 
+                            // here we are checking SAML login is from google or microsoft, if not return error message.
+                            if (oAuthProviders != null)
+                            {
+                                if (oAuthProviders.Count() > 0)
+                                {                                    
+                                    foreach (IauthenticaitonProvider authProvider in oAuthProviders)
+                                    {
+                                        Boolean bUse = false;
+                                        if (authProvider.config["scope"].ToString() == "admin")
+                                        {
+                                            bUse = true;
+                                        }
+                                        if (bUse && authProvider.name.ToLower() == cPasswordForm.ToLower())  // this extra if added because direct checking available provider.
+                                        {                                           
+                                            if (myWeb.moRequest["SAMLResponse"] != null && authProvider.name == cPasswordDatabase)
+                                            {
+                                                bValidPassword = true;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                return sReturn = "<span class=\"msg-1036\">Login failed. Please use your <span class=\"AuthName\">" + authProvider.name + "</span> account to sign in.</span>";                                                
+                                            }
+                                        }                                       
+                                    }
+                                }
+                            }
+                            //End Auth Provider
+
                             if (!(Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "plain") & !string.IsNullOrEmpty(myWeb.moConfig["MembershipEncryption"]))
                             {
                                 string cHashedPassword = Tools.Encryption.HashString(cPasswordForm, Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true); // plain - md5 - sha1
@@ -8127,9 +8160,14 @@ namespace Protean
                                             }
                                         }
                                         break;
-                                    case "SHA2_512_SALT": // to replicate VMH
-                                        cHashedPassword = Tools.Encryption.HashString(cPasswordForm, "sha2_512", true);
-
+                                    case "SHA2_512_SALT": // to replicate
+                                        string salt = oUserDetails["cDirSalt"].ToString().ToUpperInvariant();
+                                        string saltedPassword = salt + cPasswordForm.Trim().ToLowerInvariant();
+                                        cHashedPassword = Tools.Encryption.HashString(saltedPassword, "sha2_512", true);
+                                        if ((cPasswordDatabase ?? "") == cHashedPassword)
+                                        {
+                                            bValidPassword = true;
+                                        }
                                         break;
                                     default:
                                         var oConvDoc = new XmlDocument();
@@ -8141,7 +8179,7 @@ namespace Protean
                                         if (cPasswordDatabase == cHashedPassword)
                                         {
                                             bValidPassword = true;
-                                        }
+                                        }                                       
                                         break;
                                 }
                             }

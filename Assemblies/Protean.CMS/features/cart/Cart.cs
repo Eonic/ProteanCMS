@@ -8521,11 +8521,17 @@ namespace Protean
                                             if (Information.IsNumeric(myWeb.moRequest.Form.Get("donationAmount")))
                                             {
                                                 string CartItemName = "Donation";
+                                                string CartItemXml = "";
                                                 if (!string.IsNullOrEmpty(myWeb.moRequest.Form.Get("donationName")))
                                                 {
                                                     CartItemName = myWeb.moRequest.Form.Get("donationName");
                                                 }
-                                                if (!AddItem(nProductKey, nQuantity, oOptions, CartItemName, Conversions.ToDouble(myWeb.moRequest.Form.Get("donationAmount"))))
+                                                if (!string.IsNullOrEmpty(myWeb.moRequest.Form.Get("donationMessage")))
+                                                {
+                                                    CartItemXml = "<donation><message>" + myWeb.moRequest.Form.Get("donationMessage") + "</message></donation>";
+                                                }
+
+                                                if (!AddItem(nProductKey, nQuantity, oOptions, CartItemName, Conversions.ToDouble(myWeb.moRequest.Form.Get("donationAmount")), CartItemXml))
                                                 {
                                                     qtyAdded = 0;
                                                 }
@@ -11160,7 +11166,7 @@ namespace Protean
                                 }
                                 nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
                             }
-                            oRow["nShippingTotal"] = nShippingCost;
+                            oRow["nShipOptCost"] = nShippingCost;
 
                             // TODO delete any parent relations /  or remove if allready have child
                             string delLocation = oRow["cLocationNameShort"].ToString();

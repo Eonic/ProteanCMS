@@ -1026,11 +1026,44 @@ namespace Protean
                             }
                         case "GitRepository":
                             {
-                                var objservices = new Services();
-                                string cResult = objservices.RunGitCommands();
-                                AddResponse(cResult);
-                                break;
-                            }
+                                if (goRequest["ewCmd2"] == "Do")
+                                {
+                                    Tools.GitHelper gitHelper = new Tools.GitHelper();
+                                    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+
+                                    string cRepositoryPath = "";
+                                    string cArguments = "";
+                                    string cResult = "";
+                                    if (!string.IsNullOrEmpty(moConfig["GitRepoPath"]))
+                                    {
+                                        cRepositoryPath = moConfig["GitRepoPath"];
+                                        if (Directory.Exists(cRepositoryPath))
+                                        {
+                                            if (!string.IsNullOrEmpty(moConfig["GitUserName"]) && !string.IsNullOrEmpty(moConfig["GitEmail"]))
+                                            {
+                                                gitHelper.GitCommandExecution("git config user.name " + moConfig["GitUserName"], cRepositoryPath);
+                                                gitHelper.GitCommandExecution("git config user.email" + moConfig["GitEmail"], cRepositoryPath);
+                                            }
+                                            gitHelper.GitCommandExecution("git config --add safe.directory \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
+
+
+                                            if (!string.IsNullOrEmpty(moConfig["GitCommandFile"]))
+                                            {
+                                                cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitCommandFile"];
+                                                if (File.Exists(moConfig["GitCommandFile"]))
+                                                {
+                                                    cResult = gitHelper.GitCommandExecution(cArguments, cRepositoryPath);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    AddResponse(cResult);
+                                    cStep = 1.ToString();
+                                }
+                                    break;
+                                }
+                            
                     }
                 }
                 // moPageXml.DocumentElement.SetAttribute("layout", mcEwCmd)
@@ -1065,6 +1098,8 @@ namespace Protean
             XmlElement oElmt11;
             XmlElement oElmt12;
             XmlElement oElmt13;
+            XmlElement oElmt14;
+            XmlElement oElmt15;
 
             string sProcessInfo = string.Empty;
             try
@@ -1094,7 +1129,8 @@ namespace Protean
                     oElmt12 = appendMenuItem(ref oElmt11, "Backup", "Backup", icon: "fa-save");
                     oElmt13 = appendMenuItem(ref oElmt11, "Restore", "Restore", icon: "fa-reply");
 
-                    oElmt13 = appendMenuItem(ref oElmt1, "Git Repository", "GitRepository", icon: "fa fa-folder");
+                    oElmt14 = appendMenuItem(ref oElmt1, "Update with Git", "UpdateGit", icon: "fa fa-refresh");
+                    oElmt15 = appendMenuItem(ref oElmt14, "Git Pull", "GitRepository", icon: "fa fa-refresh");
                 }
                 else
                 {
