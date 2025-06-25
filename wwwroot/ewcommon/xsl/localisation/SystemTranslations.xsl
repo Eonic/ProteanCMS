@@ -405,7 +405,7 @@
   </xsl:template>
 
 	<!-- 1036 login in using only google or microsoft -->
-	<xsl:template match="span[@class='msg-1036']" mode="term">
+	<xsl:template match="span[@class='msg-1036']" mode="term">		
 		<xsl:choose>
 			<xsl:when test="$lang='de'">Ihr benutzername wurde nicht gefunden</xsl:when>
 			<xsl:when test="$lang='en-pr'">Ya moniker were nay found</xsl:when>
@@ -414,7 +414,7 @@
 			<xsl:when test="$lang='fr'">Nom d'utilisateur introuvable</xsl:when>
 			<xsl:when test="$lang='it'">Nome utente non trovato</xsl:when>
 			<xsl:when test="$lang='nl'">Gebruikersnaam niet gevonden</xsl:when>
-			<xsl:otherwise>Login failed. Please use your Google account to sign in.</xsl:otherwise>
+			<xsl:otherwise>Login failed. Please use your <xsl:value-of select="span[@class='AuthName']/node()"/> account to sign in.</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 

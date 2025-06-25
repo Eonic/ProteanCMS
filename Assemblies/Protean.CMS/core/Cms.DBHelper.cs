@@ -8134,7 +8134,7 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                return sReturn = "<span class=\"msg-1036\">Login failed. Please use your "+ authProvider.name + " account to sign in.</span>";                                                
+                                                return sReturn = "<span class=\"msg-1036\">Login failed. Please use your <span class=\"AuthName\">" + authProvider.name + "</span> account to sign in.</span>";                                                
                                             }
                                         }                                       
                                     }
