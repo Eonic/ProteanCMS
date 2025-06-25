@@ -80,12 +80,15 @@
   <!-- ========================== XFORM ========================== -->
   <!-- -->
   <xsl:template match="div" mode="xform">
-    <xsl:if test="./@class">
-      <xsl:attribute name="class">
-        <xsl:value-of select="./@class"/>
-      </xsl:attribute>
-    </xsl:if>
-    <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+	  <div>
+		  <!-- TS: div is required otherwise it breaks in compiled mode -->
+        <xsl:if test="./@class">
+          <xsl:attribute name="class">
+            <xsl:value-of select="./@class"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+	</div>
   </xsl:template>
 
   <!-- -->
@@ -836,6 +839,18 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+	<xsl:template match="div" mode="control-outer">
+		
+		<xsl:apply-templates select="." mode="xform"/>
+	
+	</xsl:template>
+
+	<xsl:template match="submit" mode="control-outer">
+		<div class="d-grid gap-2">
+			<xsl:apply-templates select="." mode="xform"/>
+		</div>		
+	</xsl:template>
 
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform">
     <xsl:param name="nolabel"/>
