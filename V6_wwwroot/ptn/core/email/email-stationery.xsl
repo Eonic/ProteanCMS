@@ -5,6 +5,7 @@
 	<xsl:import href="../functions.xsl"/>
   <xsl:import href="email-styles.xsl"/>
 
+
 	<xsl:template match="*">
 		<html>
 			<head>
@@ -233,5 +234,7 @@
       <xsl:with-param name="valueName" select="'CompanyRegNo'"/>
     </xsl:call-template>
   </xsl:variable>
+  
+  
 	
 </xsl:stylesheet>

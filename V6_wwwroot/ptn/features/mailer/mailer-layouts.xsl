@@ -435,7 +435,7 @@
                       </td>
                     </tr>
                   </xsl:if>
-                  <xsl:if test="(@rss and @rss!='false') or @title!=''">
+                  <xsl:if test="@title!=''">
                     <tr>
                       <xsl:if test="@title!=''">
                         <td width="100%" style="width:100%;" class="emailModuleHeading">
@@ -444,18 +444,10 @@
                           </h2>
                         </td>
                       </xsl:if>
-                      <xsl:if test="@rss and @rss!='false'">
-                        <td width="20" style="width:20px;">
-                          <xsl:apply-templates select="." mode="rssLink" />
-                        </td>
-                      </xsl:if>
                     </tr>
                   </xsl:if>
                   <tr>
                     <td style="width:100%;" width="100%">
-                      <xsl:if test="@rss and @rss!='false'">
-                        <xsl:attribute name="colspan">2</xsl:attribute>
-                      </xsl:if>
                       <xsl:apply-templates select="." mode="displayBrief"/>
                     </td>
                   </tr>
@@ -578,6 +570,8 @@
     <xsl:value-of select="@title"/>
   </xsl:template>
 
+  
+
   <!-- ## Generic displayBrief   #####################################################################   -->
   <xsl:template match="Content" mode="displayBrief">
     <xsl:apply-templates select="node()" mode="cleanXhtml"/>
@@ -589,7 +583,9 @@
   </xsl:template>
 
   <!-- ## Generic displayBrief for Formatted Text and Images   #####################################################################   -->
-  <xsl:template match="Content[@moduleType='FormattedText']" mode="displayBrief">
+
+  <xsl:template match="Content" mode="displayBrief">
+    
     <xsl:apply-templates select="node()" mode="cleanXhtml"/>
   </xsl:template>
   

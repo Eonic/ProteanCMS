@@ -5,10 +5,16 @@
   <xsl:import href="mailer-imports.xsl"/>
   <xsl:import href="../../email/email-stationery.xsl"/>
 
+
+
   <xsl:output method="xml" indent="yes" standalone="yes" omit-xml-declaration="yes" doctype-public="-//W3C//DTD XHTML 1.1//EN" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" encoding="UTF-8"/>
 
   <xsl:template match="/">
     <xsl:apply-imports/>
+  </xsl:template>
+  <xsl:template match="Content[@moduleType='FormattedText']" mode="displayBrief">
+    <h1>testing</h1>
+    <xsl:apply-templates select="node()" mode="cleanXhtml"/>
   </xsl:template>
 
   <xsl:template match="*" mode="subject">
@@ -149,4 +155,6 @@
       </tr>
     </xsl:for-each>
   </xsl:template>
+  
+  
 </xsl:stylesheet>
