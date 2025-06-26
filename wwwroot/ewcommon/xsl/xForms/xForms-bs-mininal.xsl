@@ -64,13 +64,14 @@
 	<!-- ========================== XFORM ========================== -->
 	<!-- -->
 	<xsl:template match="div" mode="xform">
-		<xsl:if test="./@class">
+		<div><xsl:if test="./@class">
 			<xsl:attribute name="class">
 				<xsl:value-of select="./@class"/>
 			</xsl:attribute>
 		</xsl:if>
 		
 		<xsl:apply-templates select="." mode="cleanXhtml"/>
+		</div>
 	</xsl:template>
 
 	<!-- -->
