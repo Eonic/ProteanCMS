@@ -43,13 +43,15 @@ namespace Protean.Tools
         //    return cResult;
         //}
 
-        public string GitCommandExecution(string arguments, string workingDirectory)
+        //public string GitCommandExecution(string arguments, string workingDirectory)
+        public string GitCommandExecution(string gitUserName, string gitEmail,string ps1FilePath, string workingDirectory)
+
         {
             string result = "";
             var startInfo = new ProcessStartInfo
             {
                 FileName = "powershell.exe",
-                Arguments = arguments,
+                Arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\" -GitUserName \"{gitUserName}\" -GitEmail \"{gitEmail}\"",
                 RedirectStandardOutput = true,
                 WorkingDirectory = workingDirectory,
                 RedirectStandardError = true,

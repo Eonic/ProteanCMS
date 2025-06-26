@@ -1034,6 +1034,10 @@ namespace Protean
                                     string cRepositoryPath = "";
                                     string cArguments = "";
                                     string cResult = "";
+                                    string gitUserName = "";
+                                    string gitEmail = "";
+                                    string ps1FilePath = "";
+
                                     if (!string.IsNullOrEmpty(moConfig["GitRepoPath"]))
                                     {
                                         cRepositoryPath = moConfig["GitRepoPath"];
@@ -1041,18 +1045,16 @@ namespace Protean
                                         {
                                             if (!string.IsNullOrEmpty(moConfig["GitUserName"]) && !string.IsNullOrEmpty(moConfig["GitEmail"]))
                                             {
-                                                gitHelper.GitCommandExecution("git config user.name " + moConfig["GitUserName"], cRepositoryPath);
-                                                gitHelper.GitCommandExecution("git config user.email" + moConfig["GitEmail"], cRepositoryPath);
+                                                gitUserName = moConfig["GitUserName"].ToString();
+                                                gitEmail = moConfig["GitEmail"].ToString();
                                             }
-                                            gitHelper.GitCommandExecution("git config --add safe.directory \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
 
-
-                                            if (!string.IsNullOrEmpty(moConfig["GitCommandFile"]))
+                                            if (!string.IsNullOrEmpty(moConfig["GitPS1FilePath"]))
                                             {
-                                                cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitCommandFile"];
-                                                if (File.Exists(moConfig["GitCommandFile"]))
+                                                ps1FilePath = moConfig["GitPS1FilePath"].ToString();
+                                                if (File.Exists(moConfig["GitPS1FilePath"]))
                                                 {
-                                                    cResult = gitHelper.GitCommandExecution(cArguments, cRepositoryPath);
+                                                    cResult = gitHelper.GitCommandExecution(gitUserName, gitEmail, ps1FilePath, cRepositoryPath);
                                                 }
                                             }
                                         }
