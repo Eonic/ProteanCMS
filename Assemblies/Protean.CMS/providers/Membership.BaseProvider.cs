@@ -27,6 +27,7 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Web;
 using System.Web.Configuration;
+using System.Windows.Controls;
 using System.Xml;
 using static Protean.Cms;
 using static Protean.stdTools;
@@ -324,17 +325,15 @@ namespace Protean.Providers
                         pwdIpt.SetAttribute("placeholder", "Password");
                         base.addClientSideValidation(ref pwdIpt, true, "Please enter Password");
                         base.addBind("cPassword", "user/password", ref oBindParent, "true()");
-                        base.addDiv(ref oFrmElmt, "", "password-reminder");
+                        base.addDiv(ref oFrmElmt, "<xsl:text> </xsl:text>", "password-reminder");
+                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign In", "UserLogon", btnClass);
+                       
 
-                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign In", "UserLogon", btnClass, btnIcon);
 
-
-
-                     
                         if (oAuthProviders != null){
                             if (oAuthProviders.Count() > 0)
                             {
-                                base.addDiv(ref oFrmElmt, "OR", "separator");
+                                base.addDiv(ref oFrmElmt, "", "separator");
                                 foreach (IauthenticaitonProvider authProvider in oAuthProviders) {
                                     Boolean bUse = false;
                                     if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin") {
@@ -348,10 +347,14 @@ namespace Protean.Providers
                                 }
                             }
                         }
-                        //END auth provider                       
+                        //END auth provider
+                       
 
-                        base.addDiv(ref oFrmElmt, "", "footer-override");
-                        base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
+                       
+
+                       base.addDiv(ref oFrmElmt, "", "footer-override");
+                       
+                    base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
 
                     Check:
                         ;

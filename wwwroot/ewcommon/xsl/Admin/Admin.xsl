@@ -370,14 +370,15 @@
 	
 	</xsl:template>
 
-
+	<xsl:template match="div[@class='separator']" mode="xform">
+		<div class="separator">OR</div> 
+	</xsl:template>
 	<xsl:template match="div[@class='footer-override']" mode="xform">
-		<xsl:if test="./@class">
+		<div ><xsl:if test="./@class">
 			<xsl:attribute name="class">
 				<xsl:value-of select="./@class"/>
 			</xsl:attribute>
 		</xsl:if>
-		<div>
 			<br/>
 			<a href="{$appPath}?ewCmd=LogOff" >
 				<i class="fa fa-reply">
