@@ -535,7 +535,7 @@
       <xsl:when test="$lang='tr'">gerekli alanlar </xsl:when>
       <xsl:when test="$lang='he-il'">שדות חובה </xsl:when>
     
-      <xsl:otherwise>indicated required fields</xsl:otherwise>
+      <xsl:otherwise>indicates required fields</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 

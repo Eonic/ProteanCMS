@@ -9,13 +9,13 @@
   <xsl:import href="../../core/xforms.xsl"/>
   <xsl:import href="../../admin/admin.xsl"/>
   <xsl:import href="../../admin/admin-wysiwyg.xsl"/>
-  <xsl:import href="mailer-layouts.xsl"/>
   <xsl:import href="../../core/localisation.xsl"/>
 
 	<xsl:import href="modules/news/News.xsl"/>
 	<xsl:import href="modules/image/image.xsl"/>
   <xsl:import href="modules/columns/columns.xsl"/>
 
+  <xsl:import href="mailer-layouts.xsl"/>
   <xsl:template match="Page" mode="footerJs"></xsl:template>
 
 </xsl:stylesheet>
