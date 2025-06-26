@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Xml;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 
@@ -93,7 +93,7 @@ namespace Protean.Providers
                 {
                     set
                     {
-                       // _oAdXfm = value;
+                        // _oAdXfm = value;
                     }
                     get
                     {
@@ -217,12 +217,12 @@ namespace Protean.Providers
 
                             string PaymentLabel = configXml.SelectSingleNode("description/@value").InnerText;
                             // allow html in description node...
-                           // bool bXmlLabel = false;
+                            // bool bXmlLabel = false;
 
                             if (!string.IsNullOrEmpty(configXml.SelectSingleNode("description").InnerXml))
                             {
                                 PaymentLabel = configXml.SelectSingleNode("description").InnerXml;
-                               // bXmlLabel = true;
+                                // bXmlLabel = true;
                             }
 
                             string iconclass = "";
@@ -275,6 +275,11 @@ namespace Protean.Providers
                 }
 
                 public string ProcessNewPayment(string orderId, decimal amount, string cardNumber, string cV2, string expiryDate, string startDate, string cardHolderName, string address1, string address2, string town, string postCode, string cCounty = "", string cCountry = "", string validGroup = "")
+                {
+                    throw new NotImplementedException();
+                }
+
+                public XmlElement GetWalletPaymentDetails(XmlElement opElemt)
                 {
                     throw new NotImplementedException();
                 }
