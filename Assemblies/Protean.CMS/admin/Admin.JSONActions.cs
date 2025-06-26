@@ -773,7 +773,9 @@ namespace Protean
                                             gitUserName= moConfig["GitUserName"].ToString();
                                             gitEmail= moConfig["GitEmail"].ToString();
                                         }
-                                        
+                                        //gitHelper.GitCommandExecution("git config --add safe.directory \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
+
+
                                         if (!string.IsNullOrEmpty(moConfig["GitPS1FilePath"]))
                                         {
                                             ps1FilePath = moConfig["GitPS1FilePath"].ToString();
