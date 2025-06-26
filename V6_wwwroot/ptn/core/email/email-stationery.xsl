@@ -148,18 +148,18 @@
                       <td style="padding:0px {$hPadding}px" valign="top" class="emailCol">
                         <xsl:if test="$CompanyAddress!=''">
                           <xsl:value-of select="$CompanyAddress"/>
+                          <br/>
                         </xsl:if>
                         <xsl:if test="$CompanyRegNo!=''">
-                          <br/>
                           <strong>Registered in UK: </strong>
                           <xsl:value-of select="$CompanyRegNo"/>
+                          <br/>
                         </xsl:if>
                         <xsl:if test="$VATnumber!=''">
-                          <br/>
                           <strong>VAT Number: </strong>
                           <xsl:value-of select="$VATnumber"/>
+                          <br/>
                         </xsl:if>
-                        <br/>
                         <unsubscribe>Unsubscribe</unsubscribe>
                       </td>
                     </tr>

@@ -336,16 +336,7 @@
             <tr>
               <td width="100%" style="width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;">
-                  <xsl:if test="/Page/@adminMode">
-                    <tr>
-                      <td width="100%" style="width:100%;">
-                        <xsl:if test="@rss and @rss!='false'">
-                          <xsl:attribute name="colspan">2</xsl:attribute>
-                        </xsl:if>
-                      </td>
-                    </tr>
-                  </xsl:if>
-                  <xsl:if test="(@rss and @rss!='false') or @title!=''">
+                  <xsl:if test="@title!=''">
                     <tr>
                       <xsl:if test="@title!=''">
                         <td width="100%" style="width:100%;" class="emailModuleHeadingPadding">
@@ -354,27 +345,16 @@
                           </h2>
                         </td>
                       </xsl:if>
-                      <xsl:if test="@rss and @rss!='false'">
-                        <td width="20" style="width:20px;">
-                          <xsl:apply-templates select="." mode="rssLink" />
-                        </td>
-                      </xsl:if>
                     </tr>
                   </xsl:if>
                   <tr>
                     <td style="width:100%;" width="100%">
-                      <xsl:if test="@rss and @rss!='false'">
-                        <xsl:attribute name="colspan">2</xsl:attribute>
-                      </xsl:if>
                       <xsl:apply-templates select="." mode="displayBrief"/>
                     </td>
                   </tr>
                   <xsl:if test="@linkText!='' and @link!=''">
                     <tr>
                       <td width="100%" style="width:100%;" align="right">
-                        <xsl:if test="@rss and @rss!='false'">
-                          <xsl:attribute name="colspan">2</xsl:attribute>
-                        </xsl:if>
                         <xsl:apply-templates select="." mode="moreLinkEmail">
                           <xsl:with-param name="link">
                             <xsl:choose>
@@ -419,15 +399,7 @@
                   <xsl:attribute name="class">emailModulePadding emailTextCentre</xsl:attribute>
                 </xsl:if>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;">
-                  <xsl:if test="/Page/@adminMode">
-                    <tr>
-                      <td width="100%" style="width:100%;">
-                        <xsl:if test="@rss and @rss!='false'">
-                          <xsl:attribute name="colspan">2</xsl:attribute>
-                        </xsl:if>
-                      </td>
-                    </tr>
-                  </xsl:if>
+                 
                   <xsl:if test="@uploadIcon!=''">
                     <tr>
                       <td class="emailUploadIcon">
@@ -454,9 +426,7 @@
                   <xsl:if test="@linkText!='' and @link!=''">
                     <tr>
                       <td width="100%" style="width:100%;" align="right">
-                        <xsl:if test="@rss and @rss!='false'">
-                          <xsl:attribute name="colspan">2</xsl:attribute>
-                        </xsl:if>
+                     
                         <xsl:apply-templates select="." mode="moreLinkEmail">
                           <xsl:with-param name="link">
                             <xsl:choose>
@@ -500,9 +470,7 @@
       <xsl:if test="/Page/@adminMode">
         <tr>
           <td>
-            <xsl:if test="@rss and @rss!='false'">
-              <xsl:attribute name="colspan">2</xsl:attribute>
-            </xsl:if>
+           
             <div>
               <xsl:apply-templates select="." mode="inlinePopupOptions" />
             </div>
@@ -521,27 +489,14 @@
                 </td>
               </tr>
             </xsl:if>
-            <xsl:if test="@rss and @rss!='false'">
-              <tr>
-                <td width="20" style="width:20px;" >
-                  <xsl:apply-templates select="." mode="rssLink" />
-                </td>
-              </tr>
-            </xsl:if>
             <tr>
               <td width="100%" style="width:100%;" class="content emailBoxContent">
-                <xsl:if test="@rss and @rss!='false'">
-                  <xsl:attribute name="colspan">2</xsl:attribute>
-                </xsl:if>
                 <xsl:apply-templates select="." mode="displayBrief"/>
               </td>
             </tr>
             <xsl:if test="@linkText!='' and @link!=''">
               <tr>
                 <td width="100%" style="width:100%;" class="emailBoxFooter">
-                  <xsl:if test="@rss and @rss!='false'">
-                    <xsl:attribute name="colspan">2</xsl:attribute>
-                  </xsl:if>
                   <xsl:apply-templates select="." mode="moreLinkEmail">
                     <xsl:with-param name="link">
                       <xsl:choose>
@@ -1294,9 +1249,7 @@
   </xsl:template>
 
   <!-- -->
-  <xsl:template name="rssSubscribe">
-    <img src="{$siteURL}/ptn/images/icons/rss16x16.png" width="16" height="16" alt="RSS" style="border:none;"/>
-  </xsl:template>
+
 
   <xsl:template name="eonicDeveloperLink">
     <xsl:param name="style"/>

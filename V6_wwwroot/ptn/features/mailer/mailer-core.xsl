@@ -5,17 +5,31 @@
   <xsl:import href="mailer-imports.xsl"/>
   <xsl:import href="../../email/email-stationery.xsl"/>
 
-
-
   <xsl:output method="xml" indent="yes" standalone="yes" omit-xml-declaration="yes" doctype-public="-//W3C//DTD XHTML 1.1//EN" doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" encoding="UTF-8"/>
 
   <xsl:template match="/">
     <xsl:apply-imports/>
   </xsl:template>
+  
+  <!-- THESE SHOULDN'T BE HERE IDEALLY BUT EMAIL BREAKS IF REMOVED-->
   <xsl:template match="Content[@moduleType='FormattedText']" mode="displayBrief">
-    <h1>testing</h1>
     <xsl:apply-templates select="node()" mode="cleanXhtml"/>
   </xsl:template>
+
+  <xsl:template match="Content[@moduleType='Image']" mode="displayBrief">
+    <xsl:choose>
+      <xsl:when test="@resize='true'">
+        <xsl:apply-templates select="." mode="resize-image">
+          <xsl:with-param name="rootpath" select="$siteURL"/>
+        </xsl:apply-templates>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <!-- END OF "THESE SHOULDN'T BE HERE IDEALLY BUT EMAIL BREAKS IF REMOVED"-->
 
   <xsl:template match="*" mode="subject">
     <xsl:text> </xsl:text>
@@ -26,8 +40,6 @@
   </xsl:template>
 
   <!--   ########################   Admin Only   ############################   -->
-
-
   <!-- ACTUAL EMAIL TRANSMISSION TEMPLATE -->
   <xsl:template match="Page[not(@adminMode)]" mode="bodyBuilder">
     <body style="margin:0;padding:0;" >
@@ -48,8 +60,6 @@
       <div class="ptn-edit">
         <xsl:apply-templates select="." mode="adminFooter"/>
       </div>
-
-
       <xsl:apply-templates select="." mode="footerJs"/>
     </body>
   </xsl:template>
@@ -61,7 +71,6 @@
 
 
   <xsl:template match="Page[@adminMode='false']" mode="siteJs">
-
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">
         <xsl:apply-templates select="." mode="commonJsFiles" />
@@ -155,6 +164,4 @@
       </tr>
     </xsl:for-each>
   </xsl:template>
-  
-  
 </xsl:stylesheet>
