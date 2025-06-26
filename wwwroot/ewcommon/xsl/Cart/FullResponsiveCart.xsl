@@ -2885,6 +2885,10 @@
 	    </xsl:if>
 	</xsl:template>
 
+	<xsl:template match="Wallet" mode="Wallet">
+
+	</xsl:template>
+
 </xsl:stylesheet>
 
 
