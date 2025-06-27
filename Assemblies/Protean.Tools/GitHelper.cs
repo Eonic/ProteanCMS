@@ -32,7 +32,7 @@ namespace Protean.Tools
 
                     if (!string.IsNullOrEmpty(ps1FilePath))
                     {
-                        cArguments = "-ExecutionPolicy Bypass -File " + ps1FilePath;
+                        cArguments = $"-ExecutionPolicy Bypass -File " + ps1FilePath;
                         if (File.Exists(ps1FilePath))
                         {
                             cResult = GitCommandExecution(cArguments, workingDirectory);
