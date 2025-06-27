@@ -779,9 +779,9 @@ namespace Protean
                                         if (!string.IsNullOrEmpty(moConfig["GitPS1FilePath"]))
                                         {
 
-                                            cArguments = "-ExecutionPolicy Bypass -File \"" + moConfig["GitPS1FilePath"].Replace("\\", "/") + "\"";
+                                            //cArguments = "-ExecutionPolicy Bypass -File \"" + moConfig["GitPS1FilePath"].Replace("\\", "/") + "\"";
                                             //cArguments = $"-ExecutionPolicy Bypass -File \"{moConfig["GitPS1FilePath"]}\"";
-                                            //cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitPS1FilePath"];
+                                            cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitPS1FilePath"];
                                             if (File.Exists(moConfig["GitPS1FilePath"]))
                                             {
                                                 cResult = gitHelper.GitCommandExecution(cArguments, cRepositoryPath);
