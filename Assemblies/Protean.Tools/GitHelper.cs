@@ -52,9 +52,7 @@ namespace Protean.Tools
             {
                 FileName = "powershell.exe",
                 Arguments = arguments,
-                // Arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\" -GitUserName \"{gitUserName}\" -GitEmail \"{gitEmail}\" -GitRepoPath \"{workingDirectory.Replace("\\", "/")}\"",
-                // Arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\" -GitUserName \"{gitUserName}\" -GitEmail \"{gitEmail}\"",
-                RedirectStandardOutput = true,
+                 RedirectStandardOutput = true,
                 WorkingDirectory = workingDirectory,
                 RedirectStandardError = true,
                 UseShellExecute = false,
