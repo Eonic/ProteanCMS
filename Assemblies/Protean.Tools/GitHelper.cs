@@ -10,48 +10,50 @@ namespace Protean.Tools
     public class GitHelper
     {
 
-        //public string RunGitCommands()
-        //{
-        //    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-
-        //    //string cRepositoryPath = "";
-        //    //string cArguments = "";
-        //    string cResult = "";
-        //    if (!string.IsNullOrEmpty(moConfig["GitRepoPath"]))
-        //    {
-        //        cRepositoryPath = moConfig["GitRepoPath"];
-        //        if (Directory.Exists(cRepositoryPath))
-        //        {
-        //            if (!string.IsNullOrEmpty(moConfig["GitUserName"]) && !string.IsNullOrEmpty(moConfig["GitEmail"]))
-        //            {
-        //                GitCommandExecution("git config user.name " + moConfig["GitUserName"], cRepositoryPath);
-        //                GitCommandExecution("git config user.email" + moConfig["GitEmail"], cRepositoryPath);
-        //            }
-        //            GitCommandExecution("git config --add safe.directory \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
+        public string RunGitCommands(string gitUserName, string gitEmail, string ps1FilePath, string workingDirectory)
+        {
+            string cArguments = "";
 
 
-        //            if (!string.IsNullOrEmpty(moConfig["GitCommandFile"]))
-        //            {
-        //                cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitCommandFile"];
-        //                if (File.Exists(moConfig["GitCommandFile"]))
-        //                {
-        //                    cResult = GitCommandExecution(cArguments, cRepositoryPath);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return cResult;
-        //}
+            string cResult = "";
+            if (!string.IsNullOrEmpty(workingDirectory))
+            {
+               
+                if (Directory.Exists(workingDirectory))
+                {
+                    if (!string.IsNullOrEmpty(gitUserName) && !string.IsNullOrEmpty(gitEmail))
+                    {
+                        GitCommandExecution("git config user.name " + gitUserName, workingDirectory);
+                        GitCommandExecution("git config user.email " + gitEmail, workingDirectory);
+                    }
+                    GitCommandExecution("git config --add safe.directory  \"" + workingDirectory.Replace("\\", "/") + "\"", workingDirectory);
+                    //GitCommandExecution("git config --add safe.directory \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
 
-        //public string GitCommandExecution(string arguments, string workingDirectory)
-        public string GitCommandExecution(string gitUserName, string gitEmail,string ps1FilePath, string workingDirectory)
+
+                    if (!string.IsNullOrEmpty(ps1FilePath))
+                    {
+                        cArguments = "-ExecutionPolicy Bypass -File " + ps1FilePath;
+                        if (File.Exists(ps1FilePath))
+                        {
+                            cResult = GitCommandExecution(cArguments, workingDirectory);
+                        }
+                    }
+                }
+            }
+            return cResult;
+        }
+
+        public string GitCommandExecution(string arguments, string workingDirectory)
+        //public string GitCommandExecution(string gitUserName, string gitEmail,string ps1FilePath, string workingDirectory)
 
         {
             string result = "";
             var startInfo = new ProcessStartInfo
             {
                 FileName = "powershell.exe",
-                Arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\" -GitUserName \"{gitUserName}\" -GitEmail \"{gitEmail}\"",
+                Arguments = arguments,
+                // Arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\" -GitUserName \"{gitUserName}\" -GitEmail \"{gitEmail}\" -GitRepoPath \"{workingDirectory.Replace("\\", "/")}\"",
+                // Arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\" -GitUserName \"{gitUserName}\" -GitEmail \"{gitEmail}\"",
                 RedirectStandardOutput = true,
                 WorkingDirectory = workingDirectory,
                 RedirectStandardError = true,

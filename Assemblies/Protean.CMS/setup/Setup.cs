@@ -1054,7 +1054,7 @@ namespace Protean
                                                 ps1FilePath = moConfig["GitPS1FilePath"].ToString();
                                                 if (File.Exists(moConfig["GitPS1FilePath"]))
                                                 {
-                                                    cResult = gitHelper.GitCommandExecution(gitUserName, gitEmail, ps1FilePath, cRepositoryPath);
+                                                    cResult = gitHelper.RunGitCommands(gitUserName, gitEmail, ps1FilePath, cRepositoryPath);
                                                 }
                                             }
                                         }
