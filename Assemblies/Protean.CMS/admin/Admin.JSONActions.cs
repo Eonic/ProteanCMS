@@ -778,6 +778,7 @@ namespace Protean
 
                                         if (!string.IsNullOrEmpty(moConfig["GitPS1FilePath"]))
                                         {
+
                                             cArguments = "-ExecutionPolicy Bypass -File \"" + moConfig["GitPS1FilePath"].Replace("\\", "/") + "\"";
                                             //cArguments = $"-ExecutionPolicy Bypass -File \"{moConfig["GitPS1FilePath"]}\"";
                                             //cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitPS1FilePath"];
