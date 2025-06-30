@@ -8101,6 +8101,11 @@ namespace Protean
                         if (nNumberOfUsers == 0)
                         {
                             sReturn = sReturn; // "<span class=""msg-1015"">The username was not found</span>"
+                            //need to check authentication with google or microsoft user not found in proteanCMS
+                            if(oAuthProviders != null && myWeb.moRequest["SAMLResponse"] != null)
+                            {
+                                return sReturn = "<span class=\"msg-1037\">The user <span class=\"UserName\">" + cUsername + "</span> is not authorised to access this site. Please see the site administrator.</span>";
+                            }
                         }
                         // Return sReturn
                         else if (nNumberOfUsers > 1)
@@ -8137,7 +8142,7 @@ namespace Protean
                                             {
                                                 return sReturn = "<span class=\"msg-1036\">Login failed. Please use your <span class=\"AuthName\">" + authProvider.name + "</span> account to sign in.</span>";                                                
                                             }
-                                        }                                       
+                                        }                                                                          
                                     }
                                 }
                             }
