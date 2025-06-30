@@ -2,7 +2,7 @@
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-  <xsl:import href="../core/functions.xsl"/>
+  <!--<xsl:import href="../core/functions.xsl"/>-->
   <xsl:import href="email-styles.xsl"/>
 	
   <xsl:template match="*" mode="emailBody">
@@ -75,7 +75,7 @@
                   </xsl:comment>
                   <table cellpadding="0" cellspacing="0" style="width:100%;max-width:{$emailWidth}px;margin:0 auto;" class="emailWidthContainer">
                     <tr>
-                      <td class="emailContentWrapper" style="padding:0px {$hPadding}px">
+                      <td class="emailContentWrapper" >
                         <xsl:apply-templates select="." mode="mainLayout"/>
                       </td>
                     </tr>
@@ -124,18 +124,18 @@
                       <td style="padding:10px {$hPadding}px 0px" valign="top" class="emailCol">
                         <xsl:if test="$CompanyAddress!=''">
                           <xsl:value-of select="$CompanyAddress"/>
+                          <br/>
                         </xsl:if>
                         <xsl:if test="$CompanyRegNo!=''">
-                          <br/>
                           <strong>Registered in UK: </strong>
                           <xsl:value-of select="$CompanyRegNo"/>
+                          <br/>
                         </xsl:if>
                         <xsl:if test="$VATnumber!=''">
-                          <br/>
                           <strong>VAT Number: </strong>
                           <xsl:value-of select="$VATnumber"/>
+                          <br/>
                         </xsl:if>
-                        <br/>
                         <unsubscribe>Unsubscribe</unsubscribe>
                       </td>
                     </tr>
@@ -210,4 +210,6 @@
       <xsl:with-param name="valueName" select="'CompanyRegNo'"/>
     </xsl:call-template>
   </xsl:variable>
+  
+  
 </xsl:stylesheet>
