@@ -782,6 +782,7 @@ namespace Protean
                                             //cArguments = "-ExecutionPolicy Bypass -File \"" + moConfig["GitPS1FilePath"].Replace("\\", "/") + "\"";
                                             //cArguments = $"-ExecutionPolicy Bypass -File \"{moConfig["GitPS1FilePath"]}\"";
                                             cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitPS1FilePath"];
+                                            //cArguments = "-ExecutionPolicy Bypass -File \"D:\\_Sonali_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\GitCommandFiles\\git-pull.ps1\"";
                                             if (File.Exists(moConfig["GitPS1FilePath"]))
                                             {
                                                 cResult = gitHelper.GitCommandExecution(cArguments, cRepositoryPath);

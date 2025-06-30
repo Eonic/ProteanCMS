@@ -74,7 +74,7 @@ namespace Protean.Tools
                 process.WaitForExit();
 
                 int exitCode = process.ExitCode;
-                if (exitCode == 0)
+                if (exitCode == 0 && error=="")
                 {
                     result = "Git Pulled successfully";
                 }
