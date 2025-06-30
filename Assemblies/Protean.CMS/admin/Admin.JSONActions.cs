@@ -755,7 +755,7 @@ namespace Protean
                                 //objservices.RunGitCommands();
                                 System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                                 Tools.GitHelper gitHelper = new Tools.GitHelper();
-
+                                //Services gitHelper = new Services();
                                 string cRepositoryPath = "";
                                 string cArguments = "";
                                 string cResult = "";
@@ -810,7 +810,35 @@ namespace Protean
                 }
             }
             #endregion
+            public string RunGitWithPat(string ps1Path, string pat, string workingDir)
+{
+    var startInfo = new ProcessStartInfo
+    {
+        FileName = "powershell.exe",
+        Arguments = $"-ExecutionPolicy Bypass -File \"{ps1Path}\"",
+        RedirectStandardOutput = true,
+        RedirectStandardError = true,
+        UseShellExecute = false,
+        CreateNoWindow = true,
+        WorkingDirectory = workingDir
+    };
 
+    // Securely pass PAT via environment variable
+    startInfo.EnvironmentVariables["GIT_PAT"] = pat;
+
+    using (var process = new Process { StartInfo = startInfo })
+    {
+        process.Start();
+        string output = process.StandardOutput.ReadToEnd();
+        string error = process.StandardError.ReadToEnd();
+        process.WaitForExit();
+
+        if (process.ExitCode == 0)
+            return $"Success: {output}";
+        else
+            return $"Failed: {error}";
+    }
+}
         }
 
     }
