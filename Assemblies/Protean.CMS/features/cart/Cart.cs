@@ -1564,6 +1564,7 @@ namespace Protean
 
                                 // info to display the cart
                                 GetCart(ref oElmt);
+                                GetWalletDetails(ref oElmt);
                                 break;
                             }
 
@@ -2646,9 +2647,16 @@ namespace Protean
                             string xsltPath = string.Empty;
                             bool bOptOut = false;
                             if (string.IsNullOrEmpty(Email))
-                                Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
+                                if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email") != null)
+                                {
+                                    Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
+                                }
                             if (string.IsNullOrEmpty(Name))
-                                Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
+                                if(oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName")!=null)
+                                {
+                                    Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
+                                }
+                                
                             if (valDict is null)
                                 valDict = new Dictionary<string, string>();
 
@@ -2680,12 +2688,12 @@ namespace Protean
                                     {
                                         ListId = moMailConfig["InvoiceList"];
                                         xsltPath = moMailConfig["GetDictionaryForInvoiceListXsl"];
-                                        if (!string.IsNullOrEmpty(moMailConfig["QuoteList"]))
+                                        if (!string.IsNullOrEmpty(moMailConfig["InvoiceList"]))
                                         {
                                             // if we have invoiced the customer we don't want to send them quote reminders
                                             if (oMessaging.Activities != null)
                                             {
-                                                oMessaging.Activities.RemoveFromList(moMailConfig["QuoteList"], Email);
+                                                oMessaging.Activities.RemoveFromList(moMailConfig["InvoiceList"], Email);
                                             }
                                         }
 
@@ -3825,6 +3833,56 @@ namespace Protean
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug);
+                }
+
+            }
+
+            //this is a method to display wallet buttons on cart screen.
+            //input parameter is CartElement which will have values in 
+            //node with 'Wallets/Wallet with attributes to it
+            // which will be used to get data for rendering button with paymentdetails on cartprocess.xsl
+
+            public bool GetWalletDetails(ref XmlElement oCartElmt)
+
+            {
+                try
+                {
+
+
+                    decimal nPaymentAmount = Conversions.ToDecimal("0" + oCartElmt.GetAttribute("total"));
+                    if (nPaymentAmount <= 0)
+                    {
+                        return false;
+                    }
+
+
+                    Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
+
+                    XmlElement xElmtPaymentProvider = oEwProv.GetValidPaymentProviders();
+
+                    if (xElmtPaymentProvider != null)
+                    {
+
+                        foreach (XmlElement opElmt in xElmtPaymentProvider)
+                        {
+
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
+                            XmlElement oWallets = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
+                            //just check if wallets object is empty.
+                            if (oWallets.InnerXml != string.Empty)
+                            {
+                                oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oWallets, true));
+                            }
+                        }
+
+                    }
+                    return true;
+
+                }
+                catch (Exception ex)
+                {
+                    return false;
                 }
 
             }
@@ -11248,7 +11306,7 @@ namespace Protean
                 }
             }
 
-            private string updateGCgetValidShippingOptionsDS(string nShipOptKey)
+            public string updateGCgetValidShippingOptionsDS(string nShipOptKey)
             {
                 try
                 {

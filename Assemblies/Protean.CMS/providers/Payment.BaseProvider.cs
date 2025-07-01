@@ -55,6 +55,8 @@ namespace Protean.Providers
             string CollectPayment(ref Cms myWeb, long nPaymentMethodId, double Amount, string CurrencyCode, string PaymentDescription, ref Cms.Cart oCart);
             string UpdateOrderWithPaymentResponse(string AuthNumber, string validGroup = "");
             string ProcessNewPayment(string orderId, decimal amount, string cardNumber, string cV2, string expiryDate, String startDate, String cardHolderName, string address1, string address2, string town, string postCode, string cCounty = "", string cCountry = "", string validGroup = "");
+
+            XmlElement GetWalletPaymentDetails(XmlElement opElmt);
         }
         public class ReturnProvider
         {
@@ -613,6 +615,12 @@ namespace Protean.Providers
                 public string ProcessNewPayment(string orderId, decimal amount, string cardNumber, string cV2, string expiryDate, string startDate, string cardHolderName, string address1, string address2, string town, string postCode, string cCounty = "", string cCountry = "", string validGroup = "")
                 {
                     throw new NotImplementedException();
+                }
+
+                public XmlElement GetWalletPaymentDetails(XmlElement opElemt)
+                {
+                    //throw new NotImplementedException();
+                    return null;
                 }
             }
         }
