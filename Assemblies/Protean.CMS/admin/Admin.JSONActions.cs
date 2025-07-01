@@ -736,109 +736,118 @@ namespace Protean
                 }
                 public string RunGitOperations(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
+                    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
-                    string JsonResult = "";
+                    string scriptPath = moConfig["GitPS1FilePath"];
+                    string repoUrl = "https://github.com/Eonic/ProteanCMS";
+                    string targetPath = moConfig["GitRepoPath"];
+                    string username = "sonali.sonwane@infysion.com";
+                    string password = "Sonu@2aug";
+                    string arguments = $"-ExecutionPolicy Bypass -File \"{scriptPath}\" -RepoUrl \"{repoUrl}\" -TargetPath \"{targetPath}\" -Username \"{username}\" -Password \"{password}\"";
 
-                    Tools.Security.Impersonate oImp = null;
-                    oImp = new Tools.Security.Impersonate();
-                    if (!string.IsNullOrEmpty(goConfig["AdminAcct"]) & goConfig["AdminGroup"] != "AzureWebApp")
+                    ProcessStartInfo psi = new ProcessStartInfo
                     {
-                        impersonationMode = true;
-                    }
-                    try
+                        FileName = "powershell.exe",
+                        Arguments = arguments,
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    };
+
+                    using (Process process = Process.Start(psi))
                     {
-                        if (impersonationMode)
+                        string output = process.StandardOutput.ReadToEnd();
+                        string errors = process.StandardError.ReadToEnd();
+                        process.WaitForExit();
+
+                        Console.WriteLine("Output:\n" + output);
+                        if (!string.IsNullOrEmpty(errors))
                         {
-                            if (myApi.mbAdminMode)
-                            {
-                                //var objservices = new Services();
-                                //objservices.RunGitCommands();
-                                System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-                                Tools.GitHelper gitHelper = new Tools.GitHelper();
-                                //Services gitHelper = new Services();
-                                string cRepositoryPath = "";
-                                string cArguments = "";
-                                string cResult = "";
-                                string gitUserName = "";
-                                string gitEmail = "";
-                                string ps1FilePath = "";
-
-                                if (!string.IsNullOrEmpty(moConfig["GitRepoPath"]))
-                                {
-                                    cRepositoryPath = moConfig["GitRepoPath"];
-                                    if (Directory.Exists(cRepositoryPath))
-                                    {
-                                        if (!string.IsNullOrEmpty(moConfig["GitUserName"]) && !string.IsNullOrEmpty(moConfig["GitEmail"]))
-                                        {
-                                            gitHelper.GitCommandExecution("git config user.name " + moConfig["GitUserName"], cRepositoryPath);
-                                            gitHelper.GitCommandExecution("git config user.email " + moConfig["GitEmail"], cRepositoryPath);
-                                        }
-                                        gitHelper.GitCommandExecution("git config --add safe.directory  \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
-
-
-                                        if (!string.IsNullOrEmpty(moConfig["GitPS1FilePath"]))
-                                        {
-
-                                            //cArguments = "-ExecutionPolicy Bypass -File \"" + moConfig["GitPS1FilePath"].Replace("\\", "/") + "\"";
-                                            //cArguments = $"-ExecutionPolicy Bypass -File \"{moConfig["GitPS1FilePath"]}\"";
-                                            cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitPS1FilePath"];
-                                            //cArguments = "-ExecutionPolicy Bypass -File \"D:\\_Sonali_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\GitCommandFiles\\git-pull.ps1\"";
-                                            if (File.Exists(moConfig["GitPS1FilePath"]))
-                                            {
-                                                cResult = gitHelper.GitCommandExecution(cArguments, cRepositoryPath);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        return JsonResult;
-                        if (impersonationMode)
-                        {
-                            oImp.UndoImpersonation();
-                            oImp = null;
+                            Console.WriteLine("Errors:\n" + errors);
                         }
 
+                        return errors.ToString();
                     }
-                    catch (Exception ex)
-                    {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""));
-                        return ex.Message;
-                    }
-
-
                 }
+
+                //public string RunGitOperations(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                //{
+
+                //    string JsonResult = "";
+
+                //    Tools.Security.Impersonate oImp = null;
+                //    oImp = new Tools.Security.Impersonate();
+                //    if (!string.IsNullOrEmpty(goConfig["AdminAcct"]) & goConfig["AdminGroup"] != "AzureWebApp")
+                //    {
+                //        impersonationMode = true;
+                //    }
+                //    try
+                //    {
+                //        if (impersonationMode)
+                //        {
+                //            if (myApi.mbAdminMode)
+                //            {
+                //                //var objservices = new Services();
+                //                //objservices.RunGitCommands();
+                //                System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                //                Tools.GitHelper gitHelper = new Tools.GitHelper();
+                //                //Services gitHelper = new Services();
+                //                string cRepositoryPath = "";
+                //                string cArguments = "";
+                //                string cResult = "";
+                //                string gitUserName = "";
+                //                string gitEmail = "";
+                //                string ps1FilePath = "";
+
+                //                if (!string.IsNullOrEmpty(moConfig["GitRepoPath"]))
+                //                {
+                //                    cRepositoryPath = moConfig["GitRepoPath"];
+                //                    if (Directory.Exists(cRepositoryPath))
+                //                    {
+                //                        if (!string.IsNullOrEmpty(moConfig["GitUserName"]) && !string.IsNullOrEmpty(moConfig["GitEmail"]))
+                //                        {
+                //                            // gitHelper.GitCommandExecution("git config user.name " + moConfig["GitUserName"], cRepositoryPath);
+                //                            //gitHelper.GitCommandExecution("git config user.email " + moConfig["GitEmail"], cRepositoryPath);
+                //                        }
+                //                        // gitHelper.GitCommandExecution("git config --add safe.directory  \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
+
+
+                //                        if (!string.IsNullOrEmpty(moConfig["GitPS1FilePath"]))
+                //                        {
+
+                //                            //cArguments = "-ExecutionPolicy Bypass -File \"" + moConfig["GitPS1FilePath"].Replace("\\", "/") + "\"";
+                //                            //cArguments = $"-ExecutionPolicy Bypass -File \"{moConfig["GitPS1FilePath"]}\"";
+                //                            cArguments = "-ExecutionPolicy Bypass -File " + moConfig["GitPS1FilePath"];
+                //                            //cArguments = "-ExecutionPolicy Bypass -File \"D:\\_Sonali_WorkSpace\\Clients\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\GitCommandFiles\\git-pull.ps1\"";
+                //                            if (File.Exists(moConfig["GitPS1FilePath"]))
+                //                            {
+                //                                cResult = gitHelper.GitCommandExecution(cArguments, cRepositoryPath);
+                //                            }
+                //                        }
+                //                    }
+                //                }
+                //            }
+                //        }
+                //        return JsonResult;
+                //        if (impersonationMode)
+                //        {
+                //            oImp.UndoImpersonation();
+                //            oImp = null;
+                //        }
+
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""));
+                //        return ex.Message;
+                //    }
+
+
+                //}
             }
             #endregion
-            public string RunGitWithPat(string ps1Path, string pat, string workingDir)
-{
-    var startInfo = new ProcessStartInfo
-    {
-        FileName = "powershell.exe",
-        Arguments = $"-ExecutionPolicy Bypass -File \"{ps1Path}\"",
-        RedirectStandardOutput = true,
-        RedirectStandardError = true,
-        UseShellExecute = false,
-        CreateNoWindow = true,
-        WorkingDirectory = workingDir
-    };
 
-    // Securely pass PAT via environment variable
-    startInfo.EnvironmentVariables["GIT_PAT"] = pat;
-
-    using (var process = new Process { StartInfo = startInfo })
-    {
-        process.Start();
-        string output = process.StandardOutput.ReadToEnd();
-        string error = process.StandardError.ReadToEnd();
-        process.WaitForExit();
-
-        if (process.ExitCode == 0)
-            return $"Success: {output}";
-        else
-            return $"Failed: {error}";
-    }
-}
         }
 
     }
