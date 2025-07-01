@@ -27,7 +27,17 @@ namespace Protean.Providers
                     var arrParams = new Hashtable();
                     string sCotrolDisplayName = "Price Filter";
                     string cFilterTarget = string.Empty;
-                    XmlElement oPriceGroup = oXform.addGroup(ref oXform.moXformElmt, "PriceFilter", "pricefilter filter");
+                    XmlElement oPriceGroup;
+                    if (aWeb.moRequest.Form["MinPrice"] != null & aWeb.moRequest.Form["MinPrice"] != "")
+                    { 
+                        oPriceGroup=oXform.addGroup(ref oXform.moXformElmt, "PriceFilter", "pricefilter filter active-filter");
+                    
+                    }
+                    else
+                    {
+                        oPriceGroup= oXform.addGroup(ref oXform.moXformElmt, "PriceFilter", "pricefilter filter");
+                    }
+                        
                     oFromGroup.AppendChild(oPriceGroup);
                     var oXml = oXform.moPageXML.CreateElement("PriceFilter");
                     var oMinPrice = oXform.moPageXML.CreateAttribute("MinPrice");
@@ -194,18 +204,19 @@ namespace Protean.Providers
 
                         // Dim sText As String = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()
                         string sText = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()/*"From " + oMinPrice.Value.Trim() + " to " + oMaxPrice.Value.Trim()*/;
-                        oXform.addSubmit(ref oFromGroup, "PriceFilter", sText, "PriceFilter", "btnCrossForPrice filter-applied", "fa-times");
+                        oXform.addSubmit(ref oFromGroup, "PriceFilter", sText, "PriceFilter", "remove-PriceFilter filter-applied", "fa-times");
 
                     }
+                    oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain");
 
-                    if (aWeb.moRequest.Form["MinPrice"] != null & aWeb.moRequest.Form["MinPrice"] != "")
-                    {
-                        oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain filter-selected");
-                    }
-                    else
-                    {
-                        oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain");
-                    }
+                    //if (aWeb.moRequest.Form["MinPrice"] != null & aWeb.moRequest.Form["MinPrice"] != "")
+                    //{
+                    //    oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain filter-selected");
+                    //}
+                    //else
+                    //{
+                    //    oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain");
+                    //}
                 }
 
                 catch (Exception ex)

@@ -3201,11 +3201,18 @@ namespace Protean
                                 foreach (XmlElement currentOContentType in ManifestDoc.SelectNodes("/PageLayouts/ContentTypes/ContentTypeGroup/ContentType"))
                                 {
                                     oContentType = currentOContentType;
-                                    object formPath = oContentType.GetAttribute("formPath");
+                                    string formPath = oContentType.GetAttribute("formPath");
                                     // If formPath.contains("/") Then
                                     // formPath = formPath.Split("/")(1)
                                     // End If
-                                    oContentType.SetAttribute("formPath", Conversions.ToString(Operators.ConcatenateObject(filepath.Replace("/ptn", "") + "/", formPath)));
+                                    if(!string.IsNullOrEmpty(formPath))
+                                    {
+                                        // do nothing, just checked here if formPath attribute is present and not blank
+                                    }
+                                    else
+                                    {
+                                        oContentType.SetAttribute("formPath", Conversions.ToString(Operators.ConcatenateObject(filepath.Replace("/ptn", "") + "/", formPath)));
+                                    }                                        
                                 }
                                 foreach (XmlElement currentOModuleType in ManifestDoc.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module"))
                                 {
@@ -14472,7 +14479,7 @@ namespace Protean
                 // returnException(myWeb.msException, _moduleName, "addCorrectAnswer", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
-                // End Function
+                // End Function 
                 
             }
 

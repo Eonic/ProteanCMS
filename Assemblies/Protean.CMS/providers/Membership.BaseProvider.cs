@@ -27,6 +27,7 @@ using System.Security.AccessControl;
 using System.Text;
 using System.Web;
 using System.Web.Configuration;
+using System.Windows.Controls;
 using System.Xml;
 using static Protean.Cms;
 using static Protean.stdTools;
@@ -324,34 +325,36 @@ namespace Protean.Providers
                         pwdIpt.SetAttribute("placeholder", "Password");
                         base.addClientSideValidation(ref pwdIpt, true, "Please enter Password");
                         base.addBind("cPassword", "user/password", ref oBindParent, "true()");
-                        base.addDiv(ref oFrmElmt, "", "password-reminder");
+                        base.addDiv(ref oFrmElmt, "<xsl:text> </xsl:text>", "password-reminder");
+                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign In", "UserLogon", btnClass);
+                       
 
-                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign In", "UserLogon", btnClass, btnIcon);
 
-
-
-                     
                         if (oAuthProviders != null){
                             if (oAuthProviders.Count() > 0)
                             {
-                                base.addDiv(ref oFrmElmt, "OR", "separator");
+                                base.addDiv(ref oFrmElmt, "", "separator");
                                 foreach (IauthenticaitonProvider authProvider in oAuthProviders) {
                                     Boolean bUse = false;
                                     if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin") {
                                         bUse = true;
                                     }
                                     if (bUse) {
-                                        string provName = authProvider.name;
+                                        string provName = authProvider.config["name"];
                                         XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With " + provName, "AuthProvider", btnClass + " btn-"+ provName.ToLower(), btnIcon, provName.ToLower());
                                         thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
                                     }
                                 }
                             }
                         }
-                        //END auth provider                       
+                        //END auth provider
+                       
 
-                        base.addDiv(ref oFrmElmt, "", "footer-override");
-                        base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
+                       
+
+                       base.addDiv(ref oFrmElmt, "", "footer-override");
+                       
+                    base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
 
                     Check:
                         ;
@@ -425,7 +428,8 @@ namespace Protean.Providers
 
                             if (oAuthProviders != null && oAuthProviders.Any())
                             {
-                                string samlResponse = myWeb.moRequest["SAMLResponse"];                                
+                                string samlResponse = myWeb.moRequest["SAMLResponse"];
+                                string relayState = myWeb.moRequest["RelayState"];
 
                                 if (!string.IsNullOrEmpty(samlResponse))
                                 {
@@ -438,11 +442,14 @@ namespace Protean.Providers
                                     {
                                         string issuer = authProvider.ExtractIssuer(xmlDoc);
                                         Boolean bUse = false;
+                                        string providerKey = authProvider.config["name"].ToLower();
                                         if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin")
                                         {
                                             bUse = true;
                                         }
-                                        if (bUse && myWeb.moRequest["SAMLResponse"] != null && authProvider.config["entityId"] != null && authProvider.config["entityId"].ToString().Equals(issuer, StringComparison.OrdinalIgnoreCase))
+                                        if (bUse && myWeb.moRequest["SAMLResponse"] != null && authProvider.config["entityId"] != null 
+                                            && providerKey == relayState.ToLower() 
+                                            && authProvider.config["entityId"].ToString().Equals(issuer, StringComparison.OrdinalIgnoreCase))
                                         {
                                             //long userid = authProvider.CheckAuthenticationResponse(myWeb.moRequest, myWeb.moSession, myWeb.moResponse);
                                             samlUserEmail = authProvider.ExtractEmail(xmlDoc);
@@ -485,7 +492,7 @@ namespace Protean.Providers
                                     string selectedProvider = myWeb.moRequest["AuthProvider"];
                                     foreach (IauthenticaitonProvider authProvider in oAuthProviders)
                                     {                                        
-                                        if(authProvider.GetType().Name.ToLower().Contains(selectedProvider))
+                                        if(authProvider.config["name"].ToLower().Contains(selectedProvider))
                                         {
                                             string redirectUrl = authProvider.GetAuthenticationURL(selectedProvider);
                                             if (!string.IsNullOrEmpty(redirectUrl))

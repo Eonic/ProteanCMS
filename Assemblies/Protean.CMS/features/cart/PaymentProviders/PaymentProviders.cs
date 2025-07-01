@@ -2819,7 +2819,7 @@ namespace Protean
                                 cRequest = cRequest + "strCity=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("City").InnerText) + "&";
                                 cRequest = cRequest + "strState=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("State").InnerText) + "&";
                                 cRequest = cRequest + "strPostcode=" + this.goServer.UrlEncode(mcCardHolderPostcode) + "&";
-                                string localgetCountryISO2Code() { string argsCountry2 = oCartAdd.SelectSingleNode("Country").InnerText; var ret = getCountryISO2Code(ref argsCountry2); oCartAdd.SelectSingleNode("Country").InnerText = argsCountry2; return ret; }
+                                string localgetCountryISO2Code() { string argsCountry2 = oCartAdd.SelectSingleNode("Country").InnerText; var ret = modbHelper.getCountryISO2Code(ref argsCountry2); oCartAdd.SelectSingleNode("Country").InnerText = argsCountry2; return ret; }
 
                                 cRequest = cRequest + "strCountry=" + localgetCountryISO2Code() + "&";  // 2 letter ISO code
                                 cRequest = cRequest + "strTel=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Telephone").InnerText) + "&";
@@ -5197,71 +5197,7 @@ namespace Protean
 
                 //}
 
-                public string getCountryISO2Code(ref string sCountry)
-                {
-                    myWeb.PerfMon.Log("PaymentProviders", "getCountryISO2Code");
-                    // Dim oDr As SqlDataReader
-                    string sSql;
-                    string strReturn = "";
-                    string cProcessInfo = "getCountryISO2Code";
-                    try
-                    {
-
-                        sSql = "select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '" + sCountry + "' or cLocationNameShort Like '" + sCountry + "'";
-                        using (var oDr = modbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
-                        {
-                            if (oDr.HasRows)
-                            {
-                                while (oDr.Read())
-                                    strReturn = Conversions.ToString(oDr["cLocationISOa2"]);
-                            }
-                            else
-                            {
-                                strReturn = "";
-                            }
-
-                        }
-                        return strReturn;
-                    }
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "getCountryISO2Code", ex, "", cProcessInfo, gbDebug);
-                        return null;
-                    }
-                }
-
-                public string getCountryISO3Code(ref string sCountry)
-                {
-                    myWeb.PerfMon.Log("PaymentProviders", "getCountryISO2Code");
-                    // Dim oDr As SqlDataReader
-                    string sSql;
-                    string strReturn = "";
-                    string cProcessInfo = "getCountryISO2Code";
-                    try
-                    {
-
-                        sSql = "select cLocationISOa3 from tblCartShippingLocations where cLocationNameFull Like '" + sCountry + "' or cLocationNameShort Like '" + sCountry + "'";
-                        using (var oDr = modbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
-                        {
-                            if (oDr.HasRows)
-                            {
-                                while (oDr.Read())
-                                    strReturn = Conversions.ToString(oDr["cLocationISOa3"]);
-                            }
-                            else
-                            {
-                                strReturn = "";
-                            }
-
-                        }
-                        return strReturn;
-                    }
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "getCountryISO3Code", ex, "", cProcessInfo, gbDebug);
-                        return null;
-                    }
-                }
+                
 
                 public long FormatCreditCardNumber(string sCCNumber)
                 {

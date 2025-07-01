@@ -1,33 +1,34 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Ajax.Utilities;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Protean.Providers.Payment;
+using Protean.Tools;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Configuration;
+using System.Configuration.Provider;
+using System.Data;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
-using System.Net.Http.Headers;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Security.Authentication;
 using System.Security.Policy;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
-using System.Collections.Specialized;
-using System.Web.Configuration;
-using Newtonsoft.Json.Linq;
-using System.Security.Authentication;
-using Protean.Providers.Payment;
-using System.Reflection;
-using static Protean.stdTools;
-using Protean.Tools;
-using Microsoft.VisualBasic.CompilerServices;
-using Microsoft.Ajax.Utilities;
-using System.Configuration.Provider;
-using Microsoft.VisualBasic;
-using System.Xml;
-using System.Web.Security;
-using System.IO.Compression;
-using System.IO;
 using System.Web;
+using System.Web.Configuration;
+using System.Web.Security;
 using System.Web.SessionState;
-using System.Data;
-using System.ServiceModel.Channels;
+using System.Xml;
 using static Protean.Cms;
+using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
 
@@ -37,8 +38,7 @@ namespace Protean.Providers
     {
         public interface IauthenticaitonProvider
         {
-            IauthenticaitonProvider Initiate(ref Cms myWeb);
-
+            IauthenticaitonProvider Initiate(Cms myWeb, NameValueCollection config);
             string GetAuthenticationURL(string ProviderName);
             string ExtractEmail(XmlDocument xmlDoc);
             string ExtractIssuer(XmlDocument xmlDoc);
@@ -68,47 +68,89 @@ namespace Protean.Providers
                     ICollection<IauthenticaitonProvider> providerList = new IauthenticaitonProvider[0];
                     var modifiable = providerList.ToList();
 
+                    //if (moPrvConfig != null)
+                    //{
+                    //    foreach (System.Configuration.ProviderSettings authProvider in moPrvConfig.Providers) { 
+
+                    //        ProviderClass = Convert.ToString(authProvider.Name);
+
+                    //        if (string.IsNullOrEmpty(ProviderClass))
+                    //        {
+                    //            ProviderClass = "Protean.Providers.Authentication.DefaultProvider";
+                    //            calledType = Type.GetType(ProviderClass, true);
+                    //        }
+                    //        else
+                    //        {
+                    //            if (authProvider.Type != "")
+                    //            {
+                    //                var assemblyInstance = Assembly.Load(authProvider.Type);
+                    //                calledType = assemblyInstance.GetType("Protean.Providers.Authentication." + ProviderClass, true);
+                    //            }
+                    //            else
+                    //            {
+                    //                calledType = Type.GetType("Protean.Providers.Authentication." + ProviderClass, true);
+                    //            }
+                    //        }
+
+                    //        var o = Activator.CreateInstance(calledType);
+                    //        var args = new object[2];
+                    //        args[0] = myWeb;
+                    //        args[1] = authProvider.Parameters;
+
+                    //        modifiable.Add((IauthenticaitonProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args));
+
+                    //    }
+
+                    //    providerList = modifiable;
+                    //    return providerList;
+
+                    //}else
+                    //{
+                    //    return null;
+                    //}
+
+
                     if (moPrvConfig != null)
                     {
-                        foreach (System.Configuration.ProviderSettings authProvider in moPrvConfig.Providers) { 
-                        
-                            ProviderClass = Convert.ToString(authProvider.Name);
-
-                            if (string.IsNullOrEmpty(ProviderClass))
-                            {
-                                ProviderClass = "Protean.Providers.Authentication.DefaultProvider";
-                                calledType = Type.GetType(ProviderClass, true);
-                            }
-                            else
-                            {
-                                if (authProvider.Type != "")
-                                {
-                                    var assemblyInstance = Assembly.Load(authProvider.Type);
-                                    calledType = assemblyInstance.GetType("Protean.Providers.Authentication." + ProviderClass, true);
-                                }
-                                else
-                                {
-                                    calledType = Type.GetType("Protean.Providers.Authentication." + ProviderClass, true);
-                                }
+                        foreach (ProviderSettings authProvider in moPrvConfig.Providers)
+                        {
+                            string providerTypeName = authProvider.Type;
+                            if (string.IsNullOrEmpty(providerTypeName))
+                            {                                
+                                providerTypeName = "Protean.Providers.Authentication.DefaultProvider, ProteanCMS";
                             }
 
-                            var o = Activator.CreateInstance(calledType);
-                            var args = new object[2];
-                            args[0] = myWeb;
-                            args[1] = authProvider.Parameters;
+                            try
+                            {
+                                // Load the full type (with namespace + assembly)
+                                calledType = Type.GetType(providerTypeName, throwOnError: true);
 
-                            modifiable.Add((IauthenticaitonProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args));
+                                object instance = Activator.CreateInstance(calledType);
 
+                                var configParams = new NameValueCollection(authProvider.Parameters);
+                                configParams["name"] = authProvider.Name;
+
+                                var args = new object[2];
+                                args[0] = myWeb;
+                                args[1] = configParams;
+
+                                var provider = (IauthenticaitonProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, instance, args);
+
+                                modifiable.Add(provider);
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log each individual provider error, skip to next
+                                Console.WriteLine($"[!] Failed to load provider '{authProvider.Name}': {ex.Message}");
+                            }
                         }
-
-                        providerList = modifiable;
-                        return providerList;
-
-                    }else
+                        return modifiable;
+                    }
+                    else
                     {
                         return null;
                     }
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -147,17 +189,12 @@ namespace Protean.Providers
                 }
             }
           
-            public IauthenticaitonProvider Initiate(ref Cms myWeb, ref NameValueCollection config)
+            public IauthenticaitonProvider Initiate(Cms myWeb, NameValueCollection config)
             {
                 _myWeb = myWeb;
                 _Config = config;
                 return this;
-            }
-
-            IauthenticaitonProvider IauthenticaitonProvider.Initiate(ref Cms myWeb)
-            {
-                throw new NotImplementedException();
-            }
+            }           
 
             public string GetAuthenticationURL(string ProviderName)
             {
@@ -175,11 +212,11 @@ namespace Protean.Providers
                 var returnUrl = string.Empty;
                 if(ProviderName.ToLower() == "google")
                 {
-                    returnUrl = $"{idpSsoUrl}&SAMLRequest={samlRequest}";
+                    returnUrl = $"{idpSsoUrl}&SAMLRequest={samlRequest}&RelayState={ProviderName}";
                 }
                 else
                 {
-                    returnUrl = $"{idpSsoUrl}?SAMLRequest={samlRequest}";
+                    returnUrl = $"{idpSsoUrl}?SAMLRequest={samlRequest}&RelayState={ProviderName}";
                 }
                 return returnUrl;
             }

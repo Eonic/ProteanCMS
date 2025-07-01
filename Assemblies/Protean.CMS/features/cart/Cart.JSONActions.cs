@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Web.Configuration;
-using System.Xml;
-using Microsoft.VisualBasic;
+﻿using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Providers.Payment;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Web.Configuration;
+using System.Xml;
 using static Protean.Tools.Xml;
 
 namespace Protean
@@ -43,7 +43,7 @@ namespace Protean
 
                 public JSONActions()
                 {
-                   // string ctest = "this constructor is being hit"; // for testing
+                    // string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
                     myWeb.InitializeVariables();
                     myWeb.Open();
@@ -86,7 +86,7 @@ namespace Protean
                         // Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                         // myCart.GetCart(CartXml.FirstChild)
                         string cShipOptKey = "0";
-                        
+
 
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
@@ -106,7 +106,7 @@ namespace Protean
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue");
                         // persist cart
                         myCart.close();
-                        return jsonString;                       
+                        return jsonString;
                     }
 
                     catch (Exception ex)
@@ -1166,7 +1166,7 @@ namespace Protean
                         oCart.moPageXml = myWeb.moPageXml;
 
                         var nProviderReference = Interaction.IIf(jObj["nProviderReference"] != null, (long)jObj["nProviderReference"], 0);
-                        decimal nAmount =Convert.ToDecimal(Interaction.IIf(jObj["nAmount"] != null, (decimal)jObj["nAmount"], "0"));
+                        decimal nAmount = Convert.ToDecimal(Interaction.IIf(jObj["nAmount"] != null, (decimal)jObj["nAmount"], "0"));
                         var cProviderName = Interaction.IIf(jObj["sProviderName"] != null, (string)jObj["sProviderName"], "");
                         object cRefundPaymentReceipt = "";
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
@@ -1247,7 +1247,7 @@ namespace Protean
                     try
                     {
                         bool bIsAuthorized = false;
-                        string cValidGroup = (jObj["validGroup"] != null)? (string)jObj["validGroup"] : "";
+                        string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
                         bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
 
                         if (bIsAuthorized == false)
@@ -1256,20 +1256,20 @@ namespace Protean
                         var oCart = new Cart(ref myWeb);
                         oCart.moPageXml = myWeb.moPageXml;
 
-                        string cProviderName = (jObj["sProviderName"] != null) ? jObj["sProviderName"].ToString(): "";
-                        string nOrderId = (jObj["orderId"] != null) ? jObj["orderId"].ToString(): "0";
-                        decimal nAmount = (jObj["amount"] != null) ? Convert.ToDecimal(jObj["amount"]): 0;
-                        string cCardNumber = (jObj["cardNumber"] != null) ? jObj["cardNumber"].ToString(): "";
-                        string cCV2 = (jObj["cV2"] != null) ? jObj["cV2"].ToString(): "";
+                        string cProviderName = (jObj["sProviderName"] != null) ? jObj["sProviderName"].ToString() : "";
+                        string nOrderId = (jObj["orderId"] != null) ? jObj["orderId"].ToString() : "0";
+                        decimal nAmount = (jObj["amount"] != null) ? Convert.ToDecimal(jObj["amount"]) : 0;
+                        string cCardNumber = (jObj["cardNumber"] != null) ? jObj["cardNumber"].ToString() : "";
+                        string cCV2 = (jObj["cV2"] != null) ? jObj["cV2"].ToString() : "";
                         string dExpiryDate = (jObj["expiryDate"] != null) ? jObj["expiryDate"].ToString() : "";
                         string dStartDate = (jObj["startDate"] != null) ? jObj["startDate"].ToString() : "";
-                        string cCardHolderName = (jObj["cardHolderName"] != null) ? jObj["cardHolderName"].ToString(): "";
-                        string cAddress1 = (jObj["address1"] != null) ? jObj["address1"].ToString(): "";
-                        string cAddress2 = (jObj["address2"] != null) ? jObj["address2"].ToString(): "";
-                        string cTown = (jObj["town"] != null) ? jObj["town"].ToString(): "";
-                        string cPostCode = (jObj["postCode"] != null) ? jObj["postCode"].ToString(): "";
-                        string cCountry = (jObj["country"] != null) ? jObj["country"].ToString(): "";
-                        string cCounty = (jObj["county"] != null)? jObj["county"].ToString(): "";
+                        string cCardHolderName = (jObj["cardHolderName"] != null) ? jObj["cardHolderName"].ToString() : "";
+                        string cAddress1 = (jObj["address1"] != null) ? jObj["address1"].ToString() : "";
+                        string cAddress2 = (jObj["address2"] != null) ? jObj["address2"].ToString() : "";
+                        string cTown = (jObj["town"] != null) ? jObj["town"].ToString() : "";
+                        string cPostCode = (jObj["postCode"] != null) ? jObj["postCode"].ToString() : "";
+                        string cCountry = (jObj["country"] != null) ? jObj["country"].ToString() : "";
+                        string cCounty = (jObj["county"] != null) ? jObj["county"].ToString() : "";
 
                         string cPaymentReceipt = "";
                         string josResult = "";
@@ -1297,6 +1297,48 @@ namespace Protean
                     }
 
                 }
+
+
+                //public string GetPaymentSession(ref Protean.rest myApi, ref JObject jObj)
+                //{
+                //    try
+                //    {
+                //        //bool bIsAuthorized = false;
+                //        //string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
+                //        //bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
+
+
+                //        //if (bIsAuthorized == false)
+                //        //    return "Error -Authorization Failed";
+                //        string nOrderId = (jObj["orderId"] != null) ? jObj["orderId"].ToString() : "0";
+                //        decimal nAmount = (jObj["amount"] != null) ? Convert.ToDecimal(jObj["amount"]) : 0;
+                //        string cProviderName = (jObj["sProviderName"] != null) ? jObj["sProviderName"].ToString() : "";
+                //        var oCart = new Cart(ref myWeb);
+                //        string cPaymentSession = "";
+                //        string josResult = "";
+                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
+                //        {
+                //            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
+                //            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                //            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
+                //            cPaymentSession = Conversions.ToString(oPaymentProv.Activities.GetPaymentSession(nOrderId, nAmount));
+                //            var xmlDoc = new XmlDocument();
+                //            var xmlResponse = xmlDoc.CreateElement("Response");
+                //            xmlResponse.InnerXml = "<PaymentReceiptId>" + cPaymentSession + "</PaymentReceiptId>";
+                //            xmlDoc.LoadXml(xmlResponse.InnerXml.ToString());
+                //            josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
+                //            josResult = josResult.Replace("\"@", "\"_");
+                //            josResult = josResult.Replace("#cdata-section", "cDataValue");
+                //        }
+                //        return josResult;
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
+                //        return "Error";
+
+                //    }
+                //}
 
                 #endregion
 

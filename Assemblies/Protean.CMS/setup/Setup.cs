@@ -6,6 +6,7 @@ using System.Collections;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -1023,6 +1024,48 @@ namespace Protean
 
                                 break;
                             }
+                        case "GitRepository":
+                            {
+                                if (goRequest["ewCmd2"] == "Do")
+                                {
+                                    Tools.GitHelper gitHelper = new Tools.GitHelper();
+                                    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+
+                                    string cRepositoryPath = "";
+                                    string cArguments = "";
+                                    string cResult = "";
+                                    string gitUserName = "";
+                                    string gitEmail = "";
+                                    string ps1FilePath = "";
+
+                                    if (!string.IsNullOrEmpty(moConfig["GitRepoPath"]))
+                                    {
+                                        cRepositoryPath = moConfig["GitRepoPath"];
+                                        if (Directory.Exists(cRepositoryPath))
+                                        {
+                                            if (!string.IsNullOrEmpty(moConfig["GitUserName"]) && !string.IsNullOrEmpty(moConfig["GitEmail"]))
+                                            {
+                                                gitUserName = moConfig["GitUserName"].ToString();
+                                                gitEmail = moConfig["GitEmail"].ToString();
+                                            }
+
+                                            if (!string.IsNullOrEmpty(moConfig["GitPS1FilePath"]))
+                                            {
+                                                ps1FilePath = moConfig["GitPS1FilePath"].ToString();
+                                                if (File.Exists(moConfig["GitPS1FilePath"]))
+                                                {
+                                                    cResult = gitHelper.RunGitCommands(gitUserName, gitEmail, moConfig["GitPS1FilePath"], cRepositoryPath);
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    AddResponse(cResult);
+                                    cStep = 1.ToString();
+                                }
+                                    break;
+                                }
+                            
                     }
                 }
                 // moPageXml.DocumentElement.SetAttribute("layout", mcEwCmd)
@@ -1057,6 +1100,8 @@ namespace Protean
             XmlElement oElmt11;
             XmlElement oElmt12;
             XmlElement oElmt13;
+            XmlElement oElmt14;
+            XmlElement oElmt15;
 
             string sProcessInfo = string.Empty;
             try
@@ -1085,6 +1130,9 @@ namespace Protean
                     oElmt11 = appendMenuItem(ref oElmt1, "Backup/Restore", "BackupRestore", icon: "fa-save");
                     oElmt12 = appendMenuItem(ref oElmt11, "Backup", "Backup", icon: "fa-save");
                     oElmt13 = appendMenuItem(ref oElmt11, "Restore", "Restore", icon: "fa-reply");
+
+                    oElmt14 = appendMenuItem(ref oElmt1, "Update with Git", "UpdateGit", icon: "fa fa-refresh");
+                    oElmt15 = appendMenuItem(ref oElmt14, "Git Pull", "GitRepository", icon: "fa fa-refresh");
                 }
                 else
                 {
@@ -2897,6 +2945,8 @@ namespace Protean
             }
 
         }
+
+
         #endregion
 
         internal int CommitToLog(Protean.Cms.dbHelper.ActivityType nEventType, int nUserId, string cSessionId, DateTime dDateTime, int nPrimaryId = 0, int nSecondaryId = 0, string cDetail = "")
