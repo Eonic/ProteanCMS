@@ -716,6 +716,47 @@
 		</div>
 	</xsl:template>-->
 
+	<xsl:template match="Content[@type='Product']" mode="contentDetailJS">
+		<xsl:variable name="price">
+			<xsl:choose>
+				<xsl:when test="not(Prices/Price[@type='sale']!='')">
+					<xsl:value-of select="Prices/Price[@type='rrp']/node()"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="Prices/Price[@type='sale']/node()"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<script>
+			gtag("event", "view_item", {
+			currency: "<xsl:value-of select="Prices/Price[@type='rrp']/@currency"/>",
+			value: <xsl:value-of select="$price"/>,
+			items: [
+			{
+			item_id: "<xsl:value-of select="StockCode"/>",
+			item_name: "<xsl:call-template name="escape-json">
+			<xsl:with-param name="string">
+				<xsl:value-of select="Name/node()"/>
+			</xsl:with-param>
+		</xsl:call-template>",
+			index: 0,
+			item_brand: "<xsl:value-of select="Manufacturer/node()"/>",
+			<xsl:if test="$subSectionPage/@name!=''">
+			item_category: "<xsl:value-of select="$subSectionPage/@name"/>",</xsl:if>
+			<xsl:if test="$subSubSectionPage/@name!=''">
+			item_category2: "<xsl:value-of select="$subSubSectionPage/@name"/>",</xsl:if>
+			<xsl:if test="$subSubSubSectionPage/@name!=''">
+			item_category3: "<xsl:value-of select="$subSubSubSectionPage/@name"/>",</xsl:if>
+			<xsl:if test="$subSubSubSubSectionPage/@name!=''">
+			item_category4: "<xsl:value-of select="$subSubSubSubSectionPage/@name"/>",</xsl:if>
+			price: <xsl:value-of select="$price"/>,
+			quantity: 1
+			}
+			]
+			});
+		</script>
+	</xsl:template>
 
 	<xsl:template match="Content[@type='Product' and parent::ContentDetail]" mode="JSONLD">
 

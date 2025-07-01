@@ -1617,6 +1617,7 @@ namespace Protean
                                     string originalPath = myWeb.mcOriginalURL.Split('?')[0].TrimEnd(charsToTrim);
                                     if ((originalPath.ToLower() ?? "") != (redirectUrl.ToLower() ?? ""))
                                     {
+                                        myWeb.mbRedirectPerm = Conversions.ToString(true);
                                         myWeb.msRedirectOnEnd = redirectUrl;
                                     }
 
@@ -1664,11 +1665,14 @@ namespace Protean
                                         if (myWeb.moConfig["addPathArtId"] == "on" && nArtId > 0)
                                         {
                                             ItemIdPath = nArtId + "-/";
-                                            string redirectUrl = "/" + thisPrefix + "/" + ItemIdPath + sPath;
+                                            string redirectUrl = "/" + thisPrefix + "/" + ItemIdPath + Protean.Tools.Text.CleanName(sPath).Replace(" ", "-").Trim('-');
+                                            
+
                                             if (myWeb.moConfig["DetailPathTrailingSlash"] == "on")
                                             {
                                                 redirectUrl = redirectUrl + "/";
                                             }
+                                            myWeb.mbRedirectPerm = Conversions.ToString(true);
                                             myWeb.msRedirectOnEnd = redirectUrl;
                                         }
                                     }
@@ -8101,6 +8105,11 @@ namespace Protean
                         if (nNumberOfUsers == 0)
                         {
                             sReturn = sReturn; // "<span class=""msg-1015"">The username was not found</span>"
+                            //need to check authentication with google or microsoft user not found in proteanCMS
+                            if(oAuthProviders != null && myWeb.moRequest["SAMLResponse"] != null)
+                            {
+                                return sReturn = "<span class=\"msg-1037\">The user <span class=\"UserName\">" + cUsername + "</span> is not authorised to access this site. Please see the site administrator.</span>";
+                            }
                         }
                         // Return sReturn
                         else if (nNumberOfUsers > 1)
@@ -8137,7 +8146,7 @@ namespace Protean
                                             {
                                                 return sReturn = "<span class=\"msg-1036\">Login failed. Please use your <span class=\"AuthName\">" + authProvider.name + "</span> account to sign in.</span>";                                                
                                             }
-                                        }                                       
+                                        }                                                                          
                                     }
                                 }
                             }
