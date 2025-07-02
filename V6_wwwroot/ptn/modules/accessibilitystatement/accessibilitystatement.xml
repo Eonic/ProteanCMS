@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+  <model>
+    <instance>
+      <tblContent>
+        <nContentKey/>
+        <nContentPrimaryId/>
+        <nVersion/>
+        <cContentForiegnRef/>
+        <cContentName/>
+        <cContentSchemaName>Module</cContentSchemaName>
+        <cContentXmlBrief>
+          <Content position="" moduleType="accessibilitystatement" box="" title="" link="" linkType="internal" linkText="Download Full Report" linkBox="" imagePosition="below" char80Layout="center"/>
+        </cContentXmlBrief>
+        <cContentXmlDetail/>
+        <nAuditId/>
+        <nAuditKey/>
+        <dPublishDate/>
+        <dExpireDate/>
+        <dInsertDate/>
+        <nInsertDirId/>
+        <dUpdateDate/>
+        <nUpdateDirId/>
+        <nStatus>1</nStatus>
+        <cDescription/>
+        <bCascade/>
+      </tblContent>
+    </instance>
+    <submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+    <bind id="cModuleTitle" nodeset="tblContent/cContentName" required="false()" type="string"/>
+    <bind nodeset="tblContent/cContentXmlBrief/Content">
+      <bind id="cModuleBox" nodeset="@box" required="false()" type="string"/>
+      <bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
+      <bind id="cIconStyle" nodeset="@iconStyle" required="false()" type="string"/>
+      <bind id="cPosition" nodeset="@position" required="true()" type="string"/>
+      <bind id="cModuleType" nodeset="@moduleType" required="true()" type="string"/>
+      <bind id="cModuleTitle" nodeset="@title" required="false()" type="string"/>
+      <bind id="public-sector" nodeset="@public-sector" required="false()" type="string"/>
+      <bind id="prep-date" nodeset="@prep-date" required="false()" type="string"/>
+      <bind id="review-date" nodeset="@review-date" required="false()" type="string"/>
+      <bind id="test-date" nodeset="@test-date" required="false()" type="string"/>
+      <bind id="tester" nodeset="@tester" required="false()" type="string"/>
+      <bind id="bLinkBox" nodeset="@linkBox" required="false()" type="string"/>
+      <bind id="accessibleText" nodeset="@accessibleText" required="false()" type="string"/>
+      <bind id="panelImage" nodeset="@panelImage" required="false()" type="string" />
+      <bind id="imagePosition" nodeset="@imagePosition" required="false()" type="string" />
+      <bind id="maxWidth" nodeset="@maxWidth" required="false()" type="string" />
+      <bind id="padding" nodeset="@padding" required="false()" type="string" />
+      <bind id="char80Layout" nodeset="@char80Layout" required="false()" type="string" />
+      <bind id="v-align" nodeset="@v-align" required="false()" type="string" />
+      <bind id="compliance-status" nodeset="compliance-status" required="false()" type="string"/>
+      <bind id="disp-burden" nodeset="disp-burden" required="false()" type="string"/>
+      <bind id="not-scope" nodeset="not-scope" required="false()" type="string"/>
+      <bind id="contact" nodeset="contact" required="false()" type="string"/>
+    </bind>
+    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+    
+    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+  </model>
+  <group ref="EditContent">
+    <label>Accessibility Statement Module</label>
+    <group  class="tabs">
+      <group>
+        <label>
+          <i class="fas fa-pen"> </i>
+          <span class="space"> </span>
+          <span>Content</span>
+        </label>
+        <group>
+          <input bind="cModuleTitle" class="long">
+            <label>Title or Name</label>
+          </input>
+          <select1 appearance="full" bind="public-sector" class="inline-items" >
+            <label>Is this website covered by Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018?</label>
+            <item>
+              <label>Yes</label>
+              <value>true</value>
+            </item>
+            <item>
+              <label>No</label>
+              <value>false</value>
+            </item>
+          </select1>
+          <group class="row row-cols-lg-2">
+            <input bind="prep-date" class="calendar short">
+              <label>Date statement prepared</label>
+            </input>
+            <input bind="review-date" class="calendar short">
+              <label>Date statement last reviewed</label>
+            </input>
+            <input bind="test-date" class="calendar short">
+              <label>Date last tested</label>
+            </input>
+            <input bind="tester" class="long">
+              <label>Tested By</label>
+            </input>
+          </group>
+          <textarea bind="contact" class="TextArea xhtml" rows="4" cols="70">
+            <label>Individual to contact with feedback</label>
+          </textarea>
+          <group class="form-section-wrapper">
+            <select1 appearance="full" bind="compliance-status">
+              <label class="required">Compliance Status</label>
+              <item>
+                <label>(a) This website is fully compliant with the Web Content Accessibility Guidelines (WCAG) version 2.2 AA standard.</label>
+                <value>a</value>
+              </item>
+              <item>
+                <label>(b) This website is partially compliant with the Web Content Accessibility Guidelines version 2.2 AA standard, due to the non-compliance(s) and/or the exemptions listed below.</label>
+                <value>b</value>
+              </item>
+              <item>
+                <label>(c) This website is not compliant with the Web Content Accessibility Guidelines version 2.2 AA standard. The non-compliance(s) and/or the exemptions are listed below.</label>
+                <value>c</value>
+              </item>
+            </select1>
+            <div>
+              <p>Select (a) only if all requirements of the technical specification are fully met without exceptions for WCAG version 2.2.</p>
+              <p>Select (b) if most requirements of the technical specification are met, but with some exceptions. This means not yet fully compliant and that the necessary measures are to be taken in order to reach full compliance.</p>
+              <p>Select (c) if most requirements of the technical specification are not met</p>
+            </div>
+          </group>
+          <group class="form-section-wrapper">
+            <textarea bind="cContentBody" class="TextArea xhtml" rows="25" cols="70">
+              <label>Non-accessible content</label>
+
+            </textarea>
+            <div>
+              <p>List the non-compliances of the website and/or describe which sections/content/functions are not yet compliant.</p>
+              <p>Describe in non-technical terms, as far as possible, how:</p>
+              <ol>
+                <li>the content is not accessible</li>
+                <li>which requirements in WCAG are not met</li>
+                <li>when they will be addressed</li>
+              </ol>
+              <p>Do not include in this list anything that is included in disproportionate burdens or which are out of scope of the regulations.</p>
+            </div>
+          </group>
+          <group class="form-section-wrapper">
+            <textarea bind="disp-burden" class="TextArea xhtml" rows="25" cols="70">
+              <label>Disproportionate Burden</label>
+            </textarea>
+            <div>
+              <p>
+                Organisations may claim disproportionate burden where the impact of fully meeting the requirements is too much for them. If a public sector body claims disproportionate burden they are legally required to carry out an assessment of the extent to which meeting the accessibility requirement imposes a disproportionate burden.
+              </p>
+              <p> We cannot offer individual advice on disproportionate burden assessments and organisations may want to seek legal advice.</p>
+              <p>The assessment is a financial cost/benefit exercise and should consider things like:</p>
+              <ul>
+                <li>how much the issue will cost to fix</li>
+                <li>the allocated spend on websites and mobile apps annually</li>
+                <li>how extra costs would impact the organisation’s budget</li>
+                <li>how many users the issue impacts if not fixed</li>
+                <li> benefits fixing issues would bring to users</li>
+                <li>how long this disproportionate burden will apply</li>
+                <li>if the site or service is procured or outsourced, how long the third party supplier is contracted for, and how much it would cost to re-tender or renegotiate the contract to fix accessibility issues</li>
+              </ul>
+            </div>
+          </group>
+          <group class="form-section-wrapper">
+            <textarea bind="not-scope" class="TextArea xhtml" rows="25" cols="70">
+              <label>Not Within Scope</label>
+            </textarea>
+            <div>
+              <p>If you have funded, developed or are in control of third party content, it is your responsibility to make sure that it is accessible.</p>
+              <p>We understand that third party content may be harder to change. You should make sure your accessibility statement is updated to include any issues users may experience when using third party content on your website.</p>
+              <p>
+                <strong>Examples of content not within scope:</strong>
+              </p>
+              <p>PDFs and other documents - the accessibility regulations do not require us to fix PDFs or other documents published before 23 September 2018 if they’re not essential to providing our services. For example, we do not plan to fix [example of non-essential document]. Any new PDFs or Word documents we publish will meet accessibility standards.</p>
+              <p>Live video - we do not plan to add captions to live video streams because live video is exempt from meeting the accessibility regulations.</p>
+            </div>
+          </group>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-link"> </i>
+          <span class="space"> </span>
+          <span>Full Report Link</span>
+        </label>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='FooterLinks']"/>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-brush"> </i>
+          <span class="space"> </span>
+          <span>Presentation</span>
+        </label>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='presentation']"/>
+        <group class="row">
+          <input bind="maxWidth" class="col-lg-6">
+            <label>Max Width</label>
+            <value></value>
+            <help class="inline">Add a value ending either px or %.</help>
+          </input>
+          <input bind="padding" class="col-lg-6">
+            <label>Padding</label>
+            <value></value>
+          </input>
+          <group class="container-fluid">
+            <group class="form-section-wrapper form-section-wrapper-wide">
+              <label>Alignment</label>
+              <group class="row row-cols-sm-2">
+                <group class="col-lg-6">
+                  <select1 bind="char80Layout" >
+                    <label>Layout of content</label>
+                    <item>
+                      <label>Centre</label>
+                      <value>center</value>
+                    </item>
+                    <item>
+                      <label>Left</label>
+                      <value>left</value>
+                    </item>
+                    <item>
+                      <label>Right</label>
+                      <value>right</value>
+                    </item>
+                    <item>
+                      <label>Wide</label>
+                      <value>wide</value>
+                    </item>
+                  </select1>
+                </group>
+                <group class="col-lg-6">
+                  <select1 bind="v-align" >
+                    <label>Vertical alignment</label>
+                    <item>
+                      <label>Top</label>
+                      <value>top</value>
+                    </item>
+                    <item>
+                      <label>Center</label>
+                      <value>center</value>
+                    </item>
+                    <item>
+                      <label>Bottom</label>
+                      <value>bottom</value>
+                    </item>
+                  </select1>
+                </group>
+              </group>
+            </group>
+          </group>
+        </group>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-tachometer-alt"> </i>
+          <span class="space"> </span>
+          <span>Animate</span>
+        </label>
+        <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+      </group>
+      <group>
+        <label>
+          <i class="fas fa-cog"> </i>
+          <span class="space"> </span>
+          <span>Advanced Settings</span>
+        </label>
+        <group>
+          <!-- These hidden fields and bindings are required for the component-->
+          <input bind="nContentKey" class="hidden">
+            <label>ContentId</label>
+          </input>
+          <input bind="cModuleType" class="hidden">
+            <label>ModuleType</label>
+          </input>
+          <!-- end of hidden fields -->
+          <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+        </group>
+      </group>
+    </group>
+  </group>
+  <group ref="submit" class="contentSubmit">
+    <submit submission="" ref="ewSubmit" class="principle">
+      <label>Save Text</label>
+    </submit>
+  </group>
+</Content>
