@@ -9,6 +9,7 @@ using System.Security.Authentication;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using Alphaleonis.Win32.Network;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
 using static Protean.stdTools;
@@ -755,7 +756,7 @@ namespace Protean
                         UseShellExecute = false,
                         CreateNoWindow = true
                     };
-
+                   // psi.EnvironmentVariables["GIT_TERMINAL_PROMPT"] = "0";
                     using (Process process = Process.Start(psi))
                     {
                         string output = process.StandardOutput.ReadToEnd();
