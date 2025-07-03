@@ -740,12 +740,12 @@ namespace Protean
                     System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
                     string scriptPath = moConfig["GitPS1FilePath"];
-                    //string repoUrl = "https://github.com/Eonic/ProteanCMS";
-                    //string targetPath = moConfig["GitRepoPath"];
+                    string repoUrl = "https://github.com/Eonic/ProteanCMS";
+                    string targetPath = moConfig["GitRepoPath"];
                     //string username = "sonali.sonwane@infysion.com";
                     //string password = "Sonu@2aug";
-                    //string arguments = $"-ExecutionPolicy Bypass -File \"{scriptPath}\" -RepoUrl \"{repoUrl}\" -TargetPath \"{targetPath}\" -Username \"{username}\" -Password \"{password}\"";
-                    string arguments = $"-ExecutionPolicy Bypass -File \"{scriptPath}\"";
+                    string arguments = $"-ExecutionPolicy Bypass -File \"{scriptPath}\" -RepoUrl \"{repoUrl}\" -TargetPath \"{targetPath}\"";
+                    //string arguments = $"-ExecutionPolicy Bypass -File \"{scriptPath}\"";
 
                     ProcessStartInfo psi = new ProcessStartInfo
                     {
