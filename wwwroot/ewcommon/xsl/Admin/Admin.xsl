@@ -455,6 +455,7 @@
 					<xsl:value-of select="/Page/@editContext"/>
 				</xsl:when>
 				<xsl:otherwise>
+					<xsl:value-of select="/Page/@ewCmd"/>				
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -588,7 +589,6 @@
 				<div class="collapse navbar-collapse" id="bs-admin-navbar-collapse-1">
 					<!--<ul class="nav navbar-nav hidden-xs nav-add-more-auto">-->
 					<ul class="nav navbar-nav nav-add-more-auto ">
-
 						<xsl:apply-templates select="MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem" mode="adminItem1">
 							<xsl:with-param name="level">1</xsl:with-param>
 						</xsl:apply-templates>
