@@ -386,11 +386,16 @@ namespace Protean
                                                 bRedirect = false;
                                                 // say thanks for registering and update the form
                                                 // hide the current form
-                                                XmlElement oFrmGrp = (XmlElement)oAdXfm.moXformElmt.SelectSingleNode("group");
-                                                oFrmGrp.SetAttribute("class", "hidden");
+                                                foreach (XmlNode grpNode in oAdXfm.moXformElmt.SelectNodes("group|button|submit")){
+                                                    XmlElement grpElmt = (XmlElement)grpNode;
+                                                    grpElmt.SetAttribute("class", "hidden");
+                                                }
+
+                                               // XmlElement oFrmGrp = (XmlElement)oAdXfm.moXformElmt.SelectSingleNode("group");
+                                               // oFrmGrp.SetAttribute("class", "hidden");
                                                 // create a new note
                                                 XmlElement frmElmt = oAdXfm.moXformElmt;
-                                                XmlElement oFrmGrp2 = (XmlElement)oAdXfm.addGroup(ref frmElmt, "validateByEmail");
+                                                XmlElement oFrmGrp2 = (XmlElement)oAdXfm.addGroup(ref frmElmt,"validateByEmail");
                                                 oAdXfm.addNote(ref oFrmGrp2, Protean.xForm.noteTypes.Hint, "<span class=\"msg-1029\">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", true);
                                                 myWeb.mnUserId = 0;
                                                 

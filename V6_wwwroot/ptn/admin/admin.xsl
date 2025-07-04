@@ -6388,6 +6388,7 @@ $(document).ready(function () {
 
   <xsl:template match="Contact" mode="AdminListContact">
     <xsl:variable name="dirid" select="/Page/Request/QueryString/Item[@name='id']"/>
+	  <xsl:if test="nContactKey!=''">
     <div class="col-md-6">
       <div class="card card-default">
         <div class="card-header">
@@ -6468,6 +6469,7 @@ $(document).ready(function () {
         </table>
       </div>
     </div>
+	  </xsl:if>
   </xsl:template>
   <!-- -->
 

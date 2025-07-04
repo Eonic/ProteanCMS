@@ -4,6 +4,8 @@
 
     if ($("form#contact").exists()) {
 
+
+
         $(".delivery-address").hide();
 
         if ($('#cDelContactAddress').val() == $('#cContactAddress').val()) {
@@ -24,13 +26,23 @@
         //when is delivery clicked
         $('input[name="cIsDelivery"]').change(function () {
 
-            if ($('input[name="cIsDelivery"]').is(":checked")) {
-                $(".delivery-address").show();
-                resetDelAddress();
-            } 
-            if ($('input[name="cIsDelivery"]').is(":checked") == false) {
-                $(".delivery-address").hide();
+            if ($('input[name="cIsDelivery"]:checked').length > 0) {
+                //alert($(this).attr('value'));
+
+                if ($(this).attr('value') == 'true') {
+                    $(".delivery-address").show();
+                    resetDelAddress();
+                }
+
+                if ($(this).attr('value') == 'false') {
+
+                   $(".delivery-address").hide();
+                    addDeliveryAddress();
+                }
+
                 if ($.isNumeric($(this).attr('value')) == true) {
+
+                    $(".delivery-address").hide();
 
                     blankoutFormFields($('#cDelContactName'), 'Collection');
                     blankoutFormFields($('#cDelContactCompany'), 'Collection');
@@ -41,9 +53,6 @@
                     blankoutFormFields($('#cDelContactCountry'), $('#cContactCountry').val());
                     blankoutFormFields($('#cDelContactTel'), 'Collection');
                     blankoutFormFields($('#cDelContactFax'), 'Collection');
-
-                } else {
-                    addDeliveryAddress();
                 }
             }            
         });
