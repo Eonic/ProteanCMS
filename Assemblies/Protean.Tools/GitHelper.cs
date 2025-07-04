@@ -10,49 +10,29 @@ namespace Protean.Tools
     public class GitHelper
     {
 
-        public string RunGitCommands(string gitUserName, string gitEmail, string ps1FilePath, string workingDirectory)
+        public string GitCommandExecution(string gitUserName, string gitPassword, string ps1FilePath, string gitRepoUrl, string workingDirectory)
         {
-            string cArguments = "";
-
-
-            string cResult = "";
+            
+            string arguments = "";
             if (!string.IsNullOrEmpty(workingDirectory))
             {
-               
+
                 if (Directory.Exists(workingDirectory))
                 {
-                    if (!string.IsNullOrEmpty(gitUserName) && !string.IsNullOrEmpty(gitEmail))
+                    if (!string.IsNullOrEmpty(gitUserName) && !string.IsNullOrEmpty(gitPassword)&& !string.IsNullOrEmpty(ps1FilePath) && !string.IsNullOrEmpty(gitRepoUrl))
                     {
-                        GitCommandExecution("git config user.name " + gitUserName, workingDirectory);
-                        GitCommandExecution("git config user.email " + gitEmail, workingDirectory);
-                    }
-                    GitCommandExecution("git config --add safe.directory  \"" + workingDirectory.Replace("\\", "/") + "\"", workingDirectory);
-                    //GitCommandExecution("git config --add safe.directory \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
+                         arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\" -RepoUrl \"{gitRepoUrl}\" -TargetPath \"{workingDirectory}\" -Username \"{gitUserName}\" -Password \"{gitPassword}\"";
 
-
-                    if (!string.IsNullOrEmpty(ps1FilePath))
-                    {
-                        cArguments = $"-ExecutionPolicy Bypass -File " + ps1FilePath;
-                        if (File.Exists(ps1FilePath))
-                        {
-                            cResult = GitCommandExecution(cArguments, workingDirectory);
-                        }
                     }
                 }
             }
-            return cResult;
-        }
 
-        public string GitCommandExecution(string arguments, string workingDirectory)
-        //public string GitCommandExecution(string gitUserName, string gitEmail,string ps1FilePath, string workingDirectory)
-
-        {
             string result = "";
             var startInfo = new ProcessStartInfo
             {
                 FileName = "powershell.exe",
                 Arguments = arguments,
-                 RedirectStandardOutput = true,
+                RedirectStandardOutput = true,
                 WorkingDirectory = workingDirectory,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -74,7 +54,7 @@ namespace Protean.Tools
                 process.WaitForExit();
 
                 int exitCode = process.ExitCode;
-                if (exitCode == 0 && error=="")
+                if (exitCode == 0 )
                 {
                     result = "Git Pulled successfully";
                 }
