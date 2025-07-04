@@ -7,16 +7,18 @@
       <!--################################################ modal for alert-->
       <div class="modal fade" id="xFrmAlertModal" role="dialog" style ="padding-top:15%!important">
         <div class="modal-dialog">
-          <div class="modal-content  alert alert-danger" role="alert">
+          <div class="modal-content panel-warning" role="alert">
             <div class="modal-header">
               <button type="button" class="btn-close"  data-bs-dismiss="modal">
-                &#160;
+				  <xsl:text> </xsl:text>
               </button>
             </div>
-            <div class="modal-body" aria-automic="true">
-              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
-              <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
-              <span id="errorMessage">&#160;</span>
+            <div class="modal-body " aria-automic="true">
+		        <div class="alert alert-danger">
+                  <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
+                  <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
+                  <span id="errorMessage">&#160;</span>
+	            </div>
             </div>
           </div>
         </div>
@@ -33,6 +35,8 @@
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::*[alert][0]" mode="xform_control_script"/>
+	<xsl:apply-templates select="descendant-or-self::help" mode="xform_control_script"/>
+	<xsl:apply-templates select="descendant-or-self::*[hint][0]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::select1[item[toggle]]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::submit" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::button" mode="xform_control_script"/>
@@ -1375,6 +1379,9 @@
   <!-- Allows for very simple overloading of default values for if a user is logged on for instance -->
   <xsl:template match="*" mode="xform_value">
     <xsl:choose>
+		<xsl:when test="force!=''">
+			<xsl:value-of select="force"/>
+		</xsl:when>
       <xsl:when test="value!=''">
         <xsl:value-of select="value"/>
       </xsl:when>
