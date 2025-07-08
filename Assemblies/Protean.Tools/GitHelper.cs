@@ -1,8 +1,14 @@
-﻿using iTextSharp.text.pdf;
+﻿using DocumentFormat.OpenXml.Office.CustomXsn;
+using iTextSharp.text.pdf;
+using Microsoft.Identity.Client;
+using Protean.Tools.Errors;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Web;
+using TinifyAPI;
+
 
 namespace Protean.Tools
 {
@@ -10,61 +16,54 @@ namespace Protean.Tools
     public class GitHelper
     {
 
-        public string GitCommandExecution(string gitUserName, string gitPassword, string ps1FilePath, string gitRepoUrl, string workingDirectory)
+
+        public string GitCommandExecution(string cClientId, string cTenantId, string ps1FilePath, string cScopeFile, string cSecreteValue,string cAccessToken)
         {
-            
-            string arguments = "";
-            if (!string.IsNullOrEmpty(workingDirectory))
-            {
-
-                if (Directory.Exists(workingDirectory))
-                {
-                    if (!string.IsNullOrEmpty(gitUserName) && !string.IsNullOrEmpty(gitPassword)&& !string.IsNullOrEmpty(ps1FilePath) && !string.IsNullOrEmpty(gitRepoUrl))
-                    {
-                         arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\" -RepoUrl \"{gitRepoUrl}\" -TargetPath \"{workingDirectory}\" -Username \"{gitUserName}\" -Password \"{gitPassword}\"";
-
-                    }
-                }
-            }
-
+           
+            string output = "";
+            string error = "";
             string result = "";
-            var startInfo = new ProcessStartInfo
+           
+            string arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\" -ClientId \"{cClientId}\" -TenantId \"{cTenantId}\" -accessToken \"{cAccessToken}\"";
+
+            // Create temporary askpass script
+            string askPassPath = Path.Combine(Path.GetTempPath(), "askpass_oauth2.bat");
+            File.WriteAllText(askPassPath, $"@echo off{Environment.NewLine}echo {cAccessToken}");
+            ProcessStartInfo gitPull = new ProcessStartInfo
             {
                 FileName = "powershell.exe",
                 Arguments = arguments,
                 RedirectStandardOutput = true,
-                WorkingDirectory = workingDirectory,
                 RedirectStandardError = true,
                 UseShellExecute = false,
-                CreateNoWindow = true
-
-
+                CreateNoWindow = true,
             };
-            // startInfo.EnvironmentVariables["GIT_CONFIG_GLOBAL"] = @"D:\temp\app_gitconfig";
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
-            startInfo.UseShellExecute = false;
-            startInfo.CreateNoWindow = true;
-            startInfo.CreateNoWindow = true;
-            using (var process = new Process { StartInfo = startInfo })
+
+            gitPull.EnvironmentVariables["GIT_ASKPASS"] = askPassPath;
+            gitPull.EnvironmentVariables["GIT_TERMINAL_PROMPT"] = "0";
+            gitPull.EnvironmentVariables["ACCESS_TOKEN"] = cAccessToken;
+            using (var process = Process.Start(gitPull))
             {
-                process.Start();
-                string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
+                output = process.StandardOutput.ReadToEnd();
+                error = process.StandardError.ReadToEnd();
                 process.WaitForExit();
 
+                File.Delete(askPassPath); // cleanup temp file
                 int exitCode = process.ExitCode;
-                if (exitCode == 0 )
+                bool hasGitError = error.Contains("fatal") || error.Contains("error");
+
+                if (exitCode == 0 && !hasGitError)
                 {
-                    result = "Git Pulled successfully";
+                    result = $"Git Pull successful.\nOutput:\n{output}";
                 }
                 else
                 {
-                    result = "Git failed -" + error;
+                    result = $"Git Pull may have failed.\nExit Code: {exitCode}\nError:\n{error}\nOutput:\n{output}";
                 }
-                return result;
-            }
+                return result ;
 
+
+            }
         }
     }
 }
