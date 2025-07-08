@@ -628,7 +628,7 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
-    <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>
+    <!--<xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>-->
   </xsl:template>
 
   <xsl:template name="favicon">
@@ -1523,7 +1523,9 @@
     </xsl:if>
     <!--New OG Tags for Facebook-->
     <xsl:apply-templates select="." mode="opengraphdata"/>
+	  <!--
     <meta property="og:url" content="{$href}"/>
+	-->
 
     <!--json-ld-->
     <xsl:apply-templates select="." mode="json-ld"/>
@@ -1833,7 +1835,7 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraphdata">
-    <meta property="og:type" content="article" />
+    <!--<meta property="og:type" content="article" />-->
   </xsl:template>
 
   <!--json-ld-->
@@ -2852,14 +2854,21 @@
 		    </xsl:otherwise>
 		  </xsl:choose>
         (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'} ; <xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s &amp;&amp;s!=='loaded' &amp;&amp; s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq'); </xsl:text>
-        <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
-          window.uetq = window.uetq || [];
-          window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
-        </xsl:if>
-
+		  <xsl:apply-templates select="." mode="BingTrackingCodeAction" />
       </script>
     </xsl:if>
   </xsl:template>
+
+	<xsl:template match="Page" mode="BingTrackingCodeAction">
+		
+	</xsl:template>
+
+	<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="BingTrackingCodeAction">
+
+			window.uetq = window.uetq || [];
+			window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
+
+	</xsl:template>
 
   <xsl:template match="Page" mode="FacebookTrackingCode">
     <xsl:if test="$FacebookTrackingID!=''">
