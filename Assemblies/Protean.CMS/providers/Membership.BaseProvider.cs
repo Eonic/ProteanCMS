@@ -2911,8 +2911,20 @@ namespace Protean.Providers
                         }
                         if (File.Exists(goServer.MapPath(xsltPath)))
                         {
-                            XmlElement oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
-                            if (clearUserId)
+                            XmlElement oUserElmt;
+                            if (myWeb.bs5)
+                            {
+                                oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
+
+                                XmlElement emailRoot = oUserElmt.OwnerDocument.CreateElement("Email");
+                                emailRoot.AppendChild(oUserElmt.CloneNode(true));
+                                emailRoot.SetAttribute("id", "UserRegistration");
+                                oUserElmt = emailRoot;
+                            }
+                            else {
+                                oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
+                            }
+                                if (clearUserId)
                                 mnUserId = 0; // clear user Id so we don't stay logged on
                             XmlElement oElmtPwd = myWeb.moPageXml.CreateElement("Password");
                             oElmtPwd.InnerText = moRequest["cDirPassword"];
