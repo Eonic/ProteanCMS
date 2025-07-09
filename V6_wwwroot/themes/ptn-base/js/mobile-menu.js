@@ -30,14 +30,22 @@ function mobileMenu() {
         $('.mainnav-toggler').focus();
     });
 
+    //close whole menu
+    $('.mobile-end-close').click(function () {
+        $('.navbar-collapse').slideUp('fast');
+        $('body').toggleClass('active-menu');
+        $(".dropdown-active").removeClass('dropdown-active');
+        $('.mainnav-toggler').focus();
+    });
+
     //stop keyboard tab leaving main menu
     if ($(window).width() < 992) {
         // send last item back to close button when tab pressed
-        var lastLiMain = $('ul.navbar-nav li:last-child a');
+        var lastLiMain = $('.mobile-end-close');
         lastLiMain.on('keydown', function (e) {
-            if (e.key === 'Tab') {
+            if (e.key === 'Tab' && !e.shiftKey) {
                 e.preventDefault();
-                $(this).parent().parent().parent().find('.nav-close-btn').focus();
+                //$(this).parent().parent().parent().find('.nav-close-btn').focus();
             }
         });
 
@@ -67,7 +75,7 @@ function mobileMenu() {
         $(this).parent().find("> .dropdown-menu button").focus();
     });
 
-//SUB MENUS
+    //SUB MENUS
     //back button on sub menus
     $('.menu-back').click(function () {
         $(this).parent().parent().find('.dropdown-toggle').focus();
