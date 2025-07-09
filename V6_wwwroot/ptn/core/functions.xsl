@@ -8430,7 +8430,16 @@
     <xsl:param name="startPos" />
     <xsl:param name="parentClass" />
     <xsl:param name="sort" select="@sortBy"/>
-    <xsl:param name="order" select="@order"/>
+	  <xsl:param name="order">
+		  <xsl:choose>
+			  <xsl:when test="@order = '' or contains(@order,',')">
+				  <xsl:text>ascending</xsl:text>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="@order"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:param>
     <xsl:param name="sort-data-type">
       <xsl:call-template name="ordering-data-type">
         <xsl:with-param name="field" select="@sortBy"/>
@@ -8533,14 +8542,17 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-    <xsl:param name="order">
-      <xsl:choose>
-        <xsl:when test="@order!=''">
-          <xsl:value-of select="@order"/>
-        </xsl:when>
-        <xsl:otherwise>descending</xsl:otherwise>
-      </xsl:choose>
-    </xsl:param>
+	  <xsl:param name="order">
+		  <xsl:choose>
+			  <xsl:when test="@order = '' or contains(@order,',')">
+				  <xsl:text>descending</xsl:text>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="@order"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:param>
+   
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="endPos">
       <xsl:choose>
@@ -8591,10 +8603,10 @@
     <xsl:param name="sort" select="@sortBy"/>
     <xsl:param name="order">
       <xsl:choose>
-        <xsl:when test="@order!=''">
-          <xsl:value-of select="@order"/>
+        <xsl:when test="@order = '' or contains(@order,',')">
+          descending
         </xsl:when>
-        <xsl:otherwise>descending</xsl:otherwise>
+        <xsl:otherwise><xsl:value-of select="@order"/></xsl:otherwise>
       </xsl:choose>
     </xsl:param>
     <xsl:param name="stepCount" select="'0'"/>
@@ -8645,7 +8657,16 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-    <xsl:param name="order" select="@order"/>
+	  <xsl:param name="order">
+		  <xsl:choose>
+			  <xsl:when test="@order = '' or contains(@order,',')">
+				  descending
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="@order"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:param>
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="maxDisplay">
       <xsl:choose>
@@ -8705,16 +8726,17 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-    <xsl:param name="order">
-      <xsl:choose>
-        <xsl:when test="@order = ''">
-          <xsl:text>ascending</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@order"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:param>
+	  <xsl:param name="order">
+		  <xsl:choose>
+			  <xsl:when test="@order = '' or contains(@order,',')">
+				  <xsl:text>ascending</xsl:text>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="@order"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:param>
+   
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="endPos">
       <xsl:choose>
@@ -8785,10 +8807,10 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="link" select="@pageLink" />
-    <xsl:param name="sort" select="@sortBy" />
+	  <xsl:param name="sort" select="@sortBy" />
     <xsl:param name="order">
       <xsl:choose>
-        <xsl:when test="@order = ''">
+        <xsl:when test="@order = '' or contains(@order,',')">
           <xsl:text>ascending</xsl:text>
         </xsl:when>
         <xsl:otherwise>
@@ -8858,7 +8880,16 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-    <xsl:param name="order" select="@order"/>
+	  <xsl:param name="order">
+		  <xsl:choose>
+			  <xsl:when test="@order = '' or contains(@order,',')">
+				  <xsl:text>ascending</xsl:text>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="@order"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:param>
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="endPos">
       <xsl:choose>

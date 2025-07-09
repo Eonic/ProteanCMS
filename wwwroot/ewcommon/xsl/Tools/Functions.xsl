@@ -2865,8 +2865,20 @@
 
 	<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="BingTrackingCodeAction">
 
-			window.uetq = window.uetq || [];
-			window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
+		window.uetq = window.uetq || [];
+
+		window.uetq.push('set', { 'pid': {
+		'em': '<xsl:value-of select="Cart/Order/Contact[@type='Billing Address']/Email"/>' 
+		} });
+
+		<xsl:for-each select="Cart/Order/Item">
+				window.uetq.push('event', 'PRODUCT_PURCHASE', {
+				'ecomm_prodid': '<xsl:value-of select="productDetail/StockCode"/>',
+				'revenue_value': '<xsl:value-of select="@itemTotal"/>',
+		        'currency': '<xsl:value-of select="Cart/Order/@currency"/>
+		        });
+	    </xsl:for-each>
+
 
 	</xsl:template>
 
