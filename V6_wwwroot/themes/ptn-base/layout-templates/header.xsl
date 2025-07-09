@@ -130,6 +130,11 @@
                     </xsl:apply-templates>
                   </div>
                 </xsl:if>
+                <button type="button" class="xs-only skip mobile-end-close" data-bs-dismiss="offcanvas" aria-label="Close">
+                  <i class="fa fa-times">
+                    <xsl:text> </xsl:text>
+                  </i> Close Menu
+                </button>
               </div>
             </nav>
           </xsl:if>
