@@ -4553,7 +4553,7 @@
       </xsl:apply-templates>
       <!--<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">-->
       <xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and ($level2='true' or $level3='true')">
-        <button class="xs-only btn btn-sm btn-outline-dark dropdown-mobile-btn">
+        <button class="xs-only btn btn-sm btn-outline-dark dropdown-mobile-btn" aria-label="Open submenu">
           <i class="fas fa-arrow-right">
             <xsl:text> </xsl:text>
           </i>
