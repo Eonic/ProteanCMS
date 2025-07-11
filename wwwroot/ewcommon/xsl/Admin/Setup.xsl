@@ -1132,7 +1132,7 @@
     <div id="mainLayout">
       <div class="adminTemplate" id="template_1_Column">
         <div id="header">
-          <h1>Git Pull</h1>
+          <h1>Git Operations</h1>
         </div>
         <div class="content">
           <xsl:choose>
@@ -1150,26 +1150,39 @@
               </div>
             </xsl:when>
             <xsl:otherwise>
-              <div class="panel-heading">
-                <h3 class="panel-title">Git Pull</h3>
-              </div>
+              
               <div class="form-group panel-body">
                 <div>
                   <p>
                     Proceeding will pull the latest Git changes for the specified branch.<br/>
-                    <strong>Are you sure you want to continue?</strong>
+                    
                   </p>
                 </div>
+                <h3>Available Files</h3>
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      <th>File Name</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <xsl:for-each select="/Page/files/file">
+                      <tr>
+                        <td>
+                          <xsl:value-of select="@name"/>
+                        </td>
+                        <td>
+                          <a href="/ewcommon/setup/default.ashx?ewCmd=GitRepository&amp;ewCmd2=Run&amp;GitPS1FilePath={@path}" class="btn btn-primary btn-sm">
+                            <i class="fa fa-play"></i>&#160;Run
+                          </a>
+                        </td>
+                      </tr>
+                    </xsl:for-each>
+                  </tbody>
+                </table>
               </div>
-              <div class="panel-footer">
-                <a href="/ewcommon/setup/default.ashx" class="btn btn-danger">
-                  <i class="fa fa-times">&#160;</i>&#160;
-                  Cancel
-                </a>
-                <a href="/ewcommon/setup/default.ashx?ewCmd=GitRepository&amp;ewCmd2=Do" class="btn btn-success">
-                  <i class="fa fa-eraser">&#160;</i>&#160;Git Pull
-                </a>
-              </div>
+             
               &#160;&#160;&#160;
             </xsl:otherwise>
           </xsl:choose>
