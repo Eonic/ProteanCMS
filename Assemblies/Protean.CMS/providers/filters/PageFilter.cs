@@ -145,6 +145,7 @@ namespace Protean.Providers
                                 sText = oPageGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild.FirstChild.InnerText;
                                 oXform.addSubmit(ref oFromGroup, sText, sText, "PageFilter", " remove-PageFilter filter-applied", "fa-times");
                             }
+                            oXform.addDiv(ref oFromGroup, "", "PageClearAll", true);
                         }
                     }
                 }
