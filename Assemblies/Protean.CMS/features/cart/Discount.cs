@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Runtime.InteropServices;
 using System.Web.Configuration;
+using System.Windows.Controls;
 using System.Xml;
 using static Protean.stdTools;
 
@@ -155,7 +156,7 @@ namespace Protean
                     var DiscountApplyDate = DateTime.Now;
                     // TS we should add logic here to get the invoiceDate from the xml if it exists. then we can apply historic discounts by refreshing the cartxml.
 
-                   // string[] sSQLArr = null;
+                    // string[] sSQLArr = null;
                     int nCount;
                     double dDisountAmount = 0d;
                     string validateShippingGroup = string.Empty;
@@ -187,10 +188,13 @@ namespace Protean
                                 }
                             }
                         }
-                        if (moCartConfig["CheckCartForDiscountToRequestDiscountCode"] != null) {
-                        if (moCartConfig["CheckCartForDiscountToRequestDiscountCode"].ToLower() == "on") {
-                            bDefaultPromoCode = true;
-                        } }
+                        if (moCartConfig["CheckCartForDiscountToRequestDiscountCode"] != null)
+                        {
+                            if (moCartConfig["CheckCartForDiscountToRequestDiscountCode"].ToLower() == "on")
+                            {
+                                bDefaultPromoCode = true;
+                            }
+                        }
 
 
 
@@ -224,6 +228,9 @@ namespace Protean
                             {
                                 // ' call stored procedure else existing code.
                                 // ' Passing parameter: cPromoCodeUserEntered,DiscountApplyDate,cUserGroupIds,nCartId
+                                // ' This returns all of the discount methods that are relevant for the user, the user group, and
+                                //   the product groups and the Date Range for the items in the shopping cart.
+                                // ' It does not check specific quanity / amount rules for the current cart these discounts need to be filtered out later.
                                 var param = new Hashtable();
                                 param.Add("PromoCodeEntered", cPromoCodeUserEntered);
                                 param.Add("UserGroupIds", cUserGroupIds);
@@ -416,134 +423,156 @@ namespace Protean
 
 
                                     //Add new logic for multiple discount code
+                                    //This section checks min/max item prices / total prices / item quantities and removes any non applicable discount rules.
 
-                                    if (!string.IsNullOrEmpty(cPromoCodeUserEntered))
+                                    //if (!string.IsNullOrEmpty(cPromoCodeUserEntered))
+                                    //{
+                                    bool validateAddedDiscount = false;
+                                    XmlDocument docAdditionalXml = new XmlDocument();
+                                    List<int> validPromoContentIds = new List<int>();
+                                    double finalDiscount = 0d;
+
+                                    for (int i = oDsDiscounts.Tables["Discount"].Rows.Count - 1; i >= 0; i--)
                                     {
-                                        bool validateAddedDiscount = false;
-                                        XmlDocument docAdditionalXml = new XmlDocument();
-                                        List<int> validPromoContentIds = new List<int>();
-                                        double finalDiscount = 0d;
 
-                                        for (int i = oDsDiscounts.Tables["Discount"].Rows.Count - 1; i >= 0; i--)
+
+
+                                        //bool appliesToCart = false;
+
+                                        //foreach (DataRow drItem in oDsCart.Tables["Item"].Rows)
+                                        //{
+                                        //    int cartContentId = Conversions.ToInteger("0" + drItem["contentId"]);
+                                        //    if (cartContentId == discountContentId)
+                                        //    {
+                                        //        appliesToCart = true;
+                                        //        break;
+                                        //    }
+                                        //}
+
+                                        //if (!appliesToCart)
+                                        //{
+                                        //    oDsDiscounts.Tables["Discount"].Rows.RemoveAt(i);
+                                        //    continue;
+                                        //}
+
+                                        DataRow drDiscount = oDsDiscounts.Tables["Discount"].Rows[i];
+                                        int discountContentId = Conversions.ToInteger("0" + drDiscount["nContentId"]);
+                                        docAdditionalXml.LoadXml("<additionalXml>" + drDiscount["cAdditionalXML"] + "</additionalXml>");
+                                        double dMaxPrice = 0d;
+                                        double dMinPrice = Conversions.ToDouble("0" + drDiscount["nDiscountMinPrice"]);
+                                        int nMinQuantity = Conversions.ToInteger("0" + drDiscount["nDiscountMinQuantity"]);
+                                        //int nMaxQuantity = 0;  // there is no any field for maximum quantity in the table.
+                                        double dMinOrderTotal = 0d;
+                                        double dMaxOrderTotal = 0d;
+
+                                        short bDiscountIsPercent = Conversions.ToShort("0" + drDiscount["bDiscountIsPercent"]);
+                                        if (docAdditionalXml.SelectSingleNode("additionalXml/nDiscountMaxPrice") != null)
                                         {
-                                            DataRow drDiscount = oDsDiscounts.Tables["Discount"].Rows[i];
+                                            dMaxPrice = Conversions.ToDouble("0" + docAdditionalXml.SelectSingleNode("additionalXml/nDiscountMaxPrice").InnerText);
+                                        }
+                                        if (docAdditionalXml.SelectSingleNode("additionalXml/nMinimumOrderValue") != null)
+                                        {
+                                            dMinOrderTotal = Conversions.ToDouble("0" + docAdditionalXml.SelectSingleNode("additionalXml/nMinimumOrderValue").InnerText);
+                                        }
+                                        if (docAdditionalXml.SelectSingleNode("additionalXml/nMaximumOrderValue") != null)
+                                        {
+                                            dMaxOrderTotal = Conversions.ToDouble("0" + docAdditionalXml.SelectSingleNode("additionalXml/nMaximumOrderValue").InnerText);
+                                        }
 
-                                            int discountContentId = Conversions.ToInteger("0" + drDiscount["nContentId"]);
-                                            bool appliesToCart = false;
+                                        bool bApplyToTotal = false;
+                                        double totalAmount = 0d;
+                                        short nValidProductCount = 0;
+                                        double nItemCost = 0d;
+                                        bool isValid = true;
+                                        nValidProductCount = 0;
+                                        totalAmount = 0d;
 
-                                            foreach (DataRow drItem in oDsCart.Tables["Item"].Rows)
+                                        string applyToOrderText = docAdditionalXml.SelectSingleNode("additionalXml/bApplyToOrder")?.InnerText;
+                                        bApplyToTotal = !string.IsNullOrEmpty(applyToOrderText) && Convert.ToBoolean(applyToOrderText);
+
+                                        string shippingMethods = docAdditionalXml.SelectSingleNode("additionalXml/cFreeShippingMethods")?.InnerText;
+                                        if (!string.IsNullOrEmpty(shippingMethods))
+                                        {
+                                            oCartXML.SetAttribute("NonDiscountedShippingCost", "0");
+                                        }                                        
+
+                                        foreach (DataRow drItem in oDsCart.Tables["Item"].Rows)
+                                        {
+                                            if (Operators.ConditionalCompareObjectEqual(drItem["nParentId"], 0, false))
                                             {
                                                 int cartContentId = Conversions.ToInteger("0" + drItem["contentId"]);
-                                                if (cartContentId == discountContentId)
+                                                if (cartContentId != discountContentId)
+                                                    continue;
+
+                                                double itemPrice = Conversions.ToDouble(drItem["price"]);
+                                                double itemQty = Conversions.ToDouble(drItem["quantity"]);
+                                                nItemCost = itemPrice * itemQty;
+                                                totalAmount += nItemCost;
+
+                                                if (!bApplyToTotal)
                                                 {
-                                                    appliesToCart = true;
-                                                    break;
-                                                }
-                                            }
-
-                                            if (!appliesToCart)
-                                            {
-                                                oDsDiscounts.Tables["Discount"].Rows.RemoveAt(i);
-                                                continue;
-                                            }
-
-                                            int nMinQuantity = Conversions.ToInteger("0" + drDiscount["nDiscountMinQuantity"]);
-                                            double dMinPrice = Conversions.ToDouble("0" + drDiscount["nDiscountMinPrice"]);
-                                            short bDiscountIsPercent = Conversions.ToShort("0" + drDiscount["bDiscountIsPercent"]);
-                                            double dMaxPrice = 0d;
-                                            bool bApplyToTotal = false;
-                                            double totalAmount = 0d;
-                                            short nValidProductCount = 0;
-                                            double nItemCost = 0d;
-
-                                            string additionalInfo = "<additionalXml>" + drDiscount["cAdditionalXML"] + "</additionalXml>";
-                                            docAdditionalXml.LoadXml(additionalInfo);
-
-                                            string applyToOrderText = docAdditionalXml.SelectSingleNode("additionalXml/bApplyToOrder")?.InnerText;
-                                            bApplyToTotal = !string.IsNullOrEmpty(applyToOrderText) && Convert.ToBoolean(applyToOrderText);
-
-                                            string maxPriceText = docAdditionalXml.SelectSingleNode("additionalXml/nDiscountMaxPrice")?.InnerText;
-                                            dMaxPrice = string.IsNullOrEmpty(maxPriceText) ? 0d : Conversions.ToDouble("0" + maxPriceText);
-
-                                            string shippingMethods = docAdditionalXml.SelectSingleNode("additionalXml/cFreeShippingMethods")?.InnerText;
-                                            if (!string.IsNullOrEmpty(shippingMethods))
-                                            {
-                                                oCartXML.SetAttribute("NonDiscountedShippingCost", "0");
-                                            }
-
-                                            bool isValid = true;
-                                            nValidProductCount = 0;
-                                            totalAmount = 0d;
-
-                                            foreach (DataRow drItem in oDsCart.Tables["Item"].Rows)
-                                            {
-                                                if (Operators.ConditionalCompareObjectEqual(drItem["nParentId"], 0, false))
-                                                {
-                                                    int cartContentId = Conversions.ToInteger("0" + drItem["contentId"]);
-                                                    if (cartContentId != discountContentId)
-                                                        continue;
-
-                                                    double itemPrice = Conversions.ToDouble(drItem["price"]);
-                                                    double itemQty = Conversions.ToDouble(drItem["quantity"]);
-                                                    nItemCost = itemPrice * itemQty;
-                                                    totalAmount += nItemCost;
-
-                                                    if (!bApplyToTotal)
+                                                    if (dMaxPrice > 0)
                                                     {
-                                                        if (dMaxPrice > 0)
-                                                        {
-                                                            if (nItemCost >= dMinPrice && nItemCost <= dMaxPrice)
-                                                                nValidProductCount++;
-                                                        }
-                                                        else if (nItemCost >= dMinPrice)
-                                                        {
+                                                        if (nItemCost >= dMinPrice && nItemCost <= dMaxPrice)
                                                             nValidProductCount++;
-                                                        }
+                                                    }
+                                                    else if (nItemCost >= dMinPrice)
+                                                    {
+                                                        nValidProductCount++;
                                                     }
                                                 }
                                             }
-
-                                            if (!bApplyToTotal && nValidProductCount < nMinQuantity)
-                                            {
-                                                isValid = false;
-                                            }
-
-                                            if (bApplyToTotal)
-                                            {
-                                                isValid = ValidateDiscount(totalAmount, additionalInfo);
-                                            }
-
-                                            if (!isValid)
-                                            {
-                                                oDsDiscounts.Tables["Discount"].Rows.RemoveAt(i);
-                                                continue;
-                                            }
-
-                                            // Promo is valid for specific item(s)
-                                            validateAddedDiscount = true;
-                                            validPromoContentIds.Add(discountContentId);
-
-                                            // Apply actual discount value
-                                            if (bDiscountIsPercent != 0)
-                                            {
-                                                finalDiscount += (totalAmount * Conversions.ToDouble("0" + drDiscount["nDiscountValue"])) / 100.0;
-                                            }
-                                            else
-                                            {
-                                                finalDiscount += Conversions.ToDouble("0" + drDiscount["nDiscountValue"]);
-                                            }
                                         }
 
-                                        if (!validateAddedDiscount)
+                                        if (!bApplyToTotal && nValidProductCount < nMinQuantity)
                                         {
-                                            RemoveDiscountCode();
-                                            oDsDiscounts = null;
+                                            isValid = false;
+                                        }
+
+                                        if (bApplyToTotal)
+                                        {
+                                            // isValid = ValidateDiscount(totalAmount, additionalInfo);
+                                            if (dMaxOrderTotal != 0d)
+                                            {
+                                                if (!(totalAmount >= dMinOrderTotal & totalAmount <= dMaxOrderTotal))
+                                                {
+                                                    isValid= false;
+                                                }
+                                            }
+                                           
+                                        }
+
+                                        if (!isValid)
+                                        {
+                                            oDsDiscounts.Tables["Discount"].Rows.RemoveAt(i);
+                                            continue;
+                                        }
+
+                                        // Promo is valid for specific item(s)
+                                        validateAddedDiscount = true;
+                                        validPromoContentIds.Add(discountContentId);
+
+                                        // Apply actual discount value
+                                        if (bDiscountIsPercent != 0)
+                                        {
+                                            finalDiscount += (totalAmount * Conversions.ToDouble("0" + drDiscount["nDiscountValue"])) / 100.0;
                                         }
                                         else
                                         {
-                                            oCartXML.SetAttribute("Discount", finalDiscount.ToString("F2"));
+                                            finalDiscount += Conversions.ToDouble("0" + drDiscount["nDiscountValue"]);
                                         }
                                     }
+
+                                    if (!validateAddedDiscount)
+                                    {
+                                        RemoveDiscountCode();
+                                        oDsDiscounts = null;
+                                    }
+                                    else
+                                    {
+                                        oCartXML.SetAttribute("Discount", finalDiscount.ToString("F2"));
+                                    }
+                                    //}
                                     //END Multiple Promo logic
 
                                 }
@@ -613,10 +642,10 @@ namespace Protean
                                         //XmlDataDocument oXml;
                                         //oXml = new XmlDataDocument(oDsCart);
                                         XmlDocument oXml = new XmlDocument();
-                                        if (oDsCart.Tables[0].Rows.Count>0)
+                                        if (oDsCart.Tables[0].Rows.Count > 0)
                                         {
                                             oXml.LoadXml(oDsCart.GetXml());
-                                        }                                       
+                                        }
                                         oDsCart.EnforceConstraints = false;
 
                                         oCartXML.InnerXml = oXml.FirstChild.InnerXml;
@@ -834,9 +863,9 @@ namespace Protean
 
                         }
 
-                       // oDsDiscounts.Dispose();
+                        // oDsDiscounts.Dispose();
                         //oDsDiscounts = null;
-                      //  myWeb.moDbHelper.CloseConnection();
+                        //  myWeb.moDbHelper.CloseConnection();
                     }
 
                     catch (Exception ex)
@@ -1821,7 +1850,7 @@ namespace Protean
                             foreach (XmlElement currentOItemLoop in oDiscXml.SelectNodes("Discounts/Item[Discount/@nDiscountKey=" + oIDs[nI] + "]"))
                             {
                                 oItemLoop = currentOItemLoop;
-                               // bool bAllowedDiscount = false;
+                                // bool bAllowedDiscount = false;
                                 // Dim nCurrentUnitPrice As Decimal = oItemLoop.GetAttribute("price")
 
                                 // NB 16/02/2010
@@ -2302,35 +2331,35 @@ namespace Protean
                                             "</additionalXml>"
                                         )
                                     );
-                                    
+
                                     doc.LoadXml(additionalInfo);
 
                                     // Initialize variables for each promo code
-                                   
+
                                     // Parse XML values safely
                                     XmlNode nodeMin = doc.SelectSingleNode("additionalXml/nMinimumOrderValue");
                                     if (nodeMin != null && !string.IsNullOrWhiteSpace(nodeMin.InnerText))
                                     {
                                         minimumOrderTotal = Conversions.ToDouble("0" + nodeMin.InnerText);
-                                    }                                       
+                                    }
 
                                     XmlNode nodeMax = doc.SelectSingleNode("additionalXml/nMaximumOrderValue");
                                     if (nodeMax != null && !string.IsNullOrWhiteSpace(nodeMax.InnerText))
                                     {
                                         maximumOrderTotal = Conversions.ToDouble("0" + nodeMax.InnerText);
-                                    }                                        
+                                    }
 
                                     XmlNode nodeMaxPrice = doc.SelectSingleNode("additionalXml/nDiscountMaxPrice");
                                     if (nodeMaxPrice != null && !string.IsNullOrWhiteSpace(nodeMaxPrice.InnerText))
                                     {
                                         dMaxPrice = Conversions.ToDouble("0" + nodeMaxPrice.InnerText);
-                                    }                                        
+                                    }
 
                                     XmlNode nodeApply = doc.SelectSingleNode("additionalXml/bApplyToOrder");
                                     if (nodeApply != null && !string.IsNullOrWhiteSpace(nodeApply.InnerText))
                                     {
                                         applyToTotal = Convert.ToBoolean(nodeApply.InnerText);
-                                    }                                       
+                                    }
 
                                     // If applyToTotal is true, validate order total
                                     if (applyToTotal)
@@ -2370,7 +2399,7 @@ namespace Protean
                                     }
 
                                     //If all checks pass, promo is valid
-                                    validPromoFound = true;                                   
+                                    validPromoFound = true;
                                 }
 
                                 // Final cleanup
@@ -2449,7 +2478,7 @@ namespace Protean
                         return null;
                     }
 
-                 }
+                }
 
                 public bool ValidateDiscount(double dAmount, string additionalInfo)
                 {
