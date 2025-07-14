@@ -1,6 +1,8 @@
+using Microsoft.Identity.Client;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
+using Protean.Tools;
 using System;
 using System.Collections;
 using System.Configuration;
@@ -10,9 +12,11 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.stdTools;
+
 
 namespace Protean
 {
@@ -38,7 +42,7 @@ namespace Protean
         public System.Web.HttpResponse goResponse;
         public System.Web.SessionState.HttpSessionState goSession;
         public System.Web.HttpServerUtility goServer;
-
+       
         public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
         public Cms myWeb;
@@ -653,6 +657,36 @@ namespace Protean
                 oPageElmt.SetAttribute("cssFramework", "bs3");
                 oPageElmt.SetAttribute("adminMode", "true");
                 mcEwCmd = goRequest["ewCmd"];
+                if (myWeb.moRequest["ewCmd"]== "GitRepository")
+                {
+                    string gitFilePath = "";
+                    if (!string.IsNullOrEmpty(goConfig["GitFilePath"]))
+                    {
+                         gitFilePath = goConfig["GitFilePath"] + "deployscripts\\";
+                    }
+                    if (Directory.Exists(gitFilePath))
+                    {
+                        
+                        XmlElement filesNode = moPageXml.CreateElement("files");
+
+                        foreach (string filePath in Directory.GetFiles(gitFilePath))
+                        {
+                            XmlElement fileNode = moPageXml.CreateElement("file");
+                            fileNode.SetAttribute("name", Path.GetFileName(filePath));
+                            fileNode.SetAttribute("path", gitFilePath+ Path.GetFileName(filePath));
+                            filesNode.AppendChild(fileNode);
+                        }
+
+                        oPageElmt.AppendChild(filesNode); // Attach to root Page element
+                    }
+                    else
+                    {
+                        sProcessInfo += $"[Folder not found: {gitFilePath}]";
+                    }
+
+
+                }
+
                 setupProcessXml();
                 if (mnUserId > 1)
                 {
@@ -1026,41 +1060,59 @@ namespace Protean
                             }
                         case "GitRepository":
                             {
-                                if (goRequest["ewCmd2"] == "Do")
+                                if (goRequest["ewCmd2"] == "Run")
                                 {
-                                    Tools.GitHelper gitHelper = new Tools.GitHelper();
-                                    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-
-                                    string cRepositoryPath = "";
-                                    string cArguments = "";
-                                    string cResult = "";
-                                    string gitUserName = "";
-                                    string gitEmail = "";
-                                    string ps1FilePath = "";
-
-                                    if (!string.IsNullOrEmpty(moConfig["GitRepoPath"]))
+                                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+                                   
+                                    string cClientId = "";
+                                    string cTenantId = "";
+                                    string cScope = "";
+                                    string cSecreteValue = "";
+                                    string cGitPS1FilePath = "";
+                                    string result = "";
+                                    string cAccessToken = "";
+                                    GitHelper gitHelper = new GitHelper();
+                                    if (goRequest["GitPS1FilePath"] != null)
                                     {
-                                        cRepositoryPath = moConfig["GitRepoPath"];
-                                        if (Directory.Exists(cRepositoryPath))
+                                        if (goRequest["GitPS1FilePath"].ToString() != null)
                                         {
-                                            if (!string.IsNullOrEmpty(moConfig["GitUserName"]) && !string.IsNullOrEmpty(moConfig["GitEmail"]))
+                                            cGitPS1FilePath = goRequest["GitPS1FilePath"].ToString();
+                                            
+                                        }
+                                        
+                                        if (File.Exists(cGitPS1FilePath))
+                                        {
+                                            if (!string.IsNullOrEmpty(goConfig["AzureClientId"]) && !string.IsNullOrEmpty(goConfig["AzureTenantId"]) && !string.IsNullOrEmpty(goConfig["AzureClientSecretValue"]) && !string.IsNullOrEmpty(goConfig["AzureScope"]))
                                             {
-                                                gitUserName = moConfig["GitUserName"].ToString();
-                                                gitEmail = moConfig["GitEmail"].ToString();
-                                            }
-
-                                            if (!string.IsNullOrEmpty(moConfig["GitPS1FilePath"]))
-                                            {
-                                                ps1FilePath = moConfig["GitPS1FilePath"].ToString();
-                                                if (File.Exists(moConfig["GitPS1FilePath"]))
+                                                cClientId = goConfig["AzureClientId"];
+                                                cTenantId = goConfig["AzureTenantId"];
+                                                cScope = goConfig["AzureScope"];
+                                                cSecreteValue = goConfig["AzureClientSecretValue"];
+                                                if (HttpContext.Current.Session["AzureDevOpsAccessToken"] != null)
                                                 {
-                                                    cResult = gitHelper.RunGitCommands(gitUserName, gitEmail, moConfig["GitPS1FilePath"], cRepositoryPath);
+                                                    cAccessToken = HttpContext.Current.Session["AzureDevOpsAccessToken"].ToString();
                                                 }
+                                                else
+                                                {
+                                                    // If token not in session, acquire a new one
+                                                    var app = ConfidentialClientApplicationBuilder.Create(cClientId)
+                                                        .WithClientSecret(cSecreteValue)
+                                                    .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
+                                                        .Build();
+
+                                                    var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
+                                                    cAccessToken = tokenResult.AccessToken;
+
+                                                    // Store in session
+                                                    HttpContext.Current.Session["AzureDevOpsAccessToken"] = cAccessToken;
+                                                }
+                                                result = gitHelper.GitCommandExecution(cClientId, cTenantId, cGitPS1FilePath, cScope, cSecreteValue, cAccessToken);
                                             }
                                         }
-                                    }
 
-                                    AddResponse(cResult);
+                                    }
+                               
+                                    AddResponse(result);
                                     cStep = 1.ToString();
                                 }
                                     break;
