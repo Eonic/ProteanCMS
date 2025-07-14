@@ -4330,6 +4330,21 @@
           <xsl:with-param name="level3" select="$level3"/>
           <xsl:with-param name="menu-back" select="$menu-back"/>
         </xsl:apply-templates>
+        <xsl:if test="$menu-back='end'">
+          <li class="xs-only nav-item menu-back">
+            <span class="nav-link">
+              <button class="btn btn-sm btn-outline-secondary">
+                <span>
+                  <i class="fas fa-arrow-left">
+                    <xsl:text> </xsl:text>
+                  </i>
+                  <span class="space">&#160;</span>
+                  <xsl:text>back</xsl:text>
+                </span>
+              </button>
+            </span>
+          </li>
+        </xsl:if>
       </ul>
 
     </li>
@@ -4538,7 +4553,7 @@
       </xsl:apply-templates>
       <!--<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">-->
       <xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and ($level2='true' or $level3='true')">
-        <button class="xs-only btn btn-sm btn-outline-dark dropdown-mobile-btn">
+        <button class="xs-only btn btn-sm btn-outline-dark dropdown-mobile-btn" aria-label="Open submenu">
           <i class="fas fa-arrow-right">
             <xsl:text> </xsl:text>
           </i>
@@ -4581,12 +4596,49 @@
               </a>
             </li>
           </xsl:if>
+          <xsl:if test="$menu-back='end'">
+            <li class="xs-only mobile-menu-heading">
+              <a href="{@url}">
+                <xsl:if test="self::MenuItem[@id=/Page/@id]">
+                  <xsl:attribute name="aria-current">page</xsl:attribute>
+                </xsl:if>
+                <xsl:attribute name="class">
+                  <xsl:text>dropdown-item</xsl:text>
+                  <xsl:choose>
+                    <xsl:when test="self::MenuItem[@id=/Page/@id]">
+                      <xsl:text> active</xsl:text>
+                    </xsl:when>
+                    <xsl:when test="descendant::MenuItem[@id=/Page/@id] and ancestor::MenuItem">
+                      <xsl:text> on</xsl:text>
+                    </xsl:when>
+                  </xsl:choose>
+                </xsl:attribute>
+                <xsl:apply-templates select="." mode="getDisplayName"/>
+              </a>
+            </li>
+          </xsl:if>
           <xsl:apply-templates select="MenuItem[not(DisplayName/@exclude='true')]" mode="submenuitem">
             <xsl:with-param name="class" select="$class"/>
             <xsl:with-param name="link-class" select="$li-class"/>
             <xsl:with-param name="level3" select="$level3"/>
             <xsl:with-param name="menu-back" select="$menu-back"/>
           </xsl:apply-templates>
+          <xsl:if test="$menu-back='end'">
+            <li class="xs-only nav-item menu-back">
+              <span class="nav-link">
+                <button class="btn btn-sm btn-outline-secondary">
+                  <span>
+                    <i class="fas fa-arrow-left">
+                      <xsl:text> </xsl:text>
+                    </i>
+                    <span class="space">&#160;</span>
+                    <xsl:text>back</xsl:text>
+                  </span>
+                </button>
+              </span>
+            </li>
+           
+          </xsl:if>
         </ul>
       </xsl:if>
     </li>
