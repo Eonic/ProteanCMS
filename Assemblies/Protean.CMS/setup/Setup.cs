@@ -17,6 +17,7 @@ using System.Xml;
 using static Protean.Cms;
 using static Protean.stdTools;
 
+using Microsoft.Identity.Client;
 
 namespace Protean
 {
