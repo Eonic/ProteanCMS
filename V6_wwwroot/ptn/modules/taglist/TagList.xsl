@@ -107,11 +107,11 @@
     <xsl:param name="sortBy"/>
     <xsl:param name="count"/>
     <xsl:variable name="articleList">
-      <xsl:for-each select="Content[@type='Tag']">
+      <xsl:for-each select="Content[@type='Tag' and @rtype='Tag']">
         <xsl:copy-of select="."/>
       </xsl:for-each>
     </xsl:variable>
-    <xsl:if test="count(Content[@type='Tag'])&gt;0">
+    <xsl:if test="count(Content[@type='Tag' and @rtype='Tag'])&gt;0">
       <div class="tags">
         <!--Tags-->
         <span class="tag-heading">

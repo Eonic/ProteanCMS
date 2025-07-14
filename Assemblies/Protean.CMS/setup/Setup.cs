@@ -1,4 +1,3 @@
-using Microsoft.Identity.Client;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
@@ -15,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms;
 using static Protean.stdTools;
 
 
@@ -372,6 +372,7 @@ namespace Protean
 
                 if (mbOutputXml == true)
                 {
+                    goResponse.ContentType = "application/xml";
                     goResponse.Write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + moPageXml.OuterXml);
                 }
                 else

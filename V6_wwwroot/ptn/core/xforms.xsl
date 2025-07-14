@@ -84,7 +84,7 @@
   <!-- ========================== XFORM ========================== -->
   <!-- -->
   <xsl:template match="div" mode="xform">
-    <div>
+ 
       <!-- TS: div is required otherwise it breaks in compiled mode -->
       <xsl:if test="./@class">
         <xsl:attribute name="class">
@@ -92,7 +92,7 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="node()" mode="cleanXhtml"/>
-    </div>
+
   </xsl:template>
 
   <!-- -->
@@ -2274,6 +2274,10 @@
       <xsl:if test="@class!=''">
         <xsl:attribute name="class">
           <xsl:text>form-control </xsl:text>
+
+			<xsl:if test="alert">
+				<xsl:text>is-invalid </xsl:text>
+			</xsl:if>
           <xsl:choose>
             <xsl:when test="ancestor::switch and contains(@class,'required')">
               <xsl:apply-templates select="." mode="isRequired"/>
@@ -2303,6 +2307,21 @@
       <xsl:text> </xsl:text>
     </textarea>
     <!--Space is required for XSLT compiled mode-->
+	      <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
+      <div class="invalid-feedback">
+        <xsl:value-of select="@data-fv-not-empty___message"/>
+      </div>
+    </xsl:if>
+    <xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+      <div class="invalid-feedback">
+        This is required
+      </div>
+    </xsl:if>
+    <xsl:if test="alert">
+      <div class="invalid-feedback-server">
+        <xsl:copy-of select="alert/node()"/>
+      </div>
+    </xsl:if>
   </xsl:template>
   <!-- -->
   <xsl:template match="textarea[contains(@class,'readonly')]" mode="xform_control">

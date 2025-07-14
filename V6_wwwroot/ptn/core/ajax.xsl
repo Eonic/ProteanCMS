@@ -25,7 +25,11 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button"  data-bs-dismiss="modal" class="close">×</button>
+			<a type="button" data-bs-dismiss="modal" class="float-end">
+				<i class="fa-regular fa-circle-xmark">
+					<xsl:text> </xsl:text>
+				</i>
+			</a>
         </div>
         <div class="modal-body">
           <xsl:copy-of select="ContentDetail/Content"/>
