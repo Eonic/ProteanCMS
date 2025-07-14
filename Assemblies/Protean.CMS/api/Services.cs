@@ -254,6 +254,15 @@ namespace Protean
                             sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, oTos[i], SubjectLine, ref odbhelper, "", "", "", ccRecipient, bccRecipient, cSeperator).ToString();
                         }
                     }
+                    else {
+                        sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "", "", "", ccRecipient, bccRecipient, cSeperator).ToString();
+                    }
+                    if (fromEmail != "") {
+                        //send confirmation to the customer
+                        oBodyXML.SetAttribute("mode", "customer");
+                        sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, fromEmail, SubjectLine, ref odbhelper, "", "", "", ccRecipient, bccRecipient, cSeperator).ToString();
+                    }
+
                 }
                 else
                 {
