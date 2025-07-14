@@ -14,7 +14,7 @@
 				  <xsl:text> </xsl:text>
 			  </i>
               <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
-              <button type="button" class="close" data-dismiss="modal">
+              <button type="button" class="close" data-dismiss="modal"  aria-label="close">
                 <i class="fa fa-times">
 					<xsl:text> </xsl:text>
 				</i>

@@ -151,7 +151,7 @@
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 
-			<a href="{$linkURL}" title="{Name}" class="nav-link">
+			<a href="{$linkURL}" class="nav-link">
 				<xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
 					<xsl:attribute name="rel">external</xsl:attribute>
 					<xsl:attribute name="class">extLink</xsl:attribute>
@@ -242,7 +242,7 @@
               </span>
             </xsl:when>
             <xsl:otherwise>
-              <a href="{$linkURL}" title="{Name}" class="list-image-link">
+              <a href="{$linkURL}"  class="list-image-link">
                 <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
                   <xsl:attribute name="rel">external</xsl:attribute>
                 </xsl:if>
@@ -273,7 +273,7 @@
                       <xsl:value-of select="Name"/>
                     </xsl:when>
                     <xsl:otherwise>
-                      <a href="{$linkURL}" title="{Name}">
+                      <a href="{$linkURL}">
                         <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
                           <xsl:attribute name="rel">external</xsl:attribute>
                           <xsl:attribute name="class">extLink</xsl:attribute>
@@ -297,7 +297,7 @@
                           <xsl:value-of select="Name"/>
                         </xsl:when>
                         <xsl:otherwise>
-                          <a href="{$linkURL}" title="{Name}">
+                          <a href="{$linkURL}">
                             <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
                               <xsl:attribute name="rel">external</xsl:attribute>
                               <xsl:attribute name="class">extLink</xsl:attribute>
@@ -319,7 +319,7 @@
                           <xsl:value-of select="Name"/>
                         </xsl:when>
                         <xsl:otherwise>
-                          <a href="{$linkURL}" title="{Name}">
+                          <a href="{$linkURL}">
                             <xsl:if test="not(substring(@linkURL,1,1)='/') and (contains(@linkURL,'http://') and Url/@type='external')">
                               <xsl:attribute name="rel">external</xsl:attribute>
                               <xsl:attribute name="class">extLink</xsl:attribute>
