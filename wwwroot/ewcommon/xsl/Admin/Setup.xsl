@@ -237,7 +237,167 @@
     </html>
   </xsl:template>
 
-  <xsl:template match="MenuItem/MenuItem" mode="adminMenuItem">
+
+	<xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
+		<xsl:choose>
+			<xsl:when test="$page/Settings/add[@key='web.proteanProductName']/@value!=''">
+				<xsl:call-template name="proteanAdminSystemName"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<img src="/ptn/admin/skin/protean-admin-black-logon.png" alt="ProteanCMS" width="320px" height="57px"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="Content[ancestor::Page[@adminMode='true'] and @name='UserLogon']" mode="xform">
+
+		        <form method="{model/submission/@method}" action="">
+			<xsl:attribute name="class">
+				<xsl:text>ewXform panel panel-primary</xsl:text>
+				<xsl:if test="model/submission/@class!=''">
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="model/submission/@class"/>
+				</xsl:if>
+			</xsl:attribute>
+			<xsl:if test="not(contains(model/submission/@action,'.asmx'))">
+				<xsl:attribute name="action">
+					<xsl:value-of select="model/submission/@action"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@id!=''">
+				<xsl:attribute name="id">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+				<xsl:attribute name="name">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@event!=''">
+				<xsl:attribute name="onsubmit">
+					<xsl:value-of select="model/submission/@event"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="descendant::upload">
+				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+			</xsl:if>
+
+			<xsl:for-each select="group">
+				<div class="panel-body">
+					<xsl:apply-templates select="label" mode="legend"/>
+					<p>Welcome back, please sign in to your account</p>
+					<xsl:choose>
+						<xsl:when test="contains(@class,'2col') or contains(@class,'2Col') ">
+							<div class="row">
+								<xsl:for-each select="group | repeat">
+									<xsl:apply-templates select="." mode="xform">
+										<xsl:with-param name="class">
+											<xsl:text>col-md-</xsl:text>
+											<xsl:choose>
+												<xsl:when test="position()='1'">4</xsl:when>
+												<xsl:when test="position()='2'">8</xsl:when>
+											</xsl:choose>
+										</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:for-each>
+							</div>
+						</xsl:when>
+						<xsl:when test="contains(@class,'2col5050') or contains(@class,'2Col5050') ">
+							<div class="row">
+								<xsl:for-each select="group | repeat">
+									<xsl:apply-templates select="." mode="xform">
+										<xsl:with-param name="class">
+											<xsl:text>col-md-</xsl:text>
+											<xsl:choose>
+												<xsl:when test="position()='1'">6</xsl:when>
+												<xsl:when test="position()='2'">6</xsl:when>
+											</xsl:choose>
+										</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:for-each>
+							</div>
+						</xsl:when>
+						<xsl:when test="contains(@class,'3col') or contains(@class,'3Col') ">
+							<div class="row">
+								<xsl:for-each select="group | repeat">
+									<xsl:apply-templates select="." mode="xform">
+										<xsl:with-param name="class">
+											<xsl:text>col-md-4</xsl:text>
+										</xsl:with-param>
+									</xsl:apply-templates>
+								</xsl:for-each>
+							</div>
+						</xsl:when>
+						<xsl:otherwise>
+							<xsl:apply-templates select="group | repeat " mode="xform"/>
+						</xsl:otherwise>
+					</xsl:choose>
+					<xsl:apply-templates select="parent::*/alert" mode="xform"/>
+
+					<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div | submit" mode="xform"/>
+
+
+				</div>
+
+			</xsl:for-each>
+		</form>
+
+		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
+	</xsl:template>
+
+	<xsl:template match="*" mode="xform_modal">
+		<!--do nothing-->
+	</xsl:template>
+
+	<xsl:template match="submit[ancestor::Content[@name='UserLogon'] and ancestor::Page/@adminMode='true' and @ref='UserLogon']" mode="xform">
+		<xsl:variable name="class">
+			<xsl:text>adminButton</xsl:text>
+			<xsl:if test="@class!=''">
+				<xsl:text> </xsl:text>
+				<xsl:value-of select="@class"/>
+			</xsl:if>
+		</xsl:variable>
+
+		<button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-primary btn-block"  onclick="disableButton(this);">
+			Sign In<xsl:text> </xsl:text>
+			<i class="fa fa-sign-in">
+				<xsl:text> </xsl:text>
+			</i>
+		</button>
+
+	</xsl:template>
+
+	<xsl:template match="div[@class='separator']" mode="xform">
+		<div class="separator">OR</div>
+	</xsl:template>
+	<xsl:template match="div[@class='footer-override']" mode="xform">
+		<div >
+			<xsl:if test="./@class">
+				<xsl:attribute name="class">
+					<xsl:value-of select="./@class"/>
+				</xsl:attribute>
+			</xsl:if>
+			<br/>
+			<a href="{$appPath}?ewCmd=LogOff" >
+				<i class="fa fa-reply">
+					<xsl:text> </xsl:text>
+				</i> Back to Site
+			</a>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
+
+		<xsl:choose>
+			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
+				<xsl:call-template name="eonicwebAdminSystemName"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<img src="/ewcommon/images/admin/skin/protean-admin-black-logon.png" alt="ProteanCMS" width="320px" height="57px"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="MenuItem/MenuItem" mode="adminMenuItem">
     <xsl:param name="level"/>
     <li>
       <xsl:apply-templates select="self::MenuItem" mode="adminLink1">
