@@ -1,30 +1,36 @@
-﻿using DocumentFormat.OpenXml.Office.CustomXsn;
-using iTextSharp.text.pdf;
-using Microsoft.Identity.Client;
-using Protean.Tools.Errors;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
-using System.Web;
-using TinifyAPI;
+using System.Configuration;
 
 
 namespace Protean.Tools
 {
-
+   
     public class GitHelper
     {
+       
+       private readonly string _gitFilePath;
 
-
-        public string GitCommandExecution(string cClientId, string cTenantId, string ps1FilePath, string cScopeFile, string cSecreteValue,string cAccessToken)
+        public GitHelper(string gitFilePath)
         {
-           
+            if (!string.IsNullOrEmpty(gitFilePath))
+            {
+                _gitFilePath = gitFilePath;
+            }
+
+        }
+        public string GitCommandExecution(string ps1FilePath, string cAccessToken)
+        {
+            
             string output = "";
             string error = "";
             string result = "";
-           
-            string arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\" -ClientId \"{cClientId}\" -TenantId \"{cTenantId}\" -accessToken \"{cAccessToken}\"";
+            string gitFilePath = _gitFilePath;
+            
+            ps1FilePath = gitFilePath + ps1FilePath;
+            string arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\"";
 
             // Create temporary askpass script
             string askPassPath = Path.Combine(Path.GetTempPath(), "askpass_oauth2.bat");
@@ -60,7 +66,7 @@ namespace Protean.Tools
                 {
                     result = $"Git Pull may have failed.\nExit Code: {exitCode}\nError:\n{error}\nOutput:\n{output}";
                 }
-                return result ;
+                return result;
 
 
             }

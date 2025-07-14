@@ -752,7 +752,7 @@ namespace Protean
                     string cAccessToken = "";
                     string gitFilePath = "";
 
-                    GitHelper gitHelper = new GitHelper();
+                    
                     Tools.Security.Impersonate oImp = null;
                     oImp = new Tools.Security.Impersonate();
 
@@ -776,9 +776,9 @@ namespace Protean
 
                                         if (!string.IsNullOrEmpty(goConfig["GitFilePath"]))
                                         {
-                                            gitFilePath = Path.Combine(goConfig["GitFilePath"], "deployscripts", cGitPS1FileName);
+                                            gitFilePath = Path.Combine(goConfig["GitFilePath"], cGitPS1FileName);
                                         }
-
+                                        GitHelper gitHelper = new GitHelper(gitFilePath);
                                         if (File.Exists(gitFilePath))
                                         {
                                             if (!string.IsNullOrEmpty(moConfig["AzureClientId"]) &&
@@ -808,7 +808,7 @@ namespace Protean
                                                     HttpContext.Current.Session["AzureDevOpsAccessToken"] = cAccessToken;
                                                 }
 
-                                                result = gitHelper.GitCommandExecution(cClientId, cTenantId, gitFilePath, cScope, cSecreteValue, cAccessToken);
+                                                result = gitHelper.GitCommandExecution(gitFilePath, cAccessToken);
                                             }
                                         }
                                     }
