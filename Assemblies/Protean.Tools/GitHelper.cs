@@ -3,6 +3,8 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Configuration;
+using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Http;
 
 namespace Protean.Tools
 {
@@ -18,12 +20,13 @@ namespace Protean.Tools
             }
         }
 
-        public string GitCommandExecution(string ps1FilePath, string cAccessToken)
+        public string AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue, string ps1FilePath)
         {
             string output = "";
             string error = "";
             string result = "";
             string askPassPath = string.Empty;
+            string cAccessToken = "";
 
             try
             {
@@ -32,8 +35,15 @@ namespace Protean.Tools
                 {
                     ps1FilePath = gitFilePath + ps1FilePath;
                 }
-               
+
                 string arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\"";
+                var app = ConfidentialClientApplicationBuilder.Create(cClientId)
+                  .WithClientSecret(cSecreteValue)
+              .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
+                  .Build();
+
+                var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
+                cAccessToken = tokenResult.AccessToken;
 
                 // Create temporary askpass script
                 askPassPath = Path.Combine(Path.GetTempPath(), "askpass_oauth2.bat");
