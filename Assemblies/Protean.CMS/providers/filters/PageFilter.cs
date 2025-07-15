@@ -109,7 +109,7 @@ namespace Protean.Providers
                             // oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                             while (oDr.Read())
                             {
-                                string name = Convert.ToString(oDr["cStructName"]) + " <span class='ProductCount'>" + Convert.ToString(oDr["ContentCount"]) + "</span>";
+                                string name = Convert.ToString(oDr["cStructName"]) + " <span class='badge ms-2' id='ProductCount'>" + Convert.ToString(oDr["ContentCount"]) + "</span>";
                                 string value = Convert.ToString(oDr["nStructKey"]);
 
                                 oXform.addOption(ref pageFilterSelect, name, value, true);
