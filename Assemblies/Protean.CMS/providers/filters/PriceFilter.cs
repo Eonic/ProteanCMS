@@ -205,8 +205,9 @@ namespace Protean.Providers
                         // Dim sText As String = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()
                         string sText = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()/*"From " + oMinPrice.Value.Trim() + " to " + oMaxPrice.Value.Trim()*/;
                         oXform.addSubmit(ref oFromGroup, "PriceFilter", sText, "PriceFilter", "remove-PriceFilter filter-applied", "fa-times");
-
+                        oXform.addDiv(ref oFromGroup, "", "PriceClearAll", true);
                     }
+                   
                     oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain");
 
                     //if (aWeb.moRequest.Form["MinPrice"] != null & aWeb.moRequest.Form["MinPrice"] != "")
