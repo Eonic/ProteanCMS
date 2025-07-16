@@ -12,16 +12,22 @@
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.AdminProxy;
+using Protean.Providers.Authentication;
+using Protean.Providers.CDN;
 using Protean.Tools;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
+using System.Net.PeerToPeer;
 using System.Reflection;
 using System.Security.AccessControl;
+using System.Text;
 using System.Web;
 using System.Web.Configuration;
+using System.Windows.Controls;
 using System.Xml;
 using static Protean.Cms;
 using static Protean.stdTools;
@@ -234,6 +240,7 @@ namespace Protean.Providers
             {
                 private const string mcModuleName = "Protean.Providers.Membership.Default.AdminXForms";
                 public bool maintainMembershipsOnAdd = true;
+                string samlUserEmail = string.Empty;
 
                 XmlElement IMembershipAdminXforms.moXformElmt
                 {
@@ -255,14 +262,29 @@ namespace Protean.Providers
                 {
 
                     // Called to get XML for the User Logon.
+                    string btnClass = "btn btn-default btn-block icon-right";
+                    string btnIcon = "fa fa-sign-in";
+                    string grpClass = "d-grid gap-2";
+                    if (myWeb.bs5) {
+                        btnClass = "btn btn-primary";
+                        btnIcon = "fa-solid fa-right-to-bracket";
+                        grpClass = "";
+                    }
 
                     XmlElement oFrmElmt = null;
                     XmlElement oSelElmt;
                     string sValidResponse;
                     string cProcessInfo = "";
                     bool bRememberMe = false;
+                    string samlUserEmail = string.Empty;
+
                     try
                     {
+                        //this need to be optional based on auth provider config
+                        Protean.Providers.Authentication.ReturnProvider oAuthProv = new Protean.Providers.Authentication.ReturnProvider();
+                        IEnumerable<IauthenticaitonProvider> oAuthProviders = oAuthProv.Get(ref myWeb);
+
+
                         base.NewFrm("UserLogon");
 
                         if (mbAdminMode & myWeb.mnUserId == 0)
@@ -291,20 +313,49 @@ namespace Protean.Providers
 
                         base.submission("UserLogon", "", "post", "form_check(this)");
 
-                        oFrmElmt = base.addGroup(ref base.moXformElmt, "UserDetails", "", "Sign in to ProteanCMS");
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "UserDetails", grpClass, "Sign in to ProteanCMS");
 
-                        XmlElement userIpt = base.addInput(ref oFrmElmt, "cUserName", true, "Email");
+                        XmlElement userIpt = base.addInput(ref oFrmElmt, "cUserName", true, "");
+                        userIpt.SetAttribute("placeholder", "Email");
                         base.addClientSideValidation(ref userIpt, true, "Please enter Email");
                         XmlElement oBindParent = null;
                         base.addBind("cUserName", "user/username", ref oBindParent, "true()");
                         string cClass = "";
-                        XmlElement pwdIpt = base.addSecret(ref oFrmElmt, "cPassword", true, "Password", ref cClass);
+                        XmlElement pwdIpt = base.addSecret(ref oFrmElmt, "cPassword", true, "", ref cClass);
+                        pwdIpt.SetAttribute("placeholder", "Password");
                         base.addClientSideValidation(ref pwdIpt, true, "Please enter Password");
                         base.addBind("cPassword", "user/password", ref oBindParent, "true()");
+                        base.addDiv(ref oFrmElmt, "<xsl:text> </xsl:text>", "password-reminder");
+                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign In", "UserLogon", btnClass);
+                       
 
-                        base.addSubmit(ref oFrmElmt, "ewSubmit", "Sign In", default, default, "fa-solid fa-right-to-bracket");
 
-                        base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
+                        if (oAuthProviders != null){
+                            if (oAuthProviders.Count() > 0)
+                            {
+                                base.addDiv(ref oFrmElmt, "", "separator");
+                                foreach (IauthenticaitonProvider authProvider in oAuthProviders) {
+                                    Boolean bUse = false;
+                                    if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin") {
+                                        bUse = true;
+                                    }
+                                    if (bUse) {
+                                        string provName = authProvider.config["name"];
+                                        XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With " + provName, "AuthProvider", btnClass + " btn-"+ provName.ToLower(), btnIcon, provName.ToLower());
+                                        thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
+                                    }
+                                }
+                            }
+                        }
+                        //END auth provider
+                       
+
+                       
+
+                       base.addDiv(ref oFrmElmt, "", "footer-override");
+                       
+                    base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
+
                     Check:
                         ;
                         XmlElement xmlGroupElmt = (XmlElement)base.moXformElmt.SelectSingleNode("group");
@@ -373,16 +424,93 @@ namespace Protean.Providers
                         }
                         else
                         {
+                            // Check for SAML response                          
+
+                            if (oAuthProviders != null && oAuthProviders.Any())
+                            {
+                                string samlResponse = myWeb.moRequest["SAMLResponse"];
+                                string relayState = myWeb.moRequest["RelayState"];
+
+                                if (!string.IsNullOrEmpty(samlResponse))
+                                {
+                                    XmlDocument xmlDoc = new XmlDocument();
+                                    xmlDoc.PreserveWhitespace = true;
+                                    xmlDoc.LoadXml(Encoding.UTF8.GetString(Convert.FromBase64String(samlResponse)));                                    
+                                 
+                                    //checking for each provider
+                                    foreach (IauthenticaitonProvider authProvider in oAuthProviders)
+                                    {
+                                        string issuer = authProvider.ExtractIssuer(xmlDoc);
+                                        Boolean bUse = false;
+                                        string providerKey = authProvider.config["name"].ToLower();
+                                        if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin")
+                                        {
+                                            bUse = true;
+                                        }
+                                        if (bUse && myWeb.moRequest["SAMLResponse"] != null && authProvider.config["entityId"] != null 
+                                            && providerKey == relayState.ToLower() 
+                                            && authProvider.config["entityId"].ToString().Equals(issuer, StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            //long userid = authProvider.CheckAuthenticationResponse(myWeb.moRequest, myWeb.moSession, myWeb.moResponse);
+                                            samlUserEmail = authProvider.ExtractEmail(xmlDoc);
+                                            //update Authprovider in existing tblDirectory against email address
+                                            string sSql = "update tblDirectory set cDirPassword ='"+ authProvider.name + "' where cDirName = '"+ samlUserEmail + "' or cDirEmail = '"+ samlUserEmail+"' " ;
+                                            sValidResponse = moDbHelper.ExeProcessSql(sSql).ToString();
+                                            
+                                            sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name); // Password as a Provider name here
+                                            if (Information.IsNumeric(sValidResponse))
+                                            {
+                                                myWeb.mnUserId = Convert.ToInt32(sValidResponse);
+                                                moDbHelper.mnUserId = Conversions.ToLong(sValidResponse);
+                                                valid = true;
+                                                if (goSession != null)
+                                                {
+                                                    goSession["nUserId"] = sValidResponse;
+                                                    XmlElement UserXml = myWeb.GetUserXML();
+                                                    if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
+                                                    {
+                                                        goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
+                                                    }
+                                                }
+                                            }else
+                                            {
+                                                //user not present in proteanCms                                               
+                                                base.valid = false;
+                                                base.addNote(ref xmlGroupElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
+                                            }                                            
+                                        }
+                                    }
+                                }                                
+                            }
+
 
                             if (base.isSubmitted())
-                            {
+                            {                                
+                                //Add code to redirect SAML Auth using Google and Microsoft                           
+                                if (!string.IsNullOrEmpty(myWeb.moRequest["AuthProvider"]))
+                                {
+                                    string selectedProvider = myWeb.moRequest["AuthProvider"];
+                                    foreach (IauthenticaitonProvider authProvider in oAuthProviders)
+                                    {                                        
+                                        if(authProvider.config["name"].ToLower().Contains(selectedProvider))
+                                        {
+                                            string redirectUrl = authProvider.GetAuthenticationURL(selectedProvider);
+                                            if (!string.IsNullOrEmpty(redirectUrl))
+                                            {
+                                                //myWeb.msRedirectOnEnd = redirectUrl;
+                                                myWeb.moResponse.Redirect(redirectUrl);
+                                            }
+                                        }                                       
+                                    }
+                                }                               
+
                                 base.validate();
                                 if (base.valid)
                                 {
-
+                                   
                                     // changed to get from instance rather than direct from querysting / form.
                                     string username = base.Instance.SelectSingleNode("user/username").InnerText;
-                                    string password = base.Instance.SelectSingleNode("user/password").InnerText;
+                                    string password = base.Instance.SelectSingleNode("user/password").InnerText;                                                                     
 
                                     sValidResponse = moDbHelper.validateUser(username, password);
 
@@ -1113,6 +1241,7 @@ namespace Protean.Providers
                             {
                                 base.Instance.InnerXml = moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Directory, id);
                                 cCurrentPassword = Instance.SelectSingleNode("*/cDirPassword").InnerText;
+
                             }
 
                             if (IntanceAppend != null)
@@ -2243,6 +2372,7 @@ namespace Protean.Providers
                                 case "md5":
                                 case "sha1":
                                 case "sha256":
+                                case "SHA2_512_SALT":
                                     {
                                         oXfmElmt = (XmlElement)adXfm.xFrmResetAccount();
                                         break;
@@ -2782,14 +2912,30 @@ namespace Protean.Providers
                         }
                         if (File.Exists(goServer.MapPath(xsltPath)))
                         {
-                            XmlElement oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
-                            if (clearUserId)
-                                mnUserId = 0; // clear user Id so we don't stay logged on
+                            XmlElement oUserEmail;
+                            XmlElement oUserElmt;      
                             XmlElement oElmtPwd = myWeb.moPageXml.CreateElement("Password");
                             oElmtPwd.InnerText = moRequest["cDirPassword"];
-                            oUserElmt.AppendChild(oElmtPwd);
+                            if (myWeb.bs5)
+                            {
+                                oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
+                                oUserElmt.AppendChild(oElmtPwd);
+                                XmlElement emailRoot = oUserElmt.OwnerDocument.CreateElement("MessageBody");
+                                emailRoot.AppendChild(oUserElmt.CloneNode(true));
+                                emailRoot.SetAttribute("id", "UserRegistration");
+                                oUserElmt = emailRoot;
+                                oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("User/Email");
+                            }
+                            else {
+                                oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
+                                oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
+                                oUserElmt.AppendChild(oElmtPwd);
+                            }
+                                if (clearUserId)
+                                mnUserId = 0; // clear user Id so we don't stay logged on
+                      
+                           
 
-                            XmlElement oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
                             string fromName = moConfig["SiteAdminName"];
                             string fromEmail = moConfig["SiteAdminEmail"];
                             string recipientEmail = "";

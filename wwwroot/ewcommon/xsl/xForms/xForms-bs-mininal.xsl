@@ -11,7 +11,7 @@
 						<div class="modal-body">
 							<i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
 							<xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
-							<button type="button" class="close" data-dismiss="modal">
+							<button type="button" class="close" data-dismiss="modal"  aria-label="close">
 								<i class="fa fa-times">&#160;</i>
 							</button>
 							<span id="errorMessage">&#160;</span>
@@ -64,12 +64,14 @@
 	<!-- ========================== XFORM ========================== -->
 	<!-- -->
 	<xsl:template match="div" mode="xform">
-		<xsl:if test="./@class">
+		<!--<xsl:if test="./@class">
 			<xsl:attribute name="class">
 				<xsl:value-of select="./@class"/>
 			</xsl:attribute>
-		</xsl:if>
-		<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+		</xsl:if>-->
+		
+		<xsl:apply-templates select="." mode="cleanXhtml"/>
+		
 	</xsl:template>
 
 	<!-- -->
@@ -933,6 +935,12 @@
 					<xsl:value-of select="@data-pleasewaitdetail"/>
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="@icon-left!=''">
+				<i class="{@icon-left} iconleft">
+					<xsl:text> </xsl:text>
+				</i>
+				<xsl:text> </xsl:text>
+			</xsl:if>
 			<xsl:if test="not(contains($class,'icon-right'))">
 				<i class="fa {$icon} fa-white">
 					<xsl:text> </xsl:text>
@@ -946,6 +954,8 @@
 					<xsl:text> </xsl:text>
 				</i>
 			</xsl:if>
+
+			
 		</button>
 	</xsl:template>
 
@@ -4071,6 +4081,12 @@
 				<xsl:attribute name="data-pleasewaitdetail">
 					<xsl:value-of select="@data-pleasewaitdetail"/>
 				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@icon-left!=''">
+				<i class="fa {@icon-left} fa-white">
+					<xsl:text> </xsl:text>
+				</i>
+				<xsl:text> </xsl:text>
 			</xsl:if>
 			<xsl:if test="not(contains($class,'icon-right'))">
 				<i class="fa {$icon} fa-white">

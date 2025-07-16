@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Runtime.CompilerServices;
@@ -12,6 +13,7 @@ using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Lucene.Net.Documents.Field;
 using static Protean.stdTools;
+using static QRCoder.PayloadGenerator;
 
 namespace Protean
 {
@@ -199,7 +201,7 @@ namespace Protean
         {
 
             string sMessage = "";
-           //string cProcessInfo = "emailer";
+            //string cProcessInfo = "emailer";
             try
             {
                 if (CheckUserIP())
@@ -207,7 +209,60 @@ namespace Protean
                     var myWeb = new Cms(moCtx);
                     var oMsg = new Messaging(ref myWeb.msException);
                     Cms.dbHelper odbhelper = null;
-                    sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine,ref odbhelper,"","","",ccRecipient, bccRecipient, cSeperator).ToString();
+                    sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "", "", "", ccRecipient, bccRecipient, cSeperator).ToString();
+                }
+                else
+                {
+                    sMessage = "<div class=\"error\">Please check SOAP IP Settings for " + GetIpAddress(moRequest) + "</div>";
+                }
+
+                return sMessage;
+            }
+
+            catch (Exception ex)
+            {
+                return ex.Message + " - " + ex.GetBaseException().Message + " - " + ex.StackTrace;
+            }
+
+        }
+
+
+        [WebMethod(Description = "Sends Email From Website xForm")]
+        public object emailerMultiSend(ref XmlElement oBodyXML, ref string xsltPath, ref string fromName, ref string fromEmail, ref string recipientEmail, ref string SubjectLine, string ccRecipient, string bccRecipient, string cSeperator, string Mode)
+        {
+
+            string sMessage = "";
+            //string cProcessInfo = "emailer";
+            try
+            {
+                if (CheckUserIP())
+                {
+                    var myWeb = new Cms(moCtx);
+                    var oMsg = new Messaging(ref myWeb.msException);
+                    Cms.dbHelper odbhelper = null;
+
+                    // using multiple addresses here
+                    if (recipientEmail.Contains(cSeperator))
+                    {
+                        string[] oTos = Strings.Split(recipientEmail, cSeperator);
+                        string[] oModes = Strings.Split(Mode, cSeperator);
+                        int i;
+                        var loopTo = oTos.Length - 1;
+                        for (i = 0; i <= loopTo; i++)
+                        {
+                            oBodyXML.SetAttribute("mode", oModes[i]);
+                            sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, oTos[i], SubjectLine, ref odbhelper, "", "", "", ccRecipient, bccRecipient, cSeperator).ToString();
+                        }
+                    }
+                    else {
+                        sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "", "", "", ccRecipient, bccRecipient, cSeperator).ToString();
+                    }
+                    if (fromEmail != "") {
+                        //send confirmation to the customer
+                        oBodyXML.SetAttribute("mode", "customer");
+                        sMessage = oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, fromEmail, SubjectLine, ref odbhelper, "", "", "", ccRecipient, bccRecipient, cSeperator).ToString();
+                    }
+
                 }
                 else
                 {
@@ -234,7 +289,7 @@ namespace Protean
                 var myWeb = new Cms(moCtx);
                 var oMsg = new Messaging(ref myWeb.msException);
                 Cms.dbHelper odbhelper = null;
-                sMessage = Conversions.ToString(oMsg.emailerWithXmlAttachment(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, attachmentFromXSLPath, attachmentFromXSLType, attachmentName,ref odbhelper, "Message Sent", "Message Failed", recipientEmail, ccRecipient, bccRecipient, cSeperator));
+                sMessage = Conversions.ToString(oMsg.emailerWithXmlAttachment(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, attachmentFromXSLPath, attachmentFromXSLType, attachmentName, ref odbhelper, "Message Sent", "Message Failed", recipientEmail, ccRecipient, bccRecipient, cSeperator));
                 return sMessage;
             }
             catch (Exception ex)
@@ -270,7 +325,7 @@ namespace Protean
         public object emailerWithAttachmentStreams(ref XmlElement oBodyXML, ref string xsltPath, ref string fromName, ref string fromEmail, ref string recipientEmail, ref string SubjectLine, string ccRecipient, string bccRecipient, string cSeperator, KeyValPair[] attachmentsBase64List)
         {
             string sMessage;
-           // string cProcessInfo = "emailerWithAttachmentStreams";
+            // string cProcessInfo = "emailerWithAttachmentStreams";
             try
             {
                 var myWeb = new Cms(moCtx);
@@ -291,7 +346,7 @@ namespace Protean
                     }
                 }
                 Cms.dbHelper odbhelper = null;
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine,ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
                 return sMessage;
             }
 
@@ -314,7 +369,7 @@ namespace Protean
 
                 oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend);
                 Cms.dbHelper odbhelper = null;
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine,ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
                 oMsg.deleteAttachment(cAttachmentFilePath);
                 return sMessage;
             }
@@ -344,7 +399,7 @@ namespace Protean
                     oMsg.addAttachment(arrayItem, bDeleteAfterSend);
                 }
                 Cms.dbHelper odbhelper = null;
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine,ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
                 // deleting physical files given full path
                 foreach (var currentArrayItem1 in strFilePath)
                 {
@@ -408,7 +463,7 @@ namespace Protean
                     oBodyXML.SetAttribute("error", "FTP Failed: " + ex.Message);
                 }
                 Cms.dbHelper odbhelper = null;
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine,ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
 
                 return sMessage;
             }
@@ -562,7 +617,7 @@ namespace Protean
             finally
             {
                 oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
-            }           
+            }
 
             HttpContext.Current.ApplicationInstance.CompleteRequest();
             return oRXML;
@@ -775,7 +830,7 @@ namespace Protean
                             string SenderName = myWeb.moConfig["SiteName"] + " Notification";
 
                             Cms.dbHelper odbhelper = null;
-                            string cMessage = Conversions.ToString(oMsg.emailer(oResponse, cXSLPath, SenderName, cWebmasterEmail, cEmail, "",ref odbhelper, "Message Sent", "Message Failed", "", "", "", ""));
+                            string cMessage = Conversions.ToString(oMsg.emailer(oResponse, cXSLPath, SenderName, cWebmasterEmail, cEmail, "", ref odbhelper, "Message Sent", "Message Failed", "", "", "", ""));
                             AddResponse(cMessage);
                         }
                         bResult = true;
@@ -1087,7 +1142,7 @@ namespace Protean
             url = myWeb.GetContentUrl(contentId);
             myWeb.Close();
             return url;
-           
+
         }
 
         [WebMethod(Description = "get standard filter for sql content")]
@@ -1099,7 +1154,7 @@ namespace Protean
             myWeb.GetStandardFilterSQLForContent();
             myWeb.Close();
             return null;
-            
+
         }
 
         [WebMethod(Description = "check page permission")]
@@ -1111,7 +1166,7 @@ namespace Protean
             int data = Convert.ToInt32(myWeb.moDbHelper.checkPagePermission(parId));
             myWeb.Close();
             return data;
-           
+
         }
 
         [WebMethod(Description = "return admin mode")]
@@ -1122,7 +1177,7 @@ namespace Protean
 
             bool data = myWeb.mbAdminMode;
             myWeb.Close();
-            return data;           
+            return data;
         }
 
         [WebMethod(Description = "create Element")]
@@ -1134,7 +1189,7 @@ namespace Protean
             myWeb.moPageXml.DocumentElement.AppendChild(oRoot);
             myWeb.Close();
             return oRoot;
-            
+
         }
 
         [WebMethod(Description = "update content index")]
@@ -1159,7 +1214,7 @@ namespace Protean
             catch (Exception ex)
             {
                 bResult = false;
-               
+
             }
             finally
             {
@@ -1167,9 +1222,9 @@ namespace Protean
             }
 
             HttpContext.Current.ApplicationInstance.CompleteRequest();
-            
-        }
 
+        }
+       
         #endregion
 
     }

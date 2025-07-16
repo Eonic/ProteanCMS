@@ -148,6 +148,12 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.2\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Identity.Client, Version=4.73.1.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
+      <HintPath>..\..\..\EonicClients\IntoTheBlue_GIT\packages\Microsoft.Identity.Client.4.73.1\lib\net472\Microsoft.Identity.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Abstractions, Version=6.35.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\EonicClients\IntoTheBlue_GIT\packages\Microsoft.IdentityModel.Abstractions.6.35.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="Microsoft.Web.Infrastructure, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Web.Infrastructure.2.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
@@ -191,6 +197,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.SqlClient, Version=4.6.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\..\EonicClients\BeatSCAD\BeatSCAD\packages\System.Data.SqlClient.4.9.0\lib\net462\System.Data.SqlClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\..\..\EonicClients\IntoTheBlue_GIT\packages\System.Diagnostics.DiagnosticSource.6.0.1\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Common, Version=9.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -279,6 +288,7 @@
     <Reference Include="System.Web.RegularExpressions" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -308,6 +318,9 @@
     <Compile Include="api\soap.cs" />
     <Compile Include="core\DBImport.cs" />
     <Compile Include="features\membership\Membership.Modules.cs" />
+    <Compile Include="providers\Authentication\Authentication.Microsoft.cs" />
+    <Compile Include="providers\Authentication\Authentication.Google.cs" />
+    <Compile Include="providers\Authentication\Authentication.BaseProvider.cs" />
     <Compile Include="providers\CDN.BaseProvider.cs" />
     <Compile Include="Connected Services\AdminProxy\Reference.cs">
       <AutoGen>True</AutoGen>
@@ -440,13 +453,13 @@
     <WCFMetadataStorage Include="Connected Services\AdminProxy\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Protean.Tools\Protean.Tools.csproj">
-      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
-      <Name>Protean.Tools</Name>
-    </ProjectReference>
+    <Folder Include="bin\App_Start\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bin\App_Start\" />
+    <ProjectReference Include="..\Protean.Tools\Protean.Tools.csproj">
+      <Project>{50df1cd6-1843-9628-fe34-68d9c3c2e326}</Project>
+      <Name>Protean.Tools</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -1,6 +1,7 @@
 ﻿using Lucene.Net.Support;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Models;
 using Protean.Providers.Membership;
 using System;
 using System.Collections;
@@ -1956,6 +1957,8 @@ namespace Protean
                                                 mcContentType = "application/pdf";
                                                 // Next we transform using into FO.Net Xml
 
+                                                moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "Create Pdf" , false);
+
 
                                                 string styleFile2 = goServer.MapPath(mcEwSiteXsl);
                                                 PerfMon.Log("Web", "ReturnPageHTML - loaded Style");
@@ -1972,6 +1975,9 @@ namespace Protean
 
                                                 string foNetXml = icPageWriter.ToString();
 
+                                                moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "Create Pdf Transformed", false);
+
+
 
                                                 if (foNetXml.StartsWith("<html"))
                                                 {
@@ -1979,6 +1985,9 @@ namespace Protean
                                                 }
                                                 else
                                                 {
+
+                                                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "FO.Net-Start", false);
+
                                                     // now we use FO.Net to generate our PDF
 
                                                     string strFileName = mcOutputFileName;
@@ -2049,8 +2058,7 @@ namespace Protean
                                                             }
                                                         }
                                                     }
-
-                                                    oFoNet.Options = rendererOpts;
+                                                     oFoNet.Options = rendererOpts;
                                                     oFoNet.Render(oTxtReader, ofileStream);
 
                                                     moResponse.Buffer = true;
@@ -2077,6 +2085,7 @@ namespace Protean
                                                     moCtx.Response.BinaryWrite(Buffer);
                                                     moCtx.Response.Flush();
 
+                                                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "FO.Net-End", false);
                                                     // objStream = Nothing
                                                     oFoNet = null;
                                                     oTxtReader = null;
@@ -3516,7 +3525,8 @@ namespace Protean
                     case "GetMoveContent":
                     case "GetLocateNode":
                     case "GetAdvNode":
-                    case "editStructurePermissions":                    
+                    case "editStructurePermissions":
+                    case "GetSEOReport":
                         {
 
                             // Make sure admin mode is true and we don't need to check for permissions
@@ -3554,6 +3564,10 @@ namespace Protean
                                 FullMenuXml.ReplaceChild(FullMenuXml.SelectSingleNode("descendant-or-self::MenuItem[@id = " + expId + "]"), FullMenuXml.FirstChild);
 
                                 FullMenuXml.SetAttribute("level", getLevel.ToString());
+                                if (moRequest["ajaxCmd"] == "GetSEOReport")
+                                {
+                                    FullMenuXml = moDbHelper.GetMenuMetaTitleDescriptionDetailsXml(FullMenuXml);
+                                }
                             }
 
                             oPageElmt.AppendChild(FullMenuXml);
@@ -5115,7 +5129,7 @@ namespace Protean
 
 
 
-        public void GetPageContentFromSelectFilterPagination(ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, string sWhereSql, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string cAdminMode = "false")
+        public void GetPageContentFromSelectFilterPagination(ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, string sWhereSql, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string cAdminMode = "false", string cGroupBySql = "")
         {
             PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -5131,6 +5145,7 @@ namespace Protean
             long nAuthGroup;
             string cContentField = "";
             string cFilterTarget = string.Empty;
+            string sGroupByClause;
 
             try
             {
@@ -5271,27 +5286,48 @@ namespace Protean
                 }
 
                 sSql = sSql + " where (" + combinedWhereSQL + ")";
+                sGroupByClause = "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+
                 if (!string.IsNullOrEmpty(cOrderBy))
                 {
 
 
                     if (distinct)
                     {
-                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        // additional column have agreegate function and distinct flag is true then group by needs to eanble with default column
+                        // along with orderby clause
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+                        else
+                        {
+                            sSql = sSql + sGroupByClause;
+                        }
+                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
                         sSql += cOrderBy;
 
+                        //this code is checking  if input cOrderby parameter is already contains nStatus field, then removing it from default column list
+                        // in order by clause.
+                        // else default column will have same columns.. 
                         if (cOrderBy.Contains("a.nStatus"))
                         {
                             sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
                         }
                         else
                         {
-                            sSql = sSql + " , c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
                         }
                     }
                     else
                     {
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+
+                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition"+ cAdditionalColumns;
                         sSql = sSql + " ORDER BY ";
                         sSql += cOrderBy;
                     }
@@ -5300,16 +5336,26 @@ namespace Protean
                 }
                 else
                 {
-
+                    // additional column have agreegate function and distinct flag is true then group by needs to eanble with default column
+                    // along with orderby clause
                     if (distinct)
                     {
-                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+                        else
+                        {
+                            sSql = sSql + sGroupByClause;
+                        }
+                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
-                        sSql = sSql + ", c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        sSql = sSql + "  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
 
                     }
                     else
                     {
+                        //default behaviour
                         sSql = sSql + " ORDER BY";
                         sSql += "(SELECT NULL)";
                     }
@@ -8136,7 +8182,8 @@ namespace Protean
                             string cAdminMode = Convert.ToString(moSession["AdminMode"]);
                             XmlElement argoPageDetail = null;
                             int nCount = 0;
-                            GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows, distinct: true, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns, cOrderBy: cOrderBySql, cAdminMode: cAdminMode);
+                            string cGroupBySql = string.Empty;
+                            GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows, distinct: true, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns, cOrderBy: cOrderBySql, cAdminMode: cAdminMode, cGroupBySql: cGroupBySql);
                         }
                         else
                         {

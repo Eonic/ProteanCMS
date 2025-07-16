@@ -1564,6 +1564,7 @@ namespace Protean
 
                                 // info to display the cart
                                 GetCart(ref oElmt);
+                                GetWalletDetails(ref oElmt);
                                 break;
                             }
 
@@ -2646,9 +2647,16 @@ namespace Protean
                             string xsltPath = string.Empty;
                             bool bOptOut = false;
                             if (string.IsNullOrEmpty(Email))
-                                Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
+                                if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email") != null)
+                                {
+                                    Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
+                                }
                             if (string.IsNullOrEmpty(Name))
-                                Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
+                                if(oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName")!=null)
+                                {
+                                    Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
+                                }
+                                
                             if (valDict is null)
                                 valDict = new Dictionary<string, string>();
 
@@ -2680,12 +2688,12 @@ namespace Protean
                                     {
                                         ListId = moMailConfig["InvoiceList"];
                                         xsltPath = moMailConfig["GetDictionaryForInvoiceListXsl"];
-                                        if (!string.IsNullOrEmpty(moMailConfig["QuoteList"]))
+                                        if (!string.IsNullOrEmpty(moMailConfig["InvoiceList"]))
                                         {
                                             // if we have invoiced the customer we don't want to send them quote reminders
                                             if (oMessaging.Activities != null)
                                             {
-                                                oMessaging.Activities.RemoveFromList(moMailConfig["QuoteList"], Email);
+                                                oMessaging.Activities.RemoveFromList(moMailConfig["InvoiceList"], Email);
                                             }
                                         }
 
@@ -3825,6 +3833,56 @@ namespace Protean
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug);
+                }
+
+            }
+
+            //this is a method to display wallet buttons on cart screen.
+            //input parameter is CartElement which will have values in 
+            //node with 'Wallets/Wallet with attributes to it
+            // which will be used to get data for rendering button with paymentdetails on cartprocess.xsl
+
+            public bool GetWalletDetails(ref XmlElement oCartElmt)
+
+            {
+                try
+                {
+
+
+                    decimal nPaymentAmount = Conversions.ToDecimal("0" + oCartElmt.GetAttribute("total"));
+                    if (nPaymentAmount <= 0)
+                    {
+                        return false;
+                    }
+
+
+                    Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
+
+                    XmlElement xElmtPaymentProvider = oEwProv.GetValidPaymentProviders();
+
+                    if (xElmtPaymentProvider != null)
+                    {
+
+                        foreach (XmlElement opElmt in xElmtPaymentProvider)
+                        {
+
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
+                            XmlElement oWallets = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
+                            //just check if wallets object is empty.
+                            if (oWallets.InnerXml != string.Empty)
+                            {
+                                oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oWallets, true));
+                            }
+                        }
+
+                    }
+                    return true;
+
+                }
+                catch (Exception ex)
+                {
+                    return false;
                 }
 
             }
@@ -5437,13 +5495,13 @@ namespace Protean
                                 }
                                 if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail") != null)
                                 {
-                                    if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nOptOutId"))
+                                    if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nOptOutKey"))
                                     {
                                         if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut") != null)
                                         {
                                             sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
                                             string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
-                                            moDBHelper.AddOptOutEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
+                                            moDBHelper.AddOptOutEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3,oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
 
                                         }
                                     }
@@ -7415,7 +7473,7 @@ namespace Protean
 
                             if (oGrpElmt.SelectSingleNode("*[@ref='terms']") is null)
                             {
-                                string argsClass1 = "readonly terms-and-condiditons";
+                                string argsClass1 = "readonly terms-and-conditons";
                                 int argnRows1 = 0;
                                 int argnCols1 = 0;
                                 oOptXform.addTextArea(ref oGrpElmt, "terms", false, cTermsTitle, ref argsClass1, nRows: ref argnRows1, nCols: ref argnCols1);
@@ -8463,11 +8521,17 @@ namespace Protean
                                             if (Information.IsNumeric(myWeb.moRequest.Form.Get("donationAmount")))
                                             {
                                                 string CartItemName = "Donation";
+                                                string CartItemXml = "";
                                                 if (!string.IsNullOrEmpty(myWeb.moRequest.Form.Get("donationName")))
                                                 {
                                                     CartItemName = myWeb.moRequest.Form.Get("donationName");
                                                 }
-                                                if (!AddItem(nProductKey, nQuantity, oOptions, CartItemName, Conversions.ToDouble(myWeb.moRequest.Form.Get("donationAmount"))))
+                                                if (!string.IsNullOrEmpty(myWeb.moRequest.Form.Get("donationMessage")))
+                                                {
+                                                    CartItemXml = "<donation><message>" + myWeb.moRequest.Form.Get("donationMessage") + "</message></donation>";
+                                                }
+
+                                                if (!AddItem(nProductKey, nQuantity, oOptions, CartItemName, Conversions.ToDouble(myWeb.moRequest.Form.Get("donationAmount")), CartItemXml))
                                                 {
                                                     qtyAdded = 0;
                                                 }
@@ -11102,7 +11166,7 @@ namespace Protean
                                 }
                                 nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
                             }
-                            oRow["nShippingTotal"] = nShippingCost;
+                            oRow["nShipOptCost"] = nShippingCost;
 
                             // TODO delete any parent relations /  or remove if allready have child
                             string delLocation = oRow["cLocationNameShort"].ToString();
@@ -11242,7 +11306,7 @@ namespace Protean
                 }
             }
 
-            private string updateGCgetValidShippingOptionsDS(string nShipOptKey)
+            public string updateGCgetValidShippingOptionsDS(string nShipOptKey)
             {
                 try
                 {

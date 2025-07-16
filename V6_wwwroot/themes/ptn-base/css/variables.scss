@@ -31,7 +31,7 @@ $modal-content-border-radius: 0;
 $body-color: #242424;
 $font-family-base: 'Gantari', sans-serif;
 $headings-font-family: $font-family-base;
-$headings-color: #00aeef;
+
 
 $navbar-font: $font-family-base;
 $font-weight-base: 300;
@@ -65,6 +65,7 @@ $btn-padding-y: 0.4rem;
 /*################### NAVIGATION #####################*/
 $navbar-light-color: $body-color;
 $nav-link-hover-color: $primary;
+$navbar-light-active-color: $nav-link-hover-color;
 $navbar-light-hover-color: $nav-link-hover-color;
 $main-nav-size: 1.1rem;
 //$navbar-font:$headings-font-family;
@@ -102,7 +103,9 @@ $header-btn-style: btn-outline-primary;
 
 /*##################### FOOTER #######################*/
 $footer-bg: $dark;
-$footer-color:#fff;
+$footer-color: #fff;
+$footer-link: #fff;
+$footer-link-hover: $nav-link-hover-color;
 
 /*###################### FORMS #######################*/
 $input-border-color: #919191;

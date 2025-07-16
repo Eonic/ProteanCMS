@@ -7,16 +7,18 @@
       <!--################################################ modal for alert-->
       <div class="modal fade" id="xFrmAlertModal" role="dialog" style ="padding-top:15%!important">
         <div class="modal-dialog">
-          <div class="modal-content  alert alert-danger" role="alert">
+          <div class="modal-content panel-warning" role="alert">
             <div class="modal-header">
-              <button type="button" class="btn-close"  data-bs-dismiss="modal">
-                &#160;
+              <button type="button" class="btn-close"  data-bs-dismiss="modal"  aria-label="close">
+                <xsl:text> </xsl:text>
               </button>
             </div>
-            <div class="modal-body" aria-automic="true">
-              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
-              <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
-              <span id="errorMessage">&#160;</span>
+            <div class="modal-body " aria-automic="true">
+              <div class="alert alert-danger">
+                <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
+                <xsl:text disable-output-escaping="yes">&amp;</xsl:text>&#160;
+                <span id="errorMessage">&#160;</span>
+              </div>
             </div>
           </div>
         </div>
@@ -33,6 +35,8 @@
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::*[alert][0]" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::help" mode="xform_control_script"/>
+    <xsl:apply-templates select="descendant-or-self::*[hint][0]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::select1[item[toggle]]" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::submit" mode="xform_control_script"/>
     <xsl:apply-templates select="descendant-or-self::button" mode="xform_control_script"/>
@@ -80,12 +84,15 @@
   <!-- ========================== XFORM ========================== -->
   <!-- -->
   <xsl:template match="div" mode="xform">
-    <xsl:if test="./@class">
-      <xsl:attribute name="class">
-        <xsl:value-of select="./@class"/>
-      </xsl:attribute>
-    </xsl:if>
-    <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+ 
+      <!-- TS: div is required otherwise it breaks in compiled mode -->
+      <xsl:if test="./@class">
+        <xsl:attribute name="class">
+          <xsl:value-of select="./@class"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+
   </xsl:template>
 
   <!-- -->
@@ -264,17 +271,17 @@
 
   <!-- Switch -->
   <xsl:template match="switch" mode="xform">
-	  <xsl:variable name="for" select="@for"/>
-	  <xsl:variable name="selectedValue" select="ancestor::Content/descendant::*[@bind=$for]/value"/>
-	  <xsl:variable name="selectedCases">
-		  <xsl:for-each select="ancestor::Content/descendant::select1[@bind=$for]/item[value=$selectedValue]/toggle">
-			  <xsl:value-of select="@case"/>
-			  <xsl:text>,</xsl:text>
-		  </xsl:for-each>
-	  </xsl:variable>
-	  <xsl:apply-templates select="case" mode="xform">
-		  <xsl:with-param name="selectedCase" select="$selectedCases"/>
-	  </xsl:apply-templates>
+    <xsl:variable name="for" select="@for"/>
+    <xsl:variable name="selectedValue" select="ancestor::Content/descendant::*[@bind=$for]/value"/>
+    <xsl:variable name="selectedCases">
+      <xsl:for-each select="ancestor::Content/descendant::select1[@bind=$for]/item[value=$selectedValue]/toggle">
+        <xsl:value-of select="@case"/>
+        <xsl:text>,</xsl:text>
+      </xsl:for-each>
+    </xsl:variable>
+    <xsl:apply-templates select="case" mode="xform">
+      <xsl:with-param name="selectedCase" select="$selectedCases"/>
+    </xsl:apply-templates>
   </xsl:template>
 
   <!-- Case -->
@@ -384,10 +391,10 @@
   <!-- -->
   <!-- ========================== GROUP In Tabs ========================== -->
   <xsl:template match="group[contains(@class,'nav-tabs')]" mode="xform">
-	  <div>
-		  <xsl:apply-templates select="hint | help | alert" mode="xform"/>
+    <div>
+      <xsl:apply-templates select="hint | help | alert" mode="xform"/>
 
-		  <ul class="nav nav-tabs d-none d-lg-flex" role="tablist">
+      <ul class="nav nav-tabs d-none d-lg-flex" role="tablist">
         <xsl:for-each select="group">
           <li role="presentation" class="nav-item">
             <xsl:if test="position()='1'">
@@ -424,17 +431,17 @@
               </xsl:when>
             </xsl:choose>
             <h2 class="accordion-header d-lg-none">
-				<xsl:choose>
-					<xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
-						<xsl:attribute name="aria-expanded">true</xsl:attribute>
-					</xsl:when>
-					<xsl:when test="position()='1' and not(/Page/Request/Form/Item[@name='stepto'])">
-						<xsl:attribute name="aria-expanded">true</xsl:attribute>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:attribute name="aria-expanded">false</xsl:attribute>
-					</xsl:otherwise>
-				</xsl:choose>
+              <xsl:choose>
+                <xsl:when test="/Page/Request/Form/Item[@name='stepto']/node()=@id">
+                  <xsl:attribute name="aria-expanded">true</xsl:attribute>
+                </xsl:when>
+                <xsl:when test="position()='1' and not(/Page/Request/Form/Item[@name='stepto'])">
+                  <xsl:attribute name="aria-expanded">true</xsl:attribute>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:attribute name="aria-expanded">false</xsl:attribute>
+                </xsl:otherwise>
+              </xsl:choose>
               <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{@id}" aria-controls="#collapse-{@id}" id="button-{@id}">
                 <xsl:if test="position()!='1'">
                   <xsl:attribute name="class">accordion-button collapsed </xsl:attribute>
@@ -496,71 +503,71 @@
   </xsl:template>
 
 
-	<xsl:template match="submit[@ref='stepto']" mode="xform">
-		<xsl:variable name="class">
-			<xsl:text>btn</xsl:text>
-			<xsl:if test="not(contains(@class,'btn-'))">
-				<xsl:text> btn-custom</xsl:text>
-			</xsl:if>
-			<xsl:if test="@class!=''">
-				<xsl:text> </xsl:text>
-				<xsl:value-of select="@class"/>
-			</xsl:if>
-		</xsl:variable>
-		<xsl:variable name="name">
-			<xsl:choose>
-				<xsl:when test="@ref!=''">
-					<xsl:value-of select="@ref"/>
-				</xsl:when>
-				<xsl:when test="@submission!=''">
-					<xsl:value-of select="@submission"/>
-				</xsl:when>
-				<xsl:when test="@bind!=''">
-					<xsl:value-of select="@bind"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text>ewSubmit</xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="icon">
-			<xsl:choose>
-				<xsl:when test="@icon!=''">
-					<xsl:value-of select="@icon"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:text> </xsl:text>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<xsl:variable name="buttonValue">
-			<xsl:choose>
-				<xsl:when test="@value!=''">
-					<xsl:value-of select="@value"/>
-				</xsl:when>
-				<xsl:otherwise>
-					<xsl:value-of select="label/node()"/>
-				</xsl:otherwise>
-			</xsl:choose>
-		</xsl:variable>
-		<button type="button" data-bs-toggle="tab"  data-bs-target="#tab-btn-{@value}" role="tab" aria-controls="tab-{@value}" aria-selected="false" class="{$class} btn-tab">
-			<!--<button type="button" onClick="bootstrap.Tab.getInstance($()).show()" class="{$class}">-->
-				<xsl:if test="not(contains($class,'icon-right')) and $icon!=''">
-				<i class="fa {$icon} fa-white">
-					<xsl:text> </xsl:text>
-				</i>
-				<xsl:text> </xsl:text>
-			</xsl:if>
-			<xsl:apply-templates select="label" mode="submitText"/>
-			<xsl:if test="contains($class,'icon-right') and $icon!=''">
-				<xsl:text> </xsl:text>
-				<i class="fa {$icon} fa-white">
-					<xsl:text> </xsl:text>
-				</i>
-			</xsl:if>
-		</button>
-	</xsl:template>
-	
+  <xsl:template match="submit[@ref='stepto']" mode="xform">
+    <xsl:variable name="class">
+      <xsl:text>btn</xsl:text>
+      <xsl:if test="not(contains(@class,'btn-'))">
+        <xsl:text> btn-custom</xsl:text>
+      </xsl:if>
+      <xsl:if test="@class!=''">
+        <xsl:text> </xsl:text>
+        <xsl:value-of select="@class"/>
+      </xsl:if>
+    </xsl:variable>
+    <xsl:variable name="name">
+      <xsl:choose>
+        <xsl:when test="@ref!=''">
+          <xsl:value-of select="@ref"/>
+        </xsl:when>
+        <xsl:when test="@submission!=''">
+          <xsl:value-of select="@submission"/>
+        </xsl:when>
+        <xsl:when test="@bind!=''">
+          <xsl:value-of select="@bind"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>ewSubmit</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="icon">
+      <xsl:choose>
+        <xsl:when test="@icon!=''">
+          <xsl:value-of select="@icon"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text> </xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="buttonValue">
+      <xsl:choose>
+        <xsl:when test="@value!=''">
+          <xsl:value-of select="@value"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="label/node()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <button type="button" data-bs-toggle="tab"  data-bs-target="#tab-btn-{@value}" role="tab" aria-controls="tab-{@value}" aria-selected="false" class="{$class} btn-tab">
+      <!--<button type="button" onClick="bootstrap.Tab.getInstance($()).show()" class="{$class}">-->
+      <xsl:if test="not(contains($class,'icon-right')) and $icon!=''">
+        <i class="fa {$icon} fa-white">
+          <xsl:text> </xsl:text>
+        </i>
+        <xsl:text> </xsl:text>
+      </xsl:if>
+      <xsl:apply-templates select="label" mode="submitText"/>
+      <xsl:if test="contains($class,'icon-right') and $icon!=''">
+        <xsl:text> </xsl:text>
+        <i class="fa {$icon} fa-white">
+          <xsl:text> </xsl:text>
+        </i>
+      </xsl:if>
+    </button>
+  </xsl:template>
+
   <!-- -->
   <!-- ========================== GROUP In Accordion ========================== -->
   <xsl:template match="group[contains(@class,'accordion')]" mode="xform">
@@ -828,6 +835,18 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template match="div" mode="control-outer">
+
+    <xsl:apply-templates select="." mode="xform"/>
+
+  </xsl:template>
+
+  <xsl:template match="submit" mode="control-outer">
+    <div class="d-grid gap-2">
+      <xsl:apply-templates select="." mode="xform"/>
+    </div>
+  </xsl:template>
+
   <xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform">
     <xsl:param name="nolabel"/>
     <xsl:param name="dependantClass"/>
@@ -901,7 +920,7 @@
     <xsl:param name="dependantClass"/>
 
     <!-- NB : the count(item)!=1 basically stops you from making a one checkbox field (ie a boolean) from being required -->
-   
+
     <xsl:variable name="fmhz">
       <xsl:if test="ancestor::group[contains(@class,'inline-labels')]">
         <xsl:text>col-sm-9</xsl:text>
@@ -1360,6 +1379,9 @@
   <!-- Allows for very simple overloading of default values for if a user is logged on for instance -->
   <xsl:template match="*" mode="xform_value">
     <xsl:choose>
+      <xsl:when test="force!=''">
+        <xsl:value-of select="force"/>
+      </xsl:when>
       <xsl:when test="value!=''">
         <xsl:value-of select="value"/>
       </xsl:when>
@@ -2252,6 +2274,10 @@
       <xsl:if test="@class!=''">
         <xsl:attribute name="class">
           <xsl:text>form-control </xsl:text>
+
+			<xsl:if test="alert">
+				<xsl:text>is-invalid </xsl:text>
+			</xsl:if>
           <xsl:choose>
             <xsl:when test="ancestor::switch and contains(@class,'required')">
               <xsl:apply-templates select="." mode="isRequired"/>
@@ -2281,6 +2307,21 @@
       <xsl:text> </xsl:text>
     </textarea>
     <!--Space is required for XSLT compiled mode-->
+	      <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
+      <div class="invalid-feedback">
+        <xsl:value-of select="@data-fv-not-empty___message"/>
+      </div>
+    </xsl:if>
+    <xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+      <div class="invalid-feedback">
+        This is required
+      </div>
+    </xsl:if>
+    <xsl:if test="alert">
+      <div class="invalid-feedback-server">
+        <xsl:copy-of select="alert/node()"/>
+      </div>
+    </xsl:if>
   </xsl:template>
   <!-- -->
   <xsl:template match="textarea[contains(@class,'readonly')]" mode="xform_control">
@@ -2488,7 +2529,7 @@
     <xsl:choose>
       <xsl:when test="name()='group'">
         <xsl:apply-templates select="." mode="xform">
-            <xsl:with-param name="dependantClass" select="$dependantClass" />
+          <xsl:with-param name="dependantClass" select="$dependantClass" />
           <xsl:with-param name="selectedCase" select="$selectedCase"/>
         </xsl:apply-templates>
       </xsl:when>
@@ -2496,7 +2537,7 @@
         <div class="form-group invisible">
           <xsl:apply-templates select="." mode="xform">
             <xsl:with-param name="dependantClass" select="$dependantClass" />
-          <xsl:with-param name="selectedCase" select="$selectedCase"/>
+            <xsl:with-param name="selectedCase" select="$selectedCase"/>
           </xsl:apply-templates>
         </div>
       </xsl:when>
@@ -2517,7 +2558,7 @@
           </xsl:attribute>
           <xsl:apply-templates select="." mode="xform">
             <xsl:with-param name="dependantClass" select="$dependantClass" />
-          <xsl:with-param name="selectedCase" select="$selectedCase"/>
+            <xsl:with-param name="selectedCase" select="$selectedCase"/>
           </xsl:apply-templates>
         </div>
         <!-- Output Cases - that not empty -->
@@ -2596,7 +2637,7 @@
     <div id="{translate(@id,'[]#=/','')}-dependant">
       <!-- IF CHOSEN CASE - HIDE-->
       <xsl:attribute name="class">
-        <xsl:value-of select="$dependantClass" />		  
+        <xsl:value-of select="$dependantClass" />
         <xsl:if test="not(contains($selectedCase,@id)) and not(descendant-or-self::alert)">
           <xsl:text> hidden</xsl:text>
         </xsl:if>

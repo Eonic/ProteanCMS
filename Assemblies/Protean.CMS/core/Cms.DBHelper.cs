@@ -8,8 +8,10 @@
 // $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
+using AngleSharp.Dom;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Authentication;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using System;
@@ -26,6 +28,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms;
+using static Protean.Cms.dbHelper;
 using static Protean.Cms.dbImport;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -1613,6 +1617,7 @@ namespace Protean
                                     string originalPath = myWeb.mcOriginalURL.Split('?')[0].TrimEnd(charsToTrim);
                                     if ((originalPath.ToLower() ?? "") != (redirectUrl.ToLower() ?? ""))
                                     {
+                                        myWeb.mbRedirectPerm = Conversions.ToString(true);
                                         myWeb.msRedirectOnEnd = redirectUrl;
                                     }
 
@@ -1660,11 +1665,14 @@ namespace Protean
                                         if (myWeb.moConfig["addPathArtId"] == "on" && nArtId > 0)
                                         {
                                             ItemIdPath = nArtId + "-/";
-                                            string redirectUrl = "/" + thisPrefix + "/" + ItemIdPath + sPath;
+                                            string redirectUrl = "/" + thisPrefix + "/" + ItemIdPath + Protean.Tools.Text.CleanName(sPath).Replace(" ", "-").Trim('-');
+                                            
+
                                             if (myWeb.moConfig["DetailPathTrailingSlash"] == "on")
                                             {
                                                 redirectUrl = redirectUrl + "/";
                                             }
+                                            myWeb.mbRedirectPerm = Conversions.ToString(true);
                                             myWeb.msRedirectOnEnd = redirectUrl;
                                         }
                                     }
@@ -6281,7 +6289,7 @@ namespace Protean
 
 
                     string cOrderBy = "";
-                    string cAdditionalColumn = ""; 
+                    string cAdditionalColumn = "";
 
                     // Get the parameters SortDirection
                     string cSchema = oContent.GetAttribute("contentType");
@@ -6306,7 +6314,7 @@ namespace Protean
                         // Get Related Items
                         XmlElement argoPageDetail = null;
                         int nCount = 0;
-                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail,cAdditionalColumns: cAdditionalColumn);
+                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail, cAdditionalColumns: cAdditionalColumn);
                         foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
                         {
                             XmlElement xmloContentElmt = oContentElmt;
@@ -8041,6 +8049,9 @@ namespace Protean
 
                 try
                 {
+                    //this need to be optional based on auth provider config
+                    Protean.Providers.Authentication.ReturnProvider oAuthProv = new Protean.Providers.Authentication.ReturnProvider();
+                    IEnumerable<IauthenticaitonProvider> oAuthProviders = oAuthProv.Get(ref myWeb);
 
                     // Does the configuration setting indicate that email addresses are allowed.
                     if (Strings.LCase(myWeb.moConfig["EmailUsernames"]) == "on")
@@ -8094,6 +8105,11 @@ namespace Protean
                         if (nNumberOfUsers == 0)
                         {
                             sReturn = sReturn; // "<span class=""msg-1015"">The username was not found</span>"
+                            //need to check authentication with google or microsoft user not found in proteanCMS
+                            if(oAuthProviders != null && myWeb.moRequest["SAMLResponse"] != null)
+                            {
+                                return sReturn = "<span class=\"msg-1037\">The user <span class=\"UserName\">" + cUsername + "</span> is not authorised to access this site. Please see the site administrator.</span>";
+                            }
                         }
                         // Return sReturn
                         else if (nNumberOfUsers > 1)
@@ -8106,6 +8122,35 @@ namespace Protean
                             oUserDetails = dsUsers.Tables[0].Rows[0];
                             cPasswordDatabase = Conversions.ToString(oUserDetails["cDirPassword"]);
                             nUserId = Conversions.ToLong(oUserDetails["nDirKey"]);
+
+                            // here we are checking SAML login is from google or microsoft, if not return error message.
+                            if (oAuthProviders != null)
+                            {
+                                if (oAuthProviders.Count() > 0)
+                                {                                    
+                                    foreach (IauthenticaitonProvider authProvider in oAuthProviders)
+                                    {
+                                        Boolean bUse = false;
+                                        if (authProvider.config["scope"].ToString() == "admin")
+                                        {
+                                            bUse = true;
+                                        }
+                                        if (bUse && authProvider.name.ToLower() == cPasswordForm.ToLower())  // this extra if added because direct checking available provider.
+                                        {                                           
+                                            if (myWeb.moRequest["SAMLResponse"] != null && authProvider.name == cPasswordDatabase)
+                                            {
+                                                bValidPassword = true;
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                return sReturn = "<span class=\"msg-1036\">Login failed. Please use your <span class=\"AuthName\">" + authProvider.name + "</span> account to sign in.</span>";                                                
+                                            }
+                                        }                                                                          
+                                    }
+                                }
+                            }
+                            //End Auth Provider
 
                             if (!(Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "plain") & !string.IsNullOrEmpty(myWeb.moConfig["MembershipEncryption"]))
                             {
@@ -8124,9 +8169,14 @@ namespace Protean
                                             }
                                         }
                                         break;
-                                    case "SHA2_512_SALT": // to replicate VMH
-                                        cHashedPassword = Tools.Encryption.HashString(cPasswordForm, "sha2_512", true);
-
+                                    case "SHA2_512_SALT": // to replicate
+                                        string salt = oUserDetails["cDirSalt"].ToString().ToUpperInvariant();
+                                        string saltedPassword = salt + cPasswordForm.Trim().ToLowerInvariant();
+                                        cHashedPassword = Tools.Encryption.HashString(saltedPassword, "sha2_512", true);
+                                        if ((cPasswordDatabase ?? "") == cHashedPassword)
+                                        {
+                                            bValidPassword = true;
+                                        }
                                         break;
                                     default:
                                         var oConvDoc = new XmlDocument();
@@ -8138,7 +8188,7 @@ namespace Protean
                                         if (cPasswordDatabase == cHashedPassword)
                                         {
                                             bValidPassword = true;
-                                        }
+                                        }                                       
                                         break;
                                 }
                             }
@@ -12459,7 +12509,7 @@ namespace Protean
 
                 return default;
             }
-            public bool AddOptOutEmail(string cEmailAddress, string cUserId, string nStatus)
+            public bool AddOptOutEmail(string cEmailAddress, string nContactKey, string cStatus)
             {
                 PerfMonLog("DBHelper", "AddOptOutEmail");
 
@@ -12467,15 +12517,32 @@ namespace Protean
                 {
                     if (string.IsNullOrEmpty(cEmailAddress))
                         return false;
+                    string cSQL = "Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
+                    string cSQLStatusCheck = "Select top 1 nStatus FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "') order by dOptOut desc";
+                    bool bstatus = Convert.ToBoolean(ExeProcessSqlScalar(cSQLStatusCheck));
 
-                    if ((cEmailAddress != ""))
+                    if (cStatus == "true")
                     {
-                        string cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,userid,optout_reason,status,optout_date) VALUES ('" + cEmailAddress + "','" + cUserId + "','','" + nStatus + "'," + SqlDate(DateTime.Now, true) + ")";
+                        cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,nCartContactId,optout_reason,nStatus,dOptOut) VALUES ('" + cEmailAddress + "','" + nContactKey + "','Cart Opt Out','" + cStatus + "'," + SqlDate(DateTime.Now, true) + ")";
                         ExeProcessSql(cSQL);
-                       
+                    }
+                    else
+                    {
+                        if (((ExeProcessSqlScalar(cSQL) ?? "") == (cEmailAddress ?? "")))
+                        {
+                            if (bstatus)
+                            {
+                                cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,nCartContactId,optout_reason,nStatus,dOptOut) VALUES ('" + cEmailAddress + "','" + nContactKey + "','Cart Opt In','" + cStatus + "'," + SqlDate(DateTime.Now, true) + ")";
+                                ExeProcessSql(cSQL);
+
+                            }
+
+                        }
 
                     }
-                    if (nStatus == "true")
+
+
+                    if (cStatus == "true")
                     {
                         System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
                         if (moMailConfig != null)
@@ -12498,7 +12565,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddInvalidEmail", ex, ""));
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddOptOutEmail", ex, ""));
                 }
 
                 return default;
@@ -12601,9 +12668,9 @@ namespace Protean
                     {
                         if (checkTableColumnExists("tblOptOutAddresses","status")) {
                         bool bReturn;
-                        if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "status"))
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nStatus"))
                         {
-                            cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE status=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
+                            cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE nStatus=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
                         }
                         else
                         {
@@ -12927,7 +12994,26 @@ namespace Protean
 
             }
 
-            public void RemoveDuplicateDirRelations()
+
+            public XmlElement RedactSensitiveData(XmlElement element)
+            {
+                string[] sensitiveTags = { "Password", "CreditCard", "BankBuildingSocietyAccountNo", "BranchSortCode", "ActivationKey" };
+
+                foreach (XmlNode child in element.ChildNodes)
+                {
+                    if (child is XmlElement childElement &&
+                    Array.Exists(sensitiveTags, tag => tag.Equals(childElement.Name, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        childElement.InnerText = "###";
+                    }
+                }
+
+                return element;
+            }
+ 
+
+
+        public void RemoveDuplicateDirRelations()
             {
                 try
                 {
@@ -14712,6 +14798,165 @@ namespace Protean
                 }
             }
 
+            public string getCountryName(string sCountryCode)
+            {
+                // SqlDataReader oDr;
+                string sSql;
+                string strReturn = "";
+                try
+                {
+                    sSql = "select cLocationNameShort  from tblCartShippingLocations where cLocationISOnum Like '" + sCountryCode + "' or cLocationISOa2 Like '" + sCountryCode + "' or cLocationISOa3 Like '" + sCountryCode + "'";
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql)) //code added by sonali 13/7/22
+                    {
+                        if (oDr.HasRows)
+                        {
+                            while (oDr.Read())
+                                strReturn = oDr["cLocationNameShort"].ToString();
+                        }
+                        else
+                            strReturn = "";
+
+                        oDr.Close();
+                        // oDr = null;
+                    }
+
+                    return strReturn;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+
+            public string getCountryISO2Code(ref string sCountry)
+            {
+                myWeb.PerfMon.Log("PaymentProviders", "getCountryISO2Code");
+                // Dim oDr As SqlDataReader
+                string sSql;
+                string strReturn = "";
+                string cProcessInfo = "getCountryISO2Code";
+                try
+                {
+
+                    sSql = "select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '" + sCountry + "' or cLocationNameShort Like '" + sCountry + "'";
+                    using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                    {
+                        if (oDr.HasRows)
+                        {
+                            while (oDr.Read())
+                                strReturn = Conversions.ToString(oDr["cLocationISOa2"]);
+                        }
+                        else
+                        {
+                            strReturn = "";
+                        }
+
+                    }
+                    return strReturn;
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getCountryISO2Code", ex, "", cProcessInfo, gbDebug);
+                    return null;
+                }
+            }
+
+            public string getCountryISO3Code(ref string sCountry)
+            {
+                myWeb.PerfMon.Log("PaymentProviders", "getCountryISO2Code");
+                // Dim oDr As SqlDataReader
+                string sSql;
+                string strReturn = "";
+                string cProcessInfo = "getCountryISO2Code";
+                try
+                {
+
+                    sSql = "select cLocationISOa3 from tblCartShippingLocations where cLocationNameFull Like '" + sCountry + "' or cLocationNameShort Like '" + sCountry + "'";
+                    using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                    {
+                        if (oDr.HasRows)
+                        {
+                            while (oDr.Read())
+                                strReturn = Conversions.ToString(oDr["cLocationISOa3"]);
+                        }
+                        else
+                        {
+                            strReturn = "";
+                        }
+
+                    }
+                    return strReturn;
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getCountryISO3Code", ex, "", cProcessInfo, gbDebug);
+                    return null;
+                }
+            }
+
+            public string getCountryISONum(string sCountry)
+            {
+                // SqlDataReader oDr;
+                string sSql;
+                string strReturn = "";
+                try
+                {
+                    sSql = "select cLocationISOnum from tblCartShippingLocations where cLocationNameFull Like '" + sCountry + "' or cLocationNameShort Like '" + sCountry + "'";
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql)) //code added by sonali 13/7/22
+                    {
+                        if (oDr.HasRows)
+                        {
+                            while (oDr.Read())
+                                strReturn = oDr["cLocationISOnum"].ToString();
+                        }
+                        else
+                            strReturn = "";
+
+                        oDr.Close();
+                        // oDr = null;
+                    }
+
+                    return strReturn;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+
+
+
+
+            public string getCountyISONum(string sCounty)
+            {
+                // SqlDataReader oDr;
+                string sSql;
+                string strReturn = "";
+                try
+                {
+                    sSql = "select cLocationISOnum from tblCartShippingLocations where cLocationNameFull Like '" + sCounty + "' or cLocationNameShort Like '" + sCounty + "'";
+                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql)) //code added by sonali 13/7/22
+                    {
+                        if (oDr.HasRows)
+                        {
+                            while (oDr.Read())
+                                strReturn = oDr["cLocationISOnum"].ToString();
+                        }
+                        else
+                            strReturn = "";
+
+                        oDr.Close();
+
+                    }
+
+                    return strReturn;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+
             // Public Function GetContentListByPageFilter(ByVal sPageIds As String) As SqlDataReader
             // Dim oDr As SqlDataReader
             // Dim sSql As String
@@ -14788,6 +15033,58 @@ namespace Protean
                     return nContentID;
                 }
             }
+
+            public XmlElement GetMenuMetaTitleDescriptionDetailsXml(XmlElement oMenuElmt)
+            {
+                string menuid = string.Empty;
+                string PageId = string.Empty;
+                string PageTitle = string.Empty;
+                string MetaDescription = string.Empty;
+                string cContentName = string.Empty;
+                string sSql = string.Empty;
+                DataSet oDs;
+                try
+                {
+                    sSql = "EXEC spGetAllMenusList";
+                    // Get the dataset
+                    //get all site detailed DS and then loop
+                    oDs = GetDataSet(sSql, "Content");
+                    if (oDs.Tables[0].Rows.Count > 0)
+                    {
+                        foreach (DataRow oRow2 in oDs.Tables[0].Rows)
+                        {
+                            PageId = Convert.ToString(oRow2["parId"]);
+                            foreach (XmlElement oMenuItem in oMenuElmt.SelectNodes($"descendant-or-self::MenuItem[@id='{PageId}']"))
+                            {
+                                XmlElement pagetitle = moPageXml.CreateElement("PageTitle");
+                                XmlElement metadescription = moPageXml.CreateElement("MetaDescription");
+                                cContentName = Convert.ToString(oRow2["cContentName"]);
+                                if (cContentName == "PageTitle")
+                                {
+                                    PageTitle = Convert.ToString(oRow2["cContentXmlBrief"]);
+                                    pagetitle.InnerXml = PageTitle;
+                                    pagetitle.SetAttribute("id", Convert.ToString(oRow2["nContentid"]));
+                                    oMenuItem.AppendChild(pagetitle);
+                                }
+                                if (cContentName == "MetaDescription")
+                                {
+                                    MetaDescription = Convert.ToString(oRow2["cContentXmlBrief"]);
+                                    metadescription.InnerXml = MetaDescription;
+                                    metadescription.SetAttribute("id", Convert.ToString(oRow2["nContentid"]));
+                                    oMenuItem.AppendChild(metadescription);
+                                }
+                            }
+                        }
+                    }
+                    return oMenuElmt;
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetMenuMetaTitleDescriptionDetailsXml", ex, "", "", gbDebug);
+                    return null;
+                }
+            }
+            
         }
 
 

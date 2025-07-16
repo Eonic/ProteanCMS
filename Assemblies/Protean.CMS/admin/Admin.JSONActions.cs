@@ -1,12 +1,22 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
+using System.Net.PeerToPeer;
+using System.Security.Authentication;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using Alphaleonis.Win32.Network;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
+using static Protean.Cms;
 using static Protean.stdTools;
+using Microsoft.Identity.Client;
+using Protean.Tools;
 
 namespace Protean
 {
@@ -14,8 +24,12 @@ namespace Protean
     public partial class Cms
     {
 
+        private System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+
+
         public partial class Admin
         {
+
 
 
             #region JSON Actions
@@ -35,7 +49,7 @@ namespace Protean
                 public Admin.Redirects moAdminRedirect;
                 public System.Collections.Specialized.NameValueCollection goConfig;
                 public System.Web.HttpContext moCtx;
-
+                public bool impersonationMode = false;
 
 
 
@@ -270,7 +284,7 @@ namespace Protean
                         return ex.Message;
                     }
 
-                   // return JsonResult;
+                    // return JsonResult;
                 }
 
                 public string DeleteUrls(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
@@ -724,6 +738,75 @@ namespace Protean
                         return ex.Message;
                     }
                 }
+                public string RunGitOperations(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                {
+                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+                    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+
+                    string cClientId = "";
+                    string cTenantId = "";
+                    string cScope = "";
+                    string cSecreteValue = "";
+                    string cGitPS1FileName = "";
+                    string result = "";
+                    string cAccessToken = "";
+                    string gitFilePath = "";
+
+                    
+                    Tools.Security.Impersonate oImp = null;
+                    oImp = new Tools.Security.Impersonate();
+
+                    bool impersonationMode = false;
+                    if (!string.IsNullOrEmpty(goConfig["AdminAcct"]) && goConfig["AdminGroup"] != "AzureWebApp")
+                    {
+                        impersonationMode = true;
+                    }
+
+                    try
+                    {
+                        if (impersonationMode)
+                        {
+                            if (myApi.mbAdminMode)
+                            {
+                                if (inputJson != null)
+                                {
+                                    if (inputJson["GitPS1FilePath"] != null && !string.IsNullOrEmpty(inputJson["GitPS1FilePath"].ToString()))
+                                    {
+                                        cGitPS1FileName = inputJson["GitPS1FilePath"].ToString();
+
+                                        if (!string.IsNullOrEmpty(goConfig["GitFilePath"]))
+                                        {
+                                            gitFilePath = goConfig["GitFilePath"];
+                                        }
+                                        GitHelper gitHelper = new GitHelper(gitFilePath);
+                                        if (File.Exists(gitFilePath + cGitPS1FileName))
+                                        {
+                                            if (!string.IsNullOrEmpty(moConfig["AzureClientId"]) &&
+                                                !string.IsNullOrEmpty(moConfig["AzureTenantId"]) &&
+                                                !string.IsNullOrEmpty(moConfig["AzureClientSecretValue"]) &&
+                                                !string.IsNullOrEmpty(moConfig["AzureScope"]))
+                                            {
+                                                cClientId = moConfig["AzureClientId"];
+                                                cTenantId = moConfig["AzureTenantId"];
+                                                cScope = moConfig["AzureScope"];
+                                                cSecreteValue = moConfig["AzureClientSecretValue"];
+                                                result = gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue, cGitPS1FileName);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        result = $"Error during Git operation: {ex.Message}";
+                    }
+
+                    return result;
+                }
+
+
             }
             #endregion
 

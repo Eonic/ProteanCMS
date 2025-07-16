@@ -30,8 +30,10 @@ namespace Protean.Providers
                     bool bParentPageId = false;
                     string cFilterTarget = string.Empty;
 
-                    XmlElement oPageGroup = oXform.addGroup(ref oXform.moXformElmt, "PageFilter", "pagefilter filter");
-                    oFromGroup.AppendChild(oPageGroup);
+                    XmlElement oPageGroup;
+                   
+                    
+                   
                     int nParentId = 1;
                     string sSql = "spGetPagesByParentPageId";
                     Hashtable arrParams = new Hashtable();
@@ -53,7 +55,15 @@ namespace Protean.Providers
 
                     oXform.Instance.AppendChild(oXml);
 
-
+                    if (!string.IsNullOrEmpty(oXml.InnerText))
+                    {
+                        oPageGroup = oXform.addGroup(ref oXform.moXformElmt, "PageFilter", "pagefilter filter active-filter");
+                    }
+                    else
+                    {
+                        oPageGroup = oXform.addGroup(ref oXform.moXformElmt, "PageFilter", "pagefilter filter");
+                    }
+                    oFromGroup.AppendChild(oPageGroup);
                     // Adding a binding to the form bindings
                     oXform.addBind("PageFilter", "PageFilter", ref oXform.model, "false()", "string");
                     if (FilterConfig.Attributes["name"] != null)
@@ -84,21 +94,22 @@ namespace Protean.Providers
                         // Adding controls to the form like dropdown, radiobuttons
                         if (oDr != null && oDr.HasRows)
                         {
+                           pageFilterSelect = oXform.addSelect(ref oPageGroup, "PageFilter", false, sCotrolDisplayName, "checkbox SubmitPageFilter", Protean.xForm.ApperanceTypes.Full);
 
-                            if (!string.IsNullOrEmpty(oXml.InnerText))
-                            {
+                            //if (!string.IsNullOrEmpty(oXml.InnerText))
+                            //{
 
-                                pageFilterSelect = oXform.addSelect(ref oPageGroup, "PageFilter", false, sCotrolDisplayName, "checkbox SubmitPageFilter filter-selected", Protean.xForm.ApperanceTypes.Full);
-                            }
-                            else
-                            {
-                                pageFilterSelect = oXform.addSelect(ref oPageGroup, "PageFilter", false, sCotrolDisplayName, "checkbox SubmitPageFilter", Protean.xForm.ApperanceTypes.Full);
-                            }
+                            //    pageFilterSelect = oXform.addSelect(ref oPageGroup, "PageFilter", false, sCotrolDisplayName, "checkbox SubmitPageFilter filter-selected", Protean.xForm.ApperanceTypes.Full);
+                            //}
+                            //else
+                            //{
+                            //    pageFilterSelect = oXform.addSelect(ref oPageGroup, "PageFilter", false, sCotrolDisplayName, "checkbox SubmitPageFilter", Protean.xForm.ApperanceTypes.Full);
+                            //}
 
                             // oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                             while (oDr.Read())
                             {
-                                string name = Convert.ToString(oDr["cStructName"]) + " <span class='ProductCount'>" + Convert.ToString(oDr["ContentCount"]) + "</span>";
+                                string name = Convert.ToString(oDr["cStructName"]) + " <span class='badge ms-2' id='ProductCount'>" + Convert.ToString(oDr["ContentCount"]) + "</span>";
                                 string value = Convert.ToString(oDr["nStructKey"]);
 
                                 oXform.addOption(ref pageFilterSelect, name, value, true);
@@ -123,7 +134,7 @@ namespace Protean.Providers
                                 {
                                     sText = oPageGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + aPages[cnt] + "']").FirstChild.FirstChild.InnerText;
 
-                                    oXform.addSubmit(ref oFromGroup, sText, sText, "PageFilter_" + aPages[cnt], " btnCross filter-applied", "fa-times");
+                                    oXform.addSubmit(ref oFromGroup, sText, sText, "PageFilter_" + aPages[cnt], " remove-PageFilter filter-applied", "fa-times");
 
                                 }
                             }
@@ -132,8 +143,9 @@ namespace Protean.Providers
                             {
 
                                 sText = oPageGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild.FirstChild.InnerText;
-                                oXform.addSubmit(ref oFromGroup, sText, sText, "PageFilter", " btnCross filter-applied", "fa-times");
+                                oXform.addSubmit(ref oFromGroup, sText, sText, "PageFilter", " remove-PageFilter filter-applied", "fa-times");
                             }
+                            oXform.addDiv(ref oFromGroup, "", "PageClearAll", true);
                         }
                     }
                 }

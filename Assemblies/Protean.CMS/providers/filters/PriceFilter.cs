@@ -27,7 +27,17 @@ namespace Protean.Providers
                     var arrParams = new Hashtable();
                     string sCotrolDisplayName = "Price Filter";
                     string cFilterTarget = string.Empty;
-                    XmlElement oPriceGroup = oXform.addGroup(ref oXform.moXformElmt, "PriceFilter", "pricefilter filter");
+                    XmlElement oPriceGroup;
+                    if (aWeb.moRequest.Form["MinPrice"] != null & aWeb.moRequest.Form["MinPrice"] != "")
+                    { 
+                        oPriceGroup=oXform.addGroup(ref oXform.moXformElmt, "PriceFilter", "pricefilter filter active-filter");
+                    
+                    }
+                    else
+                    {
+                        oPriceGroup= oXform.addGroup(ref oXform.moXformElmt, "PriceFilter", "pricefilter filter");
+                    }
+                        
                     oFromGroup.AppendChild(oPriceGroup);
                     var oXml = oXform.moPageXML.CreateElement("PriceFilter");
                     var oMinPrice = oXform.moPageXML.CreateAttribute("MinPrice");
@@ -38,6 +48,7 @@ namespace Protean.Providers
                     var oStep = oXform.moPageXML.CreateAttribute("PriceStep");
                     var oProductCountList = oXform.moPageXML.CreateAttribute("PriceCountList");
                     var oProductTotalCount = oXform.moPageXML.CreateAttribute("PriceTotalCount");
+                   
                     string sProductCount = string.Empty;
                     int cnt = 0;
                     string cProductCountList = string.Empty;
@@ -144,6 +155,7 @@ namespace Protean.Providers
                         oXml.Attributes.Append(oSliderMaxPrice);
                         oXml.Attributes.Append(oStep);
                         oXml.Attributes.Append(oProductTotalCount);
+                      
 
 
                         // 'Adding controls to the form like dropdown, radiobuttons
@@ -176,6 +188,7 @@ namespace Protean.Providers
                     oXform.addBind("PriceStep", "PriceFilter/@PriceStep", ref oXform.model, "false()", "string");
                     oXform.addBind("PriceListCount", "PriceFilter/@PriceCountList", ref oXform.model, "false()", "string");
                     oXform.addBind("PriceFilter", "PriceFilter/@MaxPrice", ref oXform.model, "false()", "string");
+                 
                     // oXform.addBind("PriceTotalCount", "PriceFilter/@PriceTotalCount", "false()", "string", oXform.model)
 
                     oXform.addInput(ref oPriceGroup, "MinPrice", true, "", "hidden");
@@ -194,18 +207,20 @@ namespace Protean.Providers
 
                         // Dim sText As String = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()
                         string sText = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPrice.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPrice.Value.Trim()/*"From " + oMinPrice.Value.Trim() + " to " + oMaxPrice.Value.Trim()*/;
-                        oXform.addSubmit(ref oFromGroup, "PriceFilter", sText, "PriceFilter", "btnCrossForPrice filter-applied", "fa-times");
+                        oXform.addSubmit(ref oFromGroup, "PriceFilter", sText, "PriceFilter", "remove-PriceFilter filter-applied", "fa-times");
+                        oXform.addDiv(ref oFromGroup, "", "PriceClearAll", true);
+                    }
+                   
+                    oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain");
 
-                    }
-
-                    if (aWeb.moRequest.Form["MinPrice"] != null & aWeb.moRequest.Form["MinPrice"] != "")
-                    {
-                        oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain filter-selected");
-                    }
-                    else
-                    {
-                        oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain");
-                    }
+                    //if (aWeb.moRequest.Form["MinPrice"] != null & aWeb.moRequest.Form["MinPrice"] != "")
+                    //{
+                    //    oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain filter-selected");
+                    //}
+                    //else
+                    //{
+                    //    oXform.addInput(ref oPriceGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPrice histogramMain");
+                    //}
                 }
 
                 catch (Exception ex)
@@ -227,8 +242,15 @@ namespace Protean.Providers
                     string cPageIds = string.Empty;
                     // cSelectedMinPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter/@MinPrice").InnerText)
                     // cSelectedMaxPrice = Convert.ToString(oXform.Instance.SelectSingleNode("PriceFilter/@MaxPrice").InnerText)
-                    cSelectedMinPrice = Convert.ToString(aWeb.moRequest.Form["MinPrice"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
-                    cSelectedMaxPrice = Convert.ToString(aWeb.moRequest.Form["MaxPrice"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
+
+                    if (aWeb.moRequest.Form["MinPrice"] != null)
+                    {
+                        cSelectedMinPrice = Convert.ToString(aWeb.moRequest.Form["MinPrice"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
+                    }
+                    if (aWeb.moRequest.Form["MaxPrice"] != null)
+                    {
+                        cSelectedMaxPrice = Convert.ToString(aWeb.moRequest.Form["MaxPrice"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
+                    }
                     //bool bParentPageId = false;
 
 
@@ -279,8 +301,16 @@ namespace Protean.Providers
                 {
                     string cSelectedMinPrice = "";
                     string cSelectedMaxPrice = "";
-                    cSelectedMinPrice = Convert.ToString(aWeb.moRequest.Form["MinPrice"]).Replace(aWeb.moCart.mcCurrency, "");
-                    cSelectedMaxPrice = Convert.ToString(aWeb.moRequest.Form["MaxPrice"]).Replace(aWeb.moCart.mcCurrency, "");
+                    //cSelectedMinPrice = Convert.ToString(aWeb.moRequest.Form["MinPrice"]).Replace(aWeb.moCart.mcCurrency, "");
+                    //cSelectedMaxPrice = Convert.ToString(aWeb.moRequest.Form["MaxPrice"]).Replace(aWeb.moCart.mcCurrency, "");
+                    if (aWeb.moRequest.Form["MinPrice"] != null)
+                    {
+                        cSelectedMinPrice = Convert.ToString(aWeb.moRequest.Form["MinPrice"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
+                    }
+                    if (aWeb.moRequest.Form["MaxPrice"] != null)
+                    {
+                        cSelectedMaxPrice = Convert.ToString(aWeb.moRequest.Form["MaxPrice"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
+                    }
                     if (!string.IsNullOrEmpty(cSelectedMaxPrice))
                     {
                         cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey ";
@@ -318,9 +348,20 @@ namespace Protean.Providers
                 // - returns empty then if order by clause is not required.
                 // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
 
+               
                 string cIndexDefinationName = "Price";
-                return " min(cii" + cIndexDefinationName + ".nNumberValue) ";
-
+                if(myWeb.moRequest.Form["SortBy"]!=null)
+                {
+                    if(myWeb.moRequest.Form["SortBy"]!=string.Empty)
+                    {
+                        if (myWeb.moRequest.Form["SortBy"] == "asc" || myWeb.moRequest.Form["SortBy"] == "desc")
+                        {
+                            return " min(cii" + cIndexDefinationName + ".nNumberValue) " + Convert.ToString(myWeb.moRequest.Form["SortBy"]);
+                        }
+                    }
+                }
+                return " min(cii" + cIndexDefinationName + ".nNumberValue) asc";
+                //return string.Empty;
             }
 
         }

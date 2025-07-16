@@ -66,7 +66,7 @@
 				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebSupportTelephone']/@value"/>
 			</xsl:when>
 			<xsl:otherwise>
-				+44 (0)1892 534044
+				+44 (0)1273 761 586
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -77,7 +77,7 @@
 				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebWebsite']/@value"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text>eonic.com</xsl:text>
+				<xsl:text>eonic.digital</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -88,7 +88,7 @@
 				<xsl:value-of select="$page/Settings/add[@key='web.eonicwebSupportEmail']/@value"/>
 			</xsl:when>
 			<xsl:otherwise>
-				<xsl:text>support@eonic.com</xsl:text>
+				<xsl:text>support@eonic.digital</xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
@@ -167,8 +167,8 @@
 
 		<xsl:if test="ContentDetail/Content[@type='xform']/descendant::submit[contains(@class,'getGeocodeButton')]">
 			<script type="text/javascript" src="//maps.google.com/maps/api/js?sensor=false&amp;key={$GoogleAPIKey}">
-        <xsl:text> </xsl:text>
-      </script>
+				<xsl:text> </xsl:text>
+			</script>
 		</xsl:if>
 		<xsl:call-template name="bundle-js">
 			<xsl:with-param name="comma-separated-files">
@@ -221,19 +221,23 @@
 		</xsl:variable>
 
 		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.jscrollpane.min.js">
-      <xsl:text> </xsl:text>
-    </script>
+			<xsl:text> </xsl:text>
+		</script>
 		<script type="text/javascript" src="/ewcommon/js/jQuery/jsScrollPane/jquery.mousewheel.js">
-      <xsl:text> </xsl:text>
-    </script>
+			<xsl:text> </xsl:text>
+		</script>
 
 		<xsl:if test="@cssFramework!='bs3'">
-			<script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js"><xsl:text> </xsl:text></script>
+			<script type="text/javascript" src="/ewcommon/js/jQuery/jquery.magnific-popup.min.js">
+				<xsl:text> </xsl:text>
+			</script>
 		</xsl:if>
-		<script type="text/javascript" src="/ewcommon/js/ajaxtreeview/ajaxtreeview.js"><xsl:text> </xsl:text></script>
+		<script type="text/javascript" src="/ewcommon/js/ajaxtreeview/ajaxtreeview.js">
+			<xsl:text> </xsl:text>
+		</script>
 		<script type="text/javascript" src="/ewcommon/js/ewAdmin.js">
-      <xsl:text> </xsl:text>
-    </script>
+			<xsl:text> </xsl:text>
+		</script>
 		<!--level: <xsl:value-of select="$menuLevelDepth"/>-->
 
 		<xsl:apply-templates select="." mode="LayoutAdminJs"/>
@@ -345,11 +349,10 @@
 	<xsl:template match="Page[@layout='Logon']" mode="Admin">
 		<div class="adminTemplate" id="template_Logon">
 			<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-			<xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
 		</div>
 	</xsl:template>
 
-	<xsl:template match="submit[ancestor::Content[@name='UserLogon'] and ancestor::Page/@adminMode='true']" mode="xform">
+	<xsl:template match="submit[ancestor::Content[@name='UserLogon'] and ancestor::Page/@adminMode='true' and @ref='UserLogon']" mode="xform">
 		<xsl:variable name="class">
 			<xsl:text>adminButton</xsl:text>
 			<xsl:if test="@class!=''">
@@ -357,28 +360,33 @@
 				<xsl:value-of select="@class"/>
 			</xsl:if>
 		</xsl:variable>
-		<a href="{$appPath}?ewCmd=LogOff" class="btn btn-primary">
-			<i class="fa fa-reply">
-				<xsl:text> </xsl:text>
-			</i> Back to Site
-		</a>
 
-		<button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-success {$class}"  onclick="disableButton(this);">
-			Login<xsl:text> </xsl:text>
-			<i class="fa fa-check">
+		<button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-primary btn-block"  onclick="disableButton(this);">
+			Sign In<xsl:text> </xsl:text>
+			<i class="fa fa-sign-in">
 				<xsl:text> </xsl:text>
 			</i>
 		</button>
-		<br/>
-		<br/>
-		<!--a href="/?ewCmd=PasswordReminder" class="text-muted">
-        <i class="fa fa-chevron-right">
-          <xsl:text> </xsl:text>
-        </i>
-        Password Reminder
-      </a-->
+	
 	</xsl:template>
 
+	<xsl:template match="div[@class='separator']" mode="xform">
+		<div class="separator">OR</div> 
+	</xsl:template>
+	<xsl:template match="div[@class='footer-override']" mode="xform">
+		<div ><xsl:if test="./@class">
+			<xsl:attribute name="class">
+				<xsl:value-of select="./@class"/>
+			</xsl:attribute>
+		</xsl:if>
+			<br/>
+			<a href="{$appPath}?ewCmd=LogOff" >
+				<i class="fa fa-reply">
+					<xsl:text> </xsl:text>
+				</i> Back to Site
+			</a>
+		</div>
+	</xsl:template>
 
 	<xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
 
@@ -447,7 +455,7 @@
 					<xsl:value-of select="/Page/@editContext"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="/Page/@ewCmd"/>
+					<xsl:value-of select="/Page/@ewCmd"/>				
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -581,7 +589,6 @@
 				<div class="collapse navbar-collapse" id="bs-admin-navbar-collapse-1">
 					<!--<ul class="nav navbar-nav hidden-xs nav-add-more-auto">-->
 					<ul class="nav navbar-nav nav-add-more-auto ">
-
 						<xsl:apply-templates select="MenuItem/MenuItem[descendant-or-self::MenuItem[@cmd=$contextCmd]]/MenuItem" mode="adminItem1">
 							<xsl:with-param name="level">1</xsl:with-param>
 						</xsl:apply-templates>
@@ -1908,21 +1915,21 @@
 							</xsl:choose>
 							<xsl:choose>
 								<xsl:when test="/Page/ContentDetail/Status/Status/CompiledTransform/node() = 'on'">
-								<li>
-									<a href="{$appPath}?recompile=true" class="btn btn-info bs-please-wait" data-pleasewaitmessage="Recompiling - Please wait a moment.">
-										<i class="fas fa-recycle">
-											<xsl:text> </xsl:text>
-										</i>
-										<xsl:text> </xsl:text>Recompile XSLT and Rebundle
-									</a>
-								</li>
+									<li>
+										<a href="{$appPath}?recompile=true" class="btn btn-info bs-please-wait" data-pleasewaitmessage="Recompiling - Please wait a moment.">
+											<i class="fas fa-recycle">
+												<xsl:text> </xsl:text>
+											</i>
+											<xsl:text> </xsl:text>Recompile XSLT and Rebundle
+										</a>
+									</li>
 								</xsl:when>
 								<xsl:otherwise>
 									<li>
-									<a href="" class="btn btn-default">
-										Compiled transform - off<br/>
-									Get a quote for increased performance
-									</a>
+										<a href="" class="btn btn-default">
+											Compiled transform - off<br/>
+											Get a quote for increased performance
+										</a>
 									</li>
 								</xsl:otherwise>
 							</xsl:choose>
@@ -3980,7 +3987,7 @@
 			</div>
 		</div>
 	</xsl:template>
-	
+
 	<!--   ##################  Parent Change   ##############################   -->
 	<!-- -->
 	<xsl:template match="Page[@layout='ParentChange']" mode="Admin">
@@ -5332,29 +5339,33 @@
 
 	<xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='AddModule'  or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
 		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js"><xsl:text> </xsl:text></script>
+		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">
+			<xsl:text> </xsl:text>
+		</script>
 		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
 		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">
-      <xsl:text> </xsl:text>
-    </script>
+			<xsl:text> </xsl:text>
+		</script>
 		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js"><xsl:text> </xsl:text></script>
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">
+			<xsl:text> </xsl:text>
+		</script>
 		<!-- The basic File Upload plugin -->
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">
-      <xsl:text> </xsl:text>
-    </script>
+			<xsl:text> </xsl:text>
+		</script>
 		<!-- The File Upload processing plugin -->
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">
-      <xsl:text> </xsl:text>
-    </script>
+			<xsl:text> </xsl:text>
+		</script>
 		<!-- The File Upload image preview & resize plugin -->
 		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">
-      <xsl:text> </xsl:text>
-    </script>
+			<xsl:text> </xsl:text>
+		</script>
 		<!-- The Image Lazy load plugin-->
 		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">
-      <xsl:text> </xsl:text>
-    </script>
+			<xsl:text> </xsl:text>
+		</script>
 	</xsl:template>
 
 	<xsl:template match="Page[@layout='ImageLib' or @layout='DocsLib' or @layout='MediaLib']" mode="LayoutAdminJs">
@@ -5419,26 +5430,32 @@
 		<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
 			<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
 			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">
-        <xsl:text> </xsl:text>
-      </script>
+				<xsl:text> </xsl:text>
+			</script>
 			<!-- The Canvas to Blob plugin is included for image resizing functionality -->
 			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">
-        <xsl:text> </xsl:text>
-      </script>
+				<xsl:text> </xsl:text>
+			</script>
 			<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js"><xsl:text> </xsl:text></script>
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">
+				<xsl:text> </xsl:text>
+			</script>
 			<!-- The basic File Upload plugin -->
 			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">
-        <xsl:text> </xsl:text>
-      </script>
+				<xsl:text> </xsl:text>
+			</script>
 			<!-- The File Upload processing plugin -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js"><xsl:text> </xsl:text></script>
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">
+				<xsl:text> </xsl:text>
+			</script>
 			<!-- The File Upload image preview & resize plugin -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js"><xsl:text> </xsl:text></script>
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">
+				<xsl:text> </xsl:text>
+			</script>
 			<!-- The Image Lazy load plugin -->
 			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">
-        <xsl:text> </xsl:text>
-      </script>
+				<xsl:text> </xsl:text>
+			</script>
 		</xsl:if>
 
 		<script>
@@ -6862,19 +6879,20 @@
 						<form action="?ewCmd=ListUsers" method="post" id="userSearch" class="col-md-4">
 							<div class="input-group">
 								<span class="input-group-btn">
-								<button type="submit" name="UserSearch" value="Clear" class="btn btn-default">
-									<i class="fa fa-times">
-										<xsl:text> </xsl:text>
-									</i>
-								</button></span>
+									<button type="submit" name="UserSearch" value="Clear" class="btn btn-default">
+										<i class="fa fa-times">
+											<xsl:text> </xsl:text>
+										</i>
+									</button>
+								</span>
 								<input type="text" name="search" value="{ContentDetail/directory/@UserSearchTerm}" class="form-control"/>
-									<span class="input-group-btn">
-								<button type="submit" name="UserSearch" value="Search" class="btn btn-primary">
-									<i class="fa fa-search">
-										<xsl:text> </xsl:text>
-									</i>
-									<xsl:text> </xsl:text>User Search
-								</button>
+								<span class="input-group-btn">
+									<button type="submit" name="UserSearch" value="Search" class="btn btn-primary">
+										<i class="fa fa-search">
+											<xsl:text> </xsl:text>
+										</i>
+										<xsl:text> </xsl:text>User Search
+									</button>
 								</span>
 							</div>
 						</form>
@@ -7374,7 +7392,7 @@
             Listing <xsl:value-of select="count(ContentDetail/directory/*)"/> Active <xsl:value-of select="ContentDetail/directory/@displayName"/>
           </h4-->
 			<form action="?ewCmd=SaveDirectoryRelations" method="post">
-				<input name="childId" type="hidden" value="{ContentDetail/directory/@childId}"/>        
+				<input name="childId" type="hidden" value="{ContentDetail/directory/@childId}"/>
 				<input name="parentList" type="hidden">
 					<xsl:attribute name="value">
 						<xsl:for-each select="ContentDetail/directory/*">
@@ -7665,7 +7683,7 @@
 				<xsl:with-param name="statusId" select="ContentDetail/Content[@type='order']/@statusId"/>
 			</xsl:call-template>
 		</xsl:variable>
-	
+
 		<div class="row" >
 			<div class="col-md-12">
 				<div class="panel panel-default">
@@ -8062,7 +8080,7 @@
 	<!--   ################################################   Cart Full  ##############################################   -->
 	<!-- -->
 	<xsl:template match="Order" mode="order-extras">
-		
+
 	</xsl:template>
 	<xsl:template match="Order" mode="displayCart">
 		<xsl:param name="currency"/>
@@ -9573,17 +9591,17 @@
 
 	<xsl:template match="Report" mode="defaultReport">
 		<div class="table-responsive">
-		<table class="table table-striped">
-			<tr>
-				<xsl:apply-templates select="Item[1]/descendant-or-self::*" mode="Report_ColsHeading"/>
-			</tr>
-			<xsl:for-each select="Item">
+			<table class="table table-striped">
+				<tr>
+					<xsl:apply-templates select="Item[1]/descendant-or-self::*" mode="Report_ColsHeading"/>
+				</tr>
+				<xsl:for-each select="Item">
 					<tr>
 						<xsl:apply-templates select="descendant-or-self::*" mode="Report_ColsValues"/>
 					</tr>
-			</xsl:for-each>
-		</table>
-			</div>
+				</xsl:for-each>
+			</table>
+		</div>
 	</xsl:template>
 
 	<xsl:template match="Report[@name='MailFormSubmissions']" mode="defaultReport">
@@ -13065,27 +13083,27 @@
 							<th>&#160;</th>
 						</tr>
 					</xsl:if>
-				
-						<tr>
-							<xsl:for-each select="*">
-								<xsl:if test="local-name()!='cCartXml' and local-name()!='Currency_Symbol' and local-name()!='Total_Cost'">
-									<td>
-										<xsl:value-of select="node()"/>
-									</td>
-								</xsl:if>
-								<xsl:if test="local-name()='Total_Cost'">
-									<td>
-										<xsl:call-template name="formatPrice">
-											<xsl:with-param name="price" select="node()"/>
-											<xsl:with-param name="currency" select="following-sibling::Currency_Symbol/node()"/>
-										</xsl:call-template>
-									</td>
-								</xsl:if>
-							</xsl:for-each>
-							<td align="right">
-								<a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="btn btn-default">view order</a>
-							</td>
-						</tr>
+
+					<tr>
+						<xsl:for-each select="*">
+							<xsl:if test="local-name()!='cCartXml' and local-name()!='Currency_Symbol' and local-name()!='Total_Cost'">
+								<td>
+									<xsl:value-of select="node()"/>
+								</td>
+							</xsl:if>
+							<xsl:if test="local-name()='Total_Cost'">
+								<td>
+									<xsl:call-template name="formatPrice">
+										<xsl:with-param name="price" select="node()"/>
+										<xsl:with-param name="currency" select="following-sibling::Currency_Symbol/node()"/>
+									</xsl:call-template>
+								</td>
+							</xsl:if>
+						</xsl:for-each>
+						<td align="right">
+							<a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="btn btn-default">view order</a>
+						</td>
+					</tr>
 					<xsl:if test="position()=last()">
 						<tr>
 							<xsl:for-each select="*">
@@ -14357,5 +14375,329 @@
 		</div>
 	</xsl:template>
 
+	<xsl:template match="Page[@layout='SEOReport']" mode="Admin">
+		<div class="page-header" style="margin-top:20px;">
+			<table>
+				<thead>
+					<th style="width:10%;"></th>
+					<th style="width:20%;">Page</th>
+					<th style="width:27%;">Page Title</th>
+					<th style="width:25%;">Meta Description</th>
+					<th style="width:10%;">Page Name</th>
+					<th style="width:10%;">Display Name</th>
+					<th style="width:20%;"></th>
+				</thead>
+			</table>
+		</div>
+		<div id="tpltSEOReport">			
+			<ul id="MenuTree" class="list-group">
+				<xsl:apply-templates select="ContentDetail/Menu/MenuItem" mode="seoreport">
+					<xsl:with-param name="level">1</xsl:with-param>
+				</xsl:apply-templates>
+				<xsl:apply-templates select="Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="seoreport">
+					<xsl:with-param name="level">1</xsl:with-param>
+				</xsl:apply-templates>
+			</ul>
+		</div>
+	</xsl:template>
 
+	<xsl:template match="MenuItem" mode="seoreport">
+		<xsl:param name="level"/>
+
+		<xsl:variable name="thislevel">
+			<xsl:value-of select="$level"/>
+		</xsl:variable>
+
+		<xsl:variable name="siteRoot">
+			<xsl:call-template name="getSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'RootPageId'"/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:variable name="getMenuLevelDepth">
+			<xsl:call-template name="getSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'MenuTreeDepth'"/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:variable name="menuLevelDepth">
+			<xsl:choose>
+				<xsl:when test="$getMenuLevelDepth = ''">
+					<xsl:value-of select="'0'"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$getMenuLevelDepth"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		
+		<xsl:variable name="pageTitleId">
+				<xsl:choose>
+				<xsl:when test="string-length(PageTitle/@id) &gt; 0">					
+					<xsl:value-of select="PageTitle/@id"/>					
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>0</xsl:text>
+				</xsl:otherwise>
+				</xsl:choose>
+			</xsl:variable>
+
+		<xsl:variable name="metaId">
+			<xsl:choose>
+			<xsl:when test="string-length(MetaDescription/@id) &gt; 0">				
+				<xsl:value-of select="MetaDescription/@id"/>				
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>0</xsl:text>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="itemId">
+			<xsl:choose>
+			<xsl:when test="string-length(@id) &gt; 0">				
+				<xsl:value-of select="@id"/>				
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>0</xsl:text>
+			</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="pageidValue">
+			<xsl:choose>
+				<xsl:when test="$pageTitleId = 0">
+					<xsl:value-of select="$itemId"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$pageTitleId"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="metaidValue">
+			<xsl:choose>
+				<xsl:when test="$metaId = 0">
+					<xsl:value-of select="$itemId"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$metaId"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
+
+			<li id="node{@id}" data-tree-level="{$thislevel}">
+				<xsl:attribute name="data-tree-parent">
+					<xsl:if test="not(DisplayName/@siteTemplate='micro' and $thislevel='1')">
+						<xsl:value-of select="./parent::MenuItem/@id"/>
+					</xsl:if>
+				</xsl:attribute>
+				<xsl:attribute name="class">
+					<xsl:if test="@cloneparent &gt; 0 and not(@cloneparent=@id)">
+						<xsl:text>clone context</xsl:text>
+						<xsl:value-of select="@cloneparent"/>
+					</xsl:if>
+					<xsl:text> list-group-item level-</xsl:text>
+					<xsl:value-of select="$thislevel"/>
+					<xsl:if test="MenuItem"> expandable</xsl:if>
+				</xsl:attribute>
+				<table xmlns="http://www.w3.org/1999/xhtml">
+					<tbody>
+						<tr>
+							<td>
+								<div class="pageCell">
+									<xsl:variable name="pageLink">
+										<xsl:apply-templates select="." mode="getHref" />
+										<xsl:text>&amp;ewCmd=Normal</xsl:text>
+										<xsl:if test="@cloneparent &gt; 0">
+											<xsl:text>&amp;context=</xsl:text>
+											<xsl:value-of select="@cloneparent"/>
+										</xsl:if>
+									</xsl:variable>
+									<xsl:variable name="displayName">
+										<xsl:apply-templates select="." mode="getDisplayName" />
+									</xsl:variable>
+									<a href="{$pageLink}" title="{@name}" name="{@id}">
+										<xsl:choose>
+											<xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
+												<i class="fa fa-home fa-lg status activeParent" xmlns="http://www.w3.org/1999/xhtml">
+													&#160;
+												</i>
+												<span class="pageName">
+													&#160;
+													<xsl:value-of select="@name"/>
+												</span>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:apply-templates select="." mode="status_legend"/>
+												<span class="pageName">
+													<xsl:value-of select="$displayName"/>
+												</span>
+											</xsl:otherwise>
+										</xsl:choose>
+									</a>
+								</div>
+							</td>
+							<div>
+								<xsl:variable name="fullPageTitleContent" select="PageTitle/node()"></xsl:variable>
+								<xsl:variable name="fullMetaDescriptionContent" select="MetaDescription/node()"></xsl:variable>
+
+								<td style="width:30%;">
+
+									<div id="title-display-{$pageidValue}">
+										<xsl:choose>
+											<xsl:when test="/PageTitle!='' or string-length(PageTitle/node()) &gt; 50">
+												<div id="title-display-{$pageidValue}" data-bs-toggle="popover" data-bs-placement="top" title="{$fullPageTitleContent}">
+													<xsl:value-of select="substring(PageTitle/node(),0,50)"/>...
+												</div>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:copy-of select="PageTitle/node()"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</div>
+									<input type="text" class="form-control page-title-input hidden" id="title-input-{$pageidValue}" value="{PageTitle}" />				
+
+								</td>
+								<td style="width:30%;">
+									<div id="MetaDescription-display-{$metaidValue}">
+										<xsl:choose>
+											<xsl:when test="/MetaDescription!='' or string-length(MetaDescription/node()) &gt; 50">
+												<div id="MetaDescription-display-{$metaidValue}" data-bs-toggle="popover" data-bs-placement="top" title="{$fullMetaDescriptionContent}">
+													<xsl:value-of select="substring(MetaDescription/node(),0,50)"/>...
+												</div>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:copy-of select="MetaDescription/node()"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</div>
+									<input type="text" class="form-control meta-desc-input hidden" id="description-input-{$metaidValue}" value="{MetaDescription}" />
+								</td>
+
+								<td style="width:10%;">
+									<div id="cPageName-{@id}">
+										<xsl:value-of select="@name"/>
+									</div>
+								    <input type="text" class="form-control pagename-input hidden" id="pagename-input-{@id}" value="{@name}" />
+								</td>
+								<td style="width:10%;">
+									<div id="cDisplayName-{@id}">
+										<xsl:value-of select="DisplayName/node()"/>
+									</div>
+								    <input type="text" class="form-control displayname-input hidden" id="displayname-input-{@id}" value="{DisplayName/node()}" />
+								</td>
+								<!--span class="hidden"> | </span-->
+								<xsl:if test="@id!=$siteRoot">									
+									<td style="width:30%;">										
+										
+										<button class="btn btn-xs btn-primary" id="Edit-btn-{@id}" onclick="editTitle({$pageTitleId}, {$metaId},{$itemId})">
+											<i class="fa fa-pencil fa-white"><xsl:text> </xsl:text>
+												</i><xsl:text> </xsl:text>Edit
+										</button>
+										<button class="btn btn-xs btn-success hidden" id="save-btn-{@id}" onclick="saveTitle({$pageTitleId}, {$metaId},{$itemId})">
+											<i class="fa fa-save"><xsl:text> </xsl:text>
+												</i><xsl:text> </xsl:text>Save
+										</button>
+
+										<xsl:if test="@status='1'">
+											<!--a href="{$appPath}?ewCmd=HidePage&amp;pgid={@id}" class="adminButton hide" title="Click here to hide this page">Hide</a-->
+											<a onclick="$('#MenuTree').hideButton({@id});" class="btn btn-xs btn-danger btn-hide" title="Click here to hide this page">
+												<i class="fa fa-times-circle fa-white">
+													<xsl:text> </xsl:text>
+												</i><xsl:text> </xsl:text>
+												Hide
+											</a>
+											<!--span class="hidden"> | </span-->
+										</xsl:if>
+
+										<xsl:if test="@status='0'">
+											<!--a href="{$appPath}?ewCmd=ShowPage&amp;pgid={@id}" class="adminButton show" title="Click here to hide this page">Show</a-->
+											<a onclick="$('#MenuTree').showButton({@id});" class="btn btn-xs btn-success btn-show" title="Click here to show this page">
+												<i class="fa fa-check-circle fa-white">
+													<xsl:text> </xsl:text>
+												</i><xsl:text> </xsl:text>Show
+											</a>
+											<!--span class="hidden"> | </span-->
+											<!--<a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="btn btn-xs btn-danger btn-del" title="Click here to delete this page">
+												<i class="fa fa-trash-o fa-white">
+													<xsl:text> </xsl:text>
+												</i><xsl:text> </xsl:text>Delete
+											</a>-->
+											<!--span class="hidden"> | </span-->
+										</xsl:if>
+									</td>
+								</xsl:if>
+							</div>
+						</tr>
+					</tbody>
+				</table>
+			</li>
+
+			<!--Expand to Level XSL variant-->
+			<xsl:if test="$menuLevelDepth &gt; 0">
+				<xsl:if test="/Page/Request/QueryString/Item[@name='ewCmd']='EditPage' or 'HidePage' or 'ShowPage' or 'CopyPage'">
+					<xsl:if test="descendant-or-self::MenuItem">
+						<xsl:if test="$level &lt; $menuLevelDepth">
+							<xsl:if test="MenuItem">
+
+								<xsl:apply-templates select="MenuItem" mode="seoreport">
+									<xsl:with-param name="level">
+										<xsl:value-of select="$level + 1"/>
+									</xsl:with-param>
+								</xsl:apply-templates>
+
+							</xsl:if>
+						</xsl:if>
+					</xsl:if>
+				</xsl:if>
+			</xsl:if>
+
+			<xsl:if test="$menuLevelDepth = 0">
+				<xsl:choose>
+					<xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd']='AddPage'">
+						<xsl:if test="descendant-or-self::MenuItem[@id=/Page/Request/QueryString/Item[@name='parId']]/@id">
+							<xsl:if test="MenuItem">
+
+								<xsl:apply-templates select="MenuItem" mode="seoreport">
+									<xsl:with-param name="level">
+										<xsl:value-of select="$thislevel + 1"/>
+									</xsl:with-param>
+								</xsl:apply-templates>
+
+							</xsl:if>
+						</xsl:if>
+					</xsl:when>
+
+					<xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd']='EditPage' or 'HidePage' or 'ShowPage' or 'CopyPage'">
+						<xsl:if test="descendant-or-self::MenuItem[@id=/Page/Request/QueryString/Item[@name='pgid']]/@id">
+							<xsl:if test="MenuItem"></xsl:if>
+
+							<xsl:apply-templates select="MenuItem" mode="seoreport">
+								<xsl:with-param name="level">
+									<xsl:value-of select="$thislevel + 1"/>
+								</xsl:with-param>
+							</xsl:apply-templates>
+
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:if test="descendant-or-self::MenuItem[@id=/Page/@id]/@id">
+							<xsl:if test="MenuItem">
+								<xsl:apply-templates select="MenuItem" mode="seoreport">
+									<xsl:with-param name="level">
+										<xsl:value-of select="$thislevel + 1"/>
+									</xsl:with-param>
+								</xsl:apply-templates>
+							</xsl:if>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+
+
+			</xsl:if>
+
+		</xsl:if>
+	</xsl:template>
 </xsl:stylesheet>

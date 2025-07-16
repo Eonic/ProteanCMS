@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
-
-
-
-
-	
-	
   <xsl:variable name="siteURL">
     <xsl:variable name="serverVariableURL">
       <xsl:call-template name="getServerVariable">
@@ -27,8 +21,6 @@
     </xsl:choose>
     <xsl:value-of select="$serverVariableURL"/>
   </xsl:variable>
-
-
 
   <xsl:variable name="mailer_utm_campaign">
     <xsl:call-template name="mailer_utm_campaign"/>
@@ -115,12 +107,6 @@
     <xsl:apply-templates select="node()" mode="cleanXhtml"/>
   </xsl:template>
 
-  <!-- Generic Template for displaying Flash Movie -->
-  <xsl:template match="Content[@type='FlashMovie']" mode="displayBrief">
-    <span class="alert">
-      <h3>Flash is not supported in emails</h3>
-    </span>
-  </xsl:template>
   <!--  -->
   <!--   ################################################   Layout Headers   ##############################################   -->
   <!-- -->
@@ -350,16 +336,7 @@
             <tr>
               <td width="100%" style="width:100%;">
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;">
-                  <xsl:if test="/Page/@adminMode">
-                    <tr>
-                      <td width="100%" style="width:100%;">
-                        <xsl:if test="@rss and @rss!='false'">
-                          <xsl:attribute name="colspan">2</xsl:attribute>
-                        </xsl:if>
-                      </td>
-                    </tr>
-                  </xsl:if>
-                  <xsl:if test="(@rss and @rss!='false') or @title!=''">
+                  <xsl:if test="@title!=''">
                     <tr>
                       <xsl:if test="@title!=''">
                         <td width="100%" style="width:100%;" class="emailModuleHeadingPadding">
@@ -368,27 +345,16 @@
                           </h2>
                         </td>
                       </xsl:if>
-                      <xsl:if test="@rss and @rss!='false'">
-                        <td width="20" style="width:20px;">
-                          <xsl:apply-templates select="." mode="rssLink" />
-                        </td>
-                      </xsl:if>
                     </tr>
                   </xsl:if>
                   <tr>
                     <td style="width:100%;" width="100%">
-                      <xsl:if test="@rss and @rss!='false'">
-                        <xsl:attribute name="colspan">2</xsl:attribute>
-                      </xsl:if>
                       <xsl:apply-templates select="." mode="displayBrief"/>
                     </td>
                   </tr>
                   <xsl:if test="@linkText!='' and @link!=''">
                     <tr>
                       <td width="100%" style="width:100%;" align="right">
-                        <xsl:if test="@rss and @rss!='false'">
-                          <xsl:attribute name="colspan">2</xsl:attribute>
-                        </xsl:if>
                         <xsl:apply-templates select="." mode="moreLinkEmail">
                           <xsl:with-param name="link">
                             <xsl:choose>
@@ -433,15 +399,7 @@
                   <xsl:attribute name="class">emailModulePadding emailTextCentre</xsl:attribute>
                 </xsl:if>
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="width:100%;">
-                  <xsl:if test="/Page/@adminMode">
-                    <tr>
-                      <td width="100%" style="width:100%;">
-                        <xsl:if test="@rss and @rss!='false'">
-                          <xsl:attribute name="colspan">2</xsl:attribute>
-                        </xsl:if>
-                      </td>
-                    </tr>
-                  </xsl:if>
+                 
                   <xsl:if test="@uploadIcon!=''">
                     <tr>
                       <td class="emailUploadIcon">
@@ -449,7 +407,7 @@
                       </td>
                     </tr>
                   </xsl:if>
-                  <xsl:if test="(@rss and @rss!='false') or @title!=''">
+                  <xsl:if test="@title!=''">
                     <tr>
                       <xsl:if test="@title!=''">
                         <td width="100%" style="width:100%;" class="emailModuleHeading">
@@ -458,27 +416,17 @@
                           </h2>
                         </td>
                       </xsl:if>
-                      <xsl:if test="@rss and @rss!='false'">
-                        <td width="20" style="width:20px;">
-                          <xsl:apply-templates select="." mode="rssLink" />
-                        </td>
-                      </xsl:if>
                     </tr>
                   </xsl:if>
                   <tr>
                     <td style="width:100%;" width="100%">
-                      <xsl:if test="@rss and @rss!='false'">
-                        <xsl:attribute name="colspan">2</xsl:attribute>
-                      </xsl:if>
                       <xsl:apply-templates select="." mode="displayBrief"/>
                     </td>
                   </tr>
                   <xsl:if test="@linkText!='' and @link!=''">
                     <tr>
                       <td width="100%" style="width:100%;" align="right">
-                        <xsl:if test="@rss and @rss!='false'">
-                          <xsl:attribute name="colspan">2</xsl:attribute>
-                        </xsl:if>
+                     
                         <xsl:apply-templates select="." mode="moreLinkEmail">
                           <xsl:with-param name="link">
                             <xsl:choose>
@@ -522,9 +470,7 @@
       <xsl:if test="/Page/@adminMode">
         <tr>
           <td>
-            <xsl:if test="@rss and @rss!='false'">
-              <xsl:attribute name="colspan">2</xsl:attribute>
-            </xsl:if>
+           
             <div>
               <xsl:apply-templates select="." mode="inlinePopupOptions" />
             </div>
@@ -543,27 +489,14 @@
                 </td>
               </tr>
             </xsl:if>
-            <xsl:if test="@rss and @rss!='false'">
-              <tr>
-                <td width="20" style="width:20px;" >
-                  <xsl:apply-templates select="." mode="rssLink" />
-                </td>
-              </tr>
-            </xsl:if>
             <tr>
               <td width="100%" style="width:100%;" class="content emailBoxContent">
-                <xsl:if test="@rss and @rss!='false'">
-                  <xsl:attribute name="colspan">2</xsl:attribute>
-                </xsl:if>
                 <xsl:apply-templates select="." mode="displayBrief"/>
               </td>
             </tr>
             <xsl:if test="@linkText!='' and @link!=''">
               <tr>
                 <td width="100%" style="width:100%;" class="emailBoxFooter">
-                  <xsl:if test="@rss and @rss!='false'">
-                    <xsl:attribute name="colspan">2</xsl:attribute>
-                  </xsl:if>
                   <xsl:apply-templates select="." mode="moreLinkEmail">
                     <xsl:with-param name="link">
                       <xsl:choose>
@@ -592,6 +525,8 @@
     <xsl:value-of select="@title"/>
   </xsl:template>
 
+  
+
   <!-- ## Generic displayBrief   #####################################################################   -->
   <xsl:template match="Content" mode="displayBrief">
     <xsl:apply-templates select="node()" mode="cleanXhtml"/>
@@ -603,7 +538,9 @@
   </xsl:template>
 
   <!-- ## Generic displayBrief for Formatted Text and Images   #####################################################################   -->
-  <xsl:template match="Content[@moduleType='FormattedText']" mode="displayBrief">
+
+  <xsl:template match="Content" mode="displayBrief">
+    
     <xsl:apply-templates select="node()" mode="cleanXhtml"/>
   </xsl:template>
   
@@ -684,9 +621,6 @@
     </a>
   </xsl:template>
   <!-- -->
-  <xsl:template match="Content[@type='Module' and @moduleType='FlashMovie']" mode="displayBrief">
-    <h1 style="color:#F00;">FLASH IS NOT SUPPORTED IN EMAILS - Please Delete</h1>
-  </xsl:template>
 
   <xsl:template match="Content[@type='Module' and contains(@moduleType,'ListEmail')]" mode="displayBrief">
     <!-- Set Variables -->
@@ -752,11 +686,6 @@
               </td>
             </xsl:otherwise>
           </xsl:choose>
-          <!--<td width="{$colWidth}%" style="width:{$colWidth}%;vertical-align:top;padding:0 {$hPadding}px {$boxMargin}px" valign="top" class="emailCol">
-            <xsl:apply-templates select="." mode="displayBrief">
-              <xsl:with-param name="sortBy" select="$sortBy"/>
-            </xsl:apply-templates>
-          </td>-->
         </xsl:for-each>
       </tr>
       <xsl:call-template name="outputContentListTDs">
@@ -1320,9 +1249,7 @@
   </xsl:template>
 
   <!-- -->
-  <xsl:template name="rssSubscribe">
-    <img src="{$siteURL}/ptn/images/icons/rss16x16.png" width="16" height="16" alt="RSS" style="border:none;"/>
-  </xsl:template>
+
 
   <xsl:template name="eonicDeveloperLink">
     <xsl:param name="style"/>
@@ -1397,93 +1324,7 @@
     </xsl:choose>
   </xsl:template>
   <!-- -->
-  <!--<xsl:template match="*" mode="moreLink">
-    <xsl:param name="link"/>
-    <xsl:param name="linkText"/>
-    <xsl:param name="altText"/>
-    <table cellpadding="0" cellspacing="0" >
-      <tr>
-        <td class="emailBtn">
-          <a>
-            <xsl:choose>
-              <xsl:when test="$linkText!=''">
-                <xsl:value-of select="$linkText"/>
-              </xsl:when>
-              <xsl:otherwise>Read more</xsl:otherwise>
-            </xsl:choose>
-          </a>
-        </td>
-      </tr>
-    </table>
-  </xsl:template>-->
-
-
-  <!--<xsl:template match="p" mode="cleanXhtml">
-    <font face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}">
-      <xsl:element name="{name()}">
-        -->
-  <!-- process attributes -->
-  <!--
-        <xsl:for-each select="@*">
-          -->
-  <!-- remove attribute prefix (if any) -->
-  <!--
-          <xsl:attribute name="{name()}">
-            <xsl:value-of select="." />
-          </xsl:attribute>
-        </xsl:for-each>
-        <xsl:apply-templates mode="cleanXhtml"/>
-      </xsl:element>
-    </font>
-  </xsl:template>
-
-  <xsl:template match="h2" mode="cleanXhtml">
-    <h2 face="{$bodyFont}" size="{$bodySize}" color="{$bodyColour}" style ="margin-bottom: 10px; margin-top: 20px;">
-
-      -->
-  <!-- process attributes -->
-  <!--
-      <xsl:for-each select="@*">
-        -->
-  <!-- remove attribute prefix (if any) -->
-  <!--
-        <xsl:attribute name="{name()}">
-          <xsl:value-of select="." />
-        </xsl:attribute>
-      </xsl:for-each>
-      <xsl:apply-templates mode="cleanXhtml"/>
-    </h2>
-  </xsl:template>
-
-  <xsl:template match="a" mode="cleanXhtml">
-    <xsl:variable name="href">
-      <xsl:choose>
-        <xsl:when test="contains(@href,'http://')">
-          <xsl:value-of select="@href"/>
-        </xsl:when>
-        <xsl:when test="contains(@href,'https://')">
-          <xsl:value-of select="@href"/>
-        </xsl:when>
-        <xsl:when test="contains(@href,'mailto:')">
-          <xsl:value-of select="@href"/>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="$siteURL"/>
-          <xsl:value-of select="@href"/>
-          <xsl:choose>
-            <xsl:when test="contains(@href,'?')">&amp;</xsl:when>
-            <xsl:otherwise>
-              <xsl:text>?</xsl:text>
-            </xsl:otherwise>
-          </xsl:choose>
-          <xsl:value-of select="$mailer_utm_campaign"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:variable>
-    <a href="{$href}" title="{@title}" style="{@style}">
-      <xsl:apply-templates mode="cleanXhtml"/>
-    </a>
-  </xsl:template>-->
+  
 
   <xsl:template match="img" mode="cleanXhtml">
 
@@ -1788,11 +1629,7 @@
       </xsl:choose>
     </xsl:variable>
     <table class="clearfix {@moduleType}">
-      <!--<xsl:apply-templates select="." mode="module-header"/>-->
       <tr>
-        <!--responsive columns -->
-        <!--<xsl:apply-templates select="." mode="contentColumns"/>-->
-        <!--end responsive columns-->
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief">
           <xsl:with-param name="sortBy" select="@sortBy"/>
           <xsl:with-param name="parentId" select="@id"/>
@@ -1802,15 +1639,6 @@
           <xsl:with-param name="heading" select="$heading"/>
           <xsl:with-param name="title" select="@title"/>
         </xsl:apply-templates>
-        <!--<xsl:if test="@stepCount != '0'">
-          <xsl:apply-templates select="/" mode="genericStepper">
-            <xsl:with-param name="articleList" select="$contentList"/>
-            <xsl:with-param name="noPerPage" select="@stepCount"/>
-            <xsl:with-param name="startPos" select="$startPos"/>
-            <xsl:with-param name="queryStringParam" select="$queryStringParam"/>
-            <xsl:with-param name="totalCount" select="$totalCount"/>
-          </xsl:apply-templates>
-        </xsl:if>-->
         <xsl:text> </xsl:text>
       </tr>
     </table>

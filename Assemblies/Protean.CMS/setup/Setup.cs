@@ -1,17 +1,22 @@
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
+using Protean.Tools;
 using System;
 using System.Collections;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms;
 using static Protean.stdTools;
+
 
 namespace Protean
 {
@@ -367,6 +372,7 @@ namespace Protean
 
                 if (mbOutputXml == true)
                 {
+                    goResponse.ContentType = "application/xml";
                     goResponse.Write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + moPageXml.OuterXml);
                 }
                 else
@@ -652,6 +658,36 @@ namespace Protean
                 oPageElmt.SetAttribute("cssFramework", "bs3");
                 oPageElmt.SetAttribute("adminMode", "true");
                 mcEwCmd = goRequest["ewCmd"];
+                if (myWeb.moRequest["ewCmd"] == "GitRepository")
+                {
+                    string gitFilePath = "";
+                    if (!string.IsNullOrEmpty(goConfig["GitFilePath"]))
+                    {
+                        gitFilePath = goConfig["GitFilePath"];
+                    }
+                    if (Directory.Exists(gitFilePath))
+                    {
+
+                        XmlElement filesNode = moPageXml.CreateElement("files");
+
+                        foreach (string filePath in Directory.GetFiles(gitFilePath))
+                        {
+                            XmlElement fileNode = moPageXml.CreateElement("file");
+                            fileNode.SetAttribute("name", Path.GetFileName(filePath));
+                            fileNode.SetAttribute("path", Path.GetFileName(filePath));
+                            filesNode.AppendChild(fileNode);
+                        }
+
+                        oPageElmt.AppendChild(filesNode); // Attach to root Page element
+                    }
+                    else
+                    {
+                        sProcessInfo += $"[Folder not found: {gitFilePath}]";
+                    }
+
+
+                }
+
                 setupProcessXml();
                 if (mnUserId > 1)
                 {
@@ -1023,6 +1059,59 @@ namespace Protean
 
                                 break;
                             }
+                        case "GitRepository":
+                            {
+                                if (goRequest["ewCmd2"] == "Run")
+                                {
+                                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+
+                                    string cClientId = "";
+                                    string cTenantId = "";
+                                    string cScope = "";
+                                    string cSecreteValue = "";
+                                    string cGitPS1FilePath = "";
+                                    string result = "";
+                                    
+                                    string gitFilePath = "";
+                                    if (!string.IsNullOrEmpty(goConfig["GitFilePath"]))
+                                    {
+                                        gitFilePath = goConfig["GitFilePath"];
+                                    }
+                                    GitHelper gitHelper = new GitHelper(gitFilePath);
+                                    if (Directory.Exists(gitFilePath))
+                                    {
+                                        if (goRequest["GitPS1FilePath"] != null)
+                                        {
+                                            if (goRequest["GitPS1FilePath"].ToString() != null)
+                                            {
+                                                cGitPS1FilePath =  goRequest["GitPS1FilePath"].ToString();
+
+                                            }
+
+                                            if (File.Exists(gitFilePath + cGitPS1FilePath))
+                                            {
+                                                if (!string.IsNullOrEmpty(goConfig["AzureClientId"]) && !string.IsNullOrEmpty(goConfig["AzureTenantId"]) && !string.IsNullOrEmpty(goConfig["AzureClientSecretValue"]) && !string.IsNullOrEmpty(goConfig["AzureScope"]))
+                                                {
+                                                    cClientId = goConfig["AzureClientId"];
+                                                    cTenantId = goConfig["AzureTenantId"];
+                                                    cScope = goConfig["AzureScope"];
+                                                    cSecreteValue = goConfig["AzureClientSecretValue"];
+                                                   
+                                                    result = gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue, cGitPS1FilePath);
+                                                }
+                                            }
+
+                                        }
+                                    }
+
+
+
+                                    AddResponse(result);
+                                    cStep = 1.ToString();
+                                }
+                                break;
+                            }
+
                     }
                 }
                 // moPageXml.DocumentElement.SetAttribute("layout", mcEwCmd)
@@ -1057,6 +1146,8 @@ namespace Protean
             XmlElement oElmt11;
             XmlElement oElmt12;
             XmlElement oElmt13;
+            XmlElement oElmt14;
+            XmlElement oElmt15;
 
             string sProcessInfo = string.Empty;
             try
@@ -1085,6 +1176,9 @@ namespace Protean
                     oElmt11 = appendMenuItem(ref oElmt1, "Backup/Restore", "BackupRestore", icon: "fa-save");
                     oElmt12 = appendMenuItem(ref oElmt11, "Backup", "Backup", icon: "fa-save");
                     oElmt13 = appendMenuItem(ref oElmt11, "Restore", "Restore", icon: "fa-reply");
+
+                    oElmt14 = appendMenuItem(ref oElmt1, "Update Version", "UpdateGit", icon: "fa fa-refresh");
+                    oElmt15 = appendMenuItem(ref oElmt14, "Run Script", "GitRepository", icon: "fa fa-refresh");
                 }
                 else
                 {
@@ -2897,6 +2991,8 @@ namespace Protean
             }
 
         }
+
+
         #endregion
 
         internal int CommitToLog(Protean.Cms.dbHelper.ActivityType nEventType, int nUserId, string cSessionId, DateTime dDateTime, int nPrimaryId = 0, int nSecondaryId = 0, string cDetail = "")

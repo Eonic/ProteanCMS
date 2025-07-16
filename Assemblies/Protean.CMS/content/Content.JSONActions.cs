@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Web.Configuration;
 using System.Xml;
+using Microsoft.Ajax.Utilities;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Protean.Tools.Integration.Twitter;
 
 namespace Protean
@@ -75,21 +78,109 @@ namespace Protean
                 {
                     try
                     {
+                        long newContentId = 0;
+                        if (myApi.mbAdminMode)
+                        { 
+                            // Extract fields from JSON
+                            long contentId = Convert.ToInt64(jObj["contentId"] ?? 0);
+                            string contentType = Convert.ToString(jObj["contentType"]);
+                            string ContentName = Convert.ToString(jObj["ContentName"]);                           
+                            JArray values = (JArray)jObj["values"];
 
-                        // first check the user privages
-                        // myApi.mnUserId
+                            long pageId = Convert.ToInt64(jObj["pageId"] ?? 0);
+                            string position = Convert.ToString(jObj["position"]);
+                            string relatedParent = Convert.ToString(jObj["relatedParent"]);
+                            string relationType = Convert.ToString(jObj["relationType"]);
 
-                        string JsonResult = "";
-                        //string contentId = "";
-                        //string xpath = "";
-                        // Dim value As String 'JSON convert to XML and save ensure the xml schemas match.
+                            XmlElement oContentInstance;
+                            Cms.Admin.AdminXforms moXform = null;
+                            string xRootBriefPath = "tblContent/cContentXmlBrief/";
+                            string xRootDetailPath = "tblContent/cContentXmlDetail";
 
-                        return JsonResult;
+
+                            if (contentId > 0)
+                            {
+                                // UPDATE existing content
+                                oContentInstance = myWeb.moDbHelper.moPageXml.CreateElement("instance");
+                                oContentInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, contentId);
+                                ApplyValuesToXml(oContentInstance, values, xRootBriefPath, xRootDetailPath);
+                                newContentId = Convert.ToInt64(myWeb.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, oContentInstance));
+                            }
+                            else
+                            {
+                                // INSERT new content
+                                moXform = (Admin.AdminXforms)myWeb.getAdminXform();
+                                string xformPath = moXform.GetContentFormPath(contentType);
+                                moXform.load(xformPath + ".xml", myWeb.maCommonFolders);
+
+                                if (moXform.Instance != null)
+                                {
+                                    moXform.Instance.SelectSingleNode("tblContent/cContentName").InnerText = ContentName;
+                                    moXform.Instance.SelectSingleNode("tblContent/dPublishDate").InnerText = Protean.Tools.Xml.XmlDate(DateTime.Now);
+                                    ApplyValuesToXml(moXform.Instance, values, xRootBriefPath, xRootDetailPath);
+                                    // Save and link to page or parent
+                                    newContentId = Convert.ToInt64(myWeb.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Content, moXform.Instance, 0));
+                                    if (newContentId > 0)
+                                    {
+                                        if (pageId > 0)
+                                        {
+                                            myWeb.moDbHelper.setContentLocation(pageId, newContentId, true, false, false, position, false);
+                                        }
+                                        else if (!string.IsNullOrEmpty(relatedParent))
+                                        {
+                                            myWeb.moDbHelper.insertContentRelation(Convert.ToInt32(relatedParent), Convert.ToString(newContentId), false, relationType ?? "default");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        return $"{{ \"id\": \"{newContentId}\" }}";
+
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
-                        return ex.Message;
+                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs("Content.JsonActions", "UpdateContentValue", ex, ""));
+                        return $"{{ \"error\": \"{ex.Message}\" }}";
+                    }
+                }
+                private void ApplyValuesToXml(XmlElement oContentInstance, JArray values, string xRootBriefPath, string xRootDetailPath)
+                {
+                    foreach (var data in values)
+                    {
+                        var item = (JObject)data;
+                        string xpath = item["xpath"]?.ToString() ?? "";
+                        string value = item["value"]?.ToString() ?? "";
+                        int mode = item["mode"]?.ToObject<int>() ?? 3;
+
+                        string fullXPath = xpath;
+
+                        if (mode == 1)
+                        {
+                            fullXPath = xRootBriefPath + xpath;
+                            XmlNode node = oContentInstance.SelectSingleNode(fullXPath);
+                            if (node != null) node.InnerXml = value;
+                        }
+                        else if (mode == 2)
+                        {
+                            fullXPath = xRootDetailPath + xpath;
+                            XmlNode node = oContentInstance.SelectSingleNode(fullXPath);
+                            if (node != null) node.InnerXml = value;
+                        }
+                        else if (mode == 3)
+                        {
+                            XmlNode node = oContentInstance.SelectSingleNode(xRootBriefPath + xpath);
+                            if (node != null) node.InnerXml = value;
+                            XmlNode node1 = oContentInstance.SelectSingleNode(xRootDetailPath + xpath);
+                            if (node1 != null) 
+                            { 
+                                node1.InnerXml = value;
+                            }
+                            else
+                            {
+                                node1 = oContentInstance.SelectSingleNode(xRootDetailPath);
+                                node1.InnerXml = value;
+                            }
+                        }
                     }
                 }
 
@@ -347,11 +438,11 @@ namespace Protean
                         {
                             if (jObj["contentId"] != null)
                             {
-                                cPageContentId =Convert.ToString(jObj["contentId"]);
+                                cPageContentId = Convert.ToString(jObj["contentId"]);
                             }
                             if (jObj["cContentName"] != null)
                             {
-                                cContentName =Convert.ToString(jObj["cContentName"]);
+                                cContentName = Convert.ToString(jObj["cContentName"]);
                             }
                             if (jObj["uploadFiles"] != null)
                             {
@@ -398,7 +489,8 @@ namespace Protean
                         {
                             return Conversions.ToString(moCtx.Session["lastUploadedFilePath"]);
                         }
-                        else {
+                        else
+                        {
                             return "No Filepath Stored";
                         }
 
@@ -418,39 +510,39 @@ namespace Protean
 
 
 
-   
 
-            public string ConvertXFormToJSON(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
-            {
-                try
+
+                public string ConvertXFormToJSON(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
-                    // Validate input
-                    if (jObj == null || !jObj.ContainsKey("xFormXml"))
+                    try
                     {
-                        throw new ArgumentException("Missing xFormXml input in the JSON request.");
+                        // Validate input
+                        if (jObj == null || !jObj.ContainsKey("xFormXml"))
+                        {
+                            throw new ArgumentException("Missing xFormXml input in the JSON request.");
+                        }
+
+                        // Extract XML string from JSON
+                        string xFormXml = jObj["xFormXml"].ToString();
+
+                        // Load XML document
+                        XmlDocument xmlDoc = new XmlDocument();
+                        xmlDoc.LoadXml(xFormXml);
+
+                        // Wrap specific HTML tags in CDATA
+                        WrapHtmlTagsInCData(xmlDoc, new[] { "div", "span", "p" });
+
+                        // Convert XML to JSON
+                        string jsonString = JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.Indented);
+
+                        return jsonString;
                     }
-
-                    // Extract XML string from JSON
-                    string xFormXml = jObj["xFormXml"].ToString();
-
-                    // Load XML document
-                    XmlDocument xmlDoc = new XmlDocument();
-                    xmlDoc.LoadXml(xFormXml);
-
-                    // Wrap specific HTML tags in CDATA
-                    WrapHtmlTagsInCData(xmlDoc, new[] { "div", "span", "p" });
-
-                    // Convert XML to JSON
-                    string jsonString = JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.Indented);
-
-                    return jsonString;
+                    catch (Exception ex)
+                    {
+                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertXFormToJSON", ex, ""));
+                        return JsonConvert.SerializeObject(new { error = ex.Message });
+                    }
                 }
-                catch (Exception ex)
-                {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertXFormToJSON", ex, ""));
-                    return JsonConvert.SerializeObject(new { error = ex.Message });
-                }
-            }
 
                 public string ConvertJSONToXForm(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
@@ -484,20 +576,20 @@ namespace Protean
                 }
 
                 private void WrapHtmlTagsInCData(XmlDocument xmlDoc, string[] tagsToWrap)
-            {
-                foreach (string tag in tagsToWrap)
                 {
-                    XmlNodeList nodes = xmlDoc.GetElementsByTagName(tag);
-                    foreach (XmlNode node in nodes)
+                    foreach (string tag in tagsToWrap)
                     {
-                        if (node.InnerText != null && !node.InnerText.StartsWith("<![CDATA["))
+                        XmlNodeList nodes = xmlDoc.GetElementsByTagName(tag);
+                        foreach (XmlNode node in nodes)
                         {
-                            // Wrap content in CDATA
-                            node.InnerXml = $"<![CDATA[{node.InnerXml}]]>";
+                            if (node.InnerText != null && !node.InnerText.StartsWith("<![CDATA["))
+                            {
+                                // Wrap content in CDATA
+                                node.InnerXml = $"<![CDATA[{node.InnerXml}]]>";
+                            }
                         }
                     }
                 }
-            }
 
                 #endregion
             }

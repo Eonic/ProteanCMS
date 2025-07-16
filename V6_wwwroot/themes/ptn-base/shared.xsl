@@ -109,6 +109,9 @@
 		<xsl:call-template name="bundle-js">
 			<xsl:with-param name="comma-separated-files">
 				<xsl:apply-templates select="." mode="commonJsFiles" />
+        <xsl:text>~/themes/</xsl:text>
+        <xsl:value-of select="$theme"/>
+        <xsl:text>/js/accessible-bootstrap-hover-dropdown.js,</xsl:text>
 				<xsl:text>~/themes/</xsl:text>
 				<xsl:value-of select="$theme"/>
 				<xsl:text>/js/jquery.appear.js,</xsl:text>
@@ -118,6 +121,9 @@
 				<xsl:text>~/themes/</xsl:text>
 				<xsl:value-of select="$theme"/>
 				<xsl:text>/js/smoothproducts.js,</xsl:text>
+        <xsl:text>~/themes/</xsl:text>
+        <xsl:value-of select="$theme"/>
+        <xsl:text>/js/mobile-menu.js,</xsl:text>
 				<xsl:text>~/themes/</xsl:text>
 				<xsl:value-of select="$theme"/>
 				<xsl:text>/js/theme-specific.js,</xsl:text>
@@ -171,6 +177,10 @@
 
 	<xsl:template match="Item" mode="cartThumbWidth">150</xsl:template>
 	<xsl:template match="Item" mode="cartThumbHeight">150</xsl:template>
+
+
+  <xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThWidth">500</xsl:template>
+  <xsl:template match="Content | MenuItem | Discount | Company" mode="getsubThHeight">500</xsl:template>
 
 	<!-- ############################################ CART ############################################### -->
 	<xsl:template match="/" mode="cartBrief">
@@ -292,6 +302,7 @@
 	<xsl:template match="/" mode="searchBrief">
 		<div class="searchBrief">
 			<form method="post" action="/information/search" id="searchInputxs" class="ewXform">
+        <label for="searchStringxs" class="visually-hidden">Search</label>
 				<input type="hidden" name="searchMode" value="REGEX" />
 				<input type="hidden" name="contentType" value="Product" />
 				<input type="hidden" name="searchFormId" value="8923" />
