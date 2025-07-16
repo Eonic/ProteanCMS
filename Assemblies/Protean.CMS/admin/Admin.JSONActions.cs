@@ -15,7 +15,6 @@ using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
 using static Protean.Cms;
 using static Protean.stdTools;
-using Microsoft.Identity.Client;
 using Protean.Tools;
 
 namespace Protean
