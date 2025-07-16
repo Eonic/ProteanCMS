@@ -14593,10 +14593,12 @@
 									<td style="width:30%;">										
 										
 										<button class="btn btn-xs btn-primary" id="Edit-btn-{@id}" onclick="editTitle({$pageTitleId}, {$metaId},{$itemId})">
-											<i class="fa fa-pencil fa-white"></i> Edit
+											<i class="fa fa-pencil fa-white"><xsl:text> </xsl:text>
+												</i><xsl:text> </xsl:text>Edit
 										</button>
 										<button class="btn btn-xs btn-success hidden" id="save-btn-{@id}" onclick="saveTitle({$pageTitleId}, {$metaId},{$itemId})">
-											<i class="fa fa-save"></i> Save
+											<i class="fa fa-save"><xsl:text> </xsl:text>
+												</i><xsl:text> </xsl:text>Save
 										</button>
 
 										<xsl:if test="@status='1'">
