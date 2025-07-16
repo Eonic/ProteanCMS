@@ -679,8 +679,9 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                cOrderBySql = orderBySql;
-                                                bDistinct = false;
+                                                //this is the change for only location filters for the pagination issue.
+                                                cOrderBySql = orderBySql + ",";
+                                                bDistinct = true;
 
                                             }
                                         }
