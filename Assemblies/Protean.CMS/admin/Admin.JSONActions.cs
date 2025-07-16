@@ -776,10 +776,10 @@ namespace Protean
 
                                         if (!string.IsNullOrEmpty(goConfig["GitFilePath"]))
                                         {
-                                            gitFilePath = Path.Combine(goConfig["GitFilePath"], cGitPS1FileName);
+                                            gitFilePath = goConfig["GitFilePath"];
                                         }
                                         GitHelper gitHelper = new GitHelper(gitFilePath);
-                                        if (File.Exists(gitFilePath))
+                                        if (File.Exists(gitFilePath + cGitPS1FileName))
                                         {
                                             if (!string.IsNullOrEmpty(moConfig["AzureClientId"]) &&
                                                 !string.IsNullOrEmpty(moConfig["AzureTenantId"]) &&
@@ -790,25 +790,7 @@ namespace Protean
                                                 cTenantId = moConfig["AzureTenantId"];
                                                 cScope = moConfig["AzureScope"];
                                                 cSecreteValue = moConfig["AzureClientSecretValue"];
-
-                                                if (HttpContext.Current.Session["AzureDevOpsAccessToken"] != null)
-                                                {
-                                                    cAccessToken = HttpContext.Current.Session["AzureDevOpsAccessToken"].ToString();
-                                                }
-                                                else
-                                                {
-                                                    var app = ConfidentialClientApplicationBuilder.Create(cClientId)
-                                                        .WithClientSecret(cSecreteValue)
-                                                        .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
-                                                        .Build();
-
-                                                    var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
-                                                    cAccessToken = tokenResult.AccessToken;
-
-                                                    HttpContext.Current.Session["AzureDevOpsAccessToken"] = cAccessToken;
-                                                }
-
-                                                result = gitHelper.GitCommandExecution(gitFilePath, cAccessToken);
+                                                result = gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue, cGitPS1FileName);
                                             }
                                         }
                                     }
