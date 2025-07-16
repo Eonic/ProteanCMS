@@ -457,6 +457,10 @@ namespace Protean
                         string className = string.Empty;
                         var oAdditionalFilterInput = new Hashtable();
                         filterForm.NewFrm(formName);
+                        var oSortBy = filterForm.moPageXML.CreateAttribute("SortBy");
+                        oContentNode.Attributes.Append(oSortBy);
+                       
+
                         filterForm.submission(formName, "", "POST", "");
                         if (oContentNode.Attributes["filterTarget"] != null)
                         {
@@ -478,6 +482,7 @@ namespace Protean
                         //bool bShowMoreFilterButton = false;
 
                         oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "", "filter-main");
+                        filterForm.addInput(ref oFrmGroup, "SortBy", true, "", "hidden");
                         // XmlElement oXml = filterForm.moPageXML.CreateElement("ShowMore");
                         // oXml.InnerText = cShowMore;
                         // filterForm.Instance.AppendChild(oXml);
@@ -654,7 +659,25 @@ namespace Protean
                                         {
                                             if(cOrderBySql !="")
                                             {
-                                                cOrderBySql = orderBySql + "," + cOrderBySql;
+                                                string orderby = orderBySql.Replace("desc", "").Replace("asc", "");
+                                                if (cOrderBySql.ToLower().Contains(orderby.ToLower()) == true)
+                                                {
+                                                    if (cOrderBySql.ToLower().Contains(orderby.ToLower()+ "desc") == true)
+                                                    {
+                                                        cOrderBySql = cOrderBySql.Replace(orderby + "desc", "");
+                                                    }
+                                                    if(cOrderBySql.ToLower().Contains(orderby.ToLower() + "asc") == true)
+                                                    {
+                                                        cOrderBySql = cOrderBySql.Replace(orderby + "asc", "");
+                                                    }
+
+                                                    cOrderBySql = orderBySql + "," + cOrderBySql;
+                                                    cOrderBySql = cOrderBySql.Replace(",,", ",");
+                                                }
+                                                else
+                                                {
+                                                    cOrderBySql = orderBySql + "," + cOrderBySql;
+                                                }
                                             }
                                             else
                                             {
@@ -668,7 +691,7 @@ namespace Protean
 
                                         {
                                             cAdditionalColumns += "," + orderBySql.ToLower().Replace("asc", "").Replace("desc", "");
-                                            if (myWeb.moConfig["ExcludeFilterForJoin"] != className)
+                                            if (!myWeb.moConfig["ExcludeFilterForJoin"].Contains(className))
                                             {
                                                 string cAlies = className.Replace("Filter", "");
                                                 cAdditionalJoins += "inner join tblContentIndex cii" + cAlies + " on cii" + cAlies + ".nContentId=c.nContentKey inner join tblContentIndexDef cid" + cAlies;
