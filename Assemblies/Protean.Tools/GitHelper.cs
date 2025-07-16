@@ -1,90 +1,108 @@
-﻿using iTextSharp.text.pdf;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
+using System.Configuration;
+using Microsoft.Identity.Client;
+using Microsoft.AspNetCore.Http;
 
 namespace Protean.Tools
 {
-
     public class GitHelper
     {
+        private readonly string _gitFilePath;
 
-        public string RunGitCommands(string gitUserName, string gitEmail, string ps1FilePath, string workingDirectory)
+        public GitHelper(string gitFilePath)
         {
-            string cArguments = "";
-
-
-            string cResult = "";
-            if (!string.IsNullOrEmpty(workingDirectory))
+            if (!string.IsNullOrEmpty(gitFilePath))
             {
-               
-                if (Directory.Exists(workingDirectory))
-                {
-                    if (!string.IsNullOrEmpty(gitUserName) && !string.IsNullOrEmpty(gitEmail))
-                    {
-                        GitCommandExecution("git config user.name " + gitUserName, workingDirectory);
-                        GitCommandExecution("git config user.email " + gitEmail, workingDirectory);
-                    }
-                    GitCommandExecution("git config --add safe.directory  \"" + workingDirectory.Replace("\\", "/") + "\"", workingDirectory);
-                    //GitCommandExecution("git config --add safe.directory \"" + cRepositoryPath.Replace("\\", "/") + "\"", cRepositoryPath);
-
-
-                    if (!string.IsNullOrEmpty(ps1FilePath))
-                    {
-                        cArguments = $"-ExecutionPolicy Bypass -File " + ps1FilePath;
-                        if (File.Exists(ps1FilePath))
-                        {
-                            cResult = GitCommandExecution(cArguments, workingDirectory);
-                        }
-                    }
-                }
+                _gitFilePath = gitFilePath;
             }
-            return cResult;
         }
 
-        public string GitCommandExecution(string arguments, string workingDirectory)
-        //public string GitCommandExecution(string gitUserName, string gitEmail,string ps1FilePath, string workingDirectory)
-
+        public string AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue, string ps1FilePath)
         {
+            string output = "";
+            string error = "";
             string result = "";
-            var startInfo = new ProcessStartInfo
+            string askPassPath = string.Empty;
+            string cAccessToken = "";
+
+            try
             {
-                FileName = "powershell.exe",
-                Arguments = arguments,
-                 RedirectStandardOutput = true,
-                WorkingDirectory = workingDirectory,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
+                string gitFilePath = _gitFilePath;
+                if (!string.IsNullOrEmpty(gitFilePath))
+                {
+                    ps1FilePath = gitFilePath + ps1FilePath;
+                }
 
+                string arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\"";
+                var app = ConfidentialClientApplicationBuilder.Create(cClientId)
+                  .WithClientSecret(cSecreteValue)
+              .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
+                  .Build();
 
-            };
-            // startInfo.EnvironmentVariables["GIT_CONFIG_GLOBAL"] = @"D:\temp\app_gitconfig";
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
-            startInfo.UseShellExecute = false;
-            startInfo.CreateNoWindow = true;
-            startInfo.CreateNoWindow = true;
-            using (var process = new Process { StartInfo = startInfo })
+                var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
+                cAccessToken = tokenResult.AccessToken;
+
+                // Create temporary askpass script
+                askPassPath = Path.Combine(Path.GetTempPath(), "askpass_oauth2.bat");
+                File.WriteAllText(askPassPath, $"@echo off{Environment.NewLine}echo {cAccessToken}");
+
+                ProcessStartInfo gitPull = new ProcessStartInfo
+                {
+                    FileName = "powershell.exe",
+                    Arguments = arguments,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                };
+
+                gitPull.EnvironmentVariables["GIT_ASKPASS"] = askPassPath;
+                gitPull.EnvironmentVariables["GIT_TERMINAL_PROMPT"] = "0";
+                gitPull.EnvironmentVariables["ACCESS_TOKEN"] = cAccessToken;
+
+                using (var process = Process.Start(gitPull))
+                {
+                    output = process.StandardOutput.ReadToEnd();
+                    error = process.StandardError.ReadToEnd();
+                    process.WaitForExit();
+
+                    int exitCode = process.ExitCode;
+                    bool hasGitError = error.Contains("fatal") || error.Contains("error");
+
+                    if (exitCode == 0 && !hasGitError)
+                    {
+                        result = $"Git Pull successful.\nOutput:\n{output}";
+                    }
+                    else
+                    {
+                        result = $"Git Pull may have failed.\nExit Code: {exitCode}\nError:\n{error}\nOutput:\n{output}";
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                process.Start();
-                string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
-                process.WaitForExit();
-
-                int exitCode = process.ExitCode;
-                if (exitCode == 0 && error=="")
+                result = $"Exception occurred while executing Git command:\n{ex.Message}\n\nStack Trace:\n{ex.StackTrace}";
+            }
+            finally
+            {
+                // Ensure cleanup happens even if an exception occurs
+                if (!string.IsNullOrEmpty(askPassPath) && File.Exists(askPassPath))
                 {
-                    result = "Git Pulled successfully";
+                    try
+                    {
+                        File.Delete(askPassPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        result += $"\n\nFailed to delete temporary askpass file:\n{ex.Message}";
+                    }
                 }
-                else
-                {
-                    result = "Git failed -" + error;
-                }
-                return result;
             }
 
+            return result;
         }
     }
 }

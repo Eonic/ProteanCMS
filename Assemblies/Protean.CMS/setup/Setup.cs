@@ -1,7 +1,7 @@
-using AngleSharp.Io;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
+using Protean.Tools;
 using System;
 using System.Collections;
 using System.Configuration;
@@ -11,10 +11,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.Cms;
 using static Protean.stdTools;
+
 
 namespace Protean
 {
@@ -656,6 +658,36 @@ namespace Protean
                 oPageElmt.SetAttribute("cssFramework", "bs3");
                 oPageElmt.SetAttribute("adminMode", "true");
                 mcEwCmd = goRequest["ewCmd"];
+                if (myWeb.moRequest["ewCmd"] == "GitRepository")
+                {
+                    string gitFilePath = "";
+                    if (!string.IsNullOrEmpty(goConfig["GitFilePath"]))
+                    {
+                        gitFilePath = goConfig["GitFilePath"];
+                    }
+                    if (Directory.Exists(gitFilePath))
+                    {
+
+                        XmlElement filesNode = moPageXml.CreateElement("files");
+
+                        foreach (string filePath in Directory.GetFiles(gitFilePath))
+                        {
+                            XmlElement fileNode = moPageXml.CreateElement("file");
+                            fileNode.SetAttribute("name", Path.GetFileName(filePath));
+                            fileNode.SetAttribute("path", Path.GetFileName(filePath));
+                            filesNode.AppendChild(fileNode);
+                        }
+
+                        oPageElmt.AppendChild(filesNode); // Attach to root Page element
+                    }
+                    else
+                    {
+                        sProcessInfo += $"[Folder not found: {gitFilePath}]";
+                    }
+
+
+                }
+
                 setupProcessXml();
                 if (mnUserId > 1)
                 {
@@ -1029,46 +1061,57 @@ namespace Protean
                             }
                         case "GitRepository":
                             {
-                                if (goRequest["ewCmd2"] == "Do")
+                                if (goRequest["ewCmd2"] == "Run")
                                 {
-                                    Tools.GitHelper gitHelper = new Tools.GitHelper();
-                                    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
-                                    string cRepositoryPath = "";
-                                    string cArguments = "";
-                                    string cResult = "";
-                                    string gitUserName = "";
-                                    string gitEmail = "";
-                                    string ps1FilePath = "";
-
-                                    if (!string.IsNullOrEmpty(moConfig["GitRepoPath"]))
+                                    string cClientId = "";
+                                    string cTenantId = "";
+                                    string cScope = "";
+                                    string cSecreteValue = "";
+                                    string cGitPS1FilePath = "";
+                                    string result = "";
+                                    
+                                    string gitFilePath = "";
+                                    if (!string.IsNullOrEmpty(goConfig["GitFilePath"]))
                                     {
-                                        cRepositoryPath = moConfig["GitRepoPath"];
-                                        if (Directory.Exists(cRepositoryPath))
+                                        gitFilePath = goConfig["GitFilePath"];
+                                    }
+                                    GitHelper gitHelper = new GitHelper(gitFilePath);
+                                    if (Directory.Exists(gitFilePath))
+                                    {
+                                        if (goRequest["GitPS1FilePath"] != null)
                                         {
-                                            if (!string.IsNullOrEmpty(moConfig["GitUserName"]) && !string.IsNullOrEmpty(moConfig["GitEmail"]))
+                                            if (goRequest["GitPS1FilePath"].ToString() != null)
                                             {
-                                                gitUserName = moConfig["GitUserName"].ToString();
-                                                gitEmail = moConfig["GitEmail"].ToString();
+                                                cGitPS1FilePath =  goRequest["GitPS1FilePath"].ToString();
+
                                             }
 
-                                            if (!string.IsNullOrEmpty(moConfig["GitPS1FilePath"]))
+                                            if (File.Exists(gitFilePath + cGitPS1FilePath))
                                             {
-                                                ps1FilePath = moConfig["GitPS1FilePath"].ToString();
-                                                if (File.Exists(moConfig["GitPS1FilePath"]))
+                                                if (!string.IsNullOrEmpty(goConfig["AzureClientId"]) && !string.IsNullOrEmpty(goConfig["AzureTenantId"]) && !string.IsNullOrEmpty(goConfig["AzureClientSecretValue"]) && !string.IsNullOrEmpty(goConfig["AzureScope"]))
                                                 {
-                                                    cResult = gitHelper.RunGitCommands(gitUserName, gitEmail, moConfig["GitPS1FilePath"], cRepositoryPath);
+                                                    cClientId = goConfig["AzureClientId"];
+                                                    cTenantId = goConfig["AzureTenantId"];
+                                                    cScope = goConfig["AzureScope"];
+                                                    cSecreteValue = goConfig["AzureClientSecretValue"];
+                                                   
+                                                    result = gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue, cGitPS1FilePath);
                                                 }
                                             }
+
                                         }
                                     }
 
-                                    AddResponse(cResult);
+
+
+                                    AddResponse(result);
                                     cStep = 1.ToString();
                                 }
-                                    break;
-                                }
-                            
+                                break;
+                            }
+
                     }
                 }
                 // moPageXml.DocumentElement.SetAttribute("layout", mcEwCmd)
@@ -1134,8 +1177,8 @@ namespace Protean
                     oElmt12 = appendMenuItem(ref oElmt11, "Backup", "Backup", icon: "fa-save");
                     oElmt13 = appendMenuItem(ref oElmt11, "Restore", "Restore", icon: "fa-reply");
 
-                    oElmt14 = appendMenuItem(ref oElmt1, "Update with Git", "UpdateGit", icon: "fa fa-refresh");
-                    oElmt15 = appendMenuItem(ref oElmt14, "Git Pull", "GitRepository", icon: "fa fa-refresh");
+                    oElmt14 = appendMenuItem(ref oElmt1, "Update Version", "UpdateGit", icon: "fa fa-refresh");
+                    oElmt15 = appendMenuItem(ref oElmt14, "Run Script", "GitRepository", icon: "fa fa-refresh");
                 }
                 else
                 {
