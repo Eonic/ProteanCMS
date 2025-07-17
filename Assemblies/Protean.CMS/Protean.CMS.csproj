@@ -346,6 +346,7 @@
     <Compile Include="handlers\FLVHandler.cs" />
     <Compile Include="handlers\httpHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="providers\Discount\Discount.BaseProvider.cs" />
     <Compile Include="providers\filters\Filter.BaseProvider.cs" />
     <Compile Include="providers\Database.BaseProvider.cs" />
     <Compile Include="providers\filters\SpecFilter.cs" />
