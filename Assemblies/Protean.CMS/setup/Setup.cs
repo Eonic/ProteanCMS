@@ -17,7 +17,6 @@ using System.Xml;
 using static Protean.Cms;
 using static Protean.stdTools;
 
-using Microsoft.Identity.Client;
 
 namespace Protean
 {
@@ -1072,9 +1071,7 @@ namespace Protean
                                     string cSecreteValue = "";
                                     string cGitPS1FilePath = "";
                                     string result = "";
-                                    string cAccessToken = "";
-                                   
-
+                                    
                                     string gitFilePath = "";
                                     if (!string.IsNullOrEmpty(goConfig["GitFilePath"]))
                                     {
@@ -1099,25 +1096,8 @@ namespace Protean
                                                     cTenantId = goConfig["AzureTenantId"];
                                                     cScope = goConfig["AzureScope"];
                                                     cSecreteValue = goConfig["AzureClientSecretValue"];
-                                                    if (HttpContext.Current.Session["AzureDevOpsAccessToken"] != null)
-                                                    {
-                                                        cAccessToken = HttpContext.Current.Session["AzureDevOpsAccessToken"].ToString();
-                                                    }
-                                                    else
-                                                    {
-                                                        // If token not in session, acquire a new one
-                                                        var app = ConfidentialClientApplicationBuilder.Create(cClientId)
-                                                            .WithClientSecret(cSecreteValue)
-                                                        .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
-                                                            .Build();
-
-                                                        var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
-                                                        cAccessToken = tokenResult.AccessToken;
-
-                                                        // Store in session
-                                                        HttpContext.Current.Session["AzureDevOpsAccessToken"] = cAccessToken;
-                                                    }
-                                                    result = gitHelper.GitCommandExecution( cGitPS1FilePath, cAccessToken);
+                                                   
+                                                    result = gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue, cGitPS1FilePath);
                                                 }
                                             }
 

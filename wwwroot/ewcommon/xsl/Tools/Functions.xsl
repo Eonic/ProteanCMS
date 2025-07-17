@@ -623,8 +623,8 @@
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
   <xsl:template match="Page" mode="headerOnlyJS">
+	<xsl:apply-templates select="." mode="JSONLD"/>	  
     <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentJS"/>
-
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
@@ -1397,7 +1397,7 @@
     </xsl:if>
 
 
-    <xsl:apply-templates select="." mode="JSONLD"/>
+
 
     <!--  Google analytics javascript  -->
     <xsl:choose>
