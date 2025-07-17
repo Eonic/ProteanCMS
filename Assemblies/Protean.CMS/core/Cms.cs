@@ -9462,7 +9462,7 @@ namespace Protean
                                 {
                                     // If we can find a content detail Content node, 
                                     // AND it contains some InnerXml, then YAY.
-                                    oPageElmt.AppendChild(oRoot.FirstChild);
+                                    oPageElmt.AppendChild(oRoot.FirstChild.CloneNode(true));
                                 }
                                 else
                                 {

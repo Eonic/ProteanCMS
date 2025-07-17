@@ -1150,6 +1150,10 @@ namespace Protean
                                         }
                                     }
 
+                                        if (oElmt.GetAttribute("type") == "bibleusx") {
+                                            cProcessInfo = oElmt.GetAttribute("type");
+                                        }
+
                                     IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
 
                                     var oContentElmt = oInfoElmt.OwnerDocument.CreateElement(oElmt.GetAttribute("type"));
