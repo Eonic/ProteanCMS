@@ -5,6 +5,7 @@ using System.IO;
 using System.Configuration;
 using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Http;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 
 namespace Protean.Tools
 {
@@ -20,7 +21,22 @@ namespace Protean.Tools
             }
         }
 
-        public string AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue, string ps1FilePath)
+        public string AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue)
+        {
+            string cAccessToken = "";
+           
+            var app = ConfidentialClientApplicationBuilder.Create(cClientId)
+              .WithClientSecret(cSecreteValue)
+          .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
+            .Build();
+
+            var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
+            cAccessToken = tokenResult.AccessToken;
+
+            return cAccessToken;
+        }
+
+        public string GitCommandExecution(string cClientId, string cTenantId, string cScope, string cSecreteValue, string ps1FilePath)
         {
             string output = "";
             string error = "";
@@ -37,13 +53,7 @@ namespace Protean.Tools
                 }
 
                 string arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\"";
-                var app = ConfidentialClientApplicationBuilder.Create(cClientId)
-                  .WithClientSecret(cSecreteValue)
-              .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
-                  .Build();
-
-                var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
-                cAccessToken = tokenResult.AccessToken;
+                cAccessToken = AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
 
                 // Create temporary askpass script
                 askPassPath = Path.Combine(Path.GetTempPath(), "askpass_oauth2.bat");
