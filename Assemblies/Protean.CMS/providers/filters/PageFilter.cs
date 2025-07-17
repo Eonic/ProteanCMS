@@ -109,7 +109,7 @@ namespace Protean.Providers
                             // oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
                             while (oDr.Read())
                             {
-                                string name = Convert.ToString(oDr["cStructName"]) + " <span class='ProductCount'>" + Convert.ToString(oDr["ContentCount"]) + "</span>";
+                                string name = Convert.ToString(oDr["cStructName"]) + " <span class='badge ms-2' id='ProductCount'>" + Convert.ToString(oDr["ContentCount"]) + "</span>";
                                 string value = Convert.ToString(oDr["nStructKey"]);
 
                                 oXform.addOption(ref pageFilterSelect, name, value, true);
@@ -145,6 +145,7 @@ namespace Protean.Providers
                                 sText = oPageGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild.FirstChild.InnerText;
                                 oXform.addSubmit(ref oFromGroup, sText, sText, "PageFilter", " remove-PageFilter filter-applied", "fa-times");
                             }
+                            oXform.addDiv(ref oFromGroup, "", "PageClearAll", true);
                         }
                     }
                 }

@@ -4955,16 +4955,20 @@ namespace Protean
 
                             case "Print":
                                 {
-                                    string orderId = myWeb.moRequest["id"];
-                                    if (orderId.Contains(",")) {
-                                        orderId = "various";
-                                    }                                                                      
+                                    string orderId = myWeb.moRequest["id"];    //Can be CSV                                           
 
-                                    //myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)myWeb.mnUserId, 0L, 0L, orderId, "Print Delivery " + orderId, false);
+                                    myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)myWeb.mnUserId, 0L, 0L, 0L, "Print Delivery " + orderId, false);
 
                                     var ofs = new Protean.fsHelper();
                                     myWeb.moResponseType = Cms.pageResponseType.pdf;
-                                    myWeb.mcOutputFileName = "DeliveryNote-" + orderId + ".pdf";
+
+                                    if (orderId.Contains(","))
+                                    {
+                                        myWeb.mcOutputFileName = "DeliveryNote-various.pdf";
+                                    }
+                                    else { 
+                                        myWeb.mcOutputFileName = "DeliveryNote-" + orderId + ".pdf";
+                                    }
                                     
                                     string DeliveryNoteXslPath = @"\xsl\docs\deliverynote.xsl";
                                     if (myWeb.bs5)
@@ -4974,9 +4978,9 @@ namespace Protean
 
                                     myWeb.mcEwSiteXsl = ofs.checkCommonFilePath(moConfig["ProjectPath"] + DeliveryNoteXslPath);
 
-                                    oCart.ListOrders(myWeb.moRequest["id"], true, 0, ref oPageDetail, bForceRefresh: false, nUserId: 0L);
+                                    oCart.ListOrders(orderId, true, 0, ref oPageDetail, bForceRefresh: false, nUserId: 0L);
                                     
-                                   // myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)myWeb.mnUserId, 0L, 0L, orderId, "Print Delivery 2" + orderId, false);
+                                    myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)myWeb.mnUserId, 0L, 0L, 0L, "Print Delivery 2" + orderId, false);
 
                                     break;
                                 }

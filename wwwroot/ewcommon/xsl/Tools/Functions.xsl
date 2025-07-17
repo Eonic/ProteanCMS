@@ -623,8 +623,8 @@
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
   <xsl:template match="Page" mode="headerOnlyJS">
+	<xsl:apply-templates select="." mode="JSONLD"/>	  
     <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentJS"/>
-
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
@@ -1397,7 +1397,7 @@
     </xsl:if>
 
 
-    <xsl:apply-templates select="." mode="JSONLD"/>
+
 
     <!--  Google analytics javascript  -->
     <xsl:choose>
@@ -2865,8 +2865,20 @@
 
 	<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="BingTrackingCodeAction">
 
-			window.uetq = window.uetq || [];
-			window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
+		window.uetq = window.uetq || [];
+
+		window.uetq.push('set', { 'pid': {
+		'em': '<xsl:value-of select="Cart/Order/Contact[@type='Billing Address']/Email"/>' 
+		} });
+
+		<xsl:for-each select="Cart/Order/Item">
+				window.uetq.push('event', 'PRODUCT_PURCHASE', {
+				'ecomm_prodid': '<xsl:value-of select="productDetail/StockCode"/>',
+				'revenue_value': '<xsl:value-of select="@itemTotal"/>',
+		        'currency': '<xsl:value-of select="Cart/Order/@currency"/>
+		        });
+	    </xsl:for-each>
+
 
 	</xsl:template>
 

@@ -151,7 +151,7 @@
 					<xsl:with-param name="class" select="'nav-item'"/>
 					<xsl:with-param name="sortBy" select="$sortBy"/>
 				</xsl:apply-templates>
-				<a href="{$url}" title="{$pageName}" class="nav-link">
+				<a href="{$url}" class="nav-link">
 					<!--<xsl:apply-templates select="." mode="menuLink"/>-->
 					<xsl:apply-templates select="." mode="getDisplayName"/>
 				</a>
@@ -261,9 +261,9 @@
             <xsl:choose>
               <xsl:when test="$linked='true'">
                 <span class="list-image-link">
-                  <xsl:attribute name="title">
+                  <!--<xsl:attribute name="title">
                     <xsl:apply-templates select="." mode="getTitleAttr"/>
-                  </xsl:attribute>
+                  </xsl:attribute>-->
                   <xsl:apply-templates select="." mode="displaySubPageThumb">
                     <xsl:with-param name="crop" select="$cropSetting" />
                     <xsl:with-param name="fixedThumb" select="$fixedThumb" />
@@ -272,9 +272,9 @@
               </xsl:when>
               <xsl:otherwise>
                 <a href="{$url}"  class="list-image-link">
-                  <xsl:attribute name="title">
+                  <!--<xsl:attribute name="title">
                     <xsl:apply-templates select="." mode="getTitleAttr"/>
-                  </xsl:attribute>
+                  </xsl:attribute>-->
                   <xsl:apply-templates select="." mode="displaySubPageThumb">
                     <xsl:with-param name="crop" select="$cropSetting" />
                     <xsl:with-param name="fixedThumb" select="$fixedThumb" />

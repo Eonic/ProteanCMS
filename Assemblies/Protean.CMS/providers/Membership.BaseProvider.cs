@@ -1241,6 +1241,7 @@ namespace Protean.Providers
                             {
                                 base.Instance.InnerXml = moDbHelper.getObjectInstance(Protean.Cms.dbHelper.objectTypes.Directory, id);
                                 cCurrentPassword = Instance.SelectSingleNode("*/cDirPassword").InnerText;
+
                             }
 
                             if (IntanceAppend != null)
@@ -2911,14 +2912,30 @@ namespace Protean.Providers
                         }
                         if (File.Exists(goServer.MapPath(xsltPath)))
                         {
-                            XmlElement oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
-                            if (clearUserId)
-                                mnUserId = 0; // clear user Id so we don't stay logged on
+                            XmlElement oUserEmail;
+                            XmlElement oUserElmt;      
                             XmlElement oElmtPwd = myWeb.moPageXml.CreateElement("Password");
                             oElmtPwd.InnerText = moRequest["cDirPassword"];
-                            oUserElmt.AppendChild(oElmtPwd);
+                            if (myWeb.bs5)
+                            {
+                                oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
+                                oUserElmt.AppendChild(oElmtPwd);
+                                XmlElement emailRoot = oUserElmt.OwnerDocument.CreateElement("MessageBody");
+                                emailRoot.AppendChild(oUserElmt.CloneNode(true));
+                                emailRoot.SetAttribute("id", "UserRegistration");
+                                oUserElmt = emailRoot;
+                                oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("User/Email");
+                            }
+                            else {
+                                oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
+                                oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
+                                oUserElmt.AppendChild(oElmtPwd);
+                            }
+                                if (clearUserId)
+                                mnUserId = 0; // clear user Id so we don't stay logged on
+                      
+                           
 
-                            XmlElement oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
                             string fromName = moConfig["SiteAdminName"];
                             string fromEmail = moConfig["SiteAdminEmail"];
                             string recipientEmail = "";

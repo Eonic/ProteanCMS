@@ -12994,7 +12994,26 @@ namespace Protean
 
             }
 
-            public void RemoveDuplicateDirRelations()
+
+            public XmlElement RedactSensitiveData(XmlElement element)
+            {
+                string[] sensitiveTags = { "Password", "CreditCard", "BankBuildingSocietyAccountNo", "BranchSortCode", "ActivationKey" };
+
+                foreach (XmlNode child in element.ChildNodes)
+                {
+                    if (child is XmlElement childElement &&
+                    Array.Exists(sensitiveTags, tag => tag.Equals(childElement.Name, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        childElement.InnerText = "###";
+                    }
+                }
+
+                return element;
+            }
+ 
+
+
+        public void RemoveDuplicateDirRelations()
             {
                 try
                 {
