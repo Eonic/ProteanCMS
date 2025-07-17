@@ -2333,7 +2333,7 @@ namespace Protean
                         {
                             RefreshUserXML();
                         }
-
+                    }
                         // TS-Moved to after add bulk related content to enable filters to be processed.
                         // not sure if this is before for a reason. I cannot seem to think of one.
                         // required for related images on contentgrabber for practitioner so added config setting
@@ -2342,7 +2342,7 @@ namespace Protean
                             ContentActions();
                         }
 
-
+                   
                         if (Strings.LCase(moConfig["FinalAddBulk"]) == "on")
                         {
 
@@ -2357,14 +2357,15 @@ namespace Protean
                             moDbHelper.addBulkRelatedContent(ref argoContentParent, ref UpdatedTime, nMaxDepth);
 
                         }
-
+                 
                         sProcessInfo = "Check Admin Mode";
-
                         if (moConfig["ActionsBeforeAddBulk"] != "on")
                         {
                             ContentActions();
                         }
 
+                    if (!ibIndexMode)
+                    {
                         CommonActions();
 
                         // TS commented out so Century can perform searches in admin mode
