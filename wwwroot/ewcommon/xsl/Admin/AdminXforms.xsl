@@ -291,6 +291,7 @@
 						</xsl:otherwise>
 					</xsl:choose>
 					<xsl:apply-templates select="parent::*/alert" mode="xform"/>
+					
 					<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div | submit" mode="xform"/>
 
 

@@ -1034,6 +1034,13 @@ namespace Protean
                                 }
 
 
+                                var redactedElement = odbHelper.RedactSensitiveData(oXml.DocumentElement);
+                                if (redactedElement != null)
+                                {
+                                    oXml.RemoveChild(oXml.DocumentElement);
+                                    oXml.AppendChild(oXml.ImportNode(redactedElement, true));
+                                }
+
                                 long logId = odbHelper.emailActivity((Int16)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString(), oXml.OuterXml);
                                 odbHelper.myWeb = new Cms(moCtx);
                                 odbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, (Int16)logId, 0, otherId, activitySchema, false, null);
