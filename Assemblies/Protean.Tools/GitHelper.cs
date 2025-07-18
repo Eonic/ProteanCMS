@@ -36,14 +36,13 @@ namespace Protean.Tools
             return cAccessToken;
         }
 
-        public string GitCommandExecution(string cClientId, string cTenantId, string cScope, string cSecreteValue, string ps1FilePath)
+        public string GitCommandExecution(string ps1FilePath,string cAccessToken)
         {
             string output = "";
             string error = "";
             string result = "";
             string askPassPath = string.Empty;
-            string cAccessToken = "";
-
+           
             try
             {
                 string gitFilePath = _gitFilePath;
@@ -51,10 +50,8 @@ namespace Protean.Tools
                 {
                     ps1FilePath = gitFilePath + ps1FilePath;
                 }
-
                 string arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\"";
-                cAccessToken = AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
-
+                
                 // Create temporary askpass script
                 askPassPath = Path.Combine(Path.GetTempPath(), "askpass_oauth2.bat");
                 File.WriteAllText(askPassPath, $"@echo off{Environment.NewLine}echo {cAccessToken}");

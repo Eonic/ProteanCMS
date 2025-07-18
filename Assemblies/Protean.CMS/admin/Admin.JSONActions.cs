@@ -789,7 +789,8 @@ namespace Protean
                                                 cTenantId = moConfig["AzureTenantId"];
                                                 cScope = moConfig["AzureScope"];
                                                 cSecreteValue = moConfig["AzureClientSecretValue"];
-                                                result = gitHelper.GitCommandExecution(cClientId, cTenantId, cScope, cSecreteValue, cGitPS1FileName);
+                                                cAccessToken = gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
+                                                result = gitHelper.GitCommandExecution(cGitPS1FileName,cAccessToken);
                                             }
                                         }
                                     }
