@@ -34,11 +34,11 @@ using static Protean.Tools.Xml;
 
 namespace Protean.Providers
 {
-    namespace Discount
+    namespace DiscountRule
     {
-        public interface IdiscountProvider
+        public interface IdiscountRuleProvider
         {
-            IdiscountProvider Initiate(Cms myWeb, NameValueCollection config);
+            IdiscountRuleProvider Initiate(Cms myWeb, NameValueCollection config);
 
             string CheckDiscountApplicable(ref DataRow oDrDiscount,ref  Protean.Cms.Cart oCart);
 
@@ -56,7 +56,7 @@ namespace Protean.Providers
         {
             private const string mcModuleName = "Protean.Providers.Authentication.GetProvider";
           
-            public IEnumerable<IdiscountProvider> Get(ref Cms myWeb)
+            public IEnumerable<IdiscountRuleProvider> Get(ref Cms myWeb)
             {
                 try
                 {
@@ -66,7 +66,7 @@ namespace Protean.Providers
                     string ProviderClass = "";
                     Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/discountProviders");
 
-                    ICollection<IdiscountProvider> providerList = new IdiscountProvider[0];
+                    ICollection<IdiscountRuleProvider> providerList = new IdiscountRuleProvider[0];
                     var modifiable = providerList.ToList();
 
                     //if (moPrvConfig != null)
@@ -135,7 +135,7 @@ namespace Protean.Providers
                                 args[0] = myWeb;
                                 args[1] = configParams;
 
-                                var provider = (IdiscountProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, instance, args);
+                                var provider = (IdiscountRuleProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, instance, args);
 
                                 modifiable.Add(provider);
                             }
@@ -162,7 +162,7 @@ namespace Protean.Providers
             }
 
         }
-        public class Default : IdiscountProvider
+        public class Default : IdiscountRuleProvider
         {
             private string _Name = "Default";
             public Protean.Cms _myWeb;
@@ -174,7 +174,7 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            string IdiscountProvider.name
+            string IdiscountRuleProvider.name
             {
                 get
                 {
@@ -190,7 +190,7 @@ namespace Protean.Providers
                 }
             }
           
-            public IdiscountProvider Initiate(Cms myWeb, NameValueCollection config)
+            public IdiscountRuleProvider Initiate(Cms myWeb, NameValueCollection config)
             {
                 _myWeb = myWeb;
                 _Config = config;
