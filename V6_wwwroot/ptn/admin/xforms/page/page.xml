@@ -8,7 +8,7 @@
 				<cStructForiegnRef/>
 				<cStructName/>
 				<cStructDescription>
-					<DisplayName title="" linkType="internal" exclude="false" noindex="false" nonav="false" navpad="true" showRedirectModal="false" banner="basic" menu="default"/>
+					<DisplayName title="" linkType="internal" exclude="false" noindex="false" nonav="false" navpad="true" showRedirectModal="false" banner="basic-banner" menu="default"/>
 					<Images>
 						<img class="icon" />
 						<img class="thumbnail" />

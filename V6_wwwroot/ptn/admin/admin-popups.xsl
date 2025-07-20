@@ -257,9 +257,8 @@
     </xsl:variable>
 
 	var newItem = getUploadedImageHtmlPopup('<xsl:value-of select="$appPath"/>','<xsl:value-of select="$fld"/>',targetPath,'<xsl:value-of select="$targetFeild"/>',file.name)
-	prepareAjaxModals();
-	
-  </xsl:template>
+
+</xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib' and (Request/QueryString/Item[@name='ewCmd2' and node()='PathOnly'] or Request/QueryString/Item[@name='pathOnly' and node()='true'])]" mode="newItemScript">
 
@@ -930,7 +929,11 @@ function primeFileUpload(){
 			var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
 			<xsl:apply-templates select="." mode="newItemScript"/>
 			$('#files').prepend(newItem);
+			
+			$('#files div:first-child').find("a[data-bs-toggle!='popover']").openInModal();
+
 			$('#files .item-image .panel').prepareLibImages();
+
 			$("[data-bs-toggle=popover]").popover({
 			html: true,
 			container: '#files',
@@ -942,7 +945,6 @@ function primeFileUpload(){
 			});
 
 			});
-			//preparePickImageModal('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>');
 
 			},
 

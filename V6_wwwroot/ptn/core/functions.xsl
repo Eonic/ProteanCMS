@@ -599,6 +599,7 @@
     </xsl:for-each>
     });
   </xsl:template>
+	
   <xsl:template match="Page" mode="criticalPathCSS">
     <style>
       <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
