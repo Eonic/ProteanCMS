@@ -2327,7 +2327,7 @@
             <xsl:otherwise>
               <xsl:apply-templates select="." mode="status_legend"/>
               <span class="pageName">
-                <xsl:value-of select="$displayName"/>
+				  <xsl:apply-templates select="." mode="getDisplayName" />
               </span>
             </xsl:otherwise>
           </xsl:choose>
@@ -2684,13 +2684,14 @@
             </i>
             <span class="pageName">
               &#160;
-              <xsl:value-of select="@name"/>
+				<xsl:apply-templates select="." mode="getDisplayName" />
             </span>
           </xsl:when>
           <xsl:otherwise>
             <xsl:apply-templates select="." mode="status_legend"/>
             <span class="pageName">
-              <xsl:value-of select="@name"/>
+
+				<xsl:apply-templates select="." mode="getDisplayName" />
             </span>
           </xsl:otherwise>
         </xsl:choose>

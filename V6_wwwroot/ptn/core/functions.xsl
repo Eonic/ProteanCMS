@@ -3611,7 +3611,16 @@
         <xsl:value-of select="@name"/>
       </xsl:otherwise>
     </xsl:choose>
+	  <xsl:apply-templates select="." mode="getContentCount"/>
   </xsl:template>
+
+	<xsl:template match="MenuItem" mode="getContentCount">
+		
+	</xsl:template>
+
+	<xsl:template match="MenuItem[ContentCount]" mode="getContentCount">
+		&#160;[<xsl:value-of select="ContentCount/@count"/>]
+	</xsl:template>
 
   <!-- Display Name for a piece of content -->
   <xsl:template match="Content" mode="getDisplayName">
