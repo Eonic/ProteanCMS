@@ -1096,8 +1096,16 @@ namespace Protean
                                                     cTenantId = goConfig["AzureTenantId"];
                                                     cScope = goConfig["AzureScope"];
                                                     cSecreteValue = goConfig["AzureClientSecretValue"];
+
                                                     cAccessToken = gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
-                                                    result = gitHelper.GitCommandExecution(cGitPS1FilePath, cAccessToken);
+                                                    if(!string.IsNullOrEmpty(cAccessToken))
+                                                    {
+                                                        result = gitHelper.GitCommandExecution(cGitPS1FilePath, cAccessToken);
+                                                    }
+                                                    else
+                                                    {
+                                                        result = "Authentication Failed - Please check your Azure credentials";
+                                                    }
                                                 }
                                             }
 

@@ -5,7 +5,6 @@ using System.IO;
 using System.Configuration;
 using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Http;
-using DocumentFormat.OpenXml.Office.CustomXsn;
 
 namespace Protean.Tools
 {
@@ -23,17 +22,28 @@ namespace Protean.Tools
 
         public string AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue)
         {
-            string cAccessToken = "";
-           
-            var app = ConfidentialClientApplicationBuilder.Create(cClientId)
+            string cAccessToken = string.Empty;
+            try
+            {
+                if(string.IsNullOrEmpty(cClientId) || string.IsNullOrEmpty(cTenantId) || string.IsNullOrEmpty(cScope) || string.IsNullOrEmpty(cSecreteValue))
+                {
+                    return "";
+                }
+
+                var app = ConfidentialClientApplicationBuilder.Create(cClientId)
               .WithClientSecret(cSecreteValue)
-          .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
-            .Build();
+              .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
+             .Build();
 
-            var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
-            cAccessToken = tokenResult.AccessToken;
+                var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
+                cAccessToken = tokenResult.AccessToken;
 
-            return cAccessToken;
+                return cAccessToken;
+            }
+            catch (Exception ex) {
+                return "";
+            }
+
         }
 
         public string GitCommandExecution(string ps1FilePath,string cAccessToken)
@@ -46,6 +56,19 @@ namespace Protean.Tools
             try
             {
                 string gitFilePath = _gitFilePath;
+                if (string.IsNullOrEmpty(cAccessToken))
+                {
+                    return "Access token is not null or empty. Please provide a valid token.";
+                }
+                if (string.IsNullOrEmpty(ps1FilePath))
+                {
+                    return "PowerShell script path is not null or empty. Please provide a valid script path.";
+                }
+                if (string.IsNullOrEmpty(gitFilePath))
+                {
+                    return "Git file path is not null or empty. Please provide a valid git file path.";
+                }
+
                 if (!string.IsNullOrEmpty(gitFilePath))
                 {
                     ps1FilePath = gitFilePath + ps1FilePath;
