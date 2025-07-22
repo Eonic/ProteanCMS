@@ -14599,34 +14599,7 @@
 										<button class="btn btn-xs btn-success hidden" id="save-btn-{@id}" onclick="saveTitle({$pageTitleId}, {$metaId},{$itemId})">
 											<i class="fa fa-save"><xsl:text> </xsl:text>
 												</i><xsl:text> </xsl:text>Save
-										</button>
-
-										<xsl:if test="@status='1'">
-											<!--a href="{$appPath}?ewCmd=HidePage&amp;pgid={@id}" class="adminButton hide" title="Click here to hide this page">Hide</a-->
-											<a onclick="$('#MenuTree').hideButton({@id});" class="btn btn-xs btn-danger btn-hide" title="Click here to hide this page">
-												<i class="fa fa-times-circle fa-white">
-													<xsl:text> </xsl:text>
-												</i><xsl:text> </xsl:text>
-												Hide
-											</a>
-											<!--span class="hidden"> | </span-->
-										</xsl:if>
-
-										<xsl:if test="@status='0'">
-											<!--a href="{$appPath}?ewCmd=ShowPage&amp;pgid={@id}" class="adminButton show" title="Click here to hide this page">Show</a-->
-											<a onclick="$('#MenuTree').showButton({@id});" class="btn btn-xs btn-success btn-show" title="Click here to show this page">
-												<i class="fa fa-check-circle fa-white">
-													<xsl:text> </xsl:text>
-												</i><xsl:text> </xsl:text>Show
-											</a>
-											<!--span class="hidden"> | </span-->
-											<!--<a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="btn btn-xs btn-danger btn-del" title="Click here to delete this page">
-												<i class="fa fa-trash-o fa-white">
-													<xsl:text> </xsl:text>
-												</i><xsl:text> </xsl:text>Delete
-											</a>-->
-											<!--span class="hidden"> | </span-->
-										</xsl:if>
+										</button>									
 									</td>
 								</xsl:if>
 							</div>
