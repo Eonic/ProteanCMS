@@ -11,7 +11,7 @@ namespace Protean.Tools
     public class GitHelper
     {
         private readonly string _gitFilePath;
-
+        public string _accessToken = string.Empty;
         public GitHelper(string gitFilePath)
         {
             if (!string.IsNullOrEmpty(gitFilePath))
@@ -20,14 +20,14 @@ namespace Protean.Tools
             }
         }
 
-        public string AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue)
+        public void AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue)
         {
             string cAccessToken = string.Empty;
             try
             {
                 if(string.IsNullOrEmpty(cClientId) || string.IsNullOrEmpty(cTenantId) || string.IsNullOrEmpty(cScope) || string.IsNullOrEmpty(cSecreteValue))
                 {
-                    return "";
+                    return;
                 }
 
                 var app = ConfidentialClientApplicationBuilder.Create(cClientId)
@@ -37,16 +37,16 @@ namespace Protean.Tools
 
                 var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
                 cAccessToken = tokenResult.AccessToken;
-
-                return cAccessToken;
+                _accessToken= cAccessToken;
+               // return cAccessToken;
             }
             catch (Exception ex) {
-                return "";
+                return;
             }
 
         }
 
-        public string GitCommandExecution(string ps1FilePath,string cAccessToken)
+        public string GitCommandExecution(string ps1FilePath)
         {
             string output = "";
             string error = "";
@@ -56,7 +56,7 @@ namespace Protean.Tools
             try
             {
                 string gitFilePath = _gitFilePath;
-                if (string.IsNullOrEmpty(cAccessToken))
+                if (string.IsNullOrEmpty(_accessToken))
                 {
                     return "Access token is not null or empty. Please provide a valid token.";
                 }
@@ -77,7 +77,7 @@ namespace Protean.Tools
                 
                 // Create temporary askpass script
                 askPassPath = Path.Combine(Path.GetTempPath(), "askpass_oauth2.bat");
-                File.WriteAllText(askPassPath, $"@echo off{Environment.NewLine}echo {cAccessToken}");
+                File.WriteAllText(askPassPath, $"@echo off{Environment.NewLine}echo {_accessToken}");
 
                 ProcessStartInfo gitPull = new ProcessStartInfo
                 {
@@ -91,7 +91,7 @@ namespace Protean.Tools
 
                 gitPull.EnvironmentVariables["GIT_ASKPASS"] = askPassPath;
                 gitPull.EnvironmentVariables["GIT_TERMINAL_PROMPT"] = "0";
-                gitPull.EnvironmentVariables["ACCESS_TOKEN"] = cAccessToken;
+                gitPull.EnvironmentVariables["ACCESS_TOKEN"] = _accessToken;
 
                 using (var process = Process.Start(gitPull))
                 {
