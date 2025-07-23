@@ -4312,6 +4312,13 @@ namespace Protean
                             // Ensure that the structure is always called from the root level, and not from any manipulation of the top level,
                             // such as AuthenticatedRootPageId
                             myWeb.GetStructureXML("Site", (long)-1, (long)mnAdminTopLevel);
+
+                            // 
+                            if (!string.IsNullOrEmpty(gcMenuContentCountTypes))
+                            {
+                                foreach (var contentType in Strings.Split(gcMenuContentCountTypes, ","))
+                                    myWeb.AddContentCount((XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu"), Strings.Trim(contentType));
+                            }
                         }
                     }
 

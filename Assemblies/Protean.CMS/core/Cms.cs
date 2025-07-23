@@ -104,7 +104,7 @@ namespace Protean
         public static string gcEwBaseUrl;
         public static string gcBlockContentType = "";
         public static bool gbMembership = false;
-        public static bool gbCart = false;
+        public bool gbCart = false;
         public static bool gbQuote = false;
         public static bool gbReport = false;
         public static int gnTopLevel = 0;
@@ -1611,15 +1611,15 @@ namespace Protean
                     default:
                         {
                             CheckPagePath();
-
-                            if (gbCart | gbQuote)
-                            {
-                                if (Conversions.ToInteger(Operators.AddObject("0", moSession["CartId"])) > 0)
+                            if (moSession != null) {
+                                if (gbCart | gbQuote)
                                 {
-                                    bPageCache = false;
+                                    if (Conversions.ToInteger("0" + moSession["CartId"] ?? string.Empty) > 0)
+                                    {
+                                        bPageCache = false;
+                                    }
                                 }
                             }
-
 
                             if (moRequest["reBundle"] != null)
                             {
@@ -3552,7 +3552,16 @@ namespace Protean
                             mbAdminMode = true;
 
                             // Note need to fix for newsletters.
-                            var FullMenuXml = GetStructureXML(-1, RootPageId, nContextId);
+                            XmlElement FullMenuXml = GetStructureXML(-1, RootPageId, nContextId);
+
+                            // 
+                            if (!string.IsNullOrEmpty(gcMenuContentCountTypes))
+                            {
+                                foreach (var contentType in Strings.Split(gcMenuContentCountTypes, ","))
+                                    AddContentCount(FullMenuXml, Strings.Trim(contentType));
+                            }
+
+
                             long getLevel = 0L;
 
                             // Move the requested ID to the top.
