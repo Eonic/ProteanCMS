@@ -3130,6 +3130,17 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template name="term3095">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>Out of Stock</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Out of Stock</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
   <!-- ################################################################################################ -->
   <!-- ProteanCMS Membership Template phrases -->
   <!-- 4000+ -->

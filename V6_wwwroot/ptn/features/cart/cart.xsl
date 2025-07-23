@@ -27,23 +27,31 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
-		<div id="cartButtons{@id}" class="cartButtons">
-			<form action="{$actionURL}" method="post" class="ewXform">
-				<xsl:apply-templates select="." mode="Options_List"/>
-				<xsl:if test="$price&gt;0 and not(format-number($price, '#.00')='NaN')">
-					<xsl:choose>
-						<xsl:when test="Content[@type='SKU']">
-							<xsl:apply-templates select="Content[@type='SKU'][1]" mode="showQuantity"/>
-						</xsl:when>
-						<xsl:otherwise>
-							<xsl:apply-templates select="." mode="showQuantity"/>
-						</xsl:otherwise>
-					</xsl:choose>
-					<xsl:apply-templates select="." mode="addtoCartButtons"/>
-				</xsl:if>
-			</form>
-		</div>
+		<xsl:choose>
+			<xsl:when test="Stock!='' and not(Stock&lt;1)">
+				<div id="cartButtons{@id}" class="cartButtons">
+					<form action="{$actionURL}" method="post" class="ewXform">
+						<xsl:apply-templates select="." mode="Options_List"/>
+						<xsl:if test="$price&gt;0 and not(format-number($price, '#.00')='NaN')">
+							<xsl:choose>
+								<xsl:when test="Content[@type='SKU']">
+									<xsl:apply-templates select="Content[@type='SKU'][1]" mode="showQuantity"/>
+								</xsl:when>
+								<xsl:otherwise>
+									<xsl:apply-templates select="." mode="showQuantity"/>
+								</xsl:otherwise>
+							</xsl:choose>
+							<xsl:apply-templates select="." mode="addtoCartButtons"/>
+						</xsl:if>
+					</form>
+				</div>
+			</xsl:when>
+			<xsl:otherwise>
+				<span class="badge bg-info">
+					<xsl:call-template name="term3095" />
+				</span>
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
 	<!-- -->
 
@@ -2584,6 +2592,9 @@
 	<!-- SKU node -->
 	<xsl:template match="Content" mode="skuOptions">
 		<option>
+			<xsl:if test="Stock != '' and Stock &lt; 1">
+				<xsl:attribute name="disabled">disabled</xsl:attribute>
+			</xsl:if>
 			<xsl:attribute name="value">
 				<xsl:value-of select="@id"/>
 				<xsl:text>_</xsl:text>
@@ -2599,6 +2610,9 @@
 				<xsl:value-of select="parent::Content/@id "/>
 			</xsl:attribute>
 			<xsl:value-of select="Name"/>
+			<xsl:if test="Stock != '' and Stock &lt; 1">
+				(<xsl:call-template name="term3095" />)
+			</xsl:if>
 		</option>
 	</xsl:template>
 	<!-- -->
