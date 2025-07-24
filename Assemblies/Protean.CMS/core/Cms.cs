@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -15,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.IndexerAsync.IndexPageAsync;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using static System.Web.HttpUtility;
@@ -7917,8 +7919,18 @@ namespace Protean
         public void addPageDetailLinksToStructure(string cContentTypes)
         {
             string cProcessInfo = "addPageDetailLinksToStructure";
+            string cIndexDetailSubTypes = "";
+            string[] IndexDetailSubTypes;
             try
             {
+
+                if (!string.IsNullOrEmpty(moConfig["SiteSearchIndexDetailSubTypes"]))
+                {
+                    cIndexDetailSubTypes = moConfig["SiteSearchIndexDetailSubTypes"];
+                }
+                IndexDetailSubTypes = Strings.Split(Strings.Replace(cIndexDetailSubTypes, " ", ""), ",");
+
+
                 XmlElement oMenuElmt = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Menu");
                 if (oMenuElmt is null)
                     return;
@@ -7944,7 +7956,7 @@ namespace Protean
 
                 //string sProcessInfo = "addPageDetailLinksToStructure";
                 string cSQL = "SELECT tblContent.nContentKey, tblContent.cContentName, tblContentLocation.nStructId, tblAudit.dPublishDate, tblAudit.dUpdateDate, tblContent.cContentSchemaName" + " FROM tblContent INNER JOIN" + " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" + " tblContentLocation ON tblContent.nContentKey = tblContentLocation.nContentId" + " WHERE (tblContentLocation.bPrimary = 1) AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dPublishDate is null) AND " + " (tblAudit.dExpireDate >= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN (" + cContentTypes + ")) ";
-
+                string ContentIdsCSV = "";
 
                 using (var oDR = moDbHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                 {
@@ -7955,7 +7967,9 @@ namespace Protean
                     {
                         string cURL = "";
                         var oContElmt = moPageXml.CreateElement("MenuItem");
-                        cURL = GetDetailURL(Conversions.ToLong(oDR[0]), oDR[5].ToString(), oDR[1].ToString(), "", Conversions.ToLong(oDR[2]), pageDict);
+                        long ContentId = Conversions.ToLong(oDR[0]);
+                        ContentIdsCSV = ContentIdsCSV + ContentId + ",";
+                        cURL = GetDetailURL(ContentId, oDR[5].ToString(), oDR[1].ToString(), "", Conversions.ToLong(oDR[2]), pageDict);
 
                         #region old code
                         //switch (moConfig["DetailPathType"] ?? "")
@@ -8027,8 +8041,37 @@ namespace Protean
                             oMenuElmt.AppendChild(oContElmt);
                         }
 
+                       
+
                     }
                     oDR.Close();
+
+                    ContentIdsCSV = ContentIdsCSV.TrimEnd(',');
+                    // we have sub products with there own pages which need to be indexed but they are not on the parent page
+                        if (cIndexDetailSubTypes != "")
+                        {
+                           foreach (string subType in IndexDetailSubTypes)
+                            {
+                               string cSQL2 = "SELECT tblContent.nContentKey, tblContent.cContentName, tblAudit.dPublishDate, tblAudit.dUpdateDate, tblContent.cContentSchemaName" + " FROM tblContent INNER JOIN" + " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" + " tblContentRelation ON tblContent.nContentKey = tblContentRelation.nContentChildId" + " WHERE tblContentRelation.nContentParentId IN (" + ContentIdsCSV + ") AND tblContent.nContentKey NOT IN (" + ContentIdsCSV + ") AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dPublishDate is null) AND " + " (tblAudit.dExpireDate >= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN ('" + cIndexDetailSubTypes + "')) ";
+                                using (SqlDataReader oDR2 = moDbHelper.getDataReaderDisposable(cSQL2))  // Done by nita on 6/7/22
+                            {
+                                while (oDR2.Read())
+                                {
+                                    string cURL2 = "";
+                                    var oContElmt2 = moPageXml.CreateElement("MenuItem");
+                                    cURL2 = GetDetailURL(Conversions.ToLong(oDR2[0]), oDR2[4].ToString(), oDR2[1].ToString(), "", 0, pageDict);
+                                    if (!string.IsNullOrEmpty(cURL2))
+                                    {
+                                        oContElmt2.SetAttribute("url", cURL2);
+                                        oContElmt2.SetAttribute("name", oDR2[1].ToString());
+                                        oContElmt2.SetAttribute("publish", Tools.Xml.XmlDate(oDR2[2].ToString(), false));
+                                        oContElmt2.SetAttribute("update", Tools.Xml.XmlDate(oDR2[3].ToString(), false));
+                                        oMenuElmt.AppendChild(oContElmt2);
+                                    }
+                                }
+                            }
+                        }
+                        }
                 }
             }
 

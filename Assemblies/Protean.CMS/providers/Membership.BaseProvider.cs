@@ -9,6 +9,7 @@
 // ***********************************************************************
 
 
+using Microsoft.Identity.Client;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.AdminProxy;
@@ -2944,8 +2945,20 @@ namespace Protean.Providers
                             string SubjectLine = "Your Registration Details";
                             var oMsg = new Protean.Messaging(ref myWeb.msException);
 
-                            oUserElmt.SetAttribute("Url", myWeb.mcOriginalURL);
+                            oUserElmt.SetAttribute("Url", myWeb.mcPageURL);
                             oUserElmt.SetAttribute("activateCmd", cmdPrefix + "ActivateAccount");
+
+                            //lets reset the activation key if it is missing.
+                            string ActivationKey = "";
+                            if (oUserElmt.SelectSingleNode("descendant-or-self::ActivationKey") != null) {
+                                ActivationKey = oUserElmt.SelectSingleNode("descendant-or-self::ActivationKey").ToString();
+                            }
+                            if (ActivationKey == "") {
+                                var oMembership = new Protean.Cms.Membership(ref myWeb);
+                                //oMembership.OnError += myWeb.OnComponentError;
+                                oMembership.AccountActivateLink((int)mnUserId);
+                                oUserElmt.ReplaceChild((XmlNode)myWeb.moDbHelper.GetUserXML(mnUserId), oUserElmt.FirstChild);
+                            }
 
                             // send an email to the new registrant
                             if (!string.IsNullOrEmpty(recipientEmail))
