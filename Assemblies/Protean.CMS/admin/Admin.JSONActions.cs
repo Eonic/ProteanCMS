@@ -748,7 +748,6 @@ namespace Protean
                     string cSecreteValue = "";
                     string cGitPS1FileName = "";
                     string result = "";
-                    string cAccessToken = "";
                     string gitFilePath = "";
 
                     
@@ -790,15 +789,8 @@ namespace Protean
                                                 cScope = moConfig["AzureScope"];
                                                 cSecreteValue = moConfig["AzureClientSecretValue"];
                                                 gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
-                                                if (!string.IsNullOrEmpty(cAccessToken))
-                                                {
-                                                    result = gitHelper.GitCommandExecution(cGitPS1FileName);
-                                                }
-                                                else
-                                                {
-                                                    result = "Authentication failed. Please check your Azure credentials.";
-                                                }
-                                                
+                                                result = gitHelper.GitCommandExecution(cGitPS1FileName);
+                                               
                                             }
                                         }
                                     }
