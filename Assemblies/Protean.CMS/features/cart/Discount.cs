@@ -2,6 +2,8 @@
 using Lucene.Net.Support;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.CDN;
+using Protean.Providers.DiscountRule;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -257,106 +259,14 @@ namespace Protean
                                     // Convert oDsDiscounts to XML and apply discount logic
                                    
                                     oXmlDiscounts.LoadXml(oDsDiscounts.GetXml());
-
-                                    XmlNodeList discountNodes = oXmlDiscounts.SelectNodes("//Discount");
-                                    bool validateAddedDiscount = false;
-                                    double finalDiscount = 0d;
-                                    List<int> validPromoContentIds = new List<int>();
-
-                                    foreach (XmlNode discountNode in discountNodes)
-                                    {
-                                        int discountContentId = Convert.ToInt32(discountNode.SelectSingleNode("nContentId")?.InnerText ?? "0");
-                                        short bDiscountIsPercent = Convert.ToInt16(discountNode.SelectSingleNode("bDiscountIsPercent")?.InnerText ?? "0");
-                                        double dMinPrice = Convert.ToDouble(discountNode.SelectSingleNode("nDiscountMinPrice")?.InnerText ?? "0");
-                                        int nMinQuantity = Convert.ToInt32(discountNode.SelectSingleNode("nDiscountMinQuantity")?.InnerText ?? "0");
-                                        double discountValue = Convert.ToDouble(discountNode.SelectSingleNode("nDiscountValue")?.InnerText ?? "0");
-
-                                        string additionalXmlRaw = discountNode.SelectSingleNode("cAdditionalXML")?.InnerText ?? "";
-                                        XmlDocument docAdditionalXml = new XmlDocument();
-                                        docAdditionalXml.LoadXml("<additionalXml>" + additionalXmlRaw + "</additionalXml>");
-
-                                        double dMaxPrice = Convert.ToDouble(docAdditionalXml.SelectSingleNode("additionalXml/nDiscountMaxPrice")?.InnerText ?? "0");
-                                        double dMinOrderTotal = Convert.ToDouble(docAdditionalXml.SelectSingleNode("additionalXml/nMinimumOrderValue")?.InnerText ?? "0");
-                                        double dMaxOrderTotal = Convert.ToDouble(docAdditionalXml.SelectSingleNode("additionalXml/nMaximumOrderValue")?.InnerText ?? "0");
-
-                                        bool bApplyToTotal = false;
-                                        string applyToOrderText = docAdditionalXml.SelectSingleNode("additionalXml/bApplyToOrder")?.InnerText;
-                                        bApplyToTotal = !string.IsNullOrEmpty(applyToOrderText) && Convert.ToBoolean(applyToOrderText);
-                                        string shippingMethods = docAdditionalXml.SelectSingleNode("additionalXml/cFreeShippingMethods")?.InnerText;
-                                        if (!string.IsNullOrEmpty(shippingMethods))
-                                        {
-                                            oCartXML.SetAttribute("NonDiscountedShippingCost", "0");
-                                        }
-
-                                        double totalAmount = 0d;
-                                        double nItemCost = 0d;
-                                        short nValidProductCount = 0;
-                                        bool isValid = true;
-
-                                        foreach (DataRow drItem in oDsCart.Tables["Item"].Rows)
-                                        {
-                                            if (Operators.ConditionalCompareObjectEqual(drItem["nParentId"], 0, false))
-                                            {
-                                                int cartContentId = Convert.ToInt32(drItem["contentId"]);
-                                                if (cartContentId != discountContentId) continue;
-
-                                                double itemPrice = Convert.ToDouble(drItem["price"]);
-                                                double itemQty = Convert.ToDouble(drItem["quantity"]);
-                                                nItemCost = itemPrice * itemQty;
-                                                totalAmount += nItemCost;
-
-                                                if (!bApplyToTotal)
-                                                {
-                                                    if (dMaxPrice > 0)
-                                                    {
-                                                        if (nItemCost >= dMinPrice && nItemCost <= dMaxPrice)
-                                                            nValidProductCount++;
-                                                    }
-                                                    else if (nItemCost >= dMinPrice)
-                                                    {
-                                                        nValidProductCount++;
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        if (!bApplyToTotal && nValidProductCount < nMinQuantity)
-                                        {
-                                            isValid = false;
-                                        }
-
-                                        if (bApplyToTotal && dMaxOrderTotal != 0d)
-                                        {
-                                            if (!(totalAmount >= dMinOrderTotal && totalAmount <= dMaxOrderTotal))
-                                            {
-                                                isValid = false;
-                                            }
-                                        }
-
-                                        if (!isValid)
-                                        {
-                                            if (!isValid && discountNode.ParentNode != null)
-                                            {
-                                                discountNode.ParentNode.RemoveChild(discountNode);
-                                            }
-                                            continue;
-                                        }
-                                       
-
-                                        validateAddedDiscount = true;
-                                        validPromoContentIds.Add(discountContentId);
-
-                                        if (bDiscountIsPercent != 0)
-                                        {
-                                            finalDiscount += (totalAmount * discountValue) / 100.0;
-                                        }
-                                        else
-                                        {
-                                            finalDiscount += discountValue;
-                                        }
+                                    bool isApplicable = false;
+                                    double finalDiscount = 0;
+                                    Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
+                                    IdiscountRuleProvider oDisProvider = (IdiscountRuleProvider)oDiscRuleProv.Get(ref myWeb);
+                                    if (oDisProvider != null) {
+                                        isApplicable = oDisProvider.CheckDiscountApplicable(ref oXmlDiscounts, oDsCart, ref oCartXML, out finalDiscount);
                                     }
-
-                                    if (!validateAddedDiscount)
+                                    if (!isApplicable)
                                     {
                                         RemoveDiscountCode();
                                         oDsDiscounts = null;
@@ -364,7 +274,7 @@ namespace Protean
                                     else
                                     {
                                         oCartXML.SetAttribute("Discount", finalDiscount.ToString("F2"));
-                                    }
+                                    }                                
 
                                 }
                                 else
@@ -399,7 +309,38 @@ namespace Protean
                             }
                             else
                             {
-                               
+                                // changing cAdditionXMl column mapping logic here to xml only
+                                //Here we get fiteredvalid discount in oXmlDiscounts 
+                                // we will set oXmlDiscounts xml 
+
+                                foreach (XmlElement discountEl in oXmlDiscounts.SelectNodes("//Discount"))
+                                {
+                                    // Move child elements to attributes (except cAdditionalXML)
+                                    foreach (XmlNode child in discountEl.SelectNodes("*[name() != 'cAdditionalXML']"))
+                                    {
+                                        discountEl.SetAttribute(child.Name, child.InnerText.Trim());
+                                        discountEl.RemoveChild(child);
+                                    }
+
+                                    // Handle cAdditionalXML
+                                    XmlNode cAddXml = discountEl.SelectSingleNode("cAdditionalXML");
+                                    if (cAddXml != null && !string.IsNullOrWhiteSpace(cAddXml.InnerText))
+                                    {
+                                        var addDoc = new XmlDocument();
+                                        addDoc.LoadXml("<root>" + cAddXml.InnerText + "</root>");
+                                        foreach (XmlNode addChild in addDoc.DocumentElement.ChildNodes)
+                                        {
+                                            if (addChild.NodeType == XmlNodeType.Element)
+                                            {
+                                                XmlElement el = oXmlDiscounts.CreateElement(addChild.Name);
+                                                el.InnerText = addChild.InnerText;
+                                                discountEl.AppendChild(el);
+                                            }
+                                        }
+                                        discountEl.RemoveChild(cAddXml);
+                                    }
+                                }
+
                                 // add a copy of the cart items table
                                 // ------------------------------------------------------------------------------------
                                 if (!bFullCart)
@@ -486,7 +427,7 @@ namespace Protean
                                     {
                                         foreach (XmlNode discountNode in discountNodes)
                                         {
-                                            string discountRefId = discountNode.SelectSingleNode("nCartItemKey")?.InnerText;
+                                            string discountRefId = discountNode.Attributes["nCartItemKey"]?.Value;
 
                                             if (discountRefId == itemId)
                                             {
