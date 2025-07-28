@@ -4114,6 +4114,7 @@
     <xsl:param name="level2"/>
     <xsl:param name="level3"/>
     <xsl:param name="menu-back"/>
+    <xsl:variable name="level-checker">2</xsl:variable>
     <xsl:variable name="liClass">
       <xsl:text>nav-item </xsl:text>
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
@@ -4277,6 +4278,10 @@
         </span>
       </xsl:if>
       <ul class="dropdown-menu" aria-labelledby="mainNavDD{@id}">
+        <xsl:attribute name="class">
+          <xsl:text>dropdown-menu menu-level-</xsl:text>
+          <xsl:value-of select="$level-checker"/>
+        </xsl:attribute>
         <xsl:if test="$menu-back='true'">
           <li class="xs-only nav-item menu-back">
             <span class="nav-link">
@@ -4339,6 +4344,7 @@
           <xsl:with-param name="level2" select="$level2"/>
           <xsl:with-param name="level3" select="$level3"/>
           <xsl:with-param name="menu-back" select="$menu-back"/>
+          <xsl:with-param name="level-checker" select="$level-checker + 1"/>
         </xsl:apply-templates>
         <xsl:if test="$menu-back='end'">
           <li class="xs-only nav-item menu-back">
@@ -4452,7 +4458,7 @@
 
     <ul>
       <xsl:attribute name="class">
-        <xsl:text>nav nav-pills</xsl:text>
+        <xsl:text>nav nav-pills </xsl:text>
       </xsl:attribute>
       <xsl:if test="$overviewLink='true'">
         <li class="nav-item">
@@ -4538,6 +4544,7 @@
     <xsl:param name="level2"/>
     <xsl:param name="level3"/>
     <xsl:param name="menu-back"/>
+    <xsl:param name="level-checker"/>
     <li>
       <xsl:attribute name="class">
         <xsl:value-of select="$li-class"/>
@@ -4563,14 +4570,15 @@
       </xsl:apply-templates>
       <!--<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">-->
       <xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and ($level2='true' or $level3='true')">
-        <button class="xs-only btn btn-sm btn-outline-dark dropdown-mobile-btn" aria-label="Open submenu">
+        <button class="xs-only btn btn-sm btn-outline-dark dropdown-mobile-btn" aria-label="Open submenu" aria-expanded="false">
           <i class="fas fa-arrow-right">
             <xsl:text> </xsl:text>
           </i>
         </button>
         <ul>
           <xsl:attribute name="class">
-            <xsl:text>nav nav-pills</xsl:text>
+            <xsl:text>nav nav-pills menu-level-</xsl:text>
+            <xsl:value-of select="$level-checker"/>
           </xsl:attribute>
           <xsl:if test="$menu-back='true'">
             <li class="xs-only nav-item menu-back">
@@ -4632,6 +4640,7 @@
             <xsl:with-param name="link-class" select="$li-class"/>
             <xsl:with-param name="level3" select="$level3"/>
             <xsl:with-param name="menu-back" select="$menu-back"/>
+            <xsl:with-param name="level-checker" select="$level-checker + 1" />
           </xsl:apply-templates>
           <xsl:if test="$menu-back='end'">
             <li class="xs-only nav-item menu-back">
@@ -6289,7 +6298,7 @@
           </xsl:if>
           <xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
             <div class="center-block">
-              <span class="upload-icon" role="img" aria-hidden="true">
+              <span class="upload-icon" role="img" >
                 <img src="{@uploadIcon}" alt="icon" class="img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
               </span>
             </div>
