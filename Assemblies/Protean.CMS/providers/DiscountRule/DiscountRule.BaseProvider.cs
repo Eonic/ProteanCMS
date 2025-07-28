@@ -41,7 +41,7 @@ namespace Protean.Providers
         {
             IdiscountRuleProvider Initiate(Cms myWeb, NameValueCollection config);
 
-            bool CheckDiscountApplicable(ref XmlDocument oXmlDiscounts, DataSet oDsCart, ref XmlElement oCartXml, out double finalDiscount);
+            bool CheckDiscountApplicable(ref XmlDocument oXmlDiscounts, ref XmlElement oCartXml, out double finalDiscount);
 
             string ApplyDiscount(ref DataRow oDrDiscount, ref Protean.Cms.Cart oCart);
             //long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response); // returns userid
@@ -130,7 +130,7 @@ namespace Protean.Providers
                 throw new NotImplementedException();
             }
 
-            public bool CheckDiscountApplicable(ref XmlDocument oXmlDiscounts, DataSet oDsCart, ref XmlElement oCartXML, out double finalDiscount)
+            public bool CheckDiscountApplicable(ref XmlDocument oXmlDiscounts, ref XmlElement oCartXML, out double finalDiscount)
             {
                 finalDiscount = 0d;
 
@@ -145,6 +145,8 @@ namespace Protean.Providers
                     double dMinOrderTotal = 0;
                     double dMaxOrderTotal = 0;
                     int nMinQuantity = 0;
+
+                    XmlNodeList cartItems = oCartXML.SelectNodes("//Item");
 
                     foreach (XmlNode discountNode in discountNodes)
                     {
@@ -176,29 +178,30 @@ namespace Protean.Providers
                         short nValidProductCount = 0;
                         bool isValid = true;
 
-                        foreach (DataRow drItem in oDsCart.Tables["Item"].Rows)
+                        foreach (XmlNode itemNode in cartItems)
                         {
-                            if (Operators.ConditionalCompareObjectEqual(drItem["nParentId"], 0, false))
+                            string parentId = itemNode.SelectSingleNode("nParentId")?.InnerText ?? "0";
+                            if (parentId != "0") continue;
+
+                            int cartContentId = Convert.ToInt32(itemNode.Attributes["contentId"]?.Value ?? "0");
+                            if (cartContentId != discountContentId) continue;
+
+                            double itemPrice = Convert.ToDouble(itemNode.Attributes["price"]?.Value ?? "0");
+                            double itemQty = Convert.ToDouble(itemNode.Attributes["quantity"]?.Value ?? "0");
+
+                            nItemCost = itemPrice * itemQty;
+                            totalAmount += nItemCost;
+
+                            if (!bApplyToTotal)
                             {
-                                int cartContentId = Convert.ToInt32(drItem["contentId"]);
-                                if (cartContentId != discountContentId) continue;
-
-                                double itemPrice = Convert.ToDouble(drItem["price"]);
-                                double itemQty = Convert.ToDouble(drItem["quantity"]);
-                                nItemCost = itemPrice * itemQty;
-                                totalAmount += nItemCost;
-
-                                if (!bApplyToTotal)
+                                if (dMaxPrice > 0)
                                 {
-                                    if (dMaxPrice > 0)
-                                    {
-                                        if (nItemCost >= dMinPrice && nItemCost <= dMaxPrice)
-                                            nValidProductCount++;
-                                    }
-                                    else if (nItemCost >= dMinPrice)
-                                    {
+                                    if (nItemCost >= dMinPrice && nItemCost <= dMaxPrice)
                                         nValidProductCount++;
-                                    }
+                                }
+                                else if (nItemCost >= dMinPrice)
+                                {
+                                    nValidProductCount++;
                                 }
                             }
                         }
@@ -218,13 +221,12 @@ namespace Protean.Providers
 
                         if (!isValid)
                         {
-                            if (!isValid && discountNode.ParentNode != null)
+                            if (discountNode.ParentNode != null)
                             {
                                 discountNode.ParentNode.RemoveChild(discountNode);
                             }
                             continue;
                         }
-
 
                         validateAddedDiscount = true;
                         validPromoContentIds.Add(discountContentId);
@@ -239,6 +241,90 @@ namespace Protean.Providers
                         }
                     }
 
+                    // Transform only valid <Discount> nodes after validation
+                    // changing cAdditionXMl column mapping logic here to xml only
+                    //Here we get fiteredvalid discount in oXmlDiscounts 
+                    // we will set oXmlDiscounts xml with oDsCart values into it.
+                    foreach (XmlElement discountEl in oXmlDiscounts.SelectNodes("//Discount"))
+                    {
+                        // Move non-cAdditionalXML child elements to attributes
+                        foreach (XmlNode child in discountEl.SelectNodes("*[name() != 'cAdditionalXML']").Cast<XmlNode>().ToList())
+                        {
+                            discountEl.SetAttribute(child.Name, child.InnerText.Trim());
+                            discountEl.RemoveChild(child);
+                        }
+
+                        // Expand <cAdditionalXML> to real elements
+                        XmlNode cAddXml = discountEl.SelectSingleNode("cAdditionalXML");
+                        if (cAddXml != null && !string.IsNullOrWhiteSpace(cAddXml.InnerText))
+                        {
+                            var addDoc = new XmlDocument();
+                            addDoc.LoadXml("<root>" + cAddXml.InnerText + "</root>");
+                            foreach (XmlNode addChild in addDoc.DocumentElement.ChildNodes)
+                            {
+                                if (addChild.NodeType == XmlNodeType.Element)
+                                {
+                                    XmlElement el = oXmlDiscounts.CreateElement(addChild.Name);
+                                    el.InnerText = addChild.InnerText;
+                                    discountEl.AppendChild(el);
+                                }
+                            }
+                            discountEl.RemoveChild(cAddXml);
+                        }
+                    }
+                    
+                    // Remove child item from carxml that have nparentid>0 in XML
+                    XmlNodeList itemNodes = oCartXML.SelectNodes("//Item");
+                    for (int i = itemNodes.Count - 1; i >= 0; i--)
+                    {
+                        XmlNode itemNode = itemNodes[i];
+                        string parentId = itemNode.SelectSingleNode("nParentId")?.InnerText ?? "0";
+
+                        if (int.TryParse(parentId, out int nParentId) && nParentId > 0)
+                        {
+                            itemNode.ParentNode.RemoveChild(itemNode); 
+                        }
+                    }
+
+                    // select parent items and add them to oDXML
+                    XmlDocument oDXML = new XmlDocument();
+                    XmlElement oDXmlElement = oDXML.CreateElement("Discounts");
+                    oDXML.AppendChild(oDXmlElement);
+
+                    XmlNodeList parentItems = oCartXML.SelectNodes("//Item[nParentId='0']");
+                    foreach (XmlNode itemNode in parentItems)
+                    {
+                        XmlNode importedItem = oDXML.ImportNode(itemNode, true);
+                        oDXmlElement.AppendChild(importedItem);
+                    }
+
+                    // Now append matching <Discount> nodes from oXmlDiscounts to matching <Item> nodes in oDXML
+                    XmlNodeList oDxmlItems = oDXML.SelectNodes("//Item");
+                    discountNodes = oXmlDiscounts.SelectNodes("//Discount");
+
+                    foreach (XmlNode itemNode in oDxmlItems)
+                    {
+                        // Try to get id from <id> element or id attribute
+                        string itemId = itemNode.SelectSingleNode("id")?.InnerText ?? itemNode.Attributes["id"]?.Value;
+
+                        if (!string.IsNullOrEmpty(itemId))
+                        {
+                            foreach (XmlNode discountNode in discountNodes)
+                            {
+                                string discountRefId = discountNode.Attributes["nCartItemKey"]?.Value;
+
+                                if (discountRefId == itemId)
+                                {
+                                    XmlNode importedDiscount = oDXML.ImportNode(discountNode, true);
+                                    itemNode.AppendChild(importedDiscount);
+                                }
+                            }
+                        }
+                    }
+
+                    oDXML.PreserveWhitespace = false;
+                    oXmlDiscounts = oDXML;
+
                     return validateAddedDiscount;
                 }
                 catch (Exception ex)
@@ -247,6 +333,7 @@ namespace Protean.Providers
                     return false;
                 }
             }
+
         }
     }
 }

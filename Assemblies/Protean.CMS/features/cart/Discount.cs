@@ -264,7 +264,7 @@ namespace Protean
                                     Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
                                     IdiscountRuleProvider oDisProvider = (IdiscountRuleProvider)oDiscRuleProv.Get(ref myWeb);
                                     if (oDisProvider != null) {
-                                        isApplicable = oDisProvider.CheckDiscountApplicable(ref oXmlDiscounts, oDsCart, ref oCartXML, out finalDiscount);
+                                        isApplicable = oDisProvider.CheckDiscountApplicable(ref oXmlDiscounts, ref oCartXML, out finalDiscount);
                                     }
                                     if (!isApplicable)
                                     {
@@ -308,142 +308,11 @@ namespace Protean
                                 return 0m;
                             }
                             else
-                            {
-                                // changing cAdditionXMl column mapping logic here to xml only
-                                //Here we get fiteredvalid discount in oXmlDiscounts 
-                                // we will set oXmlDiscounts xml with oDsCart values into it.
-
-                                foreach (XmlElement discountEl in oXmlDiscounts.SelectNodes("//Discount"))
-                                {
-                                    // Move child elements to attributes (except cAdditionalXML)
-                                    foreach (XmlNode child in discountEl.SelectNodes("*[name() != 'cAdditionalXML']"))
-                                    {
-                                        discountEl.SetAttribute(child.Name, child.InnerText.Trim());
-                                        discountEl.RemoveChild(child);
-                                    }
-
-                                    // Handle cAdditionalXML
-                                    XmlNode cAddXml = discountEl.SelectSingleNode("cAdditionalXML");
-                                    if (cAddXml != null && !string.IsNullOrWhiteSpace(cAddXml.InnerText))
-                                    {
-                                        var addDoc = new XmlDocument();
-                                        addDoc.LoadXml("<root>" + cAddXml.InnerText + "</root>");
-                                        foreach (XmlNode addChild in addDoc.DocumentElement.ChildNodes)
-                                        {
-                                            if (addChild.NodeType == XmlNodeType.Element)
-                                            {
-                                                XmlElement el = oXmlDiscounts.CreateElement(addChild.Name);
-                                                el.InnerText = addChild.InnerText;
-                                                discountEl.AppendChild(el);
-                                            }
-                                        }
-                                        discountEl.RemoveChild(cAddXml);
-                                    }
-                                }
-
-                                // add a copy of the cart items table
-                                // ------------------------------------------------------------------------------------
-                                if (!bFullCart)
-                                {
-                                    // If just a summary then cart xml does not have the items
-                                    // add to Cart XML
-                                    if (oDsCart.Tables["Item"].Rows.Count > 0)
-                                    {
-                                        // cart items
-                                        oDsCart.Tables[0].Columns["nDiscountKey"].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns["nDiscountForeignRef"].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns[2].ColumnMapping = MappingType.Attribute;
-                                        // oDsCart.Tables(0).Columns(3).ColumnMapping = Data.MappingType.Attribute
-                                        oDsCart.Tables[0].Columns[4].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns[5].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns[6].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns[7].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns[8].ColumnMapping = MappingType.Attribute;
-
-                                        if (oDsCart.Tables[0].Columns["CodeUsedId"] != null)
-                                        {
-                                            oDsCart.Tables[0].Columns["CodeUsedId"].ColumnMapping = MappingType.Attribute;
-                                        }
-
-                                        // cart contacts
-
-                                        //XmlDataDocument oXml;
-                                        //oXml = new XmlDataDocument(oDsCart);
-                                        XmlDocument oXml = new XmlDocument();
-                                        if (oDsCart.Tables[0].Rows.Count > 0)
-                                        {
-                                            oXml.LoadXml(oDsCart.GetXml());
-                                        }
-                                        oDsCart.EnforceConstraints = false;
-
-                                        oCartXML.InnerXml = oXml.FirstChild.InnerXml;
-                                    }
-                                }
-                                // ------------------------------------------------------------------------------------
-
-                                // remove product's children as they mess with the discounts\
-
-                                XmlDocument oDXML = new XmlDocument();
-                                XmlElement oDXmlElement = oDXML.CreateElement("Discounts");
-                                oDXML.AppendChild(oDXmlElement);
-                                bool bDataTableChanged = false;
-                                foreach (DataRow drItem in oDsCart.Tables["Item"].Rows)
-                                {
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(drItem["nParentId"], 0, false)))
-                                    {
-                                        drItem.Delete();
-                                        bDataTableChanged = true;
-                                    }
-                                }
-                                if (bDataTableChanged)
-                                {
-                                    oDsCart.Tables["Item"].AcceptChanges();
-                                }
-                                // Load cart XML into a temporary XmlDocument
-                                if (oDsCart.Tables["Item"].Rows.Count > 0)
-                                {
-                                    string cXML = oDsCart.GetXml().Replace("&gt;", ">").Replace("&lt;", "<");
-                                    XmlDocument tempDoc = new XmlDocument();
-                                    tempDoc.LoadXml(cXML);
-
-                                    // Import only <Item> nodes into the <Discounts> root
-                                    XmlNodeList tempItemNodes = tempDoc.SelectNodes("//Item");
-                                    foreach (XmlNode tempItemNode in tempItemNodes)
-                                    {
-                                        XmlNode importedItem = oDXML.ImportNode(tempItemNode, true);
-                                        oDXmlElement.AppendChild(importedItem);
-                                    }
-                                }
-                                // Now append matching <Discount> nodes from oXmlDiscounts
-                                XmlNodeList itemNodes = oDXML.SelectNodes("//Item");
-                                XmlNodeList discountNodes = oXmlDiscounts.SelectNodes("//Discount");
-
-                                foreach (XmlNode itemNode in itemNodes)
-                                {
-                                    // Try to get id from element or attribute
-                                    string itemId = itemNode.SelectSingleNode("id")?.InnerText ?? itemNode.Attributes["id"]?.Value;
-
-                                    if (!string.IsNullOrEmpty(itemId))
-                                    {
-                                        foreach (XmlNode discountNode in discountNodes)
-                                        {
-                                            string discountRefId = discountNode.Attributes["nCartItemKey"]?.Value;
-
-                                            if (discountRefId == itemId)
-                                            {
-                                                XmlNode importedDiscount = oDXML.ImportNode(discountNode, true);
-                                                itemNode.AppendChild(importedDiscount);
-                                            }
-                                        }
-                                    }
-                                }                             
-
-                                oDXML.PreserveWhitespace = false;
-
+                            { 
 
                                 // now need to make sure there are no duplicates where multi groups exists
                                 XmlElement oItemElmt;
-                                foreach (XmlElement currentOItemElmt in oDXML.SelectNodes("Discounts/Item"))
+                                foreach (XmlElement currentOItemElmt in oXmlDiscounts.SelectNodes("Discounts/Item"))
                                 {
                                     oItemElmt = currentOItemElmt;
                                     int[] nDiscConts = new int[] { 0 };
@@ -464,7 +333,7 @@ namespace Protean
                                 }
 
                                 // Itterate through those that have a cDiscountUserCode
-                                foreach (XmlElement currentOItemElmt1 in oDXML.SelectNodes("Discounts/Item/Discount[@cDiscountUserCode!='' or @nDiscountCodeType='3']"))
+                                foreach (XmlElement currentOItemElmt1 in oXmlDiscounts.SelectNodes("Discounts/Item/Discount[@cDiscountUserCode!='' or @nDiscountCodeType='3']"))
                                 {
                                     oItemElmt = currentOItemElmt1;
                                     bHasPromotionalDiscounts = true;
@@ -497,7 +366,7 @@ namespace Protean
 
                                 }
 
-                                foreach (XmlElement currentOItemElmt2 in oDXML.SelectNodes("Discounts/Item/Discount[@CodeUsedId!='']"))
+                                foreach (XmlElement currentOItemElmt2 in oXmlDiscounts.SelectNodes("Discounts/Item/Discount[@CodeUsedId!='']"))
                                 {
                                     oItemElmt = currentOItemElmt2;
 
@@ -563,27 +432,27 @@ namespace Protean
                                     {
                                         case "Basic_Money":
                                             {
-                                                Discount_Basic_Money(ref oDXML, ref nPriceCount, ref strcFreeShippingMethods, ref strbFreeGiftBox);
+                                                Discount_Basic_Money(ref oXmlDiscounts, ref nPriceCount, ref strcFreeShippingMethods, ref strbFreeGiftBox);
                                                 break;
                                             }
                                         case "Basic_Percent":
                                             {
-                                                Discount_Basic_Percent(ref oDXML, ref nPriceCount, ref strcFreeShippingMethods);
+                                                Discount_Basic_Percent(ref oXmlDiscounts, ref nPriceCount, ref strcFreeShippingMethods);
                                                 break;
                                             }
                                         case "Break_Product":
                                             {
-                                                Discount_Break_Product(ref oDXML, ref nPriceCount);
+                                                Discount_Break_Product(ref oXmlDiscounts, ref nPriceCount);
                                                 break;
                                             }
                                     }
                                 }
                                 // these  need to be ordered since they are dependant
                                 // on each other
-                                Discount_XForPriceY(ref oDXML, ref nPriceCount);
-                                Discount_CheapestDiscount(ref oDXML, ref nPriceCount);
-                                Discount_Break_Group(ref oDXML, ref nPriceCount);
-                                decimal nTotalSaved = Discount_ApplyToCart(ref oCartXML, oDXML);
+                                Discount_XForPriceY(ref oXmlDiscounts, ref nPriceCount);
+                                Discount_CheapestDiscount(ref oXmlDiscounts, ref nPriceCount);
+                                Discount_Break_Group(ref oXmlDiscounts, ref nPriceCount);
+                                decimal nTotalSaved = Discount_ApplyToCart(ref oCartXML, oXmlDiscounts);
 
                                 if (!bFullCart)
                                     oCartXML.InnerXml = "";
