@@ -311,7 +311,7 @@ namespace Protean
                             {
                                 // changing cAdditionXMl column mapping logic here to xml only
                                 //Here we get fiteredvalid discount in oXmlDiscounts 
-                                // we will set oXmlDiscounts xml 
+                                // we will set oXmlDiscounts xml with oDsCart values into it.
 
                                 foreach (XmlElement discountEl in oXmlDiscounts.SelectNodes("//Discount"))
                                 {
