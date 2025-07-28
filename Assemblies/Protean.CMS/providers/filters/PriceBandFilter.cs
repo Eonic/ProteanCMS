@@ -46,12 +46,8 @@ namespace Protean.Providers
                     var oMinPriceBand = oXform.moPageXML.CreateAttribute("MinPriceBand");
                     var oMaxPriceBand = oXform.moPageXML.CreateAttribute("MaxPriceBand");
                     var oMaxPriceBandLimit = oXform.moPageXML.CreateAttribute("MaxPriceBandLimit");
-                    var oSliderMinPriceBand = oXform.moPageXML.CreateAttribute("SliderMinPriceBand");
-                    var oSliderMaxPriceBand = oXform.moPageXML.CreateAttribute("SliderMaxPriceBand");
                     var oStep = oXform.moPageXML.CreateAttribute("PriceBandStep");
-                    var oProductCountList = oXform.moPageXML.CreateAttribute("PriceBandCountList");
-                    var oProductTotalCount = oXform.moPageXML.CreateAttribute("PriceBandTotalCount");
-
+                   
                     string sProductCount = string.Empty;
                     int cnt = 0;
                     string cProductCountList = string.Empty;
@@ -62,13 +58,13 @@ namespace Protean.Providers
                     string className = string.Empty;
                     string cWhereQuery = string.Empty;
 
-                    if (aWeb.moRequest.Form["MaxPriceBand"] != null)
-                    {
+                    //if (aWeb.moRequest.Form["MaxPriceBand"] != null)
+                    //{
 
-                        oMinPriceBand.Value = Convert.ToString(aWeb.moRequest.Form["MinPriceBand"]);
-                        oMaxPriceBand.Value = Convert.ToString(aWeb.moRequest.Form["MaxPriceBand"]);
+                    //    oMinPriceBand.Value = Convert.ToString(aWeb.moRequest.Form["MinPriceBand"]);
+                    //    oMaxPriceBand.Value = Convert.ToString(aWeb.moRequest.Form["MaxPriceBand"]);
 
-                    }
+                    //}
                     if (oContentNode.Attributes["filterTarget"] != null)
                     {
                         cFilterTarget = oContentNode.Attributes["filterTarget"].Value;
@@ -76,7 +72,7 @@ namespace Protean.Providers
 
                     if (FilterConfig.Attributes["maxPriceBandLimit"] != null)
                     {
-                        oMaxPriceBandLimit.Value = Convert.ToString(FilterConfig.Attributes["maxPriceBandLimit"].Value);
+                        oMaxPriceBandLimit.Value = Convert.ToString(FilterConfig.Attributes["maxPriceLimit"].Value);
                     }
                     if (FilterConfig.Attributes["name"] != null)
                     {
@@ -103,18 +99,18 @@ namespace Protean.Providers
                     {
                         if (oMaxPriceBandLimit.Value != string.Empty)
                         {
-                            oMaxPriceBandLimit.Value = Convert.ToString(FilterConfig.Attributes["maxPriceBandLimit"].Value);
+                            oMaxPriceBandLimit.Value = Convert.ToString(FilterConfig.Attributes["maxPriceLimit"].Value);
                         }
                         else
                         {
-                            oMaxPriceBandLimit.Value = Convert.ToString(FilterConfig.GetAttribute("toPriceBand"));
+                            oMaxPriceBandLimit.Value = Convert.ToString(FilterConfig.GetAttribute("toPrice"));
                         }
                     }
                     else
                     {
-                        oMaxPriceBandLimit.Value = FilterConfig.GetAttribute("toPriceBand");
+                        oMaxPriceBandLimit.Value = FilterConfig.GetAttribute("toPrice");
                     }
-                    arrParams.Add("MinPrice", FilterConfig.GetAttribute("fromPriceBand"));
+                    arrParams.Add("MinPrice", FilterConfig.GetAttribute("fromPrice"));
                     arrParams.Add("MaxPrice", oMaxPriceBandLimit.Value);//FilterConfig.GetAttribute("toPriceBand"));
                     arrParams.Add("Step", FilterConfig.GetAttribute("step"));
                     arrParams.Add("PageId", nPageId);
@@ -123,14 +119,14 @@ namespace Protean.Providers
 
 
                     //Adding controls to the form like dropdown, radiobuttons
-                         if (oXml.InnerText != String.Empty)
-                        {
-                        priceBandFilterSelect = oXform.addSelect(ref oPriceBandGroup, "PriceBandFilter", false, sCotrolDisplayName, "checkbox filter-selected", ApperanceTypes.Full);
-                        }
-                        else
-                        {
-                        priceBandFilterSelect = oXform.addSelect(ref oPriceBandGroup, "PriceBandFilter", false, sCotrolDisplayName, "checkbox", ApperanceTypes.Full);
-                        }
+                      //   if (oXml.InnerText != String.Empty)
+                       // {
+                        priceBandFilterSelect = oXform.addSelect(ref oPriceBandGroup, "PriceBandFilter", false, sCotrolDisplayName, "checkbox SubmitPriceBandFilter", ApperanceTypes.Full);
+                      //  }
+                        //else
+                        //{
+                        //priceBandFilterSelect = oXform.addSelect(ref oPriceBandGroup, "PriceBandFilter", false, sCotrolDisplayName, "checkbox", ApperanceTypes.Full);
+                        //}
                           
                       
 
@@ -146,8 +142,8 @@ namespace Protean.Providers
                                 sProductCount = Convert.ToString(oDr["ContentCount"]);
                                 cProductCountList = cProductCountList + cnt.ToString() + ":" + sProductCount + ",";
 
-                                string sText = "From " + aWeb.moCart.mcCurrencySymbol + "" + nMinPriceBandProduct + " to " + aWeb.moCart.mcCurrencySymbol + "" + nMaxPriceBandProduct /*"From " + oMinPriceBand.Value.Trim() + " to " + oMaxPriceBand.Value.Trim()*/;
-                                string value = Convert.ToString(nMinPriceBandProduct+'-'+ nMaxPriceBandProduct);
+                                string sText =  aWeb.moCart.mcCurrencySymbol + "" + nMinPriceBandProduct + " - " + aWeb.moCart.mcCurrencySymbol + "" + nMaxPriceBandProduct + " <span class='badge ms-2' id='ProductCount'>" + Convert.ToString(oDr["ContentCount"]) + "</span>"/*"From " + oMinPriceBand.Value.Trim() + " to " + oMaxPriceBand.Value.Trim()*/;
+                                string value = Convert.ToString(nMinPriceBandProduct)+"-"+ Convert.ToString(nMaxPriceBandProduct);
 
                                 oXform.addOption(ref priceBandFilterSelect, sText, value, true);
                             }
@@ -161,8 +157,7 @@ namespace Protean.Providers
 
 
 
-                        oSliderMaxPriceBand.Value = nMaxPriceBandProduct.ToString();
-                        // oMaxPriceBand.Value = FilterConfig.GetAttribute("toPriceBand")
+                        
 
                         oStep.Value = FilterConfig.GetAttribute("step");
                         //oMinPriceBand.Value= Convert.ToString(nMinPriceBandProduct);
@@ -170,7 +165,7 @@ namespace Protean.Providers
                         oXml.Attributes.Append(oMaxPriceBand);
                         oXml.Attributes.Append(oMaxPriceBandLimit);
                         oXml.Attributes.Append(oStep);
-                        oXml.Attributes.Append(oProductTotalCount);
+                       
 
 
 
@@ -179,31 +174,27 @@ namespace Protean.Providers
                     }
 
 
-                    oProductCountList.Value = cProductCountList;
-                    oXml.Attributes.Append(oProductCountList);
+                   
 
                     oXform.Instance.AppendChild(oXml);
 
 
-                    oXform.addBind("MinPriceBand", "PriceBandFilter/@MinPriceBand", ref oXform.model, "false()", "string");
-                    oXform.addBind("MaxPriceBand", "PriceBandFilter/@MaxPriceBand", ref oXform.model, "false()", "string");
+                    //oXform.addBind("MinPriceBand", "PriceBandFilter/@MinPriceBand", ref oXform.model, "false()", "string");
+                    //oXform.addBind("MaxPriceBand", "PriceBandFilter/@MaxPriceBand", ref oXform.model, "false()", "string");
                     oXform.addBind("MaxPriceBandLimit", "PriceBandFilter/@MaxPriceBandLimit", ref oXform.model, "false()", "string");
                     oXform.addBind("PriceBandStep", "PriceBandFilter/@PriceBandStep", ref oXform.model, "false()", "string");
-                    oXform.addBind("PriceBandListCount", "PriceBandFilter/@PriceBandCountList", ref oXform.model, "false()", "string");
-                    oXform.addBind("PriceBandFilter", "PriceBandFilter/@MaxPriceBand", ref oXform.model, "false()", "string");
+                     oXform.addBind("PriceBandFilter", "PriceBandFilter", ref oXform.model, "false()", "string");
 
-                    // oXform.addBind("PriceBandTotalCount", "PriceBandFilter/@PriceBandTotalCount", "false()", "string", oXform.model)
-
-                    oXform.addInput(ref oPriceBandGroup, "MinPriceBand", true, "", "hidden");
-                    oXform.addInput(ref oPriceBandGroup, "MaxPriceBand", true, "", "hidden");
+                 
+                    //oXform.addInput(ref oPriceBandGroup, "MinPriceBand", true, "", "hidden");
+                    //oXform.addInput(ref oPriceBandGroup, "MaxPriceBand", true, "", "hidden");
                     oXform.addInput(ref oPriceBandGroup, "MaxPriceBandLimit", true, "", "hidden");
                     oXform.addInput(ref oPriceBandGroup, "PriceBandStep", true, "", "hidden");
-                    oXform.addInput(ref oPriceBandGroup, "PriceBandListCount", true, "", "hidden");
                     oXform.addInput(ref oPriceBandGroup, "PriceBandFilter", true, "", "hidden");
                     oXform.addSubmit(ref oPriceBandGroup, "", "Apply", "PriceBandFilter", "  btnPriceBandSubmit hidden", "");
 
 
-                    if (aWeb.moRequest.Form["MinPriceBand"] != null & aWeb.moRequest.Form["MinPriceBand"] != "")
+                    if (aWeb.moRequest.Form["PriceBandFilter"] != null )
                     {
 
                         // Dim sText As String = "From " + aWeb.moCart.mcCurrencySymbol + "" + oMinPriceBand.Value.Trim() + " to " + aWeb.moCart.mcCurrencySymbol + "" + oMaxPriceBand.Value.Trim()
@@ -212,7 +203,7 @@ namespace Protean.Providers
                         oXform.addDiv(ref oFromGroup, "", "PriceBandClearAll", true);
                     }
 
-                    oXform.addInput(ref oPriceBandGroup, "", false, sCotrolDisplayName, "histogramSliderMainDivPriceBand histogramMain");
+                   
 
                 }
 
@@ -233,37 +224,29 @@ namespace Protean.Providers
                     string cSelectedMinPriceBand = string.Empty;
                     string cSelectedMaxPriceBand = string.Empty;
                     string cPageIds = string.Empty;
-                  
-                    if (aWeb.moRequest.Form["MinPriceBand"] != null)
-                    {
-                        cSelectedMinPriceBand = Convert.ToString(aWeb.moRequest.Form["MinPriceBand"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
-                    }
-                    if (aWeb.moRequest.Form["MaxPriceBand"] != null)
-                    {
-                        cSelectedMaxPriceBand = Convert.ToString(aWeb.moRequest.Form["MaxPriceBand"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
-                    }
+                    string cIndexDefinationName = "Price";
+
                    
-                    if (!string.IsNullOrEmpty(cSelectedMaxPriceBand))
+                    string cPriceBandRange = string.Empty;
+
+                    if (oXform.Instance.SelectSingleNode("PriceBandFilter") != null)
                     {
-
-                        if (string.IsNullOrEmpty(cSelectedMinPriceBand))
-                        {
-                            cSelectedMinPriceBand = "0";
-                        }
-                        if (!string.IsNullOrEmpty(cWhereSql))
-                        {
-                            cWhereSql = cWhereSql + " AND ";
-                        }
-
-                        // ElseIf (cPageIds = String.Empty) Then
-
-                       
-                        cWhereSql = cWhereSql + GetFilterSQL(ref aWeb);
-
-
-
+                        cPriceBandRange = oXform.Instance.SelectSingleNode("PriceBandFilter").InnerText;
 
                     }
+                    cPriceBandRange = cPriceBandRange.Replace(",", "");
+                    string[] priceRange = cPriceBandRange.Split('-');
+
+                    
+                    if (!string.IsNullOrEmpty(cWhereSql))
+                    {
+                        cWhereSql = " AND ";
+                    }
+
+                    cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey ";
+                    cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cIndexDefinationName + "' AND (";
+                    cWhereSql = cWhereSql + "ci.nNumberValue between " + priceRange[0] + " and " + priceRange[1] + "))";
+                    
                 }
 
                 catch (Exception ex)
@@ -275,46 +258,8 @@ namespace Protean.Providers
 
             public override string GetFilterSQL(ref Cms aWeb)
             {
-                string cWhereSql = string.Empty;
-                string cProcessInfo = "GetFilterSQL";
-                string cIndexDefinationName = "PriceBand";
-                try
-                {
-                    string cSelectedMinPriceBand = "";
-                    string cSelectedMaxPriceBand = "";
-                    if (aWeb.moRequest.Form["MinPriceBand"] != null)
-                    {
-                        cSelectedMinPriceBand = Convert.ToString(aWeb.moRequest.Form["MinPriceBand"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
-                    }
-                    if (aWeb.moRequest.Form["MaxPriceBand"] != null)
-                    {
-                        cSelectedMaxPriceBand = Convert.ToString(aWeb.moRequest.Form["MaxPriceBand"]).Replace(aWeb.moCart.mcCurrencySymbol, "");
-                    }
-                    if (!string.IsNullOrEmpty(cSelectedMaxPriceBand))
-                    {
-                        cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey ";
-                        cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cIndexDefinationName + "' AND (";
-
-                        if (string.IsNullOrEmpty(cSelectedMinPriceBand))
-                        {
-                            cSelectedMinPriceBand = "0";
-                        }
-                        if (cSelectedMaxPriceBand.Contains("+"))
-                        {
-                            cWhereSql = cWhereSql + "ci.nNumberValue > " + cSelectedMinPriceBand + "))";
-                        }
-                        else
-                        {
-                            cWhereSql = cWhereSql + "ci.nNumberValue between " + cSelectedMinPriceBand + " and " + cSelectedMaxPriceBand + "))";
-                        }
-
-                    }
-                }
-                catch (Exception ex)
-                {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceBandFilter", ex, ""));
-                }
-                return cWhereSql;
+               
+                return "";
             }
 
             public override string GetFilterOrderByClause(ref Cms myWeb)
@@ -328,7 +273,7 @@ namespace Protean.Providers
                 // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
 
 
-                string cIndexDefinationName = "PriceBand";
+                string cIndexDefinationName = "Price";
                 if (myWeb.moRequest.Form["SortBy"] != null)
                 {
                     if (myWeb.moRequest.Form["SortBy"] != string.Empty)
@@ -341,6 +286,11 @@ namespace Protean.Providers
                 }
                 return " min(cii" + cIndexDefinationName + ".nNumberValue) asc";
                 //return string.Empty;
+            }
+
+            public override string ContentIndexDefinationName(ref Cms aWeb)
+            {
+                return "Price";
             }
 
         }

@@ -364,6 +364,11 @@ namespace Protean.Providers
                 //return string.Empty;
             }
 
+            public override string ContentIndexDefinationName(ref Cms aWeb)
+            {
+                return "Price";
+            }
+
         }
 
     }

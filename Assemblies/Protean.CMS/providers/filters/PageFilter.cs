@@ -187,12 +187,9 @@ namespace Protean.Providers
                         {
                             cWhereSql = " AND ";
                         }
-                        // If (bParentPageId) Then
-                        // cWhereSql = " nStructId IN (" + cPageIds + ")"
-                        // Else
+                       
                         cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where (nStructKey in ( " + cPageIds + ") OR nStructParId in ( " + cPageIds + "))	)";
-                        // nStructParId in (" & cPageIds & "))"
-                        // End If
+                        
                     }
                     return cWhereSql;
                 }
@@ -224,6 +221,11 @@ namespace Protean.Providers
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(cProcessInfo, "PageFilter", ex, ""));
                 }
                 return cWhereSql;
+            }
+
+            public override string ContentIndexDefinationName(ref Cms aWeb)
+            {
+                return "";
             }
 
 
