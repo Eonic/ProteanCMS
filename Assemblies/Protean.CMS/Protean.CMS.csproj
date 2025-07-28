@@ -356,7 +356,12 @@
     <Compile Include="handlers\FLVHandler.cs" />
     <Compile Include="handlers\httpHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="providers\Discount\Discount.BaseProvider.cs" />
+    <Compile Include="providers\DiscountRule\DiscountRule.CheapestFree.cs" />
+    <Compile Include="providers\DiscountRule\DiscountRule.BreakGroup.cs" />
+    <Compile Include="providers\DiscountRule\DiscountRule.X4PriceY.cs" />
+    <Compile Include="providers\DiscountRule\DiscountRule.BreakProduct.cs" />
+    <Compile Include="providers\DiscountRule\DiscountRule.Basic.cs" />
+    <Compile Include="providers\DiscountRule\DiscountRule.BaseProvider.cs" />
     <Compile Include="providers\filters\Filter.BaseProvider.cs" />
     <Compile Include="providers\Database.BaseProvider.cs" />
     <Compile Include="providers\filters\SpecFilter.cs" />
