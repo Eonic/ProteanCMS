@@ -91,7 +91,7 @@
         <xsl:apply-templates select="/Page/ContentDetail/Content" mode="getHref"/>
       </xsl:when>
       <xsl:otherwise>
-        ...<xsl:apply-templates select="$currentPage" mode="getHref"/>
+        <xsl:apply-templates select="$currentPage" mode="getHref"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>
