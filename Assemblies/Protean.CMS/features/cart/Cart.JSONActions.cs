@@ -1297,6 +1297,40 @@ namespace Protean
                     }
 
                 }
+                /// <summary>
+                ///Anonymize GDPRD
+                /// </summary>
+                /// <param name="myApi"></param>
+                /// <param name="jObj"></param>
+                /// <returns></returns>
+                public string AnonymizeGDPRData(ref Protean.rest myApi, ref JObject jObj)
+                {
+                    try
+                    {
+                        string josResult = "";
+                        bool bIsAuthorized = false;
+                        string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
+                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
+                        if (bIsAuthorized == false)
+                            return "Error -Authorization Failed";
+                        Interaction.IIf(jObj["cEmailAddress"] != null, (string)jObj["cEmailAddress"], "");
+                        var cEmailAddress = Interaction.IIf(jObj["cEmailAddress"] != null, (string)jObj["cEmailAddress"], "");
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cEmailAddress, "", false)))
+                        {
+                            josResult= myCart.GDPRAnonomize(cEmailAddress.ToString());
+                           
+                        }
+                           
+                        
+                        return josResult;
+                    }
+                    catch (Exception ex)
+                    {
+                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AnonymizeGDPRData", ex, ""));
+                        return "Error"; // ex.Message
+                    }
+
+                }
 
 
                 //public string GetPaymentSession(ref Protean.rest myApi, ref JObject jObj)
