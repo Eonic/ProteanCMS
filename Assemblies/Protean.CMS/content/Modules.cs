@@ -694,9 +694,12 @@ namespace Protean
                                             if (!myWeb.moConfig["ExcludeFilterForJoin"].Contains(className))
                                             {
                                                 string cAlies = className.Replace("Filter", "");
+                                                string cIndexDefiniationName = GetContentIndexDefinationName(calledType, ref myWeb);
+                                                
+                                               
                                                 cAdditionalJoins += "inner join tblContentIndex cii" + cAlies + " on cii" + cAlies + ".nContentId=c.nContentKey inner join tblContentIndexDef cid" + cAlies;
                                                 cAdditionalJoins += " on cii" + cAlies + ".nContentIndexDefinitionKey=cid" + cAlies + ".nContentIndexDefKey ";
-                                                cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cAlies + "'";
+                                                cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cIndexDefiniationName + "'";
 
 
                                             }
@@ -829,6 +832,22 @@ namespace Protean
                     if (calledType != null)
                     {
                         string methodname = "GetFilterGroupByClause";
+
+                        var o = Activator.CreateInstance(calledType);
+                        var args = new object[1];
+                        args[0] = myWeb;
+                        filterGroupByClause = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
+                    }
+                    return filterGroupByClause;
+                }
+
+                public string GetContentIndexDefinationName(Type calledType, ref Cms myWeb)
+                {
+                    string filterGroupByClause = string.Empty;
+
+                    if (calledType != null)
+                    {
+                        string methodname = "ContentIndexDefinationName";
 
                         var o = Activator.CreateInstance(calledType);
                         var args = new object[1];
