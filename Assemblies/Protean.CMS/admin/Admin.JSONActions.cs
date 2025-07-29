@@ -15,7 +15,6 @@ using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
 using static Protean.Cms;
 using static Protean.stdTools;
-using Microsoft.Identity.Client;
 using Protean.Tools;
 
 namespace Protean
@@ -749,7 +748,6 @@ namespace Protean
                     string cSecreteValue = "";
                     string cGitPS1FileName = "";
                     string result = "";
-                    string cAccessToken = "";
                     string gitFilePath = "";
 
                     
@@ -790,7 +788,9 @@ namespace Protean
                                                 cTenantId = moConfig["AzureTenantId"];
                                                 cScope = moConfig["AzureScope"];
                                                 cSecreteValue = moConfig["AzureClientSecretValue"];
-                                                result = gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue, cGitPS1FileName);
+                                                gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
+                                                result = gitHelper.GitCommandExecution(cGitPS1FileName);
+                                               
                                             }
                                         }
                                     }

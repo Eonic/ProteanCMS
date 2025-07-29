@@ -896,6 +896,10 @@ namespace Protean
                     myWeb.mbIgnorePath = true;
                     myWeb.mcEwSiteXsl = cXslPath;
 
+                    if (myWeb.mnPageId == 3) {
+                        cProcessInfo = "BiblePage";                    
+                    }
+
                     cPageHtml = myWeb.ReturnPageHTML(0, true);
                     cPageHtml = Strings.Replace(cPageHtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
                     cPageHtml = Strings.Replace(cPageHtml, " xmlns=\"http://www.w3.org/1999/xhtml\"", "");
@@ -974,21 +978,40 @@ namespace Protean
                             // Now let index the content of the pages
                             // Only index content where this is the parent page, so we don't index for multiple locations.
                             long itemContentCount = 0L;
-                            XmlNodeList oContentElmts = myWeb.moPageXml.SelectNodes("/Page/Contents/Content[@type!='FormattedText' and @type!='PlainText' and @type!='MetaData' and @type!='Image' and @type!='xform' and @type!='report' and @type!='xformQuiz' and @type!='Module' and @parId=/Page/@id]");
+                            XmlNodeList oContentElmts = myWeb.moPageXml.SelectNodes("/Page/Contents/Content[@type!='FormattedText' and @type!='PlainText' and @type!='MetaData' and @type!='Image' and @type!='xform' and @type!='report' and @type!='xformQuiz' and @parId=/Page/@id]");
                             foreach (XmlElement oElmt in oContentElmts)
                             {
-                                indexContentDetail(ref oPage, ref oPageElmt, oElmt, ref myWeb, ref nIndexed, ref oElmtURL, ref itemContentCount);
-                                
+                                if (oElmt.GetAttribute("type") == "bibleusx")
+                                {
+                                    cProcessInfo = oElmt.GetAttribute("type");
+                                }
+
+                                if (oElmt.GetAttribute("type") == "Module")
+                                {
+                                      cIndexDetailSubTypes = cIndexDetailTypes;
+                                }
+                                else {
+                                    indexContentDetail(ref oPage, ref oPageElmt, oElmt, ref myWeb, ref nIndexed, ref oElmtURL, ref itemContentCount);
+                                }
+
                                 // we have sub products with there own pages which need to be indexed but they are not on the parent page
-                                if (cIndexDetailSubTypes != "") {
-                                    string[] subArr = cIndexDetailSubTypes.Split();
-                                    foreach (string subType in subArr) { 
+                                if (cIndexDetailSubTypes != "")
+                                {
+                                    char delimiter = ',';
+                                    string[] subArr = cIndexDetailSubTypes.Split(delimiter);
+                                    foreach (string subType in subArr)
+                                    {
                                         XmlNodeList oContentSubElmts = oElmt.SelectNodes("Content[@type='" + subType + "']");
-                                        foreach (XmlElement oElmtSub in oContentSubElmts) {
+                                        foreach (XmlElement oElmtSub in oContentSubElmts)
+                                        {
+                                            if (oElmtSub.GetAttribute("type") == "bibleusx")
+                                            {
+                                                cProcessInfo = oElmtSub.GetAttribute("type");
+                                            }
                                             indexContentDetail(ref oPage, ref oPageElmt, oElmtSub, ref myWeb, ref nIndexed, ref oElmtURL, ref itemContentCount);
                                         }
                                     }
-                                        
+
                                 }
                             }
                             oPageElmt.SetAttribute("contentCount", itemContentCount.ToString());

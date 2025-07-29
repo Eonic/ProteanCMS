@@ -407,28 +407,8 @@ function preparePickImageModal(CurrentModalPath) {
                 return currentModal.prev('.popoverContent').html();
         }
     });
-    currentModal.find("a[data-bs-toggle!='popover']").off("click").click(function (ev) {
 
-        ev.preventDefault();
-            currentModal.find('.modal-dialog').addClass('loading')
-            currentModal.find('.modal-content div').html('<div><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
-        var target = $(this).attr("href");
-        // load the url and call this again on success
-        if (target != '#') {
-        
-            currentModal.find(".modal-content div").first().load(target, function () {
-                currentModal.find('.modal-dialog').removeClass('loading')
-                currentModal.find('.lazy').lazy({
-                    visibleOnly: true,
-                    delay:500,
-                    effect: 'fadeIn'
-                });
-              //  alert(target);
-               // preparePickImageModal(CurrentModalPath);
-                primeFileUpload();
-            });
-        };
-    });
+    currentModal.find("a[data-bs-toggle!='popover']").off("click").openInModal();
 
     $("#SelectAll").click(function (ev) {
         ev.preventDefault();
@@ -451,7 +431,7 @@ function preparePickImageModal(CurrentModalPath) {
                 dataType: 'html',
                 success: function (msg) {
                     //$(this).find('.modal-dialog').removeClass('loading')
-                    currentModal.find(".modal-content div").html(msg);
+                    currentModal.find(".modal-content div").first().html(msg);
                     currentModal.trigger('loaded');
                 }
             });
@@ -460,6 +440,7 @@ function preparePickImageModal(CurrentModalPath) {
 
 
 function prepareAjaxModals() {
+
     $('a[data-bs-toggle="modal"]').off('click');
     $('a[data-bs-toggle="modal"]').on('click', function (e) {
         e.preventDefault();
@@ -469,6 +450,35 @@ function prepareAjaxModals() {
         content.load(link.attr("href"));
     });
 }
+
+(function ($) {
+    $.fn.openInModal = function () {
+        var currentModal = this.closest('.modal')
+        this.click(function (ev) {
+            ev.preventDefault();
+            currentModal.find('.modal-dialog').addClass('loading')
+            currentModal.find('.modal-content div').html('<div><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
+            var target = $(this).attr("href");
+            // load the url and call this again on success
+            if (target != '#') {
+                currentModal.find(".modal-content div").first().load(target, function () {
+                    currentModal.find('.modal-dialog').removeClass('loading')
+                    currentModal.find('.lazy').lazy({
+                        visibleOnly: true,
+                        delay: 500,
+                        effect: 'fadeIn'
+                    });
+                    primeFileUpload();
+                });
+            };
+        });
+    };
+}(jQuery));
+
+
+
+
+
 
 function resetAjaxModal(ref) {
     $(ref).find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading...</h4></p>');

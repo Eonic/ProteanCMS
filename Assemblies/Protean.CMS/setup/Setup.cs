@@ -1071,7 +1071,6 @@ namespace Protean
                                     string cSecreteValue = "";
                                     string cGitPS1FilePath = "";
                                     string result = "";
-                                    
                                     string gitFilePath = "";
                                     if (!string.IsNullOrEmpty(goConfig["GitFilePath"]))
                                     {
@@ -1096,8 +1095,10 @@ namespace Protean
                                                     cTenantId = goConfig["AzureTenantId"];
                                                     cScope = goConfig["AzureScope"];
                                                     cSecreteValue = goConfig["AzureClientSecretValue"];
-                                                   
-                                                    result = gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue, cGitPS1FilePath);
+
+                                                    gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
+                                                    result = gitHelper.GitCommandExecution(cGitPS1FilePath);
+                                                    
                                                 }
                                             }
 

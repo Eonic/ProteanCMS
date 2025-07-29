@@ -26,6 +26,8 @@ namespace Protean.Providers
             void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql);
             string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget);
             string GetFilterSQL(ref Cms aWeb);
+
+            string ContentIndexDefinationName(ref Cms aWeb);
             void PostFilterContentUpdates(ref Cms aWeb);
 
         }
@@ -112,34 +114,14 @@ namespace Protean.Providers
                 return this;
             }
 
-            //public class AdminXForms : Cms.Admin.AdminXforms
-            //{
-            //    private const string mcModuleName = "Providers.Providers.Eonic.AdminXForms";
-
-            //    public AdminXForms(ref Cms aWeb) : base(ref aWeb)
-            //    {
-            //    }
-
-            //}
-
-            //public void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql)
-            //{
-            //    throw new NotImplementedException();
-            //}
-
-            //public string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget)
-            //{
-            //    throw new NotImplementedException();
-            //}
-
-            //public string GetFilterSQL(ref Cms aWeb)
-            //{
-            //    throw new NotImplementedException();
-            //}
+            
 
             public abstract void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql);
             public abstract string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget);
             public abstract string GetFilterSQL(ref Cms aWeb);
+
+            public abstract string ContentIndexDefinationName(ref Cms aWeb);
+           
 
             public virtual void PostFilterContentUpdates(ref Cms aWeb)
             {
@@ -260,6 +242,7 @@ namespace Protean.Providers
 
             }
 
+           
             public virtual string GetFilterOrderByClause(ref Cms myWeb)
             {
                 return null;

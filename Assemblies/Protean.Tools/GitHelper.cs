@@ -11,7 +11,7 @@ namespace Protean.Tools
     public class GitHelper
     {
         private readonly string _gitFilePath;
-
+        public string _accessToken = string.Empty;
         public GitHelper(string gitFilePath)
         {
             if (!string.IsNullOrEmpty(gitFilePath))
@@ -20,34 +20,64 @@ namespace Protean.Tools
             }
         }
 
-        public string AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue, string ps1FilePath)
+        public void AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue)
+        {
+            string cAccessToken = string.Empty;
+            try
+            {
+                if(string.IsNullOrEmpty(cClientId) || string.IsNullOrEmpty(cTenantId) || string.IsNullOrEmpty(cScope) || string.IsNullOrEmpty(cSecreteValue))
+                {
+                    return;
+                }
+
+                var app = ConfidentialClientApplicationBuilder.Create(cClientId)
+              .WithClientSecret(cSecreteValue)
+              .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
+             .Build();
+
+                var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
+                cAccessToken = tokenResult.AccessToken;
+                _accessToken= cAccessToken;
+               // return cAccessToken;
+            }
+            catch (Exception ex) {
+                return;
+            }
+
+        }
+
+        public string GitCommandExecution(string ps1FilePath)
         {
             string output = "";
             string error = "";
             string result = "";
             string askPassPath = string.Empty;
-            string cAccessToken = "";
-
+           
             try
             {
                 string gitFilePath = _gitFilePath;
+                if (string.IsNullOrEmpty(_accessToken))
+                {
+                    return "Access token is not null or empty. Please provide a valid token.";
+                }
+                if (string.IsNullOrEmpty(ps1FilePath))
+                {
+                    return "PowerShell script path is not null or empty. Please provide a valid script path.";
+                }
+                if (string.IsNullOrEmpty(gitFilePath))
+                {
+                    return "Git file path is not null or empty. Please provide a valid git file path.";
+                }
+
                 if (!string.IsNullOrEmpty(gitFilePath))
                 {
                     ps1FilePath = gitFilePath + ps1FilePath;
                 }
-
                 string arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\"";
-                var app = ConfidentialClientApplicationBuilder.Create(cClientId)
-                  .WithClientSecret(cSecreteValue)
-              .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
-                  .Build();
-
-                var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
-                cAccessToken = tokenResult.AccessToken;
-
+                
                 // Create temporary askpass script
                 askPassPath = Path.Combine(Path.GetTempPath(), "askpass_oauth2.bat");
-                File.WriteAllText(askPassPath, $"@echo off{Environment.NewLine}echo {cAccessToken}");
+                File.WriteAllText(askPassPath, $"@echo off{Environment.NewLine}echo {_accessToken}");
 
                 ProcessStartInfo gitPull = new ProcessStartInfo
                 {
@@ -61,7 +91,7 @@ namespace Protean.Tools
 
                 gitPull.EnvironmentVariables["GIT_ASKPASS"] = askPassPath;
                 gitPull.EnvironmentVariables["GIT_TERMINAL_PROMPT"] = "0";
-                gitPull.EnvironmentVariables["ACCESS_TOKEN"] = cAccessToken;
+                gitPull.EnvironmentVariables["ACCESS_TOKEN"] = _accessToken;
 
                 using (var process = Process.Start(gitPull))
                 {
