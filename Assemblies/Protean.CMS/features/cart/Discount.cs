@@ -251,7 +251,17 @@ namespace Protean
                             // If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
                             // if total crossed more or less than defined range then it will remove promocode for the user.
 
+
+
+
+
                             XmlDocument oXmlDiscounts = new XmlDocument();
+                            oXmlDiscounts.LoadXml(oDsDiscounts.GetXml());
+
+                            CheckDiscounts(ref oXmlDiscounts.DocumentElement, ref oCartXML, ref cPromoCodeUserEntered);
+
+                            // TS: Move to new CheckDiscounts
+
                             if (oDsDiscounts != null)
                             {
                                 if (oDsDiscounts.Tables["Discount"].Rows.Count > 0)
@@ -460,6 +470,8 @@ namespace Protean
                                 return nTotalSaved;
                             }
                         }
+
+                      
                         // 'code to validate exchange functionality
                         else if (string.IsNullOrEmpty(cCartItemIds) & !string.IsNullOrEmpty(cPromoCodeUserEntered))
                         {
@@ -494,6 +506,9 @@ namespace Protean
 
 
                         }
+                        // TS: END Move to new CheckDiscounts
+
+                        // ANY CODE TO UPDATE DATABASE IS HERE....
 
                         // oDsDiscounts.Dispose();
                         //oDsDiscounts = null;
@@ -512,6 +527,31 @@ namespace Protean
                     return default;
                 }
 
+
+
+                public XmlElement CheckDiscounts(XmlElement oDiscountXML, XmlElement oCartXML, string AppliedCode)
+                {
+                    try {
+
+                        // Loop through the oDiscountXml to get the provider Type and run checkApplicable
+
+                        // Look through the oDiscountXml to apply each discount rule by providerType
+
+
+                        //updated CartXML with Discounts Applied.
+                        return oCartXML;
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckDiscounts", ex, "", "", gbDebug);
+                    }
+                    finally
+                    {
+
+                    }
+
+                    return default;
+                }
 
                 private string getUserEnteredPromoCode(ref XmlElement xmlNotes, ref XmlElement xmlCart)
                 {
