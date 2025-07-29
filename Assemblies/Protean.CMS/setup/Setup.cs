@@ -1081,7 +1081,7 @@ namespace Protean
                                     {
                                         if (goRequest["GitPS1FilePath"] != null)
                                         {
-                                            if (goRequest["GitPS1FilePath"].ToString() != null)
+                                            if (goRequest["GitPS1FilePath"].ToString() != "")
                                             {
                                                 cGitPS1FilePath =  goRequest["GitPS1FilePath"].ToString();
 

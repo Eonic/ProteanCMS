@@ -1313,15 +1313,12 @@ namespace Protean
                         bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
-                        Interaction.IIf(jObj["cEmailAddress"] != null, (string)jObj["cEmailAddress"], "");
-                        var cEmailAddress = Interaction.IIf(jObj["cEmailAddress"] != null, (string)jObj["cEmailAddress"], "");
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cEmailAddress, "", false)))
+                        if(jObj["cEmailAddress"] != null && jObj["cEmailAddress"].ToString()!="")
                         {
-                            josResult= myCart.GDPRAnonomize(cEmailAddress.ToString());
-                           
+                            var cEmailAddress = jObj["cEmailAddress"].ToString();
+                            josResult = myCart.GDPRAnonomize(cEmailAddress);
                         }
-                           
-                        
+                       
                         return josResult;
                     }
                     catch (Exception ex)

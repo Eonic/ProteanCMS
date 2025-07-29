@@ -12057,6 +12057,7 @@ namespace Protean
                                         oCartElmt.InnerXml = "";
                                         GetCart(ref oCartElmt, nCartOrderid);
                                         SaveCartXML(oCartElmt, nCartOrderid);
+                                        result = "Cart data anonymized successfully.";
                                     }
 
 
@@ -12075,11 +12076,11 @@ namespace Protean
                                         bool isOptOut = oMessaging.Activities.OptOutAll(cEmailId);
                                         if (isOptOut)
                                         {
-                                            result = "Opt-out successfully.";
+                                            result += " Spotler opt-out successful.";
                                         }
                                         else
                                         {
-                                            result = "Opt-out failed or user already unsubscribed.";
+                                            result += " Spotler opt-out failed or already unsubscribed.";
                                         }
                                     }
                                 }
@@ -12094,6 +12095,7 @@ namespace Protean
                                         DataRow oOptOutRow;
                                         oOptOutRow = currentORow;
                                         moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.OptOutAddresses, Conversions.ToLong(oOptOutRow["nOptOutKey"]));
+                                        result += " Removed from tblOptOutAddresses.";
                                     }
                                 }
                             }
@@ -12105,7 +12107,11 @@ namespace Protean
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "GDPRAnonomize", ex, "", "", gbDebug);
-                    return ex.Message; //check null here
+                    if (ex != null)
+                    {
+                        result ="Error: " + ex.Message;
+                    }
+                    return result;
                 }
             }
         }

@@ -22,7 +22,6 @@ namespace Protean.Tools
 
         public void AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue)
         {
-            string cAccessToken = string.Empty;
             try
             {
                 if(string.IsNullOrEmpty(cClientId) || string.IsNullOrEmpty(cTenantId) || string.IsNullOrEmpty(cScope) || string.IsNullOrEmpty(cSecreteValue))
@@ -36,9 +35,8 @@ namespace Protean.Tools
              .Build();
 
                 var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
-                cAccessToken = tokenResult.AccessToken;
-                _accessToken= cAccessToken;
-               // return cAccessToken;
+                _accessToken = tokenResult.AccessToken;
+                
             }
             catch (Exception ex) {
                 return;
