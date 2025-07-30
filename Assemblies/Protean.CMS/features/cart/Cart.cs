@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualBasic;
+﻿using Lucene.Net.Search;
+using Lucene.Net.Support;
+using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
@@ -9,12 +11,15 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Reflection;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 using VB = Microsoft.VisualBasic;
 
 namespace Protean
@@ -2652,11 +2657,11 @@ namespace Protean
                                     Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
                                 }
                             if (string.IsNullOrEmpty(Name))
-                                if(oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName")!=null)
+                                if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName") != null)
                                 {
                                     Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
                                 }
-                                
+
                             if (valDict is null)
                                 valDict = new Dictionary<string, string>();
 
@@ -5501,7 +5506,7 @@ namespace Protean
                                         {
                                             sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
                                             string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
-                                            moDBHelper.AddOptOutEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3,oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
+                                            moDBHelper.AddOptOutEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
 
                                         }
                                     }
@@ -12008,6 +12013,105 @@ namespace Protean
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "CreateDuplicateOrder", ex, "", "", gbDebug);
                     return null;
+                }
+            }
+
+            public string GDPRAnonomize(string cEmailId)
+            {
+
+                string result = "";
+                try
+                {
+                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper(ref myWeb);
+                    Protean.Cms.modal.Contact contact = new Cms.modal.Contact();
+                    if (!string.IsNullOrEmpty(cEmailId))
+                    {
+                        DataSet oDS;
+                        if (myWeb.moDbHelper.checkDBObjectExists("spGetCartContact", Tools.Database.objectTypes.StoredProcedure))
+                        {
+
+                            var param = new Hashtable();
+                            param.Add("EmailAddress", cEmailId);
+                            XmlDocument oXml = new XmlDocument();
+                            oDS = moDBHelper.GetDataSet("spGetCartContact", "tblCartContact", "", false, param, CommandType.StoredProcedure);
+                            if (oDS.Tables["tblCartContact"] != null && oDS.Tables["tblCartContact"].Rows.Count > 0)
+                            {
+                                foreach (DataRow row in oDS.Tables["tblCartContact"].Rows)
+                                {
+                                    DataRow oRow = row;
+                                    contact.cContactName = "";
+                                    contact.cContactAddress = "";
+                                    contact.cContactCity = "";
+                                    contact.cContactZip = "";
+                                    contact.cContactCountry = "";
+                                    contact.cContactTel = "";
+                                    contact.cContactEmail = "";
+                                    contact.cContactFirstName = "";
+                                    contact.cContactLastName = "";
+                                    contact.nContactKey = Convert.ToInt32(oRow["nContactkey"]);
+                                    dbHelper.SetContact(ref contact);
+                                    int nCartOrderid = Convert.ToInt32(oRow["nContactCartId"]);
+                                    if (nCartOrderid > 0)
+                                    {
+                                        var oCartElmt = moPageXml.CreateElement("Order");
+                                        oCartElmt.InnerXml = "";
+                                        GetCart(ref oCartElmt, nCartOrderid);
+                                        SaveCartXML(oCartElmt, nCartOrderid);
+                                        result = "Cart data anonymized successfully.";
+                                    }
+
+
+                                }
+                                // OptOut from spotler mail +
+                                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                                if (moMailConfig != null)
+                                {
+                                    string sMessagingProvider = "";
+                                    sMessagingProvider = moMailConfig["MessagingProvider"];
+
+                                    if (!string.IsNullOrEmpty(sMessagingProvider))
+                                    {
+                                        Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                                        IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
+                                        bool isOptOut = oMessaging.Activities.OptOutAll(cEmailId);
+                                        if (isOptOut)
+                                        {
+                                            result += " Spotler opt-out successful.";
+                                        }
+                                        else
+                                        {
+                                            result += " Spotler opt-out failed or already unsubscribed.";
+                                        }
+                                    }
+                                }
+                                //remove from tblOptOutAddresses
+                                DataSet oDSOptOut;
+                                string cSql = "select nOptOutKey  from tblOptOutAddresses where EmailAddress='" + cEmailId + "'";
+                                oDSOptOut = moDBHelper.GetDataSet(cSql, "Item");
+                                if (oDSOptOut.Tables["Item"].Rows.Count > 0)
+                                {
+                                    foreach (DataRow currentORow in oDSOptOut.Tables["Item"].Rows)
+                                    {
+                                        DataRow oOptOutRow;
+                                        oOptOutRow = currentORow;
+                                        moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.OptOutAddresses, Conversions.ToLong(oOptOutRow["nOptOutKey"]));
+                                        result += " Removed from tblOptOutAddresses.";
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return result;
+
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GDPRAnonomize", ex, "", "", gbDebug);
+                    if (ex != null)
+                    {
+                        result ="Error: " + ex.Message;
+                    }
+                    return result;
                 }
             }
         }
