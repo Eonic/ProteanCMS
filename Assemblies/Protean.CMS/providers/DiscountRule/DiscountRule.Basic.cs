@@ -47,9 +47,13 @@ namespace Protean.Providers
             public IdiscountRuleProvider Initiate(ref Cms myWeb)
             {
                 return this;
-            }       
+            }
 
+            public void ApplyDiscount(ref XmlElement oCartXML, ref Cms myWeb)
+            {
+                
 
+            }
         }
     }
 }

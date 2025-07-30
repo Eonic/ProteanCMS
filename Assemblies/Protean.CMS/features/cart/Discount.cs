@@ -51,7 +51,7 @@ namespace Protean
                     SingleCode = 1, // was "12N"
                     UseOnce = 2, // was "121"
                     MultiCode = 3 // to be implemented later using tblCode
-                }
+                }                
 
                 public Discount(ref Cms aWeb)
                 {
@@ -150,24 +150,17 @@ namespace Protean
                     myWeb.PerfMon.Log("Discount", "CheckDiscounts");
                     if (!bIsCartOn & !bIsQuoteOn)
                         return 0m;
-                    DataSet oDsDiscounts = new DataSet();
-                    // Dim cSQL As String
-                    // Dim sUserSql As String
-                    var strSQL = new System.Text.StringBuilder();
-                    // Dim oDr As DataRow
-
+                    DataSet oDsDiscounts = new DataSet();                    
+                    var strSQL = new System.Text.StringBuilder();                  
                     var DiscountApplyDate = DateTime.Now;
                     // TS we should add logic here to get the invoiceDate from the xml if it exists. then we can apply historic discounts by refreshing the cartxml.
-
-                    // string[] sSQLArr = null;
+                   
                     int nCount;
                     double dDisountAmount = 0d;
-                    string validateShippingGroup = string.Empty;
-                    //string oDiscountMessageNew = "The promo code you have provided is invalid for this transaction";
+                    string validateShippingGroup = string.Empty;                   
 
                     try
                     {
-
                         // get cart contentIds
                         var strItemIds = new System.Text.StringBuilder();
                         foreach (XmlElement xmlCartItem in oCartXML.SelectNodes("Item"))
@@ -198,14 +191,9 @@ namespace Protean
                                 bDefaultPromoCode = true;
                             }
                         }
-
-
-
                         if (!string.IsNullOrEmpty(cCartItemIds) & (bDefaultPromoCode | !string.IsNullOrEmpty(cPromoCodeUserEntered)))
                         {
-
                             string cUserGroupIds = getUserGroupIDs(); // get the user groups
-
 
                             // 'comment----------
                             // ' we selecting all discounts applicable to all Items of the cart.
@@ -220,11 +208,6 @@ namespace Protean
                             {
                                 DiscountApplyDate = Conversions.ToDate(oCartXML.Attributes["InvoiceDateTime"].Value);
                             }
-
-
-
-
-
 
                             cCartItemIds = cCartItemIds.Remove(cCartItemIds.Length - 1);
                             if (myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups"))
@@ -251,41 +234,16 @@ namespace Protean
                             // If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
                             // if total crossed more or less than defined range then it will remove promocode for the user.
 
-
-
-
-
                             XmlDocument oXmlDiscounts = new XmlDocument();
-                            oXmlDiscounts.LoadXml(oDsDiscounts.GetXml());
-
-                            CheckDiscounts(ref oXmlDiscounts.DocumentElement, ref oCartXML, ref cPromoCodeUserEntered);
-
+                            
                             // TS: Move to new CheckDiscounts
 
                             if (oDsDiscounts != null)
                             {
                                 if (oDsDiscounts.Tables["Discount"].Rows.Count > 0)
                                 {
-                                    // Convert oDsDiscounts to XML and apply discount logic
-                                   
                                     oXmlDiscounts.LoadXml(oDsDiscounts.GetXml());
-                                    bool isApplicable = false;
-                                    double finalDiscount = 0;
-                                    Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
-                                    IdiscountRuleProvider oDisProvider = (IdiscountRuleProvider)oDiscRuleProv.Get(ref myWeb);
-                                    if (oDisProvider != null) {
-                                        isApplicable = oDisProvider.CheckDiscountApplicable(ref oXmlDiscounts, ref oCartXML, out finalDiscount);
-                                    }
-                                    if (!isApplicable)
-                                    {
-                                        RemoveDiscountCode();
-                                        oDsDiscounts = null;
-                                    }
-                                    else
-                                    {
-                                        oCartXML.SetAttribute("Discount", finalDiscount.ToString("F2"));
-                                    }                                
-
+                                    CheckDiscounts(oXmlDiscounts.DocumentElement, ref oCartXML, ref cPromoCodeUserEntered);
                                 }
                                 else
                                 {
@@ -303,9 +261,7 @@ namespace Protean
                                 }
 
                             }
-
-
-                            if (oDsDiscounts is null)
+                            else
                             {
                                 if (!string.IsNullOrEmpty(cPromoCodeUserEntered))
                                 {
@@ -317,8 +273,14 @@ namespace Protean
                                 }
                                 return 0m;
                             }
+
+
+                            if (oDsDiscounts is null)
+                            {
+                                
+                            }
                             else
-                            { 
+                            {
 
                                 // now need to make sure there are no duplicates where multi groups exists
                                 XmlElement oItemElmt;
@@ -529,14 +491,41 @@ namespace Protean
 
 
 
-                public XmlElement CheckDiscounts(XmlElement oDiscountXML, XmlElement oCartXML, string AppliedCode)
+                public XmlElement CheckDiscounts(XmlElement oXmlDiscounts,ref XmlElement oCartXML, ref string AppliedCode)
                 {
                     try {
 
                         // Loop through the oDiscountXml to get the provider Type and run checkApplicable
+                        XmlNodeList discountNodes = oXmlDiscounts.SelectNodes("//Discount");
+                        foreach (XmlNode discountNode in discountNodes)
+                        {
+                            bool isApplicable = false;
+                            int ProviderType = 0;
+                            //ProviderType = Convert.ToInt32(discountNode.SelectSingleNode("nDiscountCodeType")?.InnerText ?? "0");
+                            Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
+                            IdiscountRuleProvider oDisProvider = oDiscRuleProv.Get(ref myWeb);
+                            if (oDisProvider != null)
+                            {
+                                 isApplicable = oDisProvider.CheckDiscountApplicable(discountNode, ref oCartXML, out ProviderType);
+                                //Need to append valid discountcode to the cart xml first 
+                                oDisProvider.UpdateCartXMLwithDiscounts(discountNode, ref oCartXML, ref myWeb);
+                            }
 
-                        // Look through the oDiscountXml to apply each discount rule by providerType
-
+                            if (isApplicable)
+                            {
+                                // Based on providerType 1,2,3... get the actual provider
+                                IdiscountRuleProvider ApplicableProviderType = oDiscRuleProv.Get(ref myWeb, ProviderType);
+                                if (ApplicableProviderType != null)
+                                {
+                                    // Look through the oDiscountXml to apply each discount rule by providerType                                    
+                                    ApplicableProviderType.ApplyDiscount(ref oCartXML, ref myWeb);
+                                }
+                            }
+                            else
+                            {
+                                discountNode.ParentNode.RemoveChild(discountNode); // remove invalid discounts
+                            }
+                        }
 
                         //updated CartXML with Discounts Applied.
                         return oCartXML;
