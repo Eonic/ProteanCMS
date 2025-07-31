@@ -12016,7 +12016,7 @@ namespace Protean
                 }
             }
 
-            public string GDPRAnonomize(string cEmailId)
+            public string GDPRAnonomize(string cEmailAddress)
             {
 
                 string result = "";
@@ -12024,14 +12024,14 @@ namespace Protean
                 {
                     Protean.Cms.dbHelper dbHelper = new Cms.dbHelper(ref myWeb);
                     Protean.Cms.modal.Contact contact = new Cms.modal.Contact();
-                    if (!string.IsNullOrEmpty(cEmailId))
+                    if (!string.IsNullOrEmpty(cEmailAddress))
                     {
                         DataSet oDS;
                         if (myWeb.moDbHelper.checkDBObjectExists("spGetCartContact", Tools.Database.objectTypes.StoredProcedure))
                         {
 
                             var param = new Hashtable();
-                            param.Add("EmailAddress", cEmailId);
+                            param.Add("EmailAddress", cEmailAddress);
                             XmlDocument oXml = new XmlDocument();
                             oDS = moDBHelper.GetDataSet("spGetCartContact", "tblCartContact", "", false, param, CommandType.StoredProcedure);
                             if (oDS.Tables["tblCartContact"] != null && oDS.Tables["tblCartContact"].Rows.Count > 0)
@@ -12073,7 +12073,7 @@ namespace Protean
                                     {
                                         Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                                         IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
-                                        bool isOptOut = oMessaging.Activities.OptOutAll(cEmailId);
+                                        bool isOptOut = oMessaging.Activities.OptOutAll(cEmailAddress);
                                         if (isOptOut)
                                         {
                                             result += " Spotler opt-out successful.";
@@ -12086,16 +12086,20 @@ namespace Protean
                                 }
                                 //remove from tblOptOutAddresses
                                 DataSet oDSOptOut;
-                                string cSql = "select nOptOutKey  from tblOptOutAddresses where EmailAddress='" + cEmailId + "'";
+                                string cSql = "select nOptOutKey  from tblOptOutAddresses where EmailAddress='" + cEmailAddress + "'";
                                 oDSOptOut = moDBHelper.GetDataSet(cSql, "Item");
                                 if (oDSOptOut.Tables["Item"].Rows.Count > 0)
                                 {
-                                    foreach (DataRow currentORow in oDSOptOut.Tables["Item"].Rows)
+                                    foreach (DataRow currentRow in oDSOptOut.Tables["Item"].Rows)
                                     {
                                         DataRow oOptOutRow;
-                                        oOptOutRow = currentORow;
-                                        moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.OptOutAddresses, Conversions.ToLong(oOptOutRow["nOptOutKey"]));
-                                        result += " Removed from tblOptOutAddresses.";
+                                        oOptOutRow = currentRow;
+                                        if(oOptOutRow["nOptOutKey"]!=null)
+                                        {
+                                            moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.OptOutAddresses, Conversions.ToLong(oOptOutRow["nOptOutKey"]));
+                                            result += " Removed from tblOptOutAddresses.";
+                                        }
+                                       
                                     }
                                 }
                             }
