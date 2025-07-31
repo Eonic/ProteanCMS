@@ -12034,7 +12034,7 @@ namespace Protean
                                 foreach (DataRow row in oDS.Tables["tblCartContact"].Rows)
                                 {
                                     DataRow oRow = row;
-                                    contact.cContactName = "";
+                                    contact.cContactName = "GDPR Removal Request ("+ DateTime.Now +")";
                                     contact.cContactAddress = "";
                                     contact.cContactCity = "";
                                     contact.cContactZip = "";
@@ -12071,32 +12071,48 @@ namespace Protean
                                         bool isOptOut = oMessaging.Activities.OptOutAll(cEmailAddress);
                                         if (isOptOut)
                                         {
-                                            result += " Spotler opt-out successful.";
+                                            result += " Messaging opt-out successful.";
                                         }
                                         else
                                         {
-                                            result += " Spotler opt-out failed or already unsubscribed.";
+                                            result += " Messaging opt-out failed or already unsubscribed.";
                                         }
                                     }
                                 }
-                                //remove from tblOptOutAddresses
+                                //update in tblOptOutAddresses
                                 DataSet oDSOptOut;
                                 string cSql = "select nOptOutKey  from tblOptOutAddresses where EmailAddress='" + cEmailAddress + "'";
                                 oDSOptOut = moDBHelper.GetDataSet(cSql, "Item");
                                 if (oDSOptOut.Tables["Item"].Rows.Count > 0)
                                 {
-                                    foreach (DataRow currentRow in oDSOptOut.Tables["Item"].Rows)
+                                    List<string> optOutKeys = new List<string>();
+                                    foreach (DataRow row in oDSOptOut.Tables["Item"].Rows)
                                     {
-                                        DataRow oOptOutRow;
-                                        oOptOutRow = currentRow;
-                                        if(oOptOutRow["nOptOutKey"]!=null)
-                                        {
-                                            moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.OptOutAddresses, Conversions.ToLong(oOptOutRow["nOptOutKey"]));
-                                            result += " Removed from tblOptOutAddresses.";
-                                        }
-                                       
+                                        optOutKeys.Add(row["nOptOutKey"].ToString());
                                     }
+                                    string keyList = string.Join(",", optOutKeys);
+                                    string updateSql = "UPDATE tblOptOutAddresses SET dGDPROptOut =" + Tools.Database.SqlDate(DateTime.Now) + ",optout_reason='GDPR Opt Out request',nStatus='1'  WHERE nOptOutKey IN (" + keyList + ")";
+                                    moDBHelper.ExeProcessSql(updateSql);
                                 }
+                                else
+                                {
+                                    string cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,optout_reason,nStatus,dOptOut,dGDPROptOut) VALUES ('" + cEmailAddress + "','GDPR Opt Out request','1'," + Tools.Database.SqlDate(DateTime.Now) + "," + Tools.Database.SqlDate(DateTime.Now) + ")";
+                                    moDBHelper.ExeProcessSql(cSQL);
+                                }
+                                //if (oDSOptOut.Tables["Item"].Rows.Count > 0)
+                                //{
+                                //    foreach (DataRow currentRow in oDSOptOut.Tables["Item"].Rows)
+                                //    {
+                                //        DataRow oOptOutRow;
+                                //        oOptOutRow = currentRow;
+                                //        if(oOptOutRow["nOptOutKey"]!=null)
+                                //        {
+                                //            moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.OptOutAddresses, Conversions.ToLong(oOptOutRow["nOptOutKey"]));
+                                //            result += " Removed from tblOptOutAddresses.";
+                                //        }
+                                       
+                                //    }
+                                //}
                             }
                         }
                     }
