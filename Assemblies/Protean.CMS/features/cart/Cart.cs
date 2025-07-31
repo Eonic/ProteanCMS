@@ -1,6 +1,4 @@
-﻿using Lucene.Net.Search;
-using Lucene.Net.Support;
-using Microsoft.VisualBasic;
+﻿using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
@@ -11,15 +9,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 using System.Reflection;
 using System.Web.Configuration;
 using System.Xml;
-using static Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 using VB = Microsoft.VisualBasic;
 
 namespace Protean
