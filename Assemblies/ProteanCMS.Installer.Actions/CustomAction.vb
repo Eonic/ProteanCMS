@@ -2,7 +2,7 @@
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.43.0"
+    Public Shared ewAssemblyVersion As String = "6.1.44.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.1.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
@@ -27,13 +27,13 @@ Public Class CustomActions
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.4.5.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "14.5.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "14.5.0.0"
+    Public Shared MagickNETCoreAssemblyVersion As String = "14.7.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "14.7.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
     Public Shared SystemBuffersVersion As String = "4.0.4.0"
     Public Shared SystemMemoryVersion As String = "4.0.2.0"
-    Public Shared DocumentFormatOpenXmlVersion As String = "3.2.0.0"
+    Public Shared DocumentFormatOpenXmlVersion As String = "3.3.0.0"
     Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.1.0"
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
     Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.0.1"
@@ -42,12 +42,12 @@ Public Class CustomActions
     Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.2"
     Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "8.0.0.0"
     Public Shared SystemNumericsVectorsVersion As String = "4.1.5.0"
-    Public Shared AngleSharpVersion As String = "1.2.0.0"
+    Public Shared AngleSharpVersion As String = "1.3.0.0"
     Public Shared PreMailerVersion As String = "2.6.0.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
     Public Shared iTextSharpVersion As String = "3.7.1.0"
     Public Shared SkiaSharpVersion As String = "3.116.0.0"
-    Public Shared BouncyCastleCrypto As String = "2.0.0.0"
+    Public Shared BouncyCastleCrypto As String = "2.6.2.0"
     Public Shared SystemIOPipelines As String = "9.0.0.2"
     Public Shared SystemDataSQLClient As String = "4.6.2.0" 'lib version 4.8.6
     Public Shared SystemDrawingCommon As String = "9.0.0.0"
@@ -270,7 +270,8 @@ Public Class CustomActions
 
 
 
-                    ' UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=8fb06cb64d019a17")
+                    UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml.Framework, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=8fb06cb64d019a17")
 
                     'TS: These are not required and forces the CMS to load so cannot be overiden by newer version
                     '  UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
@@ -589,6 +590,8 @@ Public Class CustomActions
 
             UpdateDependantAssembly(oSectXml, "QRCoder", "c4ed5b9ae8358a28", QRCoderVersion)
             UpdateDependantAssembly(oSectXml, "System.Drawing.Common", "cc7b13ffcd2ddd51", SystemDrawingCommon)
+            UpdateDependantAssembly(oSectXml, "DocumentFormat.OpenXml", "8fb06cb64d019a17", DocumentFormatOpenXmlVersion)
+            UpdateDependantAssembly(oSectXml, "DocumentFormat.OpenXml.Framework", "8fb06cb64d019a17", DocumentFormatOpenXmlVersion)
 
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")
