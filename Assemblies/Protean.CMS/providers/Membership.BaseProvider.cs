@@ -818,22 +818,22 @@ namespace Protean.Providers
                         {
                             if (isValidEmailAddress)
                             {
-                                base.addInput(ref oFrmElmt, "cEmail", true, "Email address", "readonly");
+                                base.addInput(ref oFrmElmt, "cEmail", true, "Email address", "term-4005 readonly");
                             }
                             else
                             {
-                                base.addInput(ref oFrmElmt, "cEmail", true, "Username", "readonly");
+                                base.addInput(ref oFrmElmt, "cEmail", true, "Username", "term-400o readonly");
                             }
                         }
                         else
                         {
-                            base.addInput(ref oFrmElmt, "cEmail", true, "Email address / Username");
+                            base.addInput(ref oFrmElmt, "cEmail", true, "Email", "term-4005");
                         }
                         // check for legal chars in either email or username
                         XmlElement xmlObind = null;
                         base.addBind("cEmail", "user/email", ref xmlObind, "true()", "format:^[a-zA-Z0-9._%+-@ ]*$");
 
-                        base.addSubmit(ref oFrmElmt, "", "Reset Password", "ewAccountReset");
+                        base.addSubmit(ref oFrmElmt, "", "Reset Password", "ewAccountReset", "term-4052");
 
                     Check:
                         ;

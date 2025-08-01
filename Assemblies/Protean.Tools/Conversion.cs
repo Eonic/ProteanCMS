@@ -374,8 +374,9 @@ namespace Protean.Tools
             }
 
 
-            catch (Exception)
+            catch (Exception ex)
             {
+                ErrorMsg = ex.Message + " - " + ex.InnerException.Message;
                 SetStatus(Status.Failed, StatusReason.Undefined);
             }
 
