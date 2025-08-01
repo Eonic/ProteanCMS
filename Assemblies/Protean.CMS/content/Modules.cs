@@ -562,7 +562,7 @@ namespace Protean
                         string whereSQL = string.Empty;
                         string orderBySql = string.Empty;
                         string groupBySql = string.Empty;
-                        string cCssClassName = "hidden";
+                        //string cCssClassName = "hidden";
                         //  filterForm.addBind("cShowMore", "ShowMore", ref filterForm.model, "false()", "string");
 
                         // filterForm.addInput(ref oFrmGroup, "cShowMore", true, "ShowMore", "hidden");
@@ -843,7 +843,7 @@ namespace Protean
 
                 public string GetContentIndexDefinationName(Type calledType, ref Cms myWeb)
                 {
-                    string filterGroupByClause = string.Empty;
+                    string cContentIndexDefinationName = string.Empty;
 
                     if (calledType != null)
                     {
@@ -852,9 +852,9 @@ namespace Protean
                         var o = Activator.CreateInstance(calledType);
                         var args = new object[1];
                         args[0] = myWeb;
-                        filterGroupByClause = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
+                        cContentIndexDefinationName = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
                     }
-                    return filterGroupByClause;
+                    return cContentIndexDefinationName;
                 }
 
                 public string GetFilterWhereClause(ref Cms myWeb, ref Cms.xForm filterForm, ref XmlElement oContentNode, string excludeClassName)
