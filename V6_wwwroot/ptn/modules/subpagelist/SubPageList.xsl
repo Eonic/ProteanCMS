@@ -60,7 +60,7 @@
 		<xsl:choose>
 			<xsl:when test="@layout='simple'">
 				<div class="clearfix SubPageListSimple">
-					<ul class="nav nav-module" role="navigation">
+					<ul class="nav nav-module">
 						<xsl:if test="@align='vertical'">
 							<xsl:attribute name="class">nav nav-module flex-column</xsl:attribute>
 						</xsl:if>
