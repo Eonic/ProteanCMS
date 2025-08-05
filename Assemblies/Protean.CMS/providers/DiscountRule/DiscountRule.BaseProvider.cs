@@ -48,8 +48,8 @@ namespace Protean.Providers
             void UpdateCartXMLwithDiscounts(XmlNode discountNode, ref XmlElement oCartXML, ref Cms myWeb);
             //long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response); // returns userid
 
-            void ApplyDiscount(ref XmlElement oCartXML, ref Cms myWeb);
-
+            void ApplyDiscount(ref XmlElement oCartXML, ref int nPriceCount, ref Cms myWeb, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers);
+            decimal FinalApplyToCart(ref XmlElement oCartXML, ref Cms myWeb, bool mbRoundUp);
         }
 
         public class ReturnProvider
@@ -270,9 +270,151 @@ namespace Protean.Providers
                 }
             }
 
-            public void ApplyDiscount(ref XmlElement oCartXML, ref Cms myWeb)
+            public void ApplyDiscount(ref XmlElement oCartXML, ref int nPriceCount, ref Cms myWeb, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers)
             {
                 throw new NotImplementedException("This method should be overridden in derived classes.");
+            }
+
+            public decimal FinalApplyToCart(ref XmlElement oCartXML, ref Cms myWeb, bool mbRoundUp)
+            {
+                myWeb.PerfMon.Log("Discount", "Discount_ApplyToCart");
+                try
+                {
+                    // for basic we need to loop through and apply the new price
+                    // also link the discounts applied
+                    // for price
+                    // for units
+                    XmlElement oPriceElmt;
+                    // the item
+                    var nDelIDs = new int[1];
+                    decimal nTotalSaved = 0m;
+
+                    // Item ID
+                    var nLineTotalSaving = default(decimal);
+                    XmlDocument oDiscountXml = new XmlDocument();
+                    oDiscountXml.AppendChild(oDiscountXml.ImportNode(oCartXML, true));
+                    foreach (XmlElement oItemElmt in oCartXML.SelectNodes("/Order/Item"))
+                    {
+                        int nId = Conversions.ToInteger(oItemElmt.GetAttribute("id"));
+                        oPriceElmt = (XmlElement)oDiscountXml.SelectSingleNode("Order/Item[@id=" + nId + "]/DiscountPrice");
+                        if (oPriceElmt != null)
+                        {
+
+                            // NB 16/02/2010 added rounding
+                            decimal nNewUnitPrice = Round(oPriceElmt.GetAttribute("UnitPrice"), bForceRoundup: mbRoundUp);
+                            decimal nNewTotal = Conversions.ToDecimal(oPriceElmt.GetAttribute("Total"));
+                            decimal nUnitSaving = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitSaving"));
+                            nLineTotalSaving = Conversions.ToDecimal(oPriceElmt.GetAttribute("TotalSaving"));
+
+
+                            // set up new attreibutes and change price
+                            oItemElmt.SetAttribute("id", nId.ToString());
+                            // NB 16/02/2010 added rounding
+                            oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString());
+                            oItemElmt.SetAttribute("price", nNewUnitPrice.ToString());
+                            oItemElmt.SetAttribute("unitSaving", nUnitSaving.ToString());
+                            oItemElmt.SetAttribute("itemSaving", nLineTotalSaving.ToString());
+                            oItemElmt.SetAttribute("itemTotal", nNewTotal.ToString());
+
+                            // this will change
+                            nTotalSaved += nLineTotalSaving;
+
+
+
+                            // now to add the discount items to the cart
+                            foreach (XmlElement oDiscountElmt in oDiscountXml.SelectNodes("Order/Item[@id=" + nId + "]/Discount[((@nDiscountCat=1 or @nDiscountCat=2) and @Applied=1) or (@nDiscountCat=3) or (@nDiscountCat=5)]"))
+                            {
+                                oDiscountElmt.SetAttribute("AppliedToCart", 1.ToString());
+                                oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountElmt.CloneNode(true), true));
+                            }
+                            XmlElement oTmpElmt = (XmlElement)oDiscountXml.SelectSingleNode("Order/Item[@id=" + nId + "]/DiscountPrice");
+                            oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oTmpElmt.CloneNode(true), true));
+                        }
+
+                        // That was the Price Modifiers done, now for the unit modifiers (not group yet)
+                        // TS: I don't really understand this next bit, if anyone does can you document it better.
+
+                        foreach (XmlElement oDiscountItemTest in oDiscountXml.SelectNodes("Order/Item[@id=" + nId + "]/DiscountItem"))
+                        {
+                            if (Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving")) <= Conversions.ToDecimal(oItemElmt.GetAttribute("itemTotal")))
+                            {
+                                oDiscountItemTest.SetAttribute("AppliedToCart", 1.ToString());
+                                oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountItemTest.CloneNode(true), true));
+                                XmlElement oDiscountInfo = (XmlElement)oDiscountXml.SelectSingleNode("Order/Item[@id=" + nId + "]/Discount[@nDiscountKey=" + oDiscountItemTest.GetAttribute("nDiscountKey") + "]");
+                                if (oDiscountInfo != null)
+                                {
+                                    oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountInfo.CloneNode(true), true));
+                                }
+                                oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("itemTotal")) - Conversions.ToDouble(oDiscountItemTest.GetAttribute("TotalSaving"))).ToString());
+                                nLineTotalSaving += Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
+                                nTotalSaved += Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
+                            }
+                            else if (Information.IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")))
+                            {
+                                if (Conversions.ToDouble(oDiscountItemTest.GetAttribute("nDiscountCat")) == 4d)
+                                {
+                                    if (nDelIDs[0] == 0)
+                                    {
+                                        nDelIDs[0] = Conversions.ToInteger(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                    }
+                                    else
+                                    {
+                                        Array.Resize(ref nDelIDs, Information.UBound(nDelIDs) + 1 + 1);
+                                        nDelIDs[Information.UBound(nDelIDs)] = Conversions.ToInteger(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                    }
+                                }
+
+                                else
+                                {
+
+                                    // Discount greater than quanity on this line.... should give discount overall
+
+                                    oDiscountItemTest.SetAttribute("AppliedToCart", 1.ToString());
+                                    oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountItemTest.CloneNode(true), true));
+                                    XmlElement oDiscountInfo = (XmlElement)oDiscountXml.SelectSingleNode("Order/Item[@id=" + nId + "]/Discount[@nDiscountKey=" + oDiscountItemTest.GetAttribute("nDiscountKey") + "]");
+                                    if (oDiscountInfo != null)
+                                    {
+                                        oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountInfo.CloneNode(true), true));
+                                    }
+                                    oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("itemTotal")) - Conversions.ToDouble(oDiscountItemTest.GetAttribute("TotalSaving"))).ToString());
+                                    nLineTotalSaving += Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
+                                    nTotalSaved += Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
+                                }
+
+
+                            }
+                        }
+
+                        // also need to save the total discount in the cart
+                        // TS added in April 09
+                        string cUpdtSQL = "UPDATE tblCartItem SET nDiscountValue = " + nLineTotalSaving + " WHERE nCartItemKey = " + nId;
+                        myWeb.moDbHelper.ExeProcessSql(cUpdtSQL);
+
+                    }
+                    // End If
+
+
+                    if (!(nDelIDs[0] == 0))
+                    {
+                        int nIX;
+                        var loopTo = Information.UBound(nDelIDs);
+                        for (nIX = 0; nIX <= loopTo; nIX++)
+                        {
+                            foreach (XmlElement nDelElmt in oCartXML.SelectNodes("descendant-or-self::DiscountItem[@nDiscountKey=" + nDelIDs[nIX] + "] | descendant-or-self::Discount[@nDiscountKey=" + nDelIDs[nIX] + "]"))
+                                nDelElmt.ParentNode.RemoveChild(nDelElmt);
+                        }
+                    }
+
+
+                    return nTotalSaved;
+                }
+                // Thats all folks!
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, "", "Discount_ApplyToCart", ex, "", "", gbDebug);
+                }
+
+                return default;
             }
         }
     }

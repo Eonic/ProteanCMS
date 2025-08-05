@@ -1,1 +1,282 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<Order cartId="873629" session="znxvdmiyepw41rop4w0ijug3" statusId="1" status="Unknown Process ID" itemCount="1" weight="0" orderType="" complete="True" shippingType="65" shippingCost="3.95" shippingDesc="First Class (Royal Mail)-" ReceiptType="0" totalNet="433.95" vatRate="0" vatAmt="0" total="433.95" currency="" currencySymbol="£" errorMsg="0">
+	<Item id="2511378" contentId="32272" ref="WOWCLA" url="/experiences/classic-car-hire-surrey/" price="430.0000" taxRate="0" quantity="1" shippingLevel="-1" weight="0" parId="" originalPrice="430.00" unitSaving="0" itemSaving="0" discount="0" itemTotal="430">
+		<Name>Classic Car Choice A</Name>
+		<productDetail overridePrice="" sMostpopular="" sBestSeller="" lowMargin="" type="SKU">
+			<Name>Classic Car Choice A</Name>
+			<StockCode classification="C24" eVoucherOnly="">WOWCLA</StockCode>
+			<Prices>
+				<Price currency="GBP" validGroup="all" type="rrp">430</Price>
+				<Price currency="GBP" validGroup="all" type="sale" vatAmt="358.33" zeroRatedAmt="">430</Price>
+			</Prices>
+			<Stock />
+			<MinQuantity>1</MinQuantity>
+			<MaxQuantity>1</MaxQuantity>
+			<InsuranceType>0</InsuranceType>
+			<VatType>1</VatType>
+			<LocationDescription />
+			<Supplier setting="" />
+			<HTRTitle>A Classic Car Hire (Choice A Package)</HTRTitle>
+			<HTRDescription>for one person</HTRDescription>
+			<HTRSummary />
+			<HTRExperience>
+				<ul>
+					<li>Full day (9 hours) self-drive classic car experience</li>
+					<li>Brief classic car lesson lasting around 20-30 minutes with one of the classic car team to familiarise yourself with the vehicle, learn the controls and pick up driving tips</li>
+					<li>Explore the surrounding countryside for the remainder of the time in your chosen vehicle</li>
+					<li>Drives can be enjoyed with family and friends (depending on the number of seats of your chosen car)</li>
+					<li>100 miles allowance, fully comprehensive insurance for one driver and full RAC break down cover is included</li>
+					<li>Your choice of car from the following options (cars are subject to availability)</li>
+				</ul>
+				<p>
+					<strong>Car Choice A</strong>
+				</p>
+				<div>
+					<ul>
+						<li>Morris Minor Convertible</li>
+						<li>Morris Million</li>
+						<li>MG B Roadster: An Early 1967 convertible</li>
+					</ul>
+				</div>
+			</HTRExperience>
+			<HTRAvailability>
+				<ul>
+					<li>Weekdays and weekends throughout the year</li>
+					<li>Hire is from 9-6pm </li>
+					<li>All dates are subject to availability of your chosen vehicle</li>
+					<li>
+						<span>The car can be driven in the rain, but severe weather conditions may make it not suitable or safe to take the car out. This is at the discretion of the hire team on the day</span>
+					</li>
+				</ul>
+			</HTRAvailability>
+			<HTRRequirements>
+				<ul>
+					<li>Drivers must hold a full and clean UK or EU driving licence with less than 6 points</li>
+					<li>Drivers must be aged between 25 and 75</li>
+					<li>Drivers must have had their licence for a minimum of 3 years</li>
+				</ul>
+			</HTRRequirements>
+			<HTRSpectatorFacilities>
+				<ul>
+					<li>Passengers are welcome if there is space in your chosen vehicle</li>
+				</ul>
+			</HTRSpectatorFacilities>
+			<HTRNotes>
+				<div>We hope you have an enjoyable and memorable experience. If we can be of any further assistance please do not hesitate to call Into the Blue customer services on 01959 578100.</div>
+			</HTRNotes>
+			<HTRDoc />
+			<BookingDetails>
+				<div>
+					<p class="c1">The more notice you are able to give, the more likely you are to be able to secure the date you want. You will need to take your voucher with you on the day. Please note that once you have booked your date, you are subject to the terms and conditions of the operator, including cancellation.</p>
+				</div>
+			</BookingDetails>
+			<Experience>
+				<div>What we love about this particular collection of cars is that it is pretty eclectic. We think it epitomises classic in the true sense of the word. That's to say, desirable, rare, iconic and even revolutionary in its own way. Not all of these cars for hire in Weybridge are high-powered fancy sports cars, but every one is utterly appealing and you will absolutely love driving them around Surrey.</div>
+			</Experience>
+			<ExperienceDetail>
+				<div>As for where to go during your self-drive hire? Well, in Surrey you've got yourself a wonderful county to explore. There's everything from vineyards, gastro pubs and award winning restaurants, to motor museums, country clubs and castles. There are many stunning villages and winding roads to discover within your four hour hire period, so go out there and enjoy your drive!</div>
+			</ExperienceDetail>
+			<Location>
+				<ul>
+					<li>Weybridge, Surrey</li>
+				</ul>
+			</Location>
+			<AnythingToKnow>
+				<ul>
+					<li>A pre-authorised Credit Card Security Deposit of £1500 will need to provided to cover any fines incurred during the hire of the vehicle</li>
+					<li>You must produce your driving licence on the day along with two other types of identification which must be a utility bill and official letter both addressed to you and be under your current address and dated within three months from the date of hire</li>
+					<li>It is possible for three other drivers to be insured to drive the vehicle for a supplement of £40 per person payable direct, providing they meet the insurance requirements</li>
+					<li>You must return the vehicle with the same amount of fuel that you started with</li>
+				</ul>
+			</AnythingToKnow>
+			<HTRMenu />
+			<Notes />
+			<Validity validUntilDate="">12m</Validity>
+			<Locations>
+				<Location long="-0.4261" lat="51.3742" postcode="KT13 9RP" />
+			</Locations>
+			<ParentProduct>
+				<Content id="6347" ref="PROD-4386" parId="908" name="classic car hire surrey" type="Product" publish="2017-11-21T09:16:23+05:30" update="2025-04-08T14:33:13+05:30" owner="1" status="1" onHold="false" SkuOptions="None" action="IntoTheBlue.Web.Modules.ProductDetail" assemblyType="IntoTheBlue.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" metaTitle="Classic Car Hire in Weybridge Driving on the Surrey roads" metaKeywords="" metaDescription="Classic car full-day hire from Weybridge to explore Surrey in a vintage motor with an eclectic fleet of cars to choose from. Passengers ride for free! Book your hire slot online now." noIndex="" ratingAvg="" ratingCount="">
+					<Name category="">Classic Car Hire Surrey</Name>
+					<StockCode gtin="" mpn="" />
+					<Manufacturer />
+					<Options>
+						<OptGroup type="Options1" selectType="DropDown">
+							<option />
+							<option />
+							<option />
+						</OptGroup>
+						<OptGroup type="Options2" selectType="DropDown">
+							<option />
+							<option />
+							<option />
+						</OptGroup>
+					</Options>
+					<Prices>
+						<Price currency="GBP" type="sale" validGroup="all" suffix="">430</Price>
+						<Price currency="GBP" type="rrp" validGroup="all" suffix="" />
+					</Prices>
+					<ShippingWeight unit="" />
+					<Stock />
+					<Images>
+						<img src="/images/assets/uploaded/MG-A-8-3501.jpg" width="" height="" alt="Classic Car Hire in Weybridge Surrey" class="thumbnail" />
+						<img src="/images/assets/uploaded/MG-A-8-3501.jpg" width="" height="" alt="Classic Car Hire in Weybridge Surrey" class="display" />
+						<img src="/images/assets/uploaded/MG-A-8-3501.jpg" width="" height="" alt="Classic Car Hire in Weybridge Surrey" class="detail" />
+						<img src="/images" width="" height="" alt="" class="voucher" />
+						<img src="" width="" height="" alt="" class="voucher2023" />
+					</Images>
+					<ShowBanner />
+					<ShortDescription>
+						<p>Surrey roadtrips driving the classic car of your choice around stunning countryside with passengers welcome to join you.</p>
+					</ShortDescription>
+					<Summary>
+						<ul>
+							<li>Classic car hire packages in Surrey</li>
+							<li>An eclectic fleet of cars to choose from</li>
+							<li>Spend 9 hours driving on public roads</li>
+							<li>You can invite passengers to fill the seats!</li>
+						</ul>
+					</Summary>
+					<Body order="2">
+						<p>
+							<span style="font-weight: 400;">Book yourself in for a day of retro motoring with these classic car hire packages in Surrey! Take your pick from a fleet of classic cars that reside in Weybridge, to then explore the wonderful Surrey countryside. This is what going out for a drive was always meant to be like!</span>
+						</p>
+						<p>
+							<span style="font-weight: 400;">What we love about this particular collection of cars is that it is pretty eclectic. We think it epitomises classic in the true sense of the word. That's to say, desirable, rare, iconic and even revolutionary in its own way. </span>
+						</p>
+						<p>
+							<span style="font-weight: 400;">We are offering you four different price bands of vintage cars for you. Indeed, not all of these cars for hire in Weybridge are high-powered fancy sports cars, but every one is utterly appealing and you will absolutely love driving them around Surrey on the open roads.</span>
+						</p>
+						<p>
+							<span style="font-weight: 400;">If truth be told, we think the lowest price band is where the cutest cars feature. Of course, moving up to category B definitely moves you up a gear in the vintage car stakes, as does the category C car group. Car choice group D is for serious head-turners, with the most desirable Aston and Jags featuring, as well as the beautiful Porsche 911T.</span>
+						</p>
+						<p>
+							<span style="font-weight: 400;">As for where to go during your nine-hour self-drive hire? Well, in Surrey you've got yourself a wonderful county to explore. There's everything from vineyards, gastro pubs and award winning restaurants, to motor museums, country clubs and castles. There are many stunning villages and winding roads to discover within your hire period too.</span>
+						</p>
+						<p>
+							<span style="font-weight: 400;">And don't forget, these Surrey classic car hire packages are self-drive for one driver, but you are welcome to fill all available passenger seats. If it's a two seater sporty little number there's only room for one ride-along buddy, but if there are four seats it can be a veritable family excursion around Surrey!</span>
+						</p>
+					</Body>
+					<WhatsIncluded order="1">
+						<div>
+							<ul>
+								<li>Full day (9 hours) self-drive classic car experience</li>
+								<li>Brief classic car lesson lasting around 20-30 minutes with one of the classic car team to familiarise yourself with the vehicle, learn the controls and pick up driving tips</li>
+								<li>Explore the surrounding countryside for the remainder of the time in your chosen vehicle</li>
+								<li>Drives can be enjoyed with family and friends (depending on the number of seats of your chosen car)</li>
+								<li>100 miles allowance, fully comprehensive insurance for one driver and full RAC break down cover is included</li>
+								<li>Your choice of car from the following options (cars are subject to availability)</li>
+								<li>Complimentary premium gift packaging from Into The Blue</li>
+							</ul>
+							<strong>Car Choice A</strong>
+						</div>
+						<div>
+							<ul>
+								<li>Morris Minor Convertible</li>
+								<li>Morris Million</li>
+								<li>MG B Roadster: An Early 1967 convertible</li>
+							</ul>
+							<strong>Car Choice B</strong>
+						</div>
+						<div>
+							<ul>
+								<li>Land Rover Series 2</li>
+								<li>MG A Roadster</li>
+								<li>Porsche 356 S Pilgrim</li>
+								<li>Alfa Romeo Spider 2000</li>
+							</ul>
+							<strong>Car Choice C</strong>
+							<br />
+							<ul>
+								<li>Aston Martin DB7</li>
+								<li>Jaguar E-Type 2+2</li>
+								<li>Rolls Royce Corniche</li>
+								<li>Rolls Royce Silver Cloud 3</li>
+								<li>Austin Healey 3000</li>
+								<li>Ford Mustang Convertible</li>
+							</ul>
+							<strong>Car Choice D</strong>
+							<ul>
+								<li>Jaguar XK150</li>
+								<li>Jaguar E-Type</li>
+								<li>Aston Martin V8</li>
+								<li>Mercedes 190 SL</li>
+								<li>Porsche 911 T</li>
+							</ul>
+						</div>
+					</WhatsIncluded>
+					<WhenAvailable order="3">
+						<ul>
+							<li>Weekdays and weekends throughout the year</li>
+							<li>Hire is from 9-6pm </li>
+							<li>All dates are subject to availability of your chosen vehicle</li>
+							<li>
+								<span>The car can be driven in the rain, but severe weather conditions may make it not suitable or safe to take the car out. This is at the discretion of the hire team on the day</span>
+							</li>
+						</ul>
+					</WhenAvailable>
+					<LocationMap order="4" lat="0" long="0" shortDescription="Weybridge, Surrey">
+						<ul>
+							<li>Weybridge, Surrey</li>
+						</ul>
+					</LocationMap>
+					<Suitable order="5">
+						<ul>
+							<li>Drivers must hold a full and clean UK or EU driving licence with less than 6 points</li>
+							<li>Drivers must be aged between 25 and 75</li>
+							<li>Drivers must have had their licence for a minimum of 3 years</li>
+						</ul>
+					</Suitable>
+					<Spectators order="6">
+						<ul>
+							<li>Passengers are welcome if there is space in your chosen vehicle</li>
+						</ul>
+					</Spectators>
+					<AnythingElse order="7">
+						<ul>
+							<li>A pre-authorised Credit Card Security Deposit of £1500 will need to provided to cover any fines incurred during the hire of the vehicle</li>
+							<li>You must produce your driving licence on the day along with two other types of identification which must be a utility bill and official letter both addressed to you and be under your current address and dated within three months from the date of hire</li>
+							<li>It is possible for three other drivers to be insured to drive the vehicle for a supplement of £40 per person payable direct, providing they meet the insurance requirements</li>
+							<li>You must return the vehicle with the same amount of fuel that you started with</li>
+						</ul>
+					</AnythingElse>
+					<Menu order="8" />
+					<SpecificationDocument />
+					<Keywords />
+					<KeywordsSearch />
+					<NotSearch />
+					<Classification />
+					<SuitableAges>18</SuitableAges>
+					<Sticker color="" />
+					<Canonical />
+					<SearchAlt />
+					<SearchTitle />
+					<SearchContent />
+					<SearchLinkText />
+					<Sticker color="None" />
+					<Restrictions minAge="25" maxAge="75" minWeight="0" maxWeight="200" minHeight="0" minGroupSize="1" maxGroupSize="1" maxHeight="250" />
+				</Content>
+			</ParentProduct>
+		</productDetail>
+		<nItemOptGrpIdx>0</nItemOptGrpIdx>
+		<nItemOptIdx>0</nItemOptIdx>
+		<nParentId>0</nParentId>
+		<contentType>SKU</contentType>
+		<ProductStatus>1</ProductStatus>
+		<nShippingGroup />
+		<nshippingType />
+		<Item id="2511379" contentId="0" ref="0" url="" unit="0" price="0.0000" taxRate="0" quantity="1" shippingLevel="-1" discount="0.0000" parId="4954">
+			<Name>Standard</Name>
+			<productDetail />
+			<nItemOptGrpIdx>0</nItemOptGrpIdx>
+			<nItemOptIdx>0</nItemOptIdx>
+			<nParentId>2511378</nParentId>
+			<nShippingGroup />
+			<nshippingType />
+		</Item>
+	</Item>
+	<Shipping>
+		<Name>First Class (Royal Mail)</Name>
+		<Carrier />
+		<DeliveryTime>Immediate</DeliveryTime>
+	</Shipping>
+</Order>

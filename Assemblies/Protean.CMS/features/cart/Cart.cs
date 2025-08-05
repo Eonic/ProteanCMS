@@ -11273,7 +11273,7 @@ namespace Protean
 
             }
 
-            private string updatePackagingForFreeGiftDiscount(string nCartItemKey, decimal AmountToDiscount)
+            public string updatePackagingForFreeGiftDiscount(string nCartItemKey, decimal AmountToDiscount)
             {
                 try
                 {

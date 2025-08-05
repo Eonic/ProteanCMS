@@ -1,1 +1,142 @@
-﻿<?xml version="1.0" encoding="utf-8" ?> 
+﻿<?xml version="1.0"?>
+
+<Discounts>
+
+
+	<Discount>
+
+		<nDiscountKey>29236</nDiscountKey>
+
+		<cDiscountName>ITBTEST</cDiscountName>
+
+		<cDiscountCode>ITBTEST</cDiscountCode>
+
+		<bDiscountIsPercent>0</bDiscountIsPercent>
+
+		<nDiscountValue>10 </nDiscountValue>
+
+		<nDiscountMinPrice>50</nDiscountMinPrice>
+
+		<nDiscountMinQuantity>1</nDiscountMinQuantity>
+
+		<nDiscountCat>1</nDiscountCat>
+
+		<cAdditionalXML>
+			<cDescription />
+			<cTerms />
+			<Images>0 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E) at TidyManaged.Interop.PInvoke.tidyCreate()at TidyManaged.Document.FromString(String htmlString)at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 14640 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E) at TidyManaged.Interop.PInvoke.tidyCreate()at TidyManaged.Document.FromString(String htmlString)at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 14640 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E) at TidyManaged.Interop.PInvoke.tidyCreate()at TidyManaged.Document.FromString(String htmlString)at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 1464</Images>
+			<bFreeGiftBox></bFreeGiftBox>
+			<bApplyToOrder></bApplyToOrder>
+			<cFreeShippingMethods></cFreeShippingMethods>
+			<nMinimumOrderValue>50</nMinimumOrderValue>
+			<nMaximumOrderValue>100</nMaximumOrderValue>
+			<nDiscountMaxPrice>100</nDiscountMaxPrice>
+		</cAdditionalXML>
+
+		<nAuditId>6508895</nAuditId>
+
+		<nContentId>76842</nContentId>
+
+		<nDiscountCodeType>1</nDiscountCodeType>
+
+		<cDiscountUserCode>ITBTEST</cDiscountUserCode>
+
+		<nCartItemKey>2511380</nCartItemKey>
+
+	</Discount>
+
+
+	<Discount>
+
+		<nDiscountKey>29237</nDiscountKey>
+
+		<nDiscountForeignRef/>
+
+		<cDiscountName>ITBTEST</cDiscountName>
+
+		<cDiscountCode>ITBTEST</cDiscountCode>
+
+		<bDiscountIsPercent>0</bDiscountIsPercent>
+
+		<nDiscountCompoundBehaviour>0</nDiscountCompoundBehaviour>
+
+		<nDiscountValue>20 </nDiscountValue>
+
+		<nDiscountMinPrice>100</nDiscountMinPrice>
+
+		<nDiscountMinQuantity>1</nDiscountMinQuantity>
+
+		<nDiscountCat>1</nDiscountCat>
+
+		<cAdditionalXML>
+			<cDescription />
+			<cTerms />
+			<Images>0 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E) at TidyManaged.Interop.PInvoke.tidyCreate()at TidyManaged.Document.FromString(String htmlString)at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 14640 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E) at TidyManaged.Interop.PInvoke.tidyCreate()at TidyManaged.Document.FromString(String htmlString)at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 14640 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E) at TidyManaged.Interop.PInvoke.tidyCreate()at TidyManaged.Document.FromString(String htmlString)at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 1464</Images>
+			<bFreeGiftBox></bFreeGiftBox>
+			<bApplyToOrder>True</bApplyToOrder>
+			<cFreeShippingMethods></cFreeShippingMethods>
+			<nMinimumOrderValue>100</nMinimumOrderValue>
+			<nMaximumOrderValue>199</nMaximumOrderValue>
+			<nDiscountMaxPrice>199</nDiscountMaxPrice>
+		</cAdditionalXML>
+
+		<nAuditId>6508898</nAuditId>
+
+		<nContentId>76842</nContentId>
+
+		<nDiscountCodeType>1</nDiscountCodeType>
+
+		<cDiscountUserCode>ITBTEST</cDiscountUserCode>
+
+		<nCartItemKey>2511380</nCartItemKey>
+
+	</Discount>
+
+
+	<Discount>
+
+		<nDiscountKey>29238</nDiscountKey>
+
+		<nDiscountForeignRef/>
+
+		<cDiscountName>ITBTEST</cDiscountName>
+
+		<cDiscountCode>ITBTEST</cDiscountCode>
+
+		<bDiscountIsPercent>0</bDiscountIsPercent>
+
+		<nDiscountCompoundBehaviour>0</nDiscountCompoundBehaviour>
+
+		<nDiscountValue>30 </nDiscountValue>
+
+		<nDiscountMinPrice>200</nDiscountMinPrice>
+
+		<nDiscountMinQuantity>1</nDiscountMinQuantity>
+
+		<nDiscountCat>1</nDiscountCat>
+
+		<cAdditionalXML>
+			<cDescription />
+			<cTerms />
+			<Images>0 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E) at TidyManaged.Interop.PInvoke.tidyCreate()at TidyManaged.Document.FromString(String htmlString)at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 14640 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E) at TidyManaged.Interop.PInvoke.tidyCreate()at TidyManaged.Document.FromString(String htmlString)at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 14640 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E) at TidyManaged.Interop.PInvoke.tidyCreate()at TidyManaged.Document.FromString(String htmlString)at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 1464</Images>
+			<bFreeGiftBox></bFreeGiftBox>
+			<bApplyToOrder></bApplyToOrder>
+			<cFreeShippingMethods></cFreeShippingMethods>
+			<nMinimumOrderValue>200</nMinimumOrderValue>
+			<nMaximumOrderValue>500</nMaximumOrderValue>
+			<nDiscountMaxPrice>500</nDiscountMaxPrice>
+		</cAdditionalXML>
+
+		<nAuditId>6508901</nAuditId>
+
+		<nContentId>76842</nContentId>
+
+		<nDiscountCodeType>1</nDiscountCodeType>
+
+		<cDiscountUserCode>ITBTEST</cDiscountUserCode>
+
+		<nCartItemKey>2511380</nCartItemKey>
+
+	</Discount>
+
+</Discounts>
