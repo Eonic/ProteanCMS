@@ -247,7 +247,7 @@
 									</xsl:attribute>
                   <xsl:choose>
                     <xsl:when test="$linked='true'">
-                      <xsl:apply-templates select="." mode="getDisplayName"/>
+						<xsl:apply-templates select="." mode="getDisplayName"/>
                     </xsl:when>
                     <xsl:otherwise>
                       <xsl:apply-templates select="." mode="menuLink"/>

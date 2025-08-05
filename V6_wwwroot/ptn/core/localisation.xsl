@@ -3802,6 +3802,10 @@
     </xsl:choose>
   </xsl:template>
 
+	<xsl:template match="span[@class='term4052']" mode="term">
+		<xsl:call-template name="term4052" />
+	</xsl:template>
+	
   <xsl:template name="term4052">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">

@@ -13,7 +13,7 @@
       <tr>
         <td colspan="2">
           <font face="verdana" size="2">
-            Dear <xsl:value-of select="FirstName/node()"/>&#160;<xsl:value-of select="LastName/node()"/>,
+            Dear <xsl:value-of select="User/FirstName/node()"/>&#160;<xsl:value-of select="User/LastName/node()"/>,
           </font>
         </td>
       </tr>
@@ -33,7 +33,7 @@
 			</th>
 			<td>
 				<font face="verdana" size="2">
-					<xsl:value-of select="Email/node()"/>
+					<xsl:value-of select="User/Email/node()"/>
 				</font>
 			</td>
 		</tr>
@@ -43,11 +43,11 @@
         </th>
         <td>
           <font face="verdana" size="2">
-            <xsl:value-of select="FirstName/node()"/>&#160;<xsl:value-of select="LastName/node()"/>
+            <xsl:value-of select="User/FirstName/node()"/>&#160;<xsl:value-of select="LastName/node()"/>
           </font>
         </td>
       </tr>
-		<xsl:if test="ActivationKey/node()!=''">
+		<xsl:if test="User/ActivationKey/node()!=''">
 		<tr>
 			<td colspan="2" align="center">
 				<table cellspacing="0" cellpadding="0">
@@ -55,11 +55,11 @@
 						<td class="button" bgcolor="{$mainColour}">
 							<xsl:variable name="secureLink">
 								<xsl:value-of select="$siteURL"/>
-								<xsl:value-of select="@Url"/>
+								<xsl:value-of select="User/@Url"/>
 								<xsl:text>?ewCmd=</xsl:text>
-								<xsl:value-of select="@activateCmd"/>
+								<xsl:value-of select="User/@activateCmd"/>
 								<xsl:text>&amp;key=</xsl:text>
-								<xsl:value-of select="ActivationKey/node()"/>
+								<xsl:value-of select="User/ActivationKey/node()"/>
 							</xsl:variable>
 							<a href="{$secureLink}" title="Activate Account">Click to Activate Account</a>
 						</td>

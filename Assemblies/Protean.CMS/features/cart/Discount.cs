@@ -128,7 +128,7 @@ namespace Protean
                             mcUnitModOrder = moCartConfig["UnitModOrder"];
                         }
 
-                        mcModuleName = "Eonic.Discount";
+                        mcModuleName = "Protean.Discount";
                         myWeb.PerfMon.Log("Discount", "New-End");
                     }
 
