@@ -12093,11 +12093,13 @@ namespace Protean
                                     string keyList = string.Join(",", optOutKeys);
                                     string updateSql = "UPDATE tblOptOutAddresses SET dGDPROptOut =" + Tools.Database.SqlDate(DateTime.Now) + ",optout_reason='GDPR Opt Out request',nStatus='1'  WHERE nOptOutKey IN (" + keyList + ")";
                                     moDBHelper.ExeProcessSql(updateSql);
+                                    result += " update in tblOptOutAddresses.";
                                 }
                                 else
                                 {
                                     string cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,optout_reason,nStatus,dOptOut,dGDPROptOut) VALUES ('" + cEmailAddress + "','GDPR Opt Out request','1'," + Tools.Database.SqlDate(DateTime.Now) + "," + Tools.Database.SqlDate(DateTime.Now) + ")";
                                     moDBHelper.ExeProcessSql(cSQL);
+                                    result += " added GDPR in tblOptOutAddresses.";
                                 }
                                 //if (oDSOptOut.Tables["Item"].Rows.Count > 0)
                                 //{
