@@ -1,21 +1,31 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Protean;
-using Protean.Providers.DiscountRule;
 using System;
 using System.IO;
+using System.Runtime.Remoting.Channels;
 using System.Xml;
+using Protean.Providers.DiscountRule;
+using System.Web;
 using static Protean.Cms;
+using static Protean.Cms.Cart;
+
 
 namespace ProteanCMS.UnitTests
 {
     [TestClass]
-    public class Discounts
-    {        
+    public class discounts
+    {
+        //public HttpContext moCtx = HttpContext.Current;
+        public Cart.Discount moDiscount;
+        public Protean.Cms myWeb;
         XmlDocument RunDiscountTest(string TestPath)
-        {           
+        {
+            Protean.Cms myWeb = new Protean.Cms();
+            Cart myCart = new Cart(ref myWeb);
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;            
+            string projectRoot = Path.GetFullPath(Path.Combine(baseDir, @"..\..\"));
 
-            string discountXmlPath = TestPath + "discounts.xml";
-            string cartXmlPath = TestPath + "cart.xml";
+            string discountXmlPath = Path.Combine(projectRoot, TestPath, "discounts.xml"); 
+            string cartXmlPath = Path.Combine(projectRoot, TestPath, "cart.xml"); ;
 
             // Load test XMLs
             XmlDocument xDiscounts = new XmlDocument();
@@ -30,27 +40,33 @@ namespace ProteanCMS.UnitTests
             string appliedCode = "";
 
             // Create Cms object and call CheckDiscounts
-            var cms = new Protean.Cms();
-            var discountModule = new Protean.Cms.Cart.Discount(ref cms);
-            XmlElement result = discountModule.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode);
+           
+            moDiscount= new Protean.Cms.Cart.Discount(ref myWeb);
+            XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode);
 
             // Set result in XmlDocument to return
-            XmlDocument updatedDoc = new XmlDocument();
-            updatedDoc.LoadXml(result.OuterXml);
+            XmlDocument updatedCartDoc = new XmlDocument();
+            updatedCartDoc.LoadXml(result.OuterXml);
 
-            return updatedDoc;
+            return updatedCartDoc;
         }
        
        
         [TestMethod]
         public void TenPercentDiscount()
         {
-            
-            XmlDocument xCart = RunDiscountTest("basic-discount/TenPercentDiscount");
+            bool mbRoundUp = true;
+            // Get updated cart with discount applied
+            XmlDocument oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/TenPercentDiscount/");
+            XmlElement ofinalCartXML = oCartXML.DocumentElement;
+            Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
+            IdiscountRuleProvider oDisProvider = oDiscRuleProv.Get(ref myWeb);
 
-            //here I am getting the discount line from the cart XML
-            XmlNode discountLine = xCart.SelectSingleNode("//DiscountPriceLine[@type='percent']");
-         
+            //decimal nTotalSaved = Discount_ApplyToCart(ref oCartXML, oXmlDiscounts);
+            decimal nTotalSaved = oDisProvider.FinalApplyToCart(ref ofinalCartXML, ref myWeb, mbRoundUp);
+           
+             Assert.AreEqual(11, Math.Round(nTotalSaved, 2));
+
             //   XmlDocument oUserInstance = new XmlDocument();
 
             //      here we need to get the instance from the Xform for the website and populate the default values.

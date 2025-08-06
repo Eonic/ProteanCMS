@@ -250,24 +250,7 @@ namespace Protean.Providers
                                     foreach (XmlElement oItemLoop in oDiscountXML.SelectNodes("/Order/Item"))
                                     {
                                         oPriceElmt = (XmlElement)oItemLoop.SelectSingleNode("DiscountPrice");
-                                        if (oPriceElmt is null)
-                                        {
-                                            // NB 16/02/2010
-                                            // Time to pull price out so we can round it, to avoid the multiple decimal place issues
-                                            decimal nPrice;
-                                            nPrice = Round(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
-                                            oPriceElmt = oDiscountXML.CreateElement("Item/DiscountPrice");
-                                            oPriceElmt.SetAttribute("OriginalUnitPrice", nPrice.ToString());
-                                            // oPriceElmt.SetAttribute("OriginalUnitPrice", oItemLoop.GetAttribute("price"))
-                                            oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString());
-                                            // oPriceElmt.SetAttribute("UnitPrice", oItemLoop.GetAttribute("price"))
-                                            oPriceElmt.SetAttribute("Units", oItemLoop.GetAttribute("quantity"));
-                                            oPriceElmt.SetAttribute("Total", ((double)nPrice * Conversions.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
-                                            // oPriceElmt.SetAttribute("Total", oItemLoop.GetAttribute("price") * oItemLoop.GetAttribute("quantity"))
-                                            oPriceElmt.SetAttribute("UnitSaving", 0.ToString());
-                                            oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
-                                            oItemLoop.AppendChild(oPriceElmt);
-                                        }
+                                        
                                         foreach (XmlElement oDiscountLoop1 in oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=1 and @nDiscountCat=1]"))
                                         {
                                             decimal nNewPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));

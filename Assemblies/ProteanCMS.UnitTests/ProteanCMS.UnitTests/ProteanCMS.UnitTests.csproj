@@ -66,6 +66,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -79,15 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Protean.CMS\Protean.CMS.csproj">
-      <Project>{b8c13866-2804-4975-83a4-4f76296248f5}</Project>
+      <Project>{B8C13866-2804-4975-83A4-4F76296248F5}</Project>
       <Name>Protean.CMS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Protean.Tools\Protean.Tools.csproj">
-      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
-      <Name>Protean.Tools</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="providers\discounts\test-data\basic-discount\TenPercentDiscount\cart.xml" />
     <Content Include="providers\discounts\test-data\basic-discount\TenPercentDiscount\discounts.xml" />
