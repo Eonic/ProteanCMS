@@ -39,6 +39,11 @@
             Specifies that the method should be handled by an event remover.
             </summary>
         </member>
+        <member name="F:AngleSharp.Attributes.Accessors.Method">
+            <summary>
+            Specifies that the getter only property should be handled by a method.
+            </summary>
+        </member>
         <member name="T:AngleSharp.Attributes.DomAccessorAttribute">
             <summary>
             This attribute decorates official DOM objects as specified by the W3C.
@@ -950,6 +955,13 @@
             documents.
             </summary>
         </member>
+        <member name="P:AngleSharp.BrowsingContext.IsFrame">
+             <summary>
+             Determines if the current context is for a frame rather than
+             a window. Useful for properly determining the proper target
+             for `_top` and `_parent`.
+            </summary>
+        </member>
         <member name="P:AngleSharp.BrowsingContext.SessionHistory">
             <summary>
             Gets the session history of the given browsing context, if any.
@@ -980,6 +992,15 @@
             </summary>
             <param name="name">The name of the child context, if any.</param>
             <param name="security">The security flags to apply.</param>
+            <returns></returns>
+        </member>
+        <member name="M:AngleSharp.BrowsingContext.CreateChild(System.String,AngleSharp.Browser.Sandboxes,System.Boolean)">
+            <summary>
+            Creates a new named browsing context as child of the given parent.
+            </summary>
+            <param name="name">The name of the child context, if any.</param>
+            <param name="security">The security flags to apply.</param>
+            <param name="isFrameContext">Whether the child context is for a frame.</param>
             <returns></returns>
         </member>
         <member name="M:AngleSharp.BrowsingContext.FindChild(System.String)">
@@ -14103,6 +14124,42 @@
             <summary>
             Loading is complete.
             </summary>
+        </member>
+        <member name="T:AngleSharp.Dom.DomElementExtensions">
+            <summary>
+            Element extensions exposed to DOM.
+            </summary>
+        </member>
+        <member name="M:AngleSharp.Dom.DomElementExtensions.GetAttributeNode(AngleSharp.Dom.IElement,System.String)">
+            <summary>
+            Returns the named attribute on the specified element.
+            </summary>
+            <param name="element">
+            Current element
+            </param>
+            <param name="name">
+            The name of the attribute you want to get.
+            </param>
+            <returns>
+            Named attribute or null if it doesn't exist.
+            </returns>
+        </member>
+        <member name="M:AngleSharp.Dom.DomElementExtensions.GetAttributeNode(AngleSharp.Dom.IElement,System.String,System.String)">
+            <summary>
+            Returns the named attribute on the specified element.
+            </summary>
+            <param name="element">
+            Current element
+            </param>
+            <param name="namespaceUri">
+            A string specifying the namespace of the attribute.
+            </param>
+            <param name="localName">
+            The name of the attribute you want to get.
+            </param>
+            <returns>
+            Named attribute or null if it doesn't exist.
+            </returns>
         </member>
         <member name="T:AngleSharp.Dom.DomError">
             <summary>
