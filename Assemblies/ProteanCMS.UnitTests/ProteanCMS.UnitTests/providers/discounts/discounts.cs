@@ -15,12 +15,9 @@ namespace ProteanCMS.UnitTests
     public class discounts
     {
         //public HttpContext moCtx = HttpContext.Current;
-        public Cart.Discount moDiscount;
-        public Protean.Cms myWeb;
+        public Cart.Discount moDiscount;        
         XmlDocument RunDiscountTest(string TestPath)
-        {
-            Protean.Cms myWeb = new Protean.Cms();
-            Cart myCart = new Cart(ref myWeb);
+        {           
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;            
             string projectRoot = Path.GetFullPath(Path.Combine(baseDir, @"..\..\"));
 
@@ -41,7 +38,7 @@ namespace ProteanCMS.UnitTests
 
             // Create Cms object and call CheckDiscounts
            
-            moDiscount= new Protean.Cms.Cart.Discount(ref myWeb);
+            moDiscount= new Protean.Cms.Cart.Discount();
             XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode);
 
             // Set result in XmlDocument to return
@@ -54,57 +51,31 @@ namespace ProteanCMS.UnitTests
        
         [TestMethod]
         public void TenPercentDiscount()
-        {
-            bool mbRoundUp = true;
+        {            
             // Get updated cart with discount applied
             XmlDocument oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/TenPercentDiscount/");
-            XmlElement ofinalCartXML = oCartXML.DocumentElement;
-            Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
-            IdiscountRuleProvider oDisProvider = oDiscRuleProv.Get(ref myWeb);
+            XmlNode discountPriceLineNode = oCartXML.SelectSingleNode("//DiscountPriceLine");
+            string totalSaving = discountPriceLineNode.Attributes["TotalSaving"]?.Value;
+            string unitPrice = discountPriceLineNode.Attributes["UnitPrice"]?.Value;
+            string priceOrder = discountPriceLineNode.Attributes["PriceOrder"]?.Value;
+            if (discountPriceLineNode != null && discountPriceLineNode.Attributes["Total"] != null)
+            {
+                string totalStr = discountPriceLineNode.Attributes["Total"].Value;
 
-            //decimal nTotalSaved = Discount_ApplyToCart(ref oCartXML, oXmlDiscounts);
-            decimal nTotalSaved = oDisProvider.FinalApplyToCart(ref ofinalCartXML, ref myWeb, mbRoundUp);
-           
-             Assert.AreEqual(11, Math.Round(nTotalSaved, 2));
-
-            //   XmlDocument oUserInstance = new XmlDocument();
-
-            //      here we need to get the instance from the Xform for the website and populate the default values.
-
-            //   ptnCMS.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Directory, oUserInstance.DocumentElement);
-
-            // force pass
-            Assert.IsTrue(true);
-
-        }
-
-        
-        //[TestMethod]
-        //public void Get_Supplier_Amount_VAT_TO_BE_Charged_When_ZeroRatedAmount_Is_Not_Passed()
-        //{
-        //    VatModels vatModels = new VatModels();
-        //    vatModels.AmountZeroRated = 0;
-        //    vatModels.SKUPrice = 20;
-        //    vatModels.VatRate = 20;
-        //    vatModels.AmountToBeVATCharged = vatSVC.getAmountToBeVATCharged(vatModels);
-        //    Assert.AreEqual(16.67, Math.Round(vatModels.AmountToBeVATCharged, 2));
-        //}
-
-        [TestMethod]
-        public void CreateCompany()
-        {
-
-         //   Protean.Cms ptnCMS = new Protean.Cms();
-
-         //   XmlDocument oCompanyInstance = new XmlDocument();
-
-            // here we need to get the instance from the Xform for the website and populate the default values.
-
-        //    ptnCMS.moDbHelper.setObjectInstance(Protean.Cms.dbHelper.objectTypes.Directory, oCompanyInstance.DocumentElement);
-
-            // force pass
-            Assert.IsTrue(true);
-
+                if (decimal.TryParse(totalStr, out decimal total))
+                {                                    
+                    Assert.AreEqual(249.00m, total);
+                    Assert.IsTrue(true);
+                }
+                else
+                {
+                    Assert.Fail("Failed to parse Total attribute as decimal.");
+                }
+            }
+            else
+            {
+                Assert.Fail("DiscountPriceLine node or Total attribute not found.");
+            }  
         }
     }
 }

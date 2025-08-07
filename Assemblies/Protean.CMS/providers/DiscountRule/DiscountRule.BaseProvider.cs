@@ -41,14 +41,14 @@ namespace Protean.Providers
     {
         public interface IdiscountRuleProvider
         {
-            IdiscountRuleProvider Initiate(Cms myWeb, NameValueCollection config);
+            IdiscountRuleProvider Initiate(NameValueCollection config);
 
             bool CheckDiscountApplicable(XmlNode discountNode, ref XmlElement oCartXml, out int ProviderType);
 
-            void UpdateCartXMLwithDiscounts(XmlNode discountNode, ref XmlElement oCartXML, ref Cms myWeb);
+            void UpdateCartXMLwithDiscounts(XmlNode discountNode, ref XmlElement oCartXML);
             //long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response); // returns userid
 
-            void ApplyDiscount(ref XmlElement oCartXML, ref int nPriceCount, ref Cms myWeb, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers);
+            void ApplyDiscount(ref XmlElement oCartXML, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag);
             decimal FinalApplyToCart(ref XmlElement oCartXML, ref Cms myWeb, bool mbRoundUp);
         }
 
@@ -56,8 +56,9 @@ namespace Protean.Providers
         {
             private const string mcModuleName = "Protean.Providers.Authentication.GetProvider";
 
-            public IdiscountRuleProvider Get(ref Cms myWeb, int? ProviderType = null)
+            public IdiscountRuleProvider Get(int? ProviderType = null)
             {
+                string ExceptionMessage = "";
                 try
                 {
                     string className = ProviderType.HasValue
@@ -77,11 +78,12 @@ namespace Protean.Providers
                         BindingFlags.InvokeMethod,
                         null,
                         instance,
-                        new object[] { myWeb, null }  // config is null
+                        new object[] { null }  // config is null
                     );
                 }
-                catch
+                catch (Exception ex)
                 {
+                    stdTools.returnException(ref ExceptionMessage, "", "Get", ex, "", "", gbDebug);
                     return null;
                 }
             }
@@ -109,14 +111,13 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            public IdiscountRuleProvider Initiate(Cms myWeb, NameValueCollection config)
-            {
-                _myWeb = myWeb;
+            public IdiscountRuleProvider Initiate(NameValueCollection config)
+            {               
                 _Config = config;
                 return this;
             }
 
-            public void UpdateCartXMLwithDiscounts(XmlNode discountNode, ref XmlElement oCartXML, ref Cms myWeb)
+            public void UpdateCartXMLwithDiscounts(XmlNode discountNode, ref XmlElement oCartXML)
             {
                 XmlElement discountEl = (XmlElement)discountNode;
 
@@ -260,7 +261,10 @@ namespace Protean.Providers
                     {
                         return false;
                     }
-                    validateAddedDiscount = true;
+                    else
+                    {
+                        validateAddedDiscount = true;
+                    }                      
                     return validateAddedDiscount;
                 }
                 catch (Exception ex)
@@ -270,7 +274,7 @@ namespace Protean.Providers
                 }
             }
 
-            public void ApplyDiscount(ref XmlElement oCartXML, ref int nPriceCount, ref Cms myWeb, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers)
+            public void ApplyDiscount(ref XmlElement oCartXML, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {
                 throw new NotImplementedException("This method should be overridden in derived classes.");
             }
@@ -293,7 +297,7 @@ namespace Protean.Providers
                     var nLineTotalSaving = default(decimal);
                     XmlDocument oDiscountXml = new XmlDocument();
                     oDiscountXml.AppendChild(oDiscountXml.ImportNode(oCartXML, true));
-                    foreach (XmlElement oItemElmt in oCartXML.SelectNodes("/Order/Item"))
+                    foreach (XmlElement oItemElmt in oCartXML.SelectNodes("Item"))
                     {
                         int nId = Conversions.ToInteger(oItemElmt.GetAttribute("id"));
                         oPriceElmt = (XmlElement)oDiscountXml.SelectSingleNode("Order/Item[@id=" + nId + "]/DiscountPrice");

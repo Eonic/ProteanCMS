@@ -46,25 +46,31 @@ namespace Protean.Providers
             }
 
 
-            public IdiscountRuleProvider Initiate(ref Cms myWeb)
+            public new IdiscountRuleProvider Initiate(NameValueCollection config)
             {
                 return this;
             }
 
-            public new void ApplyDiscount(ref XmlElement oCartXML, ref int nPriceCount, ref Cms myWeb, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers)
+            public new void ApplyDiscount(ref XmlElement oCartXML, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {
-                myWeb.PerfMon.Log("Discount", "ApplyDiscount");
+                //myWeb.PerfMon.Log("Discount", "ApplyDiscount");
                 XmlElement oDiscountLoop;
                 XmlElement oPriceElmt;
                 bool bApplyOnTotal = false;
                 double RemainingAmountToDiscount = 0d;
-                int nPromocodeApplyFlag = 0;
+                //int nPromocodeApplyFlag = 0;
+                string exceptionMessage = string.Empty;
 
                 try
                 {
                     decimal AmountToDiscount = default;
                     XmlDocument oDiscountXML = new XmlDocument();
-                    oDiscountXML.AppendChild(oDiscountXML.ImportNode(oCartXML, true));
+                    // Optional: add XML declaration
+                    XmlDeclaration xmlDecl = oDiscountXML.CreateXmlDeclaration("1.0", "UTF-8", null);
+                    oDiscountXML.AppendChild(xmlDecl);
+                    // oCartXML is the <Order> node
+                    XmlNode importedOrder = oDiscountXML.ImportNode(oCartXML, true);
+                    oDiscountXML.AppendChild(importedOrder);
                     int nCount;
                     var loopTo1 = Information.UBound(cPriceModifiers);
                     for (nCount = 0; nCount <= loopTo1; nCount++)
@@ -103,7 +109,6 @@ namespace Protean.Providers
                                         {
                                             oDiscountLoop = currentODiscountLoop;
                                             // now work out new unit prices etc
-
                                             decimal nNewPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
                                             AmountToDiscount = Conversions.ToDecimal(oDiscountLoop.GetAttribute("nDiscountValue"));
                                             if (!string.IsNullOrEmpty(oDiscountLoop.GetAttribute("nDiscountRemaining")))
@@ -114,7 +119,6 @@ namespace Protean.Providers
 
                                             if (nNewPrice > 0m & bApplyOnTotal == false) // only apply it if its not gonna go below 0
                                             {
-
                                                 var oPriceLine = oDiscountXML.CreateElement("DiscountPriceLine");
                                                 // this works the price out for this discount based on previous stuff
                                                 nPriceCount += 1;
@@ -134,11 +138,7 @@ namespace Protean.Providers
                                                 // we will always apply these
                                                 oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                                                 foreach (XmlElement oDiscountElmt in oDiscountXML.SelectNodes("/Order/Item/Discount[@nDiscountKey=" + oDiscountLoop.GetAttribute("nDiscountKey") + "]"))
-                                                {
-                                                    // set shipping option after applied promocode
-                                                    // If (cFreeShippingMethods <> "") Then
-                                                    // myCart.updateGCgetValidShippingOptionsDS(cFreeShippingMethods)
-                                                    // End If
+                                                {                                                    
                                                     if (oDiscountLoop.SelectSingleNode("bApplyToOrder") != null)
                                                     {
                                                         if (oDiscountLoop.SelectSingleNode("bApplyToOrder").InnerText.ToString() == "True")
@@ -183,9 +183,7 @@ namespace Protean.Providers
                                                 RemainingAmountToDiscount = RemainingAmountToDiscount + Conversions.ToDouble(oPriceLine.GetAttribute("TotalSaving"));
                                                 // set the discount remianing if this rule is available on other products..
                                                 foreach (XmlElement oDiscountElmt in oDiscountXML.SelectNodes("/Order/Item/Discount[@nDiscountKey=" + oDiscountLoop.GetAttribute("nDiscountKey") + "]"))
-                                                {
-                                                    // 'oDiscountElmt.SetAttribute("nDiscountRemaining", oDiscountLoop.GetAttribute("nDiscountValue") - oPriceLine.GetAttribute("TotalSaving"))
-
+                                                {                                                    
                                                     if (oDiscountLoop.SelectSingleNode("bApplyToOrder") != null)
                                                     {
                                                         if (oDiscountLoop.SelectSingleNode("bApplyToOrder").InnerText.ToString() == "True")
@@ -208,40 +206,13 @@ namespace Protean.Providers
                                                 }
                                             }
                                         }
-
-
-                                        // Code for setting default delivery option if discount code option is 'Giftbox'
-
-                                        if (!string.IsNullOrEmpty(strbFreeGiftBox) & oItemLoop.SelectSingleNode("Discount") != null)
-                                        {
-                                            myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes["id"].Value, AmountToDiscount);
-
-                                            if (moConfig["GiftBoxDiscount"] != null & moConfig["GiftBoxDiscount"] == "on")
-                                            {
-                                                string sSql;
-                                                var strSQL = new System.Text.StringBuilder();
-                                                DataSet oDs;
-                                                sSql = "select nShippingMethodId from tblCartOrder where nCartOrderKey=" + myCart.mnCartId;
-                                                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                                                if (moConfig["eShippingMethodId"] != null & moConfig["DefaultShippingMethodId"] != null)
-                                                {
-                                                    if (Operators.ConditionalCompareObjectEqual(oDs.Tables[0].Rows[0]["nShippingMethodId"], moConfig["eShippingMethodId"], false))
-                                                    {
-                                                        myCart.updateGCgetValidShippingOptionsDS(moConfig["DefaultShippingMethodId"]);
-                                                    }
-                                                }
-                                            }
-
-                                        }
-
                                         // Code added for if value basic is Free Shipping then set discount amount=0 and if multiple delivery free shipping selected then 
                                         // chose lowest one price
                                         foreach (XmlElement currentODiscountLoop1 in oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=2 and @nDiscountCat=1 and not(@Applied='1')]"))
                                         {
                                             oDiscountLoop = currentODiscountLoop1;
-                                            Discount_Basic_FreeShipping(ref oDiscountXML, ref nPriceCount, ref strcFreeShippingMethods, ref strbFreeGiftBox, mbRoundUp, ref myCart, ref myWeb);
+                                            Discount_Basic_FreeShipping(ref oDiscountXML, ref nPriceCount, ref strcFreeShippingMethods, ref strbFreeGiftBox, mbRoundUp, ref myCart);
                                         }
-
                                     }
                                     break;
                                 }
@@ -257,7 +228,6 @@ namespace Protean.Providers
                                             nNewPrice = Round((double)nNewPrice * ((100d - Conversions.ToDouble(oDiscountLoop1.GetAttribute("nDiscountValue"))) / 100d), bForceRoundup: mbRoundUp);
 
                                             var oPriceLine = oDiscountXML.CreateElement("DiscountPriceLine");
-
                                             nPriceCount += 1;
                                             oPriceLine.SetAttribute("nDiscountKey", oDiscountLoop1.GetAttribute("nDiscountKey"));
                                             oPriceLine.SetAttribute("PriceOrder", nPriceCount.ToString());
@@ -268,7 +238,6 @@ namespace Protean.Providers
                                             oPriceElmt.AppendChild(oPriceLine);
 
                                             // this works the overall price
-
                                             oPriceElmt.SetAttribute("UnitPrice", nNewPrice.ToString());
                                             oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                                             oPriceElmt.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
@@ -277,12 +246,7 @@ namespace Protean.Providers
                                             oDiscountLoop1.SetAttribute("Applied", 1.ToString());
                                             nPromocodeApplyFlag = 1;
                                         }
-                                    }
-                                    // set shipping option after applying promocode
-                                    if (!string.IsNullOrEmpty(strcFreeShippingMethods) & nPromocodeApplyFlag == 1)
-                                    {
-                                        myCart.updateGCgetValidShippingOptionsDS(strcFreeShippingMethods);
-                                    }
+                                    }                                    
                                     break;
                                 }
                             case "Break_Product":
@@ -433,26 +397,24 @@ namespace Protean.Providers
                         }
                     }
 
-                   
-
-                    // Final cart update
-                    oCartXML.RemoveAll();
-                    foreach (XmlNode child in oDiscountXML.DocumentElement.ChildNodes)
-                    {
-                        XmlNode importedChild = oCartXML.OwnerDocument.ImportNode(child, true);
-                        oCartXML.AppendChild(importedChild);
-                    }
+                    //oCartXML.RemoveAll();
+                    //foreach (XmlNode child in oDiscountXML.DocumentElement.ChildNodes)
+                    //{
+                    //    XmlNode importedChild = oCartXML.OwnerDocument.ImportNode(child, true);
+                    //    oCartXML.AppendChild(importedChild);
+                    //}
+                    oCartXML = (XmlElement)oCartXML.OwnerDocument.ImportNode(oDiscountXML.DocumentElement, true);
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, "", "ApplyDiscount", ex, "", "", gbDebug);
+                    stdTools.returnException(ref exceptionMessage, "", "ApplyDiscount", ex, "", "", gbDebug);
                 }
             }
 
-            private void Discount_Basic_FreeShipping(ref XmlDocument oDiscountXML, ref int nPriceCount, ref string cFreeShippingMethods, [Optional, DefaultParameterValue("")] ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, ref Cms myWeb)
+            private void Discount_Basic_FreeShipping(ref XmlDocument oDiscountXML, ref int nPriceCount, ref string cFreeShippingMethods, [Optional, DefaultParameterValue("")] ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart)
             {
                 // this will work basic monetary discounts
-               
+               string exceptionMessage = string.Empty;
                 XmlElement oPriceElmt;
                 bool bApplyOnTotal = false;
                 double RemainingAmountToDiscount = 0d;
@@ -610,7 +572,7 @@ namespace Protean.Providers
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, "", "FreeShipping", ex, "", "", gbDebug);
+                    stdTools.returnException(ref exceptionMessage, "", "FreeShipping", ex, "", "", gbDebug);
                 }
             }
 
