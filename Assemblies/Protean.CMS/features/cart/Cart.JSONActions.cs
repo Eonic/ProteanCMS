@@ -1298,7 +1298,7 @@ namespace Protean
 
                 }
                 /// <summary>
-                ///Anonymize GDPRD
+                ///Anonymize GDPR
                 /// </summary>
                 /// <param name="myApi"></param>
                 /// <param name="jObj"></param>
