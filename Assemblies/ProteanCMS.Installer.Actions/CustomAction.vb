@@ -9,7 +9,7 @@ Public Class CustomActions
     Public Shared bundleSassAssemblyVersion As String = "1.15.3.0"
     Public Shared DartSassHostAssemblyVersion As String = "1.1.1.0"
     Public Shared jsSwitcherAssemblyVersion As String = "3.29.1.0"
-    Public Shared jsSwitcherV8AssemblyVersion As String = "3.29.2.0"
+    Public Shared jsSwitcherV8AssemblyVersion As String = "3.29.1.0"
     Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.29.0.0"
     Public Shared WebGreaseAssemblyVersion As String = "1.6.5135.21930"
     Public Shared AdvancedStringBuilderVersion As String = "0.1.1.0"

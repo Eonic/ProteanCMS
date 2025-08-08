@@ -98,7 +98,7 @@
                     <File Id='_63BDF556_ADF6_DC60_A6AE_DFCEBB6C3699' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='JavaScriptEngineSwitcher.Core.dll' Source='..\packages\JavaScriptEngineSwitcher.Core.3.24.1\lib\net45\JavaScriptEngineSwitcher.Core.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_JavaScriptEngineSwitcher_V8' Guid='0cef3571-45f5-421d-8d24-f0ce966f8526' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_JavaScriptEngineSwitcher_V8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='JavaScriptEngineSwitcher.V8.dll' Source='..\packages\JavaScriptEngineSwitcher.V8.3.24.2\lib\net45\JavaScriptEngineSwitcher.V8.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_JavaScriptEngineSwitcher_V8' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='JavaScriptEngineSwitcher.V8.dll' Source='..\packages\JavaScriptEngineSwitcher.V8\3.29.1\lib\net471\JavaScriptEngineSwitcher.V8.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
 				<Component Id='com_Microsoft_ClearScript_Core' Guid='e5ed7dfd-948b-49a5-a535-d49164a7c0c8' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_Microsoft_ClearScript_Core' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScript.Core.dll' Source='..\packages\Microsoft.ClearScript.Core.7.5.0\lib\net471\ClearScript.Core.dll' Assembly='.net' KeyPath='yes' />
@@ -219,7 +219,7 @@
 				</Component>
 				
 				<Component Id='com_SystemTextEncodingsWeb' Guid='4dfb277c-b692-4118-b0f2-e086ef193c53' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemTextEncodingsWeb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encodings.Web.dll' Source='..\packages\System.Text.Encodings.Web.9.0.2\lib\net462\System.Text.Encodings.Web.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemTextEncodingsWeb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encodings.Web.dll' Source='..\packages\System.Text.Encodings.Web.9.0.7\lib\net462\System.Text.Encodings.Web.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SystemNumericsVectors' Guid='5e62ecb1-4b75-4ba1-9dc4-9bbc032eb8cc' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SystemNumericsVectors' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Numerics.Vectors.dll' Source='..\packages\System.Numerics.Vectors.4.6.1\lib\net462\System.Numerics.Vectors.dll' Assembly='.net' KeyPath='yes' />
@@ -246,7 +246,7 @@
 					<File Id='_SystemIOPackaging' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.IO.Packaging.dll' Source='C:\Users\trevo\.nuget\packages\system.io.packaging\9.0.7\lib\net462\System.IO.Packaging.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SystemIOPipelines' Guid='875d2329-84ac-4137-bddd-e6088181c24c' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemIOPipelines' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.IO.Pipelines.dll' Source='..\packages\System.IO.Pipelines.9.0.2\lib\net462\System.IO.Pipelines.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemIOPipelines' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.IO.Pipelines.dll' Source='..\packages\System.IO.Pipelines.9.0.7\lib\net462\System.IO.Pipelines.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SystemDrawingCommon' Guid='68aa99a2-e2ad-44a5-987d-2a1f5cf947bf' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SystemDrawingCommon' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Drawing.Common.dll' Source='..\packages\System.Drawing.Common.9.0.7\lib\net462\System.Drawing.Common.dll' Assembly='.net' KeyPath='yes' />
@@ -257,7 +257,7 @@
 					<File Id='_DocumentFormatOpenXml' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DocumentFormat.OpenXml.dll' Source='..\packages\documentformat.openxml\3.3.0\lib\netstandard2.0\DocumentFormat.OpenXml.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
-				<Component Id='com_DocumentFormatOpenXmlFramework' Guid='d5d52859-3471-4db8-94f5-5c9c98a46ac1' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+				<Component Id='com_DocumentFormatOpenXmlFramework' Guid='59b147b6-bcc7-4acb-8a04-60cb042fc9f6' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_DocumentFormatOpenXmlFramework' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DocumentFormat.OpenXml.Framework.dll' Source='..\packages\documentformat.openxml.framework\3.3.0\lib\netstandard2.0\DocumentFormat.OpenXml.Framework.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
@@ -265,15 +265,15 @@
 					<File Id='_MicrosoftIdentityClient' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Identity.Client.dll' Source='..\packages\Microsoft.Identity.Client.4.74.1\lib\net472\Microsoft.Identity.Client.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_MicrosoftIdentityModelAbstractions' Guid='66f18d56-62de-43ef-8130-e93203c9b5bf' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_MicrosoftIdentityModelAbstractions' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Identity.Client.dll' Source='..\packages\Microsoft.IdentityModel.Abstractions.8.13.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_MicrosoftIdentityModelAbstractions' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.IdentityModel.Abstractions.dll' Source='..\packages\Microsoft.IdentityModel.Abstractions.8.13.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
-
+	<!--
 				<Component Id='com_SelectHtmlToPdf' Guid='948eec8b-2894-4bbe-a094-dfd2f95f8601' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SelectHtmlToPdf' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Select.HtmlToPdf.dll' Source='..\packages\Select.HtmlToPdf.25.2.0\lib\net40\Select.HtmlToPdf.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				
 
-				<!--
+			
 				<Component Id='com_SelectHtmlToPdf' Guid='8ecf5eae-ab8d-4390-95d0-234e54902a58' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SelectHtmlToPdf' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Select.HtmlToPdf.dll' Source='..\packages\Select.HtmlToPdf.23.1.0\lib\net40\Select.HtmlToPdf.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
@@ -403,6 +403,7 @@
 			<ComponentRef Id='com_SystemIOPipelines' />
 			<ComponentRef Id='com_SystemDrawingCommon' />
 			<ComponentRef Id='com_DocumentFormatOpenXml' />
+			<ComponentRef Id='com_DocumentFormatOpenXmlFramework' />			
 			<ComponentRef Id='com_MicrosoftIdentityClient' />
 			<ComponentRef Id='com_MicrosoftIdentityModelAbstractions' />
 			<ComponentRef Id='com_SelectHtmlToPdf' />
