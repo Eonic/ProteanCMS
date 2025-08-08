@@ -252,7 +252,35 @@ namespace Protean
                                 if (oDsDiscounts.Tables["Discount"].Rows.Count > 0)
                                 {
                                     oXmlDiscounts.LoadXml(oDsDiscounts.GetXml());
-                                    CheckDiscounts(oXmlDiscounts.DocumentElement, ref oCartXML, ref cPromoCodeUserEntered);                                   
+                                    CheckDiscounts(oXmlDiscounts.DocumentElement, ref oCartXML, ref cPromoCodeUserEntered);
+
+                                    string strbFreeGiftBox = oCartXML.GetAttribute("bFreeGiftBox");
+                                    // Code for setting default delivery option if discount code option is 'Giftbox'
+                                    foreach (XmlElement oItemLoop in oCartXML.SelectNodes("Item"))
+                                    {
+                                        if (!string.IsNullOrEmpty(strbFreeGiftBox) & oItemLoop.SelectSingleNode("Discount") != null)
+                                        {
+                                            decimal AmountToDiscount = Conversions.ToDecimal(oItemLoop.SelectSingleNode("Discount").Attributes["nDiscountValue"].InnerText);
+                                            myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes["id"].Value, AmountToDiscount);
+
+                                            if (moConfig["GiftBoxDiscount"] != null & moConfig["GiftBoxDiscount"] == "on")
+                                            {
+                                                string sSql;
+                                                strSQL = new System.Text.StringBuilder();
+                                                DataSet oDs;
+                                                sSql = "select nShippingMethodId from tblCartOrder where nCartOrderKey=" + myCart.mnCartId;
+                                                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                                                if (moConfig["eShippingMethodId"] != null & moConfig["DefaultShippingMethodId"] != null)
+                                                {
+                                                    if (Operators.ConditionalCompareObjectEqual(oDs.Tables[0].Rows[0]["nShippingMethodId"], moConfig["eShippingMethodId"], false))
+                                                    {
+                                                        myCart.updateGCgetValidShippingOptionsDS(moConfig["DefaultShippingMethodId"]);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
                                 }
                                 else
                                 {
@@ -565,10 +593,10 @@ namespace Protean
                                         // do nothing we will process this rule because it matches the incoming query which contains the code.
                                     }
                                 }
-                                else if (!((cDiscountUserCode ?? "") == (AppliedCode.ToLower() ?? "")))
-                                {
-                                    oItemElmt.ParentNode.RemoveChild(oItemElmt);
-                                }
+                                //else if (!((cDiscountUserCode ?? "") == (AppliedCode.ToLower() ?? "")))
+                                //{
+                                //    oItemElmt.ParentNode.RemoveChild(oItemElmt);
+                                //}
                                 else if (nDiscountCodeType == promoCodeType.UseOnce)
                                 {
                                     if (!cPromotionalDiscounts.Contains("," + oItemElmt.GetAttribute("nDiscountKey") + ","))
@@ -607,7 +635,7 @@ namespace Protean
                                     if (freeGiftBoxNode != null && !string.IsNullOrEmpty(freeGiftBoxNode.InnerText))
                                     {
                                         strbFreeGiftBox = freeGiftBoxNode.InnerText;
-                                        //oCartXML.SetAttribute("bFreeGiftBox", freeGiftBoxNode.InnerText);
+                                         oCartXML.SetAttribute("bFreeGiftBox", freeGiftBoxNode.InnerText);
                                     }
                                 }
                             }
@@ -620,33 +648,7 @@ namespace Protean
                                 cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
                             int nPriceCount = 0;
                             ApplicableProviderType.ApplyDiscount(ref oCartXML, ref nPriceCount, ref strcFreeShippingMethods, ref strbFreeGiftBox, mbRoundUp, ref myCart, cPriceModifiers, ref nPromocodeApplyFlag);
-
-                            // Code for setting default delivery option if discount code option is 'Giftbox'
-                            foreach (XmlElement oItemLoop in oCartXML.SelectNodes("Item"))
-                            {
-                                if (!string.IsNullOrEmpty(strbFreeGiftBox) & oItemLoop.SelectSingleNode("Discount") != null)
-                                {
-                                    decimal AmountToDiscount = Conversions.ToDecimal(oItemLoop.SelectSingleNode("Discount").Attributes["nDiscountValue"].InnerText);
-                                    myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes["id"].Value, AmountToDiscount);
-
-                                    if (moConfig["GiftBoxDiscount"] != null & moConfig["GiftBoxDiscount"] == "on")
-                                    {
-                                        string sSql;
-                                        var strSQL = new System.Text.StringBuilder();
-                                        DataSet oDs;
-                                        sSql = "select nShippingMethodId from tblCartOrder where nCartOrderKey=" + myCart.mnCartId;
-                                        oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                                        if (moConfig["eShippingMethodId"] != null & moConfig["DefaultShippingMethodId"] != null)
-                                        {
-                                            if (Operators.ConditionalCompareObjectEqual(oDs.Tables[0].Rows[0]["nShippingMethodId"], moConfig["eShippingMethodId"], false))
-                                            {
-                                                myCart.updateGCgetValidShippingOptionsDS(moConfig["DefaultShippingMethodId"]);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
+                            
                             // set shipping option after applying promocode
                             if (!string.IsNullOrEmpty(strcFreeShippingMethods) & nPromocodeApplyFlag == 1)
                             {

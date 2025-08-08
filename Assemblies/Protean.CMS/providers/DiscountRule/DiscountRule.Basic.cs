@@ -28,7 +28,6 @@ using System.Web.Security;
 using System.Web.SessionState;
 using System.Xml;
 using static Protean.Cms;
-using static Protean.stdTools;
 
 
 namespace Protean.Providers
@@ -49,6 +48,45 @@ namespace Protean.Providers
             public new IdiscountRuleProvider Initiate(NameValueCollection config)
             {
                 return this;
+            }
+
+            private decimal priceRound(object nNumber, int nDecimalPlaces = 2, int nSplitNo = 5, bool bForceRoundup = true, bool bForceRoundDown = false)
+            {
+                try
+                {
+                    decimal value = Convert.ToDecimal(nNumber);
+
+                    if (bForceRoundup)
+                    {
+                        // If split number is used (e.g., round to nearest 0.05, 0.10, etc.)
+                        decimal factor = (decimal)Math.Pow(10, nDecimalPlaces);
+                        if (nSplitNo > 0)
+                        {
+                            decimal step = 1m / nSplitNo;
+                            value = Math.Ceiling(value / step) * step;
+                            value = Math.Round(value, nDecimalPlaces, MidpointRounding.AwayFromZero);
+                        }
+                        else
+                        {
+                            value = Math.Ceiling(value * factor) / factor;
+                        }
+                    }
+                    else if (bForceRoundDown)
+                    {
+                        decimal factor = (decimal)Math.Pow(10, nDecimalPlaces);
+                        value = Math.Floor(value * factor) / factor;
+                    }
+                    else
+                    {
+                        value = Math.Round(value, nDecimalPlaces, MidpointRounding.ToEven);
+                    }
+
+                    return value;
+                }
+                catch
+                {
+                    return 0m;
+                }
             }
 
             public new void ApplyDiscount(ref XmlElement oCartXML, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
@@ -89,7 +127,7 @@ namespace Protean.Providers
                                             // NB 16/02/2010
                                             // Time to pull price out so we can round it, to avoid the multiple decimal place issues
                                             decimal nPrice;
-                                            nPrice = Round(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
+                                            nPrice = priceRound(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
 
                                             // set default attributes
                                             oPriceElmt = oDiscountXML.CreateElement("DiscountPrice");
@@ -225,7 +263,7 @@ namespace Protean.Providers
                                         foreach (XmlElement oDiscountLoop1 in oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=1 and @nDiscountCat=1]"))
                                         {
                                             decimal nNewPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
-                                            nNewPrice = Round((double)nNewPrice * ((100d - Conversions.ToDouble(oDiscountLoop1.GetAttribute("nDiscountValue"))) / 100d), bForceRoundup: mbRoundUp);
+                                            nNewPrice = priceRound((double)nNewPrice * ((100d - Conversions.ToDouble(oDiscountLoop1.GetAttribute("nDiscountValue"))) / 100d), bForceRoundup: mbRoundUp);
 
                                             var oPriceLine = oDiscountXML.CreateElement("DiscountPriceLine");
                                             nPriceCount += 1;
@@ -261,7 +299,7 @@ namespace Protean.Providers
                                             // NB 16/02/2010
                                             // Time to pull price out so we can round it, to avoid the multiple decimal place issues
                                             decimal nPrice;
-                                            nPrice = Round(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
+                                            nPrice = priceRound(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
 
                                             // set default attributes
                                             oPriceElmt = oDiscountXML.CreateElement("DiscountPrice");
@@ -342,7 +380,7 @@ namespace Protean.Providers
                                             }
                                             else
                                             {
-                                                nUnitPrice = Round((double)nUnitPrice * ((100d - Conversions.ToDouble(oTestElmt.GetAttribute("nDiscountValue"))) / 100d), bForceRoundup: mbRoundUp);
+                                                nUnitPrice = priceRound((double)nUnitPrice * ((100d - Conversions.ToDouble(oTestElmt.GetAttribute("nDiscountValue"))) / 100d), bForceRoundup: mbRoundUp);
                                             }
                                             // make the totals
                                             nTotal = nUnitPrice * nUnits;
@@ -407,7 +445,7 @@ namespace Protean.Providers
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref exceptionMessage, "", "ApplyDiscount", ex, "", "", gbDebug);
+                    stdTools.returnException(ref exceptionMessage, "", "ApplyDiscount", ex, "", "", false);
                 }
             }
 
@@ -432,7 +470,7 @@ namespace Protean.Providers
                             // NB 16/02/2010
                             // Time to pull price out so we can round it, to avoid the multiple decimal place issues
                             decimal nPrice;
-                            nPrice = Round(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
+                            nPrice = priceRound(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
 
                             // set default attributes
                             oPriceElmt = oDiscountXML.CreateElement("DiscountPrice");
@@ -572,7 +610,7 @@ namespace Protean.Providers
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref exceptionMessage, "", "FreeShipping", ex, "", "", gbDebug);
+                    stdTools.returnException(ref exceptionMessage, "", "FreeShipping", ex, "", "", false);
                 }
             }
 

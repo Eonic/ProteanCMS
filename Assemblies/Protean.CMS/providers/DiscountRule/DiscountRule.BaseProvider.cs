@@ -119,7 +119,8 @@ namespace Protean.Providers
 
             public void UpdateCartXMLwithDiscounts(XmlNode discountNode, ref XmlElement oCartXML)
             {
-                XmlElement discountEl = (XmlElement)discountNode;
+                // Clone the discountNode to avoid modifying the original
+                XmlElement discountEl = (XmlElement)discountNode.CloneNode(true);
 
                 // Move all child nodes (except cAdditionalXML) to attributes
                 foreach (XmlNode child in discountEl.SelectNodes("*[name() != 'cAdditionalXML']").Cast<XmlNode>().ToList())
@@ -128,47 +129,115 @@ namespace Protean.Providers
                     discountEl.RemoveChild(child);
                 }
 
-                // Expand cAdditionalXML if it exists and contains XML content
-                XmlNode cAddXml = discountEl.SelectSingleNode("cAdditionalXML");
-                if (cAddXml != null && !string.IsNullOrWhiteSpace(cAddXml.InnerText))
+                // Expand <cAdditionalXML> into elements
+                XmlNode cAddXml = discountEl.SelectSingleNode("*[local-name()='cAdditionalXML']");
+                if (cAddXml != null && !string.IsNullOrWhiteSpace(cAddXml.InnerXml))
                 {
-                    var addDoc = new XmlDocument();
-                    // Wrap with root and load
-                    addDoc.LoadXml("<root>" + cAddXml.InnerText + "</root>");
+                    try
+                    {                        
+                        string decodedXml = HttpUtility.HtmlDecode(cAddXml.InnerXml.Trim());
+                        string wrappedXml = "<root>" + decodedXml + "</root>";
+                        XmlDocument addDoc = new XmlDocument();
+                        addDoc.LoadXml(wrappedXml);
 
-                    foreach (XmlNode addChild in addDoc.DocumentElement.ChildNodes)
-                    {
-                        if (addChild.NodeType == XmlNodeType.Element)
+                        // Import each child node from <root> into <Discount>
+                        foreach (XmlNode child in addDoc.DocumentElement.ChildNodes)
                         {
-                            XmlElement el = discountEl.OwnerDocument.CreateElement(addChild.Name);
-                            el.InnerText = addChild.InnerText;
-                            discountEl.AppendChild(el);
+                            // Skip text nodes that are just whitespace or empty
+                            if (child.NodeType == XmlNodeType.Text && string.IsNullOrWhiteSpace(child.Value))
+                            {
+                                continue;
+                            }
+                            // Import only Element nodes (like <Images>, <cDescription>, etc.)
+                            if (child.NodeType == XmlNodeType.Element)
+                            {
+                                XmlNode imported = discountEl.OwnerDocument.ImportNode(child, true);
+                                discountEl.AppendChild(imported);
+                            }
                         }
                     }
-                    discountEl.RemoveChild(cAddXml);
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error parsing cAdditionalXML: " + ex.Message);
+                    }
+
+                    discountEl.RemoveChild(cAddXml); // remove <cAdditionalXML> tag itself
+                }
+                // Parse core rules
+                double.TryParse(discountEl.GetAttribute("nDiscountMinPrice"), out double dMinPrice);
+                double.TryParse(discountEl.GetAttribute("nDiscountMaxPrice"), out double dMaxPrice);
+                int.TryParse(discountEl.GetAttribute("nDiscountMinQuantity"), out int nMinQty);
+                double.TryParse(discountEl.SelectSingleNode("nMinimumOrderValue")?.InnerText, out double dMinOrderValue);
+                double.TryParse(discountEl.SelectSingleNode("nMaximumOrderValue")?.InnerText, out double dMaxOrderValue);
+
+                bool bApplyToOrder = false;
+                var applyNode = discountEl.SelectSingleNode("bApplyToOrder");
+                if (applyNode != null && !string.IsNullOrWhiteSpace(applyNode.InnerText))
+                {
+                    bool.TryParse(applyNode.InnerText, out bApplyToOrder);
                 }
 
-                //Now need to import the discountNode to the oCartXML
+                // Prepare cart totals
+                XmlNodeList cartItems = oCartXML.SelectNodes("//Item");
+                double totalOrderAmount = 0;
+                List<XmlNode> eligibleItems = new List<XmlNode>();
 
-                // Get the cart item key from the discount
-                XmlElement discountElement = (XmlElement)discountNode;
-                string cartItemKey = discountElement.GetAttribute("nCartItemKey");
-
-                if (!string.IsNullOrEmpty(cartItemKey))
+                foreach (XmlNode item in cartItems)
                 {
-                    // Find <Item> node with matching cartItemKey id
-                    XmlNode itemNode = oCartXML.SelectSingleNode($"//Item[@id='{cartItemKey}']");
+                    string parentId = item.SelectSingleNode("nParentId")?.InnerText ?? "0";
+                    if (parentId != "0") continue; // Skip child/variant items
 
-                    if (itemNode != null)
+                    double itemPrice = Convert.ToDouble(item.Attributes["price"]?.Value ?? "0");
+                    double itemQty = Convert.ToDouble(item.Attributes["quantity"]?.Value ?? "0");
+                    double itemTotal = itemPrice * itemQty;
+
+                    totalOrderAmount += itemTotal;
+
+                    // Apply per-item discount logic if not applying to entire order
+                    if (!bApplyToOrder)
                     {
-                        XmlNode importedDiscount = oCartXML.OwnerDocument.ImportNode(discountElement, true);
-                        // Append the discount as a child to the matched <Item>
-                        itemNode.AppendChild(importedDiscount);
+                        bool withinPriceRange = dMaxPrice > 0
+                            ? itemTotal >= dMinPrice && itemTotal <= dMaxPrice
+                            : itemTotal >= dMinPrice;
+
+                        if (withinPriceRange && itemQty >= nMinQty)
+                        {
+                            eligibleItems.Add(item);
+                        }
                     }
                 }
 
-                //END here final update the oCartXML with the discount is ready to be applied
+                if (bApplyToOrder)
+                {
+                    bool orderMatches = true;
+
+                    if (dMinOrderValue > 0 && totalOrderAmount < dMinOrderValue)
+                        orderMatches = false;
+                    if (dMaxOrderValue > 0 && totalOrderAmount > dMaxOrderValue)
+                        orderMatches = false;
+
+                    if (orderMatches)
+                    {
+                        // Add all eligible top-level items
+                        foreach (XmlNode item in cartItems)
+                        {
+                            string parentId = item.SelectSingleNode("nParentId")?.InnerText ?? "0";
+                            if (parentId == "0")
+                            {
+                                eligibleItems.Add(item);
+                            }
+                        }
+                    }
+                }
+               
+                // Final attach step — same for both cases
+                foreach (var eligibleItem in eligibleItems)
+                {
+                    XmlNode importedDiscount = oCartXML.OwnerDocument.ImportNode(discountEl, true);
+                    eligibleItem.AppendChild(importedDiscount);
+                }
             }
+
 
             //this method only return discount is applicable or not with matching Provider type
             public bool CheckDiscountApplicable(XmlNode discountNode, ref XmlElement oCartXML, out int ProviderType)
@@ -195,10 +264,12 @@ namespace Protean.Providers
                     int.TryParse(discountNode.SelectSingleNode("nDiscountMinQuantity")?.InnerText, out nMinQuantity);
                     double.TryParse(discountNode.SelectSingleNode("nDiscountValue")?.InnerText, out discountValue);
 
-                    string additionalXmlRaw = discountNode.SelectSingleNode("cAdditionalXML")?.InnerText ?? "";
+                    // Get actual XML content
+                    string additionalXmlRaw = discountNode.SelectSingleNode("cAdditionalXML")?.InnerXml ?? "";
+                    // Wrap and parse
                     XmlDocument docAdditionalXml = new XmlDocument();
                     docAdditionalXml.LoadXml("<additionalXml>" + additionalXmlRaw + "</additionalXml>");
-
+                    // Read values correctly
                     double.TryParse(docAdditionalXml.SelectSingleNode("additionalXml/nDiscountMaxPrice")?.InnerText, out dMaxPrice);
                     double.TryParse(docAdditionalXml.SelectSingleNode("additionalXml/nMinimumOrderValue")?.InnerText, out dMinOrderTotal);
                     double.TryParse(docAdditionalXml.SelectSingleNode("additionalXml/nMaximumOrderValue")?.InnerText, out dMaxOrderTotal);
@@ -213,58 +284,60 @@ namespace Protean.Providers
                     }
 
                     double totalAmount = 0d;
-                    double nItemCost = 0d;
-                    short nValidProductCount = 0;
+                    int nValidProductCount = 0;
                     bool isValid = true;
 
                     foreach (XmlNode itemNode in cartItems)
                     {
+                        // Skip child/variant items
                         string parentId = itemNode.SelectSingleNode("nParentId")?.InnerText ?? "0";
                         if (parentId != "0") continue;
-
-                        int cartContentId = Convert.ToInt32(itemNode.Attributes["contentId"]?.Value ?? "0");
-                        if (cartContentId != discountContentId) continue;
 
                         double itemPrice = Convert.ToDouble(itemNode.Attributes["price"]?.Value ?? "0");
                         double itemQty = Convert.ToDouble(itemNode.Attributes["quantity"]?.Value ?? "0");
 
-                        nItemCost = itemPrice * itemQty;
-                        totalAmount += nItemCost;
+                        double itemCost = itemPrice * itemQty;
+                        totalAmount += itemCost;
 
+                        // Item-level check (if not applying to total order)
                         if (!bApplyToTotal)
                         {
                             if (dMaxPrice > 0)
                             {
-                                if (nItemCost >= dMinPrice && nItemCost <= dMaxPrice)
+                                if (itemCost >= dMinPrice && itemCost <= dMaxPrice)
                                     nValidProductCount++;
                             }
-                            else if (nItemCost >= dMinPrice)
+                            else if (itemCost >= dMinPrice)
                             {
                                 nValidProductCount++;
                             }
                         }
                     }
 
+                    // Quantity check (item-based)
                     if (!bApplyToTotal && nValidProductCount < nMinQuantity)
                     {
                         isValid = false;
                     }
 
-                    if (bApplyToTotal && dMaxOrderTotal != 0d)
+                    // Order total check
+                    if (bApplyToTotal)
                     {
-                        if (!(totalAmount >= dMinOrderTotal && totalAmount <= dMaxOrderTotal))
+                        if (dMaxOrderTotal > 0)
                         {
-                            isValid = false;
+                            if (!(totalAmount >= dMinOrderTotal && totalAmount <= dMaxOrderTotal))
+                                isValid = false;
+                        }
+                        else
+                        {
+                            if (totalAmount < dMinOrderTotal)
+                                isValid = false;
                         }
                     }
-                    if(!isValid)
-                    {
-                        return false;
-                    }
-                    else
-                    {
+
+                    if (isValid)
                         validateAddedDiscount = true;
-                    }                      
+
                     return validateAddedDiscount;
                 }
                 catch (Exception ex)

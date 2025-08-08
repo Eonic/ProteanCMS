@@ -64,7 +64,7 @@ namespace ProteanCMS.UnitTests
 
                 if (decimal.TryParse(totalStr, out decimal total))
                 {                                    
-                    Assert.AreEqual(249.00m, total);
+                    Assert.AreEqual(105.01m, total);
                     Assert.IsTrue(true);
                 }
                 else

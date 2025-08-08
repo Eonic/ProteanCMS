@@ -1,5 +1,5 @@
-﻿<Order cartId="873642" session="53d4sppbexr1r51ohj3szncj" statusId="1" status="Unknown Process ID" itemCount="1" weight="0" orderType="" complete="True" shippingType="65" shippingCost="3.95" shippingDesc="First Class (Royal Mail)-" ReceiptType="0" shippingDefaultDestination="United Kingdom" shippingCarrier="" totalNet="113.95" vatRate="0" vatAmt="0" total="113.95" currency="" currencySymbol="£" errorMsg="0">
-	<Item id="2511408" contentId="76842" ref="TRIPC4" url="/experiences/target-challenge/" price="110.0000" taxRate="0" quantity="1" shippingLevel="-1" weight="0" parId="" originalPrice="110.00" unitSaving="0" itemSaving="0" discount="0" itemTotal="110">
+﻿<Order cartId="967439" session="jbq40ks5mynwklc2nkxqgbqm" statusId="1" status="Unknown Process ID" itemCount="1" weight="0" orderType="" complete="True" shippingType="65" shippingCost="3.95" shippingDesc="First Class (Royal Mail)-" ReceiptType="0" totalNet="113.95" vatRate="0" vatAmt="0" total="113.95" currency="" currencySymbol="£" errorMsg="0">
+	<Item id="2790179" contentId="76842" ref="TRIPC4" url="/experiences/target-challenge/" price="110.0000" taxRate="0" quantity="1" shippingLevel="-1" weight="0" parId="" originalPrice="110.00" unitSaving="0" itemSaving="0" discount="0" itemTotal="110">
 		<Name>Triple Challenge for Four</Name>
 		<productDetail overridePrice="" lowMargin="" sMostpopular="" sBestSeller="" type="SKU">
 			<Name>Triple Challenge for Four</Name>
@@ -84,7 +84,7 @@
 				<Location long="-0.5042" lat="52.2508" postcode="MK44 1BX" />
 			</Locations>
 			<ParentProduct>
-				<Content id="4711" ref="PROD-2997" parId="801" name="target challenge" type="Product" publish="2014-01-29T15:12:39+05:30" update="2025-04-08T14:30:40+05:30" owner="1" status="1" onHold="false" SkuOptions="None" action="IntoTheBlue.Web.Modules.ProductDetail" assemblyType="IntoTheBlue.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" metaTitle="Target Challenge for Four Bedfordshire" metaKeywords="" metaDescription="Target challenge for four people. A trio or quartet of shooting activities at this family-run Bedford school. Archery, axes, clays &amp; rifles. Shop vouchers now." noIndex="" ratingAvg="" ratingCount="">
+				<Content id="4711" ref="PROD-2997" parId="801" name="target challenge" type="Product" publish="2014-01-29T15:12:39+00:00" update="2024-11-20T11:47:16+00:00" owner="1" status="1" SkuOptions="None" action="IntoTheBlue.Web.Modules.ProductDetail" assemblyType="IntoTheBlue.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" metaTitle="Target Challenge for Four Bedfordshire" metaKeywords="" metaDescription="Target challenge for four people. A trio or quartet of shooting activities at this family-run Bedford school. Archery, axes, clays &amp; rifles. Shop vouchers now." noIndex="" ratingAvg="" ratingCount="" product-layout="new">
 					<Name category="">Target Challenge for Four</Name>
 					<StockCode gtin="" mpn="" />
 					<Manufacturer />
@@ -107,17 +107,17 @@
 					<ShippingWeight unit="" />
 					<Stock />
 					<Images>
-						<img src="/images/assets/uploaded/airgunclose-350-opt.jpg" width="" height="" alt="Target Challenge for Four in Bedfordshire" class="thumbnail" />
-						<img src="/images/assets/uploaded/airgunclose-350-opt.jpg" width="" height="" alt="Target Challenge for Four in Bedfordshire" class="display" />
-						<img src="/images/assets/uploaded/airgunclose-350-opt.jpg" width="" height="" alt="Target Challenge for Four in Bedfordshire" class="detail" />
-						<img src="/images/assets/uploaded/IMG_0012 Kevin Parsons 12052010 H.tif" width="" height="" alt="" class="voucher" />
-						<img src="" width="" height="" alt="" class="voucher2023" />
+						<img src="/images/assets/uploaded/airgunclose-350-opt.jpg" width="" height="" class="thumbnail" alt="Target Challenge for Four in Bedfordshire" />
+						<img src="" width="" height="" class="display" alt="" />
+						<img src="/images/2024-Products/Sporting%20Targets%20Ltd/TRIPC4.jpg" width="1500" height="720" class="detail" alt="Target Challenge for Four" />
+						<img src="/images/assets/uploaded/IMG_0012 Kevin Parsons 12052010 H.tif" width="" height="" class="voucher" alt="" />
+						<img src="" width="" height="" class="voucher2023" alt="" />
 					</Images>
 					<ShowBanner />
-					<ShortDescription>
+					<ShortDescription hubDescriptionTitle="">
 						<p>Three or four shooting challenges for groups of four in Bedfordshire</p>
 					</ShortDescription>
-					<Summary>
+					<Summary uspBulletPoint="">
 						<ul>
 							<li>Triple &amp; quadruple shooting fun!</li>
 							<li>Vouchers are for 4 people</li>
@@ -126,7 +126,7 @@
 						</ul>
 						<p />
 					</Summary>
-					<Body order="2">
+					<Body order="2" whatCanIExpectTitle="">
 						<p>
 							<span style="font-weight: 400;">A top-notch target challenge for four in Bedfordshire! Will you be the triple or quadruple hot shot winner when you and a friend have a go at three or four shooting sports at this renowned centre?</span>
 						</p>
@@ -137,7 +137,7 @@
 						<p>Then there are the clays. Quite simply, this is what this centre does best. They have most types of target here and the mature hedgerows and trees create sheltered and almost hidden corners to shoot from, where you'll be lurking waiting to pounce on the clay.</p>
 						<p>And as for the axe throwing on the quadruple experience, who wouldn't want to lob axes into great chunks of wood? Great fun. And don't forget, these target challenge vouchers are for four people, so they're great value too!</p>
 					</Body>
-					<WhatsIncluded order="1">
+					<WhatsIncluded order="1" whatsIncludedTitle="">
 						<ul>
 							<li>Enjoy an exclusive target experience for four people</li>
 							<li>
@@ -164,36 +164,36 @@
 							<li>Throw traditional axes at the targets </li>
 						</ul>
 					</WhatsIncluded>
-					<WhenAvailable order="3">
+					<WhenAvailable order="3" whenIsItAvailableTitle="">
 						<ul>
 							<li>Selected weekdays throughout year</li>
 						</ul>
 					</WhenAvailable>
-					<LocationMap order="4" lat="52.2508" long="-0.5042" shortDescription="Bedfordshire">
+					<LocationMap order="4" lat="52.2508" long="-0.5042" shortDescription="Bedfordshire" locationShortDescriptionTitle="" locationDetailsTitle="">
 						<ul>
 							<li>Riseley in Bedfordshire</li>
 							<li>Conveniently located half way between Kettering and Bedford</li>
 							<li>Easy access via the M1, A1 and A14</li>
 						</ul>
 					</LocationMap>
-					<Suitable order="5">
+					<Suitable order="5" suitableForTitle="">
 						<ul>
 							<li>Minimum age 18</li>
 							<li>Suitable outdoor clothing and footwear should be worn for this experience</li>
 						</ul>
 					</Suitable>
-					<Spectators order="6">
+					<Spectators order="6" spectatorsTitle="">
 						<ul>
 							<li>Spectators are welcome, but may not be able to see all the action</li>
 						</ul>
 					</Spectators>
-					<AnythingElse order="7">
+					<AnythingElse order="7" anythingelseTitle="">
 						<ul>
 							<li>The Shooting Lodge is a comfortable place with outdoor patio, bar, café and restaurant</li>
 							<li>Ample car parking and toilets on site</li>
 						</ul>
 					</AnythingElse>
-					<Menu order="8" />
+					<Menu order="8" menuTitle="" />
 					<SpecificationDocument />
 					<Keywords />
 					<KeywordsSearch />
@@ -218,12 +218,12 @@
 		<ProductStatus>1</ProductStatus>
 		<nShippingGroup />
 		<nshippingType />
-		<Item id="2511409" contentId="0" ref="0" url="" unit="0" price="0.0000" taxRate="0" quantity="1" shippingLevel="-1" discount="0.0000" parId="4954">
+		<Item id="2790180" contentId="0" ref="0" url="" unit="0" price="0.0000" taxRate="0" quantity="1" shippingLevel="-1" discount="0.0000" parId="">
 			<Name>Standard</Name>
 			<productDetail />
 			<nItemOptGrpIdx>0</nItemOptGrpIdx>
 			<nItemOptIdx>0</nItemOptIdx>
-			<nParentId>2511408</nParentId>
+			<nParentId>2790179</nParentId>
 			<nShippingGroup />
 			<nshippingType />
 		</Item>
