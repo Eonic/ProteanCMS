@@ -48,6 +48,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief" >
           <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="linked" select="@linkArticle"/>
           <xsl:with-param name="showThumbnail" select="@showThumbnails"/>
           <xsl:with-param name="heading" select="$heading"/>
           <xsl:with-param name="title" select="@title"/>
@@ -78,6 +79,11 @@
     <xsl:param name="showThumbnail"/>
     <xsl:param name="heading"/>
     <xsl:param name="title"/>
+    <xsl:param name="crop"/>
+    <xsl:param name="class"/>
+    <xsl:param name="parentId"/>
+    <xsl:param name="linked"/>
+    <xsl:param name="itemLayout"/>
     <!-- documentBrief -->
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="self::Content" mode="getHref">
@@ -97,6 +103,30 @@
       </xsl:choose>
     </xsl:variable>
     <xsl:variable name="classValues">
+      <xsl:text>listItem documents </xsl:text>
+      <xsl:if test="$linked='true'">
+        <xsl:text> linked-listItem </xsl:text>
+      </xsl:if>
+      <xsl:if test="$itemLayout='wide'">
+        <xsl:text> wide-item </xsl:text>
+      </xsl:if>
+      <xsl:value-of select="$class"/>
+      <xsl:text> </xsl:text>
+      <xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
+        <xsl:with-param name="parentId" select="$parentId"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <div class="{$classValues}">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem documents'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
@@ -262,6 +292,11 @@
                     <xsl:value-of select="@id"/>
                   </xsl:otherwise>
                 </xsl:choose>
+              </xsl:attribute>
+              <xsl:attribute name="class">
+                <xsl:text>docLink </xsl:text>
+                <xsl:value-of select="substring-after(Path,'.')"/>
+                <xsl:text>icon stretched-link</xsl:text>
               </xsl:attribute>
               <xsl:if test="$GoogleAnalyticsUniversalID!=''">
                 <xsl:attribute name="onclick">
