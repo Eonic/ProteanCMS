@@ -3900,11 +3900,12 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      <xsl:attribute name="target">
-        <xsl:if test="@externalNewWindow='true'">
+      
+      <xsl:if test="DisplayName/@externalNewWindow='true'">
+        <xsl:attribute name="target">
           <xsl:text>_blank</xsl:text>
-        </xsl:if>
-      </xsl:attribute>
+        </xsl:attribute>
+      </xsl:if>
 
 
       <xsl:if test="DisplayName/@linkType='popUp'">
