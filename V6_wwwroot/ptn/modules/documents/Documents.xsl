@@ -96,7 +96,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="listItem documents">
+    <xsl:variable name="classValues">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem documents'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
