@@ -39,13 +39,9 @@ namespace ProteanCMS.UnitTests
             // Create Cms object and call CheckDiscounts
            
             moDiscount= new Protean.Cms.Cart.Discount();
-            XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode);
+            XmlDocument result = moDiscount.CheckDiscounts(oXmlDiscounts, oCartXML, ref appliedCode);          
 
-            // Set result in XmlDocument to return
-            XmlDocument updatedCartDoc = new XmlDocument();
-            updatedCartDoc.LoadXml(result.OuterXml);
-
-            return updatedCartDoc;
+            return result;
         }
        
        
