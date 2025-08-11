@@ -47,7 +47,6 @@ libraries\Newtonsoft.Json.dll
 ..\packages\PreMailer.Net.2.7.2\lib\net461\PreMailer.Net.dll
 ..\Assemblies\Protean.AppStart\bin\Release\Protean.AppStart.dll
 ..\packages\QRcoder.1.6.0\lib\net40\QRcoder.dll
-..\packages\Select.HtmlToPdf.25.2.0\lib\net40\Select.HtmlToPdf.dll
 ..\packages\skiasharp\3.119.0\lib\netstandard2.0\SkiaSharp.dll
 ..\packages\System.Text.Encoding.CodePages.9.0.7\lib\netstandard2.0\System.Text.Encoding.CodePages.dll
 ..\packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll

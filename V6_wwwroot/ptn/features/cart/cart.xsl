@@ -1423,7 +1423,7 @@
 	</xsl:template>
 
 	<xsl:template match="label[parent::textarea[contains(@class,'readonly terms-and-condiditons')]]">
-
+		<xsl:text> </xsl:text>
 	</xsl:template>
 
 	<xsl:template match="label[parent::item and ancestor::select[@ref='confirmterms']]" mode="xform-label">
@@ -1433,10 +1433,15 @@
 		</a>
 	</xsl:template>
 
+	<xsl:template match="label[parent::select[@ref='confirmterms']]" mode="xform-label">
+		<xsl:text> </xsl:text>
+	</xsl:template>
+	
 	<xsl:template match="textarea[contains(@class,'readonly terms-and-condiditons')]" mode="xform_legend">
 		<!--<button type="button" class="btn btn-link continue" data-bs-toggle="modal" data-bs-target="#terms-modal">
 			View terms and conditions
 		</button>-->
+		<xsl:text> </xsl:text>
 	</xsl:template>
 
 	<xsl:template match="textarea[contains(@class,'readonly terms-and-conditons')]" mode="xform_control">
@@ -1560,7 +1565,8 @@
 			</a>
 			<xsl:if test="@ref and @ref!=''">
 				<div class="ref">
-					<xsl:value-of select="@ref"/>&#160;
+					<xsl:value-of select="@ref"/>
+					<xsl:text> </xsl:text>
 					<xsl:for-each select="Item">
 						<xsl:apply-templates select="option" mode="optionCodeConcat"/>
 					</xsl:for-each>
@@ -1578,12 +1584,12 @@
 					<xsl:apply-templates select="/Page" mode="formatPrice">
 						<xsl:with-param name="price" select="productDetail/Prices/Price[@type='sale']"/>
 						<xsl:with-param name="currency" select="$page/Cart/@currencySymbol"/>
-					</xsl:apply-templates>&#160;
-					<xsl:value-of select="productDetail/Prices/Price[@type='sale']/@suffix"/>&#160;then
+					</xsl:apply-templates>	<xsl:text> </xsl:text>
+					<xsl:value-of select="productDetail/Prices/Price[@type='sale']/@suffix"/>	<xsl:text> </xsl:text>then
 					<xsl:apply-templates select="/Page" mode="formatPrice">
 						<xsl:with-param name="price" select="productDetail/SubscriptionPrices/Price[@type='sale']"/>
 						<xsl:with-param name="currency" select="$page/Cart/@currencySymbol"/>
-					</xsl:apply-templates>&#160;
+					</xsl:apply-templates>	<xsl:text> </xsl:text>
 					<xsl:value-of select="productDetail/SubscriptionPrices/Price[@type='sale']/@suffix"/>
 				</p>
 			</xsl:if>
@@ -1616,7 +1622,7 @@
 					</span>
 					<xsl:text>&#160;&#160;&#160;</xsl:text>
 					<xsl:call-template name="term3054" />
-					<xsl:text>:&#160;</xsl:text>
+					<xsl:text>: </xsl:text>
 					<xsl:apply-templates select="/Page" mode="formatPrice">
 						<xsl:with-param name="price" select="@UnitSaving"/>
 						<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>

@@ -406,7 +406,7 @@
 			<ComponentRef Id='com_DocumentFormatOpenXmlFramework' />			
 			<ComponentRef Id='com_MicrosoftIdentityClient' />
 			<ComponentRef Id='com_MicrosoftIdentityModelAbstractions' />
-			<ComponentRef Id='com_SelectHtmlToPdf' />
+		<!--	<ComponentRef Id='com_SelectHtmlToPdf' />-->
 
 			
 
