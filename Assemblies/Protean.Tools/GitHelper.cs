@@ -74,8 +74,8 @@ namespace Protean.Tools
                 string arguments = $"-ExecutionPolicy Bypass -File \"{ps1FilePath}\"";
                 
                 // Create temporary askpass script
-                askPassPath = Path.Combine(Path.GetTempPath(), "askpass_oauth2.bat");
-                File.WriteAllText(askPassPath, $"@echo off{Environment.NewLine}echo {_accessToken}");
+                //askPassPath = Path.Combine(Path.GetTempPath(), "askpass_oauth2.bat");
+                //File.WriteAllText(askPassPath, $"@echo off{Environment.NewLine}echo {_accessToken}");
 
                 ProcessStartInfo gitPull = new ProcessStartInfo
                 {
@@ -87,9 +87,9 @@ namespace Protean.Tools
                     CreateNoWindow = true,
                 };
 
-                gitPull.EnvironmentVariables["GIT_ASKPASS"] = askPassPath;
-                gitPull.EnvironmentVariables["GIT_TERMINAL_PROMPT"] = "0";
-                gitPull.EnvironmentVariables["ACCESS_TOKEN"] = _accessToken;
+                //gitPull.EnvironmentVariables["GIT_ASKPASS"] = askPassPath;
+                //gitPull.EnvironmentVariables["GIT_TERMINAL_PROMPT"] = "0";
+                //gitPull.EnvironmentVariables["ACCESS_TOKEN"] = _accessToken;
 
                 using (var process = Process.Start(gitPull))
                 {

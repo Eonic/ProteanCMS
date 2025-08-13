@@ -56,6 +56,7 @@ namespace Protean.Providers
                     int nMaxPRiceProduct = 0;
                     int nMinPriceProduct = 0;
                     //XmlElement oFilterElmt = null;
+                    //Sonali code test
                     string className = string.Empty;
                     string cWhereQuery = string.Empty;
 
