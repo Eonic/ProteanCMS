@@ -6143,7 +6143,7 @@ namespace Protean
                         // load the directory item to be deleted
                         moDbHelper.moPageXml = moPageXML;
 
-                        base.NewFrm("EditSelect");
+                        base.NewFrm("DeleteDirectory");
 
                         // Lets get the object
                         oElmt = moPageXML.CreateElement("sType");
@@ -6204,8 +6204,8 @@ namespace Protean
 
 
 
-                        base.submission("EditInput", "", "post");
-                        oFrmElmt = base.addGroup(ref base.moXformElmt, "DeleteDir", "", "Delete " + sType);
+                        base.submission("delete-form", "", "post");
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "", "delete-form", "Delete " + sType);
 
                         //XmlNode argoNode = oFrmElmt;
                         base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this " + sType + " " + encodeAllHTML(oElmt.GetAttribute("name")), false, "alert-danger");
@@ -6324,7 +6324,7 @@ namespace Protean
 
                         }
 
-                        base.addSubmit(ref oFrmElmt, "", "Delete " + sType);
+                        base.addSubmit(ref oFrmElmt, "delete-form", "Delete " + sType);
 
                         if (base.isSubmitted())
                         {
