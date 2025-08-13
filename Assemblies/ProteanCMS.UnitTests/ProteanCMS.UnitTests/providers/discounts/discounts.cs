@@ -16,7 +16,7 @@ namespace ProteanCMS.UnitTests
     {
         //public HttpContext moCtx = HttpContext.Current;
         public Cart.Discount moDiscount;        
-        XmlDocument RunDiscountTest(string TestPath)
+        XmlElement RunDiscountTest(string TestPath)
         {           
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;            
             string projectRoot = Path.GetFullPath(Path.Combine(baseDir, @"..\..\"));
@@ -39,17 +39,17 @@ namespace ProteanCMS.UnitTests
             // Create Cms object and call CheckDiscounts
            
             moDiscount= new Protean.Cms.Cart.Discount();
-            XmlDocument result = moDiscount.CheckDiscounts(oXmlDiscounts, oCartXML, ref appliedCode);          
+            XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode);          
 
             return result;
         }
        
        
         [TestMethod]
-        public void TenPercentDiscount()
+        public void Apply_And_Validate_ITBTEST_Ten_Monitory_PromotionalCode()
         {            
             // Get updated cart with discount applied
-            XmlDocument oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/TenPercentDiscount/");
+            XmlElement oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/BasicMonitory/");
             XmlNode discountPriceLineNode = oCartXML.SelectSingleNode("//DiscountPriceLine");
             string totalSaving = discountPriceLineNode.Attributes["TotalSaving"]?.Value;
             string unitPrice = discountPriceLineNode.Attributes["UnitPrice"]?.Value;
@@ -60,7 +60,7 @@ namespace ProteanCMS.UnitTests
 
                 if (decimal.TryParse(totalStr, out decimal total))
                 {                                    
-                    Assert.AreEqual(105.01m, total);
+                    Assert.AreEqual(90m, total);
                     Assert.IsTrue(true);
                 }
                 else
@@ -72,6 +72,35 @@ namespace ProteanCMS.UnitTests
             {
                 Assert.Fail("DiscountPriceLine node or Total attribute not found.");
             }  
+        }
+
+        [TestMethod]
+        public void Apply_And_Validate_BringAFriend_Ten_Percentage_PromotionalCode()
+        {
+            // Get updated cart with discount applied
+            XmlElement oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/Percent_BringAFriend/");
+            XmlNode discountPriceLineNode = oCartXML.SelectSingleNode("//DiscountPriceLine");
+            string totalSaving = discountPriceLineNode.Attributes["TotalSaving"]?.Value;
+            string unitPrice = discountPriceLineNode.Attributes["UnitPrice"]?.Value;
+            string priceOrder = discountPriceLineNode.Attributes["PriceOrder"]?.Value;
+            if (discountPriceLineNode != null && discountPriceLineNode.Attributes["Total"] != null)
+            {
+                string totalStr = discountPriceLineNode.Attributes["Total"].Value;
+
+                if (decimal.TryParse(totalStr, out decimal total))
+                {
+                    Assert.AreEqual(90m, total);
+                    Assert.IsTrue(true);
+                }
+                else
+                {
+                    Assert.Fail("Failed to parse Total attribute as decimal.");
+                }
+            }
+            else
+            {
+                Assert.Fail("DiscountPriceLine node or Total attribute not found.");
+            }
         }
     }
 }

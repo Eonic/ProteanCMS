@@ -48,10 +48,10 @@ namespace Protean.Providers
                 return this;
             }
 
-            public new void ApplyDiscount(ref XmlElement oCartXML, ref int nPriceCount, ref Cms myWeb, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart)
+            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {
-
-                myWeb.PerfMon.Log("Discount", "Discount_CheapestFree");
+                string exceptionMessage = string.Empty;
+                //myWeb.PerfMon.Log("Discount", "Discount_CheapestFree");
                 // this is going to be the wierdest one
                 // we will need to loop through discounts first, then the items
                 XmlElement oItemLoop = null;
@@ -61,10 +61,8 @@ namespace Protean.Providers
                 try
                 {
                     // need to record all the discount Ids
-                    string cIDs = ",";
-                    XmlDocument oDiscXml = new XmlDocument();
-                    oDiscXml.AppendChild(oDiscXml.ImportNode(oCartXML, true));
-                    foreach (XmlElement oDiscountLoop in oDiscXml.SelectNodes("descendant-or-self::Discount[@nDiscountCat='4']"))
+                    string cIDs = ",";                   
+                    foreach (XmlElement oDiscountLoop in oFinalDiscounts.SelectNodes("descendant-or-self::Discount[@nDiscountCat='4']"))
                     {
                         // For Each oDiscountLoop In oDiscountXML.SelectNodes("descendant-or-self::Discount[@type=4]")
                         if (!cIDs.Contains("," + oDiscountLoop.GetAttribute("nDiscountKey") + ","))
@@ -102,7 +100,7 @@ namespace Protean.Providers
 
                         int i = 0;
 
-                        oCurDiscount = (XmlElement)oDiscXml.SelectSingleNode("Discounts/Item/Discount[@nDiscountKey=" + oIDs[nI] + "]");
+                        oCurDiscount = (XmlElement)oFinalDiscounts.SelectSingleNode("Discounts/Item/Discount[@nDiscountKey=" + oIDs[nI] + "]");
                         nDiscountValue = Conversions.ToDecimal(oCurDiscount.GetAttribute("nDiscountValue"));
                         bDiscountIsPercent = Conversions.ToBoolean(oCurDiscount.GetAttribute("bDiscountIsPercent"));
                         // Set nMinItems
@@ -115,9 +113,9 @@ namespace Protean.Providers
                         if (Information.IsNumeric(oCurDiscount.SelectSingleNode("nDiscountMaxPrice").InnerText))
                             nDiscountMaxPrice = Conversions.ToDecimal(oCurDiscount.SelectSingleNode("nDiscountMaxPrice").InnerText);
 
-                        var aPriceArray = new double[oDiscXml.SelectNodes("Discounts/Item[Discount/@nDiscountKey=" + oIDs[nI] + "]").Count];
+                        var aPriceArray = new double[oFinalDiscounts.SelectNodes("Discounts/Item[Discount/@nDiscountKey=" + oIDs[nI] + "]").Count];
                         // Step through each product in the cart associated with current rule
-                        foreach (XmlElement currentOItemLoop in oDiscXml.SelectNodes("Discounts/Item[Discount/@nDiscountKey=" + oIDs[nI] + "]"))
+                        foreach (XmlElement currentOItemLoop in oFinalDiscounts.SelectNodes("Discounts/Item[Discount/@nDiscountKey=" + oIDs[nI] + "]"))
                         {
                             oItemLoop = currentOItemLoop;
                             // bool bAllowedDiscount = false;
@@ -132,7 +130,7 @@ namespace Protean.Providers
                             oPriceElmt = (XmlElement)oItemLoop.SelectSingleNode("DiscountPrice");
                             if (oPriceElmt is null)
                             {
-                                oPriceElmt = oDiscXml.CreateElement("Item/DiscountPrice");
+                                oPriceElmt = oFinalDiscounts.CreateElement("Item/DiscountPrice");
                                 oPriceElmt.SetAttribute("discountId", oIDs[nI]);
                                 oPriceElmt.SetAttribute("OriginalUnitPrice", nCurrentUnitPrice.ToString());
                                 oPriceElmt.SetAttribute("UnitPrice", nCurrentUnitPrice.ToString());
@@ -177,7 +175,7 @@ namespace Protean.Providers
                                 // step through prices cheapest first
                                 if (aPriceArray[i] > (double)nLastPrice & aPriceArray[i] <= (double)nDiscountMaxPrice & itemsToDiscount > 0)
                                 {
-                                    foreach (XmlElement currentOItemLoop1 in oDiscXml.SelectNodes("Discounts/Item[DiscountPrice/@UnitPrice=" + aPriceArray[i] + "]"))
+                                    foreach (XmlElement currentOItemLoop1 in oFinalDiscounts.SelectNodes("Discounts/Item[DiscountPrice/@UnitPrice=" + aPriceArray[i] + "]"))
                                     {
                                         oItemLoop = currentOItemLoop1;
 
@@ -195,7 +193,7 @@ namespace Protean.Providers
                                             nDiscountNumber = Conversions.ToLong(oPriceElmt.GetAttribute("Units"));
                                         }
 
-                                        oDiscount = oDiscXml.CreateElement("DiscountItem");
+                                        oDiscount = oFinalDiscounts.CreateElement("DiscountItem");
                                         itemsToDiscount = (int)(itemsToDiscount - nDiscountNumber);
 
                                         // define the by Unit Discounted Price
@@ -261,7 +259,7 @@ namespace Protean.Providers
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, "", "Discount_CheapestFree", ex, "", "", gbDebug);
+                    stdTools.returnException(ref exceptionMessage, "", "Discount_CheapestFree", ex, "", "", gbDebug);
                 }
 
             }

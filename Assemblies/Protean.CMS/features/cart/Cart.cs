@@ -11310,7 +11310,7 @@ namespace Protean
             {
                 try
                 {
-
+                    //tidy up this logic
                     // Dim ods As DataSet
                     // Dim oRow As DataRow
                     string sSql;

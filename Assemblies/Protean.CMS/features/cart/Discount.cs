@@ -243,8 +243,7 @@ namespace Protean
                             // If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
                             // if total crossed more or less than defined range then it will remove promocode for the user.
 
-                            XmlDocument oXmlDiscounts = new XmlDocument();
-                            XmlDocument oFinalXmlDiscount = new XmlDocument(); 
+                            XmlDocument oXmlDiscounts = new XmlDocument();                            
                             // TS: Move to new CheckDiscounts
 
                             if (oDsDiscounts != null)
@@ -252,44 +251,15 @@ namespace Protean
                                 if (oDsDiscounts.Tables["Discount"].Rows.Count > 0)
                                 {
                                     oXmlDiscounts.LoadXml(oDsDiscounts.GetXml());
-                                    oFinalXmlDiscount = CheckDiscounts(oXmlDiscounts.DocumentElement, oCartXML, ref cPromoCodeUserEntered);
-
-                                    string strbFreeGiftBox = oFinalXmlDiscount.DocumentElement?.Attributes["bFreeGiftBox"]?.Value ?? "";
-                                    // Code for setting default delivery option if discount code option is 'Giftbox'
-                                    foreach (XmlElement oItemLoop in oFinalXmlDiscount.SelectNodes("/Discounts/Item"))
-                                    {
-                                        if (!string.IsNullOrEmpty(strbFreeGiftBox) & oItemLoop.SelectSingleNode("Discount") != null)
-                                        {
-                                            decimal AmountToDiscount = Conversions.ToDecimal(oItemLoop.SelectSingleNode("Discount").Attributes["nDiscountValue"].InnerText);
-                                            myCart.updatePackagingForFreeGiftDiscount(oItemLoop.Attributes["id"].Value, AmountToDiscount);
-
-                                            if (moConfig["GiftBoxDiscount"] != null & moConfig["GiftBoxDiscount"] == "on")
-                                            {
-                                                string sSql;
-                                                strSQL = new System.Text.StringBuilder();
-                                                DataSet oDs;
-                                                sSql = "select nShippingMethodId from tblCartOrder where nCartOrderKey=" + myCart.mnCartId;
-                                                oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                                                if (moConfig["eShippingMethodId"] != null & moConfig["DefaultShippingMethodId"] != null)
-                                                {
-                                                    if (Operators.ConditionalCompareObjectEqual(oDs.Tables[0].Rows[0]["nShippingMethodId"], moConfig["eShippingMethodId"], false))
-                                                    {
-                                                        myCart.updateGCgetValidShippingOptionsDS(moConfig["DefaultShippingMethodId"]);
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
+                                    CheckDiscounts(oXmlDiscounts.DocumentElement, ref oCartXML, ref cPromoCodeUserEntered);                                   
 
                                     Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
                                     IdiscountRuleProvider oDisProvider = oDiscRuleProv.Get();
-
-                                    //decimal nTotalSaved = Discount_ApplyToCart(ref oCartXML, oXmlDiscounts);
-                                    decimal nTotalSaved = oDisProvider.FinalApplyToCart(ref oCartXML, oFinalXmlDiscount, ref myWeb, mbRoundUp);
+                                    // put all db funtions in it                                  
+                                    decimal nTotalSaved = oDisProvider.FinalCartUpdateDB(ref oCartXML, ref myWeb, mbRoundUp, ref myCart); 
 
                                     if (!bFullCart)
                                         oCartXML.InnerXml = "";
-
                                     return nTotalSaved;
                                 }
                                 else
@@ -302,7 +272,6 @@ namespace Protean
                                         oItemElmt.SetAttribute("itemSaving", 0.ToString());
                                         oItemElmt.SetAttribute("discount", 0.ToString());
                                         oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("price")) * Conversions.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
-
                                     }
                                     oDsDiscounts = null;
                                 }
@@ -478,7 +447,6 @@ namespace Protean
                         // 'code to validate exchange functionality
                         else if (string.IsNullOrEmpty(cCartItemIds) & !string.IsNullOrEmpty(cPromoCodeUserEntered))
                         {
-
                             strSQL.Append(" SELECT tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ");
                             strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue from tblCartDiscountRules where cDiscountCode='" + cPromoCodeUserEntered + "'");
                             // oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
@@ -516,11 +484,9 @@ namespace Protean
                     {
                     }
                     return default;
-                }
+                } 
 
-
-
-                public XmlDocument CheckDiscounts(XmlElement oXmlDiscounts, XmlElement oCartXML, ref string AppliedCode)
+                public XmlElement CheckDiscounts(XmlElement oXmlDiscounts, ref XmlElement oCartXML, ref string AppliedCode)
                 {
                     try {
                         bool isApplicable = false;
@@ -557,11 +523,11 @@ namespace Protean
                         IdiscountRuleProvider ApplicableProviderType = oDiscRuleProv.Get(ProviderType);
                         if (ApplicableProviderType != null)
                         {
-                            // now need to make sure there are no duplicates where multi groups exists
-                            XmlElement oItemElmt;
-                            foreach (XmlElement currentOItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item"))
+                            // now need to make sure there are no discounts that have been applied more than once.
+                            // revisit for optimization - nita
+                            foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item"))
                             {
-                                oItemElmt = currentOItemElmt;
+                                
                                 int[] nDiscConts = new int[] { 0 };
                                 string cDiscConts = ",";
                                 foreach (XmlElement oDupElmt in oItemElmt.SelectNodes("Discount"))
@@ -577,16 +543,18 @@ namespace Protean
                                 }
                             }
 
-                            // Itterate through those that have a cDiscountUserCode
-                            foreach (XmlElement currentOItemElmt1 in oFinalDiscounts.SelectNodes("/Discounts/Item/Discount[@cDiscountUserCode!='' or @nDiscountCodeType='3']"))
+                            // Itterate through those that have a cDiscountUserCode and store them to global variables
+                            // so we can deactivate the codes on completed order.
+                            foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item/Discount[@cDiscountUserCode!='' or @nDiscountCodeType='3']"))
                             {
-                                oItemElmt = currentOItemElmt1;
+                              
                                 bHasPromotionalDiscounts = true;
                                 string cDiscountUserCode = oItemElmt.GetAttribute("cDiscountUserCode").ToLower();
                                 promoCodeType nDiscountCodeType = (promoCodeType)Conversions.ToInteger(oItemElmt.GetAttribute("nDiscountCodeType").ToLower());
 
                                 if (nDiscountCodeType == promoCodeType.MultiCode)
                                 {
+                                    // if the code is empty then we remove the rule, otherwise we will process it.
                                     if (string.IsNullOrEmpty(AppliedCode))
                                     {
                                         oItemElmt.ParentNode.RemoveChild(oItemElmt);
@@ -609,42 +577,10 @@ namespace Protean
                                 }
                             }
 
-                            foreach (XmlElement currentOItemElmt2 in oFinalDiscounts.SelectNodes("/Discounts/Item/Discount[@CodeUsedId!='']"))
-                            {
-                                oItemElmt = currentOItemElmt2;
+                            foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item/Discount[@CodeUsedId!='']"))
+                            {                                
                                 cVouchersUsed += oItemElmt.GetAttribute("CodeUsedId") + ",";
-                            }
-
-                            string strcFreeShippingMethods = "";
-                            string strbFreeGiftBox = "";
-                            XmlNodeList itemNodes = oFinalDiscounts.SelectNodes("/Discounts/Item");
-                            XmlElement oElement = oFinalDiscounts.DocumentElement; // root element <Discounts>
-                            if (oElement != null)
-                            {
-                                foreach (XmlNode itemNode in itemNodes)
-                                {
-                                    XmlNode itemdiscountNode = itemNode.SelectSingleNode("Discount");
-                                    if (itemdiscountNode != null)
-                                    {
-                                        // Free Shipping Methods
-                                        XmlNode freeShippingNode = itemdiscountNode.SelectSingleNode("cFreeShippingMethods");
-                                        if (freeShippingNode != null && !string.IsNullOrEmpty(freeShippingNode.InnerText))
-                                        {
-                                            strcFreeShippingMethods = freeShippingNode.InnerText;
-                                            oElement.SetAttribute("NonDiscountedShippingCost", "0");
-                                            oElement.SetAttribute("freeShippingMethods", freeShippingNode.InnerText);
-                                        }
-
-                                        // Free Gift Box
-                                        XmlNode freeGiftBoxNode = itemdiscountNode.SelectSingleNode("bFreeGiftBox");
-                                        if (freeGiftBoxNode != null && !string.IsNullOrEmpty(freeGiftBoxNode.InnerText))
-                                        {
-                                            strbFreeGiftBox = freeGiftBoxNode.InnerText;
-                                            oElement.SetAttribute("bFreeGiftBox", freeGiftBoxNode.InnerText);
-                                        }
-                                    }
-                                }
-                            }  
+                            }                                                   
 
                             // Look through the oDiscountXml to apply each discount rule by providerType
                             // Price Modifiers
@@ -653,17 +589,14 @@ namespace Protean
                             if (!string.IsNullOrEmpty(mcPriceModOrder))
                                 cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
                             int nPriceCount = 0;
-                            ApplicableProviderType.ApplyDiscount(ref oFinalDiscounts, ref nPriceCount, ref strcFreeShippingMethods, ref strbFreeGiftBox, mbRoundUp, ref myCart, cPriceModifiers, ref nPromocodeApplyFlag);
-                            
-                            // set shipping option after applying promocode
-                            if (!string.IsNullOrEmpty(strcFreeShippingMethods) & nPromocodeApplyFlag == 1)
-                            {
-                                myCart.updateGCgetValidShippingOptionsDS(strcFreeShippingMethods);
-                            }
+                            ApplicableProviderType.ApplyDiscount(ref oFinalDiscounts, ref nPriceCount, mbRoundUp, ref myCart, cPriceModifiers, ref nPromocodeApplyFlag);
+
+                            // move this to CheckDiscounts 
+                            oDisProvider.FinalUpdateCartXMLwithDiscounts(ref oCartXML, oFinalDiscounts, mbRoundUp);
                         }
                         
                         //updated CartXML with Discounts Applied.
-                        return oFinalDiscounts;
+                        return oCartXML;
                     }
                     catch (Exception ex)
                     {

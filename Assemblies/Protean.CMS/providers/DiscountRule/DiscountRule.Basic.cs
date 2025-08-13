@@ -89,14 +89,12 @@ namespace Protean.Providers
                 }
             }
 
-            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
+            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {
-                //myWeb.PerfMon.Log("Discount", "ApplyDiscount");
-                XmlElement oDiscountLoop;
+                //myWeb.PerfMon.Log("Discount", "ApplyDiscount");                
                 XmlElement oPriceElmt;
                 bool bApplyOnTotal = false;
-                double RemainingAmountToDiscount = 0d;
-                //int nPromocodeApplyFlag = 0;
+                double RemainingAmountToDiscount = 0d;               
                 string exceptionMessage = string.Empty;
 
                 try
@@ -135,9 +133,8 @@ namespace Protean.Providers
                                             oItemLoop.AppendChild(oPriceElmt);
                                         }
                                         // loop through the basic money discounts'
-                                        foreach (XmlElement currentODiscountLoop in oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=0 and @nDiscountCat=1 and not(@Applied='1')]"))
-                                        {
-                                            oDiscountLoop = currentODiscountLoop;
+                                        foreach (XmlElement oDiscountLoop in oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=0 and @nDiscountCat=1 and not(@Applied='1')]"))
+                                        {                                            
                                             // now work out new unit prices etc
                                             decimal nNewPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
                                             AmountToDiscount = Conversions.ToDecimal(oDiscountLoop.GetAttribute("nDiscountValue"));
@@ -238,10 +235,9 @@ namespace Protean.Providers
                                         }
                                         // Code added for if value basic is Free Shipping then set discount amount=0 and if multiple delivery free shipping selected then 
                                         // chose lowest one price
-                                        foreach (XmlElement currentODiscountLoop1 in oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=2 and @nDiscountCat=1 and not(@Applied='1')]"))
-                                        {
-                                            oDiscountLoop = currentODiscountLoop1;
-                                            Discount_Basic_FreeShipping(ref oFinalDiscounts, ref nPriceCount, ref strcFreeShippingMethods, ref strbFreeGiftBox, mbRoundUp, ref myCart);
+                                        foreach (XmlElement oDiscountLoop in oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=2 and @nDiscountCat=1 and not(@Applied='1')]"))
+                                        {                                            
+                                           // Discount_Basic_FreeShipping(ref oFinalDiscounts, ref nPriceCount, mbRoundUp);
                                         }
                                     }
                                     break;
@@ -404,15 +400,8 @@ namespace Protean.Providers
                                     break;
                                 }
                         }
-                    }
+                    }                  
 
-                    //oCartXML.RemoveAll();
-                    //foreach (XmlNode child in oDiscountXML.DocumentElement.ChildNodes)
-                    //{
-                    //    XmlNode importedChild = oCartXML.OwnerDocument.ImportNode(child, true);
-                    //    oCartXML.AppendChild(importedChild);
-                    //}
-                    //oCartXML = (XmlElement)oCartXML.OwnerDocument.ImportNode(oDiscountXML.DocumentElement, true);
                 }
                 catch (Exception ex)
                 {

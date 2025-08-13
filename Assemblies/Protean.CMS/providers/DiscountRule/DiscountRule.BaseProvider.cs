@@ -19,6 +19,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Security.Authentication;
+using System.Security.Cryptography;
 using System.Security.Policy;
 using System.ServiceModel.Channels;
 using System.Text;
@@ -27,11 +28,13 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Security;
 using System.Web.SessionState;
+using System.Windows.Media.Animation;
 using System.Xml;
 using static Protean.Cms;
 using static Protean.Cms.Cart.Discount;
 using static Protean.Providers.DiscountRule.DefaultProvider;
 using static Protean.stdTools;
+using static Protean.Syndication.Distributor;
 using static Protean.Tools.Xml;
 
 
@@ -48,8 +51,9 @@ namespace Protean.Providers
             void UpdateCartXMLwithDiscounts(XmlNode discountNode, XmlElement oCartXML, ref XmlDocument oFinalDiscounts);
             //long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response); // returns userid
 
-            void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag);
-            decimal FinalApplyToCart(ref XmlElement oCartXML, XmlDocument oDiscountXml, ref Cms myWeb, bool mbRoundUp);
+            void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag);
+            void FinalUpdateCartXMLwithDiscounts(ref XmlElement oCartXML, XmlDocument oDiscountXml, bool mbRoundUp);
+            decimal FinalCartUpdateDB(ref XmlElement oCartXML, ref Cms myWeb, bool mbRoundUp, ref Cms.Cart myCart);
         }
 
         public class ReturnProvider
@@ -94,6 +98,7 @@ namespace Protean.Providers
         {
             private string _Name = "Default";
             public Protean.Cms _myWeb;
+            private System.Collections.Specialized.NameValueCollection moConfig;
             public enum DiscountProviderType
             {
                 DefaultProvider = 0,   // optional “catch‑all”
@@ -216,6 +221,7 @@ namespace Protean.Providers
                 }
 
                 // Populate oXmlDiscounts (final output) with valid items & discounts
+                //oFinalDiscounts is the replica of cartxml but not final cartxml...
                 foreach (XmlNode eligibleItem in eligibleItems)
                 {
                     XmlElement itemCopy = (XmlElement)oFinalDiscounts.ImportNode(eligibleItem, true);
@@ -230,8 +236,39 @@ namespace Protean.Providers
 
                     oFinalDiscounts.DocumentElement.AppendChild(itemCopy);
                 }
-            }
 
+                //move this block to basic provider - nita added below code after valid discount append to cartxml, just add new attributes for freeshipping and giftbox
+                string strcFreeShippingMethods = "";
+                string strbFreeGiftBox = "";
+                XmlElement orderElement = (XmlElement)oCartXML.SelectSingleNode("/Order"); // root <Order>
+                if (orderElement != null)
+                {
+                    XmlNodeList itemNodes = oFinalDiscounts.SelectNodes("/Discounts/Item");
+                    foreach (XmlNode itemNode in itemNodes)
+                    {
+                        XmlNode itemdiscountNode = itemNode.SelectSingleNode("Discount");
+                        if (itemdiscountNode != null)
+                        {
+                            // Free Shipping Methods
+                            XmlNode freeShippingNode = itemdiscountNode.SelectSingleNode("cFreeShippingMethods");
+                            if (freeShippingNode != null && !string.IsNullOrEmpty(freeShippingNode.InnerText))
+                            {
+                                strcFreeShippingMethods = freeShippingNode.InnerText;
+                                orderElement.SetAttribute("NonDiscountedShippingCost", "0");
+                                orderElement.SetAttribute("freeShippingMethods", freeShippingNode.InnerText);
+                            }
+
+                            // Free Gift Box
+                            XmlNode freeGiftBoxNode = itemdiscountNode.SelectSingleNode("bFreeGiftBox");
+                            if (freeGiftBoxNode != null && !string.IsNullOrEmpty(freeGiftBoxNode.InnerText))
+                            {
+                                strbFreeGiftBox = freeGiftBoxNode.InnerText;
+                                orderElement.SetAttribute("bFreeGiftBox", freeGiftBoxNode.InnerText);
+                            }
+                        }
+                    }
+                }
+            }
 
             //this method only return discount is applicable or not with matching Provider type
             public bool CheckDiscountApplicable(XmlNode discountNode, ref XmlElement oCartXML, out int ProviderType)
@@ -342,14 +379,15 @@ namespace Protean.Providers
                 }
             }
 
-            public void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
+            public void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {
                 throw new NotImplementedException("This method should be overridden in derived classes.");
             }
 
-            public decimal FinalApplyToCart(ref XmlElement oCartXML, XmlDocument oDiscountXml, ref Cms myWeb, bool mbRoundUp)
+            public void FinalUpdateCartXMLwithDiscounts(ref XmlElement oCartXML, XmlDocument oDiscountXml, bool mbRoundUp)
             {
-                myWeb.PerfMon.Log("Discount", "Discount_ApplyToCart");
+                string exceptionMessage = string.Empty;
+                //myWeb.PerfMon.Log("Discount", "Discount_ApplyToCart");
                 try
                 {
                     // for basic we need to loop through and apply the new price
@@ -369,13 +407,11 @@ namespace Protean.Providers
                         oPriceElmt = (XmlElement)oDiscountXml.SelectSingleNode("Discounts/Item[@id=" + nId + "]/DiscountPrice");
                         if (oPriceElmt != null)
                         {
-
                             // NB 16/02/2010 added rounding
                             decimal nNewUnitPrice = Round(oPriceElmt.GetAttribute("UnitPrice"), bForceRoundup: mbRoundUp);
                             decimal nNewTotal = Conversions.ToDecimal(oPriceElmt.GetAttribute("Total"));
                             decimal nUnitSaving = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitSaving"));
                             nLineTotalSaving = Conversions.ToDecimal(oPriceElmt.GetAttribute("TotalSaving"));
-
 
                             // set up new attreibutes and change price
                             oItemElmt.SetAttribute("id", nId.ToString());
@@ -388,8 +424,6 @@ namespace Protean.Providers
 
                             // this will change
                             nTotalSaved += nLineTotalSaving;
-
-
 
                             // now to add the discount items to the cart
                             foreach (XmlElement oDiscountElmt in oDiscountXml.SelectNodes("Discounts/Item[@id=" + nId + "]/Discount[((@nDiscountCat=1 or @nDiscountCat=2) and @Applied=1) or (@nDiscountCat=3) or (@nDiscountCat=5)]"))
@@ -433,12 +467,9 @@ namespace Protean.Providers
                                         nDelIDs[Information.UBound(nDelIDs)] = Conversions.ToInteger(oDiscountItemTest.GetAttribute("nDiscountKey"));
                                     }
                                 }
-
                                 else
                                 {
-
                                     // Discount greater than quanity on this line.... should give discount overall
-
                                     oDiscountItemTest.SetAttribute("AppliedToCart", 1.ToString());
                                     oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountItemTest.CloneNode(true), true));
                                     XmlElement oDiscountInfo = (XmlElement)oDiscountXml.SelectSingleNode("Discounts/Item[@id=" + nId + "]/Discount[@nDiscountKey=" + oDiscountItemTest.GetAttribute("nDiscountKey") + "]");
@@ -450,20 +481,11 @@ namespace Protean.Providers
                                     nLineTotalSaving += Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
                                     nTotalSaved += Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
                                 }
-
-
                             }
-                        }
-
-                        // also need to save the total discount in the cart
-                        // TS added in April 09
-                        string cUpdtSQL = "UPDATE tblCartItem SET nDiscountValue = " + nLineTotalSaving + " WHERE nCartItemKey = " + nId;
-                        myWeb.moDbHelper.ExeProcessSql(cUpdtSQL);
+                        }                      
 
                     }
                     // End If
-
-
                     if (!(nDelIDs[0] == 0))
                     {
                         int nIX;
@@ -474,17 +496,68 @@ namespace Protean.Providers
                                 nDelElmt.ParentNode.RemoveChild(nDelElmt);
                         }
                     }
-
-
-                    return nTotalSaved;
+                    
                 }
                 // Thats all folks!
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, "", "Discount_ApplyToCart", ex, "", "", gbDebug);
+                    stdTools.returnException(ref exceptionMessage, "", "Discount_ApplyToCart", ex, "", "", gbDebug);
+                }                
+            }
+
+            public decimal FinalCartUpdateDB(ref XmlElement oCartXML, ref Cms myWeb, bool mbRoundUp, ref Cms.Cart myCart)
+            {
+                var strSQL = new System.Text.StringBuilder();
+                moConfig = myWeb.moConfig;                
+
+                string strbFreeGiftBox = oCartXML.GetAttribute("bFreeGiftBox");
+                // Code for setting default delivery option if discount code option is 'Giftbox'
+                foreach (XmlElement oItemLoop in oCartXML.SelectNodes("/Order/Item"))
+                {
+                    if (!string.IsNullOrEmpty(strbFreeGiftBox) && oItemLoop.SelectSingleNode("Discount") != null)
+                    {
+                        decimal AmountToDiscount = Conversions.ToDecimal(oItemLoop.SelectSingleNode("Discount").Attributes["nDiscountValue"].InnerText);
+                        myCart.updatePackagingForFreeGiftDiscount(oItemLoop.GetAttribute("id"), AmountToDiscount);
+
+                        if (moConfig["GiftBoxDiscount"] != null && moConfig["GiftBoxDiscount"] == "on")
+                        {
+                            strSQL = new System.Text.StringBuilder();
+                            string sSql = "SELECT nShippingMethodId FROM tblCartOrder WHERE nCartOrderKey=" + myCart.mnCartId;
+                            DataSet oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+
+                            if (moConfig["eShippingMethodId"] != null && moConfig["DefaultShippingMethodId"] != null)
+                            {
+                                if (Convert.ToInt32(oDs.Tables[0].Rows[0]["nShippingMethodId"]) == Convert.ToInt32(moConfig["eShippingMethodId"]))
+                                {
+                                    myCart.updateGCgetValidShippingOptionsDS(moConfig["DefaultShippingMethodId"]);
+                                }
+                            }
+                        }
+                    }
                 }
 
-                return default;
+                string strcFreeShippingMethods = oCartXML.GetAttribute("freeShippingMethods");
+                // set shipping option after applying promocode                
+                if (!string.IsNullOrEmpty(strcFreeShippingMethods))
+                {
+                    myCart.updateGCgetValidShippingOptionsDS(strcFreeShippingMethods);
+                }
+
+                // Final update total discount value for that cartid into database table.
+                // TS added in April 09
+                decimal nLineTotalSaving = 0;                
+                foreach (XmlElement oItemElmt in oCartXML.SelectNodes("Item"))
+                {                    
+                    int nId = Conversions.ToInteger(oItemElmt.GetAttribute("id"));
+                    XmlElement oPriceElmt = (XmlElement)oCartXML.SelectSingleNode("//Item[@id=" + nId + "]/DiscountPrice");
+                    if (oPriceElmt != null)
+                    {
+                        nLineTotalSaving = Conversions.ToDecimal(oPriceElmt.GetAttribute("TotalSaving"));
+                        string cUpdtSQL = "UPDATE tblCartItem SET nDiscountValue = " + nLineTotalSaving + " WHERE nCartItemKey = " + nId;
+                        myWeb.moDbHelper.ExeProcessSql(cUpdtSQL);
+                    }
+                }
+                return nLineTotalSaving;
             }
 
         }

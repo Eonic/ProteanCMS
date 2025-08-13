@@ -48,16 +48,15 @@ namespace Protean.Providers
                 return this;
             }
 
-            public new void ApplyDiscount(ref XmlElement oCartXML, ref int nPriceCount, ref Cms myWeb, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart)
+            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {
+                string exceptionMessage = string.Empty;
                 // this will work basic discount discounts
-                myWeb.PerfMon.Log("Discount", "Discount_XForPriceY");
+                //myWeb.PerfMon.Log("Discount", "Discount_XForPriceY");
                 XmlElement oPriceElmt;
                 try
-                {
-                    XmlDocument oDiscountXML = new XmlDocument();
-                    oDiscountXML.AppendChild(oDiscountXML.ImportNode(oCartXML, true));
-                    foreach (XmlElement oItemLoop in oDiscountXML.SelectNodes("Discounts/Item"))
+                {                    
+                    foreach (XmlElement oItemLoop in oFinalDiscounts.SelectNodes("Discounts/Item"))
                     {
                         oPriceElmt = (XmlElement)oItemLoop.SelectSingleNode("DiscountPrice");
                         if (oPriceElmt is null)
@@ -67,7 +66,7 @@ namespace Protean.Providers
                             decimal nPrice;
                             nPrice = Round(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
 
-                            oPriceElmt = oDiscountXML.CreateElement("Item/DiscountPrice");
+                            oPriceElmt = oFinalDiscounts.CreateElement("Item/DiscountPrice");
                             oPriceElmt.SetAttribute("OriginalUnitPrice", nPrice.ToString());
                             // oPriceElmt.SetAttribute("OriginalUnitPrice", oItemLoop.GetAttribute("price"))
                             oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString());
@@ -104,7 +103,7 @@ namespace Protean.Providers
                             nTotalQOff = (int)Math.Round(Conversions.ToDouble(Strings.Split((nQtotal / (double)nQX).ToString(), ".")[0]) * (nQX - nQY));
                             if (nTotalQOff > 0)
                             {
-                                var oDiscount = oDiscountXML.CreateElement("DiscountItem");
+                                var oDiscount = oFinalDiscounts.CreateElement("DiscountItem");
                                 oDiscount.SetAttribute("nDiscountKey", oDiscountLoop.GetAttribute("nDiscountKey")); // ID
                                 oDiscount.SetAttribute("nDiscountCat", 3.ToString());
                                 oDiscount.SetAttribute("oldUnits", oPriceElmt.GetAttribute("Units")); // Original Charged Units
@@ -127,7 +126,7 @@ namespace Protean.Providers
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, "", "Discount_xForPriceY", ex, "", "", gbDebug);
+                    stdTools.returnException(ref exceptionMessage, "", "Discount_xForPriceY", ex, "", "", gbDebug);
                 }
             }
         }

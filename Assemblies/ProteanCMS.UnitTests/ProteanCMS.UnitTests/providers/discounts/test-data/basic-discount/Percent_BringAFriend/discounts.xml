@@ -2,15 +2,15 @@
 
 <Discounts>
 	<Discount>
-		<nDiscountKey>22249</nDiscountKey>
+		<nDiscountKey>16</nDiscountKey>
 		<cDiscountForeignRef/>
-		<cDiscountName>TESTCOURIER</cDiscountName>
+		<cDiscountName>BringAFriend</cDiscountName>
 		<cContentForiegnRef/>
-		<cDiscountCode>TESTCOURIER</cDiscountCode>
+		<cDiscountCode>BringAFriend</cDiscountCode>
 		<nDiscountCat>1</nDiscountCat>
-		<bDiscountIsPercent>0</bDiscountIsPercent>
-		<nDiscountValue>4.99</nDiscountValue>
-		<nDiscountMinPrice>0</nDiscountMinPrice>
+		<bDiscountIsPercent>1</bDiscountIsPercent>
+		<nDiscountValue>10</nDiscountValue>
+		<nDiscountMinPrice></nDiscountMinPrice>
 		<nDiscountMinQuantity>1</nDiscountMinQuantity>
 			<cAdditionalXML>
 				<cDescription />
@@ -20,17 +20,15 @@
 					<img src="" width="" height="" class="display" alt="" />
 					<img src="" width="" height="" class="detail" alt="" />
 				</Images>
-				<bFreeGiftBox>True</bFreeGiftBox>
+				<bFreeGiftBox></bFreeGiftBox>
 				<bApplyToOrder></bApplyToOrder>
-				<cFreeShippingMethods>102</cFreeShippingMethods>
+				<cFreeShippingMethods></cFreeShippingMethods>
 				<nMinimumOrderValue></nMinimumOrderValue>
 				<nMaximumOrderValue></nMaximumOrderValue>
-				<nDiscountMaxPrice>1000</nDiscountMaxPrice>
+				<nDiscountMaxPrice></nDiscountMaxPrice>
 			</cAdditionalXML>
-		<cDiscountUserCode>TESTCOURIER</cDiscountUserCode>
-		<nDiscountCodeType>1</nDiscountCodeType>
-		<nDiscountCodeBank />
-		<nAuditId>5510173</nAuditId>
-		<bAllProductExcludeGroups>1</bAllProductExcludeGroups>
+		<cDiscountUserCode>BringAFriend</cDiscountUserCode>
+		<nDiscountCodeType>1</nDiscountCodeType>		
 	</Discount>
+	
 </Discounts>
