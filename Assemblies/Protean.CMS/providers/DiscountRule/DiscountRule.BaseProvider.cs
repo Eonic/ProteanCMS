@@ -514,9 +514,9 @@ namespace Protean.Providers
                 // Code for setting default delivery option if discount code option is 'Giftbox'
                 foreach (XmlElement oItemLoop in oCartXML.SelectNodes("/Order/Item"))
                 {
-                    if (!string.IsNullOrEmpty(strbFreeGiftBox) && oItemLoop.SelectSingleNode("Discount") != null)
+                    if (!string.IsNullOrEmpty(strbFreeGiftBox) && oItemLoop.SelectSingleNode("DiscountPrice") != null)
                     {
-                        decimal AmountToDiscount = Conversions.ToDecimal(oItemLoop.SelectSingleNode("Discount").Attributes["nDiscountValue"].InnerText);
+                        decimal AmountToDiscount =Convert.ToDecimal(oItemLoop.GetAttribute("discount"));
                         myCart.updatePackagingForFreeGiftDiscount(oItemLoop.GetAttribute("id"), AmountToDiscount);
 
                         if (moConfig["GiftBoxDiscount"] != null && moConfig["GiftBoxDiscount"] == "on")
