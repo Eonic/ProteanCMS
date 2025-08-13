@@ -944,7 +944,7 @@ namespace Protean
                             {
                                 if (goRequest["ewCmd2"] == "Do")
                                 {
-                                    // AddResponse(myWeb.moDbHelper.CleanDatabase());
+                                    AddResponse(myWeb.moDbHelper.CleanDatabase());
                                     cStep = 1.ToString();
                                 }
 

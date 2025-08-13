@@ -9,6 +9,7 @@
 // ***********************************************************************
 
 using AngleSharp.Dom;
+using AngleSharp.Io;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Authentication;
@@ -12759,6 +12760,23 @@ namespace Protean
                 }
 
                 return default;
+            }
+
+            public string CleanDatabase()
+            {
+                PerfMonLog("dbTools", "CleanDatabase");
+                try
+                {
+                    string cSQL= "spCleanDatabase";
+                    ExeProcessSql(cSQL, CommandType.StoredProcedure);
+                    return "Deleted 100 records from order table and inactive promotional code "; ;
+
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "CleanDatabase", ex, ""));
+                    return "Error cleaning Database";
+                }
             }
 
             public string CleanAuditOrphans()
