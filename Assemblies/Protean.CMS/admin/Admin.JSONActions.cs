@@ -779,19 +779,20 @@ namespace Protean
                                         GitHelper gitHelper = new GitHelper(gitFilePath);
                                         if (File.Exists(gitFilePath + cGitPS1FileName))
                                         {
-                                            if (!string.IsNullOrEmpty(moConfig["AzureClientId"]) &&
-                                                !string.IsNullOrEmpty(moConfig["AzureTenantId"]) &&
-                                                !string.IsNullOrEmpty(moConfig["AzureClientSecretValue"]) &&
-                                                !string.IsNullOrEmpty(moConfig["AzureScope"]))
-                                            {
-                                                cClientId = moConfig["AzureClientId"];
-                                                cTenantId = moConfig["AzureTenantId"];
-                                                cScope = moConfig["AzureScope"];
-                                                cSecreteValue = moConfig["AzureClientSecretValue"];
-                                                gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
-                                                result = gitHelper.GitCommandExecution(cGitPS1FileName);
-                                               
-                                            }
+                                            result = gitHelper.GitCommandExecution(cGitPS1FileName);
+                                            //if (!string.IsNullOrEmpty(moConfig["AzureClientId"]) &&
+                                            //    !string.IsNullOrEmpty(moConfig["AzureTenantId"]) &&
+                                            //    !string.IsNullOrEmpty(moConfig["AzureClientSecretValue"]) &&
+                                            //    !string.IsNullOrEmpty(moConfig["AzureScope"]))
+                                            //{
+                                            //    cClientId = moConfig["AzureClientId"];
+                                            //    cTenantId = moConfig["AzureTenantId"];
+                                            //    cScope = moConfig["AzureScope"];
+                                            //    cSecreteValue = moConfig["AzureClientSecretValue"];
+                                            //    gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
+                                            //    result = gitHelper.GitCommandExecution(cGitPS1FileName);
+
+                                            //}
                                         }
                                     }
                                 }

@@ -1089,17 +1089,18 @@ namespace Protean
 
                                             if (File.Exists(gitFilePath + cGitPS1FilePath))
                                             {
-                                                if (!string.IsNullOrEmpty(goConfig["AzureClientId"]) && !string.IsNullOrEmpty(goConfig["AzureTenantId"]) && !string.IsNullOrEmpty(goConfig["AzureClientSecretValue"]) && !string.IsNullOrEmpty(goConfig["AzureScope"]))
-                                                {
-                                                    cClientId = goConfig["AzureClientId"];
-                                                    cTenantId = goConfig["AzureTenantId"];
-                                                    cScope = goConfig["AzureScope"];
-                                                    cSecreteValue = goConfig["AzureClientSecretValue"];
+                                                result = gitHelper.GitCommandExecution(cGitPS1FilePath);
+                                                //if (!string.IsNullOrEmpty(goConfig["AzureClientId"]) && !string.IsNullOrEmpty(goConfig["AzureTenantId"]) && !string.IsNullOrEmpty(goConfig["AzureClientSecretValue"]) && !string.IsNullOrEmpty(goConfig["AzureScope"]))
+                                                //{
+                                                //    cClientId = goConfig["AzureClientId"];
+                                                //    cTenantId = goConfig["AzureTenantId"];
+                                                //    cScope = goConfig["AzureScope"];
+                                                //    cSecreteValue = goConfig["AzureClientSecretValue"];
 
-                                                    gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
-                                                    result = gitHelper.GitCommandExecution(cGitPS1FilePath);
+                                                //    gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
+                                                //    result = gitHelper.GitCommandExecution(cGitPS1FilePath);
                                                     
-                                                }
+                                                //}
                                             }
 
                                         }

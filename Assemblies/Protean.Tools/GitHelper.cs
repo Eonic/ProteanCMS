@@ -11,7 +11,7 @@ namespace Protean.Tools
     public class GitHelper
     {
         private readonly string _gitFilePath;
-        public string _accessToken = string.Empty;
+        //public string _accessToken = string.Empty;
         public GitHelper(string gitFilePath)
         {
             if (!string.IsNullOrEmpty(gitFilePath))
@@ -20,29 +20,29 @@ namespace Protean.Tools
             }
         }
 
-        public void AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue)
-        {
-            try
-            {
-                if(string.IsNullOrEmpty(cClientId) || string.IsNullOrEmpty(cTenantId) || string.IsNullOrEmpty(cScope) || string.IsNullOrEmpty(cSecreteValue))
-                {
-                    return;
-                }
+        //public void AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue)
+        //{
+        //    try
+        //    {
+        //        if(string.IsNullOrEmpty(cClientId) || string.IsNullOrEmpty(cTenantId) || string.IsNullOrEmpty(cScope) || string.IsNullOrEmpty(cSecreteValue))
+        //        {
+        //            return;
+        //        }
 
-                var app = ConfidentialClientApplicationBuilder.Create(cClientId)
-              .WithClientSecret(cSecreteValue)
-              .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
-             .Build();
+        //        var app = ConfidentialClientApplicationBuilder.Create(cClientId)
+        //      .WithClientSecret(cSecreteValue)
+        //      .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
+        //     .Build();
 
-                var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
-                _accessToken = tokenResult.AccessToken;
+        //        var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
+        //        _accessToken = tokenResult.AccessToken;
                 
-            }
-            catch (Exception ex) {
-                return;
-            }
+        //    }
+        //    catch (Exception ex) {
+        //        return;
+        //    }
 
-        }
+        //}
 
         public string GitCommandExecution(string ps1FilePath)
         {
@@ -54,10 +54,10 @@ namespace Protean.Tools
             try
             {
                 string gitFilePath = _gitFilePath;
-                if (string.IsNullOrEmpty(_accessToken))
-                {
-                    return "Access token is not null or empty. Please provide a valid token.";
-                }
+                //if (string.IsNullOrEmpty(_accessToken))
+                //{
+                //    return "Access token is not null or empty. Please provide a valid token.";
+                //}
                 if (string.IsNullOrEmpty(ps1FilePath))
                 {
                     return "PowerShell script path is not null or empty. Please provide a valid script path.";
