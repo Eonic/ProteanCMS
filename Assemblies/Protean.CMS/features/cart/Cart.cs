@@ -11850,12 +11850,12 @@ namespace Protean
                     var oInstance = new XmlDocument();
                     XmlElement oElmt;
                     XmlElement oeResponseElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response");
-                    string ReceiptId = oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response/@ReceiptId").Value.ToString();
+                    string ReceiptId = oCartListElmt.SelectSingleNode("/PaymentDetails/@ref").Value.ToString();
                     double Amount = Convert.ToDouble(oCartListElmt.GetAttribute("total"));
                     //int nItemID = 0; // ID of the cart item record
                     // Dim oDs As DataSet
 
-                    XmlElement oePaymentDetailsInstanceElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails/instance");
+                    XmlElement oePaymentDetailsInstanceElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails");
 
                     oInstance.AppendChild(oInstance.CreateElement("instance"));
                     XmlNode argoNode = oInstance.DocumentElement;
