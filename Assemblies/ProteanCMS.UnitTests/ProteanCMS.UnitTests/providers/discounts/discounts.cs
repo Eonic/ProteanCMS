@@ -14,8 +14,9 @@ namespace ProteanCMS.UnitTests
     [TestClass]
     public class discounts
     {
-        //public HttpContext moCtx = HttpContext.Current;
-        public Cart.Discount moDiscount;        
+        public Cart myCart;
+        public Cart.Discount moDiscount;         
+
         XmlElement RunDiscountTest(string TestPath)
         {           
             string baseDir = AppDomain.CurrentDomain.BaseDirectory;            
@@ -39,7 +40,8 @@ namespace ProteanCMS.UnitTests
             // Create Cms object and call CheckDiscounts
            
             moDiscount= new Protean.Cms.Cart.Discount();
-            XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode);          
+            myCart = new Protean.Cms.Cart();
+            XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode, myCart);          
 
             return result;
         }
@@ -90,6 +92,35 @@ namespace ProteanCMS.UnitTests
                 if (decimal.TryParse(totalStr, out decimal total))
                 {
                     Assert.AreEqual(90m, total);
+                    Assert.IsTrue(true);
+                }
+                else
+                {
+                    Assert.Fail("Failed to parse Total attribute as decimal.");
+                }
+            }
+            else
+            {
+                Assert.Fail("DiscountPriceLine node or Total attribute not found.");
+            }
+        }
+
+        [TestMethod]
+        public void Apply_And_Validate_COMER20_Twenty_Percentage_PromotionalCode()
+        {
+            // Get updated cart with discount applied
+            XmlElement oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/Percent_COMER20_Evoucher_Free/");
+            XmlNode discountPriceLineNode = oCartXML.SelectSingleNode("//DiscountPriceLine");
+            string totalSaving = discountPriceLineNode.Attributes["TotalSaving"]?.Value;
+            string unitPrice = discountPriceLineNode.Attributes["UnitPrice"]?.Value;
+            string priceOrder = discountPriceLineNode.Attributes["PriceOrder"]?.Value;
+            if (discountPriceLineNode != null && discountPriceLineNode.Attributes["Total"] != null)
+            {
+                string totalStr = discountPriceLineNode.Attributes["Total"].Value;
+
+                if (decimal.TryParse(totalStr, out decimal total))
+                {
+                    Assert.AreEqual(168m, total);
                     Assert.IsTrue(true);
                 }
                 else

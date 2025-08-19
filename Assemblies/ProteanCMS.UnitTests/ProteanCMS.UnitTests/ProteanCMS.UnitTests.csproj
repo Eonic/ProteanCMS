@@ -66,6 +66,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -87,6 +88,8 @@
   <ItemGroup>
     <Content Include="providers\discounts\test-data\basic-discount\BasicMonitory\cart.xml" />
     <Content Include="providers\discounts\test-data\basic-discount\BasicMonitory\discounts.xml" />
+    <Content Include="providers\discounts\test-data\basic-discount\Percent_COMER20_Evoucher_Free\cart.xml" />
+    <Content Include="providers\discounts\test-data\basic-discount\Percent_COMER20_Evoucher_Free\discounts.xml" />
     <Content Include="providers\discounts\test-data\basic-discount\Percent_BringAFriend\cart.xml" />
     <Content Include="providers\discounts\test-data\basic-discount\Percent_BringAFriend\discounts.xml" />
   </ItemGroup>

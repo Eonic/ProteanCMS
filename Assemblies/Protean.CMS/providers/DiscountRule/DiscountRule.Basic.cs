@@ -50,45 +50,7 @@ namespace Protean.Providers
                 return this;
             }
 
-            private decimal priceRound(object nNumber, int nDecimalPlaces = 2, int nSplitNo = 5, bool bForceRoundup = true, bool bForceRoundDown = false)
-            {
-                try
-                {
-                    decimal value = Convert.ToDecimal(nNumber);
-
-                    if (bForceRoundup)
-                    {
-                        // If split number is used (e.g., round to nearest 0.05, 0.10, etc.)
-                        decimal factor = (decimal)Math.Pow(10, nDecimalPlaces);
-                        if (nSplitNo > 0)
-                        {
-                            decimal step = 1m / nSplitNo;
-                            value = Math.Ceiling(value / step) * step;
-                            value = Math.Round(value, nDecimalPlaces, MidpointRounding.AwayFromZero);
-                        }
-                        else
-                        {
-                            value = Math.Ceiling(value * factor) / factor;
-                        }
-                    }
-                    else if (bForceRoundDown)
-                    {
-                        decimal factor = (decimal)Math.Pow(10, nDecimalPlaces);
-                        value = Math.Floor(value * factor) / factor;
-                    }
-                    else
-                    {
-                        value = Math.Round(value, nDecimalPlaces, MidpointRounding.ToEven);
-                    }
-
-                    return value;
-                }
-                catch
-                {
-                    return 0m;
-                }
-            }
-
+            
             public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {
                 //myWeb.PerfMon.Log("Discount", "ApplyDiscount");                

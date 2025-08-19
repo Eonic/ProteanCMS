@@ -408,7 +408,7 @@ namespace Protean.Providers
                         if (oPriceElmt != null)
                         {
                             // NB 16/02/2010 added rounding
-                            decimal nNewUnitPrice = Round(oPriceElmt.GetAttribute("UnitPrice"), bForceRoundup: mbRoundUp);
+                            decimal nNewUnitPrice = priceRound(oPriceElmt.GetAttribute("UnitPrice"), bForceRoundup: mbRoundUp);
                             decimal nNewTotal = Conversions.ToDecimal(oPriceElmt.GetAttribute("Total"));
                             decimal nUnitSaving = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitSaving"));
                             nLineTotalSaving = Conversions.ToDecimal(oPriceElmt.GetAttribute("TotalSaving"));
@@ -416,7 +416,7 @@ namespace Protean.Providers
                             // set up new attreibutes and change price
                             oItemElmt.SetAttribute("id", nId.ToString());
                             // NB 16/02/2010 added rounding
-                            oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString());
+                            oItemElmt.SetAttribute("originalPrice", priceRound(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString());
                             oItemElmt.SetAttribute("price", nNewUnitPrice.ToString());
                             oItemElmt.SetAttribute("unitSaving", nUnitSaving.ToString());
                             oItemElmt.SetAttribute("itemSaving", nLineTotalSaving.ToString());
@@ -558,6 +558,44 @@ namespace Protean.Providers
                     }
                 }
                 return nLineTotalSaving;
+            }
+            public decimal priceRound(object nNumber, int nDecimalPlaces = 2, int nSplitNo = 5, bool bForceRoundup = true, bool bForceRoundDown = false)
+            {
+                try
+                {
+                    decimal value = Convert.ToDecimal(nNumber);
+
+                    if (bForceRoundup)
+                    {
+                        // If split number is used (e.g., round to nearest 0.05, 0.10, etc.)
+                        decimal factor = (decimal)Math.Pow(10, nDecimalPlaces);
+                        if (nSplitNo > 0)
+                        {
+                            decimal step = 1m / nSplitNo;
+                            value = Math.Ceiling(value / step) * step;
+                            value = Math.Round(value, nDecimalPlaces, MidpointRounding.AwayFromZero);
+                        }
+                        else
+                        {
+                            value = Math.Ceiling(value * factor) / factor;
+                        }
+                    }
+                    else if (bForceRoundDown)
+                    {
+                        decimal factor = (decimal)Math.Pow(10, nDecimalPlaces);
+                        value = Math.Floor(value * factor) / factor;
+                    }
+                    else
+                    {
+                        value = Math.Round(value, nDecimalPlaces, MidpointRounding.ToEven);
+                    }
+
+                    return value;
+                }
+                catch
+                {
+                    return 0m;
+                }
             }
 
         }

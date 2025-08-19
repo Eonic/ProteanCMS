@@ -493,6 +493,10 @@ namespace Protean
 
 
             protected internal Cms myWeb;
+            public Cart()
+            {
+
+            }
 
             public Cart(ref Cms aWeb)
             {

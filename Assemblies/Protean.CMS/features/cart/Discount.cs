@@ -243,15 +243,16 @@ namespace Protean
                             // If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
                             // if total crossed more or less than defined range then it will remove promocode for the user.
 
-                            XmlDocument oXmlDiscounts = new XmlDocument();                            
+                                                   
                             // TS: Move to new CheckDiscounts
 
                             if (oDsDiscounts != null)
                             {
                                 if (oDsDiscounts.Tables["Discount"].Rows.Count > 0)
                                 {
+                                    XmlDocument oXmlDiscounts = new XmlDocument();
                                     oXmlDiscounts.LoadXml(oDsDiscounts.GetXml());
-                                    CheckDiscounts(oXmlDiscounts.DocumentElement, ref oCartXML, ref cPromoCodeUserEntered);                                   
+                                    CheckDiscounts(oXmlDiscounts.DocumentElement, ref oCartXML, ref cPromoCodeUserEntered, myCart);                                   
 
                                     Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
                                     IdiscountRuleProvider oDisProvider = oDiscRuleProv.Get();
@@ -486,7 +487,7 @@ namespace Protean
                     return default;
                 } 
 
-                public XmlElement CheckDiscounts(XmlElement oXmlDiscounts, ref XmlElement oCartXML, ref string AppliedCode)
+                public XmlElement CheckDiscounts(XmlElement oXmlDiscounts, ref XmlElement oCartXML, ref string AppliedCode, Cart myCart)
                 {
                     try {
                         bool isApplicable = false;
@@ -593,6 +594,13 @@ namespace Protean
 
                             // move this to CheckDiscounts 
                             oDisProvider.FinalUpdateCartXMLwithDiscounts(ref oCartXML, oFinalDiscounts, mbRoundUp);
+
+                            // update the cart xml
+                            if(oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value != "" && oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value != null)
+                            {
+                                double Total = Convert.ToDouble(oCartXML.SelectSingleNode("/Order/Item/@itemTotal")?.Value);
+                                myCart.updateTotals(ref oCartXML, Total, Convert.ToDouble(oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value), oCartXML.SelectSingleNode("/Order/@shippingType")?.Value);
+                            }
                         }
                         
                         //updated CartXML with Discounts Applied.

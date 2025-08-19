@@ -15014,24 +15014,32 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "execute spGetContentIdFromOrderReference @orderRef=" + orderRef + ", @ProductName=" + "'" + ContentName + "'";
-                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                    using (SqlCommand cmd = new SqlCommand("spGetContentIdFromOrderReference", oConn))
                     {
-                        if (oDr != null)
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Pass parameters safely
+                        cmd.Parameters.Add("@orderRef", SqlDbType.Int).Value = Convert.ToInt32(orderRef);
+                        cmd.Parameters.Add("@ProductName", SqlDbType.NVarChar, 200).Value = ContentName;
+
+                        using (SqlDataReader oDr = cmd.ExecuteReader())
                         {
-                            while (oDr.Read())
+                            if (oDr != null)
                             {
-                                nContentID = Convert.ToString(oDr["nItemId"]);
+                                while (oDr.Read())
+                                {
+                                    nContentID = Convert.ToString(oDr["nItemId"]);
+                                }
                             }
                         }
                     }
-                    return nContentID.ToString();
                 }
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateContact", ex, cProcessInfo));
                     return nContentID;
                 }
+                return nContentID;
             }
 
             public XmlElement GetMenuMetaTitleDescriptionDetailsXml(XmlElement oMenuElmt)
