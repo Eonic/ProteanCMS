@@ -53,37 +53,28 @@ namespace ProteanCMS.UnitTests
             XmlDocument expected = new XmlDocument();
             expected.Load(expectedXmlPath);
 
-            AssertXmlEquals(expected.OuterXml, actualCartXml.OuterXml);
-        }
+            XmlDocument CartXML = new XmlDocument();
+            CartXML.LoadXml(actualCartXml.OuterXml);
 
-        // Custom XML comparer
-        public static void AssertXmlEquals(string expectedXml, string actualXml)
+            CompareNodes(expected.DocumentElement, CartXML.DocumentElement, "/");
+        }       
+
+        private static void CompareNodes(XmlNode expected, XmlNode CartXML, string path)
         {
-            XmlDocument expected = new XmlDocument();
-            expected.LoadXml(expectedXml);
-
-            XmlDocument actual = new XmlDocument();
-            actual.LoadXml(actualXml);
-
-            CompareNodes(expected.DocumentElement, actual.DocumentElement, "/");
-        }
-
-        private static void CompareNodes(XmlNode expected, XmlNode actual, string path)
-        {
-            if (expected == null && actual == null)
+            if (expected == null && CartXML == null)
                 return;
 
-            if (expected == null || actual == null)
+            if (expected == null || CartXML == null)
                 Assert.Fail($"Node mismatch at {path}. One is null, the other is not.");
 
             // Compare node names
-            if (expected.Name != actual.Name)
-                Assert.Fail($"Node name mismatch at {path}. Expected '{expected.Name}', got '{actual.Name}'.");
+            if (expected.Name != CartXML.Name)
+                Assert.Fail($"Node name mismatch at {path}. Expected '{expected.Name}', got '{CartXML.Name}'.");
 
             // Compare attributes
             foreach (XmlAttribute expAttr in expected.Attributes)
             {
-                string actVal = actual.Attributes[expAttr.Name]?.Value;
+                string actVal = CartXML.Attributes[expAttr.Name]?.Value;
                 if (actVal != expAttr.Value)
                 {
                     Assert.Fail(
@@ -94,7 +85,7 @@ namespace ProteanCMS.UnitTests
 
             // Compare child nodes count
             XmlNodeList expectedChildren = expected.ChildNodes;
-            XmlNodeList actualChildren = actual.ChildNodes;
+            XmlNodeList actualChildren = CartXML.ChildNodes;
 
             if (expectedChildren.Count != actualChildren.Count)
                 Assert.Fail($"Child count mismatch at {path}/{expected.Name}. Expected {expectedChildren.Count}, got {actualChildren.Count}.");

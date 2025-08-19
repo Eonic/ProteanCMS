@@ -598,6 +598,10 @@ namespace Protean
                             // update the cart xml
                             if(oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value != "" && oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value != null)
                             {
+                                if (bHasPromotionalDiscounts)
+                                {
+                                    oCartXML.SetAttribute("showDiscountCodeBox", "true");
+                                }
                                 double Total = Convert.ToDouble(oCartXML.SelectSingleNode("/Order/Item/@itemTotal")?.Value);
                                 myCart.updateTotals(ref oCartXML, Total, Convert.ToDouble(oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value), oCartXML.SelectSingleNode("/Order/@shippingType")?.Value);
                             }

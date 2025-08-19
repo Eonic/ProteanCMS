@@ -314,6 +314,10 @@ namespace Protean.Providers
                     {
                         oCartXML.SetAttribute("NonDiscountedShippingCost", "0");
                     }
+                    if (bDiscountIsPercent != default(short))
+                    {
+                        oCartXML.SetAttribute("bDiscountIsPercent", bDiscountIsPercent + "");
+                    }
 
                     double totalAmount = 0d;
                     int nValidProductCount = 0;
@@ -416,15 +420,15 @@ namespace Protean.Providers
                             // set up new attreibutes and change price
                             oItemElmt.SetAttribute("id", nId.ToString());
                             // NB 16/02/2010 added rounding
-                            oItemElmt.SetAttribute("originalPrice", priceRound(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString());
-                            oItemElmt.SetAttribute("price", nNewUnitPrice.ToString());
-                            oItemElmt.SetAttribute("unitSaving", nUnitSaving.ToString());
-                            oItemElmt.SetAttribute("itemSaving", nLineTotalSaving.ToString());
-                            oItemElmt.SetAttribute("itemTotal", nNewTotal.ToString());
+                            oItemElmt.SetAttribute("originalPrice", priceRound(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString("0.00"));
+                            oItemElmt.SetAttribute("price", nNewUnitPrice.ToString("0.00"));
+                            oItemElmt.SetAttribute("unitSaving", nUnitSaving.ToString("0.00"));
+                            oItemElmt.SetAttribute("itemSaving", nLineTotalSaving.ToString("0.00"));
+                            oItemElmt.SetAttribute("itemTotal", nNewTotal.ToString("0.00"));
 
                             // this will change
                             nTotalSaved += nLineTotalSaving;
-
+                            oItemElmt.SetAttribute("discount", nLineTotalSaving.ToString());
                             // now to add the discount items to the cart
                             foreach (XmlElement oDiscountElmt in oDiscountXml.SelectNodes("Discounts/Item[@id=" + nId + "]/Discount[((@nDiscountCat=1 or @nDiscountCat=2) and @Applied=1) or (@nDiscountCat=3) or (@nDiscountCat=5)]"))
                             {
