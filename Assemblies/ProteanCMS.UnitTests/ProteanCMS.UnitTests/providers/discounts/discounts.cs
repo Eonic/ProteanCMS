@@ -15,38 +15,111 @@ namespace ProteanCMS.UnitTests
     public class discounts
     {
         public Cart myCart;
-        public Cart.Discount moDiscount;         
+        public Cart.Discount moDiscount;
 
-        XmlElement RunDiscountTest(string TestPath)
-        {           
-            string baseDir = AppDomain.CurrentDomain.BaseDirectory;            
-            string projectRoot = Path.GetFullPath(Path.Combine(baseDir, @"..\..\"));
+        // Runs discount engine and returns actual cart XML
+        public XmlElement RunDiscountTest(string testFolderPath)
+        {
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string projectRoot = Path.GetFullPath(Path.Combine(baseDir, @"..\..\UnitTestCases"));
 
-            string discountXmlPath = Path.Combine(projectRoot, TestPath, "discounts.xml"); 
-            string cartXmlPath = Path.Combine(projectRoot, TestPath, "cart.xml"); ;
+            string discountXmlPath = Path.Combine(projectRoot, testFolderPath, "discounts.xml");
+            string cartXmlPath = Path.Combine(projectRoot, testFolderPath, "cart.xml");
 
-            // Load test XMLs
             XmlDocument xDiscounts = new XmlDocument();
             xDiscounts.Load(discountXmlPath);
 
             XmlDocument xCart = new XmlDocument();
             xCart.Load(cartXmlPath);
 
-            // Prepare nodes
             XmlElement oXmlDiscounts = xDiscounts.DocumentElement;
             XmlElement oCartXML = xCart.DocumentElement;
             string appliedCode = "";
 
-            // Create Cms object and call CheckDiscounts
-           
-            moDiscount= new Protean.Cms.Cart.Discount();
+            moDiscount = new Protean.Cms.Cart.Discount();
             myCart = new Protean.Cms.Cart();
-            XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode, myCart);          
 
+            XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode, myCart);
             return result;
+        }       
+
+        // Full XML assert
+        public void AssertDiscountResult(string testFolderPath)
+        {
+            // Run your existing method to get actual + expected XML
+            XmlElement actualCartXml = RunDiscountTest(testFolderPath);
+            string expectedXmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\UnitTestCases", testFolderPath, "expectedCart.xml");
+
+            XmlDocument expected = new XmlDocument();
+            expected.Load(expectedXmlPath);
+
+            AssertXmlEquals(expected.OuterXml, actualCartXml.OuterXml);
         }
-       
-       
+
+        // Custom XML comparer
+        public static void AssertXmlEquals(string expectedXml, string actualXml)
+        {
+            XmlDocument expected = new XmlDocument();
+            expected.LoadXml(expectedXml);
+
+            XmlDocument actual = new XmlDocument();
+            actual.LoadXml(actualXml);
+
+            CompareNodes(expected.DocumentElement, actual.DocumentElement, "/");
+        }
+
+        private static void CompareNodes(XmlNode expected, XmlNode actual, string path)
+        {
+            if (expected == null && actual == null)
+                return;
+
+            if (expected == null || actual == null)
+                Assert.Fail($"Node mismatch at {path}. One is null, the other is not.");
+
+            // Compare node names
+            if (expected.Name != actual.Name)
+                Assert.Fail($"Node name mismatch at {path}. Expected '{expected.Name}', got '{actual.Name}'.");
+
+            // Compare attributes
+            foreach (XmlAttribute expAttr in expected.Attributes)
+            {
+                string actVal = actual.Attributes[expAttr.Name]?.Value;
+                if (actVal != expAttr.Value)
+                {
+                    Assert.Fail(
+                        $"Attribute mismatch at {path}/{expected.Name}[@{expAttr.Name}]. " +
+                        $"Expected '{expAttr.Value}', got '{actVal ?? "MISSING"}'.");
+                }
+            }
+
+            // Compare child nodes count
+            XmlNodeList expectedChildren = expected.ChildNodes;
+            XmlNodeList actualChildren = actual.ChildNodes;
+
+            if (expectedChildren.Count != actualChildren.Count)
+                Assert.Fail($"Child count mismatch at {path}/{expected.Name}. Expected {expectedChildren.Count}, got {actualChildren.Count}.");
+
+            // Recurse into children
+            for (int i = 0; i < expectedChildren.Count; i++)
+            {
+                CompareNodes(expectedChildren[i], actualChildren[i], $"{path}/{expected.Name}[{i}]");
+            }
+        }
+
+        [TestMethod]
+        public void Run_All_Discount_Tests()
+        {
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+            string projectRoot = Path.GetFullPath(Path.Combine(baseDir, @"..\..\UnitTestCases"));
+
+            foreach (string folder in System.IO.Directory.GetDirectories(projectRoot))
+            {
+                string testName = Path.GetFileName(folder);
+                AssertDiscountResult(testName);
+            }
+        }
+
+
         [TestMethod]
         public void Apply_And_Validate_ITBTEST_Ten_Monitory_PromotionalCode()
         {            
