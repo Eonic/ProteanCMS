@@ -1065,10 +1065,6 @@ namespace Protean
                                 {
                                     System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
-                                    string cClientId = "";
-                                    string cTenantId = "";
-                                    string cScope = "";
-                                    string cSecreteValue = "";
                                     string cGitPS1FilePath = "";
                                     string result = "";
                                     string gitFilePath = "";

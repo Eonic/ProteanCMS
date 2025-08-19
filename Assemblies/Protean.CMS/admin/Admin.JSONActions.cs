@@ -742,10 +742,6 @@ namespace Protean
                     System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
                     System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
-                    string cClientId = "";
-                    string cTenantId = "";
-                    string cScope = "";
-                    string cSecreteValue = "";
                     string cGitPS1FileName = "";
                     string result = "";
                     string gitFilePath = "";
