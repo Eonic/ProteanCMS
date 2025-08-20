@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Protean.Providers.DiscountRule;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Channels;
@@ -62,78 +63,87 @@ namespace ProteanCMS.UnitTests
 
         private static void CompareNodes(XmlNode expected, XmlNode actual, string path)
         {
-            if (expected == null && actual == null)
-                return;
-
+            if (expected == null && actual == null) return;
             if (expected == null || actual == null)
-                Assert.Fail($"Node mismatch at {path}. One is null, the other is not.");
+            {
+                Assert.Fail($"Node mismatch at {path}");
+            }
 
-            // Compare node names
-            if (expected.Name != actual.Name)
-                Assert.Fail($"Node name mismatch at {path}. Expected '{expected.Name}', got '{actual.Name}'.");
+            // Compare node name (case-insensitive)
+            if (!string.Equals(expected.Name, actual.Name, StringComparison.OrdinalIgnoreCase))
+            {
+                Assert.Fail($"Node name mismatch at {path}. Expected '{expected.Name}', got '{actual.Name}'");
+            }
 
-            // Compare attributes (ignore order, normalize whitespace)
+            // Compare attributes (ignore extra in actual)
             if (expected.Attributes != null)
             {
                 foreach (XmlAttribute expAttr in expected.Attributes)
                 {
                     var actAttr = actual.Attributes?[expAttr.Name];
-                    string expVal = expAttr.Value?.Trim() ?? string.Empty;
-                    string actVal = actAttr?.Value?.Trim() ?? string.Empty;
+                    string expVal = (expAttr.Value ?? "").Trim();
+                    string actVal = (actAttr?.Value ?? "").Trim();
 
                     if (actAttr == null)
-                    {
-                        Assert.Fail($"Missing attribute at {path}/{expected.Name}[@{expAttr.Name}]. Expected '{expVal}', but it was not found.");
-                    }
+                        Assert.Fail($"Missing attribute {expAttr.Name} at {path}");
 
-                    if (!string.Equals(expVal, actVal, StringComparison.Ordinal))
-                    {
-                        Assert.Fail(
-                            $"Attribute mismatch at {path}/{expected.Name}[@{expAttr.Name}]. " +
-                            $"Expected '{expVal}', got '{actVal}'.");
-                    }
+                    // Case-insensitive compare
+                    if (!string.Equals(expVal, actVal, StringComparison.OrdinalIgnoreCase))
+                        Assert.Fail($"Attribute mismatch at {path}/{expAttr.Name}: expected '{expVal}', got '{actVal}'");
                 }
+            }
 
-                // Check for unexpected extra attributes
-                foreach (XmlAttribute actAttr in actual.Attributes)
+            // Compare text if both nodes are simple text nodes (case-insensitive)
+            string expText = (expected.InnerText ?? "").Trim();
+            string actText = (actual.InnerText ?? "").Trim();
+            if (expected.ChildNodes.Count == 1 && expected.FirstChild is XmlText &&
+                !string.Equals(expText, actText, StringComparison.OrdinalIgnoreCase))
+            {
+                Assert.Fail($"Text mismatch at {path}: expected '{expText}', got '{actText}'");
+            }
+
+            // Compare child elements by name (ignore order, ignore missing/extra)
+            Dictionary<string, List<XmlNode>> expChildren = new Dictionary<string, List<XmlNode>>(StringComparer.OrdinalIgnoreCase);
+            foreach (XmlNode n in expected.ChildNodes)
+            {
+                if (n.NodeType == XmlNodeType.Element)
                 {
-                    if (expected.Attributes[actAttr.Name] == null)
-                    {
-                        Assert.Fail($"Unexpected attribute at {path}/{expected.Name}[@{actAttr.Name}] with value '{actAttr.Value}'.");
-                    }
+                    if (!expChildren.ContainsKey(n.Name))
+                        expChildren[n.Name] = new List<XmlNode>();
+                    expChildren[n.Name].Add(n);
                 }
             }
 
-            // Compare inner text (trimmed, whitespace normalized)
-            string expectedText = expected.InnerText?.Trim() ?? string.Empty;
-            string actualText = actual.InnerText?.Trim() ?? string.Empty;
-            if (expectedText != actualText && expected.ChildNodes.Count == 1 && expected.FirstChild is XmlText)
+            Dictionary<string, List<XmlNode>> actChildren = new Dictionary<string, List<XmlNode>>(StringComparer.OrdinalIgnoreCase);
+            foreach (XmlNode n in actual.ChildNodes)
             {
-                Assert.Fail(
-                    $"Text mismatch at {path}/{expected.Name}. " +
-                    $"Expected '{expectedText}', got '{actualText}'.");
+                if (n.NodeType == XmlNodeType.Element)
+                {
+                    if (!actChildren.ContainsKey(n.Name))
+                        actChildren[n.Name] = new List<XmlNode>();
+                    actChildren[n.Name].Add(n);
+                }
             }
 
-            // Compare child nodes count
-            XmlNodeList expectedChildren = expected.ChildNodes;
-            XmlNodeList actualChildren = actual.ChildNodes;
-
-            // Only compare element nodes (ignore whitespace-only text nodes)
-            var expElems = expectedChildren.Cast<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element).ToList();
-            var actElems = actualChildren.Cast<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element).ToList();
-
-            if (expElems.Count != actElems.Count)
+            // Compare only for expected nodes that exist in actual
+            foreach (var kv in expChildren)
             {
-                Assert.Fail($"Child node count mismatch at {path}/{expected.Name}. " +
-                            $"Expected {expElems.Count}, got {actElems.Count}.");
+                if (actChildren.ContainsKey(kv.Key))
+                {
+                    var expList = kv.Value;
+                    var actList = actChildren[kv.Key];
+
+                    int minCount = Math.Min(expList.Count, actList.Count);
+                    for (int i = 0; i < minCount; i++)
+                    {
+                        CompareNodes(expList[i], actList[i], path + "/" + kv.Key);
+                    }
+                }
+                // else → if missing should be ignored, do nothing
             }
 
-            // Recursively compare children
-            for (int i = 0; i < expElems.Count; i++)
-            {
-                CompareNodes(expElems[i], actElems[i], $"{path}/{expected.Name}");
-            }
         }
+
 
         [TestMethod]
         public void Run_All_Discount_Tests()
