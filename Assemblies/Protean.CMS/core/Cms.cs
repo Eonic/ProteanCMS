@@ -1,4 +1,5 @@
-﻿using Lucene.Net.Support;
+﻿using AngleSharp.Io;
+using Lucene.Net.Support;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Models;
@@ -1062,6 +1063,7 @@ namespace Protean
                             }
                     }
                 }
+
                 bool bSessionLogging = false;
                 if (moSession != null)
                 {
@@ -1847,6 +1849,7 @@ namespace Protean
                                                         moResponse.AddHeader("X-Frame-Options", "DENY");
                                                     }
                                                 }
+
                                                 if (mbSetNoBrowserCache)
                                                 {
                                                     moResponse.Cache.SetNoStore();
@@ -2160,6 +2163,7 @@ namespace Protean
                                 {
                                     moResponse.AddHeader("X-Frame-Options", "DENY");
                                 }
+
                                 short filelen = (short)(goServer.MapPath("/" + gcProjectPath).Length + sServeFile.Length);
                                 DateTime UpdatedTime = mdPageUpdateDate ?? DateTime.Now;
                                 moResponse.AddHeader("Last-Modified", Tools.Text.HtmlHeaderDateTime(UpdatedTime));
