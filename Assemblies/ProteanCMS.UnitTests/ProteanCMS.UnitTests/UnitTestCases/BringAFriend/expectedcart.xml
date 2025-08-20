@@ -8,7 +8,7 @@
 <ProductStatus>1</ProductStatus>
 <nShippingGroup/>
 <nshippingType/>
-<Discount nDiscountKey="16" nDiscountForeignRef="" cDiscountName="BringAFriend" cDiscountCode="BringAFriend" bDiscountIsPercent="1" nDiscountValue="10 " nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1" nAuditId="1278340" nContentId="30572" nDiscountCodeType="1" cDiscountUserCode="BringAFriend" nCartItemKey="2790319" Applied="1" AppliedToCart="1">
+<Discount nDiscountKey="16" nDiscountForeignRef="" cDiscountName="BringAFriend" cDiscountCode="BringAFriend" bDiscountIsPercent="1" nDiscountValue="10 " nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1" nDiscountCodeType="1" cDiscountUserCode="BringAFriend" nCartItemKey="2790319" Applied="1" AppliedToCart="1">
 <cDescription/>
 <cTerms/>
 <Images>

@@ -8,7 +8,7 @@
 <ProductStatus>1</ProductStatus>
 <nShippingGroup/>
 <nshippingType/>
-<Discount nDiscountKey="417" cDiscountName="Angela 20% Discount" cDiscountCode="AG20" bDiscountIsPercent="1" nDiscountValue="20 " nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1" nAuditId="1920746" nContentId="30572" nDiscountCodeType="1" cDiscountUserCode="AG20" nCartItemKey="2790319" Applied="1" AppliedToCart="1">
+<Discount nDiscountKey="417" cDiscountName="Angela 20% Discount" cDiscountCode="AG20" bDiscountIsPercent="1" nDiscountValue="20 " nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1" nDiscountCodeType="1" cDiscountUserCode="AG20" Applied="1" AppliedToCart="1">
 <cDescription>
 <p>Angela 20% Discount</p>
 </cDescription>

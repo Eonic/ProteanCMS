@@ -1,14 +1,13 @@
 <Discount>
 	<nDiscountKey>417</nDiscountKey>
 	<cDiscountForeignRef/>
-	<cDiscountName>AG20</cDiscountName>
-	<cContentForiegnRef/>
+	<cDiscountName>Angela 20% Discount</cDiscountName>
 	<cDiscountCode>AG20</cDiscountCode>
 	<nDiscountCat>1</nDiscountCat>
 	<bDiscountIsPercent>1</bDiscountIsPercent>
 	<nDiscountValue>20</nDiscountValue>
-	<nDiscountMinPrice>0</nDiscountMinPrice>
-	<nDiscountMinQuantity>1</nDiscountMinQuantity>
+	<nDiscountMinPrice></nDiscountMinPrice>
+	<nDiscountMinQuantity></nDiscountMinQuantity>
 	<cAdditionalXML>
 		<cDescription />
 		<cTerms />

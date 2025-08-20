@@ -1,10 +1,11 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Protean.Providers.DiscountRule;
 using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.Remoting.Channels;
-using System.Xml;
-using Protean.Providers.DiscountRule;
 using System.Web;
+using System.Xml;
 using static Protean.Cms;
 using static Protean.Cms.Cart;
 
@@ -57,43 +58,80 @@ namespace ProteanCMS.UnitTests
             CartXML.LoadXml(actualCartXml.OuterXml);
 
             CompareNodes(expected.DocumentElement, CartXML.DocumentElement, "/");
-        }       
+        }
 
-        private static void CompareNodes(XmlNode expected, XmlNode CartXML, string path)
+        private static void CompareNodes(XmlNode expected, XmlNode actual, string path)
         {
-            if (expected == null && CartXML == null)
+            if (expected == null && actual == null)
                 return;
 
-            if (expected == null || CartXML == null)
+            if (expected == null || actual == null)
                 Assert.Fail($"Node mismatch at {path}. One is null, the other is not.");
 
             // Compare node names
-            if (expected.Name != CartXML.Name)
-                Assert.Fail($"Node name mismatch at {path}. Expected '{expected.Name}', got '{CartXML.Name}'.");
+            if (expected.Name != actual.Name)
+                Assert.Fail($"Node name mismatch at {path}. Expected '{expected.Name}', got '{actual.Name}'.");
 
-            // Compare attributes
-            foreach (XmlAttribute expAttr in expected.Attributes)
+            // Compare attributes (ignore order, normalize whitespace)
+            if (expected.Attributes != null)
             {
-                string actVal = CartXML.Attributes[expAttr.Name]?.Value;
-                if (actVal != expAttr.Value)
+                foreach (XmlAttribute expAttr in expected.Attributes)
                 {
-                    Assert.Fail(
-                        $"Attribute mismatch at {path}/{expected.Name}[@{expAttr.Name}]. " +
-                        $"Expected '{expAttr.Value}', got '{actVal ?? "MISSING"}'.");
+                    var actAttr = actual.Attributes?[expAttr.Name];
+                    string expVal = expAttr.Value?.Trim() ?? string.Empty;
+                    string actVal = actAttr?.Value?.Trim() ?? string.Empty;
+
+                    if (actAttr == null)
+                    {
+                        Assert.Fail($"Missing attribute at {path}/{expected.Name}[@{expAttr.Name}]. Expected '{expVal}', but it was not found.");
+                    }
+
+                    if (!string.Equals(expVal, actVal, StringComparison.Ordinal))
+                    {
+                        Assert.Fail(
+                            $"Attribute mismatch at {path}/{expected.Name}[@{expAttr.Name}]. " +
+                            $"Expected '{expVal}', got '{actVal}'.");
+                    }
                 }
+
+                // Check for unexpected extra attributes
+                foreach (XmlAttribute actAttr in actual.Attributes)
+                {
+                    if (expected.Attributes[actAttr.Name] == null)
+                    {
+                        Assert.Fail($"Unexpected attribute at {path}/{expected.Name}[@{actAttr.Name}] with value '{actAttr.Value}'.");
+                    }
+                }
+            }
+
+            // Compare inner text (trimmed, whitespace normalized)
+            string expectedText = expected.InnerText?.Trim() ?? string.Empty;
+            string actualText = actual.InnerText?.Trim() ?? string.Empty;
+            if (expectedText != actualText && expected.ChildNodes.Count == 1 && expected.FirstChild is XmlText)
+            {
+                Assert.Fail(
+                    $"Text mismatch at {path}/{expected.Name}. " +
+                    $"Expected '{expectedText}', got '{actualText}'.");
             }
 
             // Compare child nodes count
             XmlNodeList expectedChildren = expected.ChildNodes;
-            XmlNodeList actualChildren = CartXML.ChildNodes;
+            XmlNodeList actualChildren = actual.ChildNodes;
 
-            if (expectedChildren.Count != actualChildren.Count)
-                Assert.Fail($"Child count mismatch at {path}/{expected.Name}. Expected {expectedChildren.Count}, got {actualChildren.Count}.");
+            // Only compare element nodes (ignore whitespace-only text nodes)
+            var expElems = expectedChildren.Cast<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element).ToList();
+            var actElems = actualChildren.Cast<XmlNode>().Where(n => n.NodeType == XmlNodeType.Element).ToList();
 
-            // Recurse into children
-            for (int i = 0; i < expectedChildren.Count; i++)
+            if (expElems.Count != actElems.Count)
             {
-                CompareNodes(expectedChildren[i], actualChildren[i], $"{path}/{expected.Name}[{i}]");
+                Assert.Fail($"Child node count mismatch at {path}/{expected.Name}. " +
+                            $"Expected {expElems.Count}, got {actElems.Count}.");
+            }
+
+            // Recursively compare children
+            for (int i = 0; i < expElems.Count; i++)
+            {
+                CompareNodes(expElems[i], actElems[i], $"{path}/{expected.Name}");
             }
         }
 

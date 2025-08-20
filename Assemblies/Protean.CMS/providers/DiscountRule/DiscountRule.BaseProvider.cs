@@ -422,13 +422,13 @@ namespace Protean.Providers
                             // NB 16/02/2010 added rounding
                             oItemElmt.SetAttribute("originalPrice", priceRound(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString("0.00"));
                             oItemElmt.SetAttribute("price", nNewUnitPrice.ToString("0.00"));
-                            oItemElmt.SetAttribute("unitSaving", nUnitSaving.ToString("0.00"));
-                            oItemElmt.SetAttribute("itemSaving", nLineTotalSaving.ToString("0.00"));
-                            oItemElmt.SetAttribute("itemTotal", nNewTotal.ToString("0.00"));
+                            oItemElmt.SetAttribute("unitSaving", nUnitSaving.ToString());
+                            oItemElmt.SetAttribute("itemSaving", nLineTotalSaving.ToString());
+                            oItemElmt.SetAttribute("itemTotal", nNewTotal.ToString());
 
                             // this will change
                             nTotalSaved += nLineTotalSaving;
-                            oItemElmt.SetAttribute("discount", nLineTotalSaving.ToString());
+                            oItemElmt.SetAttribute("discount", nLineTotalSaving.ToString("0.0000"));
                             // now to add the discount items to the cart
                             foreach (XmlElement oDiscountElmt in oDiscountXml.SelectNodes("Discounts/Item[@id=" + nId + "]/Discount[((@nDiscountCat=1 or @nDiscountCat=2) and @Applied=1) or (@nDiscountCat=3) or (@nDiscountCat=5)]"))
                             {
@@ -563,38 +563,66 @@ namespace Protean.Providers
                 }
                 return nLineTotalSaving;
             }
-            public decimal priceRound(object nNumber, int nDecimalPlaces = 2, int nSplitNo = 5, bool bForceRoundup = true, bool bForceRoundDown = false)
+            public static decimal priceRound(object nNumber,int nDecimalPlaces = 2,int nSplitNo = 5, bool bForceRoundup = false, bool bForceRoundDown = false)
             {
                 try
                 {
+                    if (!Information.IsNumeric(nNumber))
+                        return 0m;
+
                     decimal value = Convert.ToDecimal(nNumber);
 
                     if (bForceRoundup)
                     {
-                        // If split number is used (e.g., round to nearest 0.05, 0.10, etc.)
-                        decimal factor = (decimal)Math.Pow(10, nDecimalPlaces);
-                        if (nSplitNo > 0)
+                        // Custom RoundUp logic inline
+                        string sVal = value.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+                        // no decimal places
+                        if (!sVal.Contains("."))
+                            return value;
+
+                        string[] parts = sVal.Split('.');
+                        int nWholeNo = Convert.ToInt32(parts[0]);
+                        string decimals = parts[1];
+                        if (decimals.Length <= nDecimalPlaces)
+                            return value; // already has fewer decimals
+
+                        int nTotalLength = decimals.Length;
+                        int nCarry = 0;
+
+                        for (int nI = 0; nI <= (nTotalLength - nDecimalPlaces); nI++)
                         {
-                            decimal step = 1m / nSplitNo;
-                            value = Math.Ceiling(value / step) * step;
-                            value = Math.Round(value, nDecimalPlaces, MidpointRounding.AwayFromZero);
+                            int nCurrent = Convert.ToInt32(decimals.Substring(nTotalLength - nI - 1, 1));
+                            nCurrent += nCarry;
+                            nCarry = (nCurrent >= nSplitNo) ? 1 : 0;
+                        }
+
+                        int nDecimal = Convert.ToInt32(decimals.Substring(0, nDecimalPlaces));
+                        nDecimal += nCarry;
+
+                        if (nDecimal.ToString().Length > nDecimalPlaces)
+                        {
+                            nCarry = 1;
+                            nDecimal = Convert.ToInt32(nDecimal.ToString().Substring(nDecimal.ToString().Length - nDecimalPlaces));
                         }
                         else
                         {
-                            value = Math.Ceiling(value * factor) / factor;
+                            nCarry = 0;
                         }
+
+                        nWholeNo += nCarry;
+
+                        string finalVal = nWholeNo + "." + nDecimal.ToString().PadLeft(nDecimalPlaces, '0');
+                        return Convert.ToDecimal(finalVal);
                     }
                     else if (bForceRoundDown)
                     {
-                        decimal factor = (decimal)Math.Pow(10, nDecimalPlaces);
-                        value = Math.Floor(value * factor) / factor;
+                        return Math.Floor(value * (decimal)Math.Pow(10, nDecimalPlaces)) / (decimal)Math.Pow(10, nDecimalPlaces);
                     }
                     else
                     {
-                        value = Math.Round(value, nDecimalPlaces, MidpointRounding.ToEven);
+                        return Math.Round(value, nDecimalPlaces, MidpointRounding.ToEven);
                     }
-
-                    return value;
                 }
                 catch
                 {
