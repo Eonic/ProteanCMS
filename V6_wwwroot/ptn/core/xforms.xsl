@@ -85,13 +85,16 @@
   <!-- -->
   <xsl:template match="div" mode="xform">
  
-      <!-- TS: div is required otherwise it breaks in compiled mode -->
-      <xsl:if test="./@class">
-        <xsl:attribute name="class">
-          <xsl:value-of select="./@class"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+      <!-- TS: div is required otherwise it breaks in compiled mode - added back in for goodnews. -->
+	  <div>
+          <xsl:if test="./@class">
+            <xsl:attribute name="class">
+              <xsl:value-of select="./@class"/>
+            </xsl:attribute>
+          </xsl:if>
+		  <xsl:text> </xsl:text>
+          <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+	  </div>
 
   </xsl:template>
 
@@ -234,6 +237,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>
+		<xsl:text> </xsl:text>
     </fieldset>
   </xsl:template>
 
@@ -2633,7 +2637,6 @@
       </xsl:choose>
       <xsl:text>-dependant</xsl:text>
     </xsl:variable>
-
     <div id="{translate(@id,'[]#=/','')}-dependant">
       <!-- IF CHOSEN CASE - HIDE-->
       <xsl:attribute name="class">
@@ -3078,6 +3081,10 @@
           <xsl:text>','</xsl:text>
           <xsl:value-of select="$dependantClass"/>
           <xsl:text>');</xsl:text>
+		
+		
+			
+			
         </xsl:attribute>
 
         <xsl:if test="ancestor::select1/item[1]/value/node() = $value">

@@ -631,7 +631,7 @@ namespace Protean
         public XmlDocument SubscriptionProcess()
         {
             var myWeb = new Cms(HttpContext.Current);
-            Cms.gbCart = false;
+            myWeb.gbCart = false;
             myWeb.Open();
             try
             {

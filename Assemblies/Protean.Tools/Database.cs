@@ -1,4 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Office.Word;
+using Org.BouncyCastle.Crypto.Engines;
+using SkiaSharp;
 using System;
 using System.Collections;
 using System.Data;
@@ -1490,10 +1492,18 @@ namespace Protean.Tools
                 {
                     if (nObjectType == objectTypes.Database)
                     {
+                        object dbVersion = GetDataValue("SELECT @@VERSION");
+
+                        if (dbVersion.ToString().Contains("Azure")) {
+                            return true;
+                        }
+                        else {
+
                         if (GetDataSet(string.Format("select name from master..sysdatabases where name = '{0}'", SqlFmt(cObjectName)), "db").Tables[0].Rows.Count > 0)
                             return true;
                         else
                             return false;
+                        }
                     }
                     else
                     {
