@@ -493,6 +493,14 @@ namespace Protean
 
 
             protected internal Cms myWeb;
+            public Cart()
+            {               
+                mcCurrencySymbol = "£";
+                mcCurrency = "GBP";
+                mcCurrencyRef = "GBP";
+                if (string.IsNullOrEmpty(mcCurrency))
+                    mcCurrency = "GBP";
+            }
 
             public Cart(ref Cms aWeb)
             {
@@ -11273,7 +11281,7 @@ namespace Protean
 
             }
 
-            private string updatePackagingForFreeGiftDiscount(string nCartItemKey, decimal AmountToDiscount)
+            public string updatePackagingForFreeGiftDiscount(string nCartItemKey, decimal AmountToDiscount)
             {
                 try
                 {
@@ -11310,7 +11318,7 @@ namespace Protean
             {
                 try
                 {
-
+                    //tidy up this logic
                     // Dim ods As DataSet
                     // Dim oRow As DataRow
                     string sSql;
