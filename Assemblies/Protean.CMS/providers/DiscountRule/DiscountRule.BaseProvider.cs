@@ -288,7 +288,7 @@ namespace Protean.Providers
 
                     XmlNodeList cartItems = oCartXML.SelectNodes("//Item");
 
-                    ProviderType = Convert.ToInt32(discountNode.SelectSingleNode("nDiscountCodeType")?.InnerText ?? "0");
+                    ProviderType = Convert.ToInt32(discountNode.SelectSingleNode("nDiscountCat")?.InnerText ?? "0");
                     int discountContentId = Convert.ToInt32(discountNode.SelectSingleNode("nContentId")?.InnerText ?? "0");
                     short bDiscountIsPercent = Convert.ToInt16(discountNode.SelectSingleNode("bDiscountIsPercent")?.InnerText ?? "0");
                     double.TryParse(discountNode.SelectSingleNode("nDiscountMinPrice")?.InnerText, out dMinPrice);
