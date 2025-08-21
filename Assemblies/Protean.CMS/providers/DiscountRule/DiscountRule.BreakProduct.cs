@@ -48,7 +48,7 @@ namespace Protean.Providers
             }
 
 
-            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
+            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {
                 string exceptionMessage = string.Empty;
                 // this will work basic monetary discounts
@@ -66,7 +66,7 @@ namespace Protean.Providers
                             // NB 16/02/2010
                             // Time to pull price out so we can round it, to avoid the multiple decimal place issues
                             decimal nPrice;
-                            nPrice = Round(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
+                            nPrice = priceRound(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
 
                             // set default attributes
                             oPriceElmt = oFinalDiscounts.CreateElement("DiscountPrice");
@@ -147,7 +147,7 @@ namespace Protean.Providers
                             }
                             else
                             {
-                                nUnitPrice = Round((double)nUnitPrice * ((100d - Conversions.ToDouble(oTestElmt.GetAttribute("nDiscountValue"))) / 100d), bForceRoundup: mbRoundUp);
+                                nUnitPrice = priceRound((double)nUnitPrice * ((100d - Conversions.ToDouble(oTestElmt.GetAttribute("nDiscountValue"))) / 100d), bForceRoundup: mbRoundUp);
                             }
                             // make the totals
                             nTotal = nUnitPrice * nUnits;

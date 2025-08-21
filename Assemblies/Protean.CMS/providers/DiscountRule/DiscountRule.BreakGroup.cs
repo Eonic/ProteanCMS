@@ -89,12 +89,12 @@ namespace Protean.Providers
                                     // NB 16/02/2010
                                     // Time to pull price out so we can round it, to avoid the multiple decimal place issues
                                     decimal nPrice;
-                                    nPrice = Round(oItem.GetAttribute("price"), bForceRoundup: mbRoundUp);
+                                    nPrice = priceRound(oItem.GetAttribute("price"), bForceRoundup: mbRoundUp);
 
                                     oPriceElmt = oFinalDiscounts.CreateElement("Item/DiscountPrice");
-                                    oPriceElmt.SetAttribute("OriginalUnitPrice", nPrice.ToString());
+                                    oPriceElmt.SetAttribute("OriginalUnitPrice", nPrice.ToString("0.00"));
                                     // oPriceElmt.SetAttribute("OriginalUnitPrice", oItem.GetAttribute("price"))
-                                    oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString());
+                                    oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString("0.00"));
                                     // oPriceElmt.SetAttribute("UnitPrice", oItem.GetAttribute("price"))
                                     oPriceElmt.SetAttribute("Units", oItem.GetAttribute("quantity"));
                                     oPriceElmt.SetAttribute("Total", ((double)nPrice * Conversions.ToDouble(oItem.GetAttribute("quantity"))).ToString());
@@ -126,7 +126,7 @@ namespace Protean.Providers
 
                                     if (Conversions.ToDouble(oDiscount.GetAttribute("bDiscountIsPercent")) == 1d)
                                     {
-                                        nNewPrice = Round(Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) / 100d * (100d - Conversions.ToDouble(oDiscount.GetAttribute("nDiscountValue"))), bForceRoundup: mbRoundUp);
+                                        nNewPrice = priceRound(Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) / 100d * (100d - Conversions.ToDouble(oDiscount.GetAttribute("nDiscountValue"))), bForceRoundup: mbRoundUp);
                                     }
                                     else
                                     {
@@ -137,7 +137,7 @@ namespace Protean.Providers
                                     nPriceCount += 1;
                                     oPriceLine.SetAttribute("nDiscountKey", oDiscount.GetAttribute("nDiscountKey"));
                                     oPriceLine.SetAttribute("PriceOrder", nPriceCount.ToString());
-                                    oPriceLine.SetAttribute("UnitPrice", nNewPrice.ToString());
+                                    oPriceLine.SetAttribute("UnitPrice", nNewPrice.ToString("0.00"));
                                     oPriceLine.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                                     oPriceLine.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - (double)nNewPrice).ToString());
                                     oPriceLine.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
@@ -145,7 +145,7 @@ namespace Protean.Providers
 
                                     // this works the overall price
 
-                                    oPriceElmt.SetAttribute("UnitPrice", nNewPrice.ToString());
+                                    oPriceElmt.SetAttribute("UnitPrice", nNewPrice.ToString("0.00"));
                                     oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                                     oPriceElmt.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
                                     oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());

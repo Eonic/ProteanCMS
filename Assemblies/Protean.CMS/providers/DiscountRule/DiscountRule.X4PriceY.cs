@@ -48,7 +48,7 @@ namespace Protean.Providers
                 return this;
             }
 
-            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
+            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {
                 string exceptionMessage = string.Empty;
                 // this will work basic discount discounts
@@ -64,7 +64,7 @@ namespace Protean.Providers
                             // NB 16/02/2010
                             // Time to pull price out so we can round it, to avoid the multiple decimal place issues
                             decimal nPrice;
-                            nPrice = Round(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
+                            nPrice = priceRound(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
 
                             oPriceElmt = oFinalDiscounts.CreateElement("Item/DiscountPrice");
                             oPriceElmt.SetAttribute("OriginalUnitPrice", nPrice.ToString());

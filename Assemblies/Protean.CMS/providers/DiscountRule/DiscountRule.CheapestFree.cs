@@ -48,7 +48,7 @@ namespace Protean.Providers
                 return this;
             }
 
-            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, ref string strcFreeShippingMethods, ref string strbFreeGiftBox, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
+            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {
                 string exceptionMessage = string.Empty;
                 //myWeb.PerfMon.Log("Discount", "Discount_CheapestFree");
@@ -124,7 +124,7 @@ namespace Protean.Providers
                             // NB 16/02/2010
                             // Time to pull price out so we can round it, to avoid the multiple decimal place issues
                             decimal nCurrentUnitPrice;
-                            nCurrentUnitPrice = Round(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
+                            nCurrentUnitPrice = priceRound(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
 
 
                             oPriceElmt = (XmlElement)oItemLoop.SelectSingleNode("DiscountPrice");
@@ -215,7 +215,7 @@ namespace Protean.Providers
 
 
                                         // nUnitPriceDiscounted = Math.Round(nUnitPriceDiscounted, 2)
-                                        nUnitPriceDiscounted = Round(nUnitPriceDiscounted, bForceRoundup: mbRoundUp);
+                                        nUnitPriceDiscounted = priceRound(nUnitPriceDiscounted, bForceRoundup: mbRoundUp);
 
                                         int nUnitCount = Conversions.ToInteger(oPriceElmt.GetAttribute("Units"));
 
