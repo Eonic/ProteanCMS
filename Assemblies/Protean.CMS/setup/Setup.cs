@@ -944,7 +944,7 @@ namespace Protean
                             {
                                 if (goRequest["ewCmd2"] == "Do")
                                 {
-                                    // AddResponse(myWeb.moDbHelper.CleanDatabase());
+                                    AddResponse(myWeb.moDbHelper.CleanDatabase());
                                     cStep = 1.ToString();
                                 }
 
@@ -1065,10 +1065,6 @@ namespace Protean
                                 {
                                     System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
 
-                                    string cClientId = "";
-                                    string cTenantId = "";
-                                    string cScope = "";
-                                    string cSecreteValue = "";
                                     string cGitPS1FilePath = "";
                                     string result = "";
                                     string gitFilePath = "";
@@ -1081,7 +1077,7 @@ namespace Protean
                                     {
                                         if (goRequest["GitPS1FilePath"] != null)
                                         {
-                                            if (goRequest["GitPS1FilePath"].ToString() != null)
+                                            if (goRequest["GitPS1FilePath"].ToString() != "")
                                             {
                                                 cGitPS1FilePath =  goRequest["GitPS1FilePath"].ToString();
 
@@ -1089,17 +1085,18 @@ namespace Protean
 
                                             if (File.Exists(gitFilePath + cGitPS1FilePath))
                                             {
-                                                if (!string.IsNullOrEmpty(goConfig["AzureClientId"]) && !string.IsNullOrEmpty(goConfig["AzureTenantId"]) && !string.IsNullOrEmpty(goConfig["AzureClientSecretValue"]) && !string.IsNullOrEmpty(goConfig["AzureScope"]))
-                                                {
-                                                    cClientId = goConfig["AzureClientId"];
-                                                    cTenantId = goConfig["AzureTenantId"];
-                                                    cScope = goConfig["AzureScope"];
-                                                    cSecreteValue = goConfig["AzureClientSecretValue"];
+                                                result = gitHelper.GitCommandExecution(cGitPS1FilePath);
+                                                //if (!string.IsNullOrEmpty(goConfig["AzureClientId"]) && !string.IsNullOrEmpty(goConfig["AzureTenantId"]) && !string.IsNullOrEmpty(goConfig["AzureClientSecretValue"]) && !string.IsNullOrEmpty(goConfig["AzureScope"]))
+                                                //{
+                                                //    cClientId = goConfig["AzureClientId"];
+                                                //    cTenantId = goConfig["AzureTenantId"];
+                                                //    cScope = goConfig["AzureScope"];
+                                                //    cSecreteValue = goConfig["AzureClientSecretValue"];
 
-                                                    gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
-                                                    result = gitHelper.GitCommandExecution(cGitPS1FilePath);
+                                                //    gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
+                                                //    result = gitHelper.GitCommandExecution(cGitPS1FilePath);
                                                     
-                                                }
+                                                //}
                                             }
 
                                         }
