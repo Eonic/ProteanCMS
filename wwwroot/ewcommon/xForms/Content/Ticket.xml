@@ -82,7 +82,7 @@
       <bind id="cContentForiegnRef" nodeset="cContentForiegnRef" required="false()" type="string"/>
       <bind id="cContentName" nodeset="cContentName" required="true()" type="string"/>
       <bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
-      <bind id="dEventEndDate" nodeset="dExpireDate" required="false()" type="string"/>
+      <bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
       <bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
       <bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
       <bind nodeset="cContentXmlBrief/Content">

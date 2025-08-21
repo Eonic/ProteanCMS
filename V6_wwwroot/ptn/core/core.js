@@ -686,6 +686,8 @@ function showDependant(dependant, allDependants) {
         // ...use `element`...
         $("#" + sDependant).removeClass('hidden');
 
+        $("#" + sDependant).addClass(allDependants);
+
         // Find all inactive required fields and make required again for JS Validation
         $("#" + sDependant).find('.reqinactive').each(function () {
             $(this).removeClass('reqinactive');

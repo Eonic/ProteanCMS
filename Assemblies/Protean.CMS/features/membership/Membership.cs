@@ -1,26 +1,26 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.Membership;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.Reflection;
-using System.Web.Configuration;
-
-using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using static Protean.stdTools;
-using Protean.Providers.Membership;
-using System.Runtime.InteropServices.ComTypes;
-using static Protean.Cms.Admin;
-using System.Web.UI.WebControls;
-using System.Web;
-using System.Linq.Expressions;
 using System.Drawing.Imaging;
-using Microsoft.Ajax.Utilities;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Runtime.InteropServices.ComTypes;
+using System.Threading;
+using System.Web;
+using System.Web.Configuration;
+using System.Web.UI.WebControls;
+using System.Xml;
 using static Protean.Cms;
+using static Protean.Cms.Admin;
+using static Protean.stdTools;
 
 namespace Protean
 {
@@ -259,27 +259,43 @@ namespace Protean
             {
                 try
                 {
+                    Boolean bDoUpdate = true;
                     long userId;
 
                     // lets get the userId form the hash supplied
                     string cSQL = "SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirXml LIKE '%<ActivationKey>" + cLink + "</ActivationKey>%'";
                     userId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
 
+                    if (userId > 0L) {
+                        myWeb.moDbHelper.logActivity(dbHelper.ActivityType.ActivateAccount, userId, 0, 0, 0, cLink);
+                    }                   
+                    else { 
+                        // if account has been activated in the last 10 secs to prevent double clicks showing error
+                        Thread.Sleep(2000);
+                        string cSQL2 = "SELECT nUserDirId FROM tblActivitylog WHERE cActivityDetail LIKE  '" + cLink + "' AND dDateTime >= DATEADD(SECOND, -10, GETDATE())";
+                        // myWeb.moDbHelper.logActivity(dbHelper.ActivityType.ActivateAccount, userId, 0, 0, 0, cSQL2);
+                        userId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue(cSQL2, CommandType.Text, null, (object)0));
+                        myWeb.moDbHelper.logActivity(dbHelper.ActivityType.ActivateAccount, userId, 0, 0, 0, cSQL2);
+                        bDoUpdate = false;
+                        return true;
+                    }
+
                     if (userId > 0L)
                     {
-                        // change the account status
-                        myWeb.moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.Directory, Cms.dbHelper.Status.Live, userId);
-                        // remove the activation key from userXML
-                        var oUserXml = new XmlDocument();
-                        var oUserInstance = oUserXml.CreateElement("Instance");
-                        oUserXml.AppendChild(oUserInstance);
-                        oUserInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Directory, userId);
-                        XmlElement ActivationKeyElmt;
-                        ActivationKeyElmt = (XmlElement)oUserInstance.FirstChild.SelectSingleNode("cDirXml/User/ActivationKey");
-                        ActivationKeyElmt.ParentNode.RemoveChild(ActivationKeyElmt);
-                        myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Directory, oUserXml.DocumentElement, userId);
-
-                        myWeb.moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)userId, myWeb.moSession.SessionID, DateTime.Now, 0, 0, "Activate");
+                        if (bDoUpdate) {
+                            // change the account status
+                            myWeb.moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.Directory, Cms.dbHelper.Status.Live, userId);
+                            // remove the activation key from userXML
+                            var oUserXml = new XmlDocument();
+                            var oUserInstance = oUserXml.CreateElement("Instance");
+                            oUserXml.AppendChild(oUserInstance);
+                            oUserInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Directory, userId);
+                            XmlElement ActivationKeyElmt;
+                            ActivationKeyElmt = (XmlElement)oUserInstance.FirstChild.SelectSingleNode("cDirXml/User/ActivationKey");
+                            ActivationKeyElmt.ParentNode.RemoveChild(ActivationKeyElmt);
+                            myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Directory, oUserXml.DocumentElement, userId);                         
+                            myWeb.moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)userId, myWeb.moSession.SessionID, DateTime.Now, 0, 0, "Activate");
+                        }
                         switch (myWeb.moConfig["ActivateBehaviour"] ?? "")
                         {
                             case "LogonReload":
@@ -320,13 +336,15 @@ namespace Protean
 
                     else
                     {
+                        myWeb.moDbHelper.logActivity(dbHelper.ActivityType.ActivateAccount, userId, 0, 0, 0, "USED CODE ERROR " + cLink);
                         return false;
                     }
                 }
 
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ReactivateAccount", ex, ""));
+                    myWeb.moDbHelper.logActivity(dbHelper.ActivityType.ActivateAccount, 0, 0, 0, 0, ex.Message + ex.StackTrace);
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ActivateAccount", ex, ""));
                     return false;
                 }
             }

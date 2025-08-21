@@ -66,34 +66,25 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Directory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="providers\discounts\discounts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Protean.CMS\Protean.CMS.csproj">
-      <Project>{B8C13866-2804-4975-83A4-4F76296248F5}</Project>
-      <Name>Protean.CMS</Name>
+    <ProjectReference Include="..\..\Protean.Tools\Protean.Tools.csproj">
+      <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
+      <Name>Protean.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="providers\discounts\test-data\basic-discount\BasicMonitory\cart.xml" />
-    <Content Include="providers\discounts\test-data\basic-discount\BasicMonitory\discounts.xml" />
-    <Content Include="providers\discounts\test-data\basic-discount\Percent_COMER20_Evoucher_Free\cart.xml" />
-    <Content Include="providers\discounts\test-data\basic-discount\Percent_COMER20_Evoucher_Free\discounts.xml" />
-    <Content Include="providers\discounts\test-data\basic-discount\Percent_BringAFriend\cart.xml" />
-    <Content Include="providers\discounts\test-data\basic-discount\Percent_BringAFriend\discounts.xml" />
+    <Folder Include="NewFolder1\" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

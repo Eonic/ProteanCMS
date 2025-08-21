@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
-  <xsl:strip-space elements="*"/>
-  <!-- -->
+	<xsl:import href="../core/localisation.xsl"/>
+
+	<xsl:strip-space elements="*"/>
+	<!-- localisation moved here because it contains templates used in functions, so you can load just functions in without compile error - moved from core.xsl -->
+
+
+	<!-- -->
   <!-- ## GLOBAL VARIABLES ########################################################################   -->
   <!-- ## Variables for all EonicWeb XSLT   #######################################################   -->
 
@@ -599,7 +604,7 @@
     </xsl:for-each>
     });
   </xsl:template>
-	
+
   <xsl:template match="Page" mode="criticalPathCSS">
     <style>
       <xsl:copy-of select="/Page/Contents/Content[@name='criticalPathCSS']/node()"/>
@@ -1201,7 +1206,7 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="metadata">
-      <xsl:apply-templates select="." mode="BingTrackingCode"/>
+    <xsl:apply-templates select="." mode="BingTrackingCode"/>
     <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
@@ -2534,15 +2539,15 @@
 
     <xsl:if test="$BingTrackingID!=''">
       <script>
-		  <xsl:choose>
-			  <xsl:when test="Contents/Content[@type='CookieFirst']">
-				  <xsl:attribute name="type">text/plain</xsl:attribute>
-				  <xsl:attribute name="data-cookiefirst-script">bing_ads</xsl:attribute>
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <xsl:attribute name="cookie-consent">tracking</xsl:attribute>
-			  </xsl:otherwise>
-		  </xsl:choose>
+        <xsl:choose>
+          <xsl:when test="Contents/Content[@type='CookieFirst']">
+            <xsl:attribute name="type">text/plain</xsl:attribute>
+            <xsl:attribute name="data-cookiefirst-script">bing_ads</xsl:attribute>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:attribute name="cookie-consent">tracking</xsl:attribute>
+          </xsl:otherwise>
+        </xsl:choose>
         (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'};o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&amp;&amp;s!=='loaded'&amp;&amp;s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq');
       </script>
       <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
@@ -3611,16 +3616,16 @@
         <xsl:value-of select="@name"/>
       </xsl:otherwise>
     </xsl:choose>
-	  <xsl:apply-templates select="." mode="getContentCount"/>
+    <xsl:apply-templates select="." mode="getContentCount"/>
   </xsl:template>
 
-	<xsl:template match="MenuItem" mode="getContentCount">
-		
-	</xsl:template>
+  <xsl:template match="MenuItem" mode="getContentCount">
 
-	<xsl:template match="MenuItem[ContentCount]" mode="getContentCount">
-		&#160;[<xsl:value-of select="ContentCount/@count"/>]
-	</xsl:template>
+  </xsl:template>
+
+  <xsl:template match="MenuItem[ContentCount]" mode="getContentCount">
+    &#160;[<xsl:value-of select="ContentCount/@count"/>]
+  </xsl:template>
 
   <!-- Display Name for a piece of content -->
   <xsl:template match="Content" mode="getDisplayName">
@@ -3900,6 +3905,12 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
+      
+      <xsl:if test="DisplayName/@externalNewWindow='true'">
+        <xsl:attribute name="target">
+          <xsl:text>_blank</xsl:text>
+        </xsl:attribute>
+      </xsl:if>
 
 
       <xsl:if test="DisplayName/@linkType='popUp'">
@@ -4114,6 +4125,7 @@
     <xsl:param name="level2"/>
     <xsl:param name="level3"/>
     <xsl:param name="menu-back"/>
+    <xsl:variable name="level-checker">2</xsl:variable>
     <xsl:variable name="liClass">
       <xsl:text>nav-item </xsl:text>
       <xsl:if test="self::MenuItem[@id=/Page/@id]">
@@ -4277,6 +4289,10 @@
         </span>
       </xsl:if>
       <ul class="dropdown-menu" aria-labelledby="mainNavDD{@id}">
+        <xsl:attribute name="class">
+          <xsl:text>dropdown-menu menu-level-</xsl:text>
+          <xsl:value-of select="$level-checker"/>
+        </xsl:attribute>
         <xsl:if test="$menu-back='true'">
           <li class="xs-only nav-item menu-back">
             <span class="nav-link">
@@ -4339,6 +4355,7 @@
           <xsl:with-param name="level2" select="$level2"/>
           <xsl:with-param name="level3" select="$level3"/>
           <xsl:with-param name="menu-back" select="$menu-back"/>
+          <xsl:with-param name="level-checker" select="$level-checker + 1"/>
         </xsl:apply-templates>
         <xsl:if test="$menu-back='end'">
           <li class="xs-only nav-item menu-back">
@@ -4452,7 +4469,7 @@
 
     <ul>
       <xsl:attribute name="class">
-        <xsl:text>nav nav-pills</xsl:text>
+        <xsl:text>nav nav-pills </xsl:text>
       </xsl:attribute>
       <xsl:if test="$overviewLink='true'">
         <li class="nav-item">
@@ -4538,6 +4555,7 @@
     <xsl:param name="level2"/>
     <xsl:param name="level3"/>
     <xsl:param name="menu-back"/>
+    <xsl:param name="level-checker"/>
     <li>
       <xsl:attribute name="class">
         <xsl:value-of select="$li-class"/>
@@ -4563,14 +4581,15 @@
       </xsl:apply-templates>
       <!--<xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and descendant-or-self::MenuItem[@id=/Page/@id]">-->
       <xsl:if test="count(child::MenuItem[not(DisplayName/@exclude='true')])&gt;0 and ($level2='true' or $level3='true')">
-        <button class="xs-only btn btn-sm btn-outline-dark dropdown-mobile-btn" aria-label="Open submenu">
+        <button class="xs-only btn btn-sm btn-outline-dark dropdown-mobile-btn" aria-label="Open submenu" aria-expanded="false">
           <i class="fas fa-arrow-right">
             <xsl:text> </xsl:text>
           </i>
         </button>
         <ul>
           <xsl:attribute name="class">
-            <xsl:text>nav nav-pills</xsl:text>
+            <xsl:text>nav nav-pills menu-level-</xsl:text>
+            <xsl:value-of select="$level-checker"/>
           </xsl:attribute>
           <xsl:if test="$menu-back='true'">
             <li class="xs-only nav-item menu-back">
@@ -4632,6 +4651,7 @@
             <xsl:with-param name="link-class" select="$li-class"/>
             <xsl:with-param name="level3" select="$level3"/>
             <xsl:with-param name="menu-back" select="$menu-back"/>
+            <xsl:with-param name="level-checker" select="$level-checker + 1" />
           </xsl:apply-templates>
           <xsl:if test="$menu-back='end'">
             <li class="xs-only nav-item menu-back">
@@ -4647,7 +4667,7 @@
                 </button>
               </span>
             </li>
-           
+
           </xsl:if>
         </ul>
       </xsl:if>
@@ -4868,7 +4888,7 @@
     <xsl:param name="altText"/>
     <xsl:param name="stretchLink"/>
     <xsl:param name="tabindex"/>
-    
+
 
     <div class="morelink">
       <span>
@@ -4929,7 +4949,9 @@
                 <xsl:value-of select="$altText"/>
               </xsl:when>
               <xsl:otherwise>
-                --><!-- Back to list --><!--
+                -->
+          <!-- Back to list -->
+          <!--
                 <xsl:call-template name="term2022" />
               </xsl:otherwise>
             </xsl:choose>
@@ -6289,7 +6311,7 @@
           </xsl:if>
           <xsl:if test="@uploadIcon!='' and @uploadIcon!='_'">
             <div class="center-block">
-              <span class="upload-icon" role="img" aria-hidden="true">
+              <span class="upload-icon" role="img" >
                 <img src="{@uploadIcon}" alt="icon" class="img-responsive" width="{@uploadIcon-w}" height="{@uploadIcon-h}"/>
               </span>
             </div>
@@ -7194,7 +7216,7 @@
                   <xsl:attribute name="alt">
                     <xsl:value-of select="$alt" />
                   </xsl:attribute>
-                  
+
                   <!-- Class -->
                   <xsl:attribute name="class">
                     <xsl:choose>
@@ -8477,16 +8499,16 @@
     <xsl:param name="startPos" />
     <xsl:param name="parentClass" />
     <xsl:param name="sort" select="@sortBy"/>
-	  <xsl:param name="order">
-		  <xsl:choose>
-			  <xsl:when test="@order = '' or contains(@order,',')">
-				  <xsl:text>ascending</xsl:text>
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <xsl:value-of select="@order"/>
-			  </xsl:otherwise>
-		  </xsl:choose>
-	  </xsl:param>
+    <xsl:param name="order">
+      <xsl:choose>
+        <xsl:when test="@order = '' or contains(@order,',')">
+          <xsl:text>ascending</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@order"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:param>
     <xsl:param name="sort-data-type">
       <xsl:call-template name="ordering-data-type">
         <xsl:with-param name="field" select="@sortBy"/>
@@ -8589,17 +8611,17 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-	  <xsl:param name="order">
-		  <xsl:choose>
-			  <xsl:when test="@order = '' or contains(@order,',')">
-				  <xsl:text>descending</xsl:text>
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <xsl:value-of select="@order"/>
-			  </xsl:otherwise>
-		  </xsl:choose>
-	  </xsl:param>
-   
+    <xsl:param name="order">
+      <xsl:choose>
+        <xsl:when test="@order = '' or contains(@order,',')">
+          <xsl:text>descending</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@order"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:param>
+
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="endPos">
       <xsl:choose>
@@ -8653,7 +8675,9 @@
         <xsl:when test="@order = '' or contains(@order,',')">
           descending
         </xsl:when>
-        <xsl:otherwise><xsl:value-of select="@order"/></xsl:otherwise>
+        <xsl:otherwise>
+          <xsl:value-of select="@order"/>
+        </xsl:otherwise>
       </xsl:choose>
     </xsl:param>
     <xsl:param name="stepCount" select="'0'"/>
@@ -8704,16 +8728,16 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-	  <xsl:param name="order">
-		  <xsl:choose>
-			  <xsl:when test="@order = '' or contains(@order,',')">
-				  descending
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <xsl:value-of select="@order"/>
-			  </xsl:otherwise>
-		  </xsl:choose>
-	  </xsl:param>
+    <xsl:param name="order">
+      <xsl:choose>
+        <xsl:when test="@order = '' or contains(@order,',')">
+          descending
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@order"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:param>
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="maxDisplay">
       <xsl:choose>
@@ -8773,17 +8797,17 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-	  <xsl:param name="order">
-		  <xsl:choose>
-			  <xsl:when test="@order = '' or contains(@order,',')">
-				  <xsl:text>ascending</xsl:text>
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <xsl:value-of select="@order"/>
-			  </xsl:otherwise>
-		  </xsl:choose>
-	  </xsl:param>
-   
+    <xsl:param name="order">
+      <xsl:choose>
+        <xsl:when test="@order = '' or contains(@order,',')">
+          <xsl:text>ascending</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@order"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:param>
+
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="endPos">
       <xsl:choose>
@@ -8854,7 +8878,7 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="link" select="@pageLink" />
-	  <xsl:param name="sort" select="@sortBy" />
+    <xsl:param name="sort" select="@sortBy" />
     <xsl:param name="order">
       <xsl:choose>
         <xsl:when test="@order = '' or contains(@order,',')">
@@ -8927,16 +8951,16 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-	  <xsl:param name="order">
-		  <xsl:choose>
-			  <xsl:when test="@order = '' or contains(@order,',')">
-				  <xsl:text>ascending</xsl:text>
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <xsl:value-of select="@order"/>
-			  </xsl:otherwise>
-		  </xsl:choose>
-	  </xsl:param>
+    <xsl:param name="order">
+      <xsl:choose>
+        <xsl:when test="@order = '' or contains(@order,',')">
+          <xsl:text>ascending</xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="@order"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:param>
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="endPos">
       <xsl:choose>
@@ -9893,13 +9917,13 @@
     <xsl:value-of select="ew:GetPageIdFromFref($fRef)"/>
   </xsl:template>
 
-	<xsl:template name="GetDirIdFromFref">
-		<xsl:param name="fRef"/>
-		<xsl:value-of select="ew:GetDirIdFromFref($fRef)"/>
-	</xsl:template>
+  <xsl:template name="GetDirIdFromFref">
+    <xsl:param name="fRef"/>
+    <xsl:value-of select="ew:GetDirIdFromFref($fRef)"/>
+  </xsl:template>
 
 
-	<xsl:template name="DeletePage">
+  <xsl:template name="DeletePage">
     <xsl:param name="id"/>
     <xsl:value-of select="ew:DeletePage($id)"/>
   </xsl:template>
