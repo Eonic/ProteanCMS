@@ -510,3 +510,5 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Microsoft.Identity.
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Microsoft.IdentityModel.Abstractions.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Microsoft.Identity.Client.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Microsoft.IdentityModel.Abstractions.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Diagnostics.DiagnosticSource.xml
