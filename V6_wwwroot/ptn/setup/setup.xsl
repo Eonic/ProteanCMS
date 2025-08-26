@@ -650,12 +650,12 @@
                 Doing this will clean out unused records related to cart,promocode. <br/>
                 <strong>Are you sure you wish to continue?</strong><br/>
               </p>
-              <a href="/ewcommon/setup/default.ashx" class="btn btn-default">
+              <a href="/ptn/setup/default.ashx" class="btn btn-default">
                 <i class="fa fa-times">&#160;</i>&#160;
                 Cancel
               </a>
               &#160;&#160;&#160;
-              <a href="/ewcommon/setup/default.ashx?ewCmd=CleanDatabase&amp;ewCmd2=Do" class="btn btn-danger">
+              <a href="/ptn/setup/default.ashx?ewCmd=CleanDatabase&amp;ewCmd2=Do" class="btn btn-danger">
                 <i class="fa fa-eraser">&#160;</i>&#160;Clean Database
               </a>
             </xsl:otherwise>
@@ -1081,7 +1081,7 @@
                           <xsl:value-of select="@name"/>
                         </td>
                         <td>
-                          <a href="/ewcommon/setup/default.ashx?ewCmd=GitRepository&amp;ewCmd2=Run&amp;GitPS1FilePath={@path}" class="btn btn-primary btn-sm">
+                          <a href="/ptn/setup/default.ashx?ewCmd=GitRepository&amp;ewCmd2=Run&amp;GitPS1FilePath={@path}" class="btn btn-primary btn-sm">
                             <i class="fa fa-play"></i>&#160;Run
                           </a>
                         </td>

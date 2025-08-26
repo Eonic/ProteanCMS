@@ -434,7 +434,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScript.Windows
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\DartSassHost.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Fonet.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ICSharpCode.SharpZipLib.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Imazen.WebP.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\JavaScriptEngineSwitcher.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\JavaScriptEngineSwitcher.V8.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Lucene.Net.dll

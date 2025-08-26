@@ -530,7 +530,7 @@ namespace Protean
                 string cartXmlFromDatabase = "";
                 mcOrderType = "Order";
                 cOrderReference = "";
-                mcModuleName = "Eonic.Cart";
+                mcModuleName = "Protean.Cart";
 
                 string cProcessInfo = Conversions.ToString(string.IsNullOrEmpty("initialise variables"));
                 try

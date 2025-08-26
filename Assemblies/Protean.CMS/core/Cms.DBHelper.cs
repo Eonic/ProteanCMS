@@ -432,6 +432,7 @@ namespace Protean
                 LogonInvalidPassword = 16,
                 HistoricPassword = 17,
                 Recompile = 18,
+                ActivateAccount = 19,
 
                 // Audit changes 
                 StatusChangeLive = 30,

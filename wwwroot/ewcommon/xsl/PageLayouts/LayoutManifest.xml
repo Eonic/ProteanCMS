@@ -20,6 +20,7 @@
 	  <ContentType type="PlainText" formPath="/xforms/Content/PlainText" name="Plain Text" >Plain unformatted text</ContentType>
 	  <ContentType type="MetaData" formPath="/xforms/Content/MetaData" name="Meta Data" >Meta Data</ContentType>
       <ContentType type="Image" name="Image">An Image to display</ContentType>
+		<ContentType type="Tag" name="Tag">Tag or Category</ContentType>
     </ContentTypeGroup>
     <ContentTypeGroup name="Media">
       <ContentType type="Document" name="Document">A Document for visitors to download</ContentType>
