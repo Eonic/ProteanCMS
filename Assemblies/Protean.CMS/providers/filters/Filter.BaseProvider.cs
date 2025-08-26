@@ -100,6 +100,7 @@ namespace Protean.Providers
             public DefaultFilter()
             {
                 // do nothing
+
             }
 
             // IFilterProvider myFilters;
@@ -212,6 +213,8 @@ namespace Protean.Providers
                 }
                 aWeb.moSession["FilterList"] = filters;
             }
+
+
         }
     }
 
