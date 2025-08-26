@@ -34,7 +34,7 @@ namespace Protean
         }
 
 
-        public System.Drawing.Bitmap generateImage(string sTextToImg = "")
+        public Bitmap generateImage(string sTextToImg = "")
         {
             // 
             if (string.IsNullOrEmpty(sTextToImg))
