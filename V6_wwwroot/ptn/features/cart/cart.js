@@ -20,7 +20,7 @@
         }
         else {
             //tick deliver top this address
-            $('input[name="cIsDelivery"]').attr('checked', 'checked')
+            $('input[name="cIsDelivery"]').attr('checked', 'checked');
         }
 
         //when is delivery clicked

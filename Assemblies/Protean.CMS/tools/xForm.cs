@@ -2509,7 +2509,20 @@ namespace Protean
                 if (!string.IsNullOrEmpty(sLabel))
                 {
                     oLabelElmt = moPageXML.CreateElement("label");
-                    oLabelElmt.InnerText = sLabel;
+                    if (sClass.Contains("term-"))
+                    {
+                        XmlElement oSpanElmt = moPageXML.CreateElement("span");
+                        oSpanElmt.SetAttribute("class", "term" + Regex.Match(sClass, @"term-(\d+)").Groups[1].Value);
+                        oSpanElmt.InnerText = sLabel;
+                        oLabelElmt.AppendChild(oSpanElmt);
+                    }
+                    else {
+
+                        oLabelElmt.InnerText = sLabel;
+                    }
+
+
+
                     oIptElmt.AppendChild(oLabelElmt);
                 }
 
@@ -2851,7 +2864,17 @@ namespace Protean
                 if (!string.IsNullOrEmpty(sLabel))
                 {
                     oLabelElmt = moPageXML.CreateElement("label");
-                    oLabelElmt.InnerXml = sLabel;
+                    if (sClass.Contains("term-"))
+                    {
+                        XmlElement oSpanElmt = moPageXML.CreateElement("span");
+                        oSpanElmt.SetAttribute("class", "term" + Regex.Match(sClass, @"term-(\d+)").Groups[1].Value);
+                        oSpanElmt.InnerText = sLabel;
+                        oLabelElmt.AppendChild(oSpanElmt);
+                    }
+                    else
+                    {
+                        oLabelElmt.InnerText = sLabel;
+                    }
                     oIptElmt.AppendChild(oLabelElmt);
                 }
 
@@ -2958,7 +2981,18 @@ namespace Protean
                 if (!string.IsNullOrEmpty(sLabel))
                 {
                     oLabelElmt = moPageXML.CreateElement("label");
-                    oLabelElmt.InnerXml = sLabel;
+                    if (sClass.Contains("term-"))
+                    {
+                        XmlElement oSpanElmt = moPageXML.CreateElement("span");
+                        oSpanElmt.SetAttribute("class", "term" + Regex.Match(sClass, @"term-(\d+)").Groups[1].Value);
+                        oSpanElmt.InnerText = sLabel;
+                        oLabelElmt.AppendChild(oSpanElmt);
+                    }
+                    else
+                    {
+
+                        oLabelElmt.InnerText = sLabel;
+                    }
                     oIptElmt.AppendChild(oLabelElmt);
                 }
 
@@ -3422,7 +3456,17 @@ namespace Protean
                 if (!string.IsNullOrEmpty(sLabel))
                 {
                     oLabelElmt = oContextNode.OwnerDocument.CreateElement("label");
-                    oLabelElmt.InnerText = sLabel;
+                    if (sClass.Contains("term-"))
+                    {
+                        XmlElement oSpanElmt = moPageXML.CreateElement("span");
+                        oSpanElmt.SetAttribute("class", "term" + Regex.Match(sClass, @"term-(\d+)").Groups[1].Value);
+                        oSpanElmt.InnerText = sLabel;
+                        oLabelElmt.AppendChild(oSpanElmt);
+                    }
+                    else
+                    {
+                        oLabelElmt.InnerText = sLabel;
+                    }
                     oIptElmt.AppendChild(oLabelElmt);
                 }
 

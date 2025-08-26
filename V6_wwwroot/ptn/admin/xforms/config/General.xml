@@ -175,7 +175,6 @@
 	  <bind id="ptnCart" nodeset="web/add[@key='Cart']/@value" required="false()" type="string" />
 	  <bind id="ptnMembership" nodeset="web/add[@key='Membership']/@value" required="false()" type="string" />
 	  <bind id="ptnSearch" nodeset="web/add[@key='Search']/@value" required="false()" type="string" />
-	  >
 	  <bind id="ptnMenuContentCountTypes" nodeset="web/add[@key='MenuContentCountTypes']/@value" required="false()" type="string" />
 
   </model>

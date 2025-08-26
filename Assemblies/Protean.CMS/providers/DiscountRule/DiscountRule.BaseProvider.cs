@@ -1,42 +1,16 @@
-﻿using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic;
+﻿using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Protean.Providers.CDN;
-using Protean.Providers.Payment;
-using Protean.Tools;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Configuration;
-using System.Configuration.Provider;
 using System.Data;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Reflection;
-using System.Security.Authentication;
-using System.Security.Cryptography;
-using System.Security.Policy;
-using System.ServiceModel.Channels;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
-using System.Web.Security;
-using System.Web.SessionState;
-using System.Windows.Media.Animation;
 using System.Xml;
-using static Protean.Cms;
-using static Protean.Cms.Cart.Discount;
 using static Protean.Providers.DiscountRule.DefaultProvider;
 using static Protean.stdTools;
-using static Protean.Syndication.Distributor;
-using static Protean.Tools.Xml;
-
 
 namespace Protean.Providers
 {
@@ -330,7 +304,7 @@ namespace Protean.Providers
                         if (parentId != "0") continue;
 
                         double itemPrice = Convert.ToDouble(itemNode.Attributes["price"]?.Value ?? "0");
-                        double itemQty = Convert.ToDouble(itemNode.Attributes["quantity"]?.Value ?? "0");
+                        int itemQty = Convert.ToInt32(itemNode.Attributes["quantity"]?.Value ?? "0");
 
                         double itemCost = itemPrice * itemQty;
                         totalAmount += itemCost;

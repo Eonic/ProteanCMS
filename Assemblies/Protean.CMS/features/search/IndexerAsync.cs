@@ -1171,11 +1171,7 @@ namespace Protean
                                         {
                                             sPageUrl = oLinkElmt.GetAttribute("href");
                                         }
-                                    }
-
-                                        if (oElmt.GetAttribute("type") == "bibleusx") {
-                                            cProcessInfo = oElmt.GetAttribute("type");
-                                        }
+                                    }                                       
 
                                     IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
 

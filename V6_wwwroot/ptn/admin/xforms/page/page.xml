@@ -43,6 +43,7 @@
 			<bind nodeset="DisplayName">
 				<bind id="cLinkTitle" nodeset="@title" required="false()" type="string"/>
 				<bind id="cLinkType" nodeset="@linkType" required="false()" type="string"/>
+				<bind id="externalNewWindow" nodeset="@externalNewWindow" required="false()" type="string"/>
 				<bind id="cXcludeFromSiteNav" nodeset="@exclude" required="false()" type="string"/>
 				<bind id="cXcludeFromSearchEngines" nodeset="@noindex" required="false()" type="string"/>
 				<bind id="cXcludeNav" nodeset="@nonav" required="false()" type="string"/>
@@ -142,6 +143,7 @@
 							</p>
 							<p>Links for this page will open up another URL in a new window</p>
 						</help>
+            
 					</item>
 					<item>
 						<label>Pop up box</label>
@@ -165,6 +167,12 @@
 						<input bind="cUrl" class="long">
 							<label>URL</label>
 						</input>
+            <select appearance="full" bind="externalNewWindow">
+              <item>
+                <label>Open Link in New Window</label>
+                <value>true</value>
+              </item>
+            </select>
 					</case>
 					<case id="cLinkType_3">
 						<input bind="ModalID" class="long">
