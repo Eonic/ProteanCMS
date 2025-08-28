@@ -9,7 +9,7 @@
 // ***********************************************************************
 
 
-using Microsoft.Identity.Client;
+//using Microsoft.Identity.Client;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.AdminProxy;

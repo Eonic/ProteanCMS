@@ -2,13 +2,13 @@
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.44.0"
+    Public Shared ewAssemblyVersion As String = "6.1.45.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.1.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
     Public Shared bundleSassAssemblyVersion As String = "1.15.3.0"
     Public Shared DartSassHostAssemblyVersion As String = "1.1.1.0"
-    Public Shared jsSwitcherAssemblyVersion As String = "3.29.1.0"
+    Public Shared jsSwitcherAssemblyVersion As String = "3.24.1.0"
     Public Shared jsSwitcherV8AssemblyVersion As String = "3.29.1.0"
     Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.29.0.0"
     Public Shared WebGreaseAssemblyVersion As String = "1.6.5135.21930"
@@ -31,30 +31,30 @@ Public Class CustomActions
     Public Shared MagickNETAssemblyVersion As String = "14.7.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
-    Public Shared SystemBuffersVersion As String = "4.6.1.0"
-    Public Shared SystemMemoryVersion As String = "4.6.3.0"
+    Public Shared SystemBuffersVersion As String = "4.0.5.0"
+    Public Shared SystemMemoryVersion As String = "4.0.5.0"
     Public Shared DocumentFormatOpenXmlVersion As String = "3.3.0.0"
-    Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.1.2.0"
+    Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.1.0"
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
     Public Shared SystemThreadingTasksExtensionsVersion As String = "4.6.3.0"
-    Public Shared SystemTextJsonVersion As String = "9.0.7.0"
-    Public Shared MicrosoftBclAsyncInterfacesVersion As String = "9.0.7.0"
-    Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.2"
-    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.7.0"
-    Public Shared SystemNumericsVectorsVersion As String = "4.6.1.0"
+    Public Shared SystemTextJsonVersion As String = "9.0.0.0"
+    Public Shared MicrosoftBclAsyncInterfacesVersion As String = "9.0.0.8"
+    Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.7"
+    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.0.0"
+    Public Shared SystemNumericsVectorsVersion As String = "4.1.6.0"
     Public Shared AngleSharpVersion As String = "1.3.0.0"
     Public Shared PreMailerVersion As String = "2.7.2.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
     Public Shared iTextSharpVersion As String = "3.7.4.0"
     Public Shared SkiaSharpVersion As String = "3.119.0.0"
-    Public Shared BouncyCastleCrypto As String = "2.6.2.0"
+    Public Shared BouncyCastleCrypto As String = "2.0.0.0"
     Public Shared SystemIOPipelines As String = "9.0.0.2"
     Public Shared SystemDataSQLClient As String = "4.6.2.0" 'lib version 4.8.6
-    Public Shared SystemDrawingCommon As String = "9.0.7.0"
-    Public Shared MicrosoftIdentityClientVersion As String = "4.74.1.0"
-    Public Shared MicrosoftIdentityModelAbstractionsVersion As String = "8.13.0.0"
+    Public Shared SystemDrawingCommon As String = "9.0.0.0"
+    ' Public Shared MicrosoftIdentityClientVersion As String = "4.74.1.0"
+    ' Public Shared MicrosoftIdentityModelAbstractionsVersion As String = "8.13.0.0"
     Public Shared SelectHtmlToPDF As String = "25.2.0.0"
-    Public Shared SystemConfigurationManager As String = "9.0.7.0"
+    Public Shared SystemConfigurationManager As String = "9.0.0.7"
     '  Public Shared SystemWebAdaptors As String = "2.0.0.0"
 
 
@@ -243,8 +243,8 @@ Public Class CustomActions
                     ' UpdateAssemblyRef(oAssembliesSect, "Google.Protobuf, Version=" & GoogleProtoBufAssemblyVersion & ", Culture=neutral, PublicKeyToken=a7d26565bac4d604")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET.Core, Version=" & MagickNETCoreAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-x64, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
-                    UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
-                    UpdateAssemblyRef(oAssembliesSect, "System.Memory, Version=" & SystemMemoryVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    '  UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    ' Causes error with visual studio UpdateAssemblyRef(oAssembliesSect, "System.Memory, Version=" & SystemMemoryVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
                     UpdateAssemblyRef(oAssembliesSect, "Microsoft.Web.Infrastructure, Version=" & MicrosoftWebInfrastructureVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
 
@@ -255,7 +255,7 @@ Public Class CustomActions
 
                     UpdateAssemblyRef(oAssembliesSect, "QRCoder, Version=" & QRCoderVersion & ", Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28")
                     UpdateAssemblyRef(oAssembliesSect, "System.Runtime.CompilerServices.Unsafe, Version=" & SystemRuntimeCompilerServicesUnsafeVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
-                    UpdateAssemblyRef(oAssembliesSect, "System.Threading.Tasks.Extensions, Version=" & SystemThreadingTasksExtensionsVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    '   UpdateAssemblyRef(oAssembliesSect, "System.Threading.Tasks.Extensions, Version=" & SystemThreadingTasksExtensionsVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Text.Json, Version=" & SystemTextJsonVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "Microsoft.Bcl.AsyncInterfaces, Version=" & MicrosoftBclAsyncInterfacesVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Text.Encodings.Web, Version=" & SystemTextEncodingsWebVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
@@ -276,9 +276,9 @@ Public Class CustomActions
 
                     UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=8fb06cb64d019a17")
                     UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml.Framework, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=8fb06cb64d019a17")
-                    UpdateAssemblyRef(oAssembliesSect, "Microsoft.Identity.Client, Version=" & MicrosoftIdentityClientVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
-                    UpdateAssemblyRef(oAssembliesSect, "Microsoft.IdentityModel.Abstractions, Version=" & MicrosoftIdentityModelAbstractionsVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
-                    UpdateAssemblyRef(oAssembliesSect, "Select.HtmlToPDF, Version=" & SelectHtmlToPDF & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    '  UpdateAssemblyRef(oAssembliesSect, "Microsoft.Identity.Client, Version=" & MicrosoftIdentityClientVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    '  UpdateAssemblyRef(oAssembliesSect, "Microsoft.IdentityModel.Abstractions, Version=" & MicrosoftIdentityModelAbstractionsVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    'UpdateAssemblyRef(oAssembliesSect, "Select.HtmlToPDF, Version=" & SelectHtmlToPDF & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Configuration.ConfigurationManager, Version=" & SystemConfigurationManager & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
 
@@ -559,9 +559,9 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8", "C608B2A8CC9E4472", jsSwitcherV8AssemblyVersion)
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8.Native.win-x64", "C608B2A8CC9E4472", jsSwitcherV8NativeWinx64AssemblyVersion)
 
-            UpdateDependantAssembly(oSectXml, "ClearScript.Core", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "ClearScript.V8", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "ClearScript.V8.ICUData", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "ClearScript.Core", "31bf3856ad364e35", "7.4.5.0", "0.0.0.0", MicrosoftClearScriptV8AssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "ClearScript.V8", "31bf3856ad364e35", "7.4.5.0", "0.0.0.0", MicrosoftClearScriptV8AssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "ClearScript.V8.ICUData", "31bf3856ad364e35", "7.4.5.0", "0.0.0.0", MicrosoftClearScriptV8AssemblyVersion)
 
             UpdateDependantAssembly(oSectXml, "Newtonsoft.Json", "30AD4FE6B2A6AEED", JsonAssemblyVersion, "10.0.0.0", "13.0.0.0")
 
@@ -577,8 +577,8 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "AlphaFS", "4d31a58f7d7ad5c9", AlphaFSAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET.Core", "2004825badfa91ec", MagickNETCoreAssemblyVersion)
             UpdateDependantAssembly(oSectXml, "Magick.NET-Q8-x64", "2004825badfa91ec", MagickNETAssemblyVersion)
-            UpdateDependantAssembly(oSectXml, "System.Buffers", "cc7b13ffcd2ddd51", SystemBuffersVersion)
-            UpdateDependantAssembly(oSectXml, "System.Memory", "cc7b13ffcd2ddd51", SystemMemoryVersion)
+            'Breaks visual studio ' UpdateDependantAssembly(oSectXml, "System.Buffers", "cc7b13ffcd2ddd51", SystemBuffersVersion)
+            'UpdateDependantAssembly(oSectXml, "System.Memory", "cc7b13ffcd2ddd51", SystemMemoryVersion)
             UpdateDependantAssembly(oSectXml, "ICSharpCode.SharpZipLib", "1b03e6acf1164f73", SharpZipLibAssemblyVersion)
 
             UpdateDependantAssembly(oSectXml, "AngleSharp", "e83494dcdc6d31ea", AngleSharpVersion)
@@ -586,8 +586,8 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "Microsoft.Web.Infrastructure", "31bf3856ad364e35", MicrosoftWebInfrastructureVersion)
             UpdateDependantAssembly(oSectXml, "System.Runtime.CompilerServices.Unsafe", "b03f5f7f11d50a3a", SystemRuntimeCompilerServicesUnsafeVersion)
 
-            UpdateDependantAssembly(oSectXml, "System.Threading.Tasks.Extensions", "cc7b13ffcd2ddd51", SystemThreadingTasksExtensionsVersion)
-            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", SystemTextJsonVersion, "0.0.0.0", "9.0.0.2")
+            'Breaks visual studio  ' UpdateDependantAssembly(oSectXml, "System.Threading.Tasks.Extensions", "cc7b13ffcd2ddd51", SystemThreadingTasksExtensionsVersion)
+            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", SystemTextJsonVersion, "0.0.0.0", SystemTextJsonVersion)
             UpdateDependantAssembly(oSectXml, "Microsoft.Bcl.AsyncInterfaces", "cc7b13ffcd2ddd51", MicrosoftBclAsyncInterfacesVersion)
             UpdateDependantAssembly(oSectXml, "System.Text.Encodings.Web", "cc7b13ffcd2ddd51", SystemTextEncodingsWebVersion)
             UpdateDependantAssembly(oSectXml, "System.Numerics.Vectors", "b03f5f7f11d50a3a", SystemNumericsVectorsVersion)
@@ -603,10 +603,10 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Drawing.Common", "cc7b13ffcd2ddd51", SystemDrawingCommon)
             UpdateDependantAssembly(oSectXml, "DocumentFormat.OpenXml", "8fb06cb64d019a17", DocumentFormatOpenXmlVersion)
             UpdateDependantAssembly(oSectXml, "DocumentFormat.OpenXml.Framework", "8fb06cb64d019a17", DocumentFormatOpenXmlVersion)
-            UpdateDependantAssembly(oSectXml, "Microsoft.Identity.Client", "cc7b13ffcd2ddd51", MicrosoftIdentityClientVersion)
-            UpdateDependantAssembly(oSectXml, "Microsoft.IdentityModel.Abstractions", "cc7b13ffcd2ddd51", MicrosoftIdentityModelAbstractionsVersion)
-            UpdateDependantAssembly(oSectXml, "Select.HtmlToPDF", "cc7b13ffcd2ddd51", SelectHtmlToPDF)
-
+            'UpdateDependantAssembly(oSectXml, "Microsoft.Identity.Client", "cc7b13ffcd2ddd51", MicrosoftIdentityClientVersion)
+            'UpdateDependantAssembly(oSectXml, "Microsoft.IdentityModel.Abstractions", "cc7b13ffcd2ddd51", MicrosoftIdentityModelAbstractionsVersion)
+            'UpdateDependantAssembly(oSectXml, "Select.HtmlToPDF", "cc7b13ffcd2ddd51", SelectHtmlToPDF)
+            UpdateDependantAssembly(oSectXml, "System.Configuration.ConfigurationManager", "cc7b13ffcd2ddd51", SystemConfigurationManager)
 
 
 

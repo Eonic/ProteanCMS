@@ -3,7 +3,7 @@ using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Configuration;
-using Microsoft.Identity.Client;
+//using Microsoft.Identity.Client;
 using Microsoft.AspNetCore.Http;
 
 namespace Protean.Tools
@@ -20,31 +20,31 @@ namespace Protean.Tools
             }
         }
 
-        public void AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue)
-        {
-            string cAccessToken = string.Empty;
-            try
-            {
-                if(string.IsNullOrEmpty(cClientId) || string.IsNullOrEmpty(cTenantId) || string.IsNullOrEmpty(cScope) || string.IsNullOrEmpty(cSecreteValue))
-                {
-                    return;
-                }
+        //public void AuthenticateDevOps(string cClientId, string cTenantId, string cScope, string cSecreteValue)
+        //{
+        //    string cAccessToken = string.Empty;
+        //    try
+        //    {
+        //        if(string.IsNullOrEmpty(cClientId) || string.IsNullOrEmpty(cTenantId) || string.IsNullOrEmpty(cScope) || string.IsNullOrEmpty(cSecreteValue))
+        //        {
+        //            return;
+        //        }
 
-                var app = ConfidentialClientApplicationBuilder.Create(cClientId)
-              .WithClientSecret(cSecreteValue)
-              .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
-             .Build();
+        //        var app = ConfidentialClientApplicationBuilder.Create(cClientId)
+        //      .WithClientSecret(cSecreteValue)
+        //      .WithAuthority($"https://login.microsoftonline.com/{cTenantId}")
+        //     .Build();
 
-                var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
-                cAccessToken = tokenResult.AccessToken;
-                _accessToken= cAccessToken;
-               // return cAccessToken;
-            }
-            catch (Exception ex) {
-                return;
-            }
+        //        var tokenResult = app.AcquireTokenForClient(new[] { cScope }).ExecuteAsync().Result;
+        //        cAccessToken = tokenResult.AccessToken;
+        //        _accessToken= cAccessToken;
+        //       // return cAccessToken;
+        //    }
+        //    catch (Exception ex) {
+        //        return;
+        //    }
 
-        }
+        //}
 
         public string GitCommandExecution(string ps1FilePath)
         {

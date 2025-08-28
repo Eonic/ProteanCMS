@@ -39,9 +39,7 @@ Installer_Logo.jpg
 ..\packages\Microsoft.ClearScript.V8.7.5.0\lib\net471\ClearScript.V8.dll
 ..\packages\Microsoft.ClearScript.V8.ICUData.7.5.0\lib\netstandard1.0\ClearScript.V8.ICUData.dll
 ..\packages\BundleTransformer.MicrosoftAjax.1.14.0\lib\net40\BundleTransformer.MicrosoftAjax.dll
-..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.7\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll
-..\packages\Microsoft.Identity.Client.4.74.1\lib\net472\Microsoft.Identity.Client.dll
-..\packages\Microsoft.IdentityModel.Abstractions.8.13.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll
+..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.8\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll
 ..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll
 libraries\Newtonsoft.Json.dll
 ..\packages\PreMailer.Net.2.7.2\lib\net461\PreMailer.Net.dll

@@ -111,7 +111,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ClearScript.V8.IC
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DartSassHost.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Fonet.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ICSharpCode.SharpZipLib.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Imazen.WebP.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\JavaScriptEngineSwitcher.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\JavaScriptEngineSwitcher.V8.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Lucene.Net.dll
@@ -190,8 +189,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\SoundInTheory.Dyn
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\AdvancedStringBuilder.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ClearScript.Windows.Core.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ClearScript.Windows.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Microsoft.Identity.Client.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Microsoft.IdentityModel.Abstractions.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Select.HtmlToPdf.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Configuration.ConfigurationManager.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Diagnostics.DiagnosticSource.dll
@@ -204,8 +201,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.ValueTuple
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\AdvancedStringBuilder.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ClearScript.Windows.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\ClearScript.Windows.Core.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Microsoft.Identity.Client.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Microsoft.IdentityModel.Abstractions.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Select.HtmlToPdf.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Configuration.ConfigurationManager.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Diagnostics.DiagnosticSource.xml
@@ -214,3 +209,4 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.ServiceMod
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.ServiceModel.Security.pdb
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Text.Encoding.CodePages.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Text.Json.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Imazen.WebP.dll
