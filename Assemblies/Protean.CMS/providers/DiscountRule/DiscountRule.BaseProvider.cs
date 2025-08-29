@@ -77,10 +77,10 @@ namespace Protean.Providers
             {
                 DefaultProvider = 0,   // optional “catch‑all”
                 Basic = 1,
-                BreakGroup = 2,
-                BreakProduct = 3,
+                BreakProduct =2,
+                X4PriceY = 3,
                 CheapestFree = 4,
-                X4PriceY = 5
+                BreakGroup = 5  
             }
             System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
 
