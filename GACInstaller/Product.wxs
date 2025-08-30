@@ -203,7 +203,7 @@
 				</Component>
 
 				<Component Id='com_SystemRuntimeCompilerServicesUnsafe' Guid='ee8a5f5d-a9c0-41e2-8ce9-e0b797582987' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemRuntimeCompilerServicesUnsafe' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Runtime.CompilerServices.Unsafe.dll' Source='..\packages\System.Runtime.CompilerServices.Unsafe\6.1.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemRuntimeCompilerServicesUnsafe' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Runtime.CompilerServices.Unsafe.dll' Source='..\packages\System.Runtime.CompilerServices.Unsafe\6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
 				<Component Id='com_SystemThreadingTasksExtensions' Guid='8b34d495-0c6c-4c9f-b0dd-cc3489579dc1' Permanent='no' SharedDllRefCount='no' Transitive='no'>
