@@ -251,27 +251,19 @@
 				<Component Id='com_SystemDrawingCommon' Guid='68aa99a2-e2ad-44a5-987d-2a1f5cf947bf' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SystemDrawingCommon' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Drawing.Common.dll' Source='..\packages\System.Drawing.Common.9.0.7\lib\net462\System.Drawing.Common.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
-
-
 				<Component Id='com_DocumentFormatOpenXml' Guid='d5d52859-3471-4db8-94f5-5c9c98a46ac1' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_DocumentFormatOpenXml' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DocumentFormat.OpenXml.dll' Source='..\packages\documentformat.openxml\3.3.0\lib\netstandard2.0\DocumentFormat.OpenXml.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
-
 				<Component Id='com_DocumentFormatOpenXmlFramework' Guid='59b147b6-bcc7-4acb-8a04-60cb042fc9f6' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_DocumentFormatOpenXmlFramework' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DocumentFormat.OpenXml.Framework.dll' Source='..\packages\documentformat.openxml.framework\3.3.0\lib\netstandard2.0\DocumentFormat.OpenXml.Framework.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
-				<!--<Component Id='com_MicrosoftIdentityClient' Guid='0749c8bb-0a08-482c-9627-d65d194c146f' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_MicrosoftIdentityClient' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Identity.Client.dll' Source='..\packages\Microsoft.Identity.Client.4.74.1\lib\net472\Microsoft.Identity.Client.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
-				<Component Id='com_MicrosoftIdentityModelAbstractions' Guid='66f18d56-62de-43ef-8130-e93203c9b5bf' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_MicrosoftIdentityModelAbstractions' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.IdentityModel.Abstractions.dll' Source='..\packages\Microsoft.IdentityModel.Abstractions.8.13.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll' Assembly='.net' KeyPath='yes' />
-				</Component>-->
-	<!--
+
 				<Component Id='com_SelectHtmlToPdf' Guid='948eec8b-2894-4bbe-a094-dfd2f95f8601' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SelectHtmlToPdf' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Select.HtmlToPdf.dll' Source='..\packages\Select.HtmlToPdf.25.2.0\lib\net40\Select.HtmlToPdf.dll' Assembly='.net' KeyPath='yes' />
+					<File Id="_SelectHtmlToPdf_dep" Name="Select.Html.dep" Source="..\packages\Select.HtmlToPdf.25.2.0\lib\net40\Select.Html.dep" />
 				</Component>
-				
+	<!--			
 -->
 			
 
@@ -403,8 +395,8 @@
 			<!--<ComponentRef Id='com_MicrosoftIdentityClient' />
 			<ComponentRef Id='com_MicrosoftIdentityModelAbstractions' />-->
 		   
-			<!-- <ComponentRef Id='com_SelectHtmlToPdf' />
-			-->
+			<ComponentRef Id='com_SelectHtmlToPdf' />
+			<!-- -->
 			<!--  
           <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript' />
           <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript64' />
