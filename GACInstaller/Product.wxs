@@ -111,10 +111,10 @@
 				</Component>
 				<!--
 				Move to runtimes
+				
 				<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='66b71b5b-dfea-49ea-8591-98daca8fce2a' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_Microsoft_ClearScript_V8_WinX64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScriptV8.win-x64.dll' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.5\runtimes\win-x64\native\ClearScriptV8.win-x64.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
-				-->
+					<File Id='_Microsoft_ClearScript_V8_WinX64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScriptV8.win-x64.dll' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.5.0\runtimes\win-x64\native\ClearScriptV8.win-x64.dll'  KeyPath='yes' />
+				</Component>-->
 				<!-- Bundle Transformer-->
 				
               <Component Id='com_F1DE126C_3FE1_A5B4_C357_7AEFEF2B1635' Guid='8F9ED269-F3B4-42AE-87C4-BF9CD55414B8' Permanent='no' SharedDllRefCount='no' Transitive='no'>
@@ -303,10 +303,10 @@
 				<Condition>VersionNT64</Condition>
                 <File Id='_libwebp' Source='..\Assemblies\NonNuget\libwebp.dll' KeyPath='yes' />
               </Component>
-			<!--<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='af52af85-0ca4-459a-b7e5-dc3088aa17b6' Win64='no'>
+			<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='af52af85-0ca4-459a-b7e5-dc3088aa17b6' Win64='no'>
 				<Condition>VersionNT64</Condition>
-				<File Id='_Microsoft_ClearScript_V8_WinX64' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.5\runtimes\win-x64\native\ClearScriptV8.win-x64.dll' KeyPath='yes' />
-			</Component>-->
+				<File Id='_Microsoft_ClearScript_V8_WinX64' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.5.0\runtimes\win-x64\native\ClearScriptV8.win-x64.dll' KeyPath='yes' />
+			</Component>
 		</Directory>
     </Directory>
         <!-- The FileSystem group of the installation package. -->
@@ -364,7 +364,7 @@
 			<ComponentRef Id='com_DartSassHost' />
 			<ComponentRef Id='com_Microsoft_ClearScript_Core'/>
 			<ComponentRef Id='com_Microsoft_ClearScript_V8'/>
-			<!--<ComponentRef Id='com_Microsoft_ClearScript_V8_WinX64' />-->
+			<ComponentRef Id='com_Microsoft_ClearScript_V8_WinX64' />
 			<ComponentRef Id='com_Microsoft_ClearScript_V8_ICUData' />	
             <ComponentRef Id='com_AdvancedStringBuilder' />
             <ComponentRef Id='com_System_Text_Encoding_CodePages' />

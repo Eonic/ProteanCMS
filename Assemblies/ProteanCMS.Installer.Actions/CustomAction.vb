@@ -559,9 +559,9 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8", "C608B2A8CC9E4472", jsSwitcherV8AssemblyVersion)
             UpdateDependantAssembly(oSectXml, "JavaScriptEngineSwitcher.V8.Native.win-x64", "C608B2A8CC9E4472", jsSwitcherV8NativeWinx64AssemblyVersion)
 
-            UpdateDependantAssembly(oSectXml, "ClearScript.Core", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion, "0.0.0.0", "7.4.5.0")
-            UpdateDependantAssembly(oSectXml, "ClearScript.V8", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion, "0.0.0.0", "7.4.5.0")
-            UpdateDependantAssembly(oSectXml, "ClearScript.V8.ICUData", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion, "0.0.0.0", "7.4.5.0")
+            UpdateDependantAssembly(oSectXml, "ClearScript.Core", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "ClearScript.V8", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
+            UpdateDependantAssembly(oSectXml, "ClearScript.V8.ICUData", "31bf3856ad364e35", MicrosoftClearScriptV8AssemblyVersion)
 
             UpdateDependantAssembly(oSectXml, "Newtonsoft.Json", "30AD4FE6B2A6AEED", JsonAssemblyVersion, "10.0.0.0", "13.0.0.0")
 
