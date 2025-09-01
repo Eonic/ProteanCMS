@@ -589,7 +589,8 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Runtime.CompilerServices.Unsafe", "b03f5f7f11d50a3a", SystemRuntimeCompilerServicesUnsafeVersion)
 
             UpdateDependantAssembly(oSectXml, "System.Threading.Tasks.Extensions", "cc7b13ffcd2ddd51", SystemThreadingTasksExtensionsVersion)
-            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", "9.0.8.0", "9.0.0.7", SystemTextJsonVersion)
+            'Very specific as seems to break Visual Studio
+            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", "4.0.1.2", "4.0.1.2", SystemTextJsonVersion)
             UpdateDependantAssembly(oSectXml, "Microsoft.Bcl.AsyncInterfaces", "cc7b13ffcd2ddd51", MicrosoftBclAsyncInterfacesVersion)
             UpdateDependantAssembly(oSectXml, "System.Text.Encodings.Web", "cc7b13ffcd2ddd51", SystemTextEncodingsWebVersion)
             UpdateDependantAssembly(oSectXml, "System.Numerics.Vectors", "b03f5f7f11d50a3a", SystemNumericsVectorsVersion)
