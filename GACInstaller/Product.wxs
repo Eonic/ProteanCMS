@@ -178,7 +178,7 @@
 
               <!-- Libraies for PreMailer.Net - DONT UPDATE FROM NUGET!!!-->
               <Component Id='com_System_Text_Encoding_CodePages' Guid='a5b84f31-01e5-4904-af1e-d85a310cf875' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\packages\System.Text.Encoding.CodePages.9.0.8\lib\netstandard2.0\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\packages\System.Text.Encoding.CodePages.9.0.8\lib\net462\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_AngleSharp' Guid='af54845d-f98c-43f5-9f9c-8b0c7c2d677e' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_AngleSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AngleSharp.dll' Source='..\packages\AngleSharp.1.3.0\lib\net472\AngleSharp.dll' Assembly='.net' KeyPath='yes' />
@@ -211,7 +211,7 @@
 				</Component>
 
 				<Component Id='com_SystemTextJson' Guid='221de48f-a70c-458b-aa0a-4c1d48519315' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemTextJson' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Json.dll' Source='..\packages\System.Text.Json.9.0.7\lib\netstandard2.0\System.Text.Json.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemTextJson' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Json.dll' Source='..\packages\System.Text.Json.9.0.8\lib\net462\System.Text.Json.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				
 				<Component Id='com_MicrosoftBclAsyncInterfaces' Guid='0b0f40f8-1240-4b30-b06b-93ebd7a717c4' Permanent='no' SharedDllRefCount='no' Transitive='no'>

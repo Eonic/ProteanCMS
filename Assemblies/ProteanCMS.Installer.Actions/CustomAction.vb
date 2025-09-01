@@ -37,10 +37,10 @@ Public Class CustomActions
     Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.3.0"
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
     Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.4.0"
-    Public Shared SystemTextJsonVersion As String = "9.0.0.0"
+    Public Shared SystemTextJsonVersion As String = "9.0.0.8"
     Public Shared MicrosoftBclAsyncInterfacesVersion As String = "9.0.0.8"
     Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.7"
-    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.8.0"
+    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.0.8"
     Public Shared SystemNumericsVectorsVersion As String = "4.1.6.0"
     Public Shared AngleSharpVersion As String = "1.3.0.0"
     Public Shared PreMailerVersion As String = "2.7.2.0"
@@ -589,7 +589,7 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Runtime.CompilerServices.Unsafe", "b03f5f7f11d50a3a", SystemRuntimeCompilerServicesUnsafeVersion)
 
             UpdateDependantAssembly(oSectXml, "System.Threading.Tasks.Extensions", "cc7b13ffcd2ddd51", SystemThreadingTasksExtensionsVersion)
-            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", SystemTextJsonVersion)
+            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", "9.0.8.0", "0.0.0.0", SystemTextJsonVersion)
             UpdateDependantAssembly(oSectXml, "Microsoft.Bcl.AsyncInterfaces", "cc7b13ffcd2ddd51", MicrosoftBclAsyncInterfacesVersion)
             UpdateDependantAssembly(oSectXml, "System.Text.Encodings.Web", "cc7b13ffcd2ddd51", SystemTextEncodingsWebVersion)
             UpdateDependantAssembly(oSectXml, "System.Numerics.Vectors", "b03f5f7f11d50a3a", SystemNumericsVectorsVersion)
