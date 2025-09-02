@@ -111,10 +111,10 @@
 				</Component>
 				<!--
 				Move to runtimes
+				
 				<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='66b71b5b-dfea-49ea-8591-98daca8fce2a' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_Microsoft_ClearScript_V8_WinX64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScriptV8.win-x64.dll' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.5\runtimes\win-x64\native\ClearScriptV8.win-x64.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
-				-->
+					<File Id='_Microsoft_ClearScript_V8_WinX64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='ClearScriptV8.win-x64.dll' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.5.0\runtimes\win-x64\native\ClearScriptV8.win-x64.dll'  KeyPath='yes' />
+				</Component>-->
 				<!-- Bundle Transformer-->
 				
               <Component Id='com_F1DE126C_3FE1_A5B4_C357_7AEFEF2B1635' Guid='8F9ED269-F3B4-42AE-87C4-BF9CD55414B8' Permanent='no' SharedDllRefCount='no' Transitive='no'>
@@ -178,7 +178,7 @@
 
               <!-- Libraies for PreMailer.Net - DONT UPDATE FROM NUGET!!!-->
               <Component Id='com_System_Text_Encoding_CodePages' Guid='a5b84f31-01e5-4904-af1e-d85a310cf875' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\packages\System.Text.Encoding.CodePages.9.0.7\lib\netstandard2.0\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\packages\System.Text.Encoding.CodePages.9.0.8\lib\net462\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_AngleSharp' Guid='af54845d-f98c-43f5-9f9c-8b0c7c2d677e' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_AngleSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AngleSharp.dll' Source='..\packages\AngleSharp.1.3.0\lib\net472\AngleSharp.dll' Assembly='.net' KeyPath='yes' />
@@ -203,7 +203,7 @@
 				</Component>
 
 				<Component Id='com_SystemRuntimeCompilerServicesUnsafe' Guid='ee8a5f5d-a9c0-41e2-8ce9-e0b797582987' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemRuntimeCompilerServicesUnsafe' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Runtime.CompilerServices.Unsafe.dll' Source='..\packages\System.Runtime.CompilerServices.Unsafe\6.1.2\lib\netstandard2.0\System.Runtime.CompilerServices.Unsafe.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemRuntimeCompilerServicesUnsafe' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Runtime.CompilerServices.Unsafe.dll' Source='..\packages\System.Runtime.CompilerServices.Unsafe\6.1.2\lib\net462\System.Runtime.CompilerServices.Unsafe.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
 				<Component Id='com_SystemThreadingTasksExtensions' Guid='8b34d495-0c6c-4c9f-b0dd-cc3489579dc1' Permanent='no' SharedDllRefCount='no' Transitive='no'>
@@ -211,7 +211,7 @@
 				</Component>
 
 				<Component Id='com_SystemTextJson' Guid='221de48f-a70c-458b-aa0a-4c1d48519315' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemTextJson' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Json.dll' Source='..\packages\System.Text.Json.9.0.7\lib\netstandard2.0\System.Text.Json.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemTextJson' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Json.dll' Source='..\packages\System.Text.Json.9.0.8\lib\net462\System.Text.Json.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				
 				<Component Id='com_MicrosoftBclAsyncInterfaces' Guid='0b0f40f8-1240-4b30-b06b-93ebd7a717c4' Permanent='no' SharedDllRefCount='no' Transitive='no'>
@@ -219,7 +219,7 @@
 				</Component>
 				
 				<Component Id='com_SystemTextEncodingsWeb' Guid='4dfb277c-b692-4118-b0f2-e086ef193c53' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemTextEncodingsWeb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encodings.Web.dll' Source='..\packages\System.Text.Encodings.Web.9.0.7\lib\net462\System.Text.Encodings.Web.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemTextEncodingsWeb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encodings.Web.dll' Source='..\packages\System.Text.Encodings.Web.9.0.8\lib\net462\System.Text.Encodings.Web.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SystemNumericsVectors' Guid='5e62ecb1-4b75-4ba1-9dc4-9bbc032eb8cc' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SystemNumericsVectors' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Numerics.Vectors.dll' Source='..\packages\System.Numerics.Vectors.4.6.1\lib\net462\System.Numerics.Vectors.dll' Assembly='.net' KeyPath='yes' />
@@ -251,27 +251,19 @@
 				<Component Id='com_SystemDrawingCommon' Guid='68aa99a2-e2ad-44a5-987d-2a1f5cf947bf' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SystemDrawingCommon' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Drawing.Common.dll' Source='..\packages\System.Drawing.Common.9.0.7\lib\net462\System.Drawing.Common.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
-
-
 				<Component Id='com_DocumentFormatOpenXml' Guid='d5d52859-3471-4db8-94f5-5c9c98a46ac1' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_DocumentFormatOpenXml' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DocumentFormat.OpenXml.dll' Source='..\packages\documentformat.openxml\3.3.0\lib\netstandard2.0\DocumentFormat.OpenXml.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
-
 				<Component Id='com_DocumentFormatOpenXmlFramework' Guid='59b147b6-bcc7-4acb-8a04-60cb042fc9f6' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_DocumentFormatOpenXmlFramework' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DocumentFormat.OpenXml.Framework.dll' Source='..\packages\documentformat.openxml.framework\3.3.0\lib\netstandard2.0\DocumentFormat.OpenXml.Framework.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
-				<!--<Component Id='com_MicrosoftIdentityClient' Guid='0749c8bb-0a08-482c-9627-d65d194c146f' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_MicrosoftIdentityClient' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Identity.Client.dll' Source='..\packages\Microsoft.Identity.Client.4.74.1\lib\net472\Microsoft.Identity.Client.dll' Assembly='.net' KeyPath='yes' />
-				</Component>
-				<Component Id='com_MicrosoftIdentityModelAbstractions' Guid='66f18d56-62de-43ef-8130-e93203c9b5bf' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_MicrosoftIdentityModelAbstractions' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.IdentityModel.Abstractions.dll' Source='..\packages\Microsoft.IdentityModel.Abstractions.8.13.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll' Assembly='.net' KeyPath='yes' />
-				</Component>-->
-	<!--
+
 				<Component Id='com_SelectHtmlToPdf' Guid='948eec8b-2894-4bbe-a094-dfd2f95f8601' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SelectHtmlToPdf' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Select.HtmlToPdf.dll' Source='..\packages\Select.HtmlToPdf.25.2.0\lib\net40\Select.HtmlToPdf.dll' Assembly='.net' KeyPath='yes' />
+					<File Id="_SelectHtmlToPdf_dep" Name="Select.Html.dep" Source="..\packages\Select.HtmlToPdf.25.2.0\lib\net40\Select.Html.dep" />
 				</Component>
-				
+	<!--			
 -->
 			
 
@@ -311,10 +303,10 @@
 				<Condition>VersionNT64</Condition>
                 <File Id='_libwebp' Source='..\Assemblies\NonNuget\libwebp.dll' KeyPath='yes' />
               </Component>
-			<!--<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='af52af85-0ca4-459a-b7e5-dc3088aa17b6' Win64='no'>
+			<Component Id='com_Microsoft_ClearScript_V8_WinX64' Guid='af52af85-0ca4-459a-b7e5-dc3088aa17b6' Win64='no'>
 				<Condition>VersionNT64</Condition>
-				<File Id='_Microsoft_ClearScript_V8_WinX64' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.4.5\runtimes\win-x64\native\ClearScriptV8.win-x64.dll' KeyPath='yes' />
-			</Component>-->
+				<File Id='_Microsoft_ClearScript_V8_WinX64' Source='..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.5.0\runtimes\win-x64\native\ClearScriptV8.win-x64.dll' KeyPath='yes' />
+			</Component>
 		</Directory>
     </Directory>
         <!-- The FileSystem group of the installation package. -->
@@ -372,7 +364,7 @@
 			<ComponentRef Id='com_DartSassHost' />
 			<ComponentRef Id='com_Microsoft_ClearScript_Core'/>
 			<ComponentRef Id='com_Microsoft_ClearScript_V8'/>
-			<!--<ComponentRef Id='com_Microsoft_ClearScript_V8_WinX64' />-->
+			<ComponentRef Id='com_Microsoft_ClearScript_V8_WinX64' />
 			<ComponentRef Id='com_Microsoft_ClearScript_V8_ICUData' />	
             <ComponentRef Id='com_AdvancedStringBuilder' />
             <ComponentRef Id='com_System_Text_Encoding_CodePages' />
@@ -403,8 +395,8 @@
 			<!--<ComponentRef Id='com_MicrosoftIdentityClient' />
 			<ComponentRef Id='com_MicrosoftIdentityModelAbstractions' />-->
 		   
-			<!-- <ComponentRef Id='com_SelectHtmlToPdf' />
-			-->
+			<ComponentRef Id='com_SelectHtmlToPdf' />
+			<!-- -->
 			<!--  
           <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript' />
           <ComponentRef Id='com_JavaScriptEngineSwitcher_V8_Win64_clearscript64' />

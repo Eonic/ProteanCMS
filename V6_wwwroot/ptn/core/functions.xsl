@@ -3056,7 +3056,7 @@
           </xsl:choose>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:text>https://eonic.com</xsl:text>
+          <xsl:text>https://www.proteancms.com</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
