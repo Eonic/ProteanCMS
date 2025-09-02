@@ -454,31 +454,37 @@ namespace Protean.Providers
                                         {
                                             //long userid = authProvider.CheckAuthenticationResponse(myWeb.moRequest, myWeb.moSession, myWeb.moResponse);
                                             samlUserEmail = authProvider.ExtractEmail(xmlDoc);
-                                            //update Authprovider in existing tblDirectory against email address
-                                            string sSql = "update tblDirectory set cDirPassword ='"+ authProvider.name + "' where cDirName = '"+ samlUserEmail + "' or cDirEmail = '"+ samlUserEmail+"' " ;
-                                            sValidResponse = moDbHelper.ExeProcessSql(sSql).ToString();
-                                            
-                                            sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name); // Password as a Provider name here
-                                            if (Information.IsNumeric(sValidResponse))
+
+
+                                            if (samlUserEmail != string.Empty)
                                             {
-                                                myWeb.mnUserId = Convert.ToInt32(sValidResponse);
-                                                moDbHelper.mnUserId = Conversions.ToLong(sValidResponse);
-                                                valid = true;
-                                                if (goSession != null)
+                                                //update Authprovider in existing tblDirectory against email address
+                                                string sSql = "update tblDirectory set cDirPassword ='" + authProvider.name + "' where cDirName = '" + samlUserEmail + "' or cDirEmail = '" + samlUserEmail + "' AND cDirEmail != ''";
+                                                sValidResponse = moDbHelper.ExeProcessSql(sSql).ToString();
+
+                                                sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name); // Password as a Provider name here
+                                                if (Information.IsNumeric(sValidResponse))
                                                 {
-                                                    goSession["nUserId"] = sValidResponse;
-                                                    XmlElement UserXml = myWeb.GetUserXML();
-                                                    if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
+                                                    myWeb.mnUserId = Convert.ToInt32(sValidResponse);
+                                                    moDbHelper.mnUserId = Conversions.ToLong(sValidResponse);
+                                                    valid = true;
+                                                    if (goSession != null)
                                                     {
-                                                        goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
+                                                        goSession["nUserId"] = sValidResponse;
+                                                        XmlElement UserXml = myWeb.GetUserXML();
+                                                        if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
+                                                        {
+                                                            goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
+                                                        }
                                                     }
                                                 }
-                                            }else
-                                            {
-                                                //user not present in proteanCms                                               
-                                                base.valid = false;
-                                                base.addNote(ref xmlGroupElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
-                                            }                                            
+                                                else
+                                                {
+                                                    //user not present in proteanCms                                               
+                                                    base.valid = false;
+                                                    base.addNote(ref xmlGroupElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
+                                                }
+                                            }
                                         }
                                     }
                                 }                                
