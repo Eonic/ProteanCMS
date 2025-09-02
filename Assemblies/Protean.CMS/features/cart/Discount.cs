@@ -1,17 +1,11 @@
-﻿using ImageMagick;
-using Lucene.Net.Search;
-using Lucene.Net.Support;
-using Microsoft.VisualBasic;
+﻿using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using Protean.Providers.CDN;
 using Protean.Providers.DiscountRule;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Data;
 using System.Runtime.InteropServices;
 using System.Web.Configuration;
-using System.Windows.Controls;
 using System.Xml;
 using static Protean.stdTools;
 
