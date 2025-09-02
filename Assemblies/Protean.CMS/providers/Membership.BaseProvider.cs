@@ -455,7 +455,8 @@ namespace Protean.Providers
                                             //long userid = authProvider.CheckAuthenticationResponse(myWeb.moRequest, myWeb.moSession, myWeb.moResponse);
                                             samlUserEmail = authProvider.ExtractEmail(xmlDoc);
 
-                                            if(samlUserEmail != "")
+
+                                            if (samlUserEmail != string.Empty)
                                             {
                                                 //update Authprovider in existing tblDirectory against email address
                                                 string sSql = "update tblDirectory set cDirPassword ='" + authProvider.name + "' where cDirName = '" + samlUserEmail + "' or cDirEmail = '" + samlUserEmail + "' AND cDirEmail != ''";
@@ -484,7 +485,6 @@ namespace Protean.Providers
                                                     base.addNote(ref xmlGroupElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
                                                 }
                                             }
-                                                                              
                                         }
                                     }
                                 }                                
