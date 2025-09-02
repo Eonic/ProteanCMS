@@ -413,7 +413,6 @@ C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Data.SqlClie
 C:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\System.Data.SqlClient.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Select.Html.dep
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ClearScriptV8.win-x64.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.dll.config
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Debug\ProteanCMS.pdb

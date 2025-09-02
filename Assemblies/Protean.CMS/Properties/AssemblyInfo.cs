@@ -35,10 +35,10 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 
 
-[assembly: AssemblyVersion("6.1.45.1")]
-[assembly: AssemblyFileVersion("6.1.45.1")]
+[assembly: AssemblyVersion("6.1.45.7")]
+[assembly: AssemblyFileVersion("6.1.45.7")]
 [assembly: NeutralResourcesLanguage("en")]
 
-[assembly: AssemblyInformationalVersion("0.0.0.1412")]
+[assembly: AssemblyInformationalVersion("0.0.0.1418")]
 
 
