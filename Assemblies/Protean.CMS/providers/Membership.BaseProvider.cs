@@ -9,6 +9,7 @@
 // ***********************************************************************
 
 
+//using Microsoft.Identity.Client;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.AdminProxy;
@@ -823,22 +824,22 @@ namespace Protean.Providers
                         {
                             if (isValidEmailAddress)
                             {
-                                base.addInput(ref oFrmElmt, "cEmail", true, "Email address", "readonly");
+                                base.addInput(ref oFrmElmt, "cEmail", true, "Email address", "term-4005 readonly");
                             }
                             else
                             {
-                                base.addInput(ref oFrmElmt, "cEmail", true, "Username", "readonly");
+                                base.addInput(ref oFrmElmt, "cEmail", true, "Username", "term-400o readonly");
                             }
                         }
                         else
                         {
-                            base.addInput(ref oFrmElmt, "cEmail", true, "Email address / Username");
+                            base.addInput(ref oFrmElmt, "cEmail", true, "Email", "term-4005");
                         }
                         // check for legal chars in either email or username
                         XmlElement xmlObind = null;
                         base.addBind("cEmail", "user/email", ref xmlObind, "true()", "format:^[a-zA-Z0-9._%+-@ ]*$");
 
-                        base.addSubmit(ref oFrmElmt, "", "Reset Password", "ewAccountReset");
+                        base.addSubmit(ref oFrmElmt, "", "Reset Password", "ewAccountReset", "term-4052");
 
                     Check:
                         ;
@@ -2048,7 +2049,7 @@ namespace Protean.Providers
                         // If there is a user set, we need to check if we are transferring over to a secure site,
                         // to see if we should actually be logged off (which we can tell by looking at the cart order
                         // based on the session id).
-                        else if (gbCart && !string.IsNullOrEmpty(moRequest["refSessionId"]))
+                        else if (myWeb.gbCart && !string.IsNullOrEmpty(moRequest["refSessionId"]))
                         {
 
                             long nCartUserId = 0L;
@@ -2950,8 +2951,20 @@ namespace Protean.Providers
                             string SubjectLine = "Your Registration Details";
                             var oMsg = new Protean.Messaging(ref myWeb.msException);
 
-                            oUserElmt.SetAttribute("Url", myWeb.mcOriginalURL);
+                            oUserElmt.SetAttribute("Url", myWeb.mcPageURL);
                             oUserElmt.SetAttribute("activateCmd", cmdPrefix + "ActivateAccount");
+
+                            //lets reset the activation key if it is missing.
+                            string ActivationKey = "";
+                            if (oUserElmt.SelectSingleNode("descendant-or-self::ActivationKey") != null) {
+                                ActivationKey = oUserElmt.SelectSingleNode("descendant-or-self::ActivationKey").ToString();
+                            }
+                            if (ActivationKey == "") {
+                                var oMembership = new Protean.Cms.Membership(ref myWeb);
+                                //oMembership.OnError += myWeb.OnComponentError;
+                                oMembership.AccountActivateLink((int)mnUserId);
+                                oUserElmt.ReplaceChild((XmlNode)myWeb.moDbHelper.GetUserXML(mnUserId), oUserElmt.FirstChild);
+                            }
 
                             // send an email to the new registrant
                             if (!string.IsNullOrEmpty(recipientEmail))
@@ -3164,7 +3177,7 @@ namespace Protean.Providers
                         myWeb.mnUserId = 0;
 
                         // Clear the cart
-                        if (moSession != null && gbCart)
+                        if (moSession != null && myWeb.gbCart)
                         {
                             string cSql = "update tblCartOrder set cCartSessionId = 'OLD_' + cCartSessionId where (cCartSessionId = '" + moSession.SessionID + "' and cCartSessionId <> '')";
                             moDbHelper.ExeProcessSql(cSql);

@@ -115,5 +115,10 @@
   <xsl:template match="Content[@type='xform']" mode="ContentDetail">
     <xsl:apply-templates select="." mode="xform"/>
   </xsl:template>
-  
+
+	<xsl:template match="Content[@type='Module' and (@moduleType='EmailForm' or @moduleType='xForm')]" mode="contentJS">
+		<xsl:apply-templates select="." mode="xform"/>
+	</xsl:template>
+	
+	
 </xsl:stylesheet>

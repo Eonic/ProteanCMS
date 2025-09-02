@@ -257,9 +257,8 @@
     </xsl:variable>
 
 	var newItem = getUploadedImageHtmlPopup('<xsl:value-of select="$appPath"/>','<xsl:value-of select="$fld"/>',targetPath,'<xsl:value-of select="$targetFeild"/>',file.name)
-	prepareAjaxModals();
-	
-  </xsl:template>
+
+</xsl:template>
 
   <xsl:template match="Page[@layout='ImageLib' and (Request/QueryString/Item[@name='ewCmd2' and node()='PathOnly'] or Request/QueryString/Item[@name='pathOnly' and node()='true'])]" mode="newItemScript">
 
@@ -538,11 +537,11 @@
     <div class="item item-image col">
       <div class="panel">
         <div class="image-thumbnail">
-          <xsl:variable name="Extension">
-            <xsl:value-of select="translate(@Extension,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
-          </xsl:variable>
-          <xsl:choose>
-            <xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp' or $Extension='.tiff' or $Extension='.tif' ">
+			<xsl:variable name="Extension">
+				<xsl:value-of select="translate(@Extension,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
+			</xsl:variable>
+			<xsl:choose>
+				<xsl:when test="$Extension='.jpg' or $Extension='.jpeg' or $Extension='.gif' or $Extension='.png' or $Extension='.bmp' or $Extension='.tif' or $Extension='.webp'">
               <xsl:if test="@root">
 
                 <!--xsl:variable name="imgUrl">
@@ -620,12 +619,31 @@
                 <img src="/{@root}{translate($fld,'\', '/')}/{@name}" width="160" height="160" class="{@class} img-responsive"/>
               </div>
             </xsl:when>
-            <xsl:otherwise>
-              <xsl:if test="@icon">
-                <img src="/ewcommon/images/icons/{@icon}" width="15" height="15" alt=""/>
-              </xsl:if>
-            </xsl:otherwise>
-          </xsl:choose>
+
+				<xsl:when test="$Extension='.pdf' or $Extension='.doc' or $Extension='.docx'">
+
+				</xsl:when>
+				<xsl:when test="$Extension='.swf'">
+					<i class="fa fa-flash fa-5x center-block">
+						<xsl:text> </xsl:text>
+					</i>
+				</xsl:when>
+				<xsl:when test="$Extension='.flv' or $Extension='.mp4' ">
+					<i class="fa fa-film fa-5x center-block">
+						<xsl:text> </xsl:text>
+					</i>
+				</xsl:when>
+				<xsl:when test="$Extension='.mp3' or $Extension='.wma'">
+					<i class="fa fa-music fa-5x center-block">
+						<xsl:text> </xsl:text>
+					</i>
+				</xsl:when>
+				<xsl:otherwise>
+					<i class="fa fa-file fa-5x center-block">
+						<xsl:text> </xsl:text>
+					</i>
+				</xsl:otherwise>
+			</xsl:choose>
         </div>
         <div>
 			  <xsl:choose>
@@ -693,20 +711,22 @@
                   <xsl:text> </xsl:text>Pick Image
                 </a>
               </xsl:if>
+				<xsl:text> </xsl:text>
             </xsl:when>
             <xsl:otherwise>
 				<xsl:choose>
 					<!--Add new multiple=true condition for multiple library images-->
 					<xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
-
+						<xsl:text> </xsl:text>
 					</xsl:when>
 					<xsl:otherwise>
-              <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif'">
+              <xsl:if test="@Extension='.jpg' or @Extension='.jpeg' or @Extension='.gif' or @Extension='.png' or @Extension='.svg' or @Extension='.tiff' or @Extension='.tif' or @Extension='.webp'">
                 <a href="{$appPath}?contentType=popup&amp;ewcmd={/Page/@ewCmd}&amp;ewCmd2=pickImage&amp;fld={$fld}&amp;file={$filename}{@extension}" class="btn btn-sm btn-primary pickImage">
                   
                   Pick Image
                 </a>
               </xsl:if>
+						<xsl:text> </xsl:text>
 					</xsl:otherwise>
 				</xsl:choose>
             </xsl:otherwise>
@@ -930,7 +950,11 @@ function primeFileUpload(){
 			var deletePath = '<xsl:value-of select="translate(descendant::folder[@active='true']/@path,'\','/')"/>';
 			<xsl:apply-templates select="." mode="newItemScript"/>
 			$('#files').prepend(newItem);
+			
+			$('#files div:first-child').find("a[data-bs-toggle!='popover']").openInModal();
+
 			$('#files .item-image .panel').prepareLibImages();
+
 			$("[data-bs-toggle=popover]").popover({
 			html: true,
 			container: '#files',
@@ -942,7 +966,6 @@ function primeFileUpload(){
 			});
 
 			});
-			//preparePickImageModal('#modal-<xsl:value-of select="$page/Request/QueryString/Item[@name='targetField']/node()"/>');
 
 			},
 

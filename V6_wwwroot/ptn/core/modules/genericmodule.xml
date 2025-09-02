@@ -63,7 +63,9 @@
 			<bind id="title-margin" nodeset="@title-margin" required="false()" type="string"/>
       <bind id="class-name" nodeset="@class-name" required="false()" type="string"/>
       <bind id="custom-css" nodeset="@custom-css" required="false()" type="string"/>
-		</bind>
+      <bind id="gutter" nodeset="@gutter" required="false()" type="string"/>
+
+    </bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<bind nodeset="tblContent">
 			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
@@ -243,6 +245,41 @@
                 <input bind="module-padding" class="">
                   <label>Module Padding</label>
                 </input>
+                <group>
+                  <select1 bind="gutter">
+                    <label>
+                      Gutter width
+                    </label>
+                    <item>
+                      <label>0</label>
+                      <value>0</value>
+                    </item>
+                    <item>
+                      <label>1</label>
+                      <value>1</value>
+                    </item>
+                    <item>
+                      <label>2</label>
+                      <value>2</value>
+                    </item>
+                    <item>
+                      <label>3</label>
+                      <value>3</value>
+                    </item>
+                    <item>
+                      <label>4</label>
+                      <value>4</value>
+                    </item>
+                    <item>
+                      <label>5</label>
+                      <value>5</value>
+                    </item>
+                    <item>
+                      <label>6</label>
+                      <value>6</value>
+                    </item>
+                  </select1>
+                </group>
               </group>
 							
 
@@ -842,6 +879,7 @@
             </textarea>
           </group>
 				</group>
+        
 				<group id="columns" class="inline-select">
 					<label>
 						Number of columns
@@ -1041,6 +1079,8 @@
 						</select1>
 					</group>
 				</group>
+
+        
 			</group>
 		</group>
 		<group>

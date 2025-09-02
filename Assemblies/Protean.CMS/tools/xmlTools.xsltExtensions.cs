@@ -1628,16 +1628,6 @@ namespace Protean
 
                     cVirtualPath2 = Strings.Replace(cVirtualPath2, "//", "/");
 
-                    // Save any resized
-                    // to local appart from standard thumbnails
-                    if (!(sPrefix == "~ew/tn-" & maxWidth == 100L & maxHeight == 100L))
-                    {
-                        if (cVirtualPath2.StartsWith("/images/FreeStock"))
-                        {
-                            cVirtualPath2 = Strings.Replace(cVirtualPath2, "/images/FreeStock", "/images/~ew/FreeStock");
-                        }
-                    }
-
                     switch (filetype ?? "")
                     {
                         case "pdf":
@@ -1881,14 +1871,6 @@ namespace Protean
 
                     cVirtualPath2 = Strings.Replace(cVirtualPath2, "//", "/");
 
-                    // Save any resized freestock to local appart from standard thumbnails
-                    if (!(sPrefix == "~ew/tn-" & maxWidth == 100L & maxHeight == 100L))
-                    {
-                        if (cVirtualPath2.StartsWith("/images/FreeStock"))
-                        {
-                            cVirtualPath2 = Strings.Replace(cVirtualPath2, "/images/FreeStock", "/images/~ew/FreeStock");
-                        }
-                    }
 
                     switch (filetype ?? "")
                     {

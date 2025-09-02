@@ -7,12 +7,17 @@ packages/
 .vs/ProteanCMS/v16
 .vs/ProteanCMS/v17
 .vs/ProteanCMS/FileContentIndex
+.vs/ProteanCMS/CopilotIndices
+
 .vs/ProteanCMS-V6/v16
 .vs/ProteanCMS-V6/v17
 .vs/ProteanCMS-V6/FileContentIndex
+.vs/ProteanCMS-V6/CopilotIndices
+
 .vs/ProteanCMSInstaller/v16
 .vs/ProteanCMSInstaller/v17
 .vs/ProteanCMSInstaller/FileContentIndex
+.vs/ProteanCMSInstaller/CopilotIndices
 
 wwwroot/bin/**
 wwwroot/images/**

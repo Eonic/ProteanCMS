@@ -38,7 +38,8 @@
 			</xsl:if>
 			<xsl:if test="descendant::upload">
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
-			</xsl:if>
+			</xsl:if>TEST
+
 			<xsl:choose>
 				<xsl:when test="count(group) = 2 and group[2]/submit and count(group[2]/*[name()!='submit']) = 0">
 					<xsl:for-each select="group[1]">
@@ -50,7 +51,6 @@
               </div>
             </xsl:if>-->
 						<div class="">
-
 							<xsl:apply-templates select="." mode="xform"/>
 							<!--xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/-->
 						</div>
@@ -124,6 +124,8 @@
 		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
 	</xsl:template>
 
+
+	
 
 	<xsl:template match="group[@ref='EditContent' and parent::Content]" mode="xform">
 		<xsl:param name="class"/>
@@ -273,7 +275,123 @@
 		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
 	</xsl:template>
 
+	<!-- Default template for all admin forms-->
+	<xsl:template match="Content[group/@class='delete-form']" mode="xform">
+		<form method="{model/submission/@method}" action="">
+			<xsl:attribute name="class">
+				<xsl:text>xform card container-sm text-bg-danger</xsl:text>
+				<xsl:if test="model/submission/@class!=''">
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="model/submission/@class"/>
+				</xsl:if>
+			</xsl:attribute>
+			<xsl:if test="not(contains(model/submission/@action,'.asmx'))">
+				<xsl:attribute name="action">
+					<xsl:value-of select="model/submission/@action"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@id!=''">
+				<xsl:attribute name="id">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+				<xsl:attribute name="name">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@event!=''">
+				<xsl:attribute name="onsubmit">
+					<xsl:value-of select="model/submission/@event"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="descendant::upload">
+				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+			</xsl:if>
 
+			<xsl:choose>
+				<xsl:when test="count(group) = 2 and group[2]/submit and count(group[2]/*[name()!='submit']) = 0">
+					<xsl:for-each select="group[1]">
+						<div class="card-body">
+
+							<xsl:apply-templates select="." mode="xform"/>
+						</div>
+					</xsl:for-each>
+					<xsl:for-each select="group[2]">
+						<xsl:if test="count(submit) &gt; 0">
+							<div class="navbar-fixed-bottom">
+								<div class="container">
+									<xsl:apply-templates select="submit" mode="xform"/>
+									<div class="footer-status">
+										<span>
+											<xsl:if test="not($page/ContentDetail/Content/model/instance/*/nStatus='1')">
+												<xsl:attribute name="class">text-muted hidden</xsl:attribute>
+											</xsl:if>
+											<i class="fas fa-eye">
+												<xsl:text> </xsl:text>
+											</i> Live
+										</span>
+										<span>
+											<xsl:if test="not($page/ContentDetail/Content/model/instance/*/nStatus='0')">
+												<xsl:attribute name="class">text-muted hidden</xsl:attribute>
+											</xsl:if>
+											<i class="fas fa-eye-slash">
+												<xsl:text> </xsl:text>
+											</i> Hidden
+										</span>
+									</div>
+								</div>
+							</div>
+						</xsl:if>
+					</xsl:for-each>
+				</xsl:when>
+				<xsl:otherwise>
+					<div class="card-body">
+						<xsl:apply-templates select="group | repeat " mode="xform"/>
+						<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | hint | help | alert | div" mode="xform"/>
+					</div>
+					<xsl:if test="count(submit) &gt; 0">
+						<div class="card-body">
+
+							<xsl:apply-templates select="submit" mode="xform"/>
+						</div>
+					</xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
+		</form>
+		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
+	</xsl:template>
+
+	<xsl:template match="group[contains(@class,'delete-form')]" mode="xform">
+		<xsl:param name="class"/>
+		<div class="{@class} card-title">
+			<xsl:apply-templates select="label" mode="legend"/>
+		</div>
+		<div class="{@class} card-body">
+			<xsl:if test=" @id!='' ">
+				<xsl:attribute name="id">
+					<xsl:value-of select="@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+		</div>
+		<xsl:if test="count(submit) &gt; 0">
+			<div class="card-body">
+			<xsl:if test="not(submit[contains(@class,'hideRequired')])">
+				<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+					<label class="required required-message">
+						<span class="req">*</span>
+						<xsl:text> </xsl:text>
+						<xsl:call-template name="msg_required"/>
+					</label>
+				</xsl:if>
+			</xsl:if>
+			<!-- For xFormQuiz change how these buttons work -->
+			<xsl:apply-templates select="submit" mode="xform"/>
+		</div>
+		</xsl:if>
+		
+			
+	</xsl:template>
+	
 	<!-- Template for login, pick page-->
 	<xsl:template match="Content[@name='EditPageLayout' or @name='FindRelatedContent' or @name='FindContentToRelate']" mode="xform">
 		<form method="{model/submission/@method}" action=""  novalidate="novalidate">

@@ -87,6 +87,8 @@
         <add key="ServerSenderEmailName" value="" />
         <add key="DisableServerSenderEmail" value="" />
  	    <add key="ExcludeFoldersFromPaths" value="header,footer" />
+		<add key="MenuContentCountTypes" value="" />
+		  
 	  </web> 
     </instance> 
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -173,6 +175,7 @@
 	  <bind id="ptnCart" nodeset="web/add[@key='Cart']/@value" required="false()" type="string" />
 	  <bind id="ptnMembership" nodeset="web/add[@key='Membership']/@value" required="false()" type="string" />
 	  <bind id="ptnSearch" nodeset="web/add[@key='Search']/@value" required="false()" type="string" />
+	  <bind id="ptnMenuContentCountTypes" nodeset="web/add[@key='MenuContentCountTypes']/@value" required="false()" type="string" />
 
   </model>
   <group ref="WebSettings" class="admin-form-style">
@@ -675,8 +678,12 @@
         </item>
         <value />
       </select1>
-
-      <input bind="ewGoogleContentTypes">
+			
+			<input bind="ptnMenuContentCountTypes">
+				<label>Menu Content Count Types</label>
+				<value />
+			</input>
+			<input bind="ewGoogleContentTypes">
         <label>Google Sitemap Content Types</label>
         <value />
       </input>

@@ -530,7 +530,7 @@ namespace Protean
                 string cartXmlFromDatabase = "";
                 mcOrderType = "Order";
                 cOrderReference = "";
-                mcModuleName = "Eonic.Cart";
+                mcModuleName = "Protean.Cart";
 
                 string cProcessInfo = Conversions.ToString(string.IsNullOrEmpty("initialise variables"));
                 try
@@ -654,9 +654,9 @@ namespace Protean
                         }
 
                         mnTaxRate = Conversions.ToDouble(moCartConfig["TaxRate"]);
-                        if (myWeb.moSession["nTaxRate"] != null)
+                        if (myWeb.moSession!= null)
                         {
-                            mnTaxRate = Conversions.ToDouble(Operators.ConcatenateObject("0", myWeb.moSession["nTaxRate"]));
+                            mnTaxRate = Conversions.ToDouble("0" + myWeb.moSession["nTaxRate"] ?? "");
                         }
 
                         if (!string.IsNullOrEmpty(myWeb.moRequest.Form["url"]))
@@ -668,17 +668,25 @@ namespace Protean
                         {
                             myWeb.moSession["returnPage"] = myWeb.moRequest.QueryString["url"];
                         }
-
-                        mcReturnPage = Conversions.ToString(myWeb.moSession["returnPage"]);
-
-                        if (myWeb.moSession["nEwUserId"] != null)
+                        if (myWeb.moSession != null)
                         {
-                            mnEwUserId = Conversions.ToInteger(Operators.ConcatenateObject("0", myWeb.moSession["nEwUserId"]));
+                            mcReturnPage = Conversions.ToString(myWeb.moSession["returnPage"]);
+
+                            if (myWeb.moSession["nEwUserId"] != null)
+                            {
+                                mnEwUserId = Conversions.ToInteger(Operators.ConcatenateObject("0", myWeb.moSession["nEwUserId"]));
+                            }
+                            else
+                            {
+                                mnEwUserId = 0;
+                            }
                         }
                         else
                         {
                             mnEwUserId = 0;
                         }
+
+
 
                         if (myWeb.mnUserId > 0 & mnEwUserId == 0)
                             mnEwUserId = myWeb.mnUserId;
