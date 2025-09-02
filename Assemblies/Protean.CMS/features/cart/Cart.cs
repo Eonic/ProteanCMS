@@ -493,6 +493,7 @@ namespace Protean
 
 
             protected internal Cms myWeb;
+            //This constructor is added for testing purpose
             public Cart()
             {               
                 mcCurrencySymbol = "£";
