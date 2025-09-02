@@ -39,7 +39,7 @@ Public Class CustomActions
     Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.4.0"
     Public Shared SystemTextJsonVersion As String = "9.0.0.8"
     Public Shared MicrosoftBclAsyncInterfacesVersion As String = "9.0.0.8"
-    Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.7"
+    Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.8"
     Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.0.8"
     Public Shared SystemNumericsVectorsVersion As String = "4.1.6.0"
     Public Shared AngleSharpVersion As String = "1.3.0.0"
