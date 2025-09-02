@@ -42,11 +42,10 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            public IdiscountRuleProvider Initiate(ref Cms myWeb)
+            public new IdiscountRuleProvider Initiate(NameValueCollection config)
             {
                 return this;
             }
-
 
             public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {

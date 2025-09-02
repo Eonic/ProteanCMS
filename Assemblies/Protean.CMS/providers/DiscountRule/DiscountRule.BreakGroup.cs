@@ -43,7 +43,7 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            public IdiscountRuleProvider Initiate(ref Cms myWeb)
+            public new IdiscountRuleProvider Initiate(NameValueCollection config)
             {
                 return this;
             }
@@ -80,28 +80,27 @@ namespace Protean.Providers
                         foreach (XmlElement currentODiscount1 in oFinalDiscounts.SelectNodes("descendant-or-self::Discount[@nDiscountKey=" + oIds[i] + "]"))
                         {
                             oDiscount = currentODiscount1;
-                            foreach (XmlElement currentOItem in oFinalDiscounts.DocumentElement.SelectNodes("Item[Discount/@nDiscountKey=" + oDiscount.GetAttribute("nDiscountKey") + "]"))
-                            {
-                                oItem = currentOItem;
-                                oPriceElmt = (XmlElement)oItem.SelectSingleNode("DiscountPrice");
+                            foreach (XmlElement oItemLoop in oFinalDiscounts.DocumentElement.SelectNodes("Item[Discount/@nDiscountKey=" + oDiscount.GetAttribute("nDiscountKey") + "]"))
+                            {                                
+                                oPriceElmt = (XmlElement)oItemLoop.SelectSingleNode("Item/DiscountPrice");
                                 if (oPriceElmt is null)
                                 {
                                     // NB 16/02/2010
                                     // Time to pull price out so we can round it, to avoid the multiple decimal place issues
                                     decimal nPrice;
-                                    nPrice = priceRound(oItem.GetAttribute("price"), bForceRoundup: mbRoundUp);
+                                    nPrice = priceRound(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
 
-                                    oPriceElmt = oFinalDiscounts.CreateElement("Item/DiscountPrice");
+                                    oPriceElmt = oFinalDiscounts.CreateElement("DiscountPrice");
                                     oPriceElmt.SetAttribute("OriginalUnitPrice", nPrice.ToString("0.00"));
                                     // oPriceElmt.SetAttribute("OriginalUnitPrice", oItem.GetAttribute("price"))
                                     oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString("0.00"));
                                     // oPriceElmt.SetAttribute("UnitPrice", oItem.GetAttribute("price"))
-                                    oPriceElmt.SetAttribute("Units", oItem.GetAttribute("quantity"));
-                                    oPriceElmt.SetAttribute("Total", ((double)nPrice * Conversions.ToDouble(oItem.GetAttribute("quantity"))).ToString());
+                                    oPriceElmt.SetAttribute("Units", oItemLoop.GetAttribute("quantity"));
+                                    oPriceElmt.SetAttribute("Total", ((double)nPrice * Conversions.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
                                     // oPriceElmt.SetAttribute("Total", oItem.GetAttribute("price") * oItem.GetAttribute("quantity"))
                                     oPriceElmt.SetAttribute("UnitSaving", 0.ToString());
                                     oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
-                                    oItem.AppendChild(oPriceElmt);
+                                    oItemLoop.AppendChild(oPriceElmt);
                                 }
                                 nTotalItems = (int)Math.Round(nTotalItems + Conversions.ToDouble(oPriceElmt.GetAttribute("Units")));
                                 nTotalItemsValue = (decimal)(nTotalItemsValue + Convert.ToDecimal(oPriceElmt.GetAttribute("UnitPrice")) * Convert.ToDecimal(oPriceElmt.GetAttribute("Units")));

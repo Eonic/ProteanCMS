@@ -243,8 +243,9 @@ namespace Protean
                             // If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
                             // if total crossed more or less than defined range then it will remove promocode for the user.
 
-                                                   
+
                             // TS: Move to new CheckDiscounts
+                            var oDiscountMessage = oCartXML.OwnerDocument.CreateElement("DiscountMessage");
 
                             if (oDsDiscounts != null)
                             {
@@ -252,8 +253,12 @@ namespace Protean
                                 {
                                     XmlDocument oXmlDiscounts = new XmlDocument();
                                     oXmlDiscounts.LoadXml(oDsDiscounts.GetXml());
-                                    CheckDiscounts(oXmlDiscounts.DocumentElement, ref oCartXML, ref cPromoCodeUserEntered, myCart);                                   
-
+                                    oDiscountMessage = CheckDiscounts(oXmlDiscounts.DocumentElement, ref oCartXML, ref cPromoCodeUserEntered, myCart);
+                                    // check if DiscountMessage has any child nodes (means error message exists)
+                                    if (oDiscountMessage != null && oDiscountMessage.SelectSingleNode("span") != null)
+                                    {
+                                        return 0m; // exit early because discount is invalid
+                                    }
                                     Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
                                     IdiscountRuleProvider oDisProvider = oDiscRuleProv.Get();
                                     // put all db funtions in it                                  
@@ -280,8 +285,7 @@ namespace Protean
                             else
                             {
                                 if (!string.IsNullOrEmpty(cPromoCodeUserEntered))
-                                {
-                                    var oDiscountMessage = oCartXML.OwnerDocument.CreateElement("DiscountMessage");
+                                {                                    
                                     oDiscountMessage.InnerXml = "<span class=\"msg-1030\">The code you have provided is invalid for this transaction</span>";
                                     oCartXML.AppendChild(oDiscountMessage);
                                     // If promociode appiled and then it is inactive then also remove from cart also
@@ -519,93 +523,108 @@ namespace Protean
                                 }
                             }                            
                         }
-                        // If we have a valid discount code, we can apply it to the cart
-                        // Based on providerType 1,2,3... get the actual provider
-                        IdiscountRuleProvider ApplicableProviderType = oDiscRuleProv.Get(ProviderType);
-                        if (ApplicableProviderType != null)
-                        {
-                            // now need to make sure there are no discounts that have been applied more than once.
-                            // revisit for optimization - nita
-                            foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item"))
-                            {
-                                
-                                int[] nDiscConts = new int[] { 0 };
-                                string cDiscConts = ",";
-                                foreach (XmlElement oDupElmt in oItemElmt.SelectNodes("Discount"))
-                                {
-                                    if (cDiscConts.Contains("," + oDupElmt.GetAttribute("nDiscountKey") + ","))
-                                    {
-                                        oItemElmt.RemoveChild(oDupElmt);
-                                    }
-                                    else
-                                    {
-                                        cDiscConts += oDupElmt.GetAttribute("nDiscountKey") + ",";
-                                    }
-                                }
-                            }
 
-                            // Itterate through those that have a cDiscountUserCode and store them to global variables
-                            // so we can deactivate the codes on completed order.
-                            foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item/Discount[@cDiscountUserCode!='' or @nDiscountCodeType='3']"))
-                            {
-                              
-                                bHasPromotionalDiscounts = true;
-                                string cDiscountUserCode = oItemElmt.GetAttribute("cDiscountUserCode").ToLower();
-                                promoCodeType nDiscountCodeType = (promoCodeType)Conversions.ToInteger(oItemElmt.GetAttribute("nDiscountCodeType").ToLower());
+                        // Check if FinalDiscounts XML has no discount nodes
+                        if (oFinalDiscounts == null || oFinalDiscounts.SelectNodes("/Discounts/Item").Count == 0)
+                        {                          
+                            var oDiscountMessage = oCartXML.OwnerDocument.CreateElement("DiscountMessage");
+                            oDiscountMessage.InnerXml = "<span class=\"msg-1030\">The code you have provided is invalid for this transaction</span>";
+                            oCartXML.AppendChild(oDiscountMessage);
 
-                                if (nDiscountCodeType == promoCodeType.MultiCode)
-                                {
-                                    // if the code is empty then we remove the rule, otherwise we will process it.
-                                    if (string.IsNullOrEmpty(AppliedCode))
-                                    {
-                                        oItemElmt.ParentNode.RemoveChild(oItemElmt);
-                                    }
-                                    else
-                                    {
-                                        // do nothing we will process this rule because it matches the incoming query which contains the code.
-                                    }
-                                }
-                                //else if (!((cDiscountUserCode ?? "") == (AppliedCode.ToLower() ?? "")))
-                                //{
-                                //    oItemElmt.ParentNode.RemoveChild(oItemElmt);
-                                //}
-                                else if (nDiscountCodeType == promoCodeType.UseOnce)
-                                {
-                                    if (!cPromotionalDiscounts.Contains("," + oItemElmt.GetAttribute("nDiscountKey") + ","))
-                                    {
-                                        cPromotionalDiscounts += oItemElmt.GetAttribute("nDiscountKey") + ",";
-                                    }
-                                }
-                            }
-
-                            foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item/Discount[@CodeUsedId!='']"))
-                            {                                
-                                cVouchersUsed += oItemElmt.GetAttribute("CodeUsedId") + ",";
-                            }                                                   
-
-                            // Look through the oDiscountXml to apply each discount rule by providerType
-                            // Price Modifiers
-                            string[] cPriceModifiers = new string[] { "Basic_Money", "Basic_Percent", "Break_Product" };
-
-                            if (!string.IsNullOrEmpty(mcPriceModOrder))
-                                cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
-                            int nPriceCount = 0;
-                            ApplicableProviderType.ApplyDiscount(ref oFinalDiscounts, ref nPriceCount, mbRoundUp, ref myCart, cPriceModifiers, ref nPromocodeApplyFlag);
-
-                            // move this to CheckDiscounts 
-                            oDisProvider.FinalUpdateCartXMLwithDiscounts(ref oCartXML, oFinalDiscounts, mbRoundUp);
-
-                            // update the cart xml
-                            if(oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value != "" && oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value != null)
-                            {
-                                if (bHasPromotionalDiscounts)
-                                {
-                                    oCartXML.SetAttribute("showDiscountCodeBox", "true");
-                                }
-                                double Total = Convert.ToDouble(oCartXML.SelectSingleNode("/Order/Item/@itemTotal")?.Value);
-                                myCart.updateTotals(ref oCartXML, Total, Convert.ToDouble(oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value), oCartXML.SelectSingleNode("/Order/@shippingType")?.Value);
-                            }
+                            // remove invalid code from cart
+                            RemoveDiscountCode();  
+                            return oDiscountMessage;  // return cart early, no discount applied
                         }
+                        else
+                        {
+                            // If we have a valid discount code, we can apply it to the cart
+                            // Based on providerType 1,2,3... get the actual provider
+                            IdiscountRuleProvider ApplicableProviderType = oDiscRuleProv.Get(ProviderType);
+                            if (ApplicableProviderType != null)
+                            {
+                                // now need to make sure there are no discounts that have been applied more than once.
+                                // revisit for optimization - nita
+                                foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item"))
+                                {
+
+                                    int[] nDiscConts = new int[] { 0 };
+                                    string cDiscConts = ",";
+                                    foreach (XmlElement oDupElmt in oItemElmt.SelectNodes("Discount"))
+                                    {
+                                        if (cDiscConts.Contains("," + oDupElmt.GetAttribute("nDiscountKey") + ","))
+                                        {
+                                            oItemElmt.RemoveChild(oDupElmt);
+                                        }
+                                        else
+                                        {
+                                            cDiscConts += oDupElmt.GetAttribute("nDiscountKey") + ",";
+                                        }
+                                    }
+                                }
+
+                                // Itterate through those that have a cDiscountUserCode and store them to global variables
+                                // so we can deactivate the codes on completed order.
+                                foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item/Discount[@cDiscountUserCode!='' or @nDiscountCodeType='3']"))
+                                {
+
+                                    bHasPromotionalDiscounts = true;
+                                    string cDiscountUserCode = oItemElmt.GetAttribute("cDiscountUserCode").ToLower();
+                                    promoCodeType nDiscountCodeType = (promoCodeType)Conversions.ToInteger(oItemElmt.GetAttribute("nDiscountCodeType").ToLower());
+
+                                    if (nDiscountCodeType == promoCodeType.MultiCode)
+                                    {
+                                        // if the code is empty then we remove the rule, otherwise we will process it.
+                                        if (string.IsNullOrEmpty(AppliedCode))
+                                        {
+                                            oItemElmt.ParentNode.RemoveChild(oItemElmt);
+                                        }
+                                        else
+                                        {
+                                            // do nothing we will process this rule because it matches the incoming query which contains the code.
+                                        }
+                                    }
+                                    //else if (!((cDiscountUserCode ?? "") == (AppliedCode.ToLower() ?? "")))
+                                    //{
+                                    //    oItemElmt.ParentNode.RemoveChild(oItemElmt);
+                                    //}
+                                    else if (nDiscountCodeType == promoCodeType.UseOnce)
+                                    {
+                                        if (!cPromotionalDiscounts.Contains("," + oItemElmt.GetAttribute("nDiscountKey") + ","))
+                                        {
+                                            cPromotionalDiscounts += oItemElmt.GetAttribute("nDiscountKey") + ",";
+                                        }
+                                    }
+                                }
+
+                                foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item/Discount[@CodeUsedId!='']"))
+                                {
+                                    cVouchersUsed += oItemElmt.GetAttribute("CodeUsedId") + ",";
+                                }
+
+                                // Look through the oDiscountXml to apply each discount rule by providerType
+                                // Price Modifiers
+                                string[] cPriceModifiers = new string[] { "Basic_Money", "Basic_Percent", "Break_Product" };
+
+                                if (!string.IsNullOrEmpty(mcPriceModOrder))
+                                    cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
+                                int nPriceCount = 0;
+                                ApplicableProviderType.ApplyDiscount(ref oFinalDiscounts, ref nPriceCount, mbRoundUp, ref myCart, cPriceModifiers, ref nPromocodeApplyFlag);
+
+                                // move this to CheckDiscounts 
+                                oDisProvider.FinalUpdateCartXMLwithDiscounts(ref oCartXML, oFinalDiscounts, mbRoundUp);
+
+                                // update the cart xml
+                                if (oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value != "" && oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value != null)
+                                {
+                                    if (bHasPromotionalDiscounts)
+                                    {
+                                        oCartXML.SetAttribute("showDiscountCodeBox", "true");
+                                    }
+                                    double Total = Convert.ToDouble(oCartXML.SelectSingleNode("/Order/Item/@itemTotal")?.Value);
+                                    myCart.updateTotals(ref oCartXML, Total, Convert.ToDouble(oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value), oCartXML.SelectSingleNode("/Order/@shippingType")?.Value);
+                                }
+                            }
+                        }                      
                         
                         //updated CartXML with Discounts Applied.
                         return oCartXML;

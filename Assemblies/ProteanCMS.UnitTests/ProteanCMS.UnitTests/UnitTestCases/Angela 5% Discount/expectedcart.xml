@@ -10,7 +10,7 @@
 <nShippingGroup/>
 <nshippingType/>
 
-<Discount nDiscountKey="418" cDiscountName="Angela 5%" cDiscountCode="angela5" bDiscountIsPercent="1" nDiscountValue="5 " nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1" nDiscountCodeType="1" cDiscountUserCode="ANGELA5"  Applied="1" AppliedToCart="1">
+<Discount nDiscountKey="418" cDiscountName="Angela 5%" cDiscountCode="angela5" bDiscountIsPercent="1" nDiscountValue="5 " nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1"  nContentId="85107" nDiscountCodeType="1" cDiscountUserCode="ANGELA5"  Applied="1" AppliedToCart="1">
 <cDescription/>
 <cTerms/>
 <Images>

@@ -150,66 +150,85 @@ namespace Protean.Providers
                 if (applyNode != null && !string.IsNullOrWhiteSpace(applyNode.InnerText))
                     bool.TryParse(applyNode.InnerText, out bApplyToOrder);
 
-                // Get all cart items (without changing them)
-                XmlNodeList cartItems = oCartXML.SelectNodes("//Item");
-                double totalOrderAmount = 0;
+                // --- Eligibility logic (same as your earlier method) ---
+                double totalAmount = 0d;
+                int nValidProductCount = 0;
+                bool isValid = true;
+
                 List<XmlNode> eligibleItems = new List<XmlNode>();
+                XmlNodeList cartItems = oCartXML.SelectNodes("//Item");
 
-                foreach (XmlNode item in cartItems)
+                foreach (XmlNode itemNode in cartItems)
                 {
-                    string parentId = item.SelectSingleNode("nParentId")?.InnerText ?? "0";
-                    if (parentId != "0") continue; // Skip variants/child items
+                    string parentId = itemNode.SelectSingleNode("nParentId")?.InnerText ?? "0";
+                    if (parentId != "0") continue; // skip child items
 
-                    double itemPrice = Convert.ToDouble(item.Attributes["price"]?.Value ?? "0");
-                    double itemQty = Convert.ToDouble(item.Attributes["quantity"]?.Value ?? "0");
-                    double itemTotal = itemPrice * itemQty;
+                    double itemPrice = Convert.ToDouble(itemNode.Attributes["price"]?.Value ?? "0");
+                    int itemQty = Convert.ToInt32(itemNode.Attributes["quantity"]?.Value ?? "0");
+                    double itemCost = itemPrice * itemQty;
 
-                    totalOrderAmount += itemTotal;
+                    totalAmount += itemCost;
 
                     if (!bApplyToOrder)
                     {
-                        bool withinPriceRange = dMaxPrice > 0
-                            ? itemTotal >= dMinPrice && itemTotal <= dMaxPrice
-                            : itemTotal >= dMinPrice;
-
-                        if (withinPriceRange && itemQty >= nMinQty)
-                            eligibleItems.Add(item);
-                    }
-                }
-
-                if (bApplyToOrder)
-                {
-                    bool orderMatches = true;
-                    if (dMinOrderValue > 0 && totalOrderAmount < dMinOrderValue) orderMatches = false;
-                    if (dMaxOrderValue > 0 && totalOrderAmount > dMaxOrderValue) orderMatches = false;
-
-                    if (orderMatches)
-                    {
-                        foreach (XmlNode item in cartItems)
+                        bool withinPriceRange = dMaxPrice > 0? (itemCost >= dMinPrice && itemCost <= dMaxPrice): (itemCost >= dMinPrice);
+                        if (withinPriceRange)
                         {
-                            string parentId = item.SelectSingleNode("nParentId")?.InnerText ?? "0";
-                            if (parentId == "0")
-                                eligibleItems.Add(item);
+                            nValidProductCount += itemQty; // count total quantity
+                            eligibleItems.Add(itemNode);
                         }
                     }
                 }
 
-                // Populate oXmlDiscounts (final output) with valid items & discounts
-                //oFinalDiscounts is the replica of cartxml but not final cartxml...
-                foreach (XmlNode eligibleItem in eligibleItems)
+                // Quantity check (for item-level discounts)
+                if (!bApplyToOrder && nValidProductCount < nMinQty)
+                    isValid = false;
+
+                // Order total check
+                if (bApplyToOrder)
                 {
-                    XmlElement itemCopy = (XmlElement)oFinalDiscounts.ImportNode(eligibleItem, true);
+                    if (dMaxOrderValue > 0)
+                    {
+                        if (!(totalAmount >= dMinOrderValue && totalAmount <= dMaxOrderValue))
+                            isValid = false;
+                    }
+                    else
+                    {
+                        if (totalAmount < dMinOrderValue)
+                            isValid = false;
+                    }
 
-                    // Remove any existing <Discount> in the copied item
-                    foreach (XmlNode existingDiscount in itemCopy.SelectNodes("Discount").Cast<XmlNode>().ToList())
-                        itemCopy.RemoveChild(existingDiscount);
-
-                    // Append the valid discount
-                    XmlNode importedDiscount = oFinalDiscounts.ImportNode(discountEl, true);
-                    itemCopy.AppendChild(importedDiscount);
-
-                    oFinalDiscounts.DocumentElement.AppendChild(itemCopy);
+                    if (isValid)
+                    {
+                        // If order is valid, apply discount to all parent items
+                        eligibleItems.Clear();
+                        foreach (XmlNode item in cartItems)
+                        {
+                            string parentId = item.SelectSingleNode("nParentId")?.InnerText ?? "0";
+                            if (parentId == "0") eligibleItems.Add(item);
+                        }
+                    }
                 }
+
+                // --- Apply discount only if valid ---
+                if (isValid)
+                {
+                    foreach (XmlNode eligibleItem in eligibleItems)
+                    {
+                        XmlElement itemCopy = (XmlElement)oFinalDiscounts.ImportNode(eligibleItem, true);
+
+                        // Remove any existing <Discount>
+                        foreach (XmlNode existingDiscount in itemCopy.SelectNodes("Discount").Cast<XmlNode>().ToList())
+                            itemCopy.RemoveChild(existingDiscount);
+
+                        // Append new discount
+                        XmlNode importedDiscount = oFinalDiscounts.ImportNode(discountEl, true);
+                        itemCopy.AppendChild(importedDiscount);
+
+                        oFinalDiscounts.DocumentElement.AppendChild(itemCopy);
+                    }
+                }
+
 
                 //move this block to basic provider - nita added below code after valid discount append to cartxml, just add new attributes for freeshipping and giftbox
                 string strcFreeShippingMethods = "";

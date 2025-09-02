@@ -43,11 +43,10 @@ namespace Protean.Providers
                 // do nothing
             }
 
-            public IdiscountRuleProvider Initiate(ref Cms myWeb)
+            public new IdiscountRuleProvider Initiate(NameValueCollection config)
             {
                 return this;
             }
-
             public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
             {
                 string exceptionMessage = string.Empty;
@@ -56,9 +55,9 @@ namespace Protean.Providers
                 XmlElement oPriceElmt;
                 try
                 {                    
-                    foreach (XmlElement oItemLoop in oFinalDiscounts.SelectNodes("Discounts/Item"))
+                    foreach (XmlElement oItemLoop in oFinalDiscounts.SelectNodes("/Discounts/Item"))
                     {
-                        oPriceElmt = (XmlElement)oItemLoop.SelectSingleNode("DiscountPrice");
+                        oPriceElmt = (XmlElement)oItemLoop.SelectSingleNode("Item/DiscountPrice");
                         if (oPriceElmt is null)
                         {
                             // NB 16/02/2010
@@ -66,7 +65,7 @@ namespace Protean.Providers
                             decimal nPrice;
                             nPrice = priceRound(oItemLoop.GetAttribute("price"), bForceRoundup: mbRoundUp);
 
-                            oPriceElmt = oFinalDiscounts.CreateElement("Item/DiscountPrice");
+                            oPriceElmt = oFinalDiscounts.CreateElement("DiscountPrice");
                             oPriceElmt.SetAttribute("OriginalUnitPrice", nPrice.ToString());
                             // oPriceElmt.SetAttribute("OriginalUnitPrice", oItemLoop.GetAttribute("price"))
                             oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString());
@@ -113,6 +112,14 @@ namespace Protean.Providers
                                 oDiscount.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("Total")) - Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString()); // total saving
 
                                 oItemLoop.AppendChild(oDiscount);
+                                //same way need to update the DiscountPrice element
+
+                                // Adjust DiscountPrice to match X-for-Y calculation
+                                oPriceElmt.SetAttribute("Units", (nQ - nTotalQOff).ToString());
+                                oPriceElmt.SetAttribute("Total", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString());
+                                oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oItemLoop.GetAttribute("quantity")) * Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice"))
+                                    - (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff))).ToString());
+
                                 // set previous items as applied...
                                 foreach (XmlElement preceedingItems in oItemLoop.SelectNodes("./preceding-sibling::Item[@contentId='" + ItemId + "' and Discount[@nDiscountCat=3 and not(@Applied='1')]]"))
                                 {
