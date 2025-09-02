@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<DatabaseUpgrade LatestVersion="6.0.78.0">
+<DatabaseUpgrade LatestVersion="6.0.80.0">
 	<!-- Instructions	
 	   Add SQL scripts to the directory structure as below.
 	   Separate each "create" into its own file
@@ -643,6 +643,20 @@
 			<Sub3 Number="0">
 				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetAllMenusList"/>
 				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.78.0/spGetAllMenusList.sql"/>
+			</Sub3>
+		</Sub2>
+      <Sub2 Number="79">
+        <Sub3 Number="0">
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.79.0/spGetCartContact.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.79.0/AddColumn_tblOptOutAddresses.sql"/>
+		  <Action Order="3" Type="Drop" ObjectType="Procedure" ObjectName="spCleanDatabase"/>
+		  <Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.0.79.0/spCleanDatabase.sql"/>
+        </Sub3>
+      </Sub2>
+		<Sub2 Number="80">
+			<Sub3 Number="0">
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spCheckDiscounts"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.80.0/spCheckDiscounts.sql"/>
 			</Sub3>
 		</Sub2>
     </Sub1>

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0"?>
+
+<Discounts>
+	<Discount>
+		<nDiscountKey>16</nDiscountKey>
+		<cDiscountForeignRef/>
+		<cDiscountName>BringAFriend</cDiscountName>
+		<cContentForiegnRef/>
+		<cDiscountCode>BringAFriend</cDiscountCode>
+		<nDiscountCat>1</nDiscountCat>
+		<bDiscountIsPercent>1</bDiscountIsPercent>
+		<nDiscountValue>10</nDiscountValue>
+		<nDiscountMinPrice></nDiscountMinPrice>
+		<nDiscountMinQuantity>1</nDiscountMinQuantity>
+			<cAdditionalXML>
+				<cDescription />
+				<cTerms />
+				<Images>
+					<img src="" width="" height="" class="thumbnail" alt="" />
+					<img src="" width="" height="" class="display" alt="" />
+					<img src="" width="" height="" class="detail" alt="" />
+				</Images>
+				<bFreeGiftBox></bFreeGiftBox>
+				<bApplyToOrder></bApplyToOrder>
+				<cFreeShippingMethods></cFreeShippingMethods>
+				<nMinimumOrderValue></nMinimumOrderValue>
+				<nMaximumOrderValue></nMaximumOrderValue>
+				<nDiscountMaxPrice></nDiscountMaxPrice>
+			</cAdditionalXML>
+		<cDiscountUserCode>BringAFriend</cDiscountUserCode>
+		<nDiscountCodeType>1</nDiscountCodeType>		
+	</Discount>
+	
+</Discounts>

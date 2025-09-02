@@ -9,6 +9,7 @@
 // ***********************************************************************
 
 using AngleSharp.Dom;
+using AngleSharp.Io;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Authentication;
@@ -315,7 +316,7 @@ namespace Protean
                 CartCarrier = 32,
                 SubscriptionRenewal = 33,
                 CartPayment = 34,
-
+                OptOutAddresses=35,
                 // 100-199 reserved for LMS
                 CpdLog = 100,
                 Certificate = 101,
@@ -366,6 +367,7 @@ namespace Protean
                 tblCartCarrier = 32,
                 tblSubscriptionRenewal = 33,
                 tblCartPayment = 34,
+                tblOptOutAddresses=35,
 
                 // 100-199 reserved for LMS
                 tblCpdLog = 100,
@@ -2929,6 +2931,11 @@ namespace Protean
                                     ExeProcessSql("DELETE FROM tblCartShippingMethods WHERE nShipOptKey = " + nId);
                                 }
 
+                                break;
+                            }
+                        case objectTypes.OptOutAddresses:
+                            {
+                                ExeProcessSql("Delete from tblOptOutAddresses where nOptOutKey = " + nId);
                                 break;
                             }
                     }
@@ -12756,6 +12763,23 @@ namespace Protean
                 return default;
             }
 
+            public string CleanDatabase()
+            {
+                PerfMonLog("dbTools", "CleanDatabase");
+                try
+                {
+                    string cSQL= "spCleanDatabase";
+                    ExeProcessSql(cSQL, CommandType.StoredProcedure);
+                    return "Deleted 100 records from order table and inactive promotional code "; ;
+
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "CleanDatabase", ex, ""));
+                    return "Error cleaning Database";
+                }
+            }
+
             public string CleanAuditOrphans()
             {
                 PerfMonLog("dbTools", "CleanAuditOrphans");
@@ -14735,7 +14759,7 @@ namespace Protean
                         contact.nContactKey = (int)myWeb.moDbHelper.getObjectByRef(objectTypes.CartContact, contact.cContactForiegnRef, "");
                     }
                     //sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactAddress2] = '" + Tools.Database.SqlFmt(contact.cContactAddress2) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
-                    sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
+                    sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'"+ ", [cContactFirstName] = '" + Tools.Database.SqlFmt(contact.cContactFirstName) + "'" + ", [cContactLastName] = '" + Tools.Database.SqlFmt(contact.cContactLastName) + "'" + ", [cContactEmail] = '" + Tools.Database.SqlFmt(contact.cContactEmail) + "'"+ ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
 
                     ExeProcessSql(sSql);
                     return true;
@@ -15015,24 +15039,32 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "execute spGetContentIdFromOrderReference @orderRef=" + orderRef + ", @ProductName=" + "'" + ContentName + "'";
-                    using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                    using (SqlCommand cmd = new SqlCommand("spGetContentIdFromOrderReference", oConn))
                     {
-                        if (oDr != null)
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        // Pass parameters safely
+                        cmd.Parameters.Add("@orderRef", SqlDbType.Int).Value = Convert.ToInt32(orderRef);
+                        cmd.Parameters.Add("@ProductName", SqlDbType.NVarChar, 200).Value = ContentName;
+
+                        using (SqlDataReader oDr = cmd.ExecuteReader())
                         {
-                            while (oDr.Read())
+                            if (oDr != null)
                             {
-                                nContentID = Convert.ToString(oDr["nItemId"]);
+                                while (oDr.Read())
+                                {
+                                    nContentID = Convert.ToString(oDr["nItemId"]);
+                                }
                             }
                         }
                     }
-                    return nContentID.ToString();
                 }
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateContact", ex, cProcessInfo));
                     return nContentID;
                 }
+                return nContentID;
             }
 
             public XmlElement GetMenuMetaTitleDescriptionDetailsXml(XmlElement oMenuElmt)

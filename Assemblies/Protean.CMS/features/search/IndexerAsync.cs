@@ -1171,7 +1171,7 @@ namespace Protean
                                         {
                                             sPageUrl = oLinkElmt.GetAttribute("href");
                                         }
-                                    }
+                                    }                                       
 
                                     IndexPage(sPageUrl, oPageXml.DocumentElement, oElmt.GetAttribute("type"), ref myWeb.msException);
 

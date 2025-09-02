@@ -108,6 +108,7 @@
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.Diagnostics.DiagnosticSource.9.0.8\lib\net462\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
@@ -135,12 +136,17 @@
   <ItemGroup>
     <Compile Include="Directory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="providers\discounts\discounts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Protean.CMS\Protean.CMS.csproj">
+      <Project>{b8c13866-2804-4975-83a4-4f76296248f5}</Project>
+      <Name>Protean.CMS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Protean.Tools\Protean.Tools.csproj">
       <Project>{12af6171-9aab-4c4d-a83b-85fe18a334c1}</Project>
       <Name>Protean.Tools</Name>
@@ -152,6 +158,45 @@
   <ItemGroup>
     <Analyzer Include="..\..\..\packages\MSTest.Analyzers.3.10.3\analyzers\dotnet\cs\MSTest.Analyzers.CodeFixes.dll" />
     <Analyzer Include="..\..\..\packages\MSTest.Analyzers.3.10.3\analyzers\dotnet\cs\MSTest.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="providers\discounts\test-data\basic-discount\BasicMonitory\cart.xml" />
+    <Content Include="providers\discounts\test-data\basic-discount\BasicMonitory\discounts.xml" />
+    <Content Include="providers\discounts\test-data\basic-discount\Percent_BringAFriend\cart.xml" />
+    <Content Include="providers\discounts\test-data\basic-discount\Percent_BringAFriend\discounts.xml" />
+    <Content Include="providers\discounts\test-data\basic-discount\Percent_COMER20_Evoucher_Free\cart.xml" />
+    <Content Include="providers\discounts\test-data\basic-discount\Percent_COMER20_Evoucher_Free\discounts.xml" />
+    <Content Include="UnitTestCases\Angela 10%25 Discount\cart.xml" />
+    <Content Include="UnitTestCases\Angela 10%25 Discount\discounts.xml" />
+    <Content Include="UnitTestCases\Angela 10%25 Discount\expectedCart.xml" />
+    <Content Include="UnitTestCases\Angela 15%25 Discount\cart.xml" />
+    <Content Include="UnitTestCases\Angela 15%25 Discount\discounts.xml" />
+    <Content Include="UnitTestCases\Angela 15%25 Discount\expectedCart.xml" />
+    <Content Include="UnitTestCases\Angela 20%25 Discount\cart.xml" />
+    <Content Include="UnitTestCases\Angela 20%25 Discount\discounts.xml" />
+    <Content Include="UnitTestCases\Angela 20%25 Discount\expectedCart.xml" />
+    <Content Include="UnitTestCases\Angela 5%25 Discount\cart.xml" />
+    <Content Include="UnitTestCases\Angela 5%25 Discount\discounts.xml" />
+    <Content Include="UnitTestCases\Angela 5%25 Discount\expectedCart.xml" />
+    <Content Include="UnitTestCases\BringAFriend10\cart.xml" />
+    <Content Include="UnitTestCases\BringAFriend10\discounts.xml" />
+    <Content Include="UnitTestCases\BringAFriend10\expectedCart.xml" />
+    <Content Include="UnitTestCases\BringAFriend\cart.xml" />
+    <Content Include="UnitTestCases\BringAFriend\discounts.xml" />
+    <Content Include="UnitTestCases\BringAFriend\expectedcart.xml" />
+    <Content Include="UnitTestCases\COMER20\Cart.xml" />
+    <Content Include="UnitTestCases\COMER20\discounts.xml" />
+    <Content Include="UnitTestCases\COMER20\expectedCart.xml" />
+    <Content Include="UnitTestCases\Defense Services 15%25\Cart.xml" />
+    <Content Include="UnitTestCases\Defense Services 15%25\discounts.xml" />
+    <Content Include="UnitTestCases\Defense Services 15%25\expectedCart.xml" />
+    <Content Include="UnitTestCases\ITBLUE15 Affiliate code\cart.xml" />
+    <Content Include="UnitTestCases\ITBLUE15 Affiliate code\discounts.xml" />
+    <Content Include="UnitTestCases\ITBLUE15 Affiliate code\expectedCart.xml" />
+    <Content Include="UnitTestCases\Tammy 20pc off\cart.xml" />
+    <Content Include="UnitTestCases\Tammy 20pc off\discounts.xml" />
+    <Content Include="UnitTestCases\Tammy 20pc off\expectedCart.xml" />
+    <Content Include="UnitTestCases\WELCOME - newsletter website signup\discount.xml" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

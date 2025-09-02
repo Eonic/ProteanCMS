@@ -562,7 +562,7 @@ namespace Protean
                         string whereSQL = string.Empty;
                         string orderBySql = string.Empty;
                         string groupBySql = string.Empty;
-                        string cCssClassName = "hidden";
+                        //string cCssClassName = "hidden";
                         //  filterForm.addBind("cShowMore", "ShowMore", ref filterForm.model, "false()", "string");
 
                         // filterForm.addInput(ref oFrmGroup, "cShowMore", true, "ShowMore", "hidden");
@@ -694,9 +694,12 @@ namespace Protean
                                             if (!myWeb.moConfig["ExcludeFilterForJoin"].Contains(className))
                                             {
                                                 string cAlies = className.Replace("Filter", "");
+                                                string cIndexDefiniationName = GetContentIndexDefinationName(calledType, ref myWeb);
+                                                
+                                               
                                                 cAdditionalJoins += "inner join tblContentIndex cii" + cAlies + " on cii" + cAlies + ".nContentId=c.nContentKey inner join tblContentIndexDef cid" + cAlies;
                                                 cAdditionalJoins += " on cii" + cAlies + ".nContentIndexDefinitionKey=cid" + cAlies + ".nContentIndexDefKey ";
-                                                cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cAlies + "'";
+                                                cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cIndexDefiniationName + "'";
 
 
                                             }
@@ -836,6 +839,22 @@ namespace Protean
                         filterGroupByClause = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
                     }
                     return filterGroupByClause;
+                }
+
+                public string GetContentIndexDefinationName(Type calledType, ref Cms myWeb)
+                {
+                    string cContentIndexDefinationName = string.Empty;
+
+                    if (calledType != null)
+                    {
+                        string methodname = "ContentIndexDefinationName";
+
+                        var o = Activator.CreateInstance(calledType);
+                        var args = new object[1];
+                        args[0] = myWeb;
+                        cContentIndexDefinationName = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
+                    }
+                    return cContentIndexDefinationName;
                 }
 
                 public string GetFilterWhereClause(ref Cms myWeb, ref Cms.xForm filterForm, ref XmlElement oContentNode, string excludeClassName)

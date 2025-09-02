@@ -56,6 +56,7 @@ namespace Protean.Providers
                     int nMaxPRiceProduct = 0;
                     int nMinPriceProduct = 0;
                     //XmlElement oFilterElmt = null;
+                   
                     string className = string.Empty;
                     string cWhereQuery = string.Empty;
 
@@ -362,6 +363,11 @@ namespace Protean.Providers
                 }
                 return " min(cii" + cIndexDefinationName + ".nNumberValue) asc";
                 //return string.Empty;
+            }
+
+            public override string ContentIndexDefinationName(ref Cms aWeb)
+            {
+                return "Price";
             }
 
         }
