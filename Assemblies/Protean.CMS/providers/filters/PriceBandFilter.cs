@@ -251,7 +251,7 @@ namespace Protean.Providers
                     {
                         if (!string.IsNullOrEmpty(cWhereSql))
                         {
-                            cWhereSql = " AND ";
+                            cWhereSql = cWhereSql + " AND ";
                         }
                         cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey ";
                         cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cIndexDefinationName + "' AND (";
