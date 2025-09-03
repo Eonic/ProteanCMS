@@ -121,6 +121,12 @@
     <Reference Include="DartSassHost, Version=1.1.1.0, Culture=neutral, PublicKeyToken=83ed06f2bd4ecb43, processorArchitecture=MSIL">
       <HintPath>..\..\packages\DartSassHost.1.1.1\lib\net471\DartSassHost.dll</HintPath>
     </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=3.3.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DocumentFormat.OpenXml.3.3.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml.Framework, Version=3.3.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\DocumentFormat.OpenXml.Framework.3.3.0\lib\net46\DocumentFormat.OpenXml.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="Fonet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=52effa152c4a9dc6, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Fonet.1.0\lib\net20\Fonet.dll</HintPath>
     </Reference>
@@ -141,10 +147,10 @@
       <HintPath>..\..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
     </Reference>
     <Reference Include="Magick.NET-Q8-x64, Version=14.8.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=AMD64">
-      <HintPath>..\..\packages\Magick.NET-Q8-x64.14.8.1\lib\netstandard20\Magick.NET-Q8-x64.dll</HintPath>
+      <HintPath>..\..\packages\Magick.NET-Q8-x64.14.8.2\lib\netstandard20\Magick.NET-Q8-x64.dll</HintPath>
     </Reference>
     <Reference Include="Magick.NET.Core, Version=14.8.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Magick.NET.Core.14.8.1\lib\netstandard20\Magick.NET.Core.dll</HintPath>
+      <HintPath>..\..\packages\Magick.NET.Core.14.8.2\lib\netstandard20\Magick.NET.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.8\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -474,5 +480,7 @@
     <PropertyGroup>
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-x64.14.8.2\build\netstandard20\Magick.NET-Q8-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-x64.14.8.2\build\netstandard20\Magick.NET-Q8-x64.targets'))" />
   </Target>
+  <Import Project="..\..\packages\Magick.NET-Q8-x64.14.8.2\build\netstandard20\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-x64.14.8.2\build\netstandard20\Magick.NET-Q8-x64.targets')" />
 </Project>
