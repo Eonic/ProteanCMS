@@ -39,9 +39,38 @@
 	</model>
 	<group ref="EditContent" class="2Col">
 		<label>Edit Role</label>
-		<group>
+		<group class="tabs">
 			<group>
-				<label>Settings</label>
+				<label>
+					<i class="fas fa-pen"> </i>
+					<span class="space"> </span>
+					<span>Role Details</span>
+				</label>
+						<group>
+		<input bind="cDirName" class="required long">
+			<label>Role Name</label>
+		</input>
+		<textarea bind="cNotes" class="TextAreaBrief xhtml" rows="5" cols="70">
+			<label>Notes</label>
+		</textarea>
+			</group>
+			</group>
+			<group>
+				<label>
+					<i class="fa-solid fa-lock"> </i>
+					<span class="space"> </span>
+					<span>Admin Rights</span>
+				</label>
+				<group class="admin-rights-block">
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fas fa-cog"> </i>
+					<span class="space"> </span>
+					<span>Advanced Settings</span>
+				</label>
+				<group>
 <input bind="dPublishDate" class="calendar">
 			<label>Valid From</label>
 		</input>
@@ -66,16 +95,10 @@
 			</group>
 		</group>
 		<group>
-			<group>
-		<input bind="cDirName" class="required long">
-			<label>Role Name</label>
-		</input>
-		<textarea bind="cNotes" class="TextAreaBrief xhtml" rows="5" cols="70">
-			<label>Notes</label>
-		</textarea>
-			</group>
+
 		</group>
 		
+	</group>
 	</group>
 	<group>
 	<submit submission="" ref="ewSubmit" class="principle">
