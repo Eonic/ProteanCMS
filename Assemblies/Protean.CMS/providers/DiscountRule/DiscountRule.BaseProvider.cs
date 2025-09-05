@@ -486,25 +486,32 @@ namespace Protean.Providers
 
                         // Check if this item has a Product Break discount applied
                         bool isProductBreak = oDiscountXml.SelectSingleNode("Discounts/Item[@id=" + nId + "]/Discount[@nDiscountCat=2]") != null;
+                        // Check if this item has an "X for the price of Y" discount
+                        bool isXforY = oDiscountXml.SelectSingleNode("Discounts/Item[@id=" + nId + "]/Discount[@nDiscountCat=3]") != null;
 
                         if (isProductBreak)
                         {
-                            // ✅ For Product Break, don't overwrite full row prices
-                            // Example: apply saving only once (to 1 unit)
-                            decimal breakSaving = nLineTotalSaving / qty; // saving per unit
-                            decimal discountedUnitPriceBreak = nOriginalUnitPrice - breakSaving;
-
                             // Keep normal prices for line
                             oItemElmt.SetAttribute("price", nOriginalUnitPrice.ToString("0.00"));
                             oItemElmt.SetAttribute("itemTotal", originalLineTotal.ToString("0.00"));
+                        }
+                        else if(isXforY)
+                        {
+                            // Do not overwrite item price or totals
+                            oItemElmt.SetAttribute("price", nOriginalUnitPrice.ToString("0.00"));
+                            oItemElmt.SetAttribute("itemTotal", originalLineTotal.ToString("0.00"));
 
-                            // But show special discount attributes
-                            oItemElmt.SetAttribute("breakUnitPrice", discountedUnitPriceBreak.ToString("0.00"));
-                            oItemElmt.SetAttribute("breakSaving", breakSaving.ToString("0.00"));
+                            // But store the savings separately
+                            oItemElmt.SetAttribute("unitSaving", nUnitSaving.ToString("0.00"));
+                            oItemElmt.SetAttribute("itemSaving", nLineTotalSaving.ToString("0.00"));
+                            oItemElmt.SetAttribute("discount", nLineTotalSaving.ToString("0.00"));
+
+                            // Total saved still accumulates correctly
+                            nTotalSaved += nLineTotalSaving;
                         }
                         else
                         {
-                            // ✅ Normal behavior for all other discount types
+                            // Normal behavior for all other discount types
                             oItemElmt.SetAttribute("price", discountedUnitPrice.ToString("0.00"));
                             oItemElmt.SetAttribute("itemTotal", discountedLineTotal.ToString("0.00"));
                         }
