@@ -227,7 +227,23 @@ form.xform {
             color: #ffffff;
         }
     }
+
+    .adminRights fieldset {
+        padding-left: 10px;
+
+        fieldset {
+            padding-left: 20px;
+
+            fieldset {
+                padding-left: 30px;
+
+                fieldset {
+                    padding-left: 40px;
+                }
+            }
+        }
     }
+}
 .xform#UserLogon {
     margin-right: auto;
     margin-left: auto;
