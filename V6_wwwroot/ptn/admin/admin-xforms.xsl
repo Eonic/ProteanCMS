@@ -3956,6 +3956,7 @@
 						</label>
 					</xsl:if>
 				</xsl:if>
+				<xsl:apply-templates select="select1" mode="xform"/>
 				<!-- For xFormQuiz change how these buttons work -->
 				<xsl:apply-templates select="submit" mode="xform"/>
 			</div>

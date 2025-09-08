@@ -192,28 +192,41 @@ namespace Protean
 
             public string RegexResult(string input, string pattern, string resultIndex)
             {
-
-                string[] results;
-                if (resultIndex == "")
+                try
                 {
-                    resultIndex = "0";
-                }
-
-                if (!(string.IsNullOrEmpty(pattern) | string.IsNullOrEmpty(input)))
-                {
-                    try
+                    if (input == "")
                     {
-                        results = Regex.Split(input, pattern);
-                        return results[Convert.ToInt16(resultIndex)];
+
+                        return "";
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        return ex.Message;
+                        string[] results;
+                        if (resultIndex == "")
+                        {
+                            resultIndex = "0";
+                        }
+
+                        if (!(string.IsNullOrEmpty(pattern) | string.IsNullOrEmpty(input)))
+                        {
+                            try
+                            {
+                                results = Regex.Split(input, pattern);
+                                return results[Convert.ToInt16(resultIndex)];
+                            }
+                            catch (Exception ex)
+                            {
+                                return ex.Message;
+                            }
+                        }
+                        else
+                        {
+                            return "input or pattern not defined";
+                        }
                     }
                 }
-                else
-                {
-                    return "input or pattern not defined";
+                catch {
+                    return "";
                 }
             }
 
