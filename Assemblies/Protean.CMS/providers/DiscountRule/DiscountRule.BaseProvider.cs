@@ -141,6 +141,11 @@ namespace Protean.Providers
                 // Parse discount rules
                 double.TryParse(discountEl.GetAttribute("nDiscountMinPrice"), out double dMinPrice);
                 double.TryParse(discountEl.GetAttribute("nDiscountMaxPrice"), out double dMaxPrice);
+                XmlNode maxNode = discountEl.SelectSingleNode("nDiscountMaxPrice");
+                if (dMaxPrice == 0 && maxNode != null)
+                {
+                    double.TryParse(maxNode.InnerText, out dMaxPrice);
+                }
                 int.TryParse(discountEl.GetAttribute("nDiscountMinQuantity"), out int nMinQty);
                 double.TryParse(discountEl.SelectSingleNode("nMinimumOrderValue")?.InnerText, out double dMinOrderValue);
                 double.TryParse(discountEl.SelectSingleNode("nMaximumOrderValue")?.InnerText, out double dMaxOrderValue);
@@ -215,20 +220,33 @@ namespace Protean.Providers
                 {
                     foreach (XmlNode eligibleItem in eligibleItems)
                     {
+                        double itemPrice = Convert.ToDouble(eligibleItem.Attributes["price"]?.Value ?? "0");
+                        int itemQty = Convert.ToInt32(eligibleItem.Attributes["quantity"]?.Value ?? "0");
+                        double itemCost = itemPrice * itemQty;
+
+                        // 🔥 Double-check price range per item here
+                        bool withinPriceRange = dMaxPrice > 0
+                            ? (itemCost >= dMinPrice && itemCost <= dMaxPrice)
+                            : (itemCost >= dMinPrice);
+
+                        if (!withinPriceRange)
+                            continue; // skip items not matching this discount’s range
+
                         XmlElement itemCopy = (XmlElement)oFinalDiscounts.ImportNode(eligibleItem, true);
 
-                        // Remove any existing <Discount>
+                        // Remove existing discounts if necessary
                         foreach (XmlNode existingDiscount in itemCopy.SelectNodes("Discount").Cast<XmlNode>().ToList())
+                        {
                             itemCopy.RemoveChild(existingDiscount);
+                        }
 
-                        // Append new discount
+                        // Attach only the correct discount
                         XmlNode importedDiscount = oFinalDiscounts.ImportNode(discountEl, true);
                         itemCopy.AppendChild(importedDiscount);
 
                         oFinalDiscounts.DocumentElement.AppendChild(itemCopy);
                     }
                 }
-
 
                 //move this block to basic provider - nita added below code after valid discount append to cartxml, just add new attributes for freeshipping and giftbox
                 string strcFreeShippingMethods = "";
