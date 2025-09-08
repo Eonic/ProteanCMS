@@ -78,6 +78,7 @@
       
       <bind id="cVideoSize" nodeset="@size" required="false()" type="string"/>
 			<bind id="cVideoRatio" nodeset="@ratio" required="false()" type="string"/>
+			<bind id="cVideoRatioPercent" nodeset="@percentHeight" required="false()" type="number"/>
 			<bind id="cVideoWidth" nodeset="@width" required="false()" type="number"/>
 			<bind id="cVideoHeight" nodeset="@height" required="false()" type="number"/>
 		</bind>
@@ -331,6 +332,10 @@
 						<select1 bind="cVideoRatio" class="short">
 							<label>Ratio</label>
 							<item>
+								<label>Overide height %</label>
+								<value>Overide</value>
+							</item>
+							<item>
 								<label>4:3</label>
 								<value>FourThree</value>
 							</item>
@@ -338,7 +343,10 @@
 								<label>16:9</label>
 								<value>SixteenNine</value>
 							</item>
-						</select1>						
+						</select1>
+						<input bind="cVideoRatioPercent" class="vshort" type="number">
+							<label>Height %</label>
+						</input>
 					</case>
 					<case id="cSizeManual">
 						<input bind="cVideoWidth" class="vshort" type="number">
