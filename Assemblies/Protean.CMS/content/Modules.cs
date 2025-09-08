@@ -299,13 +299,9 @@ namespace Protean
                                 int argnCount3 = 0;
                                 XmlElement argoContentsNode3 = null;
                                 XmlElement argoPageDetail3 = null;
-                                string cShowRelatedBriefDepth =myWeb.moConfig["ShowRelatedBriefDepth"] + "";
-                                int nMaxDepth = 1;
-                                if (!string.IsNullOrEmpty(cShowRelatedBriefDepth) && Information.IsNumeric(cShowRelatedBriefDepth))
-                                {
-                                    nMaxDepth = Conversions.ToInteger(cShowRelatedBriefDepth);
-                                }
-                                myWeb.GetPageContentFromSelect("CL.nStructId = " + myWeb.mnPageId + " And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' and a.dpublishDate >= " + sqlDate(startDate) + endstr, nCount: ref argnCount3, oContentsNode: ref argoContentsNode3, oPageDetail: ref argoPageDetail3, gnShowRelatedBriefDepth:nMaxDepth);
+                                //string cShowRelatedBriefDepth =myWeb.moConfig["ShowRelatedBriefDepth"] + "";
+                               
+                                myWeb.GetPageContentFromSelect("CL.nStructId = " + myWeb.mnPageId + " And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' and a.dpublishDate >= " + sqlDate(startDate) + endstr, nCount: ref argnCount3, oContentsNode: ref argoContentsNode3, oPageDetail: ref argoPageDetail3);
                             }
                         }
 
