@@ -4940,6 +4940,11 @@ $(document).ready(function () {
                 <xsl:text> </xsl:text>
               </i> Edit Permissions
             </a>
+			  <a href="{$appPath}?ewCmd=EditPageRights&amp;pgid={@id}" class="btn btn-primary btn-xs" title="Click here to edit this page">
+				  <i class="fa fa-lock">
+					  <xsl:text> </xsl:text>
+				  </i> Edit Rights
+			  </a>
           </td>
         </tr>
       </table>
