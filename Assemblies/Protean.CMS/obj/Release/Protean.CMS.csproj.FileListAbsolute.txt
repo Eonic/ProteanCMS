@@ -209,7 +209,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.ServiceMod
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Text.Encoding.CodePages.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Text.Json.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Imazen.WebP.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-x64.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.xml
