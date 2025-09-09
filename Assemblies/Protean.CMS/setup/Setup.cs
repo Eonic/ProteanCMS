@@ -1072,7 +1072,7 @@ namespace Protean
                                     {
                                         gitFilePath = goConfig["GitFilePath"];
                                     }
-                                    GitHelper gitHelper = new GitHelper(gitFilePath);
+                                    PowerShellHelper gitHelper = new PowerShellHelper(gitFilePath);
                                     if (Directory.Exists(gitFilePath))
                                     {
                                         if (goRequest["GitPS1FilePath"] != null)
