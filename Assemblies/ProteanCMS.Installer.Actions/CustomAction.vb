@@ -2,11 +2,11 @@
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.45.0"
+    Public Shared ewAssemblyVersion As String = "6.1.47.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.1.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
-    Public Shared bundleSassAssemblyVersion As String = "1.15.3.0"
+    Public Shared bundleSassAssemblyVersion As String = "1.15.5.0"
     Public Shared DartSassHostAssemblyVersion As String = "1.1.1.0"
     Public Shared jsSwitcherAssemblyVersion As String = "3.24.1.0"
     Public Shared jsSwitcherV8AssemblyVersion As String = "3.29.1.0"
@@ -27,8 +27,8 @@ Public Class CustomActions
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.5.0.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "14.7.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "14.7.0.0"
+    Public Shared MagickNETCoreAssemblyVersion As String = "14.8.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "14.8.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
     Public Shared SystemBuffersVersion As String = "4.0.5.0"
@@ -48,13 +48,13 @@ Public Class CustomActions
     Public Shared iTextSharpVersion As String = "3.7.4.0"
     Public Shared SkiaSharpVersion As String = "3.119.0.0"
     Public Shared BouncyCastleCrypto As String = "2.0.0.0"
-    Public Shared SystemIOPipelines As String = "9.0.0.2"
+    Public Shared SystemIOPipelines As String = "9.0.0.8"
     Public Shared SystemDataSQLClient As String = "4.6.2.0" 'lib version 4.8.6
     Public Shared SystemDrawingCommon As String = "9.0.0.0"
     ' Public Shared MicrosoftIdentityClientVersion As String = "4.74.1.0"
     ' Public Shared MicrosoftIdentityModelAbstractionsVersion As String = "8.13.0.0"
     Public Shared SelectHtmlToPDF As String = "25.2.0.0"
-    Public Shared SystemConfigurationManager As String = "9.0.0.7"
+    Public Shared SystemConfigurationManager As String = "9.0.0.8"
     '  Public Shared SystemWebAdaptors As String = "2.0.0.0"
 
 

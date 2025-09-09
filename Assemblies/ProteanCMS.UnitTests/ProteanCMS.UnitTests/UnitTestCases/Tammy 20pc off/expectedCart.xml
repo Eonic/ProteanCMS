@@ -1,0 +1,34 @@
+<Order cartId="967508"  statusId="1" status="Unknown Process ID" itemCount="1" weight="0" orderType="" complete="True" bDiscountIsPercent="1" showDiscountCodeBox="true" shippingType="65" shippingCost="3.95" shippingDesc="First Class (Royal Mail)-" ReceiptType="0" totalNet="171.95" vatRate="0" vatAmt="0" total="171.95" currency="" currencySymbol="£" errorMsg="0" cmd="Cart" sessionId="1fwkwh2lf0ddn3lieou5l302" siteUrl="https://demo2019.intotheblue.co.uk/" cartUrl="https://demo2019.intotheblue.co.uk/">
+<Item id="2790356" contentId="54067" ref="BMTDGT" url="/experiences/derry-girls-tour-belfast/" price="168.00" taxRate="0" quantity="1" shippingLevel="-1" discount="42.0000" weight="0" parId="" originalPrice="210.00" unitSaving="42" itemSaving="42" itemTotal="168">
+<Name>Private Derry Girls Tour</Name>
+<nItemOptGrpIdx>0</nItemOptGrpIdx>
+<nItemOptIdx>0</nItemOptIdx>
+<nParentId>2790356</nParentId>
+<nShippingGroup/>
+<nshippingType/>
+</Item>
+<Discount nDiscountKey="2116" cDiscountName="Tammy 20pc off" cDiscountCode="TAMMY20" bDiscountIsPercent="1" nDiscountValue="20 " nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1"  nDiscountCodeType="1" cDiscountUserCode="TAMMY20"  Applied="1" AppliedToCart="1">
+<cDescription>
+<p>Tammy F&amp;F discount</p>
+</cDescription>
+<cTerms/>
+<Images>
+<img src="" width="" height="" class="thumbnail" alt=""/>
+<img src="" width="" height="" class="display" alt=""/>
+<img src="" width="" height="" class="detail" alt=""/>
+</Images>
+<bFreeGiftBox/>
+<bApplyToOrder/>
+<nMinimumOrderValue>5</nMinimumOrderValue>
+<nMaximumOrderValue>250</nMaximumOrderValue>
+</Discount>
+<DiscountPrice OriginalUnitPrice="210.00" UnitPrice="168.00" Units="1" Total="168" UnitSaving="42" TotalSaving="42">
+<DiscountPriceLine nDiscountKey="2116" PriceOrder="1" UnitPrice="168.00" Total="168" UnitSaving="42" TotalSaving="0"/>
+</DiscountPrice>
+</Item>
+<Shipping>
+<Name>First Class (Royal Mail)</Name>
+<Carrier/>
+<DeliveryTime>Immediate</DeliveryTime>
+</Shipping>
+</Order>

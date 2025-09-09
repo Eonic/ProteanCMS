@@ -35,7 +35,7 @@ using static System.Web.HttpUtility;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
-using System.Text.Json.Nodes;
+//using System.Text.Json.Nodes;
 using System.Web;
 using Newtonsoft.Json.Linq;
 using System.Windows.Documents;
@@ -5960,11 +5960,14 @@ namespace Protean
                                 cXformName = cDirectorySchemaName;
 
                             // ok lets load in an xform from the file location.
-
-                            if (!base.load("/xforms/directory/" + cXformName + ".xml", myWeb.maCommonFolders))
+                            string formPath = "/xforms/directory/" + cXformName + ".xml";
+                            if (myWeb.moConfig["cssFramework"] == "bs5")
+                            {
+                                formPath = "/features/membership/" + cXformName + ".xml";
+                            }
+                            if (!base.load(formPath, myWeb.maCommonFolders))
                             {
                                 // load a default content xform if no alternative.
-
                             }
 
                             base.Instance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Directory, id);
@@ -6015,9 +6018,15 @@ namespace Protean
                             oRoleRights = (XmlElement)base.Instance.SelectSingleNode("tblDirectory/cDirXml/Role/AdminRights");
                             XmlElement oSelElmt;
                             XmlElement oGrpRoot = (XmlElement)moXformElmt.SelectSingleNode("group[@class='2Col']/group[2]");
+                            if (myWeb.moConfig["cssFramework"] == "bs5")
+                            {
+                                oGrpRoot = (XmlElement)moXformElmt.SelectSingleNode("descendant-or-self::group[@class='admin-rights-block']");
+                            }
                             if (oGrpRoot is null)
                                 oGrpRoot = moXformElmt;
+                            
                             var oGrp = base.addGroup(ref oGrpRoot, "adminRights", "adminRights", "Admin Rights");
+
                             XmlElement oGrp2;
                             XmlElement oGrp3;
                             XmlElement oGrp4;

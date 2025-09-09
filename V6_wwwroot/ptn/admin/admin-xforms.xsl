@@ -38,7 +38,7 @@
 			</xsl:if>
 			<xsl:if test="descendant::upload">
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
-			</xsl:if>TEST
+			</xsl:if>
 
 			<xsl:choose>
 				<xsl:when test="count(group) = 2 and group[2]/submit and count(group[2]/*[name()!='submit']) = 0">
@@ -3956,6 +3956,7 @@
 						</label>
 					</xsl:if>
 				</xsl:if>
+				<xsl:apply-templates select="select1" mode="xform"/>
 				<!-- For xFormQuiz change how these buttons work -->
 				<xsl:apply-templates select="submit" mode="xform"/>
 			</div>

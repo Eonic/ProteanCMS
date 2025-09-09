@@ -1,0 +1,29 @@
+<Order cartId="967505" statusId="1" status="Unknown Process ID" itemCount="1" weight="0" orderType="" complete="True" bDiscountIsPercent="1" showDiscountCodeBox="true" shippingType="56" shippingCost="15.50" shippingDesc="Saturday Special Delivery (Royal Mail)-" ReceiptType="0" totalNet="68.60" vatRate="0" vatAmt="0" total="68.60" currency="" currencySymbol="£" errorMsg="0" cmd="Cart" sessionId="1fwkwh2lf0ddn3lieou5l302" siteUrl="https://demo2019.intotheblue.co.uk/" cartUrl="https://demo2019.intotheblue.co.uk/">
+  <Item id="2790340" contentId="24949" price="53.10" taxRate="0" quantity="1" shippingLevel="-1" discount="5.9000" weight="0" parId="" originalPrice="59.00" unitSaving="5.9" itemSaving="5.9" itemTotal="53.1">
+    <Name>Discover Scuba for Two</Name>
+    <nItemOptGrpIdx>0</nItemOptGrpIdx>
+    <nItemOptIdx>0</nItemOptIdx>
+    <nParentId>0</nParentId>
+    <contentType>SKU</contentType>
+    <ProductStatus>1</ProductStatus>
+    <nShippingGroup/>
+    <nshippingType/>
+    <Discount nDiscountKey="414" nDiscountForeignRef="" cDiscountName="BRINGAFRIEND10" cDiscountCode="BRINGAFRIEND10" bDiscountIsPercent="1" nDiscountValue="10 " nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1"  nDiscountCodeType="1" cDiscountUserCode="BRINGAFRIEND10"  Applied="1" AppliedToCart="1">
+      <cDescription/>
+      <cTerms/>
+      <Images>
+        <img src="" width="" height="" class="thumbnail" alt=""/>
+        <img src="" width="" height="" class="display" alt=""/>
+        <img src="" width="" height="" class="detail" alt=""/>
+      </Images>
+    </Discount>
+    <DiscountPrice OriginalUnitPrice="59.00" UnitPrice="53.10" Units="1" Total="53.1" UnitSaving="5.9" TotalSaving="5.9">
+      <DiscountPriceLine nDiscountKey="414" PriceOrder="1" UnitPrice="53.10" Total="53.1" UnitSaving="5.9" TotalSaving="0"/>
+    </DiscountPrice>
+  </Item>
+  <Shipping>
+    <Name>Saturday Special Delivery (Royal Mail)</Name>
+    <Carrier/>
+    <DeliveryTime>Immediate</DeliveryTime>
+  </Shipping>
+</Order>

@@ -212,7 +212,7 @@ namespace Protean
 
             string instanceNodeName = FeedItemNode;
             XElement origInstance = null;
-            //long ProcessedQty = 0L;
+            long ProcessedQty = 0L;
             long completeCount = 0L;
             long failedCount = 0L;
             //long startNo = 0L;
@@ -308,6 +308,7 @@ namespace Protean
                             {
                                 // Read the current <instance> element into an XElement
                                 origInstance = XNode.ReadFrom(reader) as XElement;
+                                ProcessedQty++;
                             }
                             catch (XmlException xmlEx)
                             {
@@ -511,7 +512,7 @@ namespace Protean
                     wrequest = null;
                     response = null;
 
-                    ReturnMessage = cDeleteTempTableName + " " + completeCount + " Items Queued For Import";
+                    ReturnMessage = cDeleteTempTableName + " " + completeCount + " Items Queued For Import, " + ProcessedQty + " Streamed";
                     oDBH.logActivity(Cms.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage + " Queued");
 
                     oDBH.myWeb.ClearPageCache();

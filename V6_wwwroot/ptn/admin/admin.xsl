@@ -4940,6 +4940,11 @@ $(document).ready(function () {
                 <xsl:text> </xsl:text>
               </i> Edit Permissions
             </a>
+			  <a href="{$appPath}?ewCmd=EditPageRights&amp;pgid={@id}" class="btn btn-primary btn-xs" title="Click here to edit this page">
+				  <i class="fa fa-lock">
+					  <xsl:text> </xsl:text>
+				  </i> Edit Rights
+			  </a>
           </td>
         </tr>
       </table>
@@ -6174,6 +6179,11 @@ $(document).ready(function () {
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit
             </a>&#160;
+			            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-cog fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Roles
+          </a>&#160;
             <a href="{$appPath}?ewCmd=DirMemberships&amp;type=Group&amp;id={@id}&amp;childTypes=User" class="btn btn-xs btn-primary">
               <i class="fa fa-users fa-white">
                 <xsl:text> </xsl:text>
@@ -6222,7 +6232,8 @@ $(document).ready(function () {
     <xsl:if test="position() > $startPos and position() &lt;= ($startPos + $noOnPage)">
       <tr onmouseover="this.className='rowOver'" onmouseout="this.className=''">
         <xsl:apply-templates select="*" mode="reportCell"/>
-        <td>
+		
+        <td>  <span class="edit-option-links-blue">
           <a href="{$appPath}?ewCmd=EditRole&amp;DirType=Role&amp;id={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-pencil fa-white">
               <xsl:text> </xsl:text>
@@ -6248,12 +6259,13 @@ $(document).ready(function () {
             </xsl:when>
             <xsl:otherwise>
               <a href="{$appPath}?ewCmd=HideDirItem&amp;DirType=Role&amp;id={@id}" class="btn btn-xs btn-danger">
-                <i class="fa fa-trash-o fa-white">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Disable
+				  <i class="fa fa-ban fa-white">
+					  <xsl:text> </xsl:text>
+				  </i><xsl:text> </xsl:text>Disable
               </a>
             </xsl:otherwise>
           </xsl:choose>
+			</span>
         </td>
       </tr>
     </xsl:if>

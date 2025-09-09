@@ -1,0 +1,35 @@
+<Order cartId="967506"  statusId="1" status="Unknown Process ID" itemCount="1" weight="0" orderType="" complete="True" bDiscountIsPercent="1" showDiscountCodeBox="true" shippingType="1" shippingCost="0.00" shippingDesc="Evoucher (Email) FREE-" ReceiptType="0" totalNet="68.00" vatRate="0" vatAmt="0" total="68.00" currency="" currencySymbol="£" errorMsg="0" cmd="Cart" sessionId="1fwkwh2lf0ddn3lieou5l302" siteUrl="https://demo2019.intotheblue.co.uk/" cartUrl="https://demo2019.intotheblue.co.uk/">
+<Item id="2790352" contentId="85107" ref="HLBPMP" url="/experiences/brighton-pavilion-museum-day/" price="68.00" taxRate="0" quantity="1" shippingLevel="-1" discount="17.0000" weight="0" parId="" originalPrice="85.00" unitSaving="17" itemSaving="17" itemTotal="68">
+<Name>Brighton Day Out for Two</Name>
+<nItemOptGrpIdx>0</nItemOptGrpIdx>
+<nItemOptIdx>0</nItemOptIdx>
+<nParentId>0</nParentId>
+<contentType>SKU</contentType>
+<ProductStatus>1</ProductStatus>
+<nShippingGroup/>
+<nshippingType/>
+<Discount nDiscountKey="417" cDiscountName="Angela 20% Discount" cDiscountCode="AG20" bDiscountIsPercent="1" nDiscountValue="20 " nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1"  nDiscountCodeType="1" cDiscountUserCode="AG20"  Applied="1" AppliedToCart="1">
+<cDescription>
+<p>Angela 20% Discount</p>
+</cDescription>
+<cTerms/>
+<Images>
+<img src="" width="" height="" class="thumbnail" alt=""/>
+<img src="" width="" height="" class="display" alt=""/>
+<img src="" width="" height="" class="detail" alt=""/>
+</Images>
+<bFreeGiftBox/>
+<bApplyToOrder/>
+<nMinimumOrderValue/>
+<nMaximumOrderValue/>
+</Discount>
+<DiscountPrice OriginalUnitPrice="85.00" UnitPrice="68.00" Units="1" Total="68" UnitSaving="17" TotalSaving="17">
+<DiscountPriceLine nDiscountKey="417" PriceOrder="1" UnitPrice="68.00" Total="68" UnitSaving="17" TotalSaving="0"/>
+</DiscountPrice>
+</Item>
+<Shipping>
+<Name>Evoucher (Email) FREE</Name>
+<Carrier/>
+<DeliveryTime>Immediate</DeliveryTime>
+</Shipping>
+</Order>

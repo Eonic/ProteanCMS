@@ -737,19 +737,14 @@ namespace Protean
                         return ex.Message;
                     }
                 }
-                public string RunGitOperations(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                public string RunPowershellOperations(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
                     System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
-                    string cClientId = "";
-                    string cTenantId = "";
-                    string cScope = "";
-                    string cSecreteValue = "";
-                    string cGitPS1FileName = "";
+                    string cPS1FileName = "";
                     string result = "";
-                    string cAccessToken = "";
-                    string gitFilePath = "";
+                    string powershellFilePath = "";
 
                     
                     Tools.Security.Impersonate oImp = null;
@@ -769,37 +764,19 @@ namespace Protean
                             {
                                 if (inputJson != null)
                                 {
-                                    if (inputJson["GitPS1FilePath"] != null && !string.IsNullOrEmpty(inputJson["GitPS1FilePath"].ToString()))
+                                    if (inputJson["PS1FilePath"] != null && !string.IsNullOrEmpty(inputJson["PS1FilePath"].ToString()))
                                     {
-                                        cGitPS1FileName = inputJson["GitPS1FilePath"].ToString();
+                                        cPS1FileName = inputJson["PS1FilePath"].ToString();
 
-                                        if (!string.IsNullOrEmpty(goConfig["GitFilePath"]))
+                                        if (!string.IsNullOrEmpty(goConfig["PS1FilePath"]))
                                         {
-                                            gitFilePath = goConfig["GitFilePath"];
+                                            powershellFilePath = goConfig["PS1FilePath"];
                                         }
-                                        GitHelper gitHelper = new GitHelper(gitFilePath);
-                                        if (File.Exists(gitFilePath + cGitPS1FileName))
+                                        PowerShellHelper powershellHelper = new PowerShellHelper(powershellFilePath);
+                                        if (File.Exists(powershellFilePath + cPS1FileName))
                                         {
-                                            if (!string.IsNullOrEmpty(moConfig["AzureClientId"]) &&
-                                                !string.IsNullOrEmpty(moConfig["AzureTenantId"]) &&
-                                                !string.IsNullOrEmpty(moConfig["AzureClientSecretValue"]) &&
-                                                !string.IsNullOrEmpty(moConfig["AzureScope"]))
-                                            {
-                                                cClientId = moConfig["AzureClientId"];
-                                                cTenantId = moConfig["AzureTenantId"];
-                                                cScope = moConfig["AzureScope"];
-                                                cSecreteValue = moConfig["AzureClientSecretValue"];
-                                               // gitHelper.AuthenticateDevOps(cClientId, cTenantId, cScope, cSecreteValue);
-                                                if (!string.IsNullOrEmpty(cAccessToken))
-                                                {
-                                                    result = gitHelper.GitCommandExecution(cGitPS1FileName);
-                                                }
-                                                else
-                                                {
-                                                    result = "Authentication failed. Please check your Azure credentials.";
-                                                }
-                                                
-                                            }
+                                            result = powershellHelper.GitCommandExecution(cPS1FileName);
+                                           
                                         }
                                     }
                                 }

@@ -93,6 +93,11 @@ namespace Protean.Providers
                 return " ci.nNumberValue ";
             }
 
+            public override string ContentIndexDefinationName(ref Cms aWeb)
+            {
+                return "";
+            }
+
         }
 
     }

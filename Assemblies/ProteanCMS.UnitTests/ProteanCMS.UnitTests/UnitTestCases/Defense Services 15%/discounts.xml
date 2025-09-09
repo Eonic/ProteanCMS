@@ -1,0 +1,28 @@
+<Discount>
+	<nDiscountKey>416</nDiscountKey>
+	<nDiscountForeignRef/>
+	<cDiscountName>Defense Services 15%</cDiscountName>
+	<cDiscountCode>ITBDD15</cDiscountCode>
+	<nDiscountCat>1</nDiscountCat>
+	<bDiscountIsPercent>1</bDiscountIsPercent>
+	<nDiscountValue>15</nDiscountValue>
+	<nDiscountMinPrice></nDiscountMinPrice>
+	<nDiscountMinQuantity></nDiscountMinQuantity>
+	<cAdditionalXML>
+		<cDescription />
+		<cTerms />
+		<Images>
+			<img src="" width="" height="" class="thumbnail" alt="" />
+			<img src="" width="" height="" class="display" alt="" />
+			<img src="" width="" height="" class="detail" alt="" />
+		</Images>
+		<bFreeGiftBox></bFreeGiftBox>
+		<bApplyToOrder></bApplyToOrder>
+		<cFreeShippingMethods></cFreeShippingMethods>
+		<nMinimumOrderValue>250</nMinimumOrderValue>
+		<nMaximumOrderValue></nMaximumOrderValue>
+		<nDiscountMaxPrice></nDiscountMaxPrice>
+	</cAdditionalXML>
+	<cDiscountUserCode>ITBDD15</cDiscountUserCode>
+	<nDiscountCodeType>1</nDiscountCodeType>
+</Discount>
