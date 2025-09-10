@@ -371,11 +371,21 @@ namespace Protean
                         if (oFinalDiscounts == null || oFinalDiscounts.SelectNodes("/Discounts/Item").Count == 0)
                         {                          
                             var oDiscountMessage = oCartXML.OwnerDocument.CreateElement("DiscountMessage");
-                            oDiscountMessage.InnerXml = "<span class=\"msg-1030\">The code you have provided is invalid for this transaction</span>";
+                            // oDiscountMessage.InnerXml = "<span class=\"msg-1030\">The code you have provided is invalid for this transaction</span>";
+                            oDiscountMessage.InnerXml = "";
                             oCartXML.AppendChild(oDiscountMessage);
 
                             // remove invalid code from cart
-                            RemoveDiscountCode();  
+                            RemoveDiscountCode();
+                            foreach (XmlElement oItemElmt in oCartXML.SelectNodes("Item"))
+                            {
+                                // later sites are dependant on these values
+                                oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString());
+                                oItemElmt.SetAttribute("unitSaving", 0.ToString());
+                                oItemElmt.SetAttribute("itemSaving", 0.ToString());
+                                oItemElmt.SetAttribute("discount", 0.ToString());
+                                oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("price")) * Conversions.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
+                            }
                             return oDiscountMessage;  // return cart early, no discount applied
                         }
                         else
@@ -2514,9 +2524,11 @@ namespace Protean
 
                                 foreach (DataRow oRow in oDs.Tables["Order"].Rows)
                                 {
-                                    xmlDoc.LoadXml(Conversions.ToString(oRow["cClientNotes"]));
-                                    xmlNotes = (XmlElement)xmlDoc.SelectSingleNode("Notes/PromotionalCode");
-
+                                    if (oRow["cClientNotes"] != DBNull.Value && !string.IsNullOrEmpty(oRow["cClientNotes"].ToString()))
+                                    {
+                                        xmlDoc.LoadXml(Conversions.ToString(oRow["cClientNotes"]));
+                                        xmlNotes = (XmlElement)xmlDoc.SelectSingleNode("Notes/PromotionalCode");
+                                    }
                                     oRow["cClientNotes"] = null;
                                 }
                                 myWeb.moDbHelper.updateDataset(ref oDs, "Order", true);
