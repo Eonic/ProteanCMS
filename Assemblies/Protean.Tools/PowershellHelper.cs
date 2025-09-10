@@ -8,15 +8,15 @@ using Microsoft.AspNetCore.Http;
 
 namespace Protean.Tools
 {
-    public class GitHelper
+    public class PowerShellHelper
     {
-        private readonly string _gitFilePath;
+        private readonly string _powershellFilePath;
         //public string _accessToken = string.Empty;
-        public GitHelper(string gitFilePath)
+        public PowerShellHelper(string powershellFilePath)
         {
-            if (!string.IsNullOrEmpty(gitFilePath))
+            if (!string.IsNullOrEmpty(powershellFilePath))
             {
-                _gitFilePath = gitFilePath;
+                _powershellFilePath = powershellFilePath;
             }
         }
 
@@ -53,7 +53,7 @@ namespace Protean.Tools
            
             try
             {
-                string gitFilePath = _gitFilePath;
+                string gitFilePath = _powershellFilePath;
                 //if (string.IsNullOrEmpty(_accessToken))
                 //{
                 //    return "Access token is not null or empty. Please provide a valid token.";
@@ -102,11 +102,11 @@ namespace Protean.Tools
 
                     if (exitCode == 0 && !hasGitError)
                     {
-                        result = $"Git Pull successful.\nOutput:\n{output}";
+                        result = $"Powershell script executed successfully.\nOutput:\n{output}";
                     }
                     else
                     {
-                        result = $"Git Pull may have failed.\nExit Code: {exitCode}\nError:\n{error}\nOutput:\n{output}";
+                        result = $"Powershell script may have failed.\nExit Code: {exitCode}\nError:\n{error}\nOutput:\n{output}";
                     }
                 }
             }

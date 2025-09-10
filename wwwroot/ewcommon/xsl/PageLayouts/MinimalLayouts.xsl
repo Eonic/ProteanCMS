@@ -14940,9 +14940,16 @@
 						<xsl:text>embed-responsive </xsl:text>
 						<xsl:choose>
 							<xsl:when test="@ratio='FourThree'">embed-responsive-4by3</xsl:when>
-							<xsl:otherwise>embed-responsive-16by9</xsl:otherwise>
+							<xsl:when test="@ratio='SixteenNine'">embed-responsive-16by9</xsl:when>
 						</xsl:choose>
 					</xsl:attribute>
+					<xsl:if test="@ratio='Overide'">
+						<xsl:attribute name="style">
+							<xsl:text>padding-bottom:</xsl:text>
+							<xsl:value-of select="@percentHeight"/>
+							<xsl:text>%</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
 				</xsl:if>
 				<video>
 					<xsl:choose>
@@ -15029,9 +15036,16 @@
 						<xsl:text>embed-responsive </xsl:text>
 						<xsl:choose>
 							<xsl:when test="@ratio='FourThree'">embed-responsive-4by3</xsl:when>
-							<xsl:otherwise>embed-responsive-16by9</xsl:otherwise>
+							<xsl:when test="@ratio='SixteenNine'">embed-responsive-16by9</xsl:when>
 						</xsl:choose>
 					</xsl:attribute>
+					<xsl:if test="@ratio='Overide'">
+						<xsl:attribute name="style">
+							<xsl:text>padding-bottom:</xsl:text>
+							<xsl:value-of select="@percentHeight"/>
+							<xsl:text>%</xsl:text>
+						</xsl:attribute>
+					</xsl:if>
 				</xsl:if>
 				<a>
 					<xsl:attribute name="href">
