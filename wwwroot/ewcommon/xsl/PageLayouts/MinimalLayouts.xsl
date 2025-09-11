@@ -3703,7 +3703,7 @@
 						<xsl:attribute name="class">EmailForm hideLabel</xsl:attribute>
 					</xsl:if>
 					<!-- display form-->
-					<xsl:apply-templates select="." mode="cleanXhtml"/>
+					<xsl:apply-templates select="." mode="xform"/>
 				</div>
 			</xsl:otherwise>
 		</xsl:choose>

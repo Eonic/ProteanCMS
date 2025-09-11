@@ -49,7 +49,7 @@
         <add key="LegacyRedirect" value="off" />
         <add key="PageURLFormat" value="" />
         <add key="AllowContentDetailAccess" value="" />
-		<add key="ContentDetailShowOnlyCascaded" value="on" />
+		<add key="ContentDetailShowOnlyCascaded" value="off" />
         <add key="MenuContentCountTypes" value="" />
         <add key="MenuContentBriefTypes" value="" />
         <add key="CookieDomain" value="" />
