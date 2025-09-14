@@ -134,7 +134,16 @@ namespace Protean
                             oStyle = new System.Xml.Xsl.XslTransform();
                             if (!string.IsNullOrEmpty(msXslFile))
                             {
+                               if (myWeb != null) {
+                                myWeb.PerfMon.Log("XmlHelper", "LoadXSL");
+                               }
+
                                 oStyle.Load(msXslFile);
+
+                                if (myWeb != null)
+                                {
+                                    myWeb.PerfMon.Log("XmlHelper", "LoadXSL-end");
+                                }
                             }
                             msXslLastFile = msXslFile;
                         }
@@ -306,6 +315,7 @@ namespace Protean
                 string sProcessInfo = "";
                 try
                 {
+                    aWeb.PerfMon.Log("Web", "Transform-New-Start");
                     myWeb = aWeb;
                     mbCompiled = bCompiled;
                     if (myWeb.moConfig["ProjectPath"] != "")
@@ -318,7 +328,7 @@ namespace Protean
                     // '    Dim xsltDomain As AppDomain = goApp("xsltDomain")
                     // '    AppDomain.Unload(xsltDomain)
                     // 'End If
-
+                    aWeb.PerfMon.Log("Web", "Transform-New-Start2");
                     if (recompile)
                     {
 
@@ -334,6 +344,9 @@ namespace Protean
                     string className = msXslFile.Substring(msXslFile.LastIndexOf(@"\") + 1);
                     className = className.Replace(".", "_");
 
+
+                    aWeb.PerfMon.Log("Web", "Transform-New-END");
+
                     if (mbCompiled == true & goApp[className] is null)
                     {
                         mnTimeoutSec = 60000L;
@@ -342,10 +355,12 @@ namespace Protean
                     {
                         mnTimeoutSec = nTimeoutSec;
                     }
-
+                    aWeb.PerfMon.Log("Web", "Transform-loadxslExt");
                     xsltArgs = new System.Xml.Xsl.XsltArgumentList();
                     var ewXsltExt = new Protean.xmlTools.xsltExtensions(ref myWeb);
+                    aWeb.PerfMon.Log("Web", "Transform-loadxslExt-create");
                     xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
+                    aWeb.PerfMon.Log("Web", "Transform-loadxslExt-add");
                 }
 
                 catch (Exception ex)

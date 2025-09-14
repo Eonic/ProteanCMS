@@ -305,14 +305,15 @@ namespace Protean
                             }
                         }
 
+                 
                         // remove content detail
-                        if (myWeb.moContentDetail != null)
+                        if (myWeb.mnArtId == Convert.ToInt16(oContentNode.GetAttribute("id")))
                         {
                             myWeb.moPageXml.DocumentElement.RemoveChild(myWeb.moPageXml.DocumentElement.SelectSingleNode("ContentDetail"));
                             myWeb.moContentDetail = (XmlElement)null;
                             myWeb.moPageXml.DocumentElement.RemoveAttribute("artid");
                             myWeb.mnArtId = default(int);
-                        }
+                        } 
                         oContent.XmlElement.SetAttribute("dateQuery", dateQuery);
                         oContentNode = oContent.XmlElement;
                     }

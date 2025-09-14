@@ -1908,13 +1908,14 @@ namespace Protean
                                             }
 
                                             var argaWeb1 = this;
+                                            PerfMon.Log("Web", "GetPageHTML-loadxsl2");
                                             var oTransform = new Protean.XmlHelper.Transform(ref argaWeb1, styleFile, gbCompiledTransform, 15000L, brecompile);
                                             if (!string.IsNullOrEmpty(moConfig["XslTimeout"]))
                                             {
                                                 oTransform.TimeOut = Conversions.ToLong(moConfig["XslTimeout"]);
                                             }
                                             oTransform.mbDebug = gbDebug;
-
+                                            PerfMon.Log("Web", "GetPageHTML-loadxsl3");
                                             if (bPageCache)
                                             {
 
