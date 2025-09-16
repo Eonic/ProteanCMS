@@ -51,7 +51,7 @@ namespace Protean.Providers
             }
 
             
-            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
+            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag, ref XmlElement oCartXML)
             {
                 //myWeb.PerfMon.Log("Discount", "ApplyDiscount");                
                 XmlElement oPriceElmt;
@@ -94,6 +94,8 @@ namespace Protean.Providers
                                             oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
                                             oItemLoop.AppendChild(oPriceElmt);
                                         }
+                                        string itemId = oItemLoop.GetAttribute("id"); // assuming Discount/Item has id same as CartXML
+                                        XmlElement oCartItem = (XmlElement)oCartXML.SelectSingleNode($"Item[@id='{itemId}']");
                                         // loop through the basic money discounts'
                                         foreach (XmlElement oDiscountLoop in oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=0 and @nDiscountCat=1 and not(@Applied='1')]"))
                                         {                                            
@@ -143,7 +145,8 @@ namespace Protean.Providers
                                                             }
                                                         }
                                                     }
-                                                }
+                                                }                                               
+                                               
                                             }
 
                                             // if apply on total is true in discount rule, set flag to true
@@ -194,12 +197,38 @@ namespace Protean.Providers
                                                     }
                                                 }
                                             }
+
+                                            decimal nOriginalUnitPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("OriginalUnitPrice"));
+                                            decimal nUnitSaving = nOriginalUnitPrice - nNewPrice;
+                                            decimal nLineTotalSaving = nUnitSaving * Conversions.ToDecimal(oPriceElmt.GetAttribute("Units"));
+                                            if (oCartItem != null)
+                                            {
+                                                oCartItem.SetAttribute("originalPrice", nOriginalUnitPrice.ToString("0.00"));
+                                                oCartItem.SetAttribute("price", nNewPrice.ToString("0.00"));
+                                                oCartItem.SetAttribute("itemTotal", (nNewPrice * Conversions.ToDecimal(oPriceElmt.GetAttribute("Units"))).ToString("0.00"));
+                                                oCartItem.SetAttribute("unitSaving", nUnitSaving.ToString("0.00"));
+                                                oCartItem.SetAttribute("itemSaving", nLineTotalSaving.ToString("0.00"));
+                                                oCartItem.SetAttribute("discount", nLineTotalSaving.ToString("0.00"));
+                                            }
                                         }
                                         // Code added for if value basic is Free Shipping then set discount amount=0 and if multiple delivery free shipping selected then 
                                         // chose lowest one price
                                         foreach (XmlElement oDiscountLoop in oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=2 and @nDiscountCat=1 and not(@Applied='1')]"))
                                         {                                            
                                            // Discount_Basic_FreeShipping(ref oFinalDiscounts, ref nPriceCount, mbRoundUp);
+                                        }
+
+                                        // after foreach (XmlElement oDiscountLoop ... )                                      
+                                        decimal nQuantity = Conversions.ToDecimal(oItemLoop.GetAttribute("quantity"));
+                                        decimal nOldUnitPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("OriginalUnitPrice"));
+                                        decimal discount = 0m;                                       
+                                        if (oCartItem != null && (oCartItem.GetAttribute("discount") == "" || oCartItem.GetAttribute("discount") == "0.0000"))
+                                        {                                            
+                                            oCartItem.SetAttribute("price", nOldUnitPrice.ToString("0.00"));
+                                            oCartItem.SetAttribute("itemTotal", (nOldUnitPrice * nQuantity).ToString("0.00"));
+                                            oCartItem.SetAttribute("unitSaving", "0.00");
+                                            oCartItem.SetAttribute("itemSaving", "0.00");
+                                            oCartItem.SetAttribute("discount", discount.ToString("0.00"));
                                         }
                                     }
                                     break;
@@ -233,6 +262,20 @@ namespace Protean.Providers
 
                                             oDiscountLoop1.SetAttribute("Applied", 1.ToString());
                                             nPromocodeApplyFlag = 1;
+                                            string itemId = oItemLoop.GetAttribute("id"); // assuming Discount/Item has id same as CartXML
+                                            XmlElement oCartItem = (XmlElement)oCartXML.SelectSingleNode($"Item[@id='{itemId}']");
+                                            decimal nOriginalUnitPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("OriginalUnitPrice"));
+                                            decimal nUnitSaving = nOriginalUnitPrice - nNewPrice;
+                                            decimal nLineTotalSaving = nUnitSaving * Conversions.ToDecimal(oPriceElmt.GetAttribute("Units"));
+                                            if (oCartItem != null)
+                                            {
+                                                oCartItem.SetAttribute("originalPrice", nOriginalUnitPrice.ToString("0.00"));
+                                                oCartItem.SetAttribute("price", nNewPrice.ToString("0.00"));
+                                                oCartItem.SetAttribute("itemTotal", (nNewPrice * Conversions.ToDecimal(oPriceElmt.GetAttribute("Units"))).ToString("0.00"));
+                                                oCartItem.SetAttribute("unitSaving", nUnitSaving.ToString("0.00"));
+                                                oCartItem.SetAttribute("itemSaving", nLineTotalSaving.ToString("0.00"));
+                                                oCartItem.SetAttribute("discount", nLineTotalSaving.ToString("0.00"));
+                                            }
                                         }
                                     }                                    
                                     break;

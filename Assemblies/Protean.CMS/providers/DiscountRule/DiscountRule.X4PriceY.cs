@@ -47,16 +47,19 @@ namespace Protean.Providers
             {
                 return this;
             }
-            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
+            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag, ref XmlElement oCartXML)
             {
                 string exceptionMessage = string.Empty;
                 // this will work basic discount discounts
                 //myWeb.PerfMon.Log("Discount", "Discount_XForPriceY");
                 XmlElement oPriceElmt;
+
                 try
                 {                    
                     foreach (XmlElement oItemLoop in oFinalDiscounts.SelectNodes("/Discounts/Item"))
                     {
+                        // --- Update the actual cart XML Item ---
+                        XmlElement oCartItem = (XmlElement)oCartXML.SelectSingleNode("Item[@id='" + oItemLoop.GetAttribute("id") + "']");
                         oPriceElmt = (XmlElement)oItemLoop.SelectSingleNode("Item/DiscountPrice");
                         if (oPriceElmt is null)
                         {
@@ -76,6 +79,19 @@ namespace Protean.Providers
                             oPriceElmt.SetAttribute("UnitSaving", 0.ToString());
                             oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
                             oItemLoop.AppendChild(oPriceElmt);
+                        }
+                        if (oCartItem != null)
+                        {
+                            double baseUnitPrice = Conversions.ToDouble(oItemLoop.GetAttribute("price"));
+                            int baseQty = Conversions.ToInteger(oItemLoop.GetAttribute("quantity"));
+                            double baseTotal = baseUnitPrice * baseQty;
+                            oCartItem.SetAttribute("originalPrice", baseUnitPrice.ToString("0.00"));   // original unit price
+                            oCartItem.SetAttribute("price", baseUnitPrice.ToString("0.00"));           // keep unit price attribute consistent
+                            oCartItem.SetAttribute("itemTotal", baseTotal.ToString("0.00"));          // total without discount
+                            oCartItem.SetAttribute("discountedTotal", baseTotal.ToString("0.00"));    // default same as itemTotal
+                            oCartItem.SetAttribute("itemSaving", "0.00");
+                            oCartItem.SetAttribute("unitSaving", "0.00");
+                            oCartItem.SetAttribute("discount", "0.00");                            
                         }
 
                         foreach (XmlElement oDiscountLoop in oItemLoop.SelectNodes("Discount[@nDiscountCat=3]"))
@@ -99,7 +115,9 @@ namespace Protean.Providers
                                     nQtotal = (int)Math.Round(nQtotal + Conversions.ToDouble(preceedingItems.GetAttribute("quantity")));
                             }
 
-                            nTotalQOff = (int)Math.Round(Conversions.ToDouble(Strings.Split((nQtotal / (double)nQX).ToString(), ".")[0]) * (nQX - nQY));
+                            //nTotalQOff = (int)Math.Round(Conversions.ToDouble(Strings.Split((nQtotal / (double)nQX).ToString(), ".")[0]) * (nQX - nQY));
+                            int groups = nQtotal / nQX; // integer division floors automatically
+                            nTotalQOff = groups * (nQX - nQY);
                             if (nTotalQOff > 0)
                             {
                                 var oDiscount = oFinalDiscounts.CreateElement("DiscountItem");
@@ -120,6 +138,23 @@ namespace Protean.Providers
                                 oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oItemLoop.GetAttribute("quantity")) * Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice"))
                                     - (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff))).ToString());
 
+                                double unitPrice = Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice"));
+                                double fullTotal = nQ * unitPrice;
+                                double discountedTotal = (nQ - nTotalQOff) * unitPrice;
+                                double saving = fullTotal - discountedTotal;
+                                // --- Update the actual cart XML Item ---
+                                if (oCartItem != null && nTotalQOff > 0)
+                                {
+                                    oCartItem.SetAttribute("originalPrice", unitPrice.ToString());
+                                    oCartItem.SetAttribute("itemTotal", discountedTotal.ToString("0.00"));
+                                    oCartItem.SetAttribute("price", unitPrice.ToString("0.00"));
+                                    oCartItem.SetAttribute("itemSaving", saving.ToString("0.00"));
+                                    oCartItem.SetAttribute("discount", saving.ToString("0.00"));
+                                    oCartItem.SetAttribute("price", (nQ - nTotalQOff).ToString());
+                                    if (nQ > 0)
+                                        oCartItem.SetAttribute("unitSaving", (saving / nQ).ToString("0.00"));
+                                }
+
                                 // set previous items as applied...
                                 foreach (XmlElement preceedingItems in oItemLoop.SelectNodes("./preceding-sibling::Item[@contentId='" + ItemId + "' and Discount[@nDiscountCat=3 and not(@Applied='1')]]"))
                                 {
@@ -128,7 +163,7 @@ namespace Protean.Providers
                                 }
                                 oDiscountLoop.SetAttribute("Applied", 1.ToString());
                             }
-                        }
+                        }                        
                     }
                 }
                 catch (Exception ex)

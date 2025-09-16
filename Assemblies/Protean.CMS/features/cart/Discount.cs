@@ -271,7 +271,7 @@ namespace Protean
                                         oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString());
                                         oItemElmt.SetAttribute("unitSaving", 0.ToString());
                                         oItemElmt.SetAttribute("itemSaving", 0.ToString());
-                                        oItemElmt.SetAttribute("discount", 0.ToString());
+                                        oItemElmt.SetAttribute("discount", 0m.ToString("0.00"));
                                         oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("price")) * Conversions.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
                                     }
                                     oDsDiscounts = null;
@@ -317,7 +317,7 @@ namespace Protean
                                 oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString());
                                 oItemElmt.SetAttribute("unitSaving", 0.ToString());
                                 oItemElmt.SetAttribute("itemSaving", 0.ToString());
-                                oItemElmt.SetAttribute("discount", 0.ToString());
+                                oItemElmt.SetAttribute("discount", 0m.ToString("0.00"));
                                 oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("price")) * Conversions.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
 
                             }
@@ -383,7 +383,7 @@ namespace Protean
                                 oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString());
                                 oItemElmt.SetAttribute("unitSaving", 0.ToString());
                                 oItemElmt.SetAttribute("itemSaving", 0.ToString());
-                                oItemElmt.SetAttribute("discount", 0.ToString());
+                                oItemElmt.SetAttribute("discount", 0m.ToString("0.00"));
                                 oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("price")) * Conversions.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
                             }
                             return oDiscountMessage;  // return cart early, no discount applied
@@ -461,7 +461,7 @@ namespace Protean
                                 if (!string.IsNullOrEmpty(mcPriceModOrder))
                                     cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
                                 int nPriceCount = 0;
-                                ApplicableProviderType.ApplyDiscount(ref oFinalDiscounts, ref nPriceCount, mbRoundUp, ref myCart, cPriceModifiers, ref nPromocodeApplyFlag);
+                                ApplicableProviderType.ApplyDiscount(ref oFinalDiscounts, ref nPriceCount, mbRoundUp, ref myCart, cPriceModifiers, ref nPromocodeApplyFlag, ref oCartXML);
 
                                 // move this to CheckDiscounts 
                                 oDisProvider.FinalUpdateCartXMLwithDiscounts(ref oCartXML, oFinalDiscounts, mbRoundUp);
