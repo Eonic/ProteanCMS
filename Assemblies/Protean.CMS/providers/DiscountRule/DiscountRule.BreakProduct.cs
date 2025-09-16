@@ -47,7 +47,7 @@ namespace Protean.Providers
                 return this;
             }
 
-            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
+            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag, ref XmlElement oCartXML)
             {
                 string exceptionMessage = string.Empty;
                 // this will work basic monetary discounts
@@ -189,6 +189,24 @@ namespace Protean.Providers
                         oPriceLine.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
 
                         oPriceElmt.AppendChild(oPriceLine);
+
+                        // --- Update oCartXML directly ---
+                        int nId = Conversions.ToInteger(oItemLoop.GetAttribute("id"));                        
+                        decimal nOriginalUnitPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("OriginalUnitPrice"));
+                        decimal originalLineTotal = nOriginalUnitPrice * nUnits;
+                        XmlElement oCartItem = (XmlElement)oCartXML.SelectSingleNode("Item[@id=" + nId + "]");
+                        if (oCartItem != null)
+                        {
+                            decimal discountedLineTotal = nUnitPrice * nUnits;
+                            decimal unitSaving = nUnits > 0 ? (nCurrentSaving / nUnits) : 0m;
+
+                            oCartItem.SetAttribute("originalPrice", nOriginalUnitPrice.ToString("0.00"));
+                            oCartItem.SetAttribute("price", nUnitPrice.ToString("0.00"));
+                            oCartItem.SetAttribute("itemTotal", discountedLineTotal.ToString("0.00"));
+                            oCartItem.SetAttribute("unitSaving", unitSaving.ToString("0.00"));
+                            oCartItem.SetAttribute("itemSaving", nCurrentSaving.ToString("0.00"));
+                            oCartItem.SetAttribute("discount", nCurrentSaving.ToString("0.00"));                          
+                        }
                         // we will always apply these
                         oHighestElmt.SetAttribute("Applied", 1.ToString());
                     // End If
