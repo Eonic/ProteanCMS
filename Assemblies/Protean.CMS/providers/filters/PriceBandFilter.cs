@@ -233,11 +233,18 @@ namespace Protean.Providers
                     // Dim PriceBandRange() As String
                     //string cDefinitionName = "PriceBand";
 
+                    
+
+                    string filterSQL = GetFilterSQL(ref aWeb);
+
                     if (!string.IsNullOrEmpty(cWhereSql))
                     {
-                        cWhereSql = cWhereSql + " AND ";
+                        if (filterSQL != "")
+                        {
+                            cWhereSql = cWhereSql + " AND " + filterSQL;
+                        }
                     }
-                    cWhereSql = cWhereSql + GetFilterSQL(ref aWeb);
+                   // cWhereSql = cWhereSql + filterSQL;
                 }
 
                 catch (Exception ex)
