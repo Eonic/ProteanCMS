@@ -232,27 +232,53 @@ namespace Protean.Providers
                 {
                     // Dim PriceBandRange() As String
                     //string cDefinitionName = "PriceBand";
+
+                    
+
+                    string filterSQL = GetFilterSQL(ref aWeb);
+
+                    if (!string.IsNullOrEmpty(cWhereSql))
+                    {
+                        if (filterSQL != "")
+                        {
+                            cWhereSql = cWhereSql + " AND " + filterSQL;
+                        }
+                    }
+                   // cWhereSql = cWhereSql + filterSQL;
+                }
+
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceBandFilter", ex, ""));
+                }
+                return cWhereSql;
+            }
+
+            public override string GetFilterSQL(ref Cms aWeb)
+            {
+                string cWhereSql = string.Empty;
+                string cProcessInfo = "GetFilterSQL";
+               // string cIndexDefinationName = "Price";
+                try
+                {
                     string cSelectedMinPriceBand = string.Empty;
                     string cSelectedMaxPriceBand = string.Empty;
                     string cPageIds = string.Empty;
                     string cIndexDefinationName = "Price";
                     int cnt = 0;
-                   
+
                     string cPriceBandRange = string.Empty;
 
-                    if (oXform.Instance.SelectSingleNode("PriceBandFilter") != null)
+                    if (aWeb.moRequest.Form["PriceBandFilter"] != null)
                     {
-                        cPriceBandRange = oXform.Instance.SelectSingleNode("PriceBandFilter").InnerText;
+                        cPriceBandRange = aWeb.moRequest.Form["PriceBandFilter"];
 
                     }
-                   
-                   
+
+
                     if (cPriceBandRange != string.Empty)
                     {
-                        if (!string.IsNullOrEmpty(cWhereSql))
-                        {
-                            cWhereSql = cWhereSql + " AND ";
-                        }
+                        
                         cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey ";
                         cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cIndexDefinationName + "' AND (";
 
@@ -265,7 +291,7 @@ namespace Protean.Providers
                             {
 
                                 string[] priceRange = aPriceFilters[cnt].Split('-');
-                                if(cnt>0)
+                                if (cnt > 0)
                                 {
                                     cWhereSql = cWhereSql + " OR ";
                                 }
@@ -276,7 +302,7 @@ namespace Protean.Providers
                                 else
                                 {
                                     cWhereSql = cWhereSql + " (ci.nNumberValue between " + priceRange[0] + " and " + priceRange[1] + ") ";
-                                    // cWhereSql = cWhereSql + " (ci.nNumberValue between " + priceRange[0] + " and " + priceRange[1]+") " ;
+                                   
                                 }
                             }
 
@@ -284,18 +310,11 @@ namespace Protean.Providers
                         }
                     }
                 }
-
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceBandFilter", ex, ""));
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(cProcessInfo, "PriceFilter", ex, ""));
                 }
                 return cWhereSql;
-            }
-
-            public override string GetFilterSQL(ref Cms aWeb)
-            {
-               
-                return "";
             }
 
             public override string GetFilterOrderByClause(ref Cms myWeb)
