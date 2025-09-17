@@ -142,7 +142,37 @@ namespace Protean.Providers
                             // work out depending on value/percent
                             if (Conversions.ToDouble(oTestElmt.GetAttribute("bDiscountIsPercent")) == 0d)
                             {
-                                nUnitPrice = (decimal)(nUnitPrice - Convert.ToDecimal(oTestElmt.GetAttribute("nDiscountValue")));
+                                decimal discountValue = Convert.ToDecimal(oTestElmt.GetAttribute("nDiscountValue"));
+                                long minQty = Conversions.ToLong(oTestElmt.GetAttribute("nDiscountMinQuantity"));
+                                if (minQty <= 0) minQty = 1;
+
+                                // calculate total units for this product (sum of all rows with same id)
+                                int productId = Conversions.ToInteger(oItemLoop.GetAttribute("id"));
+                                long totalUnits = 0;
+                                foreach (XmlElement x in oFinalDiscounts.SelectNodes("Discounts/Item"))
+                                {
+                                    if (Conversions.ToInteger(x.GetAttribute("id")) == productId)
+                                    {
+                                        totalUnits += Conversions.ToLong(x.GetAttribute("quantity"));
+                                    }
+                                }
+
+                                if (totalUnits >= minQty)
+                                {
+                                    // total discount = fixed discount for product
+                                    nTotalSaving = discountValue;
+
+                                    // distribute discount proportionally for this row
+                                    decimal rowDiscount = nTotalSaving * nUnits / totalUnits;
+                                    decimal unitDiscount = nUnits > 0 ? rowDiscount / nUnits : 0m;
+
+                                    nUnitPrice -= unitDiscount;
+                                    if (nUnitPrice < 0m) nUnitPrice = 0m;
+                                }
+                                else
+                                {
+                                    nTotalSaving = 0m; // quantity below min, no discount
+                                }
                             }
                             else
                             {
