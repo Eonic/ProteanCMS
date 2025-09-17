@@ -1,13 +1,13 @@
 <Discount>
-	<nDiscountKey>418</nDiscountKey>
+	<nDiscountKey>29240</nDiscountKey>
 	<nDiscountForeignRef/>
-	<cDiscountName>Angela 5%</cDiscountName>	
-	<cDiscountCode>angela5</cDiscountCode>
-	<nDiscountCat>1</nDiscountCat>
+	<cDiscountName>Test Product Break</cDiscountName>
+	<cDiscountCode>TESTP</cDiscountCode>
+	<nDiscountCat>2</nDiscountCat>
 	<bDiscountIsPercent>1</bDiscountIsPercent>
-	<nDiscountValue>5</nDiscountValue>
-	<nDiscountMinPrice></nDiscountMinPrice>
-	<nDiscountMinQuantity></nDiscountMinQuantity>
+	<nDiscountValue>15</nDiscountValue>
+	<nDiscountMinPrice>50</nDiscountMinPrice>
+	<nDiscountMinQuantity>3</nDiscountMinQuantity>
 	<cAdditionalXML>
 		<cDescription />
 		<cTerms />
@@ -23,6 +23,6 @@
 		<nMaximumOrderValue></nMaximumOrderValue>
 		<nDiscountMaxPrice></nDiscountMaxPrice>
 	</cAdditionalXML>
-	<cDiscountUserCode>angela5</cDiscountUserCode>
+	<cDiscountUserCode>TESTP</cDiscountUserCode>
 	<nDiscountCodeType>1</nDiscountCodeType>
 </Discount>

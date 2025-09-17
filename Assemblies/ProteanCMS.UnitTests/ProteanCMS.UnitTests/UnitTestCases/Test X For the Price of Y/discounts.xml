@@ -1,13 +1,13 @@
 <Discount>
-	<nDiscountKey>538</nDiscountKey>
+	<nDiscountKey>34188</nDiscountKey>
 	<nDiscountForeignRef/>
-	<cDiscountName>ITBLUE15 Affiliate code</cDiscountName>
-	<cDiscountCode>ITBLUE15</cDiscountCode>
-	<nDiscountCat>1</nDiscountCat>
-	<bDiscountIsPercent>1</bDiscountIsPercent>
-	<nDiscountValue>15</nDiscountValue>
+	<cDiscountName>Test X price Y product</cDiscountName>
+	<cDiscountCode>XTESTY</cDiscountCode>
+	<nDiscountCat>3</nDiscountCat>
+	<bDiscountIsPercent>0</bDiscountIsPercent>
+	<nDiscountValue>2</nDiscountValue>
 	<nDiscountMinPrice></nDiscountMinPrice>
-	<nDiscountMinQuantity>1</nDiscountMinQuantity>
+	<nDiscountMinQuantity>3</nDiscountMinQuantity>
 	<cAdditionalXML>
 		<cDescription />
 		<cTerms />
@@ -19,10 +19,10 @@
 		<bFreeGiftBox></bFreeGiftBox>
 		<bApplyToOrder></bApplyToOrder>
 		<cFreeShippingMethods></cFreeShippingMethods>
-		<nMinimumOrderValue>1</nMinimumOrderValue>
-		<nMaximumOrderValue>258</nMaximumOrderValue>
+		<nMinimumOrderValue></nMinimumOrderValue>
+		<nMaximumOrderValue></nMaximumOrderValue>
 		<nDiscountMaxPrice></nDiscountMaxPrice>
 	</cAdditionalXML>
-	<cDiscountUserCode>ITBLUE15</cDiscountUserCode>
+	<cDiscountUserCode>XTESTY</cDiscountUserCode>
 	<nDiscountCodeType>1</nDiscountCodeType>
 </Discount>
