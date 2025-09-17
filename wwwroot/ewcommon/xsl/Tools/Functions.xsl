@@ -10976,10 +10976,10 @@
                 </div>
               </xsl:when>
               <xsl:otherwise>
-                <div class="{$class}">
-                  <xsl:apply-templates select="." mode="displayModule"/>
-                  <xsl:text> </xsl:text>
-                </div>
+					  <div class="{$class}">
+						  <xsl:apply-templates select="." mode="displayModule"/>
+						  <xsl:text> </xsl:text>
+					  </div>
               </xsl:otherwise>
             </xsl:choose>
           </section>
