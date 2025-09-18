@@ -28,21 +28,22 @@ Public Class IssueSubscription : Implements IHttpHandler, IRequiresSessionState
 
             oCart.GetCart(oCart.moCartXml, OrderId)
 
-            'oCart.mnPaymentId = CInt("0" + myCms.moDbHelper.ExeProcessSqlScalar("select nPayMthdId from tblCartOrder where nCartOrderKey = " & OrderId))
+            oCart.mnPaymentId = CInt("0" + myCms.moDbHelper.ExeProcessSqlScalar("select nPayMthdId from tblCartOrder where nCartOrderKey = " & OrderId))
 
-            'If oCart.mnPaymentId = 0 Then
-            '    oCart.mnPaymentId = myCms.moDbHelper.savePayment(OrderId, UserId, "Judopay", "required", "Judopay", Nothing, Now(), False, "0")
-            'End If
+            If oCart.mnPaymentId = 0 Then
+                oCart.mnPaymentId = myCms.moDbHelper.savePayment(OrderId, UserId, "Judopay", "required", "Judopay", Nothing, Now(), False, "0")
+            End If
 
-            'Dim itemElmt As XmlElement
+            Dim itemElmt As XmlElement
 
-            'For Each itemElmt In oCart.moCartXml.SelectNodes("descendant-or-self::Order/Item/productDetail")
+            For Each itemElmt In oCart.moCartXml.SelectNodes("descendant-or-self::Order/Item/productDetail")
 
-            '    Dim moSubscription As Protean.Cms.Cart.Subscriptions
-            '    moSubscription = New Protean.Cms.Cart.Subscriptions(myCms)
-            '    moSubscription.AddUserSubscriptions(oCart.mnCartId, oCart.mnEwUserId, itemElmt, oCart.mnPaymentId)
+                Dim moSubscription As Protean.Cms.Cart.Subscriptions
+                moSubscription = New Protean.Cms.Cart.Subscriptions(myCms)
+                moSubscription.AddUserSubscriptions(oCart.mnCartId, oCart.mnEwUserId, itemElmt, oCart.mnPaymentId)
 
-            'Next
+
+            Next
 
             myCms.moDbHelper.ExeProcessSql("update tblCartOrder set nCartStatus = 6 where nCartOrderKey = " + OrderId)
 
