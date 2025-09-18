@@ -5900,18 +5900,18 @@ from tblContentIndexDef";
                     string status = myWeb.moRequest["isActive"];
                     if (status == "1")
                     {
-                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)  and a.nStatus=1";
+                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)  and a.nStatus=1 order by a.dPublishDate desc";
                     }
                     else if (status == "0")
                     {
 
-                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where a.dExpireDate <= getdate()  or a.nStatus=0";
+                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where a.dExpireDate <= getdate()  or a.nStatus=0 order by a.dPublishDate desc";
                     }
                     // ElseIf status = "singleUse" Then
                     // cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where dr.cDiscountCode like '%VOUCHER'"
                     else
                     {
-                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)   and a.nStatus=1";
+                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)   and a.nStatus=1 order by a.dPublishDate desc";
                     }
 
 
