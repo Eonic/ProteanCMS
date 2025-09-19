@@ -486,7 +486,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Protean.Tools\Protean.Tools.csproj">
-      <Project>{50df1cd6-1843-9628-fe34-68d9c3c2e326}</Project>
+      <Project>{404b3d19-69f0-7b3f-35da-66b2fb650899}</Project>
       <Name>Protean.Tools</Name>
     </ProjectReference>
   </ItemGroup>
