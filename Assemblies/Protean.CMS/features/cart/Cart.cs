@@ -663,11 +663,13 @@ namespace Protean
                         }
 
                         mnTaxRate = Conversions.ToDouble(moCartConfig["TaxRate"]);
-                        if (myWeb.moSession!= null)
+                        if (myWeb.moSession != null)
                         {
-                            mnTaxRate = Conversions.ToDouble("0" + myWeb.moSession["nTaxRate"] ?? "");
+                            if (myWeb.moSession["nTaxRate"] != null)
+                            {
+                                mnTaxRate = Conversions.ToDouble("0" + myWeb.moSession["nTaxRate"] ?? "");
+                            }
                         }
-
                         if (!string.IsNullOrEmpty(myWeb.moRequest.Form["url"]))
                         {
                             myWeb.moSession["returnPage"] = myWeb.moRequest.Form["url"];
