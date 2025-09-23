@@ -6869,7 +6869,11 @@ from tblContentIndexDef";
                                     oPageDetail.AppendChild(oCont);
                                     break;
                                 }
-
+                            case "ImportCodes":
+                                {
+                                    moAdXfm.xFrmImportCodes(nId);
+                                    break;
+                                }
                             case "ManageCodeGroups":
                                 {
                                     moAdXfm.xFrmMemberCodeset(nId, "CodesGroups");
@@ -6877,6 +6881,11 @@ from tblContentIndexDef";
                                         bListCodesets = true;
                                     break;
                                 }
+                                    case "DeleteCodeGroup": {
+
+                                            break;
+                                        }
+
                         }
 
                         if (!bListCodesets)

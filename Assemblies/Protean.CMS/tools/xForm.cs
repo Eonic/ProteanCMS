@@ -2713,6 +2713,54 @@ namespace Protean
             return addTextAreaRet;
         }
 
+        public XmlElement addTextArea(ref XmlElement oContextNode, string sRef, bool bBound, string sLabel, string sClass, Int16 nRows, Int16 nCols)
+        {
+            XmlElement addTextAreaRet = default;
+            XmlElement oIptElmt;
+            XmlElement oLabelElmt;
+            string cProcessInfo = "";
+            try
+            {
+                oIptElmt = moPageXML.CreateElement("textarea");
+                if (bBound)
+                {
+                    oIptElmt.SetAttribute("bind", sRef);
+                }
+                else
+                {
+                    oIptElmt.SetAttribute("ref", sRef);
+                }
+                if (!string.IsNullOrEmpty(sClass))
+                {
+                    oIptElmt.SetAttribute("class", sClass);
+                }
+                if (nRows > 0)
+                {
+                    oIptElmt.SetAttribute("rows", nRows.ToString());
+                }
+                if (nCols > 0)
+                {
+                    oIptElmt.SetAttribute("cols", nCols.ToString());
+                }
+                if (!string.IsNullOrEmpty(sLabel))
+                {
+                    oLabelElmt = moPageXML.CreateElement("label");
+                    oLabelElmt.InnerText = sLabel;
+                    oIptElmt.AppendChild(oLabelElmt);
+                }
+
+                oContextNode.AppendChild(oIptElmt);
+
+                addTextAreaRet = oIptElmt;
+            }
+            catch (Exception ex)
+            {
+                returnException(ref msException, mcModuleName, "addTextArea", ex, "", cProcessInfo, gbDebug);
+                return null;
+            }
+
+            return addTextAreaRet;
+        }
 
 
         public XmlElement addRange(ref XmlElement oContextNode, string sRef, bool bBound, string sLabel, string oStart, string oEnd, string oStep = "", string sClass = "")
