@@ -4399,13 +4399,26 @@
 
       <!-- get the href -->
       <xsl:attribute name="href">
-        <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+        <xsl:choose>
+          <xsl:when test="DisplayName/@linkType='popUp'">
+            <xsl:text>#</xsl:text>
+            <xsl:value-of select="DisplayName/@ModalID"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:attribute>
 
       <!-- title attribute -->
       <xsl:attribute name="title">
         <xsl:apply-templates select="." mode="getTitleAttr"/>
       </xsl:attribute>
+
+      <xsl:if test="DisplayName/@linkType='popUp'">
+        <xsl:attribute name="data-toggle">modal</xsl:attribute>
+        <xsl:attribute name="role">button</xsl:attribute>
+      </xsl:if>
 
 
       <!-- check for different states to be applied -->
