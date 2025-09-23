@@ -43,6 +43,7 @@ Public Class IssueSubscription : Implements IHttpHandler, IRequiresSessionState
                 moSubscription.AddUserSubscriptions(oCart.mnCartId, oCart.mnEwUserId, itemElmt, oCart.mnPaymentId)
 
 
+
             Next
 
             myCms.moDbHelper.ExeProcessSql("update tblCartOrder set nCartStatus = 6 where nCartOrderKey = " + OrderId)
