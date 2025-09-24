@@ -367,18 +367,19 @@
 				<xsl:text> </xsl:text>
 			</i>
 		</button>
-	
+
 	</xsl:template>
 
 	<xsl:template match="div[@class='separator']" mode="xform">
-		<div class="separator">OR</div> 
+		<div class="separator">OR</div>
 	</xsl:template>
 	<xsl:template match="div[@class='footer-override']" mode="xform">
-		<div ><xsl:if test="./@class">
-			<xsl:attribute name="class">
-				<xsl:value-of select="./@class"/>
-			</xsl:attribute>
-		</xsl:if>
+		<div >
+			<xsl:if test="./@class">
+				<xsl:attribute name="class">
+					<xsl:value-of select="./@class"/>
+				</xsl:attribute>
+			</xsl:if>
 			<br/>
 			<a href="{$appPath}?ewCmd=LogOff" >
 				<i class="fa fa-reply">
@@ -455,7 +456,7 @@
 					<xsl:value-of select="/Page/@editContext"/>
 				</xsl:when>
 				<xsl:otherwise>
-					<xsl:value-of select="/Page/@ewCmd"/>				
+					<xsl:value-of select="/Page/@ewCmd"/>
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
@@ -4343,6 +4344,20 @@
 
 
 	<xsl:template match="Page[@layout='DiscountRules']" mode="Admin">
+		<xsl:variable name="cSortBy" select="$page/Request/QueryString/Item[@name='SortBy']/node()" />
+<xsl:variable name="cSortOrder">
+  <xsl:choose>
+    <xsl:when test="$page/Request/QueryString/Item[@name='cSortOrder']/node()='descending'">descending</xsl:when>
+    <xsl:otherwise>ascending</xsl:otherwise>
+  </xsl:choose>
+</xsl:variable>
+		<xsl:variable name="toggleOrder">
+  <xsl:choose>
+    <xsl:when test="$cSortOrder='ascending'">descending</xsl:when>
+    <xsl:otherwise>ascending</xsl:otherwise>
+  </xsl:choose>
+</xsl:variable>
+
 		<div class="row" id="tpltDiscountRules">
 			<div class="col-md-3">
 				<div class="alert alert-info">
@@ -4421,162 +4436,294 @@
 					<table cellpadding="0" cellspacing="1" class="table">
 						<tr>
 							<th></th>
-							<th>Name</th>
-							<th>Code</th>
-							<th>Type</th>
+							<th>
+								<xsl:choose>
+									  <xsl:when test="$cSortBy = 'cDiscountName'">
+										<a href="{$appPath}?ewCmd=DiscountRules&amp;SortBy=cDiscountName&amp;cSortOrder={$toggleOrder}">
+										  Name
+										  <xsl:if test="$cSortOrder='descending'">
+											<i class="fa fa-caret-down">&#160;</i>
+										  </xsl:if>
+										  <xsl:if test="$cSortOrder='ascending'">
+											<i class="fa fa-caret-up">&#160;</i>
+										  </xsl:if>
+										</a>
+									  </xsl:when>
+									  <xsl:otherwise>
+										<a href="{$appPath}?ewCmd=DiscountRules&amp;SortBy=cDiscountName&amp;cSortOrder=ascending">
+										  Name
+										</a>
+									  </xsl:otherwise>
+									</xsl:choose>
+
+							</th>
+							<th>
+								<xsl:choose>
+									  <xsl:when test="$cSortBy = 'cDiscountCode'">
+										<a href="{$appPath}?ewCmd=DiscountRules&amp;SortBy=cDiscountCode&amp;cSortOrder={$toggleOrder}">
+										  Code
+										  <xsl:if test="$cSortOrder='descending'">
+											<i class="fa fa-caret-down">&#160;</i>
+										  </xsl:if>
+										  <xsl:if test="$cSortOrder='ascending'">
+											<i class="fa fa-caret-up">&#160;</i>
+										  </xsl:if>
+										</a>
+									  </xsl:when>
+									  <xsl:otherwise>
+										<a href="{$appPath}?ewCmd=DiscountRules&amp;SortBy=cDiscountCode&amp;cSortOrder=ascending">
+										  Code
+										</a>
+									  </xsl:otherwise>
+									</xsl:choose>
+							</th>
+							<th>
+								<xsl:choose>
+									  <xsl:when test="$cSortBy = 'nDiscountCat'">
+										<a href="{$appPath}?ewCmd=DiscountRules&amp;SortBy=nDiscountCat&amp;cSortOrder={$toggleOrder}">
+										  Type
+										  <xsl:if test="$cSortOrder='descending'">
+											<i class="fa fa-caret-down">&#160;</i>
+										  </xsl:if>
+										  <xsl:if test="$cSortOrder='ascending'">
+											<i class="fa fa-caret-up">&#160;</i>
+										  </xsl:if>
+										</a>
+									  </xsl:when>
+									  <xsl:otherwise>
+										<a href="{$appPath}?ewCmd=DiscountRules&amp;SortBy=nDiscountCat&amp;cSortOrder=ascending">
+										  Type
+										</a>
+									  </xsl:otherwise>
+									</xsl:choose>
+							</th>
+							<th xmlns="http://www.w3.org/1999/xhtml">
+								<xsl:choose>
+									  <xsl:when test="$cSortBy = 'publishDate'">
+										<a href="{$appPath}?ewCmd=DiscountRules&amp;SortBy=publishDate&amp;cSortOrder={$toggleOrder}">
+										  Start Date
+										  <xsl:if test="$cSortOrder='descending'">
+											<i class="fa fa-caret-down">&#160;</i>
+										  </xsl:if>
+										  <xsl:if test="$cSortOrder='ascending'">
+											<i class="fa fa-caret-up">&#160;</i>
+										  </xsl:if>
+										</a>
+									  </xsl:when>
+									  <xsl:otherwise>
+										<a href="{$appPath}?ewCmd=DiscountRules&amp;SortBy=publishDate&amp;cSortOrder=ascending">
+										  Start Date
+										</a>
+									  </xsl:otherwise>
+									</xsl:choose>
+							</th>
+							<th xmlns="http://www.w3.org/1999/xhtml">
+								<xsl:choose>
+									  <xsl:when test="$cSortBy = 'expireDate'">
+										<a href="{$appPath}?ewCmd=DiscountRules&amp;SortBy=expireDate&amp;cSortOrder={$toggleOrder}">
+										  Expire Date
+										  <xsl:if test="$cSortOrder='descending'">
+											<i class="fa fa-caret-down">&#160;</i>
+										  </xsl:if>
+										  <xsl:if test="$cSortOrder='ascending'">
+											<i class="fa fa-caret-up">&#160;</i>
+										  </xsl:if>
+										</a>
+									  </xsl:when>
+									  <xsl:otherwise>
+										<a href="{$appPath}?ewCmd=DiscountRules&amp;SortBy=expireDate&amp;cSortOrder=ascending">
+										  Expire Date
+										</a>
+									  </xsl:otherwise>
+									</xsl:choose>
+							</th>
 							<th>
 
 							</th>
 						</tr>
-						<xsl:for-each select="ContentDetail/DiscountRules/DiscountRule">
-							<xsl:sort select="cDiscountName"/>
-							<tr>
-								<td>
-									<xsl:call-template name="status_legend">
-										<xsl:with-param name="status">
-											<xsl:value-of select="@status"/>
-										</xsl:with-param>
-									</xsl:call-template>
-								</td>
-								<td>
-									<strong>
-										<xsl:value-of select="@cDiscountName"/>
-									</strong>
-								</td>
-								<td>
-									<xsl:value-of select="@cDiscountCode"/>
-								</td>
-								<td>
-									<xsl:choose>
-										<xsl:when test="nDiscountCat=1">
-											<xsl:text>Basic</xsl:text>
-										</xsl:when>
-										<xsl:when test="nDiscountCat=2">
-											<xsl:text>Break by Product</xsl:text>
-										</xsl:when>
-										<xsl:when test="nDiscountCat=3">
-											<xsl:text>X For The Price oF Y</xsl:text>
-										</xsl:when>
-										<xsl:when test="nDiscountCat=4">
-											<xsl:text>Cheapest Item Free</xsl:text>
-										</xsl:when>
-										<xsl:when test="nDiscountCat=5">
-											<xsl:text>Break by Group</xsl:text>
-										</xsl:when>
-									</xsl:choose>
-								</td>
-								<td>
-									<a href="{$appPath}?ewCmd=EditDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
-										<i class="fa fa-pencil fa-white">
-											<xsl:text> </xsl:text>
-										</i><xsl:text> </xsl:text>Edit
-									</a>
-									<a href="{$appPath}?ewCmd=RemoveDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-danger">
-										<i class="fa fa-trash-o fa-white">
-											<xsl:text> </xsl:text>
-										</i><xsl:text> </xsl:text>Remove
-									</a>
-								</td>
-							</tr>
-							<tr>
-								<td>&#160;</td>
-								<td colspan="3">
-									Allowed User Groups:&#160;<xsl:for-each select="Dir[@nPermLevel='1']">
-										<xsl:choose>
-											<xsl:when test="@cDirName">
-												<xsl:value-of select="@cDirName"/>,&#160;
-											</xsl:when>
-											<xsl:otherwise>
-												All Groups/Users
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:for-each>
-								</td>
-								<td>
-									<xsl:if test="Dir[@nPermLevel='0']">
-										<xsl:attribute name="rowspan">2</xsl:attribute>
-									</xsl:if>
-									<a href="{$appPath}?ewCmd=ApplyDirDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
-										<i class="fa fa-user fa-white">
-											<xsl:text> </xsl:text>
-										</i><xsl:text> </xsl:text>Select User Groups
-									</a>
-								</td>
-							</tr>
-							<xsl:if test="Dir[@nPermLevel='0']">
-								<tr>
-									<td>&#160;</td>
-									<td colspan="3">
-										Denied User Groups:&#160;<xsl:for-each select="Dir[@nPermLevel='0']">
-											<xsl:choose>
-												<xsl:when test="@cDirName">
-													<xsl:value-of select="@cDirName"/>,&#160;
-												</xsl:when>
-												<xsl:otherwise>
-													All Groups/Users
-												</xsl:otherwise>
-											</xsl:choose>
-										</xsl:for-each>
-									</td>
-								</tr>
-							</xsl:if>
-							<tr>
-								<td>&#160;</td>
-								<td colspan="3">
-									Product Groups:&#160;<xsl:for-each select="ProdCat">
-										<xsl:choose>
-											<xsl:when test="@cCatName">
-												<xsl:value-of select="@cCatName"/>,&#160;
-											</xsl:when>
-											<xsl:otherwise>
-												All Product Groups
-											</xsl:otherwise>
-										</xsl:choose>
-									</xsl:for-each>
-								</td>
-								<td>
-									<a href="{$appPath}?ewCmd=ApplyGrpDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
-										<i class="fa fa-gift fa-white">
-											<xsl:text> </xsl:text>
-										</i><xsl:text> </xsl:text>Select Product Groups
-									</a>
-								</td>
-							</tr>
-							<tr>
-								<td>&#160;</td>
-								<td colspan="1">
-									<strong>Start Date:</strong>
-									&#160;
-									<xsl:call-template name="DD_Mon_YYYY">
-										<xsl:with-param name="date">
-											<xsl:value-of select="@publishDate"/>
-										</xsl:with-param>
-										<xsl:with-param name="showTime">true</xsl:with-param>
-									</xsl:call-template>
-								</td>
-								<td colspan="3">
-									<strong>Expire Date:</strong>
-									&#160;
-									<xsl:choose>
-										<xsl:when test="@expireDate!=''">
-											<xsl:call-template name="DD_Mon_YYYY">
-												<xsl:with-param name="date">
-													<xsl:value-of select="@expireDate"/>
-												</xsl:with-param>
-												<xsl:with-param name="showTime">true</xsl:with-param>
-											</xsl:call-template>
-										</xsl:when>
-										<xsl:otherwise>
-											ongoing
-										</xsl:otherwise>
-									</xsl:choose>
-								</td>
-							</tr>
-						</xsl:for-each>
+						<!--<xsl:for-each select="ContentDetail/DiscountRules/DiscountRule">-->
+						<xsl:choose>
+							<xsl:when test="$cSortBy='cDiscountName'">
+								<xsl:for-each select="ContentDetail/DiscountRules/DiscountRule">
+									<xsl:sort select="@cDiscountName" order="{$cSortOrder}"/>
+									<xsl:call-template name="DiscountRuleRow"/>
+								</xsl:for-each>
+							</xsl:when>
+
+							<xsl:when test="$cSortBy='cDiscountCode'">
+								<xsl:for-each select="ContentDetail/DiscountRules/DiscountRule">
+									<xsl:sort select="@cDiscountCode" order="{$cSortOrder}"/>
+									<xsl:call-template name="DiscountRuleRow"/>
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:when test="$cSortBy='nDiscountCat'">
+								<xsl:for-each select="ContentDetail/DiscountRules/DiscountRule">
+									<xsl:sort select="@nDiscountCat" order="{$cSortOrder}"/>
+									<xsl:call-template name="DiscountRuleRow"/>
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:when test="$cSortBy='publishDate'">
+								<xsl:for-each select="ContentDetail/DiscountRules/DiscountRule">
+									<xsl:sort select="@publishDate" order="{$cSortOrder}"/>
+									<xsl:call-template name="DiscountRuleRow"/>
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:when test="$cSortBy='expireDate'">
+								<xsl:for-each select="ContentDetail/DiscountRules/DiscountRule">
+									<xsl:sort select="@expireDate" order="{$cSortOrder}"/>
+									<xsl:call-template name="DiscountRuleRow"/>
+								</xsl:for-each>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:for-each select="ContentDetail/DiscountRules/DiscountRule">
+									<xsl:call-template name="DiscountRuleRow"/>
+								</xsl:for-each>
+							</xsl:otherwise>
+						</xsl:choose>
+
+						<!--</xsl:for-each>-->
 					</table>
 				</div>
 			</div>
 		</div>
+	</xsl:template>
+	<xsl:template name="DiscountRuleRow">
+
+		<tr>
+			<td>
+				<xsl:call-template name="status_legend">
+					<xsl:with-param name="status">
+						<xsl:value-of select="@status"/>
+					</xsl:with-param>
+				</xsl:call-template>
+			</td>
+			<td>
+				<strong>
+					<xsl:value-of select="@cDiscountName"/>
+				</strong>
+			</td>
+			<td>
+				<xsl:value-of select="@cDiscountCode"/>
+			</td>
+			<td>
+				<xsl:choose>
+					<xsl:when test="nDiscountCat=1">
+						<xsl:text>Basic</xsl:text>
+					</xsl:when>
+					<xsl:when test="nDiscountCat=2">
+						<xsl:text>Break by Product</xsl:text>
+					</xsl:when>
+					<xsl:when test="nDiscountCat=3">
+						<xsl:text>X For The Price oF Y</xsl:text>
+					</xsl:when>
+					<xsl:when test="nDiscountCat=4">
+						<xsl:text>Cheapest Item Free</xsl:text>
+					</xsl:when>
+					<xsl:when test="nDiscountCat=5">
+						<xsl:text>Break by Group</xsl:text>
+					</xsl:when>
+				</xsl:choose>
+			</td>
+			<td>
+				<xsl:call-template name="DD_Mon_YYYY">
+					<xsl:with-param name="date">
+						<xsl:value-of select="@publishDate"/>
+					</xsl:with-param>
+					<xsl:with-param name="showTime">true</xsl:with-param>
+				</xsl:call-template>
+			</td>
+			<td>
+				<xsl:choose>
+					<xsl:when test="@expireDate!=''">
+						<xsl:call-template name="DD_Mon_YYYY">
+							<xsl:with-param name="date">
+								<xsl:value-of select="@expireDate"/>
+							</xsl:with-param>
+							<xsl:with-param name="showTime">true</xsl:with-param>
+						</xsl:call-template>
+					</xsl:when>
+					<xsl:otherwise>
+						ongoing
+					</xsl:otherwise>
+				</xsl:choose>
+			</td>
+			<td>
+				<a href="{$appPath}?ewCmd=EditDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
+					<i class="fa fa-pencil fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Edit
+				</a>
+				<a href="{$appPath}?ewCmd=RemoveDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-danger">
+					<i class="fa fa-trash-o fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Remove
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<td>&#160;</td>
+			<td colspan="5">
+				Allowed User Groups:&#160;<xsl:for-each select="Dir[@nPermLevel='1']">
+					<xsl:choose>
+						<xsl:when test="@cDirName">
+							<xsl:value-of select="@cDirName"/>,&#160;
+						</xsl:when>
+						<xsl:otherwise>
+							All Groups/Users
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</td>
+			<td>
+				<xsl:if test="Dir[@nPermLevel='0']">
+					<xsl:attribute name="rowspan">2</xsl:attribute>
+				</xsl:if>
+				<a href="{$appPath}?ewCmd=ApplyDirDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
+					<i class="fa fa-user fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Select User Groups
+				</a>
+			</td>
+		</tr>
+		<xsl:if test="Dir[@nPermLevel='0']">
+			<tr>
+				<td>&#160;</td>
+				<td colspan="5">
+					Denied User Groups:&#160;<xsl:for-each select="Dir[@nPermLevel='0']">
+						<xsl:choose>
+							<xsl:when test="@cDirName">
+								<xsl:value-of select="@cDirName"/>,&#160;
+							</xsl:when>
+							<xsl:otherwise>
+								All Groups/Users
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:for-each>
+				</td>
+			</tr>
+		</xsl:if>
+		<tr>
+			<td>&#160;</td>
+			<td colspan="5">
+				Product Groups:&#160;<xsl:for-each select="ProdCat">
+					<xsl:choose>
+						<xsl:when test="@cCatName">
+							<xsl:value-of select="@cCatName"/>,&#160;
+						</xsl:when>
+						<xsl:otherwise>
+							All Product Groups
+						</xsl:otherwise>
+					</xsl:choose>
+				</xsl:for-each>
+			</td>
+			<td>
+				<a href="{$appPath}?ewCmd=ApplyGrpDiscountRules&amp;DiscId={@nDiscountKey}" class="btn btn-xs btn-primary">
+					<i class="fa fa-gift fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Select Product Groups
+				</a>
+			</td>
+		</tr>
 	</xsl:template>
 	<!-- -->
 
@@ -14389,7 +14536,7 @@
 				</thead>
 			</table>
 		</div>
-		<div id="tpltSEOReport">			
+		<div id="tpltSEOReport">
 			<ul id="MenuTree" class="list-group">
 				<xsl:apply-templates select="ContentDetail/Menu/MenuItem" mode="seoreport">
 					<xsl:with-param name="level">1</xsl:with-param>
@@ -14432,37 +14579,37 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
-		
+
 		<xsl:variable name="pageTitleId">
-				<xsl:choose>
-				<xsl:when test="string-length(PageTitle/@id) &gt; 0">					
-					<xsl:value-of select="PageTitle/@id"/>					
+			<xsl:choose>
+				<xsl:when test="string-length(PageTitle/@id) &gt; 0">
+					<xsl:value-of select="PageTitle/@id"/>
 				</xsl:when>
 				<xsl:otherwise>
 					<xsl:text>0</xsl:text>
 				</xsl:otherwise>
-				</xsl:choose>
-			</xsl:variable>
+			</xsl:choose>
+		</xsl:variable>
 
 		<xsl:variable name="metaId">
 			<xsl:choose>
-			<xsl:when test="string-length(MetaDescription/@id) &gt; 0">				
-				<xsl:value-of select="MetaDescription/@id"/>				
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>0</xsl:text>
-			</xsl:otherwise>
+				<xsl:when test="string-length(MetaDescription/@id) &gt; 0">
+					<xsl:value-of select="MetaDescription/@id"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>0</xsl:text>
+				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 
 		<xsl:variable name="itemId">
 			<xsl:choose>
-			<xsl:when test="string-length(@id) &gt; 0">				
-				<xsl:value-of select="@id"/>				
-			</xsl:when>
-			<xsl:otherwise>
-				<xsl:text>0</xsl:text>
-			</xsl:otherwise>
+				<xsl:when test="string-length(@id) &gt; 0">
+					<xsl:value-of select="@id"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>0</xsl:text>
+				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:variable name="pageidValue">
@@ -14557,7 +14704,7 @@
 											</xsl:otherwise>
 										</xsl:choose>
 									</div>
-									<input type="text" class="form-control page-title-input hidden" id="title-input-{$pageidValue}" value="{PageTitle}" />				
+									<input type="text" class="form-control page-title-input hidden" id="title-input-{$pageidValue}" value="{PageTitle}" />
 
 								</td>
 								<td style="width:30%;">
@@ -14580,26 +14727,28 @@
 									<div id="cPageName-{@id}">
 										<xsl:value-of select="@name"/>
 									</div>
-								    <input type="text" class="form-control pagename-input hidden" id="pagename-input-{@id}" value="{@name}" />
+									<input type="text" class="form-control pagename-input hidden" id="pagename-input-{@id}" value="{@name}" />
 								</td>
 								<td style="width:10%;">
 									<div id="cDisplayName-{@id}">
 										<xsl:value-of select="DisplayName/node()"/>
 									</div>
-								    <input type="text" class="form-control displayname-input hidden" id="displayname-input-{@id}" value="{DisplayName/node()}" />
+									<input type="text" class="form-control displayname-input hidden" id="displayname-input-{@id}" value="{DisplayName/node()}" />
 								</td>
 								<!--span class="hidden"> | </span-->
-								<xsl:if test="@id!=$siteRoot">									
-									<td style="width:30%;">										
-										
+								<xsl:if test="@id!=$siteRoot">
+									<td style="width:30%;">
+
 										<button class="btn btn-xs btn-primary" id="Edit-btn-{@id}" onclick="editTitle({$pageTitleId}, {$metaId},{$itemId})">
-											<i class="fa fa-pencil fa-white"><xsl:text> </xsl:text>
-												</i><xsl:text> </xsl:text>Edit
+											<i class="fa fa-pencil fa-white">
+												<xsl:text> </xsl:text>
+											</i><xsl:text> </xsl:text>Edit
 										</button>
 										<button class="btn btn-xs btn-success hidden" id="save-btn-{@id}" onclick="saveTitle({$pageTitleId}, {$metaId},{$itemId})">
-											<i class="fa fa-save"><xsl:text> </xsl:text>
-												</i><xsl:text> </xsl:text>Save
-										</button>									
+											<i class="fa fa-save">
+												<xsl:text> </xsl:text>
+											</i><xsl:text> </xsl:text>Save
+										</button>
 									</td>
 								</xsl:if>
 							</div>
