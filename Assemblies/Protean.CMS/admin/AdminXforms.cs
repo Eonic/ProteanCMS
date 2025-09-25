@@ -40,6 +40,7 @@ using System.Web;
 using Newtonsoft.Json.Linq;
 using System.Windows.Documents;
 using Protean.Providers.CDN;
+using System.Linq;
 
 namespace Protean
 {
@@ -11560,6 +11561,100 @@ namespace Protean
                     }
                 }
 
+                public XmlElement xFrmImportCodes(int nParentCodeKey, string cFormName = "CodeGenerator")
+                {
+                    XmlElement oElmt = null;
+                    XmlElement oParentInstance = null;
+                    XmlElement oInstanceRoot = null;
+                    XmlElement oFrmElmt;
+                    //string cCodeGroups = "";
+                    //string cCodeXForm = "";
+
+                    try
+                    {
+                        // Build the form
+                        base.NewFrm("ImportCodes");
+                        base.submission("Import Codes", "", "post", "form_check(this)");
+                        base.Instance.InnerXml = "<ImportCodes/>";
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "Import Comma Separated Codes", "", "Please copy and paste the codes below separated by commas");
+                        Int16 rows = 20;
+                        Int16 cols = 80;
+                        string ClassName ="";
+                        base.addTextArea(ref oFrmElmt, "ImportCodes", true, "Import Codes", ClassName,  rows,  cols);
+
+                        XmlElement argoBindParent1 = null;
+                        base.addBind("ImportCodes", "ImportCodes", oBindParent: ref argoBindParent1, "true()");
+
+                        base.addSubmit(ref oFrmElmt, "", "Import", "ewSubmit");
+
+                        // Add the parent code id
+                        XmlElement ImportCodes = (XmlElement)base.Instance.SelectSingleNode("ImportCodes");
+
+                        ImportCodes.SetAttribute("groupId", nParentCodeKey.ToString());
+
+                        // Update the label
+                        if (Xml.NodeState(ref base.moXformElmt, "group/label", "", "", XmlNodeState.IsEmpty, oElmt, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                        {
+                        //    oElmt.InnerText += " for " + oParentInstance.SelectSingleNode("tblCodes/cCodeName").InnerText;
+                        }
+
+
+                        if (base.isSubmitted())
+                        {
+                            base.updateInstanceFromRequest();
+                            base.validate();
+
+                            if (base.valid)
+                            {
+                                // Generate the Codes
+                                oInstanceRoot = (XmlElement)base.Instance.SelectSingleNode("ImportCodes");
+
+                             
+
+                                string[] oCodes = oInstanceRoot.InnerText.Split(',');
+                                int nNoCodes = oCodes.Count();
+                                // Add the codes to the database
+                                int nAdded = 0;
+                                int nSkipped = 0;
+                                for (int i = 0, loopTo1 = oCodes.Length - 1; i <= loopTo1; i++)
+                                {
+                                    if (!string.IsNullOrEmpty(oCodes[i]))
+                                    {
+                                        if (Convert.ToInt32(myWeb.moDbHelper.GetDataValue("SELECT nCodeKey FROM tblCodes WHERE cCode ='" + oCodes[i] + "'")) > 0)
+                                        {
+                                            nSkipped += 1;
+                                        }
+                                        else
+                                        {
+                                            string codeInstance = "<tblCodes>\r\n\t\t\t\t<nCodeKey />\r\n\t\t\t\t<cCodeName />\r\n\t\t\t\t<nCodeType>1</nCodeType>\r\n\t\t\t\t<nCodeParentId />\r\n\t\t\t\t<cCodeGroups />\r\n\t\t\t\t<cCode />\r\n\t\t\t\t<nUseId />\r\n\t\t\t\t<dUseDate />\r\n\t\t\t\t</tblCodes>";
+                                            XmlElement newInstance = base.moPageXML.CreateElement("instance");
+                                            newInstance.InnerXml = codeInstance;
+
+                                            newInstance.SelectSingleNode("tblCodes/cCode").InnerText = oCodes[i];
+                                            newInstance.SelectSingleNode("tblCodes/nCodeParentId").InnerText = oInstanceRoot.GetAttribute("groupId");
+
+                                            int nSubId = Conversions.ToInteger(myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, newInstance));
+                                            nAdded += 1;
+                                        }
+                                    }
+                                }
+                                var argoNode = base.moXformElmt.SelectSingleNode("group");
+                                base.addNote(ref argoNode, Protean.xForm.noteTypes.Help, nAdded + " Codes Added, " + nSkipped + " Codes Skipped (Duplicates)", true);
+                            }
+
+                        }
+
+
+                        base.addValues();
+                        return base.moXformElmt;
+                    }
+
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMemberCodeGenerator", ex, "", "", gbDebug);
+                        return null;
+                    }
+                }
                 public XmlElement xFrmVoucherCode(int nCodeId)
                 {
 
