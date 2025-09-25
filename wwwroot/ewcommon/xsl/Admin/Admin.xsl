@@ -4384,6 +4384,7 @@
 				</div>
 			</div>
 			<div class="col-md-9">
+				<div class="col-md-6">
 				<form action="{$appPath}?ewCmd=DiscountRules" class="ewXform well well-default" name="addDiscountRule" id="addDiscountRule" method="post" onsubmit="return form_check(this)">
 					<div class="input-group">
 						<span class="input-group-addon">Add Rule &#160;</span>
@@ -4406,16 +4407,29 @@
 						</span>
 
 						<xsl:text> </xsl:text>
-
 					</div>
 				</form>
-
+				</div>
+				<div class="col-md-6">
+					<form action="{$appPath}?ewCmd=DiscountRules" method="post" id="codeSearch" class="ewXform well well-default">
+							<div class="input-group">
+								<input type="text" name="search" value="{$page/Request/Form/Item[@name='search']}" class="form-control"/>
+								<span class="input-group-btn">
+									<button type="submit" name="previous" value="Search" class="btn btn-success principle">
+										Search By Code
+										<xsl:text> </xsl:text>
+										<i class="fa fa-search fa-white">
+											<xsl:text> </xsl:text>
+										</i>
+									</button>
+								</span>
+							</div>
+						</form>				
+				</div>	
 				<xsl:text> </xsl:text>
-
-
 				<ul class="nav nav-tabs">
 					<li role="presentation">
-						<xsl:if test="$page/Request/QueryString/Item[@name='isActive']/node()!=0">
+						 <xsl:if test="not($page/Request/QueryString/Item[@name='isActive']) or $page/Request/QueryString/Item[@name='isActive']/text()='1'">
 							<xsl:attribute name="class">active</xsl:attribute>
 						</xsl:if>
 						<a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=1"  >
@@ -4423,7 +4437,7 @@
 						</a>
 					</li>
 					<li role="presentation">
-						<xsl:if test="$page/Request/QueryString/Item[@name='isActive']/node()=0">
+						<xsl:if test="$page/Request/QueryString/Item[@name='isActive']/text()='0'">
 							<xsl:attribute name="class">active</xsl:attribute>
 						</xsl:if>
 						<a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=0" >
