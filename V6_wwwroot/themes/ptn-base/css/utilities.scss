@@ -1,4 +1,13 @@
-﻿.hidden {
+﻿@mixin focus-visible-offset() {
+    display: inline-block;
+
+    &:focus-visible {
+        padding: $focus-ring-offset;
+        margin: -#{$focus-ring-offset};
+    }
+}
+
+.hidden {
     display: none;
 }
 
