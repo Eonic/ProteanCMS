@@ -114,7 +114,7 @@ header {
 
     a, button, .btn {
         &:focus-visible {
-            box-shadow: 0 0 0 $focus-ring-width rgba($footer-link, $focus-ring-opacity);
+            box-shadow: 0 0 0 $focus-ring-width rgba($header-color, $focus-ring-opacity);
         }
     }
 
@@ -253,6 +253,7 @@ header {
 
                 &:focus-visible {
                     border-radius: 3px;
+                    box-shadow: 0 0 0 $focus-ring-width rgba($header-color, $focus-ring-opacity);
                 }
             }
         }

@@ -124,6 +124,10 @@
     @extend .btn-primary;
     border-radius: 0 0 4px 4px;
     padding: 1rem;
+
+    &:focus-visible {
+        box-shadow: 0 0 0 $focus-ring-width rgba($header-color, $focus-ring-opacity);
+    }
 }
 
 .skip:focus {
