@@ -1,4 +1,13 @@
-﻿.hidden {
+﻿@mixin focus-visible-offset() {
+    display: inline-block;
+
+    &:focus-visible {
+        padding: $focus-ring-offset;
+        margin: -#{$focus-ring-offset};
+    }
+}
+
+.hidden {
     display: none;
 }
 
@@ -115,6 +124,10 @@
     @extend .btn-primary;
     border-radius: 0 0 4px 4px;
     padding: 1rem;
+
+    &:focus-visible {
+        box-shadow: 0 0 0 $focus-ring-width rgba($header-color, $focus-ring-opacity);
+    }
 }
 
 .skip:focus {
