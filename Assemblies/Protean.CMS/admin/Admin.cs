@@ -5909,7 +5909,7 @@ from tblContentIndexDef";
                     }
                     else if (status == "singleUse")
                     {
-                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where dr.cDiscountCode like '%VOUCHER'";
+                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where dr.cDiscountCode like '%VOUCHER' order by a.dPublishDate desc";
                     }                   
                     else
                     {
