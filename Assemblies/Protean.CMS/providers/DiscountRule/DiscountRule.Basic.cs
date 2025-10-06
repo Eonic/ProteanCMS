@@ -410,12 +410,11 @@ namespace Protean.Providers
                     foreach (XmlElement oCartItem in oCartXML.SelectNodes("/Order/Item"))
                     {
                         decimal nQuantity = Conversions.ToDecimal(oCartItem.GetAttribute("quantity"));
-                        decimal nPrice = Conversions.ToDecimal(oCartItem.GetAttribute("price"));
-                        // If itemTotal is missing or wrong → fix it
-                        oCartItem.SetAttribute("itemTotal", (nPrice * nQuantity).ToString("0.00"));
-                        // If no discount was applied → reset savings to 0
+                        decimal nPrice = Conversions.ToDecimal(oCartItem.GetAttribute("price"));                      
                         if (string.IsNullOrEmpty(oCartItem.GetAttribute("discount")) || oCartItem.GetAttribute("discount") == "0.00")
-                        {
+                        {  // If itemTotal is missing or wrong → fix it
+                            oCartItem.SetAttribute("itemTotal", (nPrice * nQuantity).ToString("0.00"));
+                            // If no discount was applied → reset savings to 0
                             oCartItem.SetAttribute("unitSaving", "0.00");
                             oCartItem.SetAttribute("itemSaving", "0.00");
                             oCartItem.SetAttribute("discount", "0.00");
