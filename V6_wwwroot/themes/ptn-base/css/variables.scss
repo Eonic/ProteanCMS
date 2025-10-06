@@ -62,6 +62,10 @@ $btn-border-width: 2px;
 $btn-padding-x: 1.5rem;
 $btn-padding-y: 0.4rem;
 
+$focus-ring-opacity: .25 !default;
+$focus-ring-color: rgba($primary, $focus-ring-opacity) !default;
+$focus-ring-offset: 5px;
+
 /*################### NAVIGATION #####################*/
 $navbar-light-color: $body-color;
 $nav-link-hover-color: $primary;
