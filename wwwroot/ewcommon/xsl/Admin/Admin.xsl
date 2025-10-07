@@ -11293,7 +11293,7 @@
 
 
 	<!--Subscriptions-->
-	<xsl:template match="Page[@layout='UpcomingRenewals' or @layout='ExpiredSubscriptions' or @layout='CancelledSubscriptions' or @layout='RecentRenewals']" mode="Admin">
+	<xsl:template match="Page[@layout='UpcomingRenewals' or @layout='ExpiredRolling' or @layout='ExpiredSubscriptions' or @layout='CancelledSubscriptions' or @layout='RecentRenewals']" mode="Admin">
 		<div class="row" id="template_Subscriptions">
 			<div class="col-md-12">
 				<xsl:if test="@layout='UpcomingRenewals'">

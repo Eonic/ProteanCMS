@@ -427,7 +427,7 @@ namespace Protean
                                 var args = new object[2];
                                 args[0] = this;
                                 args[1] = oPageDetail;
-
+                                sProcessInfo = "Error loading: " + methodName;
                                 calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
 
                                 // Error Handling ?
@@ -3396,6 +3396,7 @@ namespace Protean
                         case "ManageUserSubscription":
                         case "EmailAlertSubscription":                            
                         case "UpcomingRenewals":
+                        case "ExpiredRolling":                            
                         case "ExpiredSubscriptions":
                         case "CancelledSubscriptions":
                         case "RenewalAlerts":
@@ -6706,7 +6707,11 @@ from tblContentIndexDef";
                             oSub.ListUpcomingRenewals(ref oPageDetail);
                             break;
                         }
-
+                    case "ExpiredRolling":
+                        {
+                            oSub.ListExpiredRollingSubscriptions(ref oPageDetail);
+                            break;
+                        }
                     case "ExpiredSubscriptions":
                         {
                             oSub.ListExpiredSubscriptions(ref oPageDetail);

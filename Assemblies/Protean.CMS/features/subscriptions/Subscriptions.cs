@@ -5,6 +5,7 @@ using Protean.Providers.Payment;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Web.Configuration;
@@ -394,6 +395,86 @@ namespace Protean
                     }
                 }
 
+                public void ListExpiredRollingSubscriptions(ref XmlElement oParentElmt, short expiredMarginDays = 0, string renewRangePeriod = "", short renewRangeCount = 0, string SubType = "", string action = "")
+                {
+                    try
+                    {
+
+                        string ExpireRange = "";
+                        switch (Strings.LCase(renewRangePeriod) ?? "")
+                        {
+                            case "month":
+                                {
+                                    ExpireRange = sqlDate(DateTime.Now.AddMonths(renewRangeCount * -1));
+                                    break;
+                                }
+                            case "week":
+                                {
+                                    ExpireRange = sqlDate(DateTime.Now.AddDays(renewRangeCount * -7));
+                                    break;
+                                }
+                            case "day":
+                                {
+                                    ExpireRange = sqlDate(DateTime.Now.AddDays(renewRangeCount * -1));
+                                    break;
+                                }
+                        }
+
+
+                        string sSql = "select dir.cDirName, dir.cDirXml, sub.*, pay.cPayMthdProviderName, pay.cPayMthdCardType,pay.cPayMthdDescription, pay.cPayMthdDetailXml, a.*, al.dDateTime as dActionDate from tblSubscription sub" + " inner join tblDirectory dir on dir.nDirKey = sub.nDirId" + " inner join tblAudit a on a.nAuditKey = sub.nAuditId" + " LEFT OUTER JOIN tblCartPaymentMethod pay on sub.nPaymentMethodId = pay.nPayMthdKey" + " LEFT OUTER JOIN tblActivityLog al on nUserDirId = sub.nDirId and nOtherId = sub.nSubKey and cActivityDetail like '" + action + "' and al.dDateTime = (SELECT MAX(dDateTime) FROM   tblActivityLog WHERE  cActivityDetail like '" + action + "' and nOtherId = sub.nSubKey) ";
+
+
+
+                        if (renewRangeCount < 0)
+                        {
+                            if (renewRangeCount < 0)
+                            {
+                                sSql = sSql + " where a.dExpireDate <= " + ExpireRange + "and a.dExpireDate >= " + sqlDate(DateTime.Now.AddDays(expiredMarginDays * -1));
+                            }
+
+                            else
+                            {
+                                sSql = sSql + " where a.dExpireDate >= " + ExpireRange + "and a.dExpireDate <= " + sqlDate(DateTime.Now.AddDays(expiredMarginDays * -1));
+                            }
+                        }
+
+                        else
+                        {
+                            sSql = sSql + " where a.dExpireDate <= " + sqlDate(DateTime.Now.AddDays(expiredMarginDays * -1));
+                        }
+
+                        if (!string.IsNullOrEmpty(SubType))
+                        {
+                            sSql = sSql + " and sub.cRenewalStatus  = '" + SubType + "'";
+                        }
+
+                        sSql = sSql + " and sub.cRenewalStatus = 'Rolling'  order by a.dExpireDate desc";
+
+                        // List Subscription groups and thier subscriptions.
+                        var oDS = myWeb.moDbHelper.GetDataSet(sSql, "Subscribers");
+                        var oXML = new XmlDocument();
+
+                        oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&lt;", "<"), "&gt;", ">");
+                        string sContent;
+
+                        foreach (XmlElement oElmt in oXML.SelectNodes("descendant-or-self::cDirXml | descendant-or-self::cSubXml | descendant-or-self::cPayMthdDetailXml"))
+                        {
+                            sContent = oElmt.InnerXml;
+                            if (!string.IsNullOrEmpty(sContent))
+                            {
+                                oElmt.InnerXml = sContent;
+                            }
+                        }
+                        foreach (XmlElement oElmt2 in oXML.DocumentElement.SelectNodes("*"))
+                            oParentElmt.AppendChild(oParentElmt.OwnerDocument.ImportNode(oElmt2, true));
+                    }
+
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
+                    }
+                }
+
                 public void ListExpiredSubscriptions(ref XmlElement oParentElmt, short expiredMarginDays = 0, string renewRangePeriod = "", short renewRangeCount = 0, string SubType = "", string action = "")
                 {
                     try
@@ -694,145 +775,150 @@ namespace Protean
                     try
                     {
                         XmlElement moReminderCfg = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/subscriptionReminders");
-                        oParentElmt.InnerXml = moReminderCfg.OuterXml;
-                        long ProcessedCount = 0L;
-
-                        if (myWeb.moRequest["ewCmd2"] == "processAll")
-                        {
-                            bProcess = true;
+                        if (moReminderCfg == null) {
+                            oParentElmt.SetAttribute("error", "Please configure Subscription Reminders");
                         }
+                        else {
+                            oParentElmt.InnerXml = moReminderCfg.OuterXml;
+                            long ProcessedCount = 0L;
 
-                        foreach (XmlElement oReminder in oParentElmt.SelectNodes("subscriptionReminders/reminder"))
-                        {
-
-                            switch (oReminder.GetAttribute("action") ?? "")
+                            if (myWeb.moRequest["ewCmd2"] == "processAll")
                             {
-                                case "renewalreminder":
-                                    {
-                                        // Select the subscriptions that are caught up in this case
-                                        XmlElement xmloReminder = oReminder;
-                                        ListUpcomingRenewals(ref xmloReminder, (short)Conversions.ToInteger("0" + xmloReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
-                                        foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
-                                        {
-                                            bool force = false;
-                                            bool ingoreIfPaymentActive = false;
-                                            string actionResult;
-                                            if ((myWeb.moRequest["name"] ?? "") == (oReminder.GetAttribute("name") ?? "") & (myWeb.moRequest["SendId"] ?? "") == (subxml.SelectSingleNode("nSubKey").InnerText ?? ""))
-                                            {
-                                                force = true;
-                                            }
-
-                                            if (oReminder.GetAttribute("invalidPaymentOnly") != null)
-                                            {
-
-                                                if (oReminder.GetAttribute("invalidPaymentOnly") == "true")
-                                                {
-                                                    ingoreIfPaymentActive = true;
-                                                }
-                                            }
-                                            DateTime ActionDate = default;
-                                            if (subxml.SelectSingleNode("dActionDate") != null)
-                                            {
-                                                ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
-                                            }
-
-
-
-                                            long argSubId = Conversions.ToLong(subxml.SelectSingleNode("nSubKey").InnerText);
-                                            actionResult = RenewalAction(subxml, ref argSubId, oReminder.GetAttribute("action"), ref ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate);
-                                            subxml.SetAttribute("actionResult", actionResult);
-                                        }
-
-                                        break;
-                                    }
-                                case "renew":
-                                    {
-                                        // Select the subscriptions that are caught up in this case
-                                        XmlElement xmloReminder = oReminder;
-                                        ListRenewalDue(ref xmloReminder, (short)Conversions.ToInteger("0" + oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
-                                        foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
-                                        {
-                                            bool force = false;
-                                            bool ingoreIfPaymentActive = false;
-                                            string actionResult;
-                                            if ((myWeb.moRequest["name"] ?? "") == (oReminder.GetAttribute("name") ?? "") & (myWeb.moRequest["SendId"] ?? "") == (subxml.SelectSingleNode("nSubKey").InnerText ?? ""))
-                                            {
-                                                force = true;
-                                            }
-
-                                            if (oReminder.GetAttribute("invalidPaymentOnly") != null)
-                                            {
-
-                                                if (oReminder.GetAttribute("invalidPaymentOnly") == "true")
-                                                {
-                                                    ingoreIfPaymentActive = true;
-                                                }
-                                            }
-                                            DateTime ActionDate = default;
-                                            if (subxml.SelectSingleNode("dActionDate") != null)
-                                            {
-                                                ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
-                                            }
-
-                                            long argSubId1 = Conversions.ToLong(subxml.SelectSingleNode("nSubKey").InnerText);
-                                            actionResult = RenewalAction(subxml, ref argSubId1, oReminder.GetAttribute("action"), ref ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate);
-                                            subxml.SetAttribute("actionResult", actionResult);
-                                        }
-
-                                        break;
-                                    }
-                                case "expire":
-                                case "expired":
-                                case "expirewarning":
-                                    {
-                                        XmlElement xmloReminder = oReminder;
-                                        if (oReminder.GetAttribute("action") == "expire")
-                                        {                                           
-                                            ListExpiredSubscriptions(ref xmloReminder, Conversions.ToShort(oReminder.GetAttribute("count")), "", 0, Conversions.ToString(true));
-                                        }
-                                        else
-                                        {
-                                            ListExpiredSubscriptions(ref xmloReminder, 0, oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("subType"), oReminder.GetAttribute("name"));
-                                        }
-                                        foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
-                                        {
-                                            bool force = false;
-                                            if ((myWeb.moRequest["name"] ?? "") == (oReminder.GetAttribute("name") ?? "") & (myWeb.moRequest["SendId"] ?? "") == (subxml.SelectSingleNode("nSubKey").InnerText ?? ""))
-                                            {
-                                                force = true;
-                                            }
-                                            if (bProcess)
-                                            {
-                                                force = true;
-                                            }
-                                            bool ingoreIfPaymentActive = false;
-                                            string actionResult;
-                                            if ((myWeb.moRequest["name"] ?? "") == (oReminder.GetAttribute("name") ?? "") & (myWeb.moRequest["SendId"] ?? "") == (subxml.SelectSingleNode("nSubKey").InnerText ?? ""))
-                                            {
-                                                force = true;
-                                            }
-                                            if (oReminder.GetAttribute("invalidPaymentOnly") != null)
-                                            {
-                                                if (oReminder.GetAttribute("invalidPaymentOnly") == "true")
-                                                {
-                                                    ingoreIfPaymentActive = true;
-                                                }
-                                            }
-                                            DateTime ActionDate = default;
-                                            if (subxml.SelectSingleNode("dActionDate") != null)
-                                            {
-                                                ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
-                                            }
-                                            long argSubId2 = Conversions.ToLong(subxml.SelectSingleNode("nSubKey").InnerText);
-                                            actionResult = RenewalAction(subxml, ref argSubId2, oReminder.GetAttribute("action"), ref ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate);
-                                            subxml.SetAttribute("actionResult", actionResult);
-                                        }
-
-                                        break;
-                                    }
-
+                                bProcess = true;
                             }
 
+                            foreach (XmlElement oReminder in oParentElmt.SelectNodes("subscriptionReminders/reminder"))
+                            {
+
+                                switch (oReminder.GetAttribute("action") ?? "")
+                                {
+                                    case "renewalreminder":
+                                        {
+                                            // Select the subscriptions that are caught up in this case
+                                            XmlElement xmloReminder = oReminder;
+                                            ListUpcomingRenewals(ref xmloReminder, (short)Conversions.ToInteger("0" + xmloReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
+                                            foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
+                                            {
+                                                bool force = false;
+                                                bool ingoreIfPaymentActive = false;
+                                                string actionResult;
+                                                if ((myWeb.moRequest["name"] ?? "") == (oReminder.GetAttribute("name") ?? "") & (myWeb.moRequest["SendId"] ?? "") == (subxml.SelectSingleNode("nSubKey").InnerText ?? ""))
+                                                {
+                                                    force = true;
+                                                }
+
+                                                if (oReminder.GetAttribute("invalidPaymentOnly") != null)
+                                                {
+
+                                                    if (oReminder.GetAttribute("invalidPaymentOnly") == "true")
+                                                    {
+                                                        ingoreIfPaymentActive = true;
+                                                    }
+                                                }
+                                                DateTime ActionDate = default;
+                                                if (subxml.SelectSingleNode("dActionDate") != null)
+                                                {
+                                                    ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
+                                                }
+
+
+
+                                                long argSubId = Conversions.ToLong(subxml.SelectSingleNode("nSubKey").InnerText);
+                                                actionResult = RenewalAction(subxml, ref argSubId, oReminder.GetAttribute("action"), ref ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate);
+                                                subxml.SetAttribute("actionResult", actionResult);
+                                            }
+
+                                            break;
+                                        }
+                                    case "renew":
+                                        {
+                                            // Select the subscriptions that are caught up in this case
+                                            XmlElement xmloReminder = oReminder;
+                                            ListRenewalDue(ref xmloReminder, (short)Conversions.ToInteger("0" + oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
+                                            foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
+                                            {
+                                                bool force = false;
+                                                bool ingoreIfPaymentActive = false;
+                                                string actionResult;
+                                                if ((myWeb.moRequest["name"] ?? "") == (oReminder.GetAttribute("name") ?? "") & (myWeb.moRequest["SendId"] ?? "") == (subxml.SelectSingleNode("nSubKey").InnerText ?? ""))
+                                                {
+                                                    force = true;
+                                                }
+
+                                                if (oReminder.GetAttribute("invalidPaymentOnly") != null)
+                                                {
+
+                                                    if (oReminder.GetAttribute("invalidPaymentOnly") == "true")
+                                                    {
+                                                        ingoreIfPaymentActive = true;
+                                                    }
+                                                }
+                                                DateTime ActionDate = default;
+                                                if (subxml.SelectSingleNode("dActionDate") != null)
+                                                {
+                                                    ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
+                                                }
+
+                                                long argSubId1 = Conversions.ToLong(subxml.SelectSingleNode("nSubKey").InnerText);
+                                                actionResult = RenewalAction(subxml, ref argSubId1, oReminder.GetAttribute("action"), ref ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate);
+                                                subxml.SetAttribute("actionResult", actionResult);
+                                            }
+
+                                            break;
+                                        }
+                                    case "expire":
+                                    case "expired":
+                                    case "expirewarning":
+                                        {
+                                            XmlElement xmloReminder = oReminder;
+                                            if (oReminder.GetAttribute("action") == "expire")
+                                            {                                           
+                                                ListExpiredSubscriptions(ref xmloReminder, Conversions.ToShort(oReminder.GetAttribute("count")), "", 0, Conversions.ToString(true));
+                                            }
+                                            else
+                                            {
+                                                ListExpiredSubscriptions(ref xmloReminder, 0, oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("subType"), oReminder.GetAttribute("name"));
+                                            }
+                                            foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
+                                            {
+                                                bool force = false;
+                                                if ((myWeb.moRequest["name"] ?? "") == (oReminder.GetAttribute("name") ?? "") & (myWeb.moRequest["SendId"] ?? "") == (subxml.SelectSingleNode("nSubKey").InnerText ?? ""))
+                                                {
+                                                    force = true;
+                                                }
+                                                if (bProcess)
+                                                {
+                                                    force = true;
+                                                }
+                                                bool ingoreIfPaymentActive = false;
+                                                string actionResult;
+                                                if ((myWeb.moRequest["name"] ?? "") == (oReminder.GetAttribute("name") ?? "") & (myWeb.moRequest["SendId"] ?? "") == (subxml.SelectSingleNode("nSubKey").InnerText ?? ""))
+                                                {
+                                                    force = true;
+                                                }
+                                                if (oReminder.GetAttribute("invalidPaymentOnly") != null)
+                                                {
+                                                    if (oReminder.GetAttribute("invalidPaymentOnly") == "true")
+                                                    {
+                                                        ingoreIfPaymentActive = true;
+                                                    }
+                                                }
+                                                DateTime ActionDate = default;
+                                                if (subxml.SelectSingleNode("dActionDate") != null)
+                                                {
+                                                    ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
+                                                }
+                                                long argSubId2 = Conversions.ToLong(subxml.SelectSingleNode("nSubKey").InnerText);
+                                                actionResult = RenewalAction(subxml, ref argSubId2, oReminder.GetAttribute("action"), ref ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate);
+                                                subxml.SetAttribute("actionResult", actionResult);
+                                            }
+
+                                            break;
+                                        }
+
+                                }
+
+                            }
                         }
                     }
 
