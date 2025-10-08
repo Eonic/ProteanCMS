@@ -427,7 +427,7 @@ namespace Protean
                                 var args = new object[2];
                                 args[0] = this;
                                 args[1] = oPageDetail;
-
+                                sProcessInfo = "Error loading: " + methodName;
                                 calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
 
                                 // Error Handling ?
@@ -3394,7 +3394,9 @@ namespace Protean
                         case "DownSubscription":
                         case "ListSubscribers":
                         case "ManageUserSubscription":
+                        case "EmailAlertSubscription":                            
                         case "UpcomingRenewals":
+                        case "ExpiredRolling":                            
                         case "ExpiredSubscriptions":
                         case "CancelledSubscriptions":
                         case "RenewalAlerts":
@@ -6580,6 +6582,43 @@ from tblContentIndexDef";
                             sAdminLayout = "ManageUserSubscription";
                             break;
                         }
+                    case "EmailAlertSubscription":
+                        {
+                            long nSubscriptionId = Conversions.ToInteger(myWeb.moRequest["id"]);
+
+                            string AlertType = "PaymentFailed";
+                            string AlertXformPath = "xforms/EmailAlert/EmailAlert.xml";
+                            string EmailContentXsltPath = "/xsl/subscription/emailcontent.xsl";
+                            string Subject = "Subscription Renewal";
+                            string SenderName = myWeb.moConfig["SiteAdminName"];
+                            string SenderEmail = myWeb.moConfig["SiteAdminEmail"];
+                            string CcName = "";//myAdmin.myWeb.moCart.moCartConfig["MerchantName"];
+                            string CcEmail = "";//myAdmin.myWeb.moCart.moCartConfig["MerchantEmail"];
+
+                            string BccName = myWeb.moCart.moCartConfig["MerchantName"];
+                            string BccEmail = myWeb.moCart.moCartConfig["MerchantEmail"];
+
+                            XmlElement AlertData = myWeb.moPageXml.CreateElement("instance");
+                            oSub.GetSubscriptionDetail(ref AlertData, Conversions.ToInteger(nSubscriptionId));
+                            
+
+                            string recipientFullName = AlertData.SelectSingleNode("Subscription/User/FirstName").InnerText + " " + AlertData.SelectSingleNode("Subscription/User/LastName").InnerText;
+                            string RecipientEmail = AlertData.SelectSingleNode("Subscription/User/Email").InnerText;
+
+                           // AlertData.SetAttribute("subjectId", nSubscriptionId.ToString());
+
+                            oPageDetail.AppendChild(oADX.xFrmAlertEmail(AlertType, (XmlElement)AlertData.FirstChild, AlertXformPath, Subject, SenderName, SenderEmail, recipientFullName, RecipientEmail, CcName, CcEmail, BccName, BccEmail, EmailContentXsltPath, false));
+                            sAdminLayout = "AdminXForm";
+                            if (oADX.valid) {
+                                cCmd = "ManageUserSubscription";
+                                // oSub.CancelSubscription(myWeb.moRequest("subId"))
+                                goto SP;
+                            }
+
+
+                            break;
+                        }
+
                     // If oADX.valid Then
                     // cCmd = "Subscriptions"
                     // GoTo SP
@@ -6668,7 +6707,11 @@ from tblContentIndexDef";
                             oSub.ListUpcomingRenewals(ref oPageDetail);
                             break;
                         }
-
+                    case "ExpiredRolling":
+                        {
+                            oSub.ListExpiredRollingSubscriptions(ref oPageDetail);
+                            break;
+                        }
                     case "ExpiredSubscriptions":
                         {
                             oSub.ListExpiredSubscriptions(ref oPageDetail);

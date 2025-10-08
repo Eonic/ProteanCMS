@@ -12991,13 +12991,17 @@ namespace Protean
                     return null;
                 }
             }
-            public long emailActivity(short nUserDirId, string cActivityFullDetail = "", string cEmailRecipient = "", string cEmailSender = "", string cActivityXml = "")
+            public long emailActivity(short nUserDirId, string cActivityFullDetail = "", string cEmailRecipient = "", string cEmailSender = "", string cActivityXml = "", string cSubject = "")
             {
 
                 string sSql;
                 try
                 {
-                    if (checkTableColumnExists("tblEmailActivityLog", "cActivityXml"))
+                    if (checkTableColumnExists("tblEmailActivityLog", "cSubject"))
+                    {
+                        sSql = "Insert Into tblEmailActivityLog (nUserDirId, dDateTime,  cEmailRecipient, cEmailSender, cActivityDetail, cActivityXml, cSubject) " + "values (" + nUserDirId + ", " + SqlDate(DateTime.Now, true) + ", " + "'" + SqlFmt(Strings.Left(cEmailRecipient, 255)) + "', " + "'" + SqlFmt(Strings.Left(cEmailSender, 255)) + "', " + "'" + SqlFmt(cActivityFullDetail) + "', " + " '" + SqlFmt(cActivityXml) + "', " + " '" + SqlFmt(cSubject) + "')";
+                    }
+                    else if (checkTableColumnExists("tblEmailActivityLog", "cActivityXml"))
                     {
                         sSql = "Insert Into tblEmailActivityLog (nUserDirId, dDateTime,  cEmailRecipient, cEmailSender, cActivityDetail, cActivityXml) " + "values (" + nUserDirId + ", " + SqlDate(DateTime.Now, true) + ", " + "'" + SqlFmt(Strings.Left(cEmailRecipient, 255)) + "', " + "'" + SqlFmt(Strings.Left(cEmailSender, 255)) + "', " + "'" + SqlFmt(cActivityFullDetail) + "', " + " '" + SqlFmt(cActivityXml) + "')";
                     }

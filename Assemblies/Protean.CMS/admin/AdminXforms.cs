@@ -11,6 +11,8 @@
 using Microsoft.Ajax.Utilities;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Newtonsoft.Json.Linq;
+using Protean.Providers.CDN;
 using Protean.Providers.Membership;
 using Protean.Providers.Payment;
 using Protean.Tools;
@@ -23,24 +25,24 @@ using System.Configuration.Provider;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+//using System.Text.Json.Nodes;
+using System.Web;
 using System.Web.Configuration;
+using System.Windows.Documents;
 using System.Xml;
+using System.Xml.Linq;
+using static Protean.Cms;
 using static Protean.stdTools;
 using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
 using static System.Web.HttpUtility;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-//using System.Text.Json.Nodes;
-using System.Web;
-using Newtonsoft.Json.Linq;
-using System.Windows.Documents;
-using Protean.Providers.CDN;
-using System.Linq;
 
 namespace Protean
 {
@@ -10264,6 +10266,7 @@ namespace Protean
                                 if (RenewResponse == "Success")
                                 {
                                     base.valid = true;
+                                return base.moXformElmt;
                                 }
                                 else
                                 {
@@ -10271,9 +10274,9 @@ namespace Protean
                                     base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, RenewResponse);
                                     //oFrmElmt = (XmlElement)argoNode1;
                                     base.valid = false;
+
                                 }
 
-                                return base.moXformElmt;
                             }
                         }
                         return base.moXformElmt;
@@ -13032,7 +13035,7 @@ namespace Protean
                     }
                 }
 
-                public XmlElement xFrmAlertEmail(string messageType, XmlElement PayloadData, string xFormPath, string subject, string senderName, string senderEmail, string recipientName, string recipientEmail, string ccName, string ccEmail, string bccName, string bccEmail, string emailContentXsltPath, Boolean autosend)
+                public XmlElement xFrmAlertEmail(string messageType, XmlElement PayloadData, string xFormPath, string subject, string senderName, string senderEmail, string recipientName, string recipientEmail, string ccName, string ccEmail, string bccName, string bccEmail, string emailContentXsltPath, Boolean autosend, long subjectId = 0)
                 {
                     string cProcessInfo = "";
                     object FormTitle = "AlertEmail User";
@@ -13053,6 +13056,7 @@ namespace Protean
                         payloadXml.InnerXml = PayloadData.OuterXml;
 
                         base.Instance.SetAttribute("messageType", messageType);
+                        base.Instance.SetAttribute("subjectId", subjectId.ToString());
 
                         base.Instance.SelectSingleNode("emailer/recipientEmail").InnerText = recipientEmail;
                         base.Instance.SelectSingleNode("emailer/recipientName").InnerText = recipientName;

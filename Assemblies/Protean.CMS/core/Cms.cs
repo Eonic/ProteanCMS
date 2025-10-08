@@ -157,6 +157,7 @@ namespace Protean
         public string mcBehaviourAddPageCommand = "";
         public string mcBehaviourEditPageCommand = "";
 
+        public Boolean mbCheckDetailPath = false;
 
         public string mcClientCommonFolder = "";
         public string mcEWCommonFolder = "/ewcommon";
@@ -716,6 +717,10 @@ namespace Protean
 
                     mcPagePath = moRequest["path"] + "";
                     mcPagePath = mcPagePath.Replace("//", "/");
+
+                    if (Strings.LCase(moConfig["CheckDetailPath"]) == "on") {
+                        mbCheckDetailPath = true;
+                       }
 
                     JSStart.InitialiseJSEngine();
 
@@ -2613,7 +2618,7 @@ namespace Protean
                                 }
                             }
 
-                            if (Strings.LCase(moConfig["CheckDetailPath"]) == "on" & mbAdminMode == false & mnArtId > 0 & (mcOriginalURL.Contains("-/") | mcOriginalURL.Contains("/Item")))
+                            if (mbCheckDetailPath & mbAdminMode == false & mnArtId > 0 & (mcOriginalURL.Contains("-/") | mcOriginalURL.Contains("/Item")))
                             {
                                 if (oPageElmt.SelectSingleNode("ContentDetail/Content/@name") != null)
                                 {
