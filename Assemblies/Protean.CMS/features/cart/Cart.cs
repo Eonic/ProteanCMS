@@ -9909,7 +9909,7 @@ namespace Protean
                 var oDs = new DataSet();
                 string cSQL;
                 string cWhereSQL = "";
-
+                string cProcessInfo = "";
                 // Paging variables
                 int nStart = 0;
                 int nRows = 100;
@@ -10019,7 +10019,17 @@ namespace Protean
                                     // Get stored CartXML
                                     if (Conversions.ToBoolean(Operators.AndObject(!Operators.ConditionalCompareObjectEqual(oDR["cCartXML"], "", false), bForceRefresh == false)))
                                     {
-                                        oContent.InnerXml = Conversions.ToString(oDR["cCartXML"]);
+                                        try {
+                                            // if we have a badly saved xml we get a new one.
+                                            oContent.InnerXml = Conversions.ToString(oDR["cCartXML"]);
+                                        } 
+                                        catch (Exception ex)
+                                        {
+                                            cProcessInfo = ex.Message;
+                                            mnCartId = Convert.ToInt32(oDR["nCartOrderKey"]);
+                                            GetCart(ref oContent, mnCartId);
+                                            mnCartId = 0;
+                                        }
                                         if (oContent.InnerXml.Contains("\n"))
                                         {
                                             oContent.InnerXml = oContent.InnerXml.TrimStart('\n');
@@ -10174,7 +10184,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListOrders", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListOrders", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -10340,7 +10350,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartXML", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartXML", ex,"", "", gbDebug);
                 }
             }
 

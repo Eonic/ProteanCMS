@@ -217,7 +217,7 @@ namespace Protean
                                         }
                                         else
                                         {
-                                            myWeb.moPageXml.FirstChild.AppendChild(pseudoOrder.xml);
+                                            myWeb.moPageXml.FirstChild.AppendChild(pseudoOrder.xml.CloneNode(true));
                                             ContentDetailElmt.AppendChild(ccPaymentXform.moXformElmt);
                                         }
 
