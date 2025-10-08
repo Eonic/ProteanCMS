@@ -4008,7 +4008,7 @@
 				</xsl:if>
 				<xsl:if test="descendant::MenuItem[@id=$dateQuery] and @url!='/'">
 					<xsl:text>active </xsl:text>
-				</xsl:if>	
+				</xsl:if> I have	
 			</xsl:variable>
 			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
 				<xsl:with-param name="class" select="$class"/>
