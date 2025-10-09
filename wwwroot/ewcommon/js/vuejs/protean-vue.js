@@ -775,3 +775,33 @@ if (insightsSectionElement) {
         }
     });
 }
+//debugger;
+const isProductDetailPage = document.querySelector(".Product-detail-container");
+//alert("sonali");
+if (isProductDetailPage) {
+    new Vue({
+        el: '.Product-detail-container',
+        data: { isReviewAvailable: null },
+        methods: {
+            getGoogleReviews: function () {
+                debugger;
+                var that = this;
+                this.isReviewAvailable = document.getElementById('product-reviews');
+                if (isReviewAvailable==null) {
+                    axios.post(addGoogleReviewsAPIUrl)
+                        .then(function (response) {
+                            that.skuDocuments = response.data;
+                        });
+                }
+
+            },
+
+
+        },
+        mounted: function () {
+
+            this.getGoogleReviews();
+        }
+
+    });
+}
