@@ -4444,6 +4444,14 @@
 							<xsl:text> InActive Codes</xsl:text>
 						</a>
 					</li>
+					<li role="presentation">
+						<xsl:if test="$page/Request/QueryString/Item[@name='isActive']/text()='singleUse'">
+							<xsl:attribute name="class">active</xsl:attribute>
+						</xsl:if>
+						<a href="{$appPath}?ewCmd=DiscountRules&amp;isActive=singleUse" >
+							<xsl:text> Unused Codes</xsl:text>
+						</a>
+					</li>
 				</ul>
 				<div class="panel panel-default">
 
@@ -11454,7 +11462,7 @@
 
 
 	<!--Subscriptions-->
-	<xsl:template match="Page[@layout='UpcomingRenewals' or @layout='ExpiredSubscriptions' or @layout='CancelledSubscriptions' or @layout='RecentRenewals']" mode="Admin">
+	<xsl:template match="Page[@layout='UpcomingRenewals' or @layout='ExpiredRolling' or @layout='ExpiredSubscriptions' or @layout='CancelledSubscriptions' or @layout='RecentRenewals']" mode="Admin">
 		<div class="row" id="template_Subscriptions">
 			<div class="col-md-12">
 				<xsl:if test="@layout='UpcomingRenewals'">

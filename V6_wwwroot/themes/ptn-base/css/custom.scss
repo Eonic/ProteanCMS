@@ -215,7 +215,14 @@ a {
     //text-decoration: none;
     text-underline-offset: 0.2rem;
     text-decoration-thickness: 0px;
-    text-decoration-color: rgba($link-color,0.4)
+    text-decoration-color: rgba($link-color,0.4);
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 $focus-ring-width $focus-ring-color;
+        display: inline-block;
+        border-radius: 3px;
+    }
 }
 
 strong, b {
@@ -501,6 +508,10 @@ section:not(.bg-light) .bg-light {
 
     .swiper-button-prev, .swiper-button-next {
         color: color-contrast($color);
+    }
+
+    a:focus-visible {
+        box-shadow: 0 0 0 $focus-ring-width rgba(color-contrast($color), $focus-ring-opacity);
     }
 }
 

@@ -663,11 +663,13 @@ namespace Protean
                         }
 
                         mnTaxRate = Conversions.ToDouble(moCartConfig["TaxRate"]);
-                        if (myWeb.moSession!= null)
+                        if (myWeb.moSession != null)
                         {
-                            mnTaxRate = Conversions.ToDouble("0" + myWeb.moSession["nTaxRate"] ?? "");
+                            if (myWeb.moSession["nTaxRate"] != null)
+                            {
+                                mnTaxRate = Conversions.ToDouble("0" + myWeb.moSession["nTaxRate"] ?? "");
+                            }
                         }
-
                         if (!string.IsNullOrEmpty(myWeb.moRequest.Form["url"]))
                         {
                             myWeb.moSession["returnPage"] = myWeb.moRequest.Form["url"];
@@ -3689,11 +3691,12 @@ namespace Protean
                             }
 
                             // Add Any Client Notes
+                            //cartxml - discount node not available- dont import
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
                                 oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
-                                if (Convert.ToString(oElmt.FirstChild) != "")
+                                if (Convert.ToString(oElmt.FirstChild) != "" && oCartElmt.SelectSingleNode("Item/Discount") != null)
                                 {
                                     if (oElmt.FirstChild.Name == "Notes")
                                     {
@@ -9907,7 +9910,7 @@ namespace Protean
                 var oDs = new DataSet();
                 string cSQL;
                 string cWhereSQL = "";
-
+                string cProcessInfo = "";
                 // Paging variables
                 int nStart = 0;
                 int nRows = 100;
@@ -10017,7 +10020,17 @@ namespace Protean
                                     // Get stored CartXML
                                     if (Conversions.ToBoolean(Operators.AndObject(!Operators.ConditionalCompareObjectEqual(oDR["cCartXML"], "", false), bForceRefresh == false)))
                                     {
-                                        oContent.InnerXml = Conversions.ToString(oDR["cCartXML"]);
+                                        try {
+                                            // if we have a badly saved xml we get a new one.
+                                            oContent.InnerXml = Conversions.ToString(oDR["cCartXML"]);
+                                        } 
+                                        catch (Exception ex)
+                                        {
+                                            cProcessInfo = ex.Message;
+                                            mnCartId = Convert.ToInt32(oDR["nCartOrderKey"]);
+                                            GetCart(ref oContent, mnCartId);
+                                            mnCartId = 0;
+                                        }
                                         if (oContent.InnerXml.Contains("\n"))
                                         {
                                             oContent.InnerXml = oContent.InnerXml.TrimStart('\n');
@@ -10172,7 +10185,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListOrders", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListOrders", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -10338,7 +10351,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartXML", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartXML", ex,"", "", gbDebug);
                 }
             }
 
