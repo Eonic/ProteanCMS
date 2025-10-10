@@ -56,7 +56,7 @@
       </div>
       <xsl:if test="@allAsZip='on'">
         <div class="listItem list-group-item">
-          <div class="lIinner">
+          <div class="lIinner">!!
             <a class="docLink zipicon" href="{$appPath}ptn/tools/download.ashx?docId={$idsList}&amp;filename=myzip.zip&amp;xPath=/Content/Path">
               <xsl:call-template name="term2074" />
             </a>
@@ -131,7 +131,7 @@
         <xsl:with-param name="class" select="'listItem documents'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
-      <div class="lIinner">
+      <div class="lIinner position-relative">
         <xsl:if test="$showThumbnail='true'">
           <xsl:apply-templates select="." mode="displayThumbnail"/>
         </xsl:if>
