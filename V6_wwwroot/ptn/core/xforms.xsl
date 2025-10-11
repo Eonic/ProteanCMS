@@ -669,7 +669,7 @@
 
   <xsl:template match="hint" mode="xform">
     <div class="alert alert-success">
-      <i class="fa fa-info-sign fa-2x pull-left">
+      <i class="fa fa-info-sign fa-2x float-start">
         <xsl:text> </xsl:text>
       </i>
       <xsl:copy-of select="node()"/>
@@ -730,22 +730,21 @@
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="$classVal='alert-success'">
-              <i class="fa fa-check fa-2x pull-left">
+              <i class="fa fa-check fa-2x float-start">
                 <xsl:text> </xsl:text>
               </i>
             </xsl:when>
             <xsl:when test="$classVal!=''">
-              <i class="fa fa-exclamation-triangle  pull-left">
+              <i class="fa fa-exclamation-triangle float-start">
                 <xsl:text> </xsl:text>
               </i>
             </xsl:when>
             <xsl:otherwise>
-              <i class="fa fa-exclamation-circle  pull-left">
+              <i class="fa fa-exclamation-circle float-start">
                 <xsl:text> </xsl:text>
               </i>
             </xsl:otherwise>
           </xsl:choose>
-          <xsl:text>&#160;&#160;</xsl:text>
           <span class="alert-msg">
             <xsl:apply-templates select="." mode="cleanXhtml"/>
           </span>
@@ -3426,22 +3425,21 @@
     <div class="alert-msg">
       <xsl:choose>
         <xsl:when test="$classVal='alert-success'">
-          <i class="fa fa-check fa-2x pull-left">
+          <i class="fa fa-check fa-2x float-start">
             <xsl:text> </xsl:text>
           </i>
         </xsl:when>
         <xsl:when test="$classVal!=''">
-          <i class="fa fa-exclamation-triangle  pull-left">
+          <i class="fa fa-exclamation-triangle float-start">
             <xsl:text> </xsl:text>
           </i>
         </xsl:when>
         <xsl:otherwise>
-          <i class="fa fa-exclamation-circle  pull-left">
+          <i class="fa fa-exclamation-circle fa-2x float-start">
             <xsl:text> </xsl:text>
           </i>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:text>&#160;&#160;</xsl:text>
       <xsl:apply-templates select="node()" mode="cleanXhtml"/>
     </div>
   </xsl:template>

@@ -326,8 +326,8 @@ namespace Protean.Providers
                         pwdIpt.SetAttribute("placeholder", "Password");
                         base.addClientSideValidation(ref pwdIpt, true, "Please enter Password");
                         base.addBind("cPassword", "user/password", ref oBindParent, "true()");
-                        base.addDiv(ref oFrmElmt, "<xsl:text> </xsl:text>", "password-reminder");
-                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign In", "UserLogon", btnClass);
+                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign in", "UserLogon", btnClass);
+                        base.addDiv(ref oFrmElmt, "&#160;", "password-reminder");
                        
 
 
@@ -342,7 +342,7 @@ namespace Protean.Providers
                                     }
                                     if (bUse) {
                                         string provName = authProvider.config["name"];
-                                        XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With " + provName, "AuthProvider", btnClass + " btn-"+ provName.ToLower(), btnIcon, provName.ToLower());
+                                        XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign in with " + provName, "AuthProvider", btnClass + " btn-"+ provName.ToLower(), btnIcon, provName.ToLower());
                                         thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
                                     }
                                 }

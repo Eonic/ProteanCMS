@@ -556,7 +556,7 @@ namespace Protean
 
                         case "PasswordReminder":
                             {
-                                sAdminLayout = "AdminXForm";
+                                sAdminLayout = "Logon";
                                 Cms argmyWeb = myWeb;
                                 Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                                 IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, moConfig["MembershipProvider"]);
@@ -583,7 +583,7 @@ namespace Protean
                             }
                         case "AR":
                             {
-                                sAdminLayout = "AdminXForm";
+                                sAdminLayout = "Logon";
                                 Cms argmyWeb2 = myWeb;
                                 Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                                 IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb2, moConfig["MembershipProvider"]);

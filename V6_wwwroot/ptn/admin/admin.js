@@ -9,11 +9,13 @@
     Array.prototype.slice.call(forms)
         .forEach(function (form) {
             form.addEventListener('submit', function (event) {
+                if (skipValidation = false) { 
                 if (!form.checkValidity()) {
                     event.preventDefault()
                     event.stopPropagation()
                 }
-                form.classList.add('was-validated')
+                    form.classList.add('was-validated')
+                }
             }, false)
         })
 })()
@@ -377,6 +379,16 @@ $(document).ready(function () {
     prepareAjaxModals()
 
 });
+
+// Skip validation for auth logon.
+$(document).ready(function () {
+
+    // Detect click on AuthProvider button
+    $('[name="AuthProvider"]').on('click', function () {
+        skipValidation = true;
+    });
+});
+
 
 function preparePickImageModal(CurrentModalPath) {
     var treeviewPath = getAdminAjaxTreeViewPath();
