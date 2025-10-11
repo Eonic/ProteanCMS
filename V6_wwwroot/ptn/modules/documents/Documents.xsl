@@ -131,7 +131,7 @@
         <xsl:with-param name="class" select="'listItem documents'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
-      <div class="lIinner">
+      <div class="lIinner position-relative">
         <xsl:if test="$showThumbnail='true'">
           <xsl:apply-templates select="." mode="displayThumbnail"/>
         </xsl:if>
