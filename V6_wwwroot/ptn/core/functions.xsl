@@ -3986,14 +3986,19 @@
           </span>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:apply-templates select="." mode="getDisplayName"/>
+          <xsl:choose>
+            <xsl:when test="$span">
+              <span>
+                <xsl:apply-templates select="." mode="getDisplayName"/>
+              </span>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:apply-templates select="." mode="getDisplayName"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
-
-      <!-- add in aditional span - useful for icons or rounded corners -->
-      <xsl:if test="$span">
-        <span>&#160;</span>
-      </xsl:if>
+    
     </a>
 
   </xsl:template>
@@ -4793,73 +4798,75 @@
             </xsl:when>
             <xsl:otherwise>
               <a class="btn btn-custom {$class}">
-                <xsl:if test="$tabindex!=''">
-                  <xsl:attribute name="tabindex">
-                    <xsl:value-of select="$tabindex"/>
-                    <xsl:text> </xsl:text>
-                  </xsl:attribute>
-                </xsl:if>
-                <xsl:choose>
-                  <xsl:when test="$numbertest = 'number'">
-                    <xsl:variable name="pageId" select="@link"/>
-                    <xsl:attribute name="href">
-                      <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+                <span>
+                  <xsl:if test="$tabindex!=''">
+                    <xsl:attribute name="tabindex">
+                      <xsl:value-of select="$tabindex"/>
+                      <xsl:text> </xsl:text>
                     </xsl:attribute>
-                  </xsl:when>
-                  <xsl:otherwise>
-                    <xsl:choose>
-                      <xsl:when test="contains($link,'#')">
-                        <xsl:attribute name="class">
-                          <xsl:text>btn btn-custom scroll-to-anchor </xsl:text>
-                          <xsl:value-of select="class"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                      </xsl:when>
-                      <xsl:when test="(contains($link,'http') or contains($link,'tel:'))">
-                        <xsl:attribute name="href">
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="rel">external</xsl:attribute>
-                        <xsl:attribute name="target">
-                          <xsl:value-of select="$linkWindow"/>
-                        </xsl:attribute>
-                      </xsl:when>
-                      <xsl:otherwise>
-                        <xsl:attribute name="href">
-                          <xsl:text>http://</xsl:text>
-                          <xsl:value-of select="$link"/>
-                        </xsl:attribute>
-                        <xsl:attribute name="rel">external</xsl:attribute>
-                        <xsl:attribute name="target">
-                          <xsl:value-of select="$linkWindow"/>
-                        </xsl:attribute>
-                      </xsl:otherwise>
-                    </xsl:choose>
+                  </xsl:if>
+                  <xsl:choose>
+                    <xsl:when test="$numbertest = 'number'">
+                      <xsl:variable name="pageId" select="@link"/>
+                      <xsl:attribute name="href">
+                        <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
+                      </xsl:attribute>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:choose>
+                        <xsl:when test="contains($link,'#')">
+                          <xsl:attribute name="class">
+                            <xsl:text>btn btn-custom scroll-to-anchor </xsl:text>
+                            <xsl:value-of select="class"/>
+                          </xsl:attribute>
+                          <xsl:attribute name="href">
+                            <xsl:value-of select="$link"/>
+                          </xsl:attribute>
+                        </xsl:when>
+                        <xsl:when test="(contains($link,'http') or contains($link,'tel:'))">
+                          <xsl:attribute name="href">
+                            <xsl:value-of select="$link"/>
+                          </xsl:attribute>
+                          <xsl:attribute name="rel">external</xsl:attribute>
+                          <xsl:attribute name="target">
+                            <xsl:value-of select="$linkWindow"/>
+                          </xsl:attribute>
+                        </xsl:when>
+                        <xsl:otherwise>
+                          <xsl:attribute name="href">
+                            <xsl:text>http://</xsl:text>
+                            <xsl:value-of select="$link"/>
+                          </xsl:attribute>
+                          <xsl:attribute name="rel">external</xsl:attribute>
+                          <xsl:attribute name="target">
+                            <xsl:value-of select="$linkWindow"/>
+                          </xsl:attribute>
+                        </xsl:otherwise>
+                      </xsl:choose>
 
-                  </xsl:otherwise>
-                </xsl:choose>
-                <xsl:if test="$stretchLink='true'">
-                  <xsl:attribute name="class">
-                    <xsl:if test="not($accessibleText='true')">btn btn-custom </xsl:if>
-                    <xsl:text> stretched-link</xsl:text>
-                  </xsl:attribute>
-                  <xsl:if test="$stretchLink='true'"></xsl:if>
-                  <span class="visually-hidden">
+                    </xsl:otherwise>
+                  </xsl:choose>
+                  <xsl:if test="$stretchLink='true'">
+                    <xsl:attribute name="class">
+                      <xsl:if test="not($accessibleText='true')">btn btn-custom </xsl:if>
+                      <xsl:text> stretched-link</xsl:text>
+                    </xsl:attribute>
+                    <xsl:if test="$stretchLink='true'"></xsl:if>
+                    <span class="visually-hidden">
+                      <xsl:value-of select="@linkText"/>
+                    </span>
+                  </xsl:if>
+                  <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+                    <xsl:attribute name="onclick">
+                      <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                      <xsl:value-of select="$link"/>
+                      <xsl:text>');</xsl:text>
+                    </xsl:attribute>
+                  </xsl:if>
+                  <xsl:if test="not(@accessibleText='true')">
                     <xsl:value-of select="@linkText"/>
-                  </span>
-                </xsl:if>
-                <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
-                  <xsl:attribute name="onclick">
-                    <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-                    <xsl:value-of select="$link"/>
-                    <xsl:text>');</xsl:text>
-                  </xsl:attribute>
-                </xsl:if>
-                <xsl:if test="not(@accessibleText='true')">
-                  <xsl:value-of select="@linkText"/>
-                </xsl:if>
+                  </xsl:if>
+                </span>
               </a>
             </xsl:otherwise>
           </xsl:choose>
