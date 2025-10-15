@@ -44,6 +44,61 @@
   </xsl:template>
 
 
+	<xsl:template match="Content[@moduleType='2columns5050']" mode="writeNodes">
+		<xsl:element name="{name()}">
+			<!-- process attributes -->
+			<xsl:for-each select="@*">
+				<!-- remove attribute prefix (if any) -->
+				<xsl:choose>
+					<xsl:when test="name()='moduleType'">
+						<xsl:attribute name="{name()}">
+							<xsl:text>MultiColumn</xsl:text>
+						</xsl:attribute>
+						<xsl:attribute name="colType">
+							<xsl:text>true</xsl:text>
+						</xsl:attribute>
+						<xsl:if test="name()='xsCol'">
+							<!--Extra small means screens under 576px wide-->
+							<xsl:attribute name="{name()}">
+							
+							</xsl:attribute>
+						</xsl:if>
+							<xsl:if test="name()='smCol'">
+							<!--Small screens are 576px-767px-->
+							<xsl:attribute name="{name()}">
+								<xsl:value-of select="@xsCol"/>
+							</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="name()='mdCol'">
+							<!--Medium screens are 768px-991px-->
+							<xsl:attribute name="{name()}">
+								<xsl:value-of select="@smCol"/>
+							</xsl:attribute>
+						</xsl:if>
+							<xsl:if test="name()='lgCol'">
+							<!--Large screens are 992px-1199px-->
+							<xsl:attribute name="{name()}">
+								<xsl:value-of select="@mdCol"/>
+							</xsl:attribute>
+						</xsl:if>
+						<xsl:if test="name()='xlCol'">
+							<!--Extra large screens are 1200px-1399px-->
+							<xsl:attribute name="{name()}">
+								<xsl:value-of select="@lgCol"/>
+							</xsl:attribute>
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:attribute name="{name()}">
+							<xsl:value-of select="." />
+						</xsl:attribute>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:for-each>
+			<xsl:apply-templates mode="writeNodes"/>
+		</xsl:element>
+	</xsl:template>
+	
 
   <xsl:template match="Content" mode="writeNodes">
 	  <xsl:element name="{name()}">
