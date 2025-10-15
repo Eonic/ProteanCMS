@@ -8403,7 +8403,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "validateUser", ex, cProcessInfo));
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "User", ex, cProcessInfo));
                     return null;
                 }
 
