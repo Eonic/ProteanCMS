@@ -4106,7 +4106,7 @@
 	<!-- ========================== CONTROL : INPUT HIDDEN ========================== -->
 	<!-- -->
 
-	<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform">
+	<!--<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform">
 		<xsl:variable name="ref">
 			<xsl:apply-templates select="." mode="getRefOrBind"/>
 		</xsl:variable>
@@ -4133,7 +4133,45 @@
 		<script src="https://www.google.com/recaptcha/api.js" async="" defer="">
 			<xsl:text> </xsl:text>
 		</script>
+	</xsl:template>-->
+	
+	<!--ReCaptchaV3 template Handles rendering of the hidden field + JS -->
+	<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform">
+		<!-- Get reCAPTCHA site key from config -->
+		<xsl:variable name="recaptchaKey">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<!-- Hidden input for reCAPTCHA token -->
+		<input type="hidden" name="g-recaptcha-response" id="recaptcha-token" class="recaptcha" />
+
+		<!-- Load reCAPTCHA v3 JS -->
+		<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}"></script>
+
+		<script>
+			window.addEventListener('load', function() {
+			var hiddenInput = document.getElementById('recaptcha-token');
+			var form = hiddenInput.closest('form');
+
+			form.addEventListener('submit', function(e) {
+			e.preventDefault(); // stop submit until token is ready
+
+			grecaptcha.ready(function() {
+			grecaptcha.execute('<xsl:value-of select="$recaptchaKey"/>', { action: 'submit' })
+			.then(function(token) {
+			hiddenInput.value = token; // set token in hidden input
+			form.submit(); // submit form immediately after token is set
+			});
+			});
+			});
+			});
+		</script>
 	</xsl:template>
+
+
 
 	<xsl:template match="input[contains(@class,'telephone')]" mode="xform_control">
 		<xsl:variable name="label_low">

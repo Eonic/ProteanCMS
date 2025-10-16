@@ -4449,9 +4449,33 @@
         <xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
       </xsl:call-template>
     </xsl:variable>
-    <div class="g-recaptcha" data-sitekey="{$key}">
+    <!--<div class="g-recaptcha" data-sitekey="{$key}">
       <xsl:text> </xsl:text>
-    </div>
+    </div>-->
+	  <!-- Hidden input for reCAPTCHA token -->
+	  <input type="hidden" name="g-recaptcha-response" id="recaptcha-token" class="recaptcha" />
+
+	  <!-- Load reCAPTCHA v3 JS -->
+	  <script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}"></script>
+
+	  <script>
+		  window.addEventListener('load', function() {
+		  var hiddenInput = document.getElementById('recaptcha-token');
+		  var form = hiddenInput.closest('form');
+
+		  form.addEventListener('submit', function(e) {
+		  e.preventDefault(); // stop submit until token is ready
+
+		  grecaptcha.ready(function() {
+		  grecaptcha.execute('<xsl:value-of select="$recaptchaKey"/>', { action: 'submit' })
+		  .then(function(token) {
+		  hiddenInput.value = token; // set token in hidden input
+		  form.submit(); // submit form immediately after token is set
+		  });
+		  });
+		  });
+		  });
+	  </script>
   </xsl:template>
 
   <xsl:template match="Content[descendant::input[contains(@class,'recaptcha')]]" mode="contentJS">

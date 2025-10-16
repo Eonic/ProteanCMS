@@ -771,17 +771,43 @@ namespace Protean
                     {
 
                         System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-                        var recap = new Tools.RecaptchaV2.Recaptcha(moConfig["ReCaptchaKey"], moConfig["ReCaptchaKeySecret"]);
-                        var recapResult = recap.Validate(goRequest["g-recaptcha-response"], moConfig["ReCaptchaKeySecret"]);
+                        //var recap = new Tools.RecaptchaV2.Recaptcha(moConfig["ReCaptchaKey"], moConfig["ReCaptchaKeySecret"]);
+                        //var recapResult = recap.Validate(goRequest["g-recaptcha-response"], moConfig["ReCaptchaKeySecret"]);
 
-                        if (Conversions.ToBoolean(Operators.OrObject(recapResult.Succeeded, Operators.ConditionalCompareObjectEqual(goSession["recaptcha"], 1, false))))
+                        //if (Conversions.ToBoolean(Operators.OrObject(recapResult.Succeeded, Operators.ConditionalCompareObjectEqual(goSession["recaptcha"], 1, false))))
+                        //{
+                        //    cValidationError = "";
+                        //    bIsValid = true;
+                        //    goSession["recaptcha"] = 1;
+                        //    missedError = false;
+                        //}
+
+                        // Create Recaptcha instance (no parameters needed for v3)
+                        var recap = new Tools.RecaptchaV3.Recaptcha();
+                        // Validate token from client-side
+                        bool isHuman = recap.Validate(goRequest["g-recaptcha-response"], "submit", 0.5);
+
+                        // Check if human or already passed in session
+                        if (isHuman || Conversions.ToBoolean(goSession["recaptcha"] ?? 0))
                         {
                             cValidationError = "";
                             bIsValid = true;
                             goSession["recaptcha"] = 1;
                             missedError = false;
                         }
+                        else
+                        {
+                            // optionally set validation error
+                            cValidationError = "Please complete the CAPTCHA challenge.";
+                            bIsValid = false;
+                        }
 
+                    }
+                    else
+                    {
+                        // optionally set validation error
+                        cValidationError = "Please complete the CAPTCHA challenge.";
+                        bIsValid = false;
                     }
                 }
 
