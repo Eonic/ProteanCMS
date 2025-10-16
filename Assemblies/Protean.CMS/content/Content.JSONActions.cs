@@ -599,7 +599,7 @@ namespace Protean
                 {
                     string jsonResult = string.Empty;
                     XmlElement cReviewNode = myWeb.moPageXml.CreateElement("GoogleReview");
-                   
+
                     try
                     {
                         string cGoogleReviewAPIKey = string.Empty;
@@ -611,109 +611,114 @@ namespace Protean
 
                         if (!string.IsNullOrEmpty(cGoogleReviewAPIKey))
                         {
-                            var request = WebRequest.Create(cGoogleReviewAPIKey);
-                            using (var response = request.GetResponse())
+                            if (moWebConfig["PlaceId"] != null && moWebConfig["PlaceId"] != "" && moWebConfig["GoogleReviewAPIKey"] != null && moWebConfig["GoogleReviewAPIKey"] != "")
                             {
-                                if (response != null)
+
+                                string cUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + moWebConfig["PlaceId"].ToString() + "& fields=name,rating,reviews&key=" + moWebConfig["GoogleReviewAPIKey"].ToString();
+                                var request = WebRequest.Create(cUrl);
+                                using (var response = request.GetResponse())
                                 {
-                                    using (var content = response.GetResponseStream())
-                                    using (var reader = new StreamReader(content))
+                                    if (response != null)
                                     {
-                                        var jsonString = reader.ReadToEnd();
-
-                                        var json = JObject.Parse(jsonString);
-                                        var reviews = json["result"]?["reviews"];
-                                        if (reviews == null) return "";
-                                       
-
-
-                                        foreach (var r in reviews)
+                                        using (var content = response.GetResponseStream())
+                                        using (var reader = new StreamReader(content))
                                         {
-                                            XmlElement cContentNode = myWeb.moPageXml.CreateElement("Content");
+                                            var jsonString = reader.ReadToEnd();
 
-                                            cContentNode.SetAttribute("id", "");
-                                            cContentNode.SetAttribute("ref", "");
-                                            cContentNode.SetAttribute("name", r["author_name"]?.ToString() ?? "");
-                                            cContentNode.SetAttribute("type", "Review");
-                                            cContentNode.SetAttribute("status", "1");
-                                            cContentNode.SetAttribute("publish", "");
-                                            cContentNode.SetAttribute("owner", "0");
-                                            cContentNode.SetAttribute("parId", myApi.mnPageId.ToString());
-                                            cContentNode.SetAttribute("showRelated", "Tag");
-                                            cContentNode.SetAttribute("Intro", "");
-                                            cContentNode.SetAttribute("rtype", "");
+                                            var json = JObject.Parse(jsonString);
+                                            var reviews = json["result"]?["reviews"];
+                                            if (reviews == null) return "";
 
-                                            XmlElement reviewer = myWeb.moPageXml.CreateElement("Reviewer");
-                                            reviewer.InnerText = r["author_name"]?.ToString() ?? "";
 
-                                            XmlElement reviewDate = myWeb.moPageXml.CreateElement("ReviewDate");
-                                            reviewDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
 
-                                            XmlElement url = myWeb.moPageXml.CreateElement("Url");
-                                            url.InnerText = r["author_url"]?.ToString() ?? "";
-
-                                            XmlElement summary = myWeb.moPageXml.CreateElement("Summary");
-                                            summary.InnerText = r["text"]?.ToString() ?? "";
-
-                                            XmlElement description = myWeb.moPageXml.CreateElement("Description");
-                                            description.InnerText = r["text"]?.ToString() ?? "";
-
-                                            XmlElement rating = myWeb.moPageXml.CreateElement("Rating");
-                                            rating.InnerText = r["rating"]?.ToString() ?? "";
-                                            //Image
-                                            XmlElement images = myWeb.moPageXml.CreateElement("Images");
-                                            string profilePhotoUrl = r["profile_photo_url"]?.ToString();
-                                            if (!string.IsNullOrEmpty(profilePhotoUrl))
+                                            foreach (var r in reviews)
                                             {
-                                                XmlElement imgThumb = myWeb.moPageXml.CreateElement("img");
-                                                imgThumb.SetAttribute("src", profilePhotoUrl);
-                                                imgThumb.SetAttribute("width", "80");
-                                                imgThumb.SetAttribute("height", "80");
-                                                imgThumb.SetAttribute("alt", "");
-                                                imgThumb.SetAttribute("class", "thumbnail");
-                                                imgThumb.SetAttribute("type", "thumbnail");
-                                                images.AppendChild(imgThumb);
+                                                XmlElement cContentNode = myWeb.moPageXml.CreateElement("Content");
+
+                                                cContentNode.SetAttribute("id", "");
+                                                cContentNode.SetAttribute("ref", "");
+                                                cContentNode.SetAttribute("name", r["author_name"]?.ToString() ?? "");
+                                                cContentNode.SetAttribute("type", "Review");
+                                                cContentNode.SetAttribute("status", "1");
+                                                cContentNode.SetAttribute("publish", "");
+                                                cContentNode.SetAttribute("owner", "0");
+                                                cContentNode.SetAttribute("parId", myApi.mnPageId.ToString());
+                                                cContentNode.SetAttribute("showRelated", "Tag");
+                                                cContentNode.SetAttribute("Intro", "");
+                                                cContentNode.SetAttribute("rtype", "");
+
+                                                XmlElement reviewer = myWeb.moPageXml.CreateElement("Reviewer");
+                                                reviewer.InnerText = r["author_name"]?.ToString() ?? "";
+
+                                                XmlElement reviewDate = myWeb.moPageXml.CreateElement("ReviewDate");
+                                                reviewDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
+
+                                                XmlElement url = myWeb.moPageXml.CreateElement("Url");
+                                                url.InnerText = r["author_url"]?.ToString() ?? "";
+
+                                                XmlElement summary = myWeb.moPageXml.CreateElement("Summary");
+                                                summary.InnerText = r["text"]?.ToString() ?? "";
+
+                                                XmlElement description = myWeb.moPageXml.CreateElement("Description");
+                                                description.InnerText = r["text"]?.ToString() ?? "";
+
+                                                XmlElement rating = myWeb.moPageXml.CreateElement("Rating");
+                                                rating.InnerText = r["rating"]?.ToString() ?? "";
+                                                //Image
+                                                XmlElement images = myWeb.moPageXml.CreateElement("Images");
+                                                string profilePhotoUrl = r["profile_photo_url"]?.ToString();
+                                                if (!string.IsNullOrEmpty(profilePhotoUrl))
+                                                {
+                                                    XmlElement imgThumb = myWeb.moPageXml.CreateElement("img");
+                                                    imgThumb.SetAttribute("src", profilePhotoUrl);
+                                                    imgThumb.SetAttribute("width", "80");
+                                                    imgThumb.SetAttribute("height", "80");
+                                                    imgThumb.SetAttribute("alt", "");
+                                                    imgThumb.SetAttribute("class", "thumbnail");
+                                                    imgThumb.SetAttribute("type", "thumbnail");
+                                                    images.AppendChild(imgThumb);
+                                                }
+
+                                                XmlElement path = myWeb.moPageXml.CreateElement("Path");
+                                                XmlElement emailSent = myWeb.moPageXml.CreateElement("EmailSent");
+                                                emailSent.InnerText = "False";
+                                                XmlElement showImage = myWeb.moPageXml.CreateElement("ShowImage");
+                                                showImage.InnerText = string.IsNullOrEmpty(profilePhotoUrl) ? "False" : "True";
+                                                XmlElement topReview = myWeb.moPageXml.CreateElement("TopReview");
+                                                XmlElement reviewSinceDate = myWeb.moPageXml.CreateElement("reviewSinceDate");
+                                                reviewSinceDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
+
+                                                cContentNode.AppendChild(reviewer);
+                                                cContentNode.AppendChild(reviewDate);
+                                                cContentNode.AppendChild(url);
+                                                cContentNode.AppendChild(summary);
+                                                cContentNode.AppendChild(description);
+                                                cContentNode.AppendChild(rating);
+                                                cContentNode.AppendChild(images);
+                                                cContentNode.AppendChild(path);
+                                                cContentNode.AppendChild(emailSent);
+                                                cContentNode.AppendChild(showImage);
+                                                cContentNode.AppendChild(topReview);
+                                                cContentNode.AppendChild(reviewSinceDate);
+                                                cReviewNode.AppendChild(cContentNode);
                                             }
-
-                                            XmlElement path = myWeb.moPageXml.CreateElement("Path");
-                                            XmlElement emailSent = myWeb.moPageXml.CreateElement("EmailSent");
-                                            emailSent.InnerText = "False";
-                                            XmlElement showImage = myWeb.moPageXml.CreateElement("ShowImage");
-                                            showImage.InnerText = string.IsNullOrEmpty(profilePhotoUrl) ? "False" : "True";
-                                            XmlElement topReview = myWeb.moPageXml.CreateElement("TopReview");
-                                            XmlElement reviewSinceDate = myWeb.moPageXml.CreateElement("reviewSinceDate");
-                                            reviewSinceDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
-
-                                            cContentNode.AppendChild(reviewer);
-                                            cContentNode.AppendChild(reviewDate);
-                                            cContentNode.AppendChild(url);
-                                            cContentNode.AppendChild(summary);
-                                            cContentNode.AppendChild(description);
-                                            cContentNode.AppendChild(rating);
-                                            cContentNode.AppendChild(images);
-                                            cContentNode.AppendChild(path);
-                                            cContentNode.AppendChild(emailSent);
-                                            cContentNode.AppendChild(showImage);
-                                            cContentNode.AppendChild(topReview);
-                                            cContentNode.AppendChild(reviewSinceDate);
-                                            cReviewNode.AppendChild(cContentNode);
+                                            XmlElement cRatingLimit = myWeb.moPageXml.CreateElement("RatingLimit");
+                                            if (moWebConfig["ReviewRatingLimit"] != null && moWebConfig["ReviewRatingLimit"] != "")
+                                            {
+                                                cRatingLimit.SetAttribute("ratingLimit", moWebConfig["ReviewRatingLimit"].ToString());
+                                            }
+                                            else
+                                            {
+                                                cRatingLimit.SetAttribute("ratingLimit", "0");
+                                            }
+                                            cReviewNode.AppendChild(cRatingLimit);
                                         }
-                                        XmlElement cRatingLimit = myWeb.moPageXml.CreateElement("RatingLimit");
-                                        if (moWebConfig["ReviewRatingLimit"]!=null && moWebConfig["ReviewRatingLimit"] !="")
-                                        {
-                                            cRatingLimit.SetAttribute("ratingLimit", moWebConfig["ReviewRatingLimit"].ToString());
-                                        }
-                                        else
-                                        {
-                                            cRatingLimit.SetAttribute("ratingLimit", "0");
-                                        }
-                                        cReviewNode.AppendChild(cRatingLimit);
                                     }
                                 }
+                                jsonResult = JsonConvert.SerializeXmlNode(cReviewNode, Newtonsoft.Json.Formatting.Indented);
+                                jsonResult = jsonResult.Replace("\"@", "\"_");
+                                return jsonResult;
                             }
-                             jsonResult = JsonConvert.SerializeXmlNode(cReviewNode, Newtonsoft.Json.Formatting.Indented);
-                            jsonResult = jsonResult.Replace("\"@", "\"_");
-                            return jsonResult;
                         }
                     }
                     catch (Exception ex)
