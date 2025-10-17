@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content contentType="Module" moduleType="GoogleReview" box="" title="" link="" linkType="internal" linkText="More reviews" sortBy="Company" order="ascending" cols="1" stepBy="" stepCount="0" display="all" position="" listGroup="true" autoplay="true" autoPlaySpeed="2000" googleReviewAPIUrl=""/>
+					<Content contentType="Module" moduleType="GoogleReview" box="" title="" link="" linkType="internal" linkText="More reviews" sortBy="Company" order="ascending" cols="1" stepBy="" stepCount="0" display="all" position="" listGroup="true" autoplay="true" autoPlaySpeed="2000" googleReviewAPIUrl="Yes"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -80,7 +80,7 @@
 					<label>Title or Name</label>
 				</input>
         <input bind="cgoogleReviewAPIUrl" class="long">
-          <label>Google Review API Url</label>
+          <label>Enable Google Review</label>
         </input>
 			</group>
 			<group class="inline">
