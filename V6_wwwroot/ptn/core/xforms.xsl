@@ -419,6 +419,9 @@
                 </xsl:otherwise>
               </xsl:choose>
               <xsl:apply-templates select="label"/>
+				<xsl:if test="descendant-or-self::alert">
+					&#160;<i class="fa-solid fa-x2 fa-triangle-exclamation text-danger">&#160;</i>
+				</xsl:if>
             </button>
           </li>
         </xsl:for-each>
@@ -740,7 +743,7 @@
               </i>
             </xsl:when>
             <xsl:otherwise>
-              <i class="fa fa-exclamation-circle float-start">
+              <i class="fa fa-exclamation-triangle float-start">
                 <xsl:text> </xsl:text>
               </i>
             </xsl:otherwise>
@@ -1160,7 +1163,7 @@
 
   <xsl:template match="submit[contains(@class,'principle')]" mode="xform">
     <xsl:variable name="class">
-      <xsl:text>btn test </xsl:text>
+      <xsl:text>btn</xsl:text>
       <xsl:if test="not(contains(@class,'btn-'))">
         <xsl:text> btn-custom</xsl:text>
       </xsl:if>
@@ -1508,7 +1511,7 @@
     <xsl:variable name="caseId" select="ancestor::case[last()]/@id" />
     <xsl:variable name="thisCaseValue" select="//toggle[@case=$caseId]/preceding-sibling::value/node()" />
     <xsl:variable name="selectedValue" select="//toggle[@case=$caseId]/ancestor::select1/value" />
-    <xsl:if test="$thisCaseValue!=$selectedValue">
+    <xsl:if test="normalize-space($thisCaseValue)!=normalize-space($selectedValue)">
       <xsl:text>~inactive</xsl:text>
     </xsl:if>
   </xsl:template>
@@ -2490,6 +2493,8 @@
           </xsl:apply-templates>
         </xsl:otherwise>
       </xsl:choose>
+	<xsl:apply-templates select="alert" mode="xform"/>
+		
     </div>
   </xsl:template>
 
@@ -2834,6 +2839,7 @@
         </xsl:otherwise>
 
       </xsl:choose>
+		<xsl:apply-templates select="alert" mode="xform"/>
     </div>
   </xsl:template>
 
@@ -2941,7 +2947,14 @@
           <xsl:attribute name="disabled">disabled</xsl:attribute>
         </xsl:if>
 
-        <!-- Check checkbox should be selected -->
+		  <xsl:if test="contains($class,'required')">
+			  <xsl:if test="count(parent::item)=1">
+			  <xsl:attribute name="required">required</xsl:attribute>
+			  </xsl:if>
+		  </xsl:if>
+
+
+		  <!-- Check checkbox should be selected -->
         <xsl:if test="contains($type,'checkbox')">
           <!-- Run through CSL to see if this should be checked -->
           <xsl:variable name="valueMatch">
@@ -3440,7 +3453,7 @@
           </i>
         </xsl:when>
         <xsl:otherwise>
-          <i class="fa fa-exclamation-circle fa-2x float-start">
+          <i class="fa fa-exclamation-triangle fa-2x float-start">
             <xsl:text> </xsl:text>
           </i>
         </xsl:otherwise>
