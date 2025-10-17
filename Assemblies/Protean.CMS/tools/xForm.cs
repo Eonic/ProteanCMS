@@ -801,14 +801,7 @@ namespace Protean
                             cValidationError = "Please complete the CAPTCHA challenge.";
                             bIsValid = false;
                         }
-
-                    }
-                    else
-                    {
-                        // optionally set validation error
-                        cValidationError = "Please complete the CAPTCHA challenge.";
-                        bIsValid = false;
-                    }
+                    }                    
                 }
 
                 // END HANDLING FOR GOOGLE ReCAPTCHA
