@@ -7,6 +7,8 @@
       <Module type="MembershipPasswordReminder" formPath="passwordreminder" name="Password Reminder" icon="fas fa-user-lock"></Module>
       <Module type="MembershipListUsers"  formPath="listusers" name="List users" icon="fas fa-users"></Module>
       <Module type="MembershipUserContacts" formPath="usercontacts" name="List user contacts" icon="fas fa-address-card">Allow a user to list and manage their addresses</Module>
-    </ModuleGroup>
+	  <Module type="MembershipUserContent" formPath="usercontent" name="List user content" icon="fa-solid fa-list">List content added by User</Module>
+
+	</ModuleGroup>
   </ModuleTypes>
 </PageLayouts>
