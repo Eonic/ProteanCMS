@@ -2859,6 +2859,7 @@
 		<xsl:param name="formName"/>
 		<xsl:param name="relationType"/>
 		<xsl:param name="relationDirection"/>
+		<xsl:if test="@rtype=$relationType">
 		<div class="advancedModeRow row" onmouseover="this.className='rowOver row'" onmouseout="this.className='advancedModeRow row'">
 			<xsl:if test="@status=0">
 				<xsl:attribute name="class">advancedModeRow row inactive-related</xsl:attribute>
@@ -2944,6 +2945,7 @@
 
 
 		</div>
+		</xsl:if>
 	</xsl:template>
 
 

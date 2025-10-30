@@ -725,7 +725,7 @@ namespace Protean
                 }
 
                 // Check if we need to send the email
-                if (string.IsNullOrEmpty(goConfig["MailServer"]) | string.IsNullOrEmpty(goConfig["MsGraphTennantId"]))
+                if (string.IsNullOrEmpty(goConfig["MailServer"]) && string.IsNullOrEmpty(goConfig["MsGraphTennantId"]))
                 {
                     return "Mailserver Not Specified.";
                 }
@@ -847,7 +847,7 @@ namespace Protean
                         // Send direct
                         try
                         {
-                            if (goConfig["MsGraphTennantId"] != "") { 
+                            if (!string.IsNullOrEmpty(goConfig["MsGraphTennantId"])) { 
                                 
                                 var graphClient = new Protean.Tools.GraphMailClient(goConfig["MsGraphClientId"], goConfig["MsGraphClientSecret"], goConfig["MsGraphTennantId"]);
 
