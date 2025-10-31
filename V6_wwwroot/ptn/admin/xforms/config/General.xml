@@ -93,6 +93,9 @@
         <add key="DisableServerSenderEmail" value="" />
  	    <add key="ExcludeFoldersFromPaths" value="header,footer" />
 		<add key="MenuContentCountTypes" value="" />
+		  <add key="MsGraphTennantId" value="" />
+		  <add key="MsGraphClientId" value="" />
+		  <add key="MsGraphClientSecret" value="" />
 		  
 	  </web> 
     </instance> 

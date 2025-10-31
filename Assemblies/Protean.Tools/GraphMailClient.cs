@@ -5,6 +5,7 @@ using Microsoft.Identity.Client;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -21,6 +22,7 @@ namespace Protean.Tools
         private readonly string _accessToken;
 
         public string sendFromAcct;
+        public string errorMsg;
 
         public GraphMailClient(string clientId, string clientSecret, string tenantId)
         {
@@ -46,9 +48,20 @@ namespace Protean.Tools
 
         public void SendMail(MailMessage smtpMessage)
         {
+            try {
             var graphMessage = ConvertToGraphMessage(smtpMessage);
             string senderEmail = smtpMessage.From.Address;
-            SendGraphMessage(graphMessage, senderEmail);
+            SendGraphMessage(graphMessage, senderEmail);  
+            }
+            catch (Exception ex)
+            {
+
+                errorMsg = ex.Message;
+                // if (gbDebug)
+                // {
+                //     returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
+                // }
+            }
         }
 
         private object ConvertToGraphMessage(MailMessage smtpMessage)
