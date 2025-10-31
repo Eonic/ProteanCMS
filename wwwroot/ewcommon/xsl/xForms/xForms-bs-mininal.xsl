@@ -4147,12 +4147,27 @@
 
 		<!-- Hidden input for reCAPTCHA token -->
 		<input type="hidden" name="g-recaptcha-response" id="recaptcha-token" class="recaptcha" />
+		
+	</xsl:template>
 
+<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform_control_script">
+		<!-- Get reCAPTCHA site key from config -->
+		<xsl:variable name="recaptchaKey">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		
 		<!-- Load reCAPTCHA v3 JS -->
-		<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}"></script>
+		<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}">
+			<xsl:text> </xsl:text>
+	    </script>
 
 		<script>
-			window.addEventListener('load', function() {
+			
+			//window.addEventListener('load', function() {
 			var hiddenInput = document.getElementById('recaptcha-token');
 			var form = hiddenInput.closest('form');
 
@@ -4167,11 +4182,9 @@
 			});
 			});
 			});
-			});
+			//});
 		</script>
 	</xsl:template>
-
-
 
 	<xsl:template match="input[contains(@class,'telephone')]" mode="xform_control">
 		<xsl:variable name="label_low">
