@@ -94,12 +94,13 @@
 
   <xsl:template match="Page" mode="xform_control_scripts">
     <script type="text/javascript">
-		initialiseXforms();
+		//initialiseXforms();
+		$('form.xform').prepareXform();
 	</script>
 	  
       <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>
       <xsl:apply-templates select="descendant-or-self::input[contains(@class,'calendar')]" mode="xform_control_script"/>
-		<xsl:apply-templates select="descendant-or-self::input[contains(@class,'userUploadImage')]" mode="xform_control_script"/>
+	 <xsl:apply-templates select="descendant-or-self::input[contains(@class,'userUploadImage')]" mode="xform_control_script"/>
    
     <style>
       .datepicker {

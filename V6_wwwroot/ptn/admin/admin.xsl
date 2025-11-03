@@ -5258,6 +5258,11 @@ $(document).ready(function () {
               <xsl:text> </xsl:text>Activity
             </a>
           </xsl:if>
+			<a href="{$appPath}?ewCmd=ListUserContent&amp;dirId={@id}" class="btn btn-sm btn-outline-primary">
+				<i class="fa fa-user-secret fa-white">
+					<xsl:text> </xsl:text>
+				</i><xsl:text> </xsl:text>User Content
+			</a>
           <xsl:choose>
             <xsl:when test="Status='0'">
               <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-sm btn-outline-danger">
