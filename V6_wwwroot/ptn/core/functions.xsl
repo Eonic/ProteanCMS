@@ -6248,7 +6248,14 @@
   <xsl:template match="Content[@type='Module']" mode="moduleTitle">
     <xsl:variable name="title">
       <span>
-        <xsl:value-of select="@title"/>
+		  <xsl:choose>
+			  <xsl:when test="Content[@lang!='']">
+				  <xsl:value-of select="Content[@lang=$lang]/@title"/> 
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="@title"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
         <xsl:text> </xsl:text>
       </span>
     </xsl:variable>
@@ -10462,5 +10469,12 @@
     <xsl:copy-of select="ew:GetFilterButtons()"/>
 
   </xsl:template>
+
+	<xsl:template name="GetLatLong">
+		<xsl:param name="address"/>
+		<xsl:if test="$address!=''">
+			<xsl:value-of select="ew:GetLatLong($address)"/>
+		</xsl:if>
+	</xsl:template>
 
 </xsl:stylesheet>

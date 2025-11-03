@@ -150,11 +150,12 @@ form.xform {
 
     .alert-msg {
         padding-left: 40px;
-        .fa{
-            position:absolute;
-            top:20px;
-            left:15px;
-            }
+
+        .fa {
+            position: absolute;
+            top: 20px;
+            left: 15px;
+        }
     }
 
     .from-range-group {
@@ -200,6 +201,7 @@ form.xform {
 
     .tab-content {
         margin-top: -30px;
+        background: $admin-light-gray;
     }
 
     .tab-pane {
