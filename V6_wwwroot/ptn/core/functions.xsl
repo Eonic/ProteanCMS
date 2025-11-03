@@ -4798,14 +4798,12 @@
             </xsl:when>
             <xsl:otherwise>
               <a class="btn btn-custom {$class}">
-                <span>
-                  <xsl:if test="$tabindex!=''">
+				  <xsl:if test="$tabindex!=''">
                     <xsl:attribute name="tabindex">
                       <xsl:value-of select="$tabindex"/>
                       <xsl:text> </xsl:text>
                     </xsl:attribute>
-                  </xsl:if>
-                  <xsl:choose>
+                  </xsl:if> <xsl:choose>
                     <xsl:when test="$numbertest = 'number'">
                       <xsl:variable name="pageId" select="@link"/>
                       <xsl:attribute name="href">
@@ -4845,8 +4843,7 @@
                       </xsl:choose>
 
                     </xsl:otherwise>
-                  </xsl:choose>
-                  <xsl:if test="$stretchLink='true'">
+                  </xsl:choose><xsl:if test="$stretchLink='true'">
                     <xsl:attribute name="class">
                       <xsl:if test="not($accessibleText='true')">btn btn-custom </xsl:if>
                       <xsl:text> stretched-link</xsl:text>
@@ -4855,14 +4852,18 @@
                     <span class="visually-hidden">
                       <xsl:value-of select="@linkText"/>
                     </span>
-                  </xsl:if>
-                  <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+                  </xsl:if>    <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
                     <xsl:attribute name="onclick">
                       <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
                       <xsl:value-of select="$link"/>
                       <xsl:text>');</xsl:text>
                     </xsl:attribute>
                   </xsl:if>
+                <span>
+              
+                 
+                  
+              
                   <xsl:if test="not(@accessibleText='true')">
                     <xsl:value-of select="@linkText"/>
                   </xsl:if>

@@ -24,6 +24,11 @@
         <add key="MailServerUsername" value="" />
         <add key="MailServerPassword" value="" />
         <add key="MailServerSSL" value="" />
+
+		  <add key="MsGraphTennantId" value="" />
+		  <add key="MsGraphClientId" value="" />
+		  <add key="MsGraphClientSecret" value="" />
+		  
         <add key="ImageRootPath" value="/images/" />
         <add key="DocRootPath" value="/docs/" />
         <add key="MediaRootPath" value="/media/" />
@@ -88,6 +93,9 @@
         <add key="DisableServerSenderEmail" value="" />
  	    <add key="ExcludeFoldersFromPaths" value="header,footer" />
 		<add key="MenuContentCountTypes" value="" />
+		  <add key="MsGraphTennantId" value="" />
+		  <add key="MsGraphClientId" value="" />
+		  <add key="MsGraphClientSecret" value="" />
 		  
 	  </web> 
     </instance> 
@@ -113,6 +121,13 @@
     <bind id="ewMediaRootPath" nodeset="web/add[@key='MediaRootPath']/@value" required="true()" type="string" />
     <bind id="ewActivityLogging" nodeset="web/add[@key='ActivityLogging']/@value" required="true()" type="string" />
     <bind id="ewIPLogging" nodeset="web/add[@key='IPLogging']/@value" required="true()" type="string" />
+	 
+	     <bind id="MsGraphTennantId" nodeset="web/add[@key='MsGraphTennantId']/@value" required="false()" type="string" />
+	     <bind id="MsGraphClientId" nodeset="web/add[@key='MsGraphClientId']/@value" required="false()" type="string" />
+	     <bind id="MsGraphClientSecret" nodeset="web/add[@key='MsGraphClientSecret']/@value" required="false()" type="string" />
+	  
+	  
+	  
     <bind id="ewMailserver" nodeset="web/add[@key='MailServer']/@value" required="false()" type="string" />
     <bind id="ewMailserverPort" nodeset="web/add[@key='MailServerPort']/@value" required="false()" type="string" />
     <bind id="ewMailserverUsername" nodeset="web/add[@key='MailServerUsername']/@value" required="false()" type="string" />
@@ -269,8 +284,27 @@
 			    <div class="alert alert-primary">These settings are usually inherited from the hosting provider and only need to be specified if you need a specific mailserver to send for this site.</div>
    
 		</group>
-		<group  class="row row-cols-md-2">
-     <input bind="ewMailserver">
+		<group>
+			 <label>Send via Microsoft 365</label>
+			<div class="alert alert-primary">If the client has an Office 365 domain, the new recommended method is using MS Graph API to send messages.</div>
+			<group  class="row row-cols-md-2"><input bind="MsGraphTennantId">
+				<label>Microsoft Tennant Id</label>
+				<value />
+			</input>
+			<input bind="MsGraphClientId">
+				<label>Microsoft Application Client Id</label>
+				<value />
+			</input>
+			<input bind="MsGraphClientSecret">
+				<label>Microsoft Application Client Secret</label>
+				<value />
+			</input>
+		</group>
+		</group>
+		<group>
+			 <label>Send via SMTP</label>
+				 <group  class="row row-cols-md-2">
+        <input bind="ewMailserver">
         <label>Mailserver</label>
         <value />
       </input>
@@ -280,10 +314,6 @@
       </input>
       <input bind="ewMailserverPort">
         <label>Mailserver Port</label>
-        <value />
-      </input>
-      <input bind="ewMailserverUsername">
-        <label>Mailserver Username</label>
         <value />
       </input>
       <input bind="ewMailserverPassword">
@@ -302,6 +332,15 @@
         </item>
         <value>on</value>
       </select1>
+					 </group>
+			</group>
+		<group>
+			 <label>General Email Settings</label>
+				 <group  class="row row-cols-md-2">
+					       <input bind="ewMailserverUsername">
+        <label>Mailserver Username</label>
+        <value />
+      </input>
       <input bind="ewSiteAdminName">
         <label>Webmaster Email Name</label>
         <value></value>
@@ -359,6 +398,7 @@
 				</item>
 				<value />
 			</select1>
+			</group>
 			</group>
     </group>
     <group ref="Analytics" class="inline">

@@ -1198,6 +1198,10 @@ namespace Protean.Tools
                 sString = sString.Replace("&amp;rsquo;", "&#8217;");
                 sString = sString.Replace("&amp;ldquo;", "&#8220;");
                 sString = sString.Replace("&amp;rdquo;", "&#8221;");
+                sString = sString.Replace("&amp;quot;", "&#34;");
+                sString = sString.Replace("&amp;deg;", "&#176;");
+                sString = sString.Replace("&amp;pound;", "&#163;");
+
 
                 sString = sString.Replace("&amp;amp;", "&#38;");
                 sString = sString.Replace("&amp;nbsp;", "&#160;");
