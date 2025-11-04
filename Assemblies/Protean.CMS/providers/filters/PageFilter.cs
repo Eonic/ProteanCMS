@@ -1,10 +1,12 @@
 using Protean.Providers.Filter;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 
 
 using System.Data.SqlClient;
+using System.Linq;
 using System.Xml;
 
 namespace Protean.Providers
@@ -47,7 +49,12 @@ namespace Protean.Providers
                     }
                     if (aWeb.moRequest.Form["PageFilter"] != null)
                     {
-                        oXml.InnerText = Convert.ToString(aWeb.moRequest.Form["PageFilter"]);
+
+                        string cpageIds = Convert.ToString(aWeb.moRequest.Form["PageFilter"]);
+
+                        List<string> uniques = cpageIds.Split(',').Distinct().ToList();//(string[])cpageIds.Split(',').Distinct();
+
+                        oXml.InnerText = string.Join(",", uniques);// Convert.ToString(aWeb.moRequest.Form["PageFilter"]);
 
                     }
 
@@ -86,9 +93,7 @@ namespace Protean.Providers
                         arrParams.Add("FilterTarget", cFilterTarget);
                     }
 
-                    // arrParams = null;
-                    //  sSql = sSql + $" @FilterTarget = '{cFilterTarget}', @PageId = null, @whereSQL = '{cWhereSql}' ";
-
+                   
                     using (SqlDataReader oDr = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams))  // Done by nita on 6/7/22
                     {
                         // Adding controls to the form like dropdown, radiobuttons
@@ -96,17 +101,7 @@ namespace Protean.Providers
                         {
                            pageFilterSelect = oXform.addSelect(ref oPageGroup, "PageFilter", false, sCotrolDisplayName, "checkbox SubmitPageFilter", Protean.xForm.ApperanceTypes.Full);
 
-                            //if (!string.IsNullOrEmpty(oXml.InnerText))
-                            //{
-
-                            //    pageFilterSelect = oXform.addSelect(ref oPageGroup, "PageFilter", false, sCotrolDisplayName, "checkbox SubmitPageFilter filter-selected", Protean.xForm.ApperanceTypes.Full);
-                            //}
-                            //else
-                            //{
-                            //    pageFilterSelect = oXform.addSelect(ref oPageGroup, "PageFilter", false, sCotrolDisplayName, "checkbox SubmitPageFilter", Protean.xForm.ApperanceTypes.Full);
-                            //}
-
-                            // oXform.addOptionsFromSqlDataReader(pageFilterSelect, oDr, "name", "nStructKey")
+                            
                             while (oDr.Read())
                             {
                                 string name = Convert.ToString(oDr["cStructName"]) + " <span class='badge ms-2' id='ProductCount'>" + Convert.ToString(oDr["ContentCount"]) + "</span>";
@@ -126,7 +121,7 @@ namespace Protean.Providers
                             string sText;
                             // Dim sValue As String
                             int cnt;
-                            string[] aPages = oXml.InnerText.Split(',');
+                            string[] aPages = oXml.InnerText.Split(',').Distinct().ToArray();
                             if (aPages.Length != 0 & aPages.Length != default)
                             {
                                 var loopTo = aPages.Length - 1;
@@ -172,7 +167,13 @@ namespace Protean.Providers
 
                     if (oXform.Instance.SelectSingleNode("PageFilter") != null)
                     {
-                        cPageIds = oXform.Instance.SelectSingleNode("PageFilter").InnerText;
+                        string cpageIds = oXform.Instance.SelectSingleNode("PageFilter").InnerText;
+
+                        List<string> uniques = cpageIds.Split(',').Distinct().ToList();//(string[])cpageIds.Split(',').Distinct();
+
+                        //oXml.InnerText = string.Join(",", uniques);
+
+                        cPageIds = string.Join(",", uniques); ;//oXform.Instance.SelectSingleNode("PageFilter").InnerText;
 
                     }
 
@@ -210,8 +211,13 @@ namespace Protean.Providers
                 {
                     if (aWeb.moRequest.Form["PageFilter"] != null)
                     {
+                        string cpageIds = Convert.ToString(aWeb.moRequest.Form["PageFilter"]);
+
+                        List<string> uniques = cpageIds.Split(',').Distinct().ToList();
+
+                        cPageIds=string.Join(",", uniques);
                         // cWhereSql = cWhereSql & "  nStructId IN(" + aWeb.moRequest.Form("PageFilter") & ")"
-                        cWhereSql = cWhereSql + " nStructId IN (select nStructKey from tblContentStructure where (nStructKey in ( " + aWeb.moRequest.Form["PageFilter"] + ") OR nStructParId in ( " + aWeb.moRequest.Form["PageFilter"] + "))	)";
+                        cWhereSql = cWhereSql + " nStructId IN (select nStructKey from tblContentStructure where (nStructKey in ( " + cPageIds + ") OR nStructParId in ( " + aWeb.moRequest.Form["PageFilter"] + "))	)";
 
                     }
                 }

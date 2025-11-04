@@ -198,8 +198,12 @@ namespace Protean.Providers
 
             public string GetAuthenticationURL(string ProviderName)
             {
-                string gcEwBaseUrl = moCartConfig["SecureURL"].TrimEnd('/');
-                return GetSamlLoginUrl(config["ssoUrl"].ToString(), "ProteanCMS", gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
+                string gcEwBaseUrl = "https://" + _myWeb.moRequest.ServerVariables["HTTP_HOST"];
+                string appId = "ProteanCMS";
+                if (config["AppID"].ToString() != "") {
+                    appId = config["AppID"].ToString();
+                }
+                return GetSamlLoginUrl(config["ssoUrl"].ToString(), appId, gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
             }
             //check ACS URL in google account- here need to pass exactly same
             // issuer = Entity ID in google account

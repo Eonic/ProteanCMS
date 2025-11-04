@@ -477,10 +477,16 @@ section:not(.bg-light) .bg-light {
 @mixin section-contrast($color: $dark) {
     color: color-contrast($color);
 
+    a,
+    .title a {
+        color: color-contrast($color);
+    }
+
     h1, h2, h3, h4, h5, h6 {
         color: color-contrast($color);
 
-        a {
+        a,
+        .title a {
             color: color-contrast($color);
         }
     }

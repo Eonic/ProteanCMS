@@ -149,7 +149,12 @@ form.xform {
     }
 
     .alert-msg {
-        padding-left: 50px;
+        padding-left: 40px;
+        .fa{
+            position:absolute;
+            top:20px;
+            left:15px;
+            }
     }
 
     .from-range-group {
@@ -299,11 +304,27 @@ form.xform {
         z-index: 3;
     }
 
+    button[name="UserLogon"]:after {
+        font-family: "Font Awesome 6 Free";
+        content: '\f2f6';
+        font-weight: 900;
+        padding-left: 5px;
+        position: relative;
+        font-size: 90%;
+        float: right;
+    }
 
+    .btn-google:before {
+        font-family: "Font Awesome 6 Brands";
+        content: '\f1a0';
+        padding-left: 5px;
+        position: relative;
+        font-size: 90%;
+    }
 
 
     .btn-google:before {
-        font-family: "Font Awesome 6 Free";
+        font-family: "Font Awesome 6 Brands";
         content: '\f1a0';
         padding-left: 5px;
         position: relative;
@@ -311,8 +332,8 @@ form.xform {
     }
 
     .btn-microsoft:before {
-        font-family: "Font Awesome 6 Free";
-        content: '\f17a';
+        font-family: "Font Awesome 6 Brands";
+        content: '\f3ca';
         padding-left: 5px;
         position: relative;
         font-size: 90%;

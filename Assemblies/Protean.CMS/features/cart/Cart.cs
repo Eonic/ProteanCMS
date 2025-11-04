@@ -495,7 +495,7 @@ namespace Protean
             protected internal Cms myWeb;
             //This constructor is added for testing purpose
             public Cart()
-            {               
+            {
                 mcCurrencySymbol = "£";
                 mcCurrency = "GBP";
                 mcCurrencyRef = "GBP";
@@ -7225,8 +7225,13 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
-                                    nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+                                  
+                                    // Calculate any shipping cost overage
+                                    nShippingCost = Conversions.ToDouble(Strings.FormatNumber(Conversions.ToDouble(oRow["nShippingTotal"]), 2, TriState.True, TriState.False, TriState.False));
+                                    double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
+                                    double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
+                                    double overageWeightMax = Conversions.ToDouble(oRow["nShipOptWeightMax"]);
+                                    nShippingCost = calcShippingCost(nShippingCost, overageUnit, overageRate, nWeight, overageWeightMax);
 
                                     oOptXform.addInput(ref oGrpElmt, "nShipOptKey", false, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"])), "hidden");
                                     oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = Conversions.ToString(oRow["nShipOptKey"]);
@@ -10034,7 +10039,7 @@ namespace Protean
                                         try {
                                             // if we have a badly saved xml we get a new one.
                                             oContent.InnerXml = Conversions.ToString(oDR["cCartXML"]);
-                                        } 
+                                        }
                                         catch (Exception ex)
                                         {
                                             cProcessInfo = ex.Message;
@@ -10362,7 +10367,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartXML", ex,"", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartXML", ex, "", "", gbDebug);
                 }
             }
 
@@ -11192,21 +11197,12 @@ namespace Protean
                         {
 
                             // Calculate any shipping cost overage
-                            double nShippingCost;
-                            nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
-                            nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
-
+                            double nShippingCost = Conversions.ToDouble(Strings.FormatNumber(Conversions.ToDouble(oRow["nShippingTotal"]), 2, TriState.True, TriState.False, TriState.False));
                             double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
                             double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
-                            if (overageUnit > 0)
-                            {
-                                double multiplier = 0;
-                                if (nWeight > Conversions.ToDouble(oRow["nShipOptWeightMax"]))
-                                {
-                                    multiplier = Math.Ceiling(nWeight - Conversions.ToDouble(oRow["nShipOptWeightMax"]));
-                                }
-                                nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
-                            }
+                            double overageWeightMax = Conversions.ToDouble(oRow["nShipOptWeightMax"]);
+                            nShippingCost = calcShippingCost(nShippingCost, overageUnit, overageRate, nWeight, overageWeightMax);
+
                             oRow["nShipOptCost"] = nShippingCost;
 
                             // TODO delete any parent relations /  or remove if allready have child
@@ -11246,6 +11242,31 @@ namespace Protean
 
             }
 
+            private double calcShippingCost(double baseCost, double overageUnit, double overageRate, double nWeight, double nWeightMax) {
+                try
+                {
+                    double nShippingCost = baseCost;
+                nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+
+                if (overageUnit > 0)
+                {
+                    double multiplier = 0;
+                    if (nWeight > nWeightMax)
+                    {
+                        multiplier = Math.Ceiling(nWeight - nWeightMax);
+                    }
+                    nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
+                }
+               
+                return nShippingCost;
+                }
+
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "calcShippingCost", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    return 0;
+                }
+            }
 
             private XmlElement makeShippingOptionsXML()
             {
