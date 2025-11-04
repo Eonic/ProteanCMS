@@ -1,11 +1,14 @@
-﻿using Microsoft.VisualBasic;
+﻿using DocumentFormat.OpenXml.ExtendedProperties;
+using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.DiscountRule;
 using System;
 using System.Collections;
 using System.Data;
+using System.Data.SqlClient;
 using System.Runtime.InteropServices;
 using System.Web.Configuration;
+using System.Windows.Forms;
 using System.Xml;
 using static Protean.stdTools;
 
@@ -238,10 +241,59 @@ namespace Protean
                             // If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
                             // if total crossed more or less than defined range then it will remove promocode for the user.
 
-
-                            // TS: Move to new CheckDiscounts
                             var oDiscountMessage = oCartXML.OwnerDocument.CreateElement("DiscountMessage");
+                            
+                            if (oDsDiscounts != null && oDsDiscounts.Tables["Discount"].Rows.Count > 0 && oDsDiscounts.Tables.Contains("Discount"))
+                            {
+                                //Code to check nUseCount against nUseLimit
+                                bool hasUseCountColumn = myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseCount");
+                                bool hasUseLimitColumn = myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseLimit");
 
+                                // get order date from cart xml
+                                DateTime? orderDate = null; 
+                                string cartId = oCartXML.SelectSingleNode("//Order/@cartId").InnerText;
+                                if (!string.IsNullOrEmpty(cartId))
+                                {
+                                    // ✅ Get order insert date from tblAudit (through tblCartOrder)
+                                    string sql = @"SELECT a.dInsertDate FROM tblCartOrder cto INNER JOIN tblAudit a ON cto.nAuditId = a.nAuditKey WHERE cto.nCartOrderKey = " + cartId;
+                                    orderDate =Convert.ToDateTime(myWeb.moDbHelper.GetDataValue(sql));                                   
+                                }
+                                for (int i = oDsDiscounts.Tables["Discount"].Rows.Count - 1; i >= 0; i--)
+                                {
+                                    DataRow dr = oDsDiscounts.Tables["Discount"].Rows[i];
+                                    int useCount = 0; int useLimit = 0;                                  
+
+                                    if (hasUseCountColumn && dr["nUseCount"] != DBNull.Value)
+                                        useCount = Convert.ToInt32(dr["nUseCount"]);
+
+                                    if (hasUseLimitColumn && dr["nUseLimit"] != DBNull.Value)
+                                        useLimit = Convert.ToInt32(dr["nUseLimit"]);
+
+                                    // Remove if discount has reached its limit
+                                    if (useLimit > 0 && useCount >= useLimit)
+                                    {
+                                        bool allowPromoUse = false;
+                                        // Allow if promo code applied yeasterday and try to proceed order today.
+                                        if (orderDate.HasValue)
+                                        {
+                                            TimeSpan diff = DateTime.Now - orderDate.Value;
+                                            if (diff.TotalMinutes >= 5)
+                                            {
+                                                allowPromoUse = true;
+                                            }
+                                        }
+                                        if (!allowPromoUse)
+                                        {
+                                            // Remove this promo from the dataset
+                                            oDsDiscounts.Tables["Discount"].Rows.Remove(dr);
+                                            oDiscountMessage.InnerXml = "<span class=\"msg-1030\">The promo code you have provided has already been used the maximum number of times.</span>";
+                                            oCartXML.AppendChild(oDiscountMessage);
+                                        }
+                                    }
+                                }
+                            }
+
+                            // TS: Move to new CheckDiscounts                            
                             if (oDsDiscounts != null)
                             {
                                 if (oDsDiscounts.Tables["Discount"].Rows.Count > 0)
@@ -1855,82 +1907,22 @@ namespace Protean
                             }
                             else
                             {
-                                //string additionalInfo = Conversions.ToString(Operators.AddObject(Operators.AddObject("<additionalXml>", oDsDiscounts.Tables["Discount"].Rows[0]["cAdditionalXML"]), "</additionalXml>"));
-                                //doc.LoadXml(additionalInfo);
+                                //Code to check nUseCount against nUseLimit if UseOnce is true
 
-                                //if (doc.InnerXml.Contains("nMinimumOrderValue"))
-                                //{
-                                //    minimumOrderTotal = Conversions.ToDouble("0" + doc.SelectSingleNode("additionalXml").SelectSingleNode("nMinimumOrderValue").InnerText);
-                                //}
-                                //if (doc.InnerXml.Contains("nMaximumOrderValue"))
-                                //{
-                                //    maximumOrderTotal = Conversions.ToDouble("0" + doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText);
-                                //}
-                                //if (doc.InnerXml.Contains("nDiscountMaxPrice"))
-                                //{
-                                //    dMaxPrice = Conversions.ToDouble("0" + doc.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText);
-                                //}
+                                bool hasUseCountColumn = myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseCount");
+                                bool hasUseLimitColumn = myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseLimit");                                
 
-                                //if (doc.InnerXml.Contains("bApplyToOrder"))
-                                //{
-                                //    if (string.IsNullOrEmpty(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText))
-                                //    {
-                                //        applyToTotal = false;
-                                //    }
-                                //    else
-                                //    {
-                                //        applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText);
-                                //    }
+                                foreach (DataRow discountRow in oDsDiscounts.Tables["Discount"].Rows)
+                                {                                   
+                                    int useCount = hasUseCountColumn ? Convert.ToInt32(discountRow["nUseCount"]) : 0;
+                                    int useLimit = hasUseLimitColumn && discountRow["nUseLimit"] != DBNull.Value ? Convert.ToInt32(discountRow["nUseLimit"]) : 0;
 
-                                //    if (maximumOrderTotal != 0d)
-                                //    {
-                                //        if (!(orderTotal >= minimumOrderTotal & orderTotal <= maximumOrderTotal))
-                                //        {
-                                //            oDsDiscounts.Clear();
-                                //            oDsDiscounts = null;
-                                //            return oDiscountMessage;
-                                //        }
-                                //    }
-                                //    if (applyToTotal)
-                                //    {
-                                //        if (maximumOrderTotal != 0d)
-                                //        {
-                                //            if (!(orderTotal >= minimumOrderTotal & orderTotal <= maximumOrderTotal))
-                                //            {
-                                //                oDsDiscounts.Clear();
-                                //                oDsDiscounts = null;
-                                //                return oDiscountMessage;
-                                //            }
-                                //        }
-
-                                //    }
-
-                                //    // check maximum item price value set or not
-                                //    if (dMaxPrice != 0d)
-                                //    {
-                                //        // validate quantity of cart as individual item not total quantity of item purchased
-                                //        nDiscountQuantity = Conversions.ToInteger(Operators.ConcatenateObject("0", oDsDiscounts.Tables["Discount"].Rows[0]["nDiscountMinQuantity"]));
-                                //        dMinPrice = Conversions.ToDouble(Operators.ConcatenateObject("0", oDsDiscounts.Tables["Discount"].Rows[0]["nDiscountMinPrice"]));
-
-                                //        foreach (XmlNode item in docOrder.SelectNodes("Order/Item"))
-                                //        {
-                                //            itemCost = Conversions.ToDouble(item.Attributes["itemTotal"].Value);
-                                //            if (itemCost >= dMinPrice & itemCost <= dMaxPrice)
-                                //            {
-                                //                nCount = nCount + 1;
-                                //            }
-                                //        }
-                                //        if (nCount < nDiscountQuantity)
-                                //        {
-                                //            oDsDiscounts.Clear();
-                                //            oDsDiscounts = null;
-                                //            return oDiscountMessage;
-                                //        }
-                                //    }
-
-                                //}
-                                //oDsDiscounts.Clear();
-                                //oDsDiscounts = null;
+                                    if (useLimit > 0 && useCount >= useLimit)
+                                    {
+                                        // This discount cannot be applied, skip it
+                                        return "The promo code you have provided has already been used the maximum number of times.";
+                                    }
+                                }                                
 
                                 //Add new code modifications for multiple discounts with different types like different price range.
                                 bool validPromoFound = false;
