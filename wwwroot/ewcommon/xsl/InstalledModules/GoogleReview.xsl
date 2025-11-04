@@ -25,16 +25,7 @@
 
   <xsl:template match="Content[@type='Review']" mode="getThWidth-xl">285</xsl:template>
   <xsl:template match="Content[@type='Review']" mode="getThHeight-xl">214</xsl:template>
-  <xsl:template match="/Page" mode="GoogleReviewJs">
-    <xsl:call-template name="bundle-js">
-      <xsl:with-param name="comma-separated-files">
-        <xsl:text>~/ewCommon/js/vuejs/product-vue.js</xsl:text>
-      </xsl:with-param>
-      <xsl:with-param name="bundle-path">
-        <xsl:text>~/Bundles/Cart</xsl:text>
-      </xsl:with-param>
-    </xsl:call-template>
-  </xsl:template>
+
 
 
   <xsl:template match="Content[@type='Module' and @moduleType='GoogleReview']" mode="displayBrief">
@@ -43,11 +34,9 @@
     <input type="hidden" value="{$GoogleAPIUrl}" id="googleAPIUrl"/>
     <div class="product-video">
       <!-- Google Reviews Section -->
-      <div class="Reviews" id="product-reviews" v-if="GoogleReviewResponse !=undefined ">
+      <div class="Reviews" id="product-reviews">
 
         <h4>Reviews</h4>
-
-
         <div class="review-header"  v-if="GoogleReviewResponse.GoogleReview.Content.length>0">
 
           <p class="star-heading">
@@ -55,10 +44,12 @@
           </p>
 
           <span class="stars">
+            <xsl:text> </xsl:text>
             <i
               v-for="n in Math.round(Number(averageRating))"
               key="'avg'+n"
               class="fa fa-star">
+              <xsl:text> </xsl:text>
             </i>
           </span>
 
@@ -74,14 +65,15 @@
 
         <div id="reviewsTab">
           <div class="relatedcontent reviews">
-           
+
             <div
-              v-for="(review, index) in GoogleReviewResponse.GoogleReview.Content"  v-if="parseInt(review.Rating) >= parseInt(GoogleReviewResponse.GoogleReview.RatingLimit._ratingLimit)"
+              v-for="(review, index) in GoogleReviewResponse.GoogleReview.Content"
+              v-if="parseInt(review.Rating) >= parseInt(GoogleReviewResponse.GoogleReview.RatingLimit._ratingLimit)"
               key="index"
               class="listItem review reviewlist googleReviewlist" >
               <div class="lIinner TopReviews">
 
-               
+
                 <div class="cta-img">
                   <a
                  class=""
@@ -129,11 +121,14 @@
                     </picture>
                   </a>
                 </div>
-               
+
                 <span class="rating-foreground rating">
                   <span class="sr-only"> Rating: {{ review.Rating }} star</span>
                   <span class="value-title">
-                    <i v-for="n in parseInt(review.Rating)" key="'star'+index+n" class="fa fa-star"></i>
+                    <xsl:text> </xsl:text>
+                    <i v-for="n in parseInt(review.Rating)" key="'star'+index+n" class="fa fa-star">
+                      <xsl:text> </xsl:text>
+                    </i>
                   </span>
                 </span>
                 <div class="reviewer">{{ review.Reviewer }}</div>
@@ -156,6 +151,7 @@
                       <div class="modal-body review-modal">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                           <span aria-hidden="true">
+                            <xsl:text> </xsl:text>
                             <i class="fa fa-times-circle">
                               <xsl:text> </xsl:text>
                             </i>
@@ -165,7 +161,10 @@
                         <span class="rating-foreground rating">
                           <span class="sr-only" v-if="modalReview">Rating: {{ modalReview.Rating }} star</span>
                           <span class="value-title reviewRate rating5" v-if="modalReview">
-                            <i v-for="n in parseInt(modalReview.Rating)" key="'star'+n" class="fa fa-star"></i>
+                            <xsl:text> </xsl:text>
+                            <i v-for="n in parseInt(modalReview.Rating)" key="'star'+n" class="fa fa-star">
+                              <xsl:text> </xsl:text>
+                            </i>
                           </span>
                         </span>
 
@@ -203,4 +202,6 @@
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
+
+
 </xsl:stylesheet>
