@@ -176,6 +176,13 @@ namespace Protean.Providers
 
                     if (!bApplyToOrder)
                     {
+                        // --- ✅ NEW: Match item by ContentId if discount is product-specific ---
+                        string discountContentId = discountEl.GetAttribute("nContentId");
+                        string itemContentId = itemNode.Attributes["contentId"]?.Value ?? "";
+
+                        // Skip item if discount is tied to specific content and doesn’t match
+                        if (!string.IsNullOrEmpty(discountContentId) && discountContentId != itemContentId)
+                            continue;
                         bool withinPriceRange = dMaxPrice > 0? (itemCost >= dMinPrice && itemCost <= dMaxPrice): (itemCost >= dMinPrice);
                         if (withinPriceRange)
                         {
