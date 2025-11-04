@@ -31,7 +31,7 @@
 
                     return this.GoogleReviewResponse.GoogleReview.Content.filter(function (review) {
                         //  Skip null or invalid reviews safely
-                        debugger;
+                       
                         if (!review || review.Rating == null) return false;
                         var ratingValue = parseInt(review.Rating);
                         return !isNaN(ratingValue) && ratingValue >= ratingLimit;
@@ -48,7 +48,7 @@
                     if (this.filteredReviews.length === 0) return 0;
 
                     var total = this.filteredReviews.reduce(function (sum, review) {
-                        debugger
+                        
                         if (!review || review.Rating == null) return sum;
                         var val = parseInt(review.Rating);
                         return sum + (isNaN(val) ? 0 : val);
@@ -69,7 +69,7 @@
                         var inputJson = { apiurl: apiurl };
                         axios.post(addGoogleReviewsAPIUrl, inputJson)
                             .then(function (response) {
-                                debugger;
+                               
                                 console.log("Google Reviews Response:", response.data);
                                 self.GoogleReviewResponse = response.data;
                             })
