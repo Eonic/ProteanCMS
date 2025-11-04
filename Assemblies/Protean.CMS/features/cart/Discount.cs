@@ -1913,10 +1913,12 @@ namespace Protean
                                 bool hasUseLimitColumn = myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseLimit");                                
 
                                 foreach (DataRow discountRow in oDsDiscounts.Tables["Discount"].Rows)
-                                {                                   
-                                    int useCount = hasUseCountColumn ? Convert.ToInt32(discountRow["nUseCount"]) : 0;
-                                    int useLimit = hasUseLimitColumn && discountRow["nUseLimit"] != DBNull.Value ? Convert.ToInt32(discountRow["nUseLimit"]) : 0;
-
+                                {
+                                    int useCount = 0; int useLimit = 0;
+                                    if (hasUseCountColumn && discountRow["nUseCount"] != DBNull.Value)
+                                        useCount = Convert.ToInt32(discountRow["nUseCount"]);
+                                    if (hasUseLimitColumn && discountRow["nUseLimit"] != DBNull.Value)
+                                        useLimit = Convert.ToInt32(discountRow["nUseLimit"]);
                                     if (useLimit > 0 && useCount >= useLimit)
                                     {
                                         // This discount cannot be applied, skip it
