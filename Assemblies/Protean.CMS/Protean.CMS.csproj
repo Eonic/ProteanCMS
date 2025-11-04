@@ -155,8 +155,8 @@
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.8, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.8\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Identity.Client, Version=4.76.0.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Microsoft.Identity.Client.4.76.0\lib\net472\Microsoft.Identity.Client.dll</HintPath>
+    <Reference Include="Microsoft.Identity.Client, Version=4.77.1.0, Culture=neutral, PublicKeyToken=0a613f4dd989e8ae, processorArchitecture=MSIL">
+      <HintPath>..\..\..\EonicClients\visitMyHarbour\VisitMyHarbour_sol\packages\Microsoft.Identity.Client.4.77.1\lib\net472\Microsoft.Identity.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Abstractions, Version=8.14.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.IdentityModel.Abstractions.8.14.0\lib\net472\Microsoft.IdentityModel.Abstractions.dll</HintPath>
@@ -338,7 +338,8 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="api\soap.cs" />
-    <Compile Include="core\DBImport.cs" />
+    <Compile Include="core\Cms.DBHelper-Import.cs" />
+    <Compile Include="core\Cms.dbImport.cs" />
     <Compile Include="features\membership\Membership.Modules.cs" />
     <Compile Include="providers\Authentication\Authentication.Microsoft.cs" />
     <Compile Include="providers\Authentication\Authentication.Google.cs" />
@@ -420,6 +421,7 @@
     <Compile Include="tools\pdf.cs" />
     <Compile Include="tools\PerfLog.cs" />
     <Compile Include="tools\RecaptchaHelper.cs" />
+    <Compile Include="tools\RecaptchaV3.cs" />
     <Compile Include="tools\Startup.cs" />
     <Compile Include="tools\stdTools.cs" />
     <Compile Include="tools\Synchronisation.cs" />

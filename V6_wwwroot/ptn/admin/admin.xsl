@@ -803,14 +803,7 @@
                 </div>
               </div>
               <div class="col-lg-4">
-                <div class="card card-default matchHeight">
-                  <div class="card-header">
-                    <h4 >Performance Tips</h4>
-                  </div>
-                  <div class="card-body">
-                    <p>Have you checked Google Analytics recently ?</p>
-                  </div>
-                </div>
+				  <xsl:apply-templates select="." mode="dash-col2"/>               
               </div>
               <div class="col-lg-4">
                 <div class="card card-default">
@@ -1037,6 +1030,17 @@
       </div>
     </section>
   </xsl:template>
+
+	<xsl:template match="Page" mode="dash-col2">
+	<div class="card card-default matchHeight">
+		<div class="card-header">
+			<h4 >Performance Tips</h4>
+		</div>
+		<div class="card-body">
+			<p>Have you checked Google Analytics recently ?</p>
+		</div>
+	</div>
+	</xsl:template>
 
 	<xsl:template match="Module" mode="admin-module">
 		unknown module Type

@@ -3,8 +3,10 @@ using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Filter;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Xml;
 using static Protean.xForm;
 
@@ -32,11 +34,22 @@ namespace Protean.Providers
                     string cFilterTarget = string.Empty;
                     XmlElement oPriceBandGroup;
                     var oXml = oXform.moPageXML.CreateElement("PriceBandFilter");
+                    //if (aWeb.moRequest.Form["PriceBandFilter"] != null)
+                    //{
+                    //    oXml.InnerText = Convert.ToString(aWeb.moRequest.Form["PriceBandFilter"]);
+
+                    //}
                     if (aWeb.moRequest.Form["PriceBandFilter"] != null)
                     {
-                        oXml.InnerText = Convert.ToString(aWeb.moRequest.Form["PriceBandFilter"]);
+
+                        string cPriceBands = Convert.ToString(aWeb.moRequest.Form["PriceBandFilter"]);
+
+                        List<string> uniques = cPriceBands.Split(',').Distinct().ToList();//(string[])cpageIds.Split(',').Distinct();
+
+                        oXml.InnerText = string.Join(",", uniques);// Convert.ToString(aWeb.moRequest.Form["PageFilter"]);
 
                     }
+
                     if (!string.IsNullOrEmpty(oXml.InnerText))
                     {
                         oPriceBandGroup = oXform.addGroup(ref oXform.moXformElmt, "PriceBandFilter", "PriceBandfilter filter active-filter");
@@ -182,7 +195,9 @@ namespace Protean.Providers
                             string sText;
                             // Dim sValue As String
                             //int cnt;
-                            string[] aPriceFilters = oXml.InnerText.Split(',');
+                           // string[] aPriceFilters = oXml.InnerText.Split(',');
+                            string[] aPriceFilters = oXml.InnerText.Split(',').Distinct().ToArray();
+
                             if (aPriceFilters.Length != 0 & aPriceFilters.Length != default)
                             {
                                 var loopTo = aPriceFilters.Length - 1;
@@ -269,9 +284,21 @@ namespace Protean.Providers
 
                     string cPriceBandRange = string.Empty;
 
+                    //if (aWeb.moRequest.Form["PriceBandFilter"] != null)
+                    //{
+                    //    cPriceBandRange = aWeb.moRequest.Form["PriceBandFilter"];
+
+                    //}
+
                     if (aWeb.moRequest.Form["PriceBandFilter"] != null)
                     {
-                        cPriceBandRange = aWeb.moRequest.Form["PriceBandFilter"];
+                         cPriceBandRange = aWeb.moRequest.Form["PriceBandFilter"];
+
+                        List<string> uniques = cPriceBandRange.Split(',').Distinct().ToList();//(string[])cpageIds.Split(',').Distinct();
+
+                        //oXml.InnerText = string.Join(",", uniques);
+
+                        cPriceBandRange = string.Join(",", uniques); ;//oXform.Instance.SelectSingleNode("PageFilter").InnerText;
 
                     }
 
@@ -282,7 +309,9 @@ namespace Protean.Providers
                         cWhereSql = cWhereSql + " nContentKey in ( Select distinct ci.nContentId from tblContentIndex ci inner join tblContentIndexDef cid on cid.nContentIndexDefKey=ci.nContentIndexDefinitionKey ";
                         cWhereSql = cWhereSql + " inner join tblAudit ca on ca.nAuditKey=cid.nAuditId and nStatus=1 where cid.cDefinitionName='" + cIndexDefinationName + "' AND (";
 
-                        string[] aPriceFilters = cPriceBandRange.Split(',');
+                        //string[] aPriceFilters = cPriceBandRange.Split(',');
+                        string[] aPriceFilters = cPriceBandRange.Split(',').Distinct().ToArray();
+
 
                         if (aPriceFilters.Length != 0 & aPriceFilters.Length != default)
                         {
