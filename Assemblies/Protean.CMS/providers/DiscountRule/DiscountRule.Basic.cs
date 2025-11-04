@@ -223,7 +223,8 @@ namespace Protean.Providers
                                         decimal nOldUnitPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("OriginalUnitPrice"));
                                         decimal discount = 0m;                                       
                                         if (oCartItem != null && (oCartItem.GetAttribute("discount") == "" || oCartItem.GetAttribute("discount") == "0.0000"))
-                                        {                                            
+                                        {
+                                            oCartItem.SetAttribute("originalPrice", (nOldUnitPrice * nQuantity).ToString("0.00"));
                                             oCartItem.SetAttribute("price", nOldUnitPrice.ToString("0.00"));
                                             oCartItem.SetAttribute("itemTotal", (nOldUnitPrice * nQuantity).ToString("0.00"));
                                             oCartItem.SetAttribute("unitSaving", "0.00");
@@ -413,6 +414,7 @@ namespace Protean.Providers
                         decimal nPrice = Conversions.ToDecimal(oCartItem.GetAttribute("price"));                      
                         if (string.IsNullOrEmpty(oCartItem.GetAttribute("discount")) || oCartItem.GetAttribute("discount") == "0.00")
                         {  // If itemTotal is missing or wrong → fix it
+                            oCartItem.SetAttribute("originalPrice", (nPrice * nQuantity).ToString("0.00"));
                             oCartItem.SetAttribute("itemTotal", (nPrice * nQuantity).ToString("0.00"));
                             // If no discount was applied → reset savings to 0
                             oCartItem.SetAttribute("unitSaving", "0.00");
