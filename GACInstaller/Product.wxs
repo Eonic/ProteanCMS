@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<?define version="6.1.47"?>
+<?define version="6.1.48"?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi' xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
     <Product Id='*' Name='ProteanCMS GAC Installer $(var.version)' Language='1033' Version='$(var.version)' Manufacturer='Eonic Digital LLP' UpgradeCode='{577597F8-BE6F-46B4-8A9D-46E8A5360918}' Codepage='1252'>
         <Package AdminImage='no' Comments='ProteanCMS GAC Installer' Compressed='yes' Description='ProteanCMS GAC Installer (64bit)' InstallerVersion='300' InstallScope='perMachine' Languages='1033' Manufacturer='Eonic Digital LLP' Platform='x64' ReadOnly='no' ShortNames='no' />
@@ -163,10 +163,10 @@
                   <File Id='com_TidyHTML5Managed' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='TidyHTML5Managed.dll' Source='..\Assemblies\NonNuget\TidyHTML5Managed.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_MagickNETCore' Guid='ef1e2c1c-123c-46f1-be4b-4baf7df7ebc2' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MagickNETCore' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET.Core.dll' Source='..\packages\Magick.NET.Core.14.8.2\lib\netstandard20\Magick.NET.Core.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_MagickNETCore' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET.Core.dll' Source='..\packages\Magick.NET.Core.14.9.1\lib\netstandard20\Magick.NET.Core.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_MagickNETQ8x64' Guid='ccd49c31-216c-44ce-9aae-6be3ab80cd4a' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                  <File Id='_MagickNETQ8x64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-x64.dll' Source='..\packages\Magick.NET-Q8-x64.14.8.2\lib\netstandard20\Magick.NET-Q8-x64.dll' Assembly='.net' KeyPath='yes' />
+                  <File Id='_MagickNETQ8x64' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Magick.NET-Q8-x64.dll' Source='..\packages\Magick.NET-Q8-x64.14.9.1\lib\netstandard20\Magick.NET-Q8-x64.dll' Assembly='.net' KeyPath='yes' />
                 </Component>
                 <Component Id='com_AlphaFS' Guid='a0007f46-be79-462d-8c6f-a9026225065b' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                   <File Id='_AlphaFS' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AlphaFS.dll' Source='..\packages\AlphaFS.2.2.6\lib\net452\AlphaFS.dll' Assembly='.net' KeyPath='yes' />
@@ -178,7 +178,7 @@
 
               <!-- Libraies for PreMailer.Net - DONT UPDATE FROM NUGET!!!-->
               <Component Id='com_System_Text_Encoding_CodePages' Guid='a5b84f31-01e5-4904-af1e-d85a310cf875' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-                <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\packages\System.Text.Encoding.CodePages.9.0.8\lib\net462\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
+                <File Id='_System_Text_Encoding_CodePages' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encoding.CodePages.dll' Source='..\packages\System.Text.Encoding.CodePages.9.0.10\lib\net462\System.Text.Encoding.CodePages.dll' Assembly='.net' KeyPath='yes' />
               </Component>
               <Component Id='com_AngleSharp' Guid='af54845d-f98c-43f5-9f9c-8b0c7c2d677e' Permanent='no' SharedDllRefCount='no' Transitive='no'>
                 <File Id='_AngleSharp' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='AngleSharp.dll' Source='..\packages\AngleSharp.1.3.0\lib\net472\AngleSharp.dll' Assembly='.net' KeyPath='yes' />
@@ -211,15 +211,15 @@
 				</Component>
 
 				<Component Id='com_SystemTextJson' Guid='221de48f-a70c-458b-aa0a-4c1d48519315' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemTextJson' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Json.dll' Source='..\packages\System.Text.Json.9.0.8\lib\net462\System.Text.Json.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemTextJson' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Json.dll' Source='..\packages\System.Text.Json.9.0.10\lib\net462\System.Text.Json.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				
 				<Component Id='com_MicrosoftBclAsyncInterfaces' Guid='0b0f40f8-1240-4b30-b06b-93ebd7a717c4' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_MicrosoftBclAsyncInterfaces' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Bcl.AsyncInterfaces.dll' Source='..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.8\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_MicrosoftBclAsyncInterfaces' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Bcl.AsyncInterfaces.dll' Source='..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.10\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				
 				<Component Id='com_SystemTextEncodingsWeb' Guid='4dfb277c-b692-4118-b0f2-e086ef193c53' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemTextEncodingsWeb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encodings.Web.dll' Source='..\packages\System.Text.Encodings.Web.9.0.8\lib\net462\System.Text.Encodings.Web.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemTextEncodingsWeb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Text.Encodings.Web.dll' Source='..\packages\System.Text.Encodings.Web.9.0.10\lib\net462\System.Text.Encodings.Web.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SystemNumericsVectors' Guid='5e62ecb1-4b75-4ba1-9dc4-9bbc032eb8cc' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SystemNumericsVectors' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Numerics.Vectors.dll' Source='..\packages\System.Numerics.Vectors.4.6.1\lib\net462\System.Numerics.Vectors.dll' Assembly='.net' KeyPath='yes' />
@@ -237,7 +237,7 @@
 					<File Id='_SystemDataSqlClient' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Data.SqlClient.dll' Source='..\packages\System.Data.SqlClient.4.9.0\lib\net462\System.Data.SqlClient.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SystemConfigManager' Guid='db92d0e9-105b-4c1c-af2b-21783516b47c' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemConfigManager' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Configuration.ConfigurationManager.dll' Source='..\packages\System.Configuration.ConfigurationManager.9.0.8\lib\net462\System.Configuration.ConfigurationManager.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemConfigManager' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Configuration.ConfigurationManager.dll' Source='..\packages\System.Configuration.ConfigurationManager.9.0.10\lib\net462\System.Configuration.ConfigurationManager.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SystemDataOleDb' Guid='2b5ef051-e26e-4bcd-8418-104b26ff7188' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SystemDataOleDb' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Data.OleDb.dll' Source='C:\Users\trevo\.nuget\packages\system.data.oledb\9.0.7\lib\net462\System.Data.OleDb.dll' Assembly='.net' KeyPath='yes' />
@@ -246,7 +246,7 @@
 					<File Id='_SystemIOPackaging' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.IO.Packaging.dll' Source='C:\Users\trevo\.nuget\packages\system.io.packaging\9.0.7\lib\net462\System.IO.Packaging.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SystemIOPipelines' Guid='875d2329-84ac-4137-bddd-e6088181c24c' Permanent='no' SharedDllRefCount='no' Transitive='no'>
-					<File Id='_SystemIOPipelines' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.IO.Pipelines.dll' Source='..\packages\System.IO.Pipelines.9.0.8\lib\net462\System.IO.Pipelines.dll' Assembly='.net' KeyPath='yes' />
+					<File Id='_SystemIOPipelines' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.IO.Pipelines.dll' Source='..\packages\System.IO.Pipelines.9.0.10\lib\net462\System.IO.Pipelines.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 				<Component Id='com_SystemDrawingCommon' Guid='68aa99a2-e2ad-44a5-987d-2a1f5cf947bf' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SystemDrawingCommon' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='System.Drawing.Common.dll' Source='..\packages\System.Drawing.Common.9.0.8\lib\net462\System.Drawing.Common.dll' Assembly='.net' KeyPath='yes' />
@@ -258,6 +258,13 @@
 					<File Id='_DocumentFormatOpenXmlFramework' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='DocumentFormat.OpenXml.Framework.dll' Source='..\packages\documentformat.openxml.framework.3.3.0\lib\netstandard2.0\DocumentFormat.OpenXml.Framework.dll' Assembly='.net' KeyPath='yes' />
 				</Component>
 
+				<Component Id='com_MicrosoftIdentityClient' Guid='c1fd2825-9dcc-4034-9aba-09f223811c0c' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_MicrosoftIdentityClient' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.Identity.Client.dll' Source='..\packages\Microsoft.Identity.Client.4.78.0\lib\netstandard2.0\Microsoft.Identity.Client.dll' Assembly='.net' KeyPath='yes' />
+				</Component>
+	
+				<Component Id='com_MicrosoftIdentityModelAbstractions' Guid='5605892e-65b1-4d1b-b0a2-6d46a735df08' Permanent='no' SharedDllRefCount='no' Transitive='no'>
+					<File Id='_MicrosoftIdentityModelAbstractions' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Microsoft.IdentityModel.Abstractions.dll' Source='..\packages\Microsoft.IdentityModel.Abstractions.8.14.0\lib\netstandard2.0\Microsoft.IdentityModel.Abstractions.dll' Assembly='.net' KeyPath='yes' />
+				</Component>			
 
 				<Component Id='com_SelectHtmlToPdf' Guid='948eec8b-2894-4bbe-a094-dfd2f95f8601' Permanent='no' SharedDllRefCount='no' Transitive='no'>
 					<File Id='_SelectHtmlToPdf' DiskId='1' Hidden='no' ReadOnly='no' System='no' Vital='yes' Compressed='yes' Name='Select.HtmlToPdf.dll' Source='..\packages\Select.HtmlToPdf.25.2.0\lib\net40\Select.HtmlToPdf.dll' Assembly='.net' KeyPath='yes' />
@@ -392,8 +399,8 @@
 			<ComponentRef Id='com_SystemDrawingCommon' />
 			<ComponentRef Id='com_DocumentFormatOpenXml' />
 			<ComponentRef Id='com_DocumentFormatOpenXmlFramework' />			
-			<!--<ComponentRef Id='com_MicrosoftIdentityClient' />
-			<ComponentRef Id='com_MicrosoftIdentityModelAbstractions' />-->
+			<ComponentRef Id='com_MicrosoftIdentityClient' />
+			<ComponentRef Id='com_MicrosoftIdentityModelAbstractions' />
 		   
 			<ComponentRef Id='com_SelectHtmlToPdf' />
 			<!-- -->
