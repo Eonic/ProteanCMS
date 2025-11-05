@@ -4135,9 +4135,9 @@
 		</script>
 	</xsl:template>-->
 	
-	<!--ReCaptchaV3 template Handles rendering of the hidden field + JS -->
-	<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform">
-		<!-- Get reCAPTCHA site key from config -->
+	<!--ReCaptchaV3 and ReCaptchaV2 template Handles rendering of the hidden field + JS -->
+   <xsl:template match="input[contains(@class,'recaptcha')]" mode="xform">
+        <!-- Get reCAPTCHA settings -->
 		<xsl:variable name="recaptchaKey">
 			<xsl:call-template name="getXmlSettings">
 				<xsl:with-param name="sectionName" select="'web'"/>
@@ -4145,13 +4145,35 @@
 			</xsl:call-template>
 		</xsl:variable>
 
-		<!-- Hidden input for reCAPTCHA token -->
-		<input type="hidden" name="g-recaptcha-response" id="recaptcha-token" class="recaptcha" />
-		
-	</xsl:template>
+		<xsl:variable name="recaptchaVersion">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaVersion'"/>
+			</xsl:call-template>
+		</xsl:variable>
+	  
+        <!-- Conditional rendering -->
+		<xsl:choose>
+			<!-- Version 2 -->
+			<xsl:when test="contains($recaptchaVersion, 'v2')">
+				<div class="g-recaptcha" data-sitekey="{$recaptchaKey}">
+					<xsl:for-each select="@*[starts-with(name(),'data-')]">
+						<xsl:attribute name="{name()}">
+							<xsl:value-of select="."/>
+						</xsl:attribute>
+					</xsl:for-each>
+					<xsl:text> </xsl:text>
+				</div>
+			</xsl:when>
 
-<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform_control_script">
-		<!-- Get reCAPTCHA site key from config -->
+			<!-- Version 3 -->
+			<xsl:otherwise>
+				<input type="hidden" name="g-recaptcha-response" id="recaptcha-token" class="recaptcha" />
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+   <xsl:template match="input[contains(@class,'recaptcha')]" mode="xform_control_script">
 		<xsl:variable name="recaptchaKey">
 			<xsl:call-template name="getXmlSettings">
 				<xsl:with-param name="sectionName" select="'web'"/>
@@ -4159,32 +4181,46 @@
 			</xsl:call-template>
 		</xsl:variable>
 
-		
-		<!-- Load reCAPTCHA v3 JS -->
-		<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}">
-			<xsl:text> </xsl:text>
-	    </script>
+		<xsl:variable name="recaptchaVersion">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaVersion'"/>
+			</xsl:call-template>
+		</xsl:variable>
 
-		<script>
-			
-			//window.addEventListener('load', function() {
-			var hiddenInput = document.getElementById('recaptcha-token');
-			var form = hiddenInput.closest('form');
+		<xsl:choose>
+			<!-- reCAPTCHA v2 -->
+			<xsl:when test="contains($recaptchaVersion, 'v2')">
+				<script src="https://www.google.com/recaptcha/api.js" async="" defer="">
+					<xsl:text> </xsl:text>
+				</script>
+			</xsl:when>
 
-			form.addEventListener('submit', function(e) {
-			e.preventDefault(); // stop submit until token is ready
+			<!-- reCAPTCHA v3 -->
+			<xsl:otherwise>
+				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}">
+					<xsl:text> </xsl:text>
+				</script>
 
-			grecaptcha.ready(function() {
-			grecaptcha.execute('<xsl:value-of select="$recaptchaKey"/>', { action: 'submit' })
-			.then(function(token) {
-			hiddenInput.value = token; // set token in hidden input
-			form.submit(); // submit form immediately after token is set
-			});
-			});
-			});
-			//});
-		</script>
+				<script>
+					var hiddenInput = document.getElementById('recaptcha-token');
+					var form = hiddenInput.closest('form');
+					form.addEventListener('submit', function(e) {
+						e.preventDefault();
+						grecaptcha.ready(function() {
+							grecaptcha.execute('<xsl:value-of select="$recaptchaKey"/>', { action: 'submit' })
+								.then(function(token) {
+									hiddenInput.value = token;
+									form.submit();
+								});
+						});
+					});
+				</script>
+				</xsl:otherwise>
+			</xsl:choose>
 	</xsl:template>
+
+
 
 	<xsl:template match="input[contains(@class,'telephone')]" mode="xform_control">
 		<xsl:variable name="label_low">

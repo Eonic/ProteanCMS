@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Specialized;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 namespace Protean
@@ -769,39 +769,42 @@ namespace Protean
                 {
                     if (!string.IsNullOrEmpty(goRequest["g-recaptcha-response"]))
                     {
+                        var moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                        string version = moConfig["ReCaptchaVersion"] ?? "v3";
 
-                        System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-                        //var recap = new Tools.RecaptchaV2.Recaptcha(moConfig["ReCaptchaKey"], moConfig["ReCaptchaKeySecret"]);
-                        //var recapResult = recap.Validate(goRequest["g-recaptcha-response"], moConfig["ReCaptchaKeySecret"]);
-
-                        //if (Conversions.ToBoolean(Operators.OrObject(recapResult.Succeeded, Operators.ConditionalCompareObjectEqual(goSession["recaptcha"], 1, false))))
-                        //{
-                        //    cValidationError = "";
-                        //    bIsValid = true;
-                        //    goSession["recaptcha"] = 1;
-                        //    missedError = false;
-                        //}
-
-                        // Create Recaptcha instance (no parameters needed for v3)
-                        var recap = new Tools.RecaptchaV3.Recaptcha();
-                        // Validate token from client-side
-                        bool isHuman = recap.Validate(goRequest["g-recaptcha-response"], "submit", 0.5);
-
-                        // Check if human or already passed in session
-                        if (isHuman || Conversions.ToBoolean(goSession["recaptcha"] ?? 0))
+                        if (version == "v2")
                         {
-                            cValidationError = "";
-                            bIsValid = true;
-                            goSession["recaptcha"] = 1;
-                            missedError = false;
+                            var recap = new Tools.RecaptchaV2.Recaptcha(moConfig["ReCaptchaKey"], moConfig["ReCaptchaKeySecret"]);
+                            var recapResult = recap.Validate(goRequest["g-recaptcha-response"], moConfig["ReCaptchaKeySecret"]);
+
+                            if (recapResult.Succeeded || Convert.ToBoolean(goSession["recaptcha"] ?? 0))
+                            {
+                                cValidationError = "";
+                                bIsValid = true;
+                                goSession["recaptcha"] = 1;
+                                missedError = false;
+                            }
                         }
                         else
                         {
-                            // optionally set validation error
-                            cValidationError = "Please complete the CAPTCHA challenge.";
-                            bIsValid = false;
+                            var recap = new Tools.RecaptchaV3.Recaptcha();
+                            bool isHuman = recap.Validate(goRequest["g-recaptcha-response"], "submit", 0.5);
+
+                            if (isHuman || Convert.ToBoolean(goSession["recaptcha"] ?? 0))
+                            {
+                                cValidationError = "";
+                                bIsValid = true;
+                                goSession["recaptcha"] = 1;
+                                missedError = false;
+                            }
+                            else
+                            {
+                                cValidationError = "Please complete the CAPTCHA challenge.";
+                                bIsValid = false;
+                            }
                         }
-                    }                    
+                    }
+
                 }
 
                 // END HANDLING FOR GOOGLE ReCAPTCHA
