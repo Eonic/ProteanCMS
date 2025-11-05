@@ -184,10 +184,21 @@ namespace Protean
                     }
                 }
 
-                public string GetContent(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                public string GetGeoContent(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {
+                        string cSelectField = (string)jObj["cSchemaName"];
+                        string swLat = (string)jObj["swLat"];
+                        string swLng = (string)jObj["swLng"];
+                        string neLat = (string)jObj["nwLat"];
+                        string neLng = (string)jObj["nwLng"];
+
+                        string latIdx = (string)jObj["latIdx"];
+                        string lngIdx = (string)jObj["lngIdx"];
+
+                        string bBox = (string)jObj["bBox"];
+
 
                         string JsonResult = "";
                         return JsonResult;

@@ -1627,7 +1627,7 @@ namespace Protean
                             }
                             catch (Exception)
                             {
-
+                                cProcessInfo = "test";
                             }
 
                         }
