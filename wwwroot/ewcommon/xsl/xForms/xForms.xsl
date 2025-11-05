@@ -4463,24 +4463,37 @@
 	<!--ReCaptchaV3 and ReCaptchaV2 template Handles rendering of the hidden field + JS -->
 	<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform">
 		<!-- Get reCAPTCHA settings -->
-		<xsl:variable name="recaptchaKey">
-			<xsl:call-template name="getXmlSettings">
-				<xsl:with-param name="sectionName" select="'web'"/>
-				<xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
-			</xsl:call-template>
-		</xsl:variable>
-
 		<xsl:variable name="recaptchaVersion">
 			<xsl:call-template name="getXmlSettings">
 				<xsl:with-param name="sectionName" select="'web'"/>
 				<xsl:with-param name="valueName" select="'ReCaptchaVersion'"/>
 			</xsl:call-template>
 		</xsl:variable>
-
+		<xsl:variable name="recaptchaKey">
+			<xsl:choose>
+				<xsl:when test="contains($recaptchaVersion, 'v3')">
+					<xsl:call-template name="getXmlSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'ReCaptchaKeyV3'"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="getXmlSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<!-- Conditional rendering -->
 		<xsl:choose>
+			<!-- Version 3 -->
+			<xsl:when test="contains($recaptchaVersion, 'v3')">
+				<input type="hidden" name="g-recaptcha-response" id="recaptcha-token" class="recaptcha" />
+			</xsl:when>
+
 			<!-- Version 2 -->
-			<xsl:when test="contains($recaptchaVersion, 'v2')">
+			<xsl:otherwise>
 				<div class="g-recaptcha" data-sitekey="{$recaptchaKey}">
 					<xsl:for-each select="@*[starts-with(name(),'data-')]">
 						<xsl:attribute name="{name()}">
@@ -4489,23 +4502,11 @@
 					</xsl:for-each>
 					<xsl:text> </xsl:text>
 				</div>
-			</xsl:when>
-
-			<!-- Version 3 -->
-			<xsl:otherwise>
-				<input type="hidden" name="g-recaptcha-response" id="recaptcha-token" class="recaptcha" />
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
 
 	<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform_control_script">
-		<xsl:variable name="recaptchaKey">
-			<xsl:call-template name="getXmlSettings">
-				<xsl:with-param name="sectionName" select="'web'"/>
-				<xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
-			</xsl:call-template>
-		</xsl:variable>
-
 		<xsl:variable name="recaptchaVersion">
 			<xsl:call-template name="getXmlSettings">
 				<xsl:with-param name="sectionName" select="'web'"/>
@@ -4513,16 +4514,26 @@
 			</xsl:call-template>
 		</xsl:variable>
 
-		<xsl:choose>
-			<!-- reCAPTCHA v2 -->
-			<xsl:when test="contains($recaptchaVersion, 'v2')">
-				<script src="https://www.google.com/recaptcha/api.js" async="" defer="">
-					<xsl:text> </xsl:text>
-				</script>
-			</xsl:when>
+		<xsl:variable name="recaptchaKey">
+			<xsl:choose>
+				<xsl:when test="contains($recaptchaVersion, 'v3')">
+					<xsl:call-template name="getXmlSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'ReCaptchaKeyV3'"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="getXmlSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 
+		<xsl:choose>
 			<!-- reCAPTCHA v3 -->
-			<xsl:otherwise>
+			<xsl:when test="contains($recaptchaVersion, 'v3')">
 				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}">
 					<xsl:text> </xsl:text>
 				</script>
@@ -4540,6 +4551,13 @@
 					});
 					});
 					});
+				</script>
+			</xsl:when>
+
+			<!-- reCAPTCHA v2 -->
+			<xsl:otherwise>
+				<script src="https://www.google.com/recaptcha/api.js" async="" defer="">
+					<xsl:text> </xsl:text>
 				</script>
 			</xsl:otherwise>
 		</xsl:choose>

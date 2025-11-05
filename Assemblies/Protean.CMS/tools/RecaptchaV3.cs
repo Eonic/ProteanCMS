@@ -15,7 +15,7 @@ namespace Protean.Tools.RecaptchaV3
         {
             // Read from protean/web section
             NameValueCollection moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-            _secretKey = moConfig["ReCaptchaKeySecret"];
+            _secretKey = moConfig["ReCaptchaKeySecretV3"];
         }
 
         private class RecaptchaResponse

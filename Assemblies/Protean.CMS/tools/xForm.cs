@@ -772,20 +772,7 @@ namespace Protean
                         var moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                         string version = moConfig["ReCaptchaVersion"] ?? "v3";
 
-                        if (version == "v2")
-                        {
-                            var recap = new Tools.RecaptchaV2.Recaptcha(moConfig["ReCaptchaKey"], moConfig["ReCaptchaKeySecret"]);
-                            var recapResult = recap.Validate(goRequest["g-recaptcha-response"], moConfig["ReCaptchaKeySecret"]);
-
-                            if (recapResult.Succeeded || Convert.ToBoolean(goSession["recaptcha"] ?? 0))
-                            {
-                                cValidationError = "";
-                                bIsValid = true;
-                                goSession["recaptcha"] = 1;
-                                missedError = false;
-                            }
-                        }
-                        else
+                        if (version == "v3")
                         {
                             var recap = new Tools.RecaptchaV3.Recaptcha();
                             bool isHuman = recap.Validate(goRequest["g-recaptcha-response"], "submit", 0.5);
@@ -801,6 +788,19 @@ namespace Protean
                             {
                                 cValidationError = "Please complete the CAPTCHA challenge.";
                                 bIsValid = false;
+                            }
+                        }
+                        else
+                        {                           
+                            var recap = new Tools.RecaptchaV2.Recaptcha(moConfig["ReCaptchaKey"], moConfig["ReCaptchaKeySecret"]);
+                            var recapResult = recap.Validate(goRequest["g-recaptcha-response"], moConfig["ReCaptchaKeySecret"]);
+
+                            if (recapResult.Succeeded || Convert.ToBoolean(goSession["recaptcha"] ?? 0))
+                            {
+                                cValidationError = "";
+                                bIsValid = true;
+                                goSession["recaptcha"] = 1;
+                                missedError = false;
                             }
                         }
                     }
