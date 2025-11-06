@@ -1,15 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Web.Configuration;
-using System.Xml;
+﻿using AngleSharp.Text;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.Ajax.Utilities;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Tools.Integration.Twitter;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
+using System.Web.Configuration;
+using System.Xml;
+using WebGrease;
 
 namespace Protean
 {
@@ -184,24 +189,57 @@ namespace Protean
                     }
                 }
 
+
+
+                // call /ptnapi/cms.content/getGeoContent
                 public string GetGeoContent(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {
                         string cSelectField = (string)jObj["cSchemaName"];
-                        string swLat = (string)jObj["swLat"];
-                        string swLng = (string)jObj["swLng"];
-                        string neLat = (string)jObj["nwLat"];
-                        string neLng = (string)jObj["nwLng"];
+                        
+                        string[] bBox = Convert.ToString(jObj["bbox"]).SplitCommas();
+                        
+                        string swLng = bBox[0];
+                        string swLat = bBox[1];
+                        string neLng = bBox[2];
+                        string neLat = bBox[3];
 
-                        string latIdx = (string)jObj["latIdx"];
-                        string lngIdx = (string)jObj["lngIdx"];
+                        SqlConnection oConn = myWeb.moDbHelper.oConn;
+                         oConn.Open(); 
 
-                        string bBox = (string)jObj["bBox"];
+                        using (SqlCommand cmd = new SqlCommand("GetGeoContentIndex", oConn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
 
+                            // Pass parameters safely
+                            cmd.Parameters.Add("@SouthWestLat", SqlDbType.Float).Value = Convert.ToDouble(swLng);
+                            cmd.Parameters.Add("@SouthWestLon", SqlDbType.Float).Value = Convert.ToDouble(swLat);
+                            cmd.Parameters.Add("@NorthEastLat", SqlDbType.Float).Value = Convert.ToDouble(neLat);
+                            cmd.Parameters.Add("@NorthEastLon", SqlDbType.Float).Value = Convert.ToDouble(neLng);
 
-                        string JsonResult = "";
-                        return JsonResult;
+                            var items = new List<GeoContentItem>();
+                            using (SqlDataReader oDr = cmd.ExecuteReader())
+                            {
+                                if (oDr != null)
+                                {
+                                    while (oDr.Read())
+                                    {
+
+                                        items.Add(new GeoContentItem
+                                        {
+                                            id = oDr.GetInt32(oDr.GetOrdinal("id")),
+                                            name = oDr.GetString(oDr.GetOrdinal("name")),
+                                            lat = oDr.GetString(oDr.GetOrdinal("Latitude")),
+                                            lng = oDr.GetString(oDr.GetOrdinal("Longitude"))
+                                        });
+
+                                    }
+                                }
+                            }
+                            return JsonConvert.SerializeObject(items);
+                        }
+              
                     }
 
                     catch (Exception ex)
@@ -210,6 +248,17 @@ namespace Protean
                         return ex.Message;
                     }
                 }
+
+
+                private class GeoContentItem
+                {
+                    public int id { get; set; }
+                    public string name { get; set; }
+                    public string url { get; set; }
+                    public string lat { get; set; }
+                    public string lng { get; set; }
+                }
+
 
                 public string IsUnique(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {

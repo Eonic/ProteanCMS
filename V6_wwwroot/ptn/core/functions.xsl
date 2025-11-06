@@ -3784,17 +3784,24 @@
     <xsl:variable name="pageURL">
       <xsl:choose>
         <xsl:when test="$currentPageDetail='true'">
-          <xsl:apply-templates select="$menu/MenuItem/descendant-or-self::MenuItem[@id=/Page/@id]" mode="getHref"/>
+          <xsl:apply-templates select="$menu/MenuItem/descendant-or-self::MenuItem[@id=/Page/@id]" mode="getHref"/>!
         </xsl:when>
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="$menu/descendant-or-self::MenuItem[@id=$contentParId]/@url='/'">
-              <xsl:call-template name="getSiteURL"/>
-
+              <xsl:call-template name="getSiteURL"/>!!
             </xsl:when>
             <xsl:otherwise>
-              <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
-            </xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="not($lang!='en-gb')">
+						<xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="$menu/descendant-or-self::MenuItem/PageVersion[@id=$contentParId]/parent::MenuItem" mode="getHref"/>
+					</xsl:otherwise>
+				</xsl:choose>
+
+			</xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
