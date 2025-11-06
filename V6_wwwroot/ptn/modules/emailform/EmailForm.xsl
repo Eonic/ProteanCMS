@@ -3,7 +3,7 @@
   <!-- #### Email Form  ####   -->
   <!-- Email Form Module -->
   <xsl:template match="Content[@type='Module' and (@moduleType='EmailForm' or @moduleType='xForm')]" mode="displayBrief">
-    <xsl:choose>
+	  <xsl:choose>
       <xsl:when test="descendant::alert/node()='Message Sent'">
         <xsl:apply-templates select="." mode="mailformSentMessage"/>
       </xsl:when>
@@ -21,7 +21,8 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:if test="/Page/@adminMode">
-      <div class="sentMessage">
+      <div class="sentMessage text-white card bg-success">
+		  <div class="card-body">
         <xsl:choose>
           <xsl:when test="Content[@type='FormattedText']">
             <xsl:apply-templates select="Content[@type='FormattedText']" mode="inlinePopupOptions">
@@ -42,6 +43,7 @@
             </xsl:apply-templates>
           </xsl:otherwise>
         </xsl:choose>
+		  </div>
       </div>
     </xsl:if>
   </xsl:template>
@@ -77,7 +79,7 @@
 
   <!-- Template to show an Xform when found in ContentDetail -->
   <xsl:template match="Content[@type='Module' and (@moduleType='EmailForm' or @moduleType='xForm')]" mode="cleanXhtml">
-    <xsl:apply-templates select="." mode="xform"/>
+	      <xsl:apply-templates select="." mode="xform"/>
   </xsl:template>
 
   <!-- X Form Module *** not finished *** PH-->
@@ -116,9 +118,6 @@
     <xsl:apply-templates select="." mode="xform"/>
   </xsl:template>
 
-	<xsl:template match="Content[@type='Module' and (@moduleType='EmailForm' or @moduleType='xForm')]" mode="contentJS">
-		<!--<xsl:apply-templates select="." mode="xform"/>-->
-	</xsl:template>
 	
 	
 </xsl:stylesheet>

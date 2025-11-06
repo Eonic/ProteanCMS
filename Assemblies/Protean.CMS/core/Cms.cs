@@ -157,6 +157,7 @@ namespace Protean
         public string mcBehaviourAddPageCommand = "";
         public string mcBehaviourEditPageCommand = "";
 
+        public Boolean mbCheckDetailPath = false;
 
         public string mcClientCommonFolder = "";
         public string mcEWCommonFolder = "/ewcommon";
@@ -716,6 +717,10 @@ namespace Protean
 
                     mcPagePath = moRequest["path"] + "";
                     mcPagePath = mcPagePath.Replace("//", "/");
+
+                    if (Strings.LCase(moConfig["CheckDetailPath"]) == "on") {
+                        mbCheckDetailPath = true;
+                       }
 
                     JSStart.InitialiseJSEngine();
 
@@ -1908,13 +1913,14 @@ namespace Protean
                                             }
 
                                             var argaWeb1 = this;
+                                            PerfMon.Log("Web", "GetPageHTML-loadxsl2");
                                             var oTransform = new Protean.XmlHelper.Transform(ref argaWeb1, styleFile, gbCompiledTransform, 15000L, brecompile);
                                             if (!string.IsNullOrEmpty(moConfig["XslTimeout"]))
                                             {
                                                 oTransform.TimeOut = Conversions.ToLong(moConfig["XslTimeout"]);
                                             }
                                             oTransform.mbDebug = gbDebug;
-
+                                            PerfMon.Log("Web", "GetPageHTML-loadxsl3");
                                             if (bPageCache)
                                             {
 
@@ -2612,7 +2618,7 @@ namespace Protean
                                 }
                             }
 
-                            if (Strings.LCase(moConfig["CheckDetailPath"]) == "on" & mbAdminMode == false & mnArtId > 0 & (mcOriginalURL.Contains("-/") | mcOriginalURL.Contains("/Item")))
+                            if (mbCheckDetailPath & mbAdminMode == false & mnArtId > 0 & (mcOriginalURL.Contains("-/") | mcOriginalURL.Contains("/Item")))
                             {
                                 if (oPageElmt.SelectSingleNode("ContentDetail/Content/@name") != null)
                                 {
@@ -6392,7 +6398,7 @@ namespace Protean
                     }
                     // Please never add any setting here you do not want to be publicly accessible.
                     object s = "web.Cart;web.Membership;web.Search;web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;";
-                    s = Operators.AddObject(s, $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;");
+                    s = Operators.AddObject(s, $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.ReCaptchaKeyV3;web.EnableWebP;web.EnableRetina;web.ReCaptchaVersion;");
                     s = Operators.AddObject(s, "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;");
                     s = Operators.ConcatenateObject(Operators.AddObject(s, moConfig["XmlSettings"]), ";");
 

@@ -1,0 +1,28 @@
+<Discount>
+	<nDiscountKey>29244</nDiscountKey>
+	<nDiscountForeignRef/>
+	<cDiscountName>cheapest free Item</cDiscountName>
+	<cDiscountCode>TESTCHEAPEST</cDiscountCode>
+	<nDiscountCat>4</nDiscountCat>
+	<bDiscountIsPercent>1</bDiscountIsPercent>
+	<nDiscountValue>100</nDiscountValue>
+	<nDiscountMinPrice>0</nDiscountMinPrice>
+	<nDiscountMinQuantity>3</nDiscountMinQuantity>
+	<cAdditionalXML>
+		<cDescription />
+		<cTerms />
+		<Images>
+			<img src="" width="" height="" class="thumbnail" alt="" />
+			<img src="" width="" height="" class="display" alt="" />
+			<img src="" width="" height="" class="detail" alt="" />
+		</Images>
+		<bFreeGiftBox></bFreeGiftBox>
+		<bApplyToOrder></bApplyToOrder>
+		<cFreeShippingMethods></cFreeShippingMethods>
+		<nMinimumOrderValue></nMinimumOrderValue>
+		<nMaximumOrderValue></nMaximumOrderValue>
+		<nDiscountMaxPrice></nDiscountMaxPrice>
+	</cAdditionalXML>
+	<cDiscountUserCode></cDiscountUserCode>
+	<nDiscountCodeType>0</nDiscountCodeType>
+</Discount>

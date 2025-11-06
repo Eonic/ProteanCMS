@@ -54,7 +54,7 @@ namespace Protean
                 }
             }
 
-            public ewXmlElement AddMenuItem(string name, string id, string url, string dislayName = null, string description = null, int contentCount = default)
+            public ewXmlElement AddMenuItem(string name, string id, string url, string dislayName = null, string description = null, int contentCount = default, string sClass = null)
             {
                 try
                 {
@@ -62,6 +62,9 @@ namespace Protean
                     newElmt.XmlElement.SetAttribute("id", id);
                     newElmt.XmlElement.SetAttribute("name", name);
                     newElmt.XmlElement.SetAttribute("url", url);
+                    if (sClass != null) {
+                        newElmt.XmlElement.SetAttribute("class", sClass);
+                    }
                     if (contentCount != default)
                     {
                         newElmt.XmlElement.SetAttribute("contentCount", contentCount.ToString());

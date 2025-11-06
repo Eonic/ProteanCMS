@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<DatabaseUpgrade LatestVersion="6.0.72.0">
+<DatabaseUpgrade LatestVersion="6.0.81.0">
 	<!-- Instructions	
 	   Add SQL scripts to the directory structure as below.
 	   Separate each "create" into its own file
@@ -597,13 +597,71 @@
 				<Action Order="3" Type="File" ObjectType="" ObjectName="/v5/6.0.72.0/CreateFullTextCatalogForTblContent.sql"/>
 				<Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.0.72.0/CreateFullTextIndexOnTblContent.sql"/>
 				<Action Order="5" Type="Drop" ObjectType="Procedure" ObjectName="spCheckFileInUse"/>
-				<Action Order="6" Type="File" ObjectType="" ObjectName="/v5/6.0.72.0/spCheckFileInUse.sql"/>
+				<Action Order="6" Type="File" ObjectType="" ObjectName="/v5/6.0.72.0/spCheckFileInUse.sql"/>				
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="73">
+			<Sub3 Number="0">
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetContentIdFromOrderReference"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.73.0/spGetContentIdFromOrderReference.sql"/>
 			</Sub3>
 		</Sub2>
 		<Sub2 Number="73">
 			<Sub3 Number="0">
 				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.73.0/tblCartContact.sql"/>
-				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.73.0/tblCartShippingMethods.sql"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.73.0/tblCartShippingMethods.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="74">
+			<Sub3 Number="0">
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spCleanDatabase"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.74.0/spCleanDatabase.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="75">
+			<Sub3 Number="0">
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetPriceRange"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.75.0/spGetPriceRange.sql"/>				
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="76">
+			<Sub3 Number="0">				
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetValidShippingOptions"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.76.0/spGetValidShippingOptions.sql"/>
+			    <Action Order="3" Type="Drop" ObjectType="Procedure" ObjectName="spGetParentPagesForCache"/>
+				<Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.0.76.0/spGetParentPagesForCache.sql"/>
+                <Action Order="5" Type="File" ObjectType="" ObjectName="/v5/6.0.76.0/AlterQuery_tblOptOutAddresses.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="77">
+			<Sub3 Number="0">
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetValidShippingOptions"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.77.0/spGetValidShippingOptions.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="78">
+			<Sub3 Number="0">
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spGetAllMenusList"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.78.0/spGetAllMenusList.sql"/>
+			</Sub3>
+		</Sub2>
+      <Sub2 Number="79">
+        <Sub3 Number="0">
+          <Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.79.0/spGetCartContact.sql"/>
+          <Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.79.0/AddColumn_tblOptOutAddresses.sql"/>
+		  <Action Order="3" Type="Drop" ObjectType="Procedure" ObjectName="spCleanDatabase"/>
+		  <Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.0.79.0/spCleanDatabase.sql"/>
+        </Sub3>
+      </Sub2>
+		<Sub2 Number="80">
+			<Sub3 Number="0">
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="spCheckDiscounts"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.80.0/spCheckDiscounts.sql"/>
+			</Sub3>
+		</Sub2>
+		<Sub2 Number="81">
+			<Sub3 Number="0">
+				<Action Order="1" Type="Drop" ObjectType="Procedure" ObjectName="tblCartContact.sql"/>
 			</Sub3>
 		</Sub2>
     </Sub1>

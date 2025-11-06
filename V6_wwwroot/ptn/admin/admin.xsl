@@ -803,14 +803,7 @@
                 </div>
               </div>
               <div class="col-lg-4">
-                <div class="card card-default matchHeight">
-                  <div class="card-header">
-                    <h4 >Performance Tips</h4>
-                  </div>
-                  <div class="card-body">
-                    <p>Have you checked Google Analytics recently ?</p>
-                  </div>
-                </div>
+				  <xsl:apply-templates select="." mode="dash-col2"/>               
               </div>
               <div class="col-lg-4">
                 <div class="card card-default">
@@ -1037,6 +1030,17 @@
       </div>
     </section>
   </xsl:template>
+
+	<xsl:template match="Page" mode="dash-col2">
+	<div class="card card-default matchHeight">
+		<div class="card-header">
+			<h4 >Performance Tips</h4>
+		</div>
+		<div class="card-body">
+			<p>Have you checked Google Analytics recently ?</p>
+		</div>
+	</div>
+	</xsl:template>
 
 	<xsl:template match="Module" mode="admin-module">
 		unknown module Type
@@ -5254,6 +5258,11 @@ $(document).ready(function () {
               <xsl:text> </xsl:text>Activity
             </a>
           </xsl:if>
+			<a href="{$appPath}?ewCmd=ListUserContent&amp;dirId={@id}" class="btn btn-sm btn-outline-primary">
+				<i class="fa fa-user-secret fa-white">
+					<xsl:text> </xsl:text>
+				</i><xsl:text> </xsl:text>User Content
+			</a>
           <xsl:choose>
             <xsl:when test="Status='0'">
               <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-sm btn-outline-danger">
@@ -10737,8 +10746,8 @@ $(document).ready(function () {
 
       <td >
         <span class="edit-option-links-blue">
-          <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-primary" title="Edit this new code set">View/Add Codes</a>
-          <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-primary" title="Edit this new code set">Code Memberships</a>
+          <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-primary" title="Edit this new code set">View/Generate Codes</a>
+         <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-primary" title="Edit this new code set">Code Memberships</a>
         </span>
       </td>
     </tr>
@@ -10839,13 +10848,23 @@ $(document).ready(function () {
           <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodes" class="btn btn-primary btn-xs" title="Generate Codes">
             <i class="fa fa-plus">
               <xsl:text> </xsl:text>
-            </i> View/Add Codes
+            </i> View/Generate Codes
           </a>
+			<a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ImportCodes" class="btn btn-primary btn-xs" title="Import Codes">
+				<i class="fa fa-file-import">
+					<xsl:text> </xsl:text>
+				</i> Import Codes
+			</a>
           <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-primary btn-xs" title="Edit this new code set">
             <i class="fa fa-users">
               <xsl:text> </xsl:text>
             </i> Code Memberships
           </a>
+			<a href="{$appPath}?ewCmd=MemberCodes&amp;subCmd=DeleteCodeGroup&amp;id={@nCodeKey}" class="btn btn-danger btn-sm ">
+				<i class="fa fa-trash-alt fa-white">
+					<xsl:text> </xsl:text>
+				</i>
+			</a>
         </span>
       </td>
     </tr>

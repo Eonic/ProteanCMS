@@ -1949,6 +1949,14 @@
             <returns>Result of check (true - is starts with the data URI scheme;
             false - is not starts with the data URI scheme)</returns>
         </member>
+        <member name="M:BundleTransformer.Core.Helpers.UrlHelpers.StartsWithHashMark(System.String)">
+            <summary>
+            Determines whether the beginning of this url matches the hash mark
+            </summary>
+            <param name="url">URL</param>
+            <returns>Result of check (true - is starts with the hash mark;
+            false - is not starts with the hash mark)</returns>
+        </member>
         <member name="M:BundleTransformer.Core.Helpers.UrlHelpers.ProcessBackSlashes(System.String)">
             <summary>
             Converts a back slashes to forward slashes
