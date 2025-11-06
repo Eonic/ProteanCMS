@@ -47,7 +47,7 @@ namespace Protean.Providers
                 return this;
             }
 
-            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
+            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag, ref XmlElement oCartXML)
             {
                 string exceptionMessage = string.Empty;
                 // this will work basic monetary discounts
@@ -142,7 +142,37 @@ namespace Protean.Providers
                             // work out depending on value/percent
                             if (Conversions.ToDouble(oTestElmt.GetAttribute("bDiscountIsPercent")) == 0d)
                             {
-                                nUnitPrice = (decimal)(nUnitPrice - Convert.ToDecimal(oTestElmt.GetAttribute("nDiscountValue")));
+                                decimal discountValue = Convert.ToDecimal(oTestElmt.GetAttribute("nDiscountValue"));
+                                long minQty = Conversions.ToLong(oTestElmt.GetAttribute("nDiscountMinQuantity"));
+                                if (minQty <= 0) minQty = 1;
+
+                                // calculate total units for this product (sum of all rows with same id)
+                                int productId = Conversions.ToInteger(oItemLoop.GetAttribute("id"));
+                                long totalUnits = 0;
+                                foreach (XmlElement x in oFinalDiscounts.SelectNodes("Discounts/Item"))
+                                {
+                                    if (Conversions.ToInteger(x.GetAttribute("id")) == productId)
+                                    {
+                                        totalUnits += Conversions.ToLong(x.GetAttribute("quantity"));
+                                    }
+                                }
+
+                                if (totalUnits >= minQty)
+                                {
+                                    // total discount = fixed discount for product
+                                    nTotalSaving = discountValue;
+
+                                    // distribute discount proportionally for this row
+                                    decimal rowDiscount = nTotalSaving * nUnits / totalUnits;
+                                    decimal unitDiscount = nUnits > 0 ? rowDiscount / nUnits : 0m;
+
+                                    nUnitPrice -= unitDiscount;
+                                    if (nUnitPrice < 0m) nUnitPrice = 0m;
+                                }
+                                else
+                                {
+                                    nTotalSaving = 0m; // quantity below min, no discount
+                                }
                             }
                             else
                             {
@@ -189,6 +219,24 @@ namespace Protean.Providers
                         oPriceLine.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
 
                         oPriceElmt.AppendChild(oPriceLine);
+
+                        // --- Update oCartXML directly ---
+                        int nId = Conversions.ToInteger(oItemLoop.GetAttribute("id"));                        
+                        decimal nOriginalUnitPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("OriginalUnitPrice"));
+                        decimal originalLineTotal = nOriginalUnitPrice * nUnits;
+                        XmlElement oCartItem = (XmlElement)oCartXML.SelectSingleNode("Item[@id=" + nId + "]");
+                        if (oCartItem != null)
+                        {
+                            decimal discountedLineTotal = nUnitPrice * nUnits;
+                            decimal unitSaving = nUnits > 0 ? (nCurrentSaving / nUnits) : 0m;
+
+                            oCartItem.SetAttribute("originalPrice", nOriginalUnitPrice.ToString("0.00"));
+                            oCartItem.SetAttribute("price", nUnitPrice.ToString("0.00"));
+                            oCartItem.SetAttribute("itemTotal", discountedLineTotal.ToString("0.00"));
+                            oCartItem.SetAttribute("unitSaving", unitSaving.ToString("0.00"));
+                            oCartItem.SetAttribute("itemSaving", nCurrentSaving.ToString("0.00"));
+                            oCartItem.SetAttribute("discount", nCurrentSaving.ToString("0.00"));                          
+                        }
                         // we will always apply these
                         oHighestElmt.SetAttribute("Applied", 1.ToString());
                     // End If

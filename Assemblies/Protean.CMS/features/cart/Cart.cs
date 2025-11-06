@@ -2543,20 +2543,9 @@ namespace Protean
 
                         if (oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode") != null)
                         {
-
-                            string sDiscoutCode = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText;
-                            if (myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode"))
-                            {
-                                string sSql = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values (";
-                                sSql += mnCartId + ",'";
-                                sSql += sDiscoutCode + "')";
-
-
-                                moDBHelper.ExeProcessSql(sSql);
-                            }
+                            moDiscount.RecordDiscountUsage(ref oCartElmt);
                         }
                         calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
-
                     }
 
 
@@ -3691,11 +3680,12 @@ namespace Protean
                             }
 
                             // Add Any Client Notes
+                            //cartxml - discount node not available- dont import
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
                                 oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
-                                if (Convert.ToString(oElmt.FirstChild) != "")
+                                if (Convert.ToString(oElmt.FirstChild) != "" && oCartElmt.SelectSingleNode("Item/Discount") != null)
                                 {
                                     if (oElmt.FirstChild.Name == "Notes")
                                     {
