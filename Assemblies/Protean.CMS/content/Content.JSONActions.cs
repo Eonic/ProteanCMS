@@ -35,6 +35,7 @@ namespace Protean
                 public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Content.JSONActions";
                 private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
+                private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 private Cms myWeb;
                 private Protean.Cms.Cart myCart;
                 public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
@@ -85,11 +86,11 @@ namespace Protean
                     {
                         long newContentId = 0;
                         if (myApi.mbAdminMode)
-                        { 
+                        {
                             // Extract fields from JSON
                             long contentId = Convert.ToInt64(jObj["contentId"] ?? 0);
                             string contentType = Convert.ToString(jObj["contentType"]);
-                            string ContentName = Convert.ToString(jObj["ContentName"]);                           
+                            string ContentName = Convert.ToString(jObj["ContentName"]);
                             JArray values = (JArray)jObj["values"];
 
                             long pageId = Convert.ToInt64(jObj["pageId"] ?? 0);
@@ -176,8 +177,8 @@ namespace Protean
                             XmlNode node = oContentInstance.SelectSingleNode(xRootBriefPath + xpath);
                             if (node != null) node.InnerXml = value;
                             XmlNode node1 = oContentInstance.SelectSingleNode(xRootDetailPath + xpath);
-                            if (node1 != null) 
-                            { 
+                            if (node1 != null)
+                            {
                                 node1.InnerXml = value;
                             }
                             else
@@ -650,6 +651,255 @@ namespace Protean
                         }
                     }
                 }
+
+                public string GetGoogleReviews(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject apiUrl)
+                {
+                    string jsonResult = string.Empty;
+                    XmlElement cReviewNode = myWeb.moPageXml.CreateElement("GoogleReview");
+
+                    try
+                    {
+                        if (moWebConfig["PlaceId"] != null && moWebConfig["PlaceId"] != "" &&
+                            moWebConfig["GoogleReviewAPIKey"] != null && moWebConfig["GoogleReviewAPIKey"] != "")
+                        {
+                            string placeId = moWebConfig["PlaceId"].ToString();
+                            string apiKey = moWebConfig["GoogleReviewAPIKey"].ToString();
+
+                            string cUrl = $"https://maps.googleapis.com/maps/api/place/details/json?place_id={placeId}&fields=name,rating,user_ratings_total,reviews&key={apiKey}";
+
+                            var request = WebRequest.Create(cUrl);
+                            using (var response = request.GetResponse())
+                            {
+                                if (response != null)
+                                {
+                                    using (var content = response.GetResponseStream())
+                                    using (var reader = new StreamReader(content))
+                                    {
+                                        var jsonString = reader.ReadToEnd();
+                                        var json = JObject.Parse(jsonString);
+
+                                        //  Add total review count
+                                        var totalCount = json["result"]?["user_ratings_total"]?.ToString() ?? "0";
+                                        XmlElement totalNode = myWeb.moPageXml.CreateElement("TotalReviewCount");
+                                        totalNode.InnerText = totalCount;
+                                        cReviewNode.AppendChild(totalNode);
+
+                                        var avgRating = json["result"]?["rating"]?.ToString() ?? "0";
+                                        XmlElement avgRatingNode = myWeb.moPageXml.CreateElement("AverageRating");
+                                        avgRatingNode.InnerText = avgRating;
+                                        cReviewNode.AppendChild(avgRatingNode);
+
+                                        var allReviews = json["result"]?["reviews"];
+                                        if (allReviews != null)
+                                        {
+                                            foreach (var r in allReviews)
+                                            {
+                                                XmlElement cContentNode = myWeb.moPageXml.CreateElement("Content");
+
+                                                cContentNode.SetAttribute("name", r["author_name"]?.ToString() ?? "");
+                                                cContentNode.SetAttribute("type", "Review");
+                                                cContentNode.SetAttribute("status", "1");
+                                                cContentNode.SetAttribute("parId", myApi.mnPageId.ToString());
+                                                cContentNode.SetAttribute("showRelated", "Tag");
+
+                                                XmlElement reviewer = myWeb.moPageXml.CreateElement("Reviewer");
+                                                reviewer.InnerText = r["author_name"]?.ToString() ?? "";
+
+                                                XmlElement reviewDate = myWeb.moPageXml.CreateElement("ReviewDate");
+                                                reviewDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
+
+                                                XmlElement url = myWeb.moPageXml.CreateElement("Url");
+                                                url.InnerText = r["author_url"]?.ToString() ?? "";
+
+                                                XmlElement summary = myWeb.moPageXml.CreateElement("Summary");
+                                                summary.InnerText = r["text"]?.ToString() ?? "";
+
+                                                XmlElement description = myWeb.moPageXml.CreateElement("Description");
+                                                description.InnerText = r["text"]?.ToString() ?? "";
+
+                                                XmlElement rating = myWeb.moPageXml.CreateElement("Rating");
+                                                rating.InnerText = r["rating"]?.ToString() ?? "";
+
+                                                XmlElement images = myWeb.moPageXml.CreateElement("Images");
+                                                string profilePhotoUrl = r["profile_photo_url"]?.ToString();
+                                                if (!string.IsNullOrEmpty(profilePhotoUrl))
+                                                {
+                                                    XmlElement imgThumb = myWeb.moPageXml.CreateElement("img");
+                                                    imgThumb.SetAttribute("src", profilePhotoUrl);
+                                                    imgThumb.SetAttribute("width", "80");
+                                                    imgThumb.SetAttribute("height", "80");
+                                                    imgThumb.SetAttribute("class", "thumbnail");
+                                                    images.AppendChild(imgThumb);
+                                                }
+
+                                                cContentNode.AppendChild(reviewer);
+                                                cContentNode.AppendChild(reviewDate);
+                                                cContentNode.AppendChild(url);
+                                                cContentNode.AppendChild(summary);
+                                                cContentNode.AppendChild(description);
+                                                cContentNode.AppendChild(rating);
+                                                cContentNode.AppendChild(images);
+                                                cReviewNode.AppendChild(cContentNode);
+                                            }
+                                        }
+
+                                        // ✅ Add rating limit
+                                        XmlElement cRatingLimit = myWeb.moPageXml.CreateElement("RatingLimit");
+                                        string limit = moWebConfig["ReviewRatingLimit"]?.ToString() ?? "0";
+                                        cRatingLimit.SetAttribute("ratingLimit", limit);
+                                        cReviewNode.AppendChild(cRatingLimit);
+                                    }
+                                }
+                            }
+
+                            jsonResult = JsonConvert.SerializeXmlNode(cReviewNode, Newtonsoft.Json.Formatting.Indented);
+                            jsonResult = jsonResult.Replace("\"@", "\"_");
+                            return jsonResult;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        jsonResult = JsonConvert.SerializeObject(new { error = ex.Message });
+                    }
+
+                    return jsonResult;
+                }
+
+
+                //public string GetGoogleReviews(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject apiUrl)
+                //{
+                //    string jsonResult = string.Empty;
+                //    XmlElement cReviewNode = myWeb.moPageXml.CreateElement("GoogleReview");
+
+                //    try
+                //    {
+                //        string cGoogleReviewAPIKey = string.Empty;
+
+                //        //if (apiUrl.ContainsKey("apiurl"))
+                //        //{
+                //        //    cGoogleReviewAPIKey = apiUrl["apiurl"]?.ToString();
+                //        //}
+
+                //        //if (!string.IsNullOrEmpty(cGoogleReviewAPIKey))
+                //        //{
+                //            if (moWebConfig["PlaceId"] != null && moWebConfig["PlaceId"] != "" && moWebConfig["GoogleReviewAPIKey"] != null && moWebConfig["GoogleReviewAPIKey"] != "")
+                //            {
+
+                //                string cUrl = "https://maps.googleapis.com/maps/api/place/details/json?place_id=" + moWebConfig["PlaceId"].ToString() + "& fields=name,rating,user_ratings_total,reviews&key=" + moWebConfig["GoogleReviewAPIKey"].ToString();
+                //                var request = WebRequest.Create(cUrl);
+                //                using (var response = request.GetResponse())
+                //                {
+                //                    if (response != null)
+                //                    {
+                //                        using (var content = response.GetResponseStream())
+                //                        using (var reader = new StreamReader(content))
+                //                        {
+                //                            var jsonString = reader.ReadToEnd();
+
+                //                            var json = JObject.Parse(jsonString);
+                //                            var reviews = json["result"]?["reviews"];
+                //                            if (reviews == null) return "";
+
+
+
+                //                            foreach (var r in reviews)
+                //                            {
+                //                                XmlElement cContentNode = myWeb.moPageXml.CreateElement("Content");
+
+                //                                cContentNode.SetAttribute("id", "");
+                //                                cContentNode.SetAttribute("ref", "");
+                //                                cContentNode.SetAttribute("name", r["author_name"]?.ToString() ?? "");
+                //                                cContentNode.SetAttribute("type", "Review");
+                //                                cContentNode.SetAttribute("status", "1");
+                //                                cContentNode.SetAttribute("publish", "");
+                //                                cContentNode.SetAttribute("owner", "0");
+                //                                cContentNode.SetAttribute("parId", myApi.mnPageId.ToString());
+                //                                cContentNode.SetAttribute("showRelated", "Tag");
+                //                                cContentNode.SetAttribute("Intro", "");
+                //                                cContentNode.SetAttribute("rtype", "");
+
+                //                                XmlElement reviewer = myWeb.moPageXml.CreateElement("Reviewer");
+                //                                reviewer.InnerText = r["author_name"]?.ToString() ?? "";
+
+                //                                XmlElement reviewDate = myWeb.moPageXml.CreateElement("ReviewDate");
+                //                                reviewDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
+
+                //                                XmlElement url = myWeb.moPageXml.CreateElement("Url");
+                //                                url.InnerText = r["author_url"]?.ToString() ?? "";
+
+                //                                XmlElement summary = myWeb.moPageXml.CreateElement("Summary");
+                //                                summary.InnerText = r["text"]?.ToString() ?? "";
+
+                //                                XmlElement description = myWeb.moPageXml.CreateElement("Description");
+                //                                description.InnerText = r["text"]?.ToString() ?? "";
+
+                //                                XmlElement rating = myWeb.moPageXml.CreateElement("Rating");
+                //                                rating.InnerText = r["rating"]?.ToString() ?? "";
+                //                                //Image
+                //                                XmlElement images = myWeb.moPageXml.CreateElement("Images");
+                //                                string profilePhotoUrl = r["profile_photo_url"]?.ToString();
+                //                                if (!string.IsNullOrEmpty(profilePhotoUrl))
+                //                                {
+                //                                    XmlElement imgThumb = myWeb.moPageXml.CreateElement("img");
+                //                                    imgThumb.SetAttribute("src", profilePhotoUrl);
+                //                                    imgThumb.SetAttribute("width", "80");
+                //                                    imgThumb.SetAttribute("height", "80");
+                //                                    imgThumb.SetAttribute("alt", "");
+                //                                    imgThumb.SetAttribute("class", "thumbnail");
+                //                                    imgThumb.SetAttribute("type", "thumbnail");
+                //                                    images.AppendChild(imgThumb);
+                //                                }
+
+                //                                XmlElement path = myWeb.moPageXml.CreateElement("Path");
+                //                                XmlElement emailSent = myWeb.moPageXml.CreateElement("EmailSent");
+                //                                emailSent.InnerText = "False";
+                //                                XmlElement showImage = myWeb.moPageXml.CreateElement("ShowImage");
+                //                                showImage.InnerText = string.IsNullOrEmpty(profilePhotoUrl) ? "False" : "True";
+                //                                XmlElement topReview = myWeb.moPageXml.CreateElement("TopReview");
+                //                                XmlElement reviewSinceDate = myWeb.moPageXml.CreateElement("reviewSinceDate");
+                //                                reviewSinceDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
+
+                //                                cContentNode.AppendChild(reviewer);
+                //                                cContentNode.AppendChild(reviewDate);
+                //                                cContentNode.AppendChild(url);
+                //                                cContentNode.AppendChild(summary);
+                //                                cContentNode.AppendChild(description);
+                //                                cContentNode.AppendChild(rating);
+                //                                cContentNode.AppendChild(images);
+                //                                cContentNode.AppendChild(path);
+                //                                cContentNode.AppendChild(emailSent);
+                //                                cContentNode.AppendChild(showImage);
+                //                                cContentNode.AppendChild(topReview);
+                //                                cContentNode.AppendChild(reviewSinceDate);
+                //                                cReviewNode.AppendChild(cContentNode);
+                //                            }
+                //                            XmlElement cRatingLimit = myWeb.moPageXml.CreateElement("RatingLimit");
+                //                            if (moWebConfig["ReviewRatingLimit"] != null && moWebConfig["ReviewRatingLimit"] != "")
+                //                            {
+                //                                cRatingLimit.SetAttribute("ratingLimit", moWebConfig["ReviewRatingLimit"].ToString());
+                //                            }
+                //                            else
+                //                            {
+                //                                cRatingLimit.SetAttribute("ratingLimit", "0");
+                //                            }
+                //                            cReviewNode.AppendChild(cRatingLimit);
+                //                        }
+                //                    }
+                //                }
+                //                jsonResult = JsonConvert.SerializeXmlNode(cReviewNode, Newtonsoft.Json.Formatting.Indented);
+                //                jsonResult = jsonResult.Replace("\"@", "\"_");
+                //                return jsonResult;
+                //            }
+                //        //}
+                //    }
+                //    catch (Exception ex)
+                //    {
+                //        // Optional: log or handle error
+                //        jsonResult = JsonConvert.SerializeObject(new { error = ex.Message });
+                //    }
+
+                //    return jsonResult;
+                //}
 
                 #endregion
             }

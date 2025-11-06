@@ -663,7 +663,18 @@
 			<Sub3 Number="0">
 				<Action Order="1" Type="File" ObjectType="" ObjectName="tblCartContact.sql"/>
 				<Action Order="2" Type="File" ObjectType="" ObjectName="tblEmailActivityLog.sql"/>
-			</Sub3>
+				<Action Order="3" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/AltertblCartDiscountRules.sql"/>
+				<Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/AltertblSingleusePromoCode.sql"/>
+				<Action Order="5" Type="Drop" ObjectType="Procedure" ObjectName="spRecordDiscountUsage"/>
+				<Action Order="6" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/spRecordDiscountUsage.sql"/>
+				<Action Order="7" Type="Drop" ObjectType="Procedure" ObjectName="spCheckDiscounts"/>
+				<Action Order="8" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/spCheckDiscounts.sql"/>
+				<Action Order="9" Type="Drop" ObjectType="Procedure" ObjectName="spCleanDatabase"/>
+				<Action Order="10" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/spCleanDatabase.sql"/>
+				<Action Order="11" Type="Drop" ObjectType="Procedure" ObjectName="spCleaningOldOrder"/>
+				<Action Order="12" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/spCleaningOldOrder.sql"/>
+				</Sub3>
+			
 		</Sub2>
     </Sub1>
   </Version>
