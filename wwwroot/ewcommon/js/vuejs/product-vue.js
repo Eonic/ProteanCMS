@@ -1,18 +1,19 @@
-
-    document.addEventListener("DOMContentLoaded", function () {
+﻿
+document.addEventListener("DOMContentLoaded", function () {
 
     var addGoogleReviewsAPIUrl = '/ewapi/Cms.Content/GetGoogleReviews';
 
-    var isGoogleReview = document.querySelector(".Reviews");
+    var isGoogleReview = document.querySelector(".GoogleReviews");
     if (isGoogleReview) {
         new Vue({
-            el: '.Reviews',
+            el: '.GoogleReviews',
             data: {
                 GoogleReviewResponse: null,
                 modalReview: null
+
             },
             computed: {
-                //  Filtered reviews based on rating limit (safe checks)
+                // Filtered reviews: 4+ stars or rating limit
                 filteredReviews: function () {
                     if (
                         !this.GoogleReviewResponse ||
@@ -30,25 +31,52 @@
                     );
 
                     return this.GoogleReviewResponse.GoogleReview.Content.filter(function (review) {
-                        //  Skip null or invalid reviews safely
-                        debugger;
                         if (!review || review.Rating == null) return false;
                         var ratingValue = parseInt(review.Rating);
                         return !isNaN(ratingValue) && ratingValue >= ratingLimit;
                     });
                 },
 
-                //  Count of reviews meeting rating condition
+                // ✅ Total count of ALL reviews
+                totalReviewCount: function () {
+                    if (
+                        !this.GoogleReviewResponse ||
+                        !this.GoogleReviewResponse.GoogleReview
+                    ) {
+                        return 0;
+                    }
+
+                    // Prefer API-provided count
+                    if (this.GoogleReviewResponse.GoogleReview.TotalReviewCount) {
+                        return this.GoogleReviewResponse.GoogleReview.TotalReviewCount;
+                    }
+                },
+
+                // ✅ Average rating of ALL reviews
+                overallAverageRating: function () {
+                    if (
+                        !this.GoogleReviewResponse ||
+                        !this.GoogleReviewResponse.GoogleReview
+                    ) {
+                        return 0;
+                    }
+
+                    // Prefer API-provided value
+                    if (this.GoogleReviewResponse.GoogleReview.AverageRating) {
+                        return parseFloat(this.GoogleReviewResponse.GoogleReview.AverageRating).toFixed(2);
+                    }
+                },
+
+                // Filtered review count (4+ stars)
                 reviewCount: function () {
                     return this.filteredReviews.length;
                 },
 
-                // Average rating with safe reduce
+                // Average rating for filtered reviews
                 averageRating: function () {
                     if (this.filteredReviews.length === 0) return 0;
 
                     var total = this.filteredReviews.reduce(function (sum, review) {
-                        debugger
                         if (!review || review.Rating == null) return sum;
                         var val = parseInt(review.Rating);
                         return sum + (isNaN(val) ? 0 : val);
@@ -60,40 +88,35 @@
             methods: {
                 // Fetch Google Reviews
                 getGoogleReviews: function () {
-                    var self = this;
-                    var apiurl = document.getElementById("googleAPIUrl")
-                        ? document.getElementById("googleAPIUrl").value
-                        : null;
 
-                    if (apiurl) {
-                        var inputJson = { apiurl: apiurl };
-                        axios.post(addGoogleReviewsAPIUrl, inputJson)
-                            .then(function (response) {
-                                debugger;
-                                console.log("Google Reviews Response:", response.data);
-                                self.GoogleReviewResponse = response.data;
-                            })
-                            .catch(function (error) {
-                                console.error("Error fetching Google Reviews:", error);
-                            });
-                    } else {
-                        console.warn("Missing Google API URL value.");
-                    }
+                    var self = this;
+                    axios.post(addGoogleReviewsAPIUrl)
+                        .then(function (response) {
+
+                            self.GoogleReviewResponse = response.data;
+
+                        })
+                        .catch(function (error) {
+                            console.error("Error fetching Google Reviews:", error);
+                        });
+                    //} else {
+                    //    console.warn("Missing Google API URL value.");
+                    //}
                 },
 
-               
+
                 wordCount: function (text) {
                     if (!text) return 0;
                     return text.trim().split(/\s+/).length;
                 },
 
-               
+
                 firstWords: function (text, n) {
                     if (!text) return '';
                     return text.trim().split(/\s+/).slice(0, n).join(' ');
                 },
 
-              
+
                 showModal: function (review) {
                     this.modalReview = review;
                     $('#ShowReviewSummary').modal('show');
