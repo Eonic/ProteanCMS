@@ -1,5 +1,6 @@
 ﻿using AngleSharp.Text;
 using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Ajax.Utilities;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
@@ -200,10 +201,10 @@ namespace Protean
                         
                         string[] bBox = Convert.ToString(jObj["bbox"]).SplitCommas();
                         
-                        string swLng = bBox[1];
                         string swLat = bBox[0];
-                        string neLng = bBox[3];
+                        string swLng = bBox[1];
                         string neLat = bBox[2];
+                        string neLng = bBox[3];
 
                         SqlConnection oConn = myWeb.moDbHelper.oConn;
                          oConn.Open(); 
@@ -213,8 +214,8 @@ namespace Protean
                             cmd.CommandType = CommandType.StoredProcedure;
 
                             // Pass parameters safely
-                            cmd.Parameters.Add("@SouthWestLat", SqlDbType.Float).Value = Convert.ToDouble(swLng);
-                            cmd.Parameters.Add("@SouthWestLon", SqlDbType.Float).Value = Convert.ToDouble(swLat);
+                            cmd.Parameters.Add("@SouthWestLat", SqlDbType.Float).Value = Convert.ToDouble(swLat);
+                            cmd.Parameters.Add("@SouthWestLon", SqlDbType.Float).Value = Convert.ToDouble(swLng);
                             cmd.Parameters.Add("@NorthEastLat", SqlDbType.Float).Value = Convert.ToDouble(neLat);
                             cmd.Parameters.Add("@NorthEastLon", SqlDbType.Float).Value = Convert.ToDouble(neLng);
 
@@ -228,16 +229,19 @@ namespace Protean
 
                                         items.Add(new GeoContentItem
                                         {
-                                            id = oDr.GetInt32(oDr.GetOrdinal("id")),
-                                            name = oDr.GetString(oDr.GetOrdinal("name")),
-                                            lat = oDr.GetString(oDr.GetOrdinal("Latitude")),
-                                            lng = oDr.GetString(oDr.GetOrdinal("Longitude"))
+                                            id = oDr["id"].ToString(),
+                                            name = oDr["name"].ToString(),
+                                            url = Tools.Text.CleanName(oDr["path"].ToString(), false, true),
+                                            lat = oDr["lat"].ToString(),
+                                            lng = oDr["lng"].ToString()
                                         });
 
                                     }
                                 }
                             }
-                            return JsonConvert.SerializeObject(items);
+
+                            string jsonreturn = JsonConvert.SerializeObject(items);
+                            return jsonreturn;
                         }
               
                     }
@@ -252,7 +256,7 @@ namespace Protean
 
                 private class GeoContentItem
                 {
-                    public int id { get; set; }
+                    public string id { get; set; }
                     public string name { get; set; }
                     public string url { get; set; }
                     public string lat { get; set; }
