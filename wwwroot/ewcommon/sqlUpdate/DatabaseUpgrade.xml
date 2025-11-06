@@ -674,7 +674,7 @@
 				<Action Order="11" Type="Drop" ObjectType="Procedure" ObjectName="spCleaningOldOrder"/>
 				<Action Order="12" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/spCleaningOldOrder.sql"/>
 				</Sub3>
-			</Sub3>
+			
 		</Sub2>
     </Sub1>
   </Version>
