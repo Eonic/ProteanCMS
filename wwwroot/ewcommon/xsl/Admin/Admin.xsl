@@ -4651,7 +4651,7 @@
 					<xsl:with-param name="date">
 						<xsl:value-of select="@publishDate"/>
 					</xsl:with-param>
-					<xsl:with-param name="showTime">true</xsl:with-param>
+					<xsl:with-param name="showTime">false</xsl:with-param>
 				</xsl:call-template>
 			</td>
 			<td>
@@ -4661,7 +4661,7 @@
 							<xsl:with-param name="date">
 								<xsl:value-of select="@expireDate"/>
 							</xsl:with-param>
-							<xsl:with-param name="showTime">true</xsl:with-param>
+							<xsl:with-param name="showTime">false</xsl:with-param>
 						</xsl:call-template>
 					</xsl:when>
 					<xsl:otherwise>

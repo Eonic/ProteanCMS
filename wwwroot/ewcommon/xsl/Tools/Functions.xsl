@@ -968,9 +968,9 @@
   </xsl:template>
 
   <xsl:template match="Content[@type='CookieFirst']" mode="headerOnlyContentJS">
-    <!--<xsl:if test="not($adminMode)">
+    <xsl:if test="not($adminMode)">
       <script src="https://consent.cookiefirst.com/sites/{SiteUrl/node()}-{ApiKey/node()}/consent.js">&#160;</script>
-    </xsl:if>-->
+    </xsl:if>
   </xsl:template>
 
 

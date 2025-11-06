@@ -74,6 +74,7 @@
         <add key="FeedOptimiseID" value="" />
         <add key="ReCaptchaKey" value="" />
         <add key="ReCaptchaKeySecret" value="" />
+		<add key="ReCaptchaVersion" value="" />  
         <add key="XmlSettings" value="" />
         <add key="PageCache" value="off" />
         <add key="PageCacheTimeout" value="24" />

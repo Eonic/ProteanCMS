@@ -1,14 +1,11 @@
-﻿using DocumentFormat.OpenXml.ExtendedProperties;
-using Microsoft.VisualBasic;
+﻿using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.DiscountRule;
 using System;
 using System.Collections;
 using System.Data;
-using System.Data.SqlClient;
 using System.Runtime.InteropServices;
 using System.Web.Configuration;
-using System.Windows.Forms;
 using System.Xml;
 using static Protean.stdTools;
 
@@ -544,6 +541,39 @@ namespace Protean
                     }
 
                     return default;
+                }
+
+                public virtual void RecordDiscountUsage(ref XmlElement oCartElmt)
+                {
+                    string sDiscoutCode = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText;
+                    int discountKey = 0;
+                    XmlNode discountNode = oCartElmt.SelectSingleNode("//Discount");
+                    if (discountNode != null && discountNode.Attributes["nDiscountKey"] != null)
+                    {
+                        discountKey = Convert.ToInt32(discountNode.Attributes["nDiscountKey"].Value);
+                    }
+                    if (myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode"))
+                    {
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseLimit"))
+                        {
+                            DataSet oDS = new DataSet();
+                            if (myWeb.moDbHelper.checkDBObjectExists("spRecordDiscountUsage", Tools.Database.objectTypes.StoredProcedure))
+                            {
+                                var param = new Hashtable();
+                                param.Add("OrderId", myCart.mnCartId);
+                                param.Add("PromoCode", sDiscoutCode);
+                                param.Add("DiscountId", discountKey);
+                                oDS = myWeb.moDbHelper.GetDataSet("spRecordDiscountUsage", "Discount", "Discount", false, param, CommandType.StoredProcedure);
+                            }
+                        }
+                        else
+                        {
+                            string sSql = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values (";
+                            sSql += myCart.mnCartId + ",'";
+                            sSql += sDiscoutCode + "')";
+                            myWeb.moDbHelper.ExeProcessSql(sSql);
+                        }
+                    }
                 }
 
                 private string getUserEnteredPromoCode(ref XmlElement xmlNotes, ref XmlElement xmlCart)
@@ -1913,10 +1943,12 @@ namespace Protean
                                 bool hasUseLimitColumn = myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseLimit");                                
 
                                 foreach (DataRow discountRow in oDsDiscounts.Tables["Discount"].Rows)
-                                {                                   
-                                    int useCount = hasUseCountColumn ? Convert.ToInt32(discountRow["nUseCount"]) : 0;
-                                    int useLimit = hasUseLimitColumn && discountRow["nUseLimit"] != DBNull.Value ? Convert.ToInt32(discountRow["nUseLimit"]) : 0;
-
+                                {
+                                    int useCount = 0; int useLimit = 0;
+                                    if (hasUseCountColumn && discountRow["nUseCount"] != DBNull.Value)
+                                        useCount = Convert.ToInt32(discountRow["nUseCount"]);
+                                    if (hasUseLimitColumn && discountRow["nUseLimit"] != DBNull.Value)
+                                        useLimit = Convert.ToInt32(discountRow["nUseLimit"]);
                                     if (useLimit > 0 && useCount >= useLimit)
                                     {
                                         // This discount cannot be applied, skip it
