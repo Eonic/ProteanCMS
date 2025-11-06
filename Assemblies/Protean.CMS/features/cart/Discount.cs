@@ -554,19 +554,25 @@ namespace Protean
                     }
                     if (myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode"))
                     {
-                        DataSet oDS = new DataSet();
-                        if (myWeb.moDbHelper.checkDBObjectExists("spRecordDiscountUsage", Tools.Database.objectTypes.StoredProcedure))
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseLimit"))
                         {
-                            var param = new Hashtable();
-                            param.Add("OrderId", myCart.mnCartId);
-                            param.Add("PromoCode", sDiscoutCode);
-                            param.Add("DiscountId", discountKey);
-                            oDS = myWeb.moDbHelper.GetDataSet("spRecordDiscountUsage", "Discount", "Discount", false, param, CommandType.StoredProcedure);
+                            DataSet oDS = new DataSet();
+                            if (myWeb.moDbHelper.checkDBObjectExists("spRecordDiscountUsage", Tools.Database.objectTypes.StoredProcedure))
+                            {
+                                var param = new Hashtable();
+                                param.Add("OrderId", myCart.mnCartId);
+                                param.Add("PromoCode", sDiscoutCode);
+                                param.Add("DiscountId", discountKey);
+                                oDS = myWeb.moDbHelper.GetDataSet("spRecordDiscountUsage", "Discount", "Discount", false, param, CommandType.StoredProcedure);
+                            }
                         }
-                        //string sSql = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values (";
-                        //sSql += mnCartId + ",'";
-                        //sSql += sDiscoutCode + "')";
-                        //moDBHelper.ExeProcessSql(sSql);
+                        else
+                        {
+                            string sSql = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values (";
+                            sSql += myCart.mnCartId + ",'";
+                            sSql += sDiscoutCode + "')";
+                            myWeb.moDbHelper.ExeProcessSql(sSql);
+                        }
                     }
                 }
 
