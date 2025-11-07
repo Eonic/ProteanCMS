@@ -248,7 +248,7 @@ namespace Protean
 
                                 // get order date from cart xml
                                 DateTime? orderDate = null; 
-                                string cartId = oCartXML.SelectSingleNode("//Order/@cartId").InnerText;
+                                string cartId = oCartXML.GetAttribute("cartId");
                                 if (!string.IsNullOrEmpty(cartId))
                                 {
                                     // ✅ Get order insert date from tblAudit (through tblCartOrder)
