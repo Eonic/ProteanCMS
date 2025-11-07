@@ -7203,7 +7203,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                  
+
                                     // Calculate any shipping cost overage
                                     nShippingCost = Conversions.ToDouble(Strings.FormatNumber(Conversions.ToDouble(oRow["nShippingTotal"]), 2, TriState.True, TriState.False, TriState.False));
                                     double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
@@ -10014,7 +10014,8 @@ namespace Protean
                                     // Get stored CartXML
                                     if (Conversions.ToBoolean(Operators.AndObject(!Operators.ConditionalCompareObjectEqual(oDR["cCartXML"], "", false), bForceRefresh == false)))
                                     {
-                                        try {
+                                        try
+                                        {
                                             // if we have a badly saved xml we get a new one.
                                             oContent.InnerXml = Conversions.ToString(oDR["cCartXML"]);
                                         }
@@ -11220,23 +11221,24 @@ namespace Protean
 
             }
 
-            private double calcShippingCost(double baseCost, double overageUnit, double overageRate, double nWeight, double nWeightMax) {
+            private double calcShippingCost(double baseCost, double overageUnit, double overageRate, double nWeight, double nWeightMax)
+            {
                 try
                 {
                     double nShippingCost = baseCost;
-                nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+                    nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
 
-                if (overageUnit > 0)
-                {
-                    double multiplier = 0;
-                    if (nWeight > nWeightMax)
+                    if (overageUnit > 0)
                     {
-                        multiplier = Math.Ceiling(nWeight - nWeightMax);
+                        double multiplier = 0;
+                        if (nWeight > nWeightMax)
+                        {
+                            multiplier = Math.Ceiling(nWeight - nWeightMax);
+                        }
+                        nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
                     }
-                    nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
-                }
-               
-                return nShippingCost;
+
+                    return nShippingCost;
                 }
 
                 catch (Exception ex)
@@ -12038,10 +12040,15 @@ namespace Protean
                     {
                         useSavedAddressesOnCart(billingAddId, deliveryAddId, null);
                     }
-                    ConfirmPayment(ref oCartListElmt, ref oePaymentDetailsInstanceElmt, cNewAuthNumber, cMethodName, Amount);
-                    GetCart(ref oCartListElmt, mnCartId);
-                    oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber);
-                    SaveCartXML(oCartListElmt, mnCartId);
+                    XmlElement instanceNode = (XmlElement)oePaymentDetailsInstanceElmt.SelectSingleNode("//PaymentDetails/instance");
+
+                    if (instanceNode != null)
+                    {
+                        ConfirmPayment(ref oCartListElmt, ref instanceNode, cNewAuthNumber, cMethodName, Amount);
+                        GetCart(ref oCartListElmt, mnCartId);
+                        oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber);
+                        SaveCartXML(oCartListElmt, mnCartId);
+                    }
                     return mnCartId.ToString();
                 }
                 catch (Exception ex)
@@ -12074,7 +12081,7 @@ namespace Protean
                                 foreach (DataRow row in oDS.Tables["tblCartContact"].Rows)
                                 {
                                     DataRow oRow = row;
-                                    contact.cContactName = "GDPR Removal Request ("+ DateTime.Now +")";
+                                    contact.cContactName = "GDPR Removal Request (" + DateTime.Now + ")";
                                     contact.cContactAddress = "";
                                     contact.cContactCity = "";
                                     contact.cContactZip = "";
@@ -12152,7 +12159,7 @@ namespace Protean
                                 //            moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.OptOutAddresses, Conversions.ToLong(oOptOutRow["nOptOutKey"]));
                                 //            result += " Removed from tblOptOutAddresses.";
                                 //        }
-                                       
+
                                 //    }
                                 //}
                             }
@@ -12166,7 +12173,7 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "GDPRAnonomize", ex, "", "", gbDebug);
                     if (ex != null)
                     {
-                        result ="Error: " + ex.Message;
+                        result = "Error: " + ex.Message;
                     }
                     return result;
                 }
