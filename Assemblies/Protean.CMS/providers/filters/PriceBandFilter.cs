@@ -256,10 +256,10 @@ namespace Protean.Providers
                     {
                         if (filterSQL != "")
                         {
-                            cWhereSql = cWhereSql + " AND " + filterSQL;
+                            cWhereSql = cWhereSql + " AND ";//+ filterSQL;
                         }
                     }
-                   // cWhereSql = cWhereSql + filterSQL;
+                    cWhereSql = cWhereSql + filterSQL;
                 }
 
                 catch (Exception ex)
