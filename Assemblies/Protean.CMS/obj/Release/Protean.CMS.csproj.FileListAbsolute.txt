@@ -213,3 +213,10 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.Op
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\DocumentFormat.OpenXml.Framework.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Magick.Native-Q8-x64.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Microsoft.Identity.Abstractions.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Microsoft.Identity.Client.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Microsoft.IdentityModel.Abstractions.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Microsoft.Identity.Abstractions.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Microsoft.Identity.Client.xml
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Microsoft.IdentityModel.Abstractions.xml

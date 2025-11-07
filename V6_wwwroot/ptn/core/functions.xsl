@@ -3784,17 +3784,24 @@
     <xsl:variable name="pageURL">
       <xsl:choose>
         <xsl:when test="$currentPageDetail='true'">
-          <xsl:apply-templates select="$menu/MenuItem/descendant-or-self::MenuItem[@id=/Page/@id]" mode="getHref"/>
+          <xsl:apply-templates select="$menu/MenuItem/descendant-or-self::MenuItem[@id=/Page/@id]" mode="getHref"/>!
         </xsl:when>
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="$menu/descendant-or-self::MenuItem[@id=$contentParId]/@url='/'">
-              <xsl:call-template name="getSiteURL"/>
-
+              <xsl:call-template name="getSiteURL"/>!!
             </xsl:when>
             <xsl:otherwise>
-              <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
-            </xsl:otherwise>
+				<xsl:choose>
+					<xsl:when test="not($lang!='en-gb')">
+						<xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="$menu/descendant-or-self::MenuItem/PageVersion[@id=$contentParId]/parent::MenuItem" mode="getHref"/>
+					</xsl:otherwise>
+				</xsl:choose>
+
+			</xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
@@ -6248,7 +6255,14 @@
   <xsl:template match="Content[@type='Module']" mode="moduleTitle">
     <xsl:variable name="title">
       <span>
-        <xsl:value-of select="@title"/>
+		  <xsl:choose>
+			  <xsl:when test="Content[@lang!='']">
+				  <xsl:value-of select="Content[@lang=$lang]/@title"/> 
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="@title"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
         <xsl:text> </xsl:text>
       </span>
     </xsl:variable>
@@ -10462,5 +10476,12 @@
     <xsl:copy-of select="ew:GetFilterButtons()"/>
 
   </xsl:template>
+
+	<xsl:template name="GetLatLong">
+		<xsl:param name="address"/>
+		<xsl:if test="$address!=''">
+			<xsl:value-of select="ew:GetLatLong($address)"/>
+		</xsl:if>
+	</xsl:template>
 
 </xsl:stylesheet>

@@ -10,6 +10,8 @@
 
 using AngleSharp.Dom;
 using AngleSharp.Io;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Drawing.Charts;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Authentication;
@@ -5520,7 +5522,7 @@ namespace Protean
 
                     if (bExcludeHiddenOnOrdering)
                     {
-                        var oDt = new DataTable();
+                        var oDt = new System.Data.DataTable();
                         oDs.Tables[getTable(objectType)].DefaultView.Sort = "nStatus DESC";
                         oDt = oDs.Tables[getTable(objectType)].DefaultView.ToTable();
                         oDs.Tables[getTable(objectType)].Clear();
@@ -7337,6 +7339,29 @@ namespace Protean
                     return null;
                 }
 
+            }
+
+            public XmlElement GetUserContentXml(int nUserId, XmlElement oPageDetail)
+            {
+                PerfMonLog("DBHelper", "GetUserContentXml");
+                try
+                {
+                    var oContent = moPageXml.CreateElement("Contacts");
+                    string cWhereSql = " nInsertDirId = " + nUserId.ToString();
+                    int nCount = 100;
+                    long nTop = 100;
+                    string cOrderBy = "";
+                    string joinSQL = "";
+
+                    myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, ref oContent, oPageDetail: ref oPageDetail, false, false, nReturnRows: (int)nTop, cOrderBy: cOrderBy, cAdditionalJoins: joinSQL);
+
+                    return oContent;
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetUserContactsXMl", ex, ""));
+                    return null;
+                }
             }
 
 
@@ -12449,7 +12474,7 @@ namespace Protean
                     cSQL += cWhere + " ORDER BY cContentName";
                     oDS = GetDataSet(cSQL, "Content", "Contents");
 
-                    foreach (DataTable oDT in oDS.Tables)
+                    foreach (System.Data.DataTable oDT in oDS.Tables)
                     {
                         foreach (DataColumn oDC in oDT.Columns)
                             oDC.ColumnMapping = MappingType.Attribute;
@@ -14140,7 +14165,7 @@ namespace Protean
 
             }
 
-            public DataTable GetContacts(int nSupplierId, int nDirId)
+            public System.Data.DataTable GetContacts(int nSupplierId, int nDirId)
             {
                 PerfMonLog("dbTools", "GetContacts");
                 string sSql;

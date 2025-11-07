@@ -2334,7 +2334,12 @@ namespace Protean
                                 oCart = (Cms.Cart)null;
                                 break;
                             }
+                        case "ListUserContent": {
+                                sAdminLayout = "UserContent";
+                                oPageDetail.AppendChild(myWeb.moDbHelper.GetUserContentXml((int)Conversions.ToInteger("0" + myWeb.moRequest["dirId"]), oPageDetail));
 
+                                break;
+                            }
                         case "ListUserContacts":
                         case "ListContacts":
                         case "ListDirContacts":

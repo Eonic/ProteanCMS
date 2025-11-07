@@ -2,7 +2,7 @@
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.47.0"
+    Public Shared ewAssemblyVersion As String = "6.1.49.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.1.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
@@ -27,8 +27,8 @@ Public Class CustomActions
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.5.0.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "14.8.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "14.8.0.0"
+    Public Shared MagickNETCoreAssemblyVersion As String = "14.9.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "14.9.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
     Public Shared SystemBuffersVersion As String = "4.0.5.0"
@@ -37,10 +37,14 @@ Public Class CustomActions
     Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.3.0"
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
     Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.4.0"
-    Public Shared SystemTextJsonVersion As String = "9.0.0.8"
-    Public Shared MicrosoftBclAsyncInterfacesVersion As String = "9.0.0.8"
-    Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.8"
-    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.0.8"
+
+    Public Shared SystemTextJsonVersion As String = "9.0.0.10"
+    Public Shared MicrosoftBclAsyncInterfacesVersion As String = "9.0.0.10"
+    Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.10"
+    Public Shared SystemIOPipelines As String = "9.0.0.10"
+    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.0.10"
+    Public Shared SystemConfigurationManager As String = "9.0.0.10"
+
     Public Shared SystemNumericsVectorsVersion As String = "4.1.6.0"
     Public Shared AngleSharpVersion As String = "1.3.0.0"
     Public Shared PreMailerVersion As String = "2.7.2.0"
@@ -48,13 +52,11 @@ Public Class CustomActions
     Public Shared iTextSharpVersion As String = "3.7.4.0"
     Public Shared SkiaSharpVersion As String = "3.119.0.0"
     Public Shared BouncyCastleCrypto As String = "2.0.0.0"
-    Public Shared SystemIOPipelines As String = "9.0.0.8"
     Public Shared SystemDataSQLClient As String = "4.6.2.0" 'lib version 4.8.6
     Public Shared SystemDrawingCommon As String = "9.0.0.0"
-    ' Public Shared MicrosoftIdentityClientVersion As String = "4.74.1.0"
-    ' Public Shared MicrosoftIdentityModelAbstractionsVersion As String = "8.13.0.0"
+    Public Shared MicrosoftIdentityClientVersion As String = "4.78.0.0"
+    Public Shared MicrosoftIdentityModelAbstractionsVersion As String = "8.14.0.0"
     Public Shared SelectHtmlToPDF As String = "25.2.0.0"
-    Public Shared SystemConfigurationManager As String = "9.0.0.8"
     '  Public Shared SystemWebAdaptors As String = "2.0.0.0"
 
 
@@ -278,8 +280,8 @@ Public Class CustomActions
 
                     UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=8fb06cb64d019a17")
                     UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml.Framework, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=8fb06cb64d019a17")
-                    '  UpdateAssemblyRef(oAssembliesSect, "Microsoft.Identity.Client, Version=" & MicrosoftIdentityClientVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
-                    '  UpdateAssemblyRef(oAssembliesSect, "Microsoft.IdentityModel.Abstractions, Version=" & MicrosoftIdentityModelAbstractionsVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "Microsoft.Identity.Client, Version=" & MicrosoftIdentityClientVersion & ", Culture=neutral, PublicKeyToken=0a613f4dd989e8ae")
+                    UpdateAssemblyRef(oAssembliesSect, "Microsoft.IdentityModel.Abstractions, Version=" & MicrosoftIdentityModelAbstractionsVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
                     UpdateAssemblyRef(oAssembliesSect, "Select.HtmlToPDF, Version=" & SelectHtmlToPDF & ", Culture=neutral, PublicKeyToken=e0ae9f6e27a97018")
                     UpdateAssemblyRef(oAssembliesSect, "System.Configuration.ConfigurationManager, Version=" & SystemConfigurationManager & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
@@ -606,8 +608,8 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Drawing.Common", "cc7b13ffcd2ddd51", SystemDrawingCommon)
             UpdateDependantAssembly(oSectXml, "DocumentFormat.OpenXml", "8fb06cb64d019a17", DocumentFormatOpenXmlVersion)
             UpdateDependantAssembly(oSectXml, "DocumentFormat.OpenXml.Framework", "8fb06cb64d019a17", DocumentFormatOpenXmlVersion)
-            'UpdateDependantAssembly(oSectXml, "Microsoft.Identity.Client", "cc7b13ffcd2ddd51", MicrosoftIdentityClientVersion)
-            'UpdateDependantAssembly(oSectXml, "Microsoft.IdentityModel.Abstractions", "cc7b13ffcd2ddd51", MicrosoftIdentityModelAbstractionsVersion)
+            UpdateDependantAssembly(oSectXml, "Microsoft.Identity.Client", "0a613f4dd989e8ae", MicrosoftIdentityClientVersion)
+            UpdateDependantAssembly(oSectXml, "Microsoft.IdentityModel.Abstractions", "31bf3856ad364e35", MicrosoftIdentityModelAbstractionsVersion)
             UpdateDependantAssembly(oSectXml, "Select.HtmlToPDF", "e0ae9f6e27a97018", SelectHtmlToPDF)
             UpdateDependantAssembly(oSectXml, "System.Configuration.ConfigurationManager", "cc7b13ffcd2ddd51", SystemConfigurationManager)
 
