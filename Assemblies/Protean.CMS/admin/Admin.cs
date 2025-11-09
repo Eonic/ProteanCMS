@@ -1354,7 +1354,7 @@ namespace Protean
                                 nContentId = 0L;
                                 string zcReturnSchema = "";
                                 string AlternateFormName = "";
-                                XmlElement localxFrmEditContent() { int argnReturnId = (int)nContentId; var ret = moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Conversions.ToLong(myWeb.moRequest["pgid"]), "", false, nReturnId: ref argnReturnId, ref zcReturnSchema, ref AlternateFormName, nVersionId: Convert.ToInt64(cVersionKey)); nContentId = argnReturnId; return ret; }
+                                XmlElement localxFrmEditContent() { int argnReturnId = (int)nContentId; var ret = moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Conversions.ToLong("0" + myWeb.moRequest["pgid"]), "", false, nReturnId: ref argnReturnId, ref zcReturnSchema, ref AlternateFormName, nVersionId: Convert.ToInt64(cVersionKey)); nContentId = argnReturnId; return ret; }
 
                                 oPageDetail.AppendChild(localxFrmEditContent());
 
@@ -2336,8 +2336,8 @@ namespace Protean
                             }
                         case "ListUserContent": {
                                 sAdminLayout = "UserContent";
+                                oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(Conversions.ToLong(myWeb.moRequest["dirId"]), true));
                                 oPageDetail.AppendChild(myWeb.moDbHelper.GetUserContentXml((int)Conversions.ToInteger("0" + myWeb.moRequest["dirId"]), oPageDetail));
-
                                 break;
                             }
                         case "ListUserContacts":
