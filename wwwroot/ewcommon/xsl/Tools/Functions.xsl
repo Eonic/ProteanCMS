@@ -2877,7 +2877,7 @@
 				window.uetq.push('event', 'PRODUCT_PURCHASE', {
 				'ecomm_prodid': '<xsl:value-of select="productDetail/StockCode"/>',
 				'revenue_value': '<xsl:value-of select="@itemTotal"/>',
-		        'currency': '<xsl:value-of select="Cart/Order/@currency"/>
+		        'currency': '<xsl:value-of select="Cart/Order/@currency"/>'
 		        });
 	    </xsl:for-each>
 

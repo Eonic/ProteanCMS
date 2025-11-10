@@ -256,10 +256,10 @@ namespace Protean.Providers
                     {
                         if (filterSQL != "")
                         {
-                            cWhereSql = cWhereSql + " AND " + filterSQL;
+                            cWhereSql = cWhereSql + " AND ";//+ filterSQL;
                         }
                     }
-                   // cWhereSql = cWhereSql + filterSQL;
+                    cWhereSql = cWhereSql + filterSQL;
                 }
 
                 catch (Exception ex)
@@ -355,19 +355,30 @@ namespace Protean.Providers
                 // - column name from existing select query
                 // - returns empty then if order by clause is not required.
                 // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
-
-
-                string cFilterName = "PriceBand";
+                string cSortBy = "";
                 if (myWeb.moRequest.Form["SortBy"] != null)
                 {
-                    if (myWeb.moRequest.Form["SortBy"] != string.Empty)
+                    if (myWeb.moRequest.Form["SortBy"] != "" && myWeb.moRequest.Form["SortBy"] != ",")
                     {
-                        if (myWeb.moRequest.Form["SortBy"] == "asc" || myWeb.moRequest.Form["SortBy"] == "desc")
+                        string sortby = Convert.ToString(myWeb.moRequest.Form["SortBy"]);
+
+                        List<string> uniques = sortby.Split(',').Distinct().ToList();
+
+                        cSortBy = uniques[0].Replace(",", "");
+
+                    }
+
+                }
+                string cFilterName = "PriceBand";
+                
+                    if (cSortBy!=string.Empty)
+                    {
+                        if (cSortBy.ToLower() == "asc" || cSortBy.ToLower() == "desc")
                         {
-                            return " min(cii" + cFilterName + ".nNumberValue) " + Convert.ToString(myWeb.moRequest.Form["SortBy"]);
+                            return " min(cii" + cFilterName + ".nNumberValue) " + cSortBy.ToLower();
                         }
                     }
-                }
+               
                 return " min(cii" + cFilterName + ".nNumberValue) asc";
                 //return string.Empty;
             }
