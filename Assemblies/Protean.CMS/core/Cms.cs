@@ -5047,7 +5047,17 @@ namespace Protean
                     string[] aAddCols = cAdditionalColumns.Split(',');
                     foreach (string col in aAddCols) {
                         string trimmedcol = col.Trim(' ');
-                        sGroupByClause += ", " + trimmedcol.Split(' ')[0];
+                        //sGroupByClause += ", " + trimmedcol.Split(' ')[0];
+                        if (trimmedcol != string.Empty)
+                        {
+                            {
+                                //check for any aggregate function
+                                if (!trimmedcol.Contains("("))
+                                {
+                                    sGroupByClause += ", " + trimmedcol.Split(' ')[0];
+                                }
+                            }
+                        }
                     }
                     sGroupByClause = sGroupByClause.Trim(' ').Trim(',');
                 }
