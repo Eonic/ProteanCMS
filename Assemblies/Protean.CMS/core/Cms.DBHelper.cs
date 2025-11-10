@@ -10374,45 +10374,59 @@ namespace Protean
                     // map the feilds to columns
                     if (oDs != null)
                     {
-                        // Added to handle User content with parent data.
-                        if (oDs.Tables[0].Columns.Contains("ParentName"))
+
+                        // make any columns over 13 attributes.
+                        if (oDs.Tables[0].Columns.Count >= 13)
                         {
-                            // make any columns over 13 attributes.
-                            if (oDs.Tables[0].Columns.Count >= 13) {
-                                foreach (DataColumn col in oDs.Tables[0].Columns) {
-                                    if (col.Ordinal >= 12) {
-                                        oDs.Tables[0].Columns[col.Ordinal].ColumnMapping = MappingType.Attribute;
-                                    }
-                                } 
-                            }
-                        }
-                        else {
-                            // SANTOSH should we not just consider adding any additional columns as attributes see above?
-                            if (oDs.Tables[0].Columns.Count >= 13)
+                            foreach (DataColumn col in oDs.Tables[0].Columns)
                             {
-
-                                if (oDs.Tables[0].Columns.Count == 16)
+                                if (col.Ordinal >= 12)
                                 {
-                                    oDs.Tables[0].Columns.RemoveAt(15);
-
+                                    oDs.Tables[0].Columns[col.Ordinal].ColumnMapping = MappingType.Attribute;
                                 }
-                                // This is added to remove extra column for price and location filter
-                                if (oDs.Tables[0].Columns.Count == 15)
-                                {
-                                    oDs.Tables[0].Columns.RemoveAt(14);
-
-                                }
-
-                                if (oDs.Tables[0].Columns.Count == 14)
-                                {
-                                    oDs.Tables[0].Columns.RemoveAt(13);
-
-                                }
-
-                                oDs.Tables[0].Columns.RemoveAt(12);
-
                             }
                         }
+
+
+                        //// Added to handle User content with parent data.
+                        //if (oDs.Tables[0].Columns.Contains("ParentName"))
+                        //{
+                        //    // make any columns over 13 attributes.
+                        //    if (oDs.Tables[0].Columns.Count >= 13) {
+                        //        foreach (DataColumn col in oDs.Tables[0].Columns) {
+                        //            if (col.Ordinal >= 12) {
+                        //                oDs.Tables[0].Columns[col.Ordinal].ColumnMapping = MappingType.Attribute;
+                        //            }
+                        //        } 
+                        //    }
+                        //}
+                        //else {
+                        //    // SANTOSH should we not just consider adding any additional columns as attributes see above?
+                        //    if (oDs.Tables[0].Columns.Count >= 13)
+                        //    {
+
+                        //        if (oDs.Tables[0].Columns.Count == 16)
+                        //        {
+                        //            oDs.Tables[0].Columns.RemoveAt(15);
+
+                        //        }
+                        //        // This is added to remove extra column for price and location filter
+                        //        if (oDs.Tables[0].Columns.Count == 15)
+                        //        {
+                        //            oDs.Tables[0].Columns.RemoveAt(14);
+
+                        //        }
+
+                        //        if (oDs.Tables[0].Columns.Count == 14)
+                        //        {
+                        //            oDs.Tables[0].Columns.RemoveAt(13);
+
+                        //        }
+
+                        //        oDs.Tables[0].Columns.RemoveAt(12);
+
+                        //    }
+                        //}
 
                         oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
 
