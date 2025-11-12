@@ -4895,16 +4895,8 @@ namespace Protean
                 {
                     cAdditionalColumns = cAdditionalColumns.Trim(' ');
                     cAdditionalColumns = cAdditionalColumns.Trim(',');
-                    //if (cAdditionalColumns.StartsWith(","))
-                    //{
-
-                    //    sSql = sSql + cAdditionalColumns + " ";
-                    //}
-                    //else {
-                        sSql = sSql + ", "  + cAdditionalColumns + " ";
-                   // }
+                    sSql = sSql + ", "  + cAdditionalColumns + " ";
                 }
-
                 
                 sSql += "FROM tblContent AS c INNER JOIN ";
                 sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
