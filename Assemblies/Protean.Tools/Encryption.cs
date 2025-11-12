@@ -129,6 +129,25 @@ namespace Protean.Tools
                         }
 
                         break;
+                    case "sha2_256_hex":
+
+                        using (SHA256 sha256 = SHA256.Create())
+                        {
+                            byte[] hashBytes = sha256.ComputeHash(Encoding.Unicode.GetBytes(OriginalString));
+                            cResult = BitConverter.ToString(hashBytes).Replace("-", "").ToUpper();
+
+                            //StringBuilder sb = new StringBuilder(128);
+                            //foreach (byte b in hashBytes)
+                            //{
+                            //    sb.Append(b.ToString("x2")); // Lowercase hexadecimal
+                            //}
+                            //cResult =  sb.ToString();
+                            //sb = null;
+                        }
+
+                        break;
+
+                        
 
                     default:
                         {
