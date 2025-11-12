@@ -33,9 +33,9 @@ namespace Protean.Providers
                     string cFilterTarget = string.Empty;
 
                     XmlElement oPageGroup;
-                   
-                    
-                   
+
+
+
                     int nParentId = 1;
                     string sSql = "spGetPagesByParentPageId";
                     Hashtable arrParams = new Hashtable();
@@ -93,15 +93,15 @@ namespace Protean.Providers
                         arrParams.Add("FilterTarget", cFilterTarget);
                     }
 
-                   
+
                     using (SqlDataReader oDr = aWeb.moDbHelper.getDataReaderDisposable(sSql, CommandType.StoredProcedure, arrParams))  // Done by nita on 6/7/22
                     {
                         // Adding controls to the form like dropdown, radiobuttons
                         if (oDr != null && oDr.HasRows)
                         {
-                           pageFilterSelect = oXform.addSelect(ref oPageGroup, "PageFilter", false, sCotrolDisplayName, "checkbox SubmitPageFilter", Protean.xForm.ApperanceTypes.Full);
+                            pageFilterSelect = oXform.addSelect(ref oPageGroup, "PageFilter", false, sCotrolDisplayName, "checkbox SubmitPageFilter", Protean.xForm.ApperanceTypes.Full);
 
-                            
+
                             while (oDr.Read())
                             {
                                 string name = Convert.ToString(oDr["cStructName"]) + " <span class='badge ms-2' id='ProductCount'>" + Convert.ToString(oDr["ContentCount"]) + "</span>";
@@ -140,7 +140,7 @@ namespace Protean.Providers
                                 sText = oPageGroup.SelectSingleNode("select[@ref='PageFilter']/item[value='" + oXml.InnerText + "']").FirstChild.FirstChild.InnerText;
                                 oXform.addSubmit(ref oFromGroup, sText, sText, "PageFilter", " remove-PageFilter filter-applied", "fa-times");
                             }
-                            oXform.addDiv(ref oFromGroup, "", "PageClearAll", true);
+                            oXform.addDiv(ref oFromGroup, "&#160;", "PageClearAll", true);
                         }
                     }
                 }
@@ -184,13 +184,13 @@ namespace Protean.Providers
 
 
 
-                        if (!string.IsNullOrEmpty(cWhereSql))
+                        if (cWhereSql != string.Empty)
                         {
-                            cWhereSql = " AND ";
+                            cWhereSql = cWhereSql + " AND ";
                         }
-                       
-                        cWhereSql = " nStructId IN (select nStructKey from tblContentStructure where (nStructKey in ( " + cPageIds + ") OR nStructParId in ( " + cPageIds + "))	)";
-                        
+
+
+                        cWhereSql = cWhereSql + " nStructId IN (select nStructKey from tblContentStructure where (nStructKey in ( " + cPageIds + ") OR nStructParId in ( " + cPageIds + ")))";// GetFilterSQL(ref aWeb);
                     }
                     return cWhereSql;
                 }
@@ -209,15 +209,28 @@ namespace Protean.Providers
                 string cPageIds = string.Empty;
                 try
                 {
-                    if (aWeb.moRequest.Form["PageFilter"] != null)
+
+                    //if (aWeb.Attributes["parId"] != null)
+                    //{
+                    //    cPageIds = Convert.ToInt32(aWeb.Attributes["parId"].Value);
+                    //}
+                    //if (aWeb.moRequest.Form["PageFilter"] != null)
+                    //{
+
+                    //    string cpageIds = Convert.ToString(aWeb.moRequest.Form["PageFilter"]);
+
+                    //    List<string> uniques = cpageIds.Split(',').Distinct().ToList();
+
+                    //    cPageIds = string.Join(",", uniques);
+
+                    //}
+
+                    cPageIds =Convert.ToString(aWeb.mnPageId);
+                    if (cPageIds != "")
                     {
-                        string cpageIds = Convert.ToString(aWeb.moRequest.Form["PageFilter"]);
 
-                        List<string> uniques = cpageIds.Split(',').Distinct().ToList();
-
-                        cPageIds=string.Join(",", uniques);
                         // cWhereSql = cWhereSql & "  nStructId IN(" + aWeb.moRequest.Form("PageFilter") & ")"
-                        cWhereSql = cWhereSql + " nStructId IN (select nStructKey from tblContentStructure where (nStructKey in ( " + cPageIds + ") OR nStructParId in ( " + aWeb.moRequest.Form["PageFilter"] + "))	)";
+                        cWhereSql = cWhereSql + " nStructId IN (select nStructKey from tblContentStructure where (nStructKey in ( " + cPageIds + ") OR nStructParId in ( " + cPageIds + "))	)";
 
                     }
                 }

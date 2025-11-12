@@ -4889,18 +4889,23 @@ namespace Protean
                 // column which you are passing here is either 
                 // - agreegate function
                 // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
-
+             
                 if (cAdditionalColumns != string.Empty)
+                    
                 {
-                    if (cAdditionalColumns.StartsWith(","))
-                    {
+                    cAdditionalColumns = cAdditionalColumns.Trim(' ');
+                    cAdditionalColumns = cAdditionalColumns.Trim(',');
+                    //if (cAdditionalColumns.StartsWith(","))
+                    //{
 
-                        sSql = sSql + cAdditionalColumns + " ";
-                    }
-                    else {
+                    //    sSql = sSql + cAdditionalColumns + " ";
+                    //}
+                    //else {
                         sSql = sSql + ", "  + cAdditionalColumns + " ";
-                    }
+                   // }
                 }
+
+                
                 sSql += "FROM tblContent AS c INNER JOIN ";
                 sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                 sSql += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
