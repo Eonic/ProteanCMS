@@ -1409,19 +1409,34 @@ namespace Protean.Providers
 
                                     string cPassword = Instance.SelectSingleNode("*/cDirPassword").InnerText;
                                     string cClearPassword = cPassword;
+                                    string cSalt = null;
                                     // RJP 7 Nov 2012. Added LCase to MembershipEncryption. Note leave the value below for md5Password hard coded as MD5.
-                                    if ((myWeb.moConfig["MembershipEncryption"].ToLower()) == "md5salt")
+                                    switch (myWeb.moConfig["MembershipEncryption"].ToLower())
                                     {
-                                        string cSalt = Encryption.generateSalt();
-                                        string inputPassword = string.Concat(cSalt, cPassword); // Take the users password and add the salt at the front
-                                        string md5Password = Encryption.HashString(inputPassword, "md5", true); // Md5 the marged string of the password and salt
-                                        string resultPassword = string.Concat(md5Password, ":", cSalt); // Adds the salt to the end of the hashed password
-                                        cPassword = resultPassword; // Store the resultant password with salt in the database
+                                        case "md5salt":
+
+                                                cSalt = Encryption.generateSalt();
+                                                string inputPassword = string.Concat(cSalt, cPassword); // Take the users password and add the salt at the front
+                                                string md5Password = Encryption.HashString(inputPassword, "md5", true); // Md5 the marged string of the password and salt
+                                                string resultPassword = string.Concat(md5Password, ":", cSalt); // Adds the salt to the end of the hashed password
+                                                cPassword = resultPassword; // Store the resultant password with salt in the database
+                                                cSalt = null;
+                                                    break;
+                                        case "sha2_512_salt": // to replicate
+                                                cSalt = Encryption.generateSalt();
+                                                cPassword = Encryption.HashString(string.Concat(cSalt, cPassword), "sha2_512_salt", true);                       // Encrypt the marged string of the password and salt
+
+                                            break;
+                                        default:
+                                            cPassword = Encryption.HashString(cPassword, (myWeb.moConfig["MembershipEncryption"].ToLower()), true);
+                                            break;
                                     }
-                                    else
+
+                                    if (cSalt != null)
                                     {
-                                        cPassword = Encryption.HashString(cPassword, (myWeb.moConfig["MembershipEncryption"].ToLower()), true);
-                                    } // plain - md5 - sha1
+                                        Instance.SelectSingleNode("*/cDirSalt").InnerText = cPassword;
+                                    }
+                                    // plain - md5 - sha1
                                     if (!((cPassword ?? "") == (cCurrentPassword ?? "")) & !((cClearPassword ?? "") == (cCurrentPassword ?? "")))
                                     {
                                         Instance.SelectSingleNode("*/cDirPassword").InnerText = cPassword;

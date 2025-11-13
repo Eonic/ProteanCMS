@@ -8191,7 +8191,7 @@ namespace Protean
                             {
                                 string cHashedPassword = Tools.Encryption.HashString(cPasswordForm, Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true); // plain - md5 - sha1
 
-                                switch (myWeb.moConfig["MembershipEncryption"])
+                                switch (myWeb.moConfig["MembershipEncryption"].ToLower())
                                 {
                                     case "md5salt": // we need password from the database, as this has the salt in format: hashedpassword:salt
                                         string[] arrPasswordFromDatabase = Strings.Split(cPasswordDatabase, ":");
@@ -8204,7 +8204,7 @@ namespace Protean
                                             }
                                         }
                                         break;
-                                    case "SHA2_512_SALT": // to replicate
+                                    case "sha2_512_salt": // to replicate
                                         string salt = oUserDetails["cDirSalt"].ToString().ToUpperInvariant();
                                         string saltedPassword = salt + cPasswordForm.Trim().ToLowerInvariant();
                                         cHashedPassword = Tools.Encryption.HashString(saltedPassword, "sha2_512", true);

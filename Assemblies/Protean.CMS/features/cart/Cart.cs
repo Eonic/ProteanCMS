@@ -3685,7 +3685,8 @@ namespace Protean
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
                                 oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
-                                if (Convert.ToString(oElmt.FirstChild) != "" && oCartElmt.SelectSingleNode("Item/Discount") != null)
+                               // if (Convert.ToString(oElmt.FirstChild) != "" && oCartElmt.SelectSingleNode("Item/Discount") != null)
+                               if (Convert.ToString(oElmt.FirstChild) != "")
                                 {
                                     if (oElmt.FirstChild.Name == "Notes")
                                     {

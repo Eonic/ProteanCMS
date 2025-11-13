@@ -2,7 +2,6 @@
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
 
 	<xsl:template match="Page" mode="xform_control_scripts">
-
 		<xsl:if test="descendant-or-self::instance">
 			<!--################################################ modal for alert-->
 			<div class="modal fade" id="xFrmAlertModal" role="dialog" style ="padding-top:15%!important">
@@ -4212,7 +4211,6 @@
 				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}">
 					<xsl:text> </xsl:text>
 				</script>
-
 				<script>
 					var hiddenInput = document.getElementById('recaptcha-token');
 					var form = hiddenInput.closest('form');
@@ -4228,7 +4226,6 @@
 					});
 				</script>
 			</xsl:when>
-
 			<!-- reCAPTCHA v2 -->
 			<xsl:otherwise>
 				<script src="https://www.google.com/recaptcha/api.js" async="" defer="">
