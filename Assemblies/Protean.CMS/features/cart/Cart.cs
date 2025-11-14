@@ -3807,9 +3807,14 @@ namespace Protean
                     {
                         moSubscription.UpdateSubscriptionsTotals(ref oCartElmt);
                     }
-
-
+                 
                     mnCartId = (int)oldCartId;
+                  
+                    if (myWeb.moRequest["refresh"] == "true") {
+                        mnCartId = nCartIdUse;                        
+                    }
+
+                    //mnCartId = (int)oldCartId;
                     SaveCartXML(oCartElmt);
                     // mnCartId = nCartIdUse
 
@@ -10340,6 +10345,7 @@ namespace Protean
                 {
                     if (nCartId > 0L)
                     {
+                        cartXML.SetAttribute("cartId", nCartId.ToString());
                         string sSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Update tblCartOrder SET cCartXML ='", SqlFmt(cartXML.OuterXml.ToString())), "' WHERE nCartOrderKey = "), nCartId));
                         moDBHelper.ExeProcessSql(sSQL);
                     }
