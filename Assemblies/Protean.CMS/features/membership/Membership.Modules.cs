@@ -119,8 +119,10 @@ namespace Protean
                             switch (Strings.LCase(myWeb.moConfig["MembershipEncryption"]) ?? "")
                             {
                                 case "md5":
+                                case "md5_salt":
                                 case "sha1":
                                 case "sha256":
+                                case "sha2_512_salt":
                                     {
                                         oXfmElmt = (XmlElement)oAdXfm.xFrmResetAccount();
                                         break;
@@ -512,6 +514,7 @@ namespace Protean
                                 case "md5":
                                 case "sha1":
                                 case "sha256":
+                                case "sha2_512_salt":
                                     {
                                         if (myWeb.moRequest["ewCmd"] == "AR-MOD")
                                         {

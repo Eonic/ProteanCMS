@@ -201,6 +201,8 @@ namespace Protean
                     // cPassword = Protean.Tools.Encryption.HashString(cPassword, myWeb.moConfig("MembershipEncryption"), True)
 
                     // RJP 7 Nov 2012. Added LCase to MembershipEncryption. Note leave the value below for md5Password hard coded as md5.
+                   
+                    
                     if (Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "md5salt")
                     {
                         string cSalt = Tools.Encryption.generateSalt();
