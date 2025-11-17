@@ -3679,13 +3679,12 @@ namespace Protean
                                 }
                             }
 
-                            // Add Any Client Notes
-                            //cartxml - discount node not available- dont import
+                            // Add Any Client Notes                         
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
                                 oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
-                                if (Convert.ToString(oElmt.FirstChild) != "" && oCartElmt.SelectSingleNode("Item/Discount") != null)
+                                if (Convert.ToString(oElmt.FirstChild) != "")
                                 {
                                     if (oElmt.FirstChild.Name == "Notes")
                                     {
