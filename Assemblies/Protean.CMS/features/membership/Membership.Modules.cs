@@ -467,7 +467,7 @@ namespace Protean
                                 {
                                     // refresh the site strucutre with new userId
                                     myWeb.mnUserId = (int)mnUserId;
-                                    myWeb.GetStructureXML("Site");
+                                    myWeb.GetStructureXML("Site", mnUserId);
                                     XmlElement oElmt = (XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id = '" + redirectId + "']");
                                     string redirectPath = myWeb.mcOriginalURL;
                                     if (oElmt is null)

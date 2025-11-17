@@ -684,7 +684,17 @@
 
     <!-- Membership Register Module -->
     <xsl:template match="Content[@type='Module' and (@moduleType='MembershipRegister')]" mode="displayBrief">
-        <xsl:apply-templates select="." mode="xform"/>
+
+		<xsl:choose>
+			<xsl:when test="descendant-or-self::alert[node()='This user has been added.']">
+				<div class="alert">Your account has been created please logon.</div>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:apply-templates select="." mode="xform"/>
+			</xsl:otherwise>
+			
+		</xsl:choose>	
+        
     </xsl:template>
 
     <xsl:template match="Content[@type='Module' and @moduleType='MembershipRegister']" mode="cleanXhtml">
