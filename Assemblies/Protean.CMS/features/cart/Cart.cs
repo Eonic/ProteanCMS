@@ -3679,12 +3679,14 @@ namespace Protean
                                 }
                             }
 
-                            // Add Any Client Notes                         
+                            // Add Any Client Notes
+                            //cartxml - discount node not available- dont import
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
                                 oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
-                                if (Convert.ToString(oElmt.FirstChild) != "")
+                               // if (Convert.ToString(oElmt.FirstChild) != "" && oCartElmt.SelectSingleNode("Item/Discount") != null)
+                               if (Convert.ToString(oElmt.FirstChild) != "")
                                 {
                                     if (oElmt.FirstChild.Name == "Notes")
                                     {
@@ -3805,9 +3807,14 @@ namespace Protean
                     {
                         moSubscription.UpdateSubscriptionsTotals(ref oCartElmt);
                     }
-
-
+                 
                     mnCartId = (int)oldCartId;
+                  
+                    if (myWeb.moRequest["refresh"] == "true") {
+                        mnCartId = nCartIdUse;                        
+                    }
+
+                    //mnCartId = (int)oldCartId;
                     SaveCartXML(oCartElmt);
                     // mnCartId = nCartIdUse
 
@@ -5623,10 +5630,21 @@ namespace Protean
                             else
                             {
                                 // we are editing a billing address and want to ensure we dont get a double form.
-                                if (mcBillingAddressXform.Contains("BillingAndDeliveryAddress.xml"))
+                                if (myWeb.bs5)
                                 {
-                                    mcBillingAddressXform = mcBillingAddressXform.Replace("BillingAndDeliveryAddress.xml", "BillingAddress.xml");
+                                    if (mcBillingAddressXform.Contains("both-addresses.xml"))
+                                    {
+                                        mcBillingAddressXform = mcBillingAddressXform.Replace("both-addresses.xml", "billing-address.xml");
+                                    }
                                 }
+                                else {
+                                    if (mcBillingAddressXform.Contains("BillingAndDeliveryAddress.xml"))
+                                    {
+                                        mcBillingAddressXform = mcBillingAddressXform.Replace("BillingAndDeliveryAddress.xml", "BillingAddress.xml");
+                                    }
+                                }
+
+                                
                                 // ensure we hit this next time through...
                                 cCmdAction = "Billing";
                                 contactFormCmd2 = Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "editAddress", oDr["nContactKey"]));
@@ -10338,6 +10356,7 @@ namespace Protean
                 {
                     if (nCartId > 0L)
                     {
+                        cartXML.SetAttribute("cartId", nCartId.ToString());
                         string sSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Update tblCartOrder SET cCartXML ='", SqlFmt(cartXML.OuterXml.ToString())), "' WHERE nCartOrderKey = "), nCartId));
                         moDBHelper.ExeProcessSql(sSQL);
                     }

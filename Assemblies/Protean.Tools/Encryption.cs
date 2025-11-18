@@ -113,6 +113,7 @@ namespace Protean.Tools
                             break;
                         }
                     case "sha2_512":
+                    case "sha2_512_salt":
 
                         using (SHA512 sha512 = SHA512.Create())
                         {

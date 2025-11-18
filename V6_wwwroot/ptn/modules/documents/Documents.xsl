@@ -283,7 +283,7 @@
           </xsl:if>
           <p class="link">
             <a rel="external" class="docLink {substring-after(Path,'.')}icon">
-              <span>
+            
                 <xsl:attribute name="href">
                   <xsl:choose>
                     <xsl:when test="contains(Path,'http://')">
@@ -308,6 +308,7 @@
                     <xsl:text>');</xsl:text>
                   </xsl:attribute>
                 </xsl:if>
+				<span>
                 <xsl:choose>
                   <xsl:when test="contains(Path,'http://')">
                     <xsl:attribute name="title">
