@@ -3683,7 +3683,7 @@ namespace Protean
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
-                                oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);                               
+                                oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
                                 if (Convert.ToString(oElmt.FirstChild) != "")
                                 {
                                     if (oElmt.FirstChild.Name == "Notes")
@@ -3805,11 +3805,12 @@ namespace Protean
                     {
                         moSubscription.UpdateSubscriptionsTotals(ref oCartElmt);
                     }
-                 
+
                     mnCartId = (int)oldCartId;
-                  
-                    if (myWeb.moRequest["refresh"] == "true") {
-                        mnCartId = nCartIdUse;                        
+
+                    if (myWeb.moRequest["refresh"] == "true")
+                    {
+                        mnCartId = nCartIdUse;
                     }
 
                     //mnCartId = (int)oldCartId;
@@ -5635,14 +5636,15 @@ namespace Protean
                                         mcBillingAddressXform = mcBillingAddressXform.Replace("both-addresses.xml", "billing-address.xml");
                                     }
                                 }
-                                else {
+                                else
+                                {
                                     if (mcBillingAddressXform.Contains("BillingAndDeliveryAddress.xml"))
                                     {
                                         mcBillingAddressXform = mcBillingAddressXform.Replace("BillingAndDeliveryAddress.xml", "BillingAddress.xml");
                                     }
                                 }
 
-                                
+
                                 // ensure we hit this next time through...
                                 cCmdAction = "Billing";
                                 contactFormCmd2 = Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "editAddress", oDr["nContactKey"]));
@@ -12056,15 +12058,20 @@ namespace Protean
                     {
                         useSavedAddressesOnCart(billingAddId, deliveryAddId, null);
                     }
-                    XmlElement instanceNode = (XmlElement)oePaymentDetailsInstanceElmt.SelectSingleNode("//PaymentDetails/instance");
+                    XmlElement instanceNode = (XmlElement)oePaymentDetailsInstanceElmt
+                             .SelectSingleNode("//PaymentDetails/instance");
 
-                    if (instanceNode != null)
-                    {
-                        ConfirmPayment(ref oCartListElmt, ref instanceNode, cNewAuthNumber, cMethodName, Amount);
-                        GetCart(ref oCartListElmt, mnCartId);
-                        oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber);
-                        SaveCartXML(oCartListElmt, mnCartId);
-                    }
+
+                    XmlElement targetNode = instanceNode ?? oePaymentDetailsInstanceElmt;
+
+                    ConfirmPayment(ref oCartListElmt, ref targetNode, cNewAuthNumber, cMethodName, Amount);
+
+                    GetCart(ref oCartListElmt, mnCartId);
+
+                    oCartListElmt.InnerXml = oCartListElmt.InnerXml.Replace(ReceiptId, cNewAuthNumber);
+
+                    SaveCartXML(oCartListElmt, mnCartId);
+
                     return mnCartId.ToString();
                 }
                 catch (Exception ex)
