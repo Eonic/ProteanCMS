@@ -3679,14 +3679,12 @@ namespace Protean
                                 }
                             }
 
-                            // Add Any Client Notes
-                            //cartxml - discount node not available- dont import
+                            // Add Any Client Notes                          
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
-                                oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
-                               // if (Convert.ToString(oElmt.FirstChild) != "" && oCartElmt.SelectSingleNode("Item/Discount") != null)
-                               if (Convert.ToString(oElmt.FirstChild) != "")
+                                oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);                               
+                                if (Convert.ToString(oElmt.FirstChild) != "")
                                 {
                                     if (oElmt.FirstChild.Name == "Notes")
                                     {
@@ -5630,10 +5628,21 @@ namespace Protean
                             else
                             {
                                 // we are editing a billing address and want to ensure we dont get a double form.
-                                if (mcBillingAddressXform.Contains("BillingAndDeliveryAddress.xml"))
+                                if (myWeb.bs5)
                                 {
-                                    mcBillingAddressXform = mcBillingAddressXform.Replace("BillingAndDeliveryAddress.xml", "BillingAddress.xml");
+                                    if (mcBillingAddressXform.Contains("both-addresses.xml"))
+                                    {
+                                        mcBillingAddressXform = mcBillingAddressXform.Replace("both-addresses.xml", "billing-address.xml");
+                                    }
                                 }
+                                else {
+                                    if (mcBillingAddressXform.Contains("BillingAndDeliveryAddress.xml"))
+                                    {
+                                        mcBillingAddressXform = mcBillingAddressXform.Replace("BillingAndDeliveryAddress.xml", "BillingAddress.xml");
+                                    }
+                                }
+
+                                
                                 // ensure we hit this next time through...
                                 cCmdAction = "Billing";
                                 contactFormCmd2 = Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "editAddress", oDr["nContactKey"]));
