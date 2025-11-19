@@ -11987,6 +11987,106 @@ namespace Protean
                         return null;
                     }
                 }
+
+                public XmlElement GetAllHiddenProducts(int page, int pageSize)
+                {
+                    try
+                    {
+                        DataTable dt = myWeb.moDbHelper.GetAllHiddenProducts();
+
+                        // Load rewriteMaps.config
+                        HashSet<string> mapUrls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                        string mapPath = myWeb.goServer.MapPath("/rewriteMaps.config");
+                        if (File.Exists(mapPath))
+                        {
+                            XmlDocument mapDoc = new XmlDocument();
+                            mapDoc.Load(mapPath);
+
+                            foreach (XmlNode n in mapDoc.SelectNodes("//add[@key]"))
+                            {
+                                string key = n.Attributes["key"]?.Value?.Trim();
+                                string val = n.Attributes["value"]?.Value?.Trim();
+
+                                if (!string.IsNullOrEmpty(key))
+                                    mapUrls.Add(key.Trim('/').ToLower());
+
+                                if (!string.IsNullOrEmpty(val))
+                                    mapUrls.Add(val.Trim('/').ToLower());
+                            }
+                        }
+
+                        // Filter rows
+                        List<DataRow> result = new List<DataRow>();
+
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            string productUrl = (row["ProductUrl"]?.ToString() ?? "").Trim().ToLower();
+                            if (string.IsNullOrWhiteSpace(productUrl))
+                                continue;
+
+                            string normalized = productUrl.Trim('/');
+
+                            if (!mapUrls.Contains(normalized))
+                                result.Add(row);
+                        }
+
+                        int total = result.Count;
+                        int startIndex = (page - 1) * pageSize;
+                        int endIndex = Math.Min(startIndex + pageSize, total);
+
+                        // Create XML
+                        XmlDocument xmlDoc = new XmlDocument();
+                        XmlElement root = xmlDoc.CreateElement("Products");
+                        xmlDoc.AppendChild(root);
+
+                        // Params
+                        XmlElement paramsNode = xmlDoc.CreateElement("Params");
+                        root.AppendChild(paramsNode);
+
+                        XmlElement p1 = xmlDoc.CreateElement("Param");
+                        p1.SetAttribute("name", "Page");
+                        p1.SetAttribute("value", page.ToString());
+                        paramsNode.AppendChild(p1);
+
+                        XmlElement p2 = xmlDoc.CreateElement("Param");
+                        p2.SetAttribute("name", "PageSize");
+                        p2.SetAttribute("value", pageSize.ToString());
+                        paramsNode.AppendChild(p2);
+
+                        XmlElement totalNode = xmlDoc.CreateElement("Param");
+                        totalNode.SetAttribute("name", "Total");
+                        totalNode.SetAttribute("value", total.ToString());
+                        paramsNode.AppendChild(totalNode);
+
+                        // Insert only paginated rows
+                        for (int i = startIndex; i < endIndex; i++)
+                        {
+                            DataRow row = result[i];
+
+                            XmlElement item = xmlDoc.CreateElement("Product");
+
+                            // IMPORTANT: use row.Table.Columns instead of dt.Columns
+                            foreach (DataColumn col in row.Table.Columns)
+                            {
+                                XmlElement node = xmlDoc.CreateElement(col.ColumnName);
+                                node.InnerText = row[col]?.ToString() ?? "";
+                                item.AppendChild(node);
+                            }
+
+                            root.AppendChild(item);
+                        }
+
+                        return root;
+                    }
+                    catch (Exception ex)
+                    {
+                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetAllHiddenProducts", ex, ""));
+                        return null;
+                    }
+                }
+
+
                 public XmlElement xFrmLookup(int nLookupId, string Category = "", long ParentId = 0L)
                 {
                     XmlElement oFrmElmt;

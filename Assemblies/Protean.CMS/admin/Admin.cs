@@ -8,6 +8,7 @@
 // $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
+using Lucene.Net.Support;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
@@ -3442,7 +3443,13 @@ namespace Protean
                                 //myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
                                 break;
                             }
-
+                        case "404ProductReport":
+                            {
+                                // bLoadStructure = true;
+                                HeiddenProductWithoutRedirect(ref oPageDetail, ref sAdminLayout);
+                                //myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
+                                break;
+                            }
 
                     }
 
@@ -7171,7 +7178,38 @@ from tblContentIndexDef";
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "SEOReport", ex, "", sProcessInfo, gbDebug);
                 }
             }
+            private void HeiddenProductWithoutRedirect(ref XmlElement oPageDetail, ref string sAdminLayout)
+            {
+                string sProcessInfo = "";
+               
+                try
+                {
+                    // Read QueryString params
+                    string sPage = myWeb.moRequest["Page"];
+                    string sPageSize = myWeb.moRequest["PageSize"];
 
+                    int page = 1;
+                    int pageSize = 100;
+
+                    int.TryParse(sPage, out page);
+                    int.TryParse(sPageSize, out pageSize);
+
+                    if (page <= 0) page = 1;
+                    if (pageSize <= 0) pageSize = 100;
+
+                    var doc = oPageDetail.OwnerDocument;
+                    var oElmt = doc.CreateElement("HiddenProducts");
+                    XmlNode imported = doc.ImportNode(moAdXfm.GetAllHiddenProducts(page, pageSize), true);
+                    oElmt.AppendChild(imported);
+                    oPageDetail.AppendChild(oElmt);
+
+                }
+
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "HeiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
+                }
+            }
         }
 
 

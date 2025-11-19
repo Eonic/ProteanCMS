@@ -14844,4 +14844,190 @@
 
 		</xsl:if>
 	</xsl:template>
+
+<!--404 product report-->
+<xsl:template match="Page[@layout='404ProductReport']" mode="Admin">
+
+    <!-- Read Params -->
+    <xsl:variable name="currentPage" select="number(ContentDetail/HiddenProducts/Products/Params/Param[@name='Page']/@value)" />
+    <xsl:variable name="pageSize" select="number(ContentDetail/HiddenProducts/Products/Params/Param[@name='PageSize']/@value)" />
+   <xsl:variable name="totalCount" select="number(ContentDetail/HiddenProducts/Products/Params/Param[@name='Total']/@value)" />
+  
+    <!-- Default Page -->
+    <xsl:variable name="page">
+        <xsl:choose>
+            <xsl:when test="$currentPage &gt; 0">
+                <xsl:value-of select="$currentPage" />
+            </xsl:when>
+            <xsl:otherwise>1</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <!-- Default PageSize -->
+    <xsl:variable name="size">
+        <xsl:choose>
+            <xsl:when test="$pageSize &gt; 0">
+                <xsl:value-of select="$pageSize" />
+            </xsl:when>
+            <xsl:otherwise>100</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    
+   <xsl:variable name="allProducts" 
+              select="ContentDetail/HiddenProducts/Products/Product" />
+
+    <!-- Count -->
+    <!--<xsl:variable name="totalCount" select="$productTotalCount" />-->
+
+    <!-- Start index -->
+    <xsl:variable name="start" select="(($page - 1) * $size) + 1" />
+
+    <!-- End index -->
+    <xsl:variable name="end">
+        <xsl:choose>
+            <xsl:when test="($page * $size) &lt; $totalCount">
+                <xsl:value-of select="$page * $size" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$totalCount" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <!-- ========================================================= -->
+    <!-- HEADER BAR WITH PAGINATION -->
+    <!-- ========================================================= -->
+
+    <div class="row" style="background:#dde4eb; padding:15px; margin:0;">
+        <div class="col-md-6">
+            <span style="font-size:18px; font-weight:600;">404 Products</span>
+        </div>
+
+        <div class="col-md-6" style="text-align:right;">
+            <xsl:call-template name="HeaderPagination">
+                <xsl:with-param name="page" select="$page" />
+                <xsl:with-param name="pageSize" select="$size" />
+                <xsl:with-param name="total" select="$totalCount" />
+            </xsl:call-template>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- TABLE -->
+    <!-- ========================================================= -->
+
+    <div class="container" style="width:100%; margin-top:20px;">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Product Id</th>
+                    <th>Schema</th>
+                    <th>Product Name</th>
+                    <th>Product URL</th>
+                </tr>
+            </thead>
+
+            <tbody>
+               <xsl:apply-templates
+    select="$allProducts"
+    mode="hiddenProducts" />
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- FOOTER PAGINATION -->
+    <!-- ========================================================= -->
+
+    <div style="margin-top:20px; text-align:right;margin-bottom: 20px;">
+        <xsl:call-template name="HeaderPagination">
+            <xsl:with-param name="page" select="$page" />
+            <xsl:with-param name="pageSize" select="$size" />
+            <xsl:with-param name="total" select="$totalCount" />
+        </xsl:call-template>
+    </div>
+
+</xsl:template>
+
+
+<xsl:template match="Product" mode="hiddenProducts">
+    <tr>
+        <td><xsl:value-of select="nContentKey"/></td>
+        <td><xsl:value-of select="cContentSchemaName"/></td>
+        <td><xsl:value-of select="cContentName"/></td>
+        <td> <a href="?ewCmd=EditContent&amp;id={nContentKey}"
+               style="margin-top:5px; margin-left:5px;"
+               target="_blank"
+               title="Open Product (Internal)">
+                <i class="fa fa-external-link fa-white"></i> <xsl:value-of select="ProductUrl"/>
+            </a></td>
+    </tr>
+</xsl:template>
+
+
+<xsl:template name="HeaderPagination">
+    <xsl:param name="page"/>
+    <xsl:param name="pageSize"/>
+    <xsl:param name="total"/>
+
+    <!-- Start -->
+    <xsl:variable name="start" select="(($page - 1) * $pageSize) + 1" />
+
+    <!-- End -->
+    <xsl:variable name="end">
+        <xsl:choose>
+            <xsl:when test="($page * $pageSize) &lt; $total">
+                <xsl:value-of select="$page * $pageSize"/>
+            </xsl:when>
+            <xsl:otherwise><xsl:value-of select="$total"/></xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <!-- Total pages -->
+    <xsl:variable name="totalPages" select="floor(($total + $pageSize - 1) div $pageSize)" />
+
+    <span style="margin-right:20px; font-size:15px; ">
+        <xsl:value-of select="$start"/> to <xsl:value-of select="$end"/>
+        of <xsl:value-of select="$total"/> Products
+    </span>
+
+    <!-- Back -->
+    <xsl:choose>
+        <xsl:when test="$page &gt; 1">
+            <a href="?ewCmd=404ProductReport&amp;Page={$page - 1}&amp;PageSize={$pageSize}"
+               style="background:#61b0e9; color:white; padding:8px 14px; 
+                      border-radius:4px; text-decoration:none; margin-right:5px;">
+                &#x2039; Back
+            </a>
+        </xsl:when>
+        <xsl:otherwise>
+            <span style="background:#aacde6; color:white; padding:8px 14px;
+                          border-radius:4px; opacity:0.6; margin-right:5px;">
+                &#x2039; Back
+            </span>
+        </xsl:otherwise>
+    </xsl:choose>
+
+    <!-- Next -->
+    <xsl:choose>
+        <xsl:when test="$page &lt; $totalPages">
+            <a href="?ewCmd=404ProductReport&amp;Page={$page + 1}&amp;PageSize={$pageSize}"
+               style="background:#61b0e9; color:white; padding:8px 14px;
+                      border-radius:4px; text-decoration:none;">
+                Next &#x203A;
+            </a>
+        </xsl:when>
+        <xsl:otherwise>
+            <span style="background:#aacde6; color:white; padding:8px 14px;
+                          border-radius:4px; opacity:0.6;">
+                Next &#x203A;
+            </span>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+
+
+
 </xsl:stylesheet>
