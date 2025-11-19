@@ -802,10 +802,11 @@
     <!-- admin javascripts -->
     <xsl:if test="$adminMode">
       <xsl:apply-templates select="." mode="adminJs"/>
-     </xsl:if>
+     </xsl:if>  
 
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
-    <!-- IF IE6 apply PNG Fix as standard -->
+
+	  <!-- IF IE6 apply PNG Fix as standard -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
       <script type="{$scriptType}" src="/ewcommon/js/pngfix.js" defer="" cookie-consent="strictly-necessary">
         <xsl:text> </xsl:text>

@@ -8192,7 +8192,7 @@ namespace Protean
                             {
                                 string cHashedPassword = Tools.Encryption.HashString(cPasswordForm, Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true); // plain - md5 - sha1
 
-                                switch (myWeb.moConfig["MembershipEncryption"])
+                                switch (myWeb.moConfig["MembershipEncryption"].ToLower())
                                 {
                                     case "md5salt": // we need password from the database, as this has the salt in format: hashedpassword:salt
                                         string[] arrPasswordFromDatabase = Strings.Split(cPasswordDatabase, ":");
@@ -8205,7 +8205,7 @@ namespace Protean
                                             }
                                         }
                                         break;
-                                    case "SHA2_512_SALT": // to replicate
+                                    case "sha2_512_salt": // to replicate
                                         string salt = oUserDetails["cDirSalt"].ToString().ToUpperInvariant();
                                         string saltedPassword = salt + cPasswordForm.Trim().ToLowerInvariant();
                                         cHashedPassword = Tools.Encryption.HashString(saltedPassword, "sha2_512", true);
@@ -8604,11 +8604,15 @@ namespace Protean
                                 {
                                     oMsg.Language = moPageXml.DocumentElement.GetAttribute("translang");
                                 }
-
                                 try
                                 {
                                     var fsHelper = new Protean.fsHelper();
-                                    string filePath = fsHelper.checkCommonFilePath("/xsl/email/passwordReminder.xsl");
+                                    string filePath = "/xsl/email/passwordReminder.xsl";
+                                    if (myWeb.bs5)
+                                    {
+                                        filePath = "/features/membership/email/passwordReminder.xsl";
+                                    }
+                                    filePath = fsHelper.checkCommonFilePath(filePath);
 
                                     dbHelper argodbHelper = null;
                                     sReturn = Conversions.ToString(oMsg.emailer(oXmlDetails.DocumentElement, goConfig["ProjectPath"] + filePath, sSenderName, sSenderEmail, cEmail, "Password Reminder", odbHelper: ref argodbHelper, "Your reset link has been emailed to you"));

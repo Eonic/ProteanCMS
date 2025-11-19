@@ -373,6 +373,7 @@
 	<xsl:template match="div[@class='separator']" mode="xform">
 		<div class="separator">OR</div>
 	</xsl:template>
+	
 	<xsl:template match="div[@class='footer-override']" mode="xform">
 		<div >
 			<xsl:if test="./@class">

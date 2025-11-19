@@ -4950,9 +4950,10 @@ namespace Protean
 
                                     bool forceRefresh = false;
                                     // TS removed as we do not want to refresh the cart XML as it destroys discount info and order ref etc.
-                                    // If myWeb.moRequest("nStatus") = 9 Then
-                                    // forceRefresh = True
-                                    // End If
+                                    if (myWeb.moRequest["refresh"] == "true") {
+                                        forceRefresh = true;
+                                    }                                     
+                                 
                                     oCart.ListOrders(myWeb.moRequest["id"], true, 0, ref oPageDetail, forceRefresh, nUserId: 0L);
 
                                     // :TODO Behaviour to manage resending recipts.
