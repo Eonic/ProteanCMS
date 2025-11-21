@@ -3664,6 +3664,18 @@ namespace Protean
                     {
 
                         var integrationHelper = new Integration.Directory.Helper(ref myWeb);
+                        // if product
+                        string sProductTypes = "Product,SKU,Ticket";
+                        if (myWeb.Features.ContainsKey("Subscriptions"))
+                        {
+                            sProductTypes = sProductTypes + ",Subscription";
+                        }
+                        if (!string.IsNullOrEmpty(myWeb.moConfig["ProductTypes"]))
+                        {
+                            sProductTypes = myWeb.moConfig["ProductTypes"];
+                        }
+                        sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
+
 
                         if (id > 0L)
                         {
@@ -3720,16 +3732,6 @@ namespace Protean
                             moDbHelper.getLocationsByContentId(id, ref argContentNode);
 
                             // Add ProductCategories
-                            string sProductTypes = "Product,SKU,Ticket";
-                            if (myWeb.Features.ContainsKey("Subscriptions"))
-                            {
-                                sProductTypes = sProductTypes + ",Subscription";
-                            }
-                            if (!string.IsNullOrEmpty(myWeb.moConfig["ProductTypes"]))
-                            {
-                                sProductTypes = myWeb.moConfig["ProductTypes"];
-                            }
-                            sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
                             if (sProductTypes.Contains(cContentSchemaName + ",") & id > 0L)
                             {
                                 if (moDbHelper.checkDBObjectExists("sp_GetProductGroups"))
@@ -3929,17 +3931,7 @@ namespace Protean
                         {
 
                             XmlElement myInstance = base.Instance;
-                            // if product
-                            string sProductTypes = "Product,SKU,Ticket";
-                            if (myWeb.Features.ContainsKey("Subscriptions"))
-                            {
-                                sProductTypes = sProductTypes + ",Subscription";
-                            }
-                            if (!string.IsNullOrEmpty(myWeb.moConfig["ProductTypes"]))
-                            {
-                                sProductTypes = myWeb.moConfig["ProductTypes"];
-                            }
-                            sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
+
                             if (sProductTypes.Contains(cContentSchemaName + ","))
                             {
                                 AddPageSpecs(ref myWeb.mnPageId, ref myInstance);
@@ -4055,6 +4047,14 @@ namespace Protean
                                     {
                                         bCascade = true;
                                     }
+                                }
+
+                                sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
+                                if (sProductTypes.Contains(cContentSchemaName + ","))
+                                {
+                                    XmlElement thisInstance = base.Instance;
+                                    DelEmptySpecs(ref thisInstance);
+                                    base.Instance = thisInstance;
                                 }
 
                                 if (id > 0L)
@@ -4658,9 +4658,12 @@ namespace Protean
                                 {
                                     SpecElmt.InnerText = "";
                                     XmlElement existingSpec = (XmlElement)Instance.SelectSingleNode($"descendant-or-self::Spec[@name='{name}']");
-                                    if (existingSpec != null)
+                                    if (existingSpec != null && existingSpec.InnerText != "")
                                     {
                                         SpecElmt.InnerText = existingSpec.InnerText;
+                                    }
+                                    else {
+                                        SpecElmt.SetAttribute("noDel", "true");
                                     }
                                     SpecsElmt.AppendChild(SpecElmt);
                                 }
@@ -4673,6 +4676,21 @@ namespace Protean
                         }
                     }
                 }
+
+                public void DelEmptySpecs(ref XmlElement Instance)
+                {
+                    // removes empty specs from the instance
+                    if (Instance.SelectSingleNode("descendant-or-self::Specs") != null)
+                    {
+                        foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs"))
+                        {
+                            if (InstanceSpecs.InnerXml == "") {
+                                InstanceSpecs.ParentNode.RemoveChild(InstanceSpecs);
+                            }                            
+                        }
+                    }
+                }
+                
 
                 public XmlElement xFrmDeleteContent(long artid)
                 {

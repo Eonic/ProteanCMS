@@ -1319,6 +1319,9 @@
           </xsl:choose>
         </xsl:variable>
         <button type="submit" name="delete:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-danger btn-delete">
+			<xsl:if test="./parent::trigger/@disabled='disabled'">
+				<xsl:attribute name="disabled">disabled</xsl:attribute>
+			</xsl:if>
           <i class="fa {$icon} fa-white">
             <xsl:text> </xsl:text>
           </i>
