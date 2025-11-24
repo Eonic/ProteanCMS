@@ -20,6 +20,7 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.FeedHandler;
@@ -3038,6 +3039,13 @@ namespace Protean
 
                                 }
 
+                                break;
+                            }
+
+                        case "IsIntranetUser":
+                            {
+                                string AdminUserName = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText;
+                                Redirect(AdminUserName, Convert.ToString(myWeb.moRequest["KeyUrl"]));
                                 break;
                             }
 
@@ -7210,6 +7218,18 @@ from tblContentIndexDef";
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "HeiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
                 }
+            }
+
+            private string Redirect(string AdminUserName, string keyUrl)
+            {
+                string token = Encryption.RC4.Encrypt(AdminUserName.ToString(), myWeb.moConfig["SharedKey"]);
+                string redirectUrl = keyUrl + "?Userkey=" + HttpUtility.UrlEncode(token);
+                if (redirectUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || redirectUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                {
+                    myWeb.moResponse.Redirect(redirectUrl, true);
+                    return null;
+                }
+                return null;
             }
         }
 
