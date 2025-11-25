@@ -16,10 +16,12 @@ using Protean.Providers.Messaging;
 using Protean.Tools;
 using System;
 using System.Collections;
+using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.FeedHandler;
@@ -3038,6 +3040,21 @@ namespace Protean
 
                                 }
 
+                                break;
+                            }
+
+                        case "IsIntranetUser":
+                            {
+                                string redirectUrl = myWeb.moConfig["IntranetRedirectUrl"];
+                                string AdminUserName = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText;
+                                if(!string.IsNullOrEmpty(redirectUrl) && !string.IsNullOrEmpty(AdminUserName))
+                                {
+                                    string encryptedUrl = Encryption.RC4.Encrypt(redirectUrl, myWeb.moConfig["SharedKey"]);
+                                    Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                    IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                                    oMembershipProv.AdminXforms.RedirectToIntranet(AdminUserName, encryptedUrl);
+                                }
+                              
                                 break;
                             }
 
@@ -7210,7 +7227,7 @@ from tblContentIndexDef";
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "HeiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
                 }
-            }
+            }          
         }
 
 

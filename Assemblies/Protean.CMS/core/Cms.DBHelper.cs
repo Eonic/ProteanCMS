@@ -4156,8 +4156,8 @@ namespace Protean
                     }
 
                     // Get the pending content
-
-                    oDS = myWeb.moDbHelper.GetDataSet("SELECT * FROM vw_VersionControl_GetPendingContent" + cFilterSql, "Pending", "GenericReport");
+                    string sSql = "SELECT * FROM vw_VersionControl_GetPendingContent" + cFilterSql;
+                    oDS = myWeb.moDbHelper.GetDataSet(sSql, "Pending", "GenericReport");
 
                     if (oDS.Tables.Count > 0 && oDS.Tables[0].Rows.Count > 0)
                     {

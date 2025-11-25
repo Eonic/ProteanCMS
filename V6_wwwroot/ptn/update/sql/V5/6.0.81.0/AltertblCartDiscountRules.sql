@@ -4,6 +4,7 @@ BEGIN
     ADD nUseCount INT NULL;
 END
 
+
 -- Add nUseLimit column if not exists
 IF COL_LENGTH('tblCartDiscountRules', 'nUseLimit') IS NULL
 BEGIN

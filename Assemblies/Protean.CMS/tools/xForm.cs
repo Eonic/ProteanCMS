@@ -4025,9 +4025,15 @@ namespace Protean
                                 {
                                     object oInstanceNodeSetCount = 0;
                                     bool bSkipBinds = false;
+                                    bool bNoDel = false;
                                     foreach (XmlElement currentONode in oInstanceNodeSet)
                                     {
                                         oNode = currentONode;
+
+                                        if (oNode.GetAttribute("noDel") == "true") {
+                                            bNoDel = true;
+                                        }
+
                                         oInstanceNodeSetCount = Operators.AddObject(oInstanceNodeSetCount, 1);
                                         if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oInstanceNodeSet.Count, oInstanceNodeSetCount, false), isInserted)))
                                         {
@@ -4101,6 +4107,12 @@ namespace Protean
                                             if (oRptElmt.ParentNode != null)
                                             {
                                                 // Adding the repeated controls but only once
+                                                if (bNoDel) {
+                                                    foreach (XmlElement tiggerElmt in oRptElmtCopy.SelectNodes("descendant-or-self::trigger")) {
+                                                        tiggerElmt.SetAttribute("disabled", "disabled");
+                                                    }
+                                                }
+
                                                 oRptElmt.ParentNode.InsertAfter(oRptElmtCopy, oRptElmt.ParentNode.LastChild);
 
                                                 // set oForm to not be readonly
