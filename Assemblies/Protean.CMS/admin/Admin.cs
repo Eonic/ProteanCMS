@@ -16,6 +16,7 @@ using Protean.Providers.Messaging;
 using Protean.Tools;
 using System;
 using System.Collections;
+using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Reflection;
@@ -3044,8 +3045,16 @@ namespace Protean
 
                         case "IsIntranetUser":
                             {
+                                string redirectUrl = myWeb.moConfig["IntranetRedirectUrl"];
                                 string AdminUserName = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText;
-                                Redirect(AdminUserName, Convert.ToString(myWeb.moRequest["KeyUrl"]));
+                                if(!string.IsNullOrEmpty(redirectUrl) && !string.IsNullOrEmpty(AdminUserName))
+                                {
+                                    string encryptedUrl = Encryption.RC4.Encrypt(redirectUrl, myWeb.moConfig["SharedKey"]);
+                                    Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                    IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                                    oMembershipProv.AdminXforms.RedirectToIntranet(AdminUserName, encryptedUrl);
+                                }
+                              
                                 break;
                             }
 
@@ -7218,19 +7227,7 @@ from tblContentIndexDef";
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "HeiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
                 }
-            }
-
-            private string Redirect(string AdminUserName, string keyUrl)
-            {
-                string token = Encryption.RC4.Encrypt(AdminUserName.ToString(), myWeb.moConfig["SharedKey"]);
-                string redirectUrl = keyUrl + "?Userkey=" + HttpUtility.UrlEncode(token);
-                if (redirectUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || redirectUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-                {
-                    myWeb.moResponse.Redirect(redirectUrl, true);
-                    return null;
-                }
-                return null;
-            }
+            }          
         }
 
 

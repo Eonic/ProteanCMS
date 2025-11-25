@@ -588,21 +588,21 @@
 				<xsl:if test="/Page/User/Role[@name='ITB Customer Services']">
 					 <xsl:choose>
                           <xsl:when test="$Environment='staging'">
-                            <a href="{$appPath}?ewCmd=IsIntranetUser&amp;KeyUrl=https://intranetdemo.intotheblue.co.uk/" class="btn btn-default btn-lg">
+                            <a href="{$appPath}?ewCmd=IsIntranetUser" class="btn btn-default btn-lg">
                               ITB Intranet<xsl:text> </xsl:text><i class="fa fa-arrow-alt-circle-up fa-white">
                                 <xsl:text> </xsl:text>
                               </i>
                             </a>
                           </xsl:when>
                           <xsl:when test="$Environment='live'">
-                            <a href="{$appPath}?ewCmd=IsIntranetUser&amp;KeyUrl=https://intranet.intotheblue.co.uk/" class="btn btn-default btn-lg">
+                            <a href="{$appPath}?ewCmd=IsIntranetUser" class="btn btn-default btn-lg">
                               ITB Intranet<xsl:text> </xsl:text><i class="fa fa-arrow-alt-circle-up fa-white">
                                 <xsl:text> </xsl:text>
                               </i>
                             </a>
                           </xsl:when>
                           <xsl:otherwise>
-                            <a href="{$appPath}?ewCmd=IsIntranetUser&amp;KeyUrl=http://itbintranet/site/Pages/pb_login.aspx" class="btn btn-default btn-lg">
+                            <a href="{$appPath}?ewCmd=IsIntranetUser" class="btn btn-default btn-lg">
                               ITB Intranet<xsl:text> </xsl:text><i class="fa fa-arrow-alt-circle-up fa-white">
                                 <xsl:text> </xsl:text>
                               </i>

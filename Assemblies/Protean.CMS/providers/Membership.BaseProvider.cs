@@ -79,7 +79,7 @@ namespace Protean.Providers
 
             void addNote(string sRef, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
             void addNote(ref XmlNode oNode, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
-
+            string RedirectToIntranet(string username, string keyUrl);
         }
 
         public interface IMembershipAdminProcess
@@ -101,8 +101,7 @@ namespace Protean.Providers
             void LogSingleUserSession();
             void LogSingleUserSession(ref Cms myWeb);
 
-            string ResetUserAcct(ref Cms myWeb, int nUserId);
-
+            string ResetUserAcct(ref Cms myWeb, int nUserId);            
         }
 
         public class ReturnProvider
@@ -630,7 +629,7 @@ namespace Protean.Providers
                     }
                 }
 
-                private string RedirectToIntranet(string username, string keyUrl)
+                public string RedirectToIntranet(string username, string keyUrl)
                 {
                     try
                     {
