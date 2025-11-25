@@ -84,17 +84,17 @@
   <!-- ========================== XFORM ========================== -->
   <!-- -->
   <xsl:template match="div" mode="xform">
- 
-      <!-- TS: div is required otherwise it breaks in compiled mode - added back in for goodnews. -->
-	  <div>
-          <xsl:if test="./@class">
-            <xsl:attribute name="class">
-              <xsl:value-of select="./@class"/>
-            </xsl:attribute>
-          </xsl:if>
-		  <xsl:text> </xsl:text>
-          <xsl:apply-templates select="node()" mode="cleanXhtml"/>
-	  </div>
+
+    <!-- TS: div is required otherwise it breaks in compiled mode - added back in for goodnews. -->
+    <div>
+      <xsl:if test="./@class">
+        <xsl:attribute name="class">
+          <xsl:value-of select="./@class"/>
+        </xsl:attribute>
+      </xsl:if>
+      <xsl:text> </xsl:text>
+      <xsl:apply-templates select="node()" mode="cleanXhtml"/>
+    </div>
 
   </xsl:template>
 
@@ -237,7 +237,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>
-		<xsl:text> </xsl:text>
+      <xsl:text> </xsl:text>
     </fieldset>
   </xsl:template>
 
@@ -419,6 +419,9 @@
                 </xsl:otherwise>
               </xsl:choose>
               <xsl:apply-templates select="label"/>
+				<xsl:if test="descendant-or-self::alert">
+					&#160;<i class="fa-solid fa-x2 fa-triangle-exclamation text-danger">&#160;</i>
+				</xsl:if>
             </button>
           </li>
         </xsl:for-each>
@@ -669,7 +672,7 @@
 
   <xsl:template match="hint" mode="xform">
     <div class="alert alert-success">
-      <i class="fa fa-info-sign fa-2x pull-left">
+      <i class="fa fa-info-sign fa-2x float-start">
         <xsl:text> </xsl:text>
       </i>
       <xsl:copy-of select="node()"/>
@@ -730,22 +733,21 @@
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="$classVal='alert-success'">
-              <i class="fa fa-check fa-2x pull-left">
+              <i class="fa fa-check fa-2x float-start">
                 <xsl:text> </xsl:text>
               </i>
             </xsl:when>
             <xsl:when test="$classVal!=''">
-              <i class="fa fa-exclamation-triangle  pull-left">
+              <i class="fa fa-exclamation-triangle float-start">
                 <xsl:text> </xsl:text>
               </i>
             </xsl:when>
             <xsl:otherwise>
-              <i class="fa fa-exclamation-circle  pull-left">
+              <i class="fa fa-exclamation-triangle float-start">
                 <xsl:text> </xsl:text>
               </i>
             </xsl:otherwise>
           </xsl:choose>
-          <xsl:text>&#160;&#160;</xsl:text>
           <span class="alert-msg">
             <xsl:apply-templates select="." mode="cleanXhtml"/>
           </span>
@@ -1214,11 +1216,14 @@
           <xsl:value-of select="@data-pleasewaitdetail"/>
         </xsl:attribute>
       </xsl:if>
-      <i class="fa {$icon} fa-white">
+      <span>
+        <i class="fa {$icon} fa-white">
+          <xsl:text> </xsl:text>
+        </i>
         <xsl:text> </xsl:text>
-      </i>
-      <xsl:text> </xsl:text>
-      <xsl:apply-templates select="label" mode="submitText"/>
+
+        <xsl:apply-templates select="label" mode="submitText"/>
+      </span>
     </button>
   </xsl:template>
 
@@ -1263,31 +1268,33 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}">
-      <xsl:if test="@data-pleasewaitmessage != ''">
-        <xsl:attribute name="data-pleasewaitmessage">
-          <xsl:value-of select="@data-pleasewaitmessage"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:if test="@data-pleasewaitdetail != ''">
-        <xsl:attribute name="data-pleasewaitdetail">
-          <xsl:value-of select="@data-pleasewaitdetail"/>
-        </xsl:attribute>
-      </xsl:if>
-      <xsl:if test="@icon-placement!='right'">
-        <i class="fa {$icon} fa-white">
-          <xsl:text> </xsl:text>
-        </i>
-        <xsl:text> </xsl:text>
-      </xsl:if>
-      <xsl:apply-templates select="label" mode="submitText"/>
-      <xsl:if test="@icon-placement='right'">
-        <xsl:text> </xsl:text>
-        <i class="fa {$icon} fa-white">
-          <xsl:text> </xsl:text>
-        </i>
-      </xsl:if>
-    </button>
+      <button type="submit" name="{$name}" value="{$buttonValue}" class="{$class}">
+        <xsl:if test="@data-pleasewaitmessage != ''">
+          <xsl:attribute name="data-pleasewaitmessage">
+            <xsl:value-of select="@data-pleasewaitmessage"/>
+          </xsl:attribute>
+        </xsl:if>
+        <xsl:if test="@data-pleasewaitdetail != ''">
+          <xsl:attribute name="data-pleasewaitdetail">
+            <xsl:value-of select="@data-pleasewaitdetail"/>
+          </xsl:attribute>
+        </xsl:if>
+        <span>
+          <xsl:if test="@icon-placement!='right'">
+            <i class="fa {$icon} fa-white">
+              <xsl:text> </xsl:text>
+            </i>
+            <xsl:text> </xsl:text>
+          </xsl:if>
+          <xsl:apply-templates select="label" mode="submitText"/>
+          <xsl:if test="@icon-placement='right'">
+            <xsl:text> </xsl:text>
+            <i class="fa {$icon} fa-white">
+              <xsl:text> </xsl:text>
+            </i>
+          </xsl:if>
+        </span>
+      </button>
   </xsl:template>
 
   <xsl:template match="trigger" mode="xform">
@@ -1312,6 +1319,9 @@
           </xsl:choose>
         </xsl:variable>
         <button type="submit" name="delete:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-danger btn-delete">
+			<xsl:if test="./parent::trigger/@disabled='disabled'">
+				<xsl:attribute name="disabled">disabled</xsl:attribute>
+			</xsl:if>
           <i class="fa {$icon} fa-white">
             <xsl:text> </xsl:text>
           </i>
@@ -1504,7 +1514,7 @@
     <xsl:variable name="caseId" select="ancestor::case[last()]/@id" />
     <xsl:variable name="thisCaseValue" select="//toggle[@case=$caseId]/preceding-sibling::value/node()" />
     <xsl:variable name="selectedValue" select="//toggle[@case=$caseId]/ancestor::select1/value" />
-    <xsl:if test="$thisCaseValue!=$selectedValue">
+    <xsl:if test="normalize-space($thisCaseValue)!=normalize-space($selectedValue)">
       <xsl:text>~inactive</xsl:text>
     </xsl:if>
   </xsl:template>
@@ -2279,9 +2289,9 @@
         <xsl:attribute name="class">
           <xsl:text>form-control </xsl:text>
 
-			<xsl:if test="alert">
-				<xsl:text>is-invalid </xsl:text>
-			</xsl:if>
+          <xsl:if test="alert">
+            <xsl:text>is-invalid </xsl:text>
+          </xsl:if>
           <xsl:choose>
             <xsl:when test="ancestor::switch and contains(@class,'required')">
               <xsl:apply-templates select="." mode="isRequired"/>
@@ -2311,7 +2321,7 @@
       <xsl:text> </xsl:text>
     </textarea>
     <!--Space is required for XSLT compiled mode-->
-	      <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
+    <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
       <div class="invalid-feedback">
         <xsl:value-of select="@data-fv-not-empty___message"/>
       </div>
@@ -2486,6 +2496,8 @@
           </xsl:apply-templates>
         </xsl:otherwise>
       </xsl:choose>
+	<xsl:apply-templates select="alert" mode="xform"/>
+		
     </div>
   </xsl:template>
 
@@ -2830,6 +2842,7 @@
         </xsl:otherwise>
 
       </xsl:choose>
+		<xsl:apply-templates select="alert" mode="xform"/>
     </div>
   </xsl:template>
 
@@ -2937,7 +2950,14 @@
           <xsl:attribute name="disabled">disabled</xsl:attribute>
         </xsl:if>
 
-        <!-- Check checkbox should be selected -->
+		  <xsl:if test="contains($class,'required')">
+			  <xsl:if test="count(parent::item)=1">
+			  <xsl:attribute name="required">required</xsl:attribute>
+			  </xsl:if>
+		  </xsl:if>
+
+
+		  <!-- Check checkbox should be selected -->
         <xsl:if test="contains($type,'checkbox')">
           <!-- Run through CSL to see if this should be checked -->
           <xsl:variable name="valueMatch">
@@ -3081,10 +3101,10 @@
           <xsl:text>','</xsl:text>
           <xsl:value-of select="$dependantClass"/>
           <xsl:text>');</xsl:text>
-		
-		
-			
-			
+
+
+
+
         </xsl:attribute>
 
         <xsl:if test="ancestor::select1/item[1]/value/node() = $value">
@@ -3426,22 +3446,21 @@
     <div class="alert-msg">
       <xsl:choose>
         <xsl:when test="$classVal='alert-success'">
-          <i class="fa fa-check fa-2x pull-left">
+          <i class="fa fa-check fa-2x float-start">
             <xsl:text> </xsl:text>
           </i>
         </xsl:when>
         <xsl:when test="$classVal!=''">
-          <i class="fa fa-exclamation-triangle  pull-left">
+          <i class="fa fa-exclamation-triangle float-start">
             <xsl:text> </xsl:text>
           </i>
         </xsl:when>
         <xsl:otherwise>
-          <i class="fa fa-exclamation-circle  pull-left">
+          <i class="fa fa-exclamation-triangle fa-2x float-start">
             <xsl:text> </xsl:text>
           </i>
         </xsl:otherwise>
       </xsl:choose>
-      <xsl:text>&#160;&#160;</xsl:text>
       <xsl:apply-templates select="node()" mode="cleanXhtml"/>
     </div>
   </xsl:template>

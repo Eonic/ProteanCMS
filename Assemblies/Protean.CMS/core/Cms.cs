@@ -1,5 +1,6 @@
 ﻿using AngleSharp.Io;
 using Lucene.Net.Support;
+using Microsoft.Ajax.Utilities;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Models;
@@ -157,6 +158,7 @@ namespace Protean
         public string mcBehaviourAddPageCommand = "";
         public string mcBehaviourEditPageCommand = "";
 
+        public Boolean mbCheckDetailPath = false;
 
         public string mcClientCommonFolder = "";
         public string mcEWCommonFolder = "/ewcommon";
@@ -716,6 +718,10 @@ namespace Protean
 
                     mcPagePath = moRequest["path"] + "";
                     mcPagePath = mcPagePath.Replace("//", "/");
+
+                    if (Strings.LCase(moConfig["CheckDetailPath"]) == "on") {
+                        mbCheckDetailPath = true;
+                       }
 
                     JSStart.InitialiseJSEngine();
 
@@ -2613,7 +2619,7 @@ namespace Protean
                                 }
                             }
 
-                            if (Strings.LCase(moConfig["CheckDetailPath"]) == "on" & mbAdminMode == false & mnArtId > 0 & (mcOriginalURL.Contains("-/") | mcOriginalURL.Contains("/Item")))
+                            if (mbCheckDetailPath & mbAdminMode == false & mnArtId > 0 & (mcOriginalURL.Contains("-/") | mcOriginalURL.Contains("/Item")))
                             {
                                 if (oPageElmt.SelectSingleNode("ContentDetail/Content/@name") != null)
                                 {
@@ -4876,18 +4882,22 @@ namespace Protean
                 sSql = "SET ARITHABORT ON ";
                 //sSql = sSql + " SELECT  c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
 
-                sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
-                sSql = sSql + "CAST(" + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
+                sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, ";
+                sSql = sSql + "CAST(c." + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
 
                 // if distinct flag true and order by clause is also enabled then  required to bring all this column in select query too. 
                 // column which you are passing here is either 
                 // - agreegate function
                 // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
-
+             
                 if (cAdditionalColumns != string.Empty)
+                    
                 {
-                    sSql = sSql + cAdditionalColumns;
+                    cAdditionalColumns = cAdditionalColumns.Trim(' ');
+                    cAdditionalColumns = cAdditionalColumns.Trim(',');
+                    sSql = sSql + ", "  + cAdditionalColumns + " ";
                 }
+                
                 sSql += "FROM tblContent AS c INNER JOIN ";
                 sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                 sSql += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
@@ -4909,8 +4919,10 @@ namespace Protean
 
                 // ' Add the extra joins if specified.
                 if (!string.IsNullOrEmpty(cAdditionalJoins))
-                    sSql += " " + cAdditionalJoins + " ";
-
+                { 
+                        sSql += " " + cAdditionalJoins + " ";
+                    }
+                   
 
 
                 // we only want to return results that occur on pages beneath the current root id.
@@ -4919,9 +4931,9 @@ namespace Protean
 
 
                 if (bPrimaryOnly)
-                {
-                    sPrimarySql = " CL.bPrimary = 1 ";
-                }
+                    {
+                        sPrimarySql = " CL.bPrimary = 1 ";
+                    }
 
 
                 object sFilterTargetSql = "";
@@ -5025,7 +5037,27 @@ namespace Protean
                     oContentsNode.SetAttribute("resultCount", nTotal.ToString());
                 }
 
-                sGroupByClause ="group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                sGroupByClause ="group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), c.cContentForiegnRef , c.cContentName, c.cContentSchemaName, CAST(c.cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId, CL.cPosition ";
+
+                if (cAdditionalColumns != string.Empty)
+                {
+                    string[] aAddCols = cAdditionalColumns.Split(',');
+                    foreach (string col in aAddCols) {
+                        string trimmedcol = col.Trim(' ');
+                        //sGroupByClause += ", " + trimmedcol.Split(' ')[0];
+                        if (trimmedcol != string.Empty)
+                        {
+                            {
+                                //check for any aggregate function
+                                if (!trimmedcol.Contains("("))
+                                {
+                                    sGroupByClause += ", " + trimmedcol.Split(' ')[0];
+                                }
+                            }
+                        }
+                    }
+                    sGroupByClause = sGroupByClause.Trim(' ').Trim(',');
+                }
 
                 if (!string.IsNullOrEmpty(cOrderBy))
                 {
@@ -5052,11 +5084,11 @@ namespace Protean
                         // else default column will have same columns.. 
                         if (cOrderBy.Contains("a.nStatus"))
                         {
-                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), c.cContentForiegnRef , c.cContentName, c.cContentSchemaName, CAST(c.cContentXmlBrief AS varchar(max)), a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
                         }
                         else
                         {
-                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), c.cContentForiegnRef , c.cContentName, c.cContentSchemaName, CAST(c.cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
                         }
                     }
                     else
@@ -5089,7 +5121,7 @@ namespace Protean
                         }
                         // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
-                        sSql = sSql + "  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        sSql = sSql + "  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), c.cContentForiegnRef , c.cContentName, c.cContentSchemaName, CAST(c.cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId, CL.cPosition  ";
 
                     }
                     else
@@ -6393,7 +6425,7 @@ namespace Protean
                     }
                     // Please never add any setting here you do not want to be publicly accessible.
                     object s = "web.Cart;web.Membership;web.Search;web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;";
-                    s = Operators.AddObject(s, $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;");
+                    s = Operators.AddObject(s, $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;web.ReCaptchaKeyV3;web.ReCaptchaVersion;");
                     s = Operators.AddObject(s, "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;");
                     s = Operators.ConcatenateObject(Operators.AddObject(s, moConfig["XmlSettings"]), ";");
 
@@ -11747,8 +11779,6 @@ namespace Protean
         }
         #endregion
 
-        ~Cms()
-        {
-        }
+
     }
 }

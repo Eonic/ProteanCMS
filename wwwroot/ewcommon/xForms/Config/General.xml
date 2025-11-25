@@ -74,6 +74,7 @@
         <add key="FeedOptimiseID" value="" />
         <add key="ReCaptchaKey" value="" />
         <add key="ReCaptchaKeySecret" value="" />
+		<add key="ReCaptchaVersion" value="" />  
         <add key="XmlSettings" value="" />
         <add key="PageCache" value="off" />
         <add key="PageCacheTimeout" value="24" />
@@ -89,6 +90,9 @@
         <add key="ServerSenderEmailName" value="" />
         <add key="DisableServerSenderEmail" value="" />
  	    <add key="ExcludeFoldersFromPaths" value="header,footer" />
+  	    <add key="MsGraphTennantId" value="" />
+        <add key="MsGraphClientId" value="" />
+		<add key="MsGraphClientSecret" value="" />
 	  </web>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -174,6 +178,9 @@
     <bind id="ServerSenderEmailName" nodeset="web/add[@key='ServerSenderEmailName']/@value" required="false()" type="email" />
     <bind id="DisableServerSenderEmail" nodeset="web/add[@key='DisableServerSenderEmail']/@value" required="false()" type="string" />
 	<bind id="ExcludeFoldersFromPaths" nodeset="web/add[@key='ExcludeFoldersFromPaths']/@value" required="false()" type="string" />
+	<bind id="MsGraphTennantId" nodeset="web/add[@key='MsGraphTennantId']/@value" required="false()" type="string" />
+    <bind id="MsGraphClientId" nodeset="web/add[@key='MsGraphClientId']/@value" required="false()" type="string" />
+    <bind id="MsGraphClientSecret" nodeset="web/add[@key='MsGraphClientSecret']/@value" required="false()" type="string" />
   </model>
   <group ref="WebSettings">
     <label>Web Settings</label>
@@ -307,7 +314,47 @@
         <label>Webmaster Email Address</label>
         <value></value>
       </input>
+		<input bind="EmailOverride">
+			<label>Email Override</label>
+			<value></value>
+			<hint>Will override destination of all email forms for site</hint>
+		</input>
+		<input bind="OverrideFromEmail">
+			<label>Override From Email</label>
+			<value></value>
+			<hint>Will override sender email of all email forms for site</hint>
+		</input>
+		<input bind="ServerSenderEmail">
+			<label>Server Sender Email</label>
+			<value></value>
+			<hint>Will override sender email of all email forms for site</hint>
+		</input>
+		<input bind="ServerSenderEmailName">
+			<label>Email Override</label>
+			<value></value>
+			<hint>Will override sender name of all email forms for site</hint>
+		</input>
+		<input bind="DisableServerSenderEmail">
+			<label>Disable Server Sender Email</label>
+			<value></value>
+			<hint>Will remove the server sender email address of all email forms for site</hint>
+		</input>
     </group>
+	  <group class="inline">
+		  <label>MS-Graph</label>
+		  <input bind="MsGraphTennantId">
+			  <label>MsGraph Tennant Id</label>
+			  <value />
+		  </input>
+		  <input bind="MsGraphClientId">
+			  <label>MsGraph Client Id</label>
+			  <value />
+		  </input>
+		  <input bind="MsGraphClientSecret">
+			  <label>MsGraph Client Secret</label>
+			  <value />
+		  </input>
+	  </group>
     <group ref="WebStats" class="inline">
       <label>WebStats</label>
       <div class="long">Settings for SmarterStats Server</div>
@@ -389,31 +436,7 @@
         </item>
         <value>on</value>
       </select1>
-      <input bind="EmailOverride">
-        <label>Email Override</label>
-        <value></value>
-        <hint>Will override destination of all email forms for site</hint>
-      </input>
-      <input bind="OverrideFromEmail">
-        <label>Override From Email</label>
-        <value></value>
-        <hint>Will override sender email of all email forms for site</hint>
-      </input>
-      <input bind="ServerSenderEmail">
-        <label>Server Sender Email</label>
-        <value></value>
-        <hint>Will override sender email of all email forms for site</hint>
-      </input>
-      <input bind="ServerSenderEmailName">
-        <label>Email Override</label>
-        <value></value>
-        <hint>Will override sender name of all email forms for site</hint>
-      </input>
-      <input bind="DisableServerSenderEmail">
-        <label>Disable Server Sender Email</label>
-        <value></value>
-        <hint>Will remove the server sender email address of all email forms for site</hint>
-      </input>
+    
       <select1 bind="ewCompiledTransform" appearance="full">
         <label>Compiled Transform</label>
         <item>

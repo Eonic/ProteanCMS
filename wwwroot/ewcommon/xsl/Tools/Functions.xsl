@@ -802,10 +802,11 @@
     <!-- admin javascripts -->
     <xsl:if test="$adminMode">
       <xsl:apply-templates select="." mode="adminJs"/>
-     </xsl:if>
+     </xsl:if>  
 
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
-    <!-- IF IE6 apply PNG Fix as standard -->
+
+	  <!-- IF IE6 apply PNG Fix as standard -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
       <script type="{$scriptType}" src="/ewcommon/js/pngfix.js" defer="" cookie-consent="strictly-necessary">
         <xsl:text> </xsl:text>
@@ -2842,19 +2843,21 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="BingTrackingCode">
+	 
     <xsl:if test="$BingTrackingID!=''">
       <script>
 	       <xsl:choose>
 		    <xsl:when test="Contents/Content[@type='CookieFirst']">
-			  <xsl:attribute name="type">text/plain</xsl:attribute>		  
+			  <xsl:attribute name="type">text/javascript</xsl:attribute>		  
 			  <xsl:attribute name="data-cookiefirst-script">bing_ads</xsl:attribute>
 			</xsl:when>
 			<xsl:otherwise>
-			    <xsl:attribute name="cookie-consent">tracking</xsl:attribute>
+				
+				<xsl:attribute name="cookie-consent">tracking</xsl:attribute>
 		    </xsl:otherwise>
 		  </xsl:choose>
-        (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'} ; <xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s &amp;&amp;s!=='loaded' &amp;&amp; s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq'); </xsl:text>
-		  <xsl:apply-templates select="." mode="BingTrackingCodeAction" />
+		(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>', enableAutoSpaTracking: true};<xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s &amp;&amp; s!=="loaded" &amp;&amp;s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");</xsl:text>
+     	  <xsl:apply-templates select="." mode="BingTrackingCodeAction" />
       </script>
     </xsl:if>
   </xsl:template>
@@ -2875,7 +2878,7 @@
 				window.uetq.push('event', 'PRODUCT_PURCHASE', {
 				'ecomm_prodid': '<xsl:value-of select="productDetail/StockCode"/>',
 				'revenue_value': '<xsl:value-of select="@itemTotal"/>',
-		        'currency': '<xsl:value-of select="Cart/Order/@currency"/>
+		        'currency': '<xsl:value-of select="Cart/Order/@currency"/>'
 		        });
 	    </xsl:for-each>
 
@@ -4399,13 +4402,26 @@
 
       <!-- get the href -->
       <xsl:attribute name="href">
-        <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+        <xsl:choose>
+          <xsl:when test="DisplayName/@linkType='popUp'">
+            <xsl:text>#</xsl:text>
+            <xsl:value-of select="DisplayName/@ModalID"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:attribute>
 
       <!-- title attribute -->
       <xsl:attribute name="title">
         <xsl:apply-templates select="." mode="getTitleAttr"/>
       </xsl:attribute>
+
+      <xsl:if test="DisplayName/@linkType='popUp'">
+        <xsl:attribute name="data-toggle">modal</xsl:attribute>
+        <xsl:attribute name="role">button</xsl:attribute>
+      </xsl:if>
 
 
       <!-- check for different states to be applied -->

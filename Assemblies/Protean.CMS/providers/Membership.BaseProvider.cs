@@ -326,8 +326,8 @@ namespace Protean.Providers
                         pwdIpt.SetAttribute("placeholder", "Password");
                         base.addClientSideValidation(ref pwdIpt, true, "Please enter Password");
                         base.addBind("cPassword", "user/password", ref oBindParent, "true()");
-                        base.addDiv(ref oFrmElmt, "<xsl:text> </xsl:text>", "password-reminder");
-                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign In", "UserLogon", btnClass);
+                        base.addSubmit(ref oFrmElmt, "UserLogon", "Sign in", "UserLogon", btnClass);
+                        base.addDiv(ref oFrmElmt, "&#160;", "password-reminder");
                        
 
 
@@ -342,7 +342,7 @@ namespace Protean.Providers
                                     }
                                     if (bUse) {
                                         string provName = authProvider.config["name"];
-                                        XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign In With " + provName, "AuthProvider", btnClass + " btn-"+ provName.ToLower(), btnIcon, provName.ToLower());
+                                        XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign in with " + provName, "AuthProvider", btnClass + " btn-"+ provName.ToLower(), btnIcon, provName.ToLower());
                                         thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
                                     }
                                 }
@@ -1406,30 +1406,8 @@ namespace Protean.Providers
                                 }
                                 if (base.valid)
                                 {
-
-                                    string cPassword = Instance.SelectSingleNode("*/cDirPassword").InnerText;
-                                    string cClearPassword = cPassword;
-                                    // RJP 7 Nov 2012. Added LCase to MembershipEncryption. Note leave the value below for md5Password hard coded as MD5.
-                                    if ((myWeb.moConfig["MembershipEncryption"].ToLower()) == "md5salt")
-                                    {
-                                        string cSalt = Encryption.generateSalt();
-                                        string inputPassword = string.Concat(cSalt, cPassword); // Take the users password and add the salt at the front
-                                        string md5Password = Encryption.HashString(inputPassword, "md5", true); // Md5 the marged string of the password and salt
-                                        string resultPassword = string.Concat(md5Password, ":", cSalt); // Adds the salt to the end of the hashed password
-                                        cPassword = resultPassword; // Store the resultant password with salt in the database
-                                    }
-                                    else
-                                    {
-                                        cPassword = Encryption.HashString(cPassword, (myWeb.moConfig["MembershipEncryption"].ToLower()), true);
-                                    } // plain - md5 - sha1
-                                    if (!((cPassword ?? "") == (cCurrentPassword ?? "")) & !((cClearPassword ?? "") == (cCurrentPassword ?? "")))
-                                    {
-                                        Instance.SelectSingleNode("*/cDirPassword").InnerText = cPassword;
-                                    }
-
                                     if (id > 0L)
                                     {
-
                                         moDbHelper.setObjectInstance(dbHelper.objectTypes.Directory, base.Instance, id);
                                         if (moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='EditContent' or @bind='EditContent']") != null)
                                         {
@@ -1446,6 +1424,53 @@ namespace Protean.Providers
                                     }
                                     else
                                     {
+                                        // Only touching the password if it's a new record
+
+                                        string cPassword = Instance.SelectSingleNode("*/cDirPassword").InnerText;
+                                        string cClearPassword = cPassword;
+                                        string cSalt = null;
+                                        // RJP 7 Nov 2012. Added LCase to MembershipEncryption. Note leave the value below for md5Password hard coded as MD5.
+                                        switch (myWeb.moConfig["MembershipEncryption"].ToLower())
+                                        {
+                                            case "md5salt":
+                                                cSalt = Encryption.generateSalt();
+                                                string inputPassword = string.Concat(cSalt, cPassword); // Take the users password and add the salt at the front
+                                                string md5Password = Encryption.HashString(inputPassword, "md5", true); // Md5 the marged string of the password and salt
+                                                string resultPassword = string.Concat(md5Password, ":", cSalt); // Adds the salt to the end of the hashed password
+                                                cPassword = resultPassword; // Store the resultant password with salt in the database
+                                                cSalt = null;
+                                                break;
+                                            case "sha2_512_salt": // to replicate
+                                                Guid g = Guid.NewGuid();
+                                                cSalt = g.ToString();
+                                                cPassword = Encryption.HashString(string.Concat(cSalt.ToUpperInvariant(), cPassword.Trim().ToLowerInvariant()), "sha2_512_salt", true);                       // Encrypt the marged string of the password and salt
+
+                                                break;
+                                            default:
+                                                cPassword = Encryption.HashString(cPassword, (myWeb.moConfig["MembershipEncryption"].ToLower()), true);
+                                                break;
+                                        }
+
+                                        if (cSalt != null)
+                                        {
+                                            if (Instance.SelectSingleNode("*/cDirSalt") != null)
+                                            {
+                                                Instance.SelectSingleNode("*/cDirSalt").InnerText = cSalt;
+                                            }
+                                            else
+                                            {
+                                                // create salt element if missing in xform
+                                                Instance.SelectSingleNode("tblDirectory").AppendChild(Instance.OwnerDocument.CreateElement("cDirSalt"));
+                                                Instance.SelectSingleNode("*/cDirSalt").InnerText = cSalt;
+                                            }
+                                        }
+
+                                        // plain - md5 - sha1
+                                        if (!((cPassword ?? "") == (cCurrentPassword ?? "")) & !((cClearPassword ?? "") == (cCurrentPassword ?? "")))
+                                        {
+                                            Instance.SelectSingleNode("*/cDirPassword").InnerText = cPassword;
+                                        }
+
                                         // add new
                                         id = Convert.ToInt64(moDbHelper.setObjectInstance(dbHelper.objectTypes.Directory, base.Instance));
 

@@ -58,18 +58,20 @@
       <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
       <MenuItem name="List Companies" cmd="ListCompanies" display="false" feature="Membership"/>
       <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership"/>
-		<MenuItem name="Dir Memberships" cmd="DirMemberships" display="false" feature="Membership"/>
+	  <MenuItem name="Dir Memberships" cmd="DirMemberships" display="false" feature="Membership"/>
 		
-		<MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
+	  <MenuItem name="Edit User Contact" cmd="EditUserContact" display="false" feature="Membership" icon="fa-map-marker"/>
       <MenuItem name="Activity Reporting" cmd="MemberActivity" display="true" feature="Membership" icon="fa-chart-bar"/>
       <MenuItem name="Member Codes" cmd="MemberCodes" display="true" feature="MemberCodes" icon="fa-certificate"/>
       <MenuItem name="Profile" cmd="Profile" display="False"/>
-      
-    </MenuItem>
+      <MenuItem name="List User Content" cmd="ListUserContent" display="false" feature="Membership" icon="fa-comment"/>
+
+	</MenuItem>
     <MenuItem name="Subscriptions" cmd="UpcomingRenewals" display="true" feature="Subscriptions" icon="far fa-calendar-alt">
       <MenuItem name="Upcoming Renewals" cmd="UpcomingRenewals" display="true" icon="fa-calendar-plus"/>
       <MenuItem name="Renewal Alerts" cmd="RenewalAlerts" display="true" icon="fa-envelope"/>
       <MenuItem name="Recent Renewals" cmd="RecentRenewals" display="true" icon="fa-calendar"/>
+		<MenuItem name="Expired Rolling" cmd="ExpiredRolling" display="true" icon="fa fa-calendar-times-o"/>
       <MenuItem name="Expired Subscriptions" cmd="ExpiredSubscriptions" display="true" icon="fa-calendar-times"/>
       <MenuItem name="Cancelled Subscriptions" cmd="CancelledSubscriptions" display="true" icon="fa fa-times"/>
       <MenuItem name="Cancel Subscription" cmd="CancelSubscription" display="false" icon="fa fa-envelope-o"/>

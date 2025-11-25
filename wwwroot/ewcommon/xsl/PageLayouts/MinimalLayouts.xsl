@@ -3995,7 +3995,7 @@
 
 	<xsl:template match="MenuItem" mode="submenuitem2">
 		<xsl:variable name="dateQuery" select="ancestor::Content/@dateQuery"/>
-		<li>
+		<li class="{@class}">
 			<xsl:variable name="class">
 				<xsl:if test="position()=1">
 					<xsl:text>first </xsl:text>
@@ -4008,7 +4008,7 @@
 				</xsl:if>
 				<xsl:if test="descendant::MenuItem[@id=$dateQuery] and @url!='/'">
 					<xsl:text>active </xsl:text>
-				</xsl:if>
+				</xsl:if> I have	
 			</xsl:variable>
 			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
 				<xsl:with-param name="class" select="$class"/>

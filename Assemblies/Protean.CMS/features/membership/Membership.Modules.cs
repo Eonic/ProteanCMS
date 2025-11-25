@@ -119,8 +119,10 @@ namespace Protean
                             switch (Strings.LCase(myWeb.moConfig["MembershipEncryption"]) ?? "")
                             {
                                 case "md5":
+                                case "md5_salt":
                                 case "sha1":
                                 case "sha256":
+                                case "sha2_512_salt":
                                     {
                                         oXfmElmt = (XmlElement)oAdXfm.xFrmResetAccount();
                                         break;
@@ -465,7 +467,7 @@ namespace Protean
                                 {
                                     // refresh the site strucutre with new userId
                                     myWeb.mnUserId = (int)mnUserId;
-                                    myWeb.GetStructureXML("Site");
+                                    myWeb.GetStructureXML("Site", mnUserId);
                                     XmlElement oElmt = (XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id = '" + redirectId + "']");
                                     string redirectPath = myWeb.mcOriginalURL;
                                     if (oElmt is null)
@@ -512,6 +514,7 @@ namespace Protean
                                 case "md5":
                                 case "sha1":
                                 case "sha256":
+                                case "sha2_512_salt":
                                     {
                                         if (myWeb.moRequest["ewCmd"] == "AR-MOD")
                                         {

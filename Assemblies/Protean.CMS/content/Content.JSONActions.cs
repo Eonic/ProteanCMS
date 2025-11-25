@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Web.Configuration;
-using System.Xml;
+﻿using AngleSharp.Text;
+using DocumentFormat.OpenXml.Spreadsheet;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Ajax.Utilities;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Tools.Integration.Twitter;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Drawing;
+using System.IO;
+using System.Web.Configuration;
+using System.Xml;
+using System.Net;
+using WebGrease;
 
 namespace Protean
 {
@@ -30,6 +37,8 @@ namespace Protean
                 public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Content.JSONActions";
                 private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
+                private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+
                 private Cms myWeb;
                 private Protean.Cms.Cart myCart;
                 public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
@@ -184,13 +193,60 @@ namespace Protean
                     }
                 }
 
-                public string GetContent(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+
+
+                // call /ptnapi/cms.content/getGeoContent
+                public string GetGeoContent(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
                     try
                     {
+                        string cSelectField = (string)jObj["cSchemaName"];
+                        
+                        string[] bBox = Convert.ToString(jObj["bbox"]).SplitCommas();
+                        
+                        string swLat = bBox[0];
+                        string swLng = bBox[1];
+                        string neLat = bBox[2];
+                        string neLng = bBox[3];
 
-                        string JsonResult = "";
-                        return JsonResult;
+                        SqlConnection oConn = myWeb.moDbHelper.oConn;
+                         oConn.Open(); 
+
+                        using (SqlCommand cmd = new SqlCommand("GetGeoContentIndex", oConn))
+                        {
+                            cmd.CommandType = CommandType.StoredProcedure;
+
+                            // Pass parameters safely
+                            cmd.Parameters.Add("@SouthWestLat", SqlDbType.Float).Value = Convert.ToDouble(swLat);
+                            cmd.Parameters.Add("@SouthWestLon", SqlDbType.Float).Value = Convert.ToDouble(swLng);
+                            cmd.Parameters.Add("@NorthEastLat", SqlDbType.Float).Value = Convert.ToDouble(neLat);
+                            cmd.Parameters.Add("@NorthEastLon", SqlDbType.Float).Value = Convert.ToDouble(neLng);
+
+                            var items = new List<GeoContentItem>();
+                            using (SqlDataReader oDr = cmd.ExecuteReader())
+                            {
+                                if (oDr != null)
+                                {
+                                    while (oDr.Read())
+                                    {
+
+                                        items.Add(new GeoContentItem
+                                        {
+                                            id = oDr["id"].ToString(),
+                                            name = oDr["name"].ToString(),
+                                            url = Tools.Text.CleanName(oDr["path"].ToString(), false, true),
+                                            lat = oDr["lat"].ToString(),
+                                            lng = oDr["lng"].ToString()
+                                        });
+
+                                    }
+                                }
+                            }
+
+                            string jsonreturn = JsonConvert.SerializeObject(items);
+                            return jsonreturn;
+                        }
+              
                     }
 
                     catch (Exception ex)
@@ -199,6 +255,17 @@ namespace Protean
                         return ex.Message;
                     }
                 }
+
+
+                private class GeoContentItem
+                {
+                    public string id { get; set; }
+                    public string name { get; set; }
+                    public string url { get; set; }
+                    public string lat { get; set; }
+                    public string lng { get; set; }
+                }
+
 
                 public string IsUnique(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
                 {
@@ -590,6 +657,122 @@ namespace Protean
                         }
                     }
                 }
+
+                public string GetGoogleReviews(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject apiUrl)
+                {
+                    string jsonResult = string.Empty;
+                    XmlElement cReviewNode = myWeb.moPageXml.CreateElement("GoogleReview");
+
+                    try
+                    {
+                        if (moWebConfig["PlaceId"] != null && moWebConfig["PlaceId"] != "" &&
+                            moWebConfig["GoogleReviewAPIKey"] != null && moWebConfig["GoogleReviewAPIKey"] != "")
+                        {
+                            string placeId = moWebConfig["PlaceId"].ToString();
+                            string apiKey = moWebConfig["GoogleReviewAPIKey"].ToString();
+
+                            string cUrl = $"https://maps.googleapis.com/maps/api/place/details/json?place_id={placeId}&fields=name,rating,user_ratings_total,reviews&key={apiKey}";
+
+                            var request = WebRequest.Create(cUrl);
+                            using (var response = request.GetResponse())
+                            {
+                                if (response != null)
+                                {
+                                    using (var content = response.GetResponseStream())
+                                    using (var reader = new StreamReader(content))
+                                    {
+                                        var jsonString = reader.ReadToEnd();
+                                        var json = JObject.Parse(jsonString);
+
+                                        //  Add total review count
+                                        var totalCount = json["result"]?["user_ratings_total"]?.ToString() ?? "0";
+                                        XmlElement totalNode = myWeb.moPageXml.CreateElement("TotalReviewCount");
+                                        totalNode.InnerText = totalCount;
+                                        cReviewNode.AppendChild(totalNode);
+
+                                        var avgRating = json["result"]?["rating"]?.ToString() ?? "0";
+                                        XmlElement avgRatingNode = myWeb.moPageXml.CreateElement("AverageRating");
+                                        avgRatingNode.InnerText = avgRating;
+                                        cReviewNode.AppendChild(avgRatingNode);
+
+                                        var allReviews = json["result"]?["reviews"];
+                                        if (allReviews != null)
+                                        {
+                                            foreach (var r in allReviews)
+                                            {
+                                                XmlElement cContentNode = myWeb.moPageXml.CreateElement("Content");
+
+                                                cContentNode.SetAttribute("name", r["author_name"]?.ToString() ?? "");
+                                                cContentNode.SetAttribute("type", "Review");
+                                                cContentNode.SetAttribute("status", "1");
+                                                cContentNode.SetAttribute("parId", myApi.mnPageId.ToString());
+                                                cContentNode.SetAttribute("showRelated", "Tag");
+
+                                                XmlElement reviewer = myWeb.moPageXml.CreateElement("Reviewer");
+                                                reviewer.InnerText = r["author_name"]?.ToString() ?? "";
+
+                                                XmlElement reviewDate = myWeb.moPageXml.CreateElement("ReviewDate");
+                                                reviewDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
+
+                                                XmlElement url = myWeb.moPageXml.CreateElement("Url");
+                                                url.InnerText = r["author_url"]?.ToString() ?? "";
+
+                                                XmlElement summary = myWeb.moPageXml.CreateElement("Summary");
+                                                summary.InnerText = r["text"]?.ToString() ?? "";
+
+                                                XmlElement description = myWeb.moPageXml.CreateElement("Description");
+                                                description.InnerText = r["text"]?.ToString() ?? "";
+
+                                                XmlElement rating = myWeb.moPageXml.CreateElement("Rating");
+                                                rating.InnerText = r["rating"]?.ToString() ?? "";
+
+                                                XmlElement images = myWeb.moPageXml.CreateElement("Images");
+                                                string profilePhotoUrl = r["profile_photo_url"]?.ToString();
+                                                if (!string.IsNullOrEmpty(profilePhotoUrl))
+                                                {
+                                                    XmlElement imgThumb = myWeb.moPageXml.CreateElement("img");
+                                                    imgThumb.SetAttribute("src", profilePhotoUrl);
+                                                    imgThumb.SetAttribute("width", "80");
+                                                    imgThumb.SetAttribute("height", "80");
+                                                    imgThumb.SetAttribute("class", "thumbnail");
+                                                    images.AppendChild(imgThumb);
+                                                }
+
+                                                cContentNode.AppendChild(reviewer);
+                                                cContentNode.AppendChild(reviewDate);
+                                                cContentNode.AppendChild(url);
+                                                cContentNode.AppendChild(summary);
+                                                cContentNode.AppendChild(description);
+                                                cContentNode.AppendChild(rating);
+                                                cContentNode.AppendChild(images);
+                                                cReviewNode.AppendChild(cContentNode);
+                                            }
+                                        }
+
+                                        // ✅ Add rating limit
+                                        XmlElement cRatingLimit = myWeb.moPageXml.CreateElement("RatingLimit");
+                                        string limit = moWebConfig["ReviewRatingLimit"]?.ToString() ?? "0";
+                                        cRatingLimit.SetAttribute("ratingLimit", limit);
+                                        cReviewNode.AppendChild(cRatingLimit);
+                                    }
+                                }
+                            }
+
+                            jsonResult = JsonConvert.SerializeXmlNode(cReviewNode, Newtonsoft.Json.Formatting.Indented);
+                            jsonResult = jsonResult.Replace("\"@", "\"_");
+                            return jsonResult;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        jsonResult = JsonConvert.SerializeObject(new { error = ex.Message });
+                    }
+
+                    return jsonResult;
+                }
+
+
+              
 
                 #endregion
             }

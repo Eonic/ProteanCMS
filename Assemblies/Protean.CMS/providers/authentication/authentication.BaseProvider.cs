@@ -198,8 +198,13 @@ namespace Protean.Providers
 
             public string GetAuthenticationURL(string ProviderName)
             {
-                string gcEwBaseUrl = moCartConfig["SecureURL"].TrimEnd('/');
-                return GetSamlLoginUrl(config["ssoUrl"].ToString(), "ProteanCMS", gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
+                string gcEwBaseUrl = "https://" + _myWeb.moRequest.ServerVariables["HTTP_HOST"];
+                // NOTE: This value must match the exact Application Identifier (Entity ID) configured in the Microsoft/Google SAML app.
+                string appId = "ProteanCMS";
+                if (Convert.ToString(config["AppID"]) != "" && config["AppID"] != null && !string.IsNullOrWhiteSpace(config["AppID"].ToString())) {
+                    appId =Convert.ToString(config["AppID"]);
+                }
+                return GetSamlLoginUrl(config["ssoUrl"].ToString(), appId, gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
             }
             //check ACS URL in google account- here need to pass exactly same
             // issuer = Entity ID in google account

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Collections.Specialized;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 namespace Protean
@@ -769,20 +769,42 @@ namespace Protean
                 {
                     if (!string.IsNullOrEmpty(goRequest["g-recaptcha-response"]))
                     {
+                        var moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                        string version = moConfig["ReCaptchaVersion"] ?? "v3";
 
-                        System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-                        var recap = new Tools.RecaptchaV2.Recaptcha(moConfig["ReCaptchaKey"], moConfig["ReCaptchaKeySecret"]);
-                        var recapResult = recap.Validate(goRequest["g-recaptcha-response"], moConfig["ReCaptchaKeySecret"]);
-
-                        if (Conversions.ToBoolean(Operators.OrObject(recapResult.Succeeded, Operators.ConditionalCompareObjectEqual(goSession["recaptcha"], 1, false))))
+                        if (version == "v3")
                         {
-                            cValidationError = "";
-                            bIsValid = true;
-                            goSession["recaptcha"] = 1;
-                            missedError = false;
-                        }
+                            var recap = new Tools.RecaptchaV3.Recaptcha();
+                            bool isHuman = recap.Validate(goRequest["g-recaptcha-response"], "submit", 0.5);
 
+                            if (isHuman || Convert.ToBoolean(goSession["recaptcha"] ?? 0))
+                            {
+                                cValidationError = "";
+                                bIsValid = true;
+                                goSession["recaptcha"] = 1;
+                                missedError = false;
+                            }
+                            else
+                            {
+                                cValidationError = "Please complete the CAPTCHA challenge.";
+                                bIsValid = false;
+                            }
+                        }
+                        else
+                        {                           
+                            var recap = new Tools.RecaptchaV2.Recaptcha(moConfig["ReCaptchaKey"], moConfig["ReCaptchaKeySecret"]);
+                            var recapResult = recap.Validate(goRequest["g-recaptcha-response"], moConfig["ReCaptchaKeySecret"]);
+
+                            if (recapResult.Succeeded || Convert.ToBoolean(goSession["recaptcha"] ?? 0))
+                            {
+                                cValidationError = "";
+                                bIsValid = true;
+                                goSession["recaptcha"] = 1;
+                                missedError = false;
+                            }
+                        }
                     }
+
                 }
 
                 // END HANDLING FOR GOOGLE ReCAPTCHA
@@ -939,18 +961,23 @@ namespace Protean
                                 if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg") != null) {
                                     validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg").InnerText;
                                 }
-                                if (validationMsg != "") {
-                                    if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label") != null)                                    
+                                if (validationMsg == "") {
+                                    if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label") != null)
                                     {
                                         validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerText;
                                         if (validationMsg == "")
                                         {
                                             string innerHtml = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerXml;
-                                            validationMsg = $"<span class=\"term4053\">Please Enter</span>&#160;{innerHtml}";
+                                            validationMsg = $"<span class=\"term4053\">Please Complete</span>&#160;{innerHtml}";
                                         }
-                                        else {
-                                            validationMsg = $"<span class=\"term4053\">Please Enter</span>&#160;{validationMsg}";
+                                        else
+                                        {
+                                            validationMsg = $"<span class=\"term4053\">Please Complete</span>&#160;{validationMsg}";
                                         }
+                                    }
+                                    else {
+                                        //control not found so add error to form.
+                                        cValidationError = $"<span class=\"term4053\">Control not found : Please Complete </span>&#160;{sRef}";
                                     }
                                 }
                                 if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=\"msg-1007\">" + validationMsg + " </span>") == false)
@@ -1164,7 +1191,7 @@ namespace Protean
                         case "imgverification":
                             {
                                 if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(Strings.LCase(sValue),(goSession["imgVerification"]), false)))
-                                    cReturn = "<span class=\"msg-1003\">Please enter the correct letters and numbers as shown.</span>";
+                                    cReturn = "<span class=\"msg-1003\">Please complete the correct letters and numbers as shown.</span>";
                                 break;
                             }
                         case "strongpassword":
@@ -2713,6 +2740,54 @@ namespace Protean
             return addTextAreaRet;
         }
 
+        public XmlElement addTextArea(ref XmlElement oContextNode, string sRef, bool bBound, string sLabel, string sClass, Int16 nRows, Int16 nCols)
+        {
+            XmlElement addTextAreaRet = default;
+            XmlElement oIptElmt;
+            XmlElement oLabelElmt;
+            string cProcessInfo = "";
+            try
+            {
+                oIptElmt = moPageXML.CreateElement("textarea");
+                if (bBound)
+                {
+                    oIptElmt.SetAttribute("bind", sRef);
+                }
+                else
+                {
+                    oIptElmt.SetAttribute("ref", sRef);
+                }
+                if (!string.IsNullOrEmpty(sClass))
+                {
+                    oIptElmt.SetAttribute("class", sClass);
+                }
+                if (nRows > 0)
+                {
+                    oIptElmt.SetAttribute("rows", nRows.ToString());
+                }
+                if (nCols > 0)
+                {
+                    oIptElmt.SetAttribute("cols", nCols.ToString());
+                }
+                if (!string.IsNullOrEmpty(sLabel))
+                {
+                    oLabelElmt = moPageXML.CreateElement("label");
+                    oLabelElmt.InnerText = sLabel;
+                    oIptElmt.AppendChild(oLabelElmt);
+                }
+
+                oContextNode.AppendChild(oIptElmt);
+
+                addTextAreaRet = oIptElmt;
+            }
+            catch (Exception ex)
+            {
+                returnException(ref msException, mcModuleName, "addTextArea", ex, "", cProcessInfo, gbDebug);
+                return null;
+            }
+
+            return addTextAreaRet;
+        }
 
 
         public XmlElement addRange(ref XmlElement oContextNode, string sRef, bool bBound, string sLabel, string oStart, string oEnd, string oStep = "", string sClass = "")
@@ -3950,9 +4025,15 @@ namespace Protean
                                 {
                                     object oInstanceNodeSetCount = 0;
                                     bool bSkipBinds = false;
+                                    bool bNoDel = false;
                                     foreach (XmlElement currentONode in oInstanceNodeSet)
                                     {
                                         oNode = currentONode;
+
+                                        if (oNode.GetAttribute("noDel") == "true") {
+                                            bNoDel = true;
+                                        }
+
                                         oInstanceNodeSetCount = Operators.AddObject(oInstanceNodeSetCount, 1);
                                         if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oInstanceNodeSet.Count, oInstanceNodeSetCount, false), isInserted)))
                                         {
@@ -4026,6 +4107,12 @@ namespace Protean
                                             if (oRptElmt.ParentNode != null)
                                             {
                                                 // Adding the repeated controls but only once
+                                                if (bNoDel) {
+                                                    foreach (XmlElement tiggerElmt in oRptElmtCopy.SelectNodes("descendant-or-self::trigger")) {
+                                                        tiggerElmt.SetAttribute("disabled", "disabled");
+                                                    }
+                                                }
+
                                                 oRptElmt.ParentNode.InsertAfter(oRptElmtCopy, oRptElmt.ParentNode.LastChild);
 
                                                 // set oForm to not be readonly
