@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -3233,6 +3234,17 @@ namespace Protean
                         oCartElmt.SetAttribute("weight", weight.ToString());
                         oCartElmt.SetAttribute("orderType", mmcOrderType + "");
 
+                        string allowUpdate = moConfig["AllowCartUpdatesOnPaymentPage"];
+
+                        if (!string.IsNullOrEmpty(allowUpdate)
+                            && allowUpdate.Trim().ToLower() == "on")
+                        {
+                            oCartElmt.SetAttribute("AllowCartUpdateConfig", "on");
+                        }
+                        else
+                        {
+                            oCartElmt.SetAttribute("AllowCartUpdateConfig", "off");
+                        }
                         if (nStatusId == 6L)
                         {
                             oCartElmt.SetAttribute("complete", "True");
@@ -8018,8 +8030,10 @@ namespace Protean
 
                     if (nQuantity < itemLimit)
                     {
+                        var cAllowCartUpdateConfig = moConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
 
-                        if (mnProcessId < 5)
+
+                        if (mnProcessId < 5 || string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             oDS = moDBHelper.getDataSetForUpdate(cSQL, "CartItems", "Cart");
                             oDS.EnforceConstraints = false;
@@ -8604,7 +8618,9 @@ namespace Protean
 
             public int RemoveItem(long nItemId = 0L, long nContentId = 0L)
             {
-                if (mnProcessId > 4)
+                var cAllowCartUpdateConfig = moConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
+
+                if (mnProcessId > 4 && !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                 {
                     return 1;
                 }

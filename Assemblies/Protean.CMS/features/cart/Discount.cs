@@ -1878,10 +1878,12 @@ namespace Protean
                     string cUserGroupIds = getUserGroupIDs(); // get the user groups
                     try
                     {
-                        if (myCart.mnProcessId > 4)
+                        var cAllowCartUpdateConfig = moConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
+                        if (myCart.mnProcessId > 4 && !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
+                        
                         else if (myCart.mnCartId > 0)
                         {
                             sSql = "select * from tblCartOrder where nCartOrderKey=" + myCart.mnCartId;
@@ -2532,7 +2534,8 @@ namespace Protean
                     string sPromoCode = "";
                     try
                     {
-                        if (myCart.mnProcessId > 4)
+                        var cAllowCartUpdateConfig = moConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
+                        if (myCart.mnProcessId > 4 && !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
