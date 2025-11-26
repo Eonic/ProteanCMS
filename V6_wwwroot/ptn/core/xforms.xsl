@@ -16,7 +16,7 @@
             <div class="modal-body " aria-automic="true">
               <div class="alert alert-danger">
                 <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
-                <xsl:text disable-output-escaping="yes">&amp;</xsl:text>&#160;
+                &#160;
                 <span id="errorMessage">&#160;</span>
               </div>
             </div>
