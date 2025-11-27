@@ -21,6 +21,7 @@ using System.Security.Authentication;
 using System.Security.Policy;
 using System.ServiceModel.Channels;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
@@ -54,13 +55,13 @@ namespace Protean.Providers
         public class ReturnProvider
         {
             private const string mcModuleName = "Protean.Providers.Authentication.GetProvider";
-          
+
             public IEnumerable<IauthenticaitonProvider> Get(ref Cms myWeb)
             {
                 try
                 {
 
-                                      
+
                     Type calledType;
                     string ProviderClass = "";
                     Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/authenticationProviders");
@@ -116,7 +117,7 @@ namespace Protean.Providers
                         {
                             string providerTypeName = authProvider.Type;
                             if (string.IsNullOrEmpty(providerTypeName))
-                            {                                
+                            {
                                 providerTypeName = "Protean.Providers.Authentication.DefaultProvider, ProteanCMS";
                             }
 
@@ -185,43 +186,52 @@ namespace Protean.Providers
             {
                 get
                 {
-                    return _Config; 
+                    return _Config;
                 }
             }
-          
+
             public IauthenticaitonProvider Initiate(Cms myWeb, NameValueCollection config)
             {
                 _myWeb = myWeb;
                 _Config = config;
                 return this;
-            }           
+            }
 
             public string GetAuthenticationURL(string ProviderName)
             {
                 string gcEwBaseUrl = "https://" + _myWeb.moRequest.ServerVariables["HTTP_HOST"];
                 // NOTE: This value must match the exact Application Identifier (Entity ID) configured in the Microsoft/Google SAML app.
                 string appId = "ProteanCMS";
-                if (Convert.ToString(config["AppID"]) != "" && config["AppID"] != null && !string.IsNullOrWhiteSpace(config["AppID"].ToString())) {
-                    appId =Convert.ToString(config["AppID"]);
+                if (Convert.ToString(config["AppID"]) != "" && config["AppID"] != null && !string.IsNullOrWhiteSpace(config["AppID"].ToString()))
+                {
+                    appId = Convert.ToString(config["AppID"]);
                 }
-                return GetSamlLoginUrl(config["ssoUrl"].ToString(), appId, gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
+                //Note: For Google or Microsoft, ACS URL is the URL where SAML response is posted- here we are using the same URL as the original request URL
+                // like :https://local.intotheblue.co.uk/?ewCmd=admin
+                string keyUrl = string.Empty;
+                if (_myWeb.mcOriginalURL.Contains("key"))
+                {
+                    keyUrl = "|" + _myWeb.moRequest.QueryString["key"];
+                    _myWeb.mcOriginalURL = Regex.Replace(_myWeb.mcOriginalURL, @"(&|\?)key=[^&]*", "");
+                }
+                return GetSamlLoginUrl(config["ssoUrl"].ToString(), appId, gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName, keyUrl);
             }
             //check ACS URL in google account- here need to pass exactly same
             // issuer = Entity ID in google account
-            public static string GetSamlLoginUrl(string idpSsoUrl, string issuer, string assertionConsumerServiceUrl, string ProviderName)
+            public static string GetSamlLoginUrl(string idpSsoUrl, string issuer, string assertionConsumerServiceUrl, string ProviderName, string keyUrl)
             {
                 var authRequest = GenerateSamlRequestXml(issuer, assertionConsumerServiceUrl);
 
                 var compressedRequest = CompressAndEncode(authRequest);
                 var samlRequest = HttpUtility.UrlEncode(compressedRequest);
                 var returnUrl = string.Empty;
-                if(ProviderName.ToLower() == "google")
+                if (ProviderName.ToLower() == "google")
                 {
-                    returnUrl = $"{idpSsoUrl}&SAMLRequest={samlRequest}&RelayState={ProviderName}";
+                    returnUrl = $"{idpSsoUrl}&SAMLRequest={samlRequest}&RelayState={ProviderName + keyUrl}";
                 }
                 else
                 {
-                    returnUrl = $"{idpSsoUrl}?SAMLRequest={samlRequest}&RelayState={ProviderName}";
+                    returnUrl = $"{idpSsoUrl}?SAMLRequest={samlRequest}&RelayState={ProviderName + keyUrl}";
                 }
                 return returnUrl;
             }

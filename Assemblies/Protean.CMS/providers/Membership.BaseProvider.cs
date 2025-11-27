@@ -33,6 +33,7 @@ using System.Xml;
 using static Protean.Cms;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 
 namespace Protean.Providers
@@ -78,7 +79,7 @@ namespace Protean.Providers
 
             void addNote(string sRef, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
             void addNote(ref XmlNode oNode, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
-
+            string RedirectToIntranet(string username, string keyUrl);
         }
 
         public interface IMembershipAdminProcess
@@ -100,8 +101,7 @@ namespace Protean.Providers
             void LogSingleUserSession();
             void LogSingleUserSession(ref Cms myWeb);
 
-            string ResetUserAcct(ref Cms myWeb, int nUserId);
-
+            string ResetUserAcct(ref Cms myWeb, int nUserId);            
         }
 
         public class ReturnProvider
@@ -302,7 +302,7 @@ namespace Protean.Providers
                         if (!base.load(formPath, myWeb.maCommonFolders))
                         {
                             // If this does not load manually then build a form to do it.
-                           goto BuildForm;
+                            goto BuildForm;
                         }
                         else
                         {
@@ -328,34 +328,38 @@ namespace Protean.Providers
                         base.addBind("cPassword", "user/password", ref oBindParent, "true()");
                         base.addSubmit(ref oFrmElmt, "UserLogon", "Sign in", "UserLogon", btnClass);
                         base.addDiv(ref oFrmElmt, "&#160;", "password-reminder");
-                       
 
 
-                        if (oAuthProviders != null){
+
+                        if (oAuthProviders != null)
+                        {
                             if (oAuthProviders.Count() > 0)
                             {
                                 base.addDiv(ref oFrmElmt, "", "separator");
-                                foreach (IauthenticaitonProvider authProvider in oAuthProviders) {
+                                foreach (IauthenticaitonProvider authProvider in oAuthProviders)
+                                {
                                     Boolean bUse = false;
-                                    if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin") {
+                                    if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin")
+                                    {
                                         bUse = true;
                                     }
-                                    if (bUse) {
+                                    if (bUse)
+                                    {
                                         string provName = authProvider.config["name"];
-                                        XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign in with " + provName, "AuthProvider", btnClass + " btn-"+ provName.ToLower(), btnIcon, provName.ToLower());
+                                        XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign in with " + provName, "AuthProvider", btnClass + " btn-" + provName.ToLower(), btnIcon, provName.ToLower());
                                         thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
                                     }
                                 }
                             }
                         }
                         //END auth provider
-                       
 
-                       
 
-                       base.addDiv(ref oFrmElmt, "", "footer-override");
-                       
-                    base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
+
+
+                        base.addDiv(ref oFrmElmt, "", "footer-override");
+
+                        base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
 
                     Check:
                         ;
@@ -375,7 +379,7 @@ namespace Protean.Providers
                             // Add elements to the form if not present
                             if (Xml.NodeState(ref base.model, "bind[@id='cRemember']") == XmlNodeState.NotInstantiated)
                             {
-                                
+
                                 oSelElmt = base.addSelect(ref xmlGroupElmt, "cRemember", true, "&#160;", "", ApperanceTypes.Full);
                                 base.addOption(ref oSelElmt, "Remember me", "true");
                                 XmlElement oBindParent1 = null;
@@ -418,8 +422,8 @@ namespace Protean.Providers
 
                             base.NewFrm("ActivateAccount");
                             XmlElement oFrmGrp2 = (XmlElement)base.addGroup(ref base.moXformElmt, "ActivateAccount");
-                            var oMembership = new Cms.Membership(ref myWeb);                      
-                            addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1036\">Your Activation Code has been resent</span>", true, "msg-1036");                         
+                            var oMembership = new Cms.Membership(ref myWeb);
+                            addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1036\">Your Activation Code has been resent</span>", true, "msg-1036");
 
                             return base.moXformElmt;
                         }
@@ -431,13 +435,21 @@ namespace Protean.Providers
                             {
                                 string samlResponse = myWeb.moRequest["SAMLResponse"];
                                 string relayState = myWeb.moRequest["RelayState"];
+                                string relayStateRaw = myWeb.moRequest["RelayState"];
+                                string keyUrl = string.Empty;
+                                if (relayStateRaw != null && relayStateRaw.Contains("|"))
+                                {
+                                    var parts = relayStateRaw.Split('|');
+                                    relayState = parts[0];
+                                    keyUrl = parts[1];
+                                }
 
                                 if (!string.IsNullOrEmpty(samlResponse))
                                 {
                                     XmlDocument xmlDoc = new XmlDocument();
                                     xmlDoc.PreserveWhitespace = true;
-                                    xmlDoc.LoadXml(Encoding.UTF8.GetString(Convert.FromBase64String(samlResponse)));                                    
-                                 
+                                    xmlDoc.LoadXml(Encoding.UTF8.GetString(Convert.FromBase64String(samlResponse)));
+
                                     //checking for each provider
                                     foreach (IauthenticaitonProvider authProvider in oAuthProviders)
                                     {
@@ -448,8 +460,8 @@ namespace Protean.Providers
                                         {
                                             bUse = true;
                                         }
-                                        if (bUse && myWeb.moRequest["SAMLResponse"] != null && authProvider.config["entityId"] != null 
-                                            && providerKey == relayState.ToLower() 
+                                        if (bUse && myWeb.moRequest["SAMLResponse"] != null && authProvider.config["entityId"] != null
+                                            && providerKey == relayState.ToLower()
                                             && authProvider.config["entityId"].ToString().Equals(issuer, StringComparison.OrdinalIgnoreCase))
                                         {
                                             //long userid = authProvider.CheckAuthenticationResponse(myWeb.moRequest, myWeb.moSession, myWeb.moResponse);
@@ -477,6 +489,11 @@ namespace Protean.Providers
                                                             goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
                                                         }
                                                     }
+                                                   // If Intranet User logged in from outside the intranet then log them out again.
+                                                    if (!string.IsNullOrEmpty(keyUrl))
+                                                    {
+                                                        RedirectToIntranet(samlUserEmail, keyUrl);
+                                                    }
                                                 }
                                                 else
                                                 {
@@ -487,19 +504,19 @@ namespace Protean.Providers
                                             }
                                         }
                                     }
-                                }                                
+                                }
                             }
 
 
                             if (base.isSubmitted())
-                            {                                
+                            {
                                 //Add code to redirect SAML Auth using Google and Microsoft                           
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["AuthProvider"]))
                                 {
                                     string selectedProvider = myWeb.moRequest["AuthProvider"];
                                     foreach (IauthenticaitonProvider authProvider in oAuthProviders)
-                                    {                                        
-                                        if(authProvider.config["name"].ToLower().Contains(selectedProvider))
+                                    {
+                                        if (authProvider.config["name"].ToLower().Contains(selectedProvider))
                                         {
                                             string redirectUrl = authProvider.GetAuthenticationURL(selectedProvider);
                                             if (!string.IsNullOrEmpty(redirectUrl))
@@ -507,17 +524,17 @@ namespace Protean.Providers
                                                 //myWeb.msRedirectOnEnd = redirectUrl;
                                                 myWeb.moResponse.Redirect(redirectUrl);
                                             }
-                                        }                                       
+                                        }
                                     }
-                                }                               
+                                }
 
                                 base.validate();
                                 if (base.valid)
                                 {
-                                   
+
                                     // changed to get from instance rather than direct from querysting / form.
                                     string username = base.Instance.SelectSingleNode("user/username").InnerText;
-                                    string password = base.Instance.SelectSingleNode("user/password").InnerText;                                                                     
+                                    string password = base.Instance.SelectSingleNode("user/password").InnerText;
 
                                     sValidResponse = moDbHelper.validateUser(username, password);
 
@@ -535,6 +552,13 @@ namespace Protean.Providers
                                                 goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
                                             }
                                         }
+                                        // If Intranet User logged in from outside the intranet then log them out again.
+                                        string keyUrl = myWeb.moRequest["key"];
+                                        if (!string.IsNullOrEmpty(keyUrl))
+                                        {
+                                            RedirectToIntranet(username, keyUrl);
+                                        }
+
                                         // Set the remember me cookie
                                         if (bRememberMe)
                                         {
@@ -595,12 +619,50 @@ namespace Protean.Providers
                             base.addValues();
                             return base.moXformElmt;
                         }
-                      
+
                     }
 
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
+
+                public string RedirectToIntranet(string username, string keyUrl)
+                {
+                    try
+                    {
+                        // 1. get encrypted value
+                        string encryptedUrl = myWeb.moRequest["key"];
+                        if (string.IsNullOrEmpty(encryptedUrl))
+                        {
+                            encryptedUrl = keyUrl;
+                        }
+                        if (!string.IsNullOrEmpty(encryptedUrl))
+                        {
+                            // 2. decrypt to get original URL
+                            string redirectUrl = Encryption.RC4.Decrypt(encryptedUrl, myWeb.moConfig["SharedKey"]);
+
+                            //SET SESSION FOR INTRANET HERE
+                            string token = Encryption.RC4.Encrypt(username.ToString(), myWeb.moConfig["SharedKey"]);
+                            redirectUrl = redirectUrl + "?Userkey=" + HttpUtility.UrlEncode(token);
+
+                            // Security: allow only whitelisted domains
+                            if (redirectUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+                                redirectUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                            {
+                                myWeb.moResponse.Redirect(redirectUrl, true);
+                                myWeb.moSession["IntraRedirectUrl"] = null;
+                                return null; // Important to stop further processing
+                            }
+                        }
+                        return null;
+                    }
+
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "RedirectToIntranet", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -730,7 +792,8 @@ namespace Protean.Providers
                         {
                             addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1036\">Your account is now activated please logon</span>", true, "msg-1036");
                         }
-                        else {
+                        else
+                        {
                             addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1037\">This activation code has allready been used or is invalid</span>", true, "msg-10376");
                         }
 
@@ -2421,7 +2484,8 @@ namespace Protean.Providers
                         else if (moRequest["ewCmd"] == "ResendActivation")
 
                         {
-                            if (mnUserId == 0) {
+                            if (mnUserId == 0)
+                            {
                                 mnUserId = Convert.ToInt16(myWeb.moRequest["userId"]);
                             }
                             sendRegistrationAlert(ref myWeb, mnUserId, false);
@@ -2929,23 +2993,26 @@ namespace Protean.Providers
                 /// <remarks>It is called in EonicWeb but has been extracted so that it may be called by lightweight EonicWeb calls (e.g. ajax calls)</remarks>
                 /// 
 
-                public void sendRegistrationAlert(ref Cms myWeb,long mnUserId, Boolean clearUserId, string cmdPrefix = "") {
+                public void sendRegistrationAlert(ref Cms myWeb, long mnUserId, Boolean clearUserId, string cmdPrefix = "")
+                {
                     System.Web.HttpRequest moRequest = myWeb.moRequest;
                     System.Collections.Specialized.NameValueCollection moConfig = myWeb.moConfig;
 
                     string sProcessInfo = "";
-                    
-                    try { 
 
-                    // send registration confirmation
+                    try
+                    {
+
+                        // send registration confirmation
                         string xsltPath = "/xsl/email/registration.xsl";
-                        if (myWeb.bs5) {
+                        if (myWeb.bs5)
+                        {
                             xsltPath = "/features/membership/email/registration.xsl";
                         }
                         if (File.Exists(goServer.MapPath(xsltPath)))
                         {
                             XmlElement oUserEmail;
-                            XmlElement oUserElmt;      
+                            XmlElement oUserElmt;
                             XmlElement oElmtPwd = myWeb.moPageXml.CreateElement("Password");
                             oElmtPwd.InnerText = moRequest["cDirPassword"];
                             if (myWeb.bs5)
@@ -2958,15 +3025,16 @@ namespace Protean.Providers
                                 oUserElmt = emailRoot;
                                 oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("User/Email");
                             }
-                            else {
+                            else
+                            {
                                 oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
                                 oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
                                 oUserElmt.AppendChild(oElmtPwd);
                             }
-                                if (clearUserId)
+                            if (clearUserId)
                                 mnUserId = 0; // clear user Id so we don't stay logged on
-                      
-                           
+
+
 
                             string fromName = moConfig["SiteAdminName"];
                             string fromEmail = moConfig["SiteAdminEmail"];
@@ -2981,10 +3049,12 @@ namespace Protean.Providers
 
                             //lets reset the activation key if it is missing.
                             string ActivationKey = "";
-                            if (oUserElmt.SelectSingleNode("descendant-or-self::ActivationKey") != null) {
+                            if (oUserElmt.SelectSingleNode("descendant-or-self::ActivationKey") != null)
+                            {
                                 ActivationKey = oUserElmt.SelectSingleNode("descendant-or-self::ActivationKey").ToString();
                             }
-                            if (ActivationKey == "") {
+                            if (ActivationKey == "")
+                            {
                                 var oMembership = new Protean.Cms.Membership(ref myWeb);
                                 //oMembership.OnError += myWeb.OnComponentError;
                                 oMembership.AccountActivateLink((int)mnUserId);
@@ -3017,9 +3087,9 @@ namespace Protean.Providers
                     {
                         // returnException(myWeb.msException, mcModuleName, "MembershipLogon", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
                         OnComponentError(ref myWeb, this, new Tools.Errors.ErrorEventArgs(mcModuleName, "MembershipV4LayoutProcess", ex, sProcessInfo));
-                  
+
                     }
-                 }
+                }
 
 
                 public void LogSingleUserSession()
@@ -3294,16 +3364,18 @@ namespace Protean.Providers
                             {
                                 path = fs.FindFilePathInCommonFolders("/features/membership/email/password-reset.xsl", myWeb.maCommonFolders);
                             }
-                            else {
+                            else
+                            {
                                 path = fs.FindFilePathInCommonFolders("/xsl/Email/passwordReset.xsl", myWeb.maCommonFolders);
-                             
+
                             }
                             Protean.Cms.dbHelper argodbHelper = null;
                             sReturnValue = Conversions.ToString(oMessage.emailer(oEmailDoc.DocumentElement, path, myWeb.moConfig["SiteAdminName"], myWeb.moConfig["SiteAdminEmail"], userEmail, "Account Reset ", odbHelper: ref argodbHelper));
 
                             //sReturnValue = Conversions.ToString(Interaction.IIf(sReturnValue == "Message Sent", "<span class=\"msg-1035\">Reset code sent to </span>" + userEmail, ""));
-                            if (sReturnValue == "Message Sent") {
-                                 sReturnValue = "If we have the user account supplied we will have emailed you a reset code";
+                            if (sReturnValue == "Message Sent")
+                            {
+                                sReturnValue = "If we have the user account supplied we will have emailed you a reset code";
                             }
                         } // endif oUserXml Is Nothing
 

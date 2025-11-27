@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -3248,6 +3249,17 @@ namespace Protean
                         oCartElmt.SetAttribute("weight", weight.ToString());
                         oCartElmt.SetAttribute("orderType", mmcOrderType + "");
 
+                        string allowUpdate = moConfig["AllowCartUpdatesOnPaymentPage"];
+
+                        if (!string.IsNullOrEmpty(allowUpdate)
+                            && allowUpdate.Trim().ToLower() == "on")
+                        {
+                            oCartElmt.SetAttribute("AllowCartUpdateConfig", "on");
+                        }
+                        else
+                        {
+                            oCartElmt.SetAttribute("AllowCartUpdateConfig", "off");
+                        }
                         if (nStatusId == 6L)
                         {
                             oCartElmt.SetAttribute("complete", "True");
@@ -3694,14 +3706,12 @@ namespace Protean
                                 }
                             }
 
-                            // Add Any Client Notes
-                            //cartxml - discount node not available- dont import
+                            // Add Any Client Notes                          
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
                                 oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
-                               // if (Convert.ToString(oElmt.FirstChild) != "" && oCartElmt.SelectSingleNode("Item/Discount") != null)
-                               if (Convert.ToString(oElmt.FirstChild) != "")
+                                if (Convert.ToString(oElmt.FirstChild) != "")
                                 {
                                     if (oElmt.FirstChild.Name == "Notes")
                                     {
@@ -3822,11 +3832,12 @@ namespace Protean
                     {
                         moSubscription.UpdateSubscriptionsTotals(ref oCartElmt);
                     }
-                 
+
                     mnCartId = (int)oldCartId;
-                  
-                    if (myWeb.moRequest["refresh"] == "true") {
-                        mnCartId = nCartIdUse;                        
+
+                    if (myWeb.moRequest["refresh"] == "true")
+                    {
+                        mnCartId = nCartIdUse;
                     }
 
                     //mnCartId = (int)oldCartId;
@@ -5652,14 +5663,15 @@ namespace Protean
                                         mcBillingAddressXform = mcBillingAddressXform.Replace("both-addresses.xml", "billing-address.xml");
                                     }
                                 }
-                                else {
+                                else
+                                {
                                     if (mcBillingAddressXform.Contains("BillingAndDeliveryAddress.xml"))
                                     {
                                         mcBillingAddressXform = mcBillingAddressXform.Replace("BillingAndDeliveryAddress.xml", "BillingAddress.xml");
                                     }
                                 }
 
-                                
+
                                 // ensure we hit this next time through...
                                 cCmdAction = "Billing";
                                 contactFormCmd2 = Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "editAddress", oDr["nContactKey"]));
@@ -8033,8 +8045,10 @@ namespace Protean
 
                     if (nQuantity < itemLimit)
                     {
+                        var cAllowCartUpdateConfig = moConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
 
-                        if (mnProcessId < 5)
+
+                        if (mnProcessId < 5 || string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             oDS = moDBHelper.getDataSetForUpdate(cSQL, "CartItems", "Cart");
                             oDS.EnforceConstraints = false;
@@ -8619,7 +8633,9 @@ namespace Protean
 
             public int RemoveItem(long nItemId = 0L, long nContentId = 0L)
             {
-                if (mnProcessId > 4)
+                var cAllowCartUpdateConfig = moConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
+
+                if (mnProcessId > 4 && !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                 {
                     return 1;
                 }
@@ -12073,15 +12089,20 @@ namespace Protean
                     {
                         useSavedAddressesOnCart(billingAddId, deliveryAddId, null);
                     }
-                    XmlElement instanceNode = (XmlElement)oePaymentDetailsInstanceElmt.SelectSingleNode("//PaymentDetails/instance");
+                    XmlElement instanceNode = (XmlElement)oePaymentDetailsInstanceElmt
+                             .SelectSingleNode("//PaymentDetails/instance");
 
-                    if (instanceNode != null)
-                    {
-                        ConfirmPayment(ref oCartListElmt, ref instanceNode, cNewAuthNumber, cMethodName, Amount);
-                        GetCart(ref oCartListElmt, mnCartId);
-                        oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber);
-                        SaveCartXML(oCartListElmt, mnCartId);
-                    }
+
+                    XmlElement targetNode = instanceNode ?? oePaymentDetailsInstanceElmt;
+
+                    ConfirmPayment(ref oCartListElmt, ref targetNode, cNewAuthNumber, cMethodName, Amount);
+
+                    GetCart(ref oCartListElmt, mnCartId);
+
+                    oCartListElmt.InnerXml = oCartListElmt.InnerXml.Replace(ReceiptId, cNewAuthNumber);
+
+                    SaveCartXML(oCartListElmt, mnCartId);
+
                     return mnCartId.ToString();
                 }
                 catch (Exception ex)

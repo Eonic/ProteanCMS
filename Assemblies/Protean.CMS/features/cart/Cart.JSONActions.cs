@@ -37,6 +37,7 @@ namespace Protean
                 private const string mcModuleName = "Eonic.Cart.JSONActions";
                 private const string cContactType = "Venue";
                 private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
+                private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 private Cms myWeb;
                 private Cart myCart;
 
@@ -141,11 +142,13 @@ namespace Protean
                             }
                             myCart.mnProcessId = (short)1;
                         }
-                        if ((int)myCart.mnProcessId > 4)
+                        var cAllowCartUpdateConfig = moWebConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
+
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
-
                         else
                         {
                             if (jObj["Item"] != null)
@@ -216,7 +219,10 @@ namespace Protean
                 {
                     try
                     {
-                        if ((int)myCart.mnProcessId > 4)
+                        var cAllowCartUpdateConfig = moWebConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
+
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -455,7 +461,10 @@ namespace Protean
 
                 public string UpdateDeliveryOptionByCountry(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    if ((int)myCart.mnProcessId > 4)
+                    var cAllowCartUpdateConfig = moWebConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
+
+                    if ((int)myCart.mnProcessId > 4 &&
+                        !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                     {
                         return "";
                     }
@@ -638,7 +647,10 @@ namespace Protean
                     try
                     {
 
-                        if ((int)myCart.mnProcessId > 4)
+                        var cAllowCartUpdateConfig = moWebConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
+
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -683,7 +695,10 @@ namespace Protean
                     string jsonString = string.Empty;
                     try
                     {
-                        if ((int)myCart.mnProcessId > 4)
+                        var cAllowCartUpdateConfig = moWebConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
+
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }

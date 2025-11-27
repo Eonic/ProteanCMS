@@ -8,6 +8,7 @@
 // $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
+using Lucene.Net.Support;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
@@ -15,10 +16,12 @@ using Protean.Providers.Messaging;
 using Protean.Tools;
 using System;
 using System.Collections;
+using System.Configuration;
 using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.FeedHandler;
@@ -3040,6 +3043,21 @@ namespace Protean
                                 break;
                             }
 
+                        case "IsIntranetUser":
+                            {
+                                string redirectUrl = myWeb.moConfig["IntranetRedirectUrl"];
+                                string AdminUserName = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText;
+                                if(!string.IsNullOrEmpty(redirectUrl) && !string.IsNullOrEmpty(AdminUserName))
+                                {
+                                    string encryptedUrl = Encryption.RC4.Encrypt(redirectUrl, myWeb.moConfig["SharedKey"]);
+                                    Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                    IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                                    oMembershipProv.AdminXforms.RedirectToIntranet(AdminUserName, encryptedUrl);
+                                }
+                              
+                                break;
+                            }
+
                         case "RelateSearch":
                             {
                                 if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "saveRelated"))
@@ -3442,7 +3460,13 @@ namespace Protean
                                 //myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
                                 break;
                             }
-
+                        case "404ProductReport":
+                            {
+                                // bLoadStructure = true;
+                                HeiddenProductWithoutRedirect(ref oPageDetail, ref sAdminLayout);
+                                //myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
+                                break;
+                            }
 
                     }
 
@@ -7172,7 +7196,38 @@ from tblContentIndexDef";
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "SEOReport", ex, "", sProcessInfo, gbDebug);
                 }
             }
+            private void HeiddenProductWithoutRedirect(ref XmlElement oPageDetail, ref string sAdminLayout)
+            {
+                string sProcessInfo = "";
+               
+                try
+                {
+                    // Read QueryString params
+                    string sPage = myWeb.moRequest["Page"];
+                    string sPageSize = myWeb.moRequest["PageSize"];
 
+                    int page = 1;
+                    int pageSize = 100;
+
+                    int.TryParse(sPage, out page);
+                    int.TryParse(sPageSize, out pageSize);
+
+                    if (page <= 0) page = 1;
+                    if (pageSize <= 0) pageSize = 100;
+
+                    var doc = oPageDetail.OwnerDocument;
+                    var oElmt = doc.CreateElement("HiddenProducts");
+                    XmlNode imported = doc.ImportNode(moAdXfm.GetAllHiddenProducts(page, pageSize), true);
+                    oElmt.AppendChild(imported);
+                    oPageDetail.AppendChild(oElmt);
+
+                }
+
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "HeiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
+                }
+            }          
         }
 
 

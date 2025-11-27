@@ -12,6 +12,7 @@ using AngleSharp.Dom;
 using AngleSharp.Io;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Authentication;
@@ -4155,8 +4156,8 @@ namespace Protean
                     }
 
                     // Get the pending content
-
-                    oDS = myWeb.moDbHelper.GetDataSet("SELECT * FROM vw_VersionControl_GetPendingContent" + cFilterSql, "Pending", "GenericReport");
+                    string sSql = "SELECT * FROM vw_VersionControl_GetPendingContent" + cFilterSql;
+                    oDS = myWeb.moDbHelper.GetDataSet(sSql, "Pending", "GenericReport");
 
                     if (oDS.Tables.Count > 0 && oDS.Tables[0].Rows.Count > 0)
                     {
@@ -14659,7 +14660,24 @@ namespace Protean
                     return null;
                 }
             }
-            
+
+            public System.Data.DataTable GetAllHiddenProducts()
+            {
+                PerfMonLog("dbTools", "GetContacts");
+                string sSql;
+                DataSet oDs;
+                try
+                {
+                    sSql = "EXEC spGetHiddenProductUrls";
+                    oDs = GetDataSet(sSql, "Content");
+                    return oDs.Tables[0];
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""));
+                    return null;
+                }
+            }
         }
 
 
