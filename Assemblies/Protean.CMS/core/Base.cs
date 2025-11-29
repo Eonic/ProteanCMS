@@ -6,6 +6,7 @@ using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
 
+
 namespace Protean
 {
 
@@ -55,12 +56,12 @@ namespace Protean
         #region Declarations
         //private licenceMode moLicenceMode = licenceMode.Live;
 
-        public System.Web.HttpContext moCtx;
+        public Protean.Env.IHttpContext moCtx;
 
         // Session / Request Level Properties
-        public System.Web.HttpRequest moRequest;
-        public System.Web.HttpResponse moResponse;
-        public System.Web.SessionState.HttpSessionState moSession;
+        public Protean.Env.IHttpRequest moRequest;
+        public Protean.Env.IHttpResponse moResponse;
+        public Protean.Env.IHttpSessionState moSession;
 
         public string mcPagePath;
         public string mcPageLayout;
