@@ -13,6 +13,7 @@ using System.Windows.Controls;
 using System.Xml;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -26,7 +27,7 @@ namespace Protean
             {
 
                 private string mcModuleName = "Subscriptions";
-                private System.Collections.Specialized.NameValueCollection oSubConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/subscriptions");
+                private System.Collections.Specialized.NameValueCollection oSubConfig;// = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/subscriptions");
 
                 private Cms myWeb;
                 private Cart myCart;
@@ -35,6 +36,7 @@ namespace Protean
                 public Subscriptions(ref Cms aWeb)
                 {
                     myWeb = aWeb;
+                    oSubConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/subscriptions");
                     myCart = myWeb.moCart;
                     if (oSubConfig != null)
                     {
@@ -99,7 +101,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
                     }
                 }
 
@@ -125,7 +127,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "SubscriptionToGroup", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SubscriptionToGroup", ex, "", "", gbDebug);
                     }
 
                     return default;
@@ -158,7 +160,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
                     }
                 }
 
@@ -258,7 +260,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
                     }
                 }
 
@@ -356,7 +358,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
                     }
                 }
 
@@ -391,7 +393,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
                     }
                 }
 
@@ -471,7 +473,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
                     }
                 }
 
@@ -551,7 +553,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
                     }
                 }
 
@@ -585,7 +587,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListSubscriptions", ex, "", "", gbDebug);
                     }
                 }
 
@@ -732,7 +734,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -774,7 +776,7 @@ namespace Protean
                 {
                     try
                     {
-                        XmlElement moReminderCfg = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/subscriptionReminders");
+                        XmlElement moReminderCfg = (XmlElement)myWeb.moConfigMng.GetWebApplicationSection("protean/subscriptionReminders");
                         if (moReminderCfg == null) {
                             oParentElmt.SetAttribute("error", "Please configure Subscription Reminders");
                         }
@@ -924,7 +926,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetSubscriptionDetail", ex, "", "", gbDebug);
                     }
                 }
 
@@ -1067,7 +1069,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "RenewalAction", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "RenewalAction", ex, "", "", gbDebug);
                         return ex.Message;
                     }
 
@@ -1158,7 +1160,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSubsTotals", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateSubsTotals", ex, "", "", gbDebug);
                     }
                 }
 
@@ -1237,7 +1239,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckCartForSubscriptions", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CheckCartForSubscriptions", ex, "", "", gbDebug);
                     }
 
                     return default;
@@ -1340,7 +1342,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CartSubscriptionPrice", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CartSubscriptionPrice", ex, "", "", gbDebug);
                     }
 
                     return default;
@@ -1430,7 +1432,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CartSubscriptionPrice", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CartSubscriptionPrice", ex, "", "", gbDebug);
                     }
                 }
 
@@ -1522,7 +1524,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "SubscriptionPrice", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SubscriptionPrice", ex, "", "", gbDebug);
                         return 0d;
                     }
                 }
@@ -1614,7 +1616,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "UpgradeCredit", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpgradeCredit", ex, "", "", gbDebug);
                     }
 
                     return default;
@@ -1662,7 +1664,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "SubscriptionEndDate", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SubscriptionEndDate", ex, "", "", gbDebug);
                     }
 
                     return default;
@@ -1689,7 +1691,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetRenewalDate", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetRenewalDate", ex, "", "", gbDebug);
                     }
 
                     return default;
@@ -1699,7 +1701,7 @@ namespace Protean
                 {
 
                     string cLastSubXml = "";
-                    System.Collections.Specialized.NameValueCollection oSubConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/subscriptions");
+                    System.Collections.Specialized.NameValueCollection oSubConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/subscriptions");
                     string SubscrptionSchemaTypes = "Subscription";
                     string SubscrptionSchemaTypesTemp = "";
                     try
@@ -1855,7 +1857,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "AddUserSubscriptions", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "AddUserSubscriptions", ex, "", "", gbDebug);
                     }
 
                 }
@@ -1989,7 +1991,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "AddUserSubscription", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "AddUserSubscription", ex, "", "", gbDebug);
                     }
 
                 }
@@ -2031,7 +2033,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "AddSubscriptionToUserXML", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "AddSubscriptionToUserXML", ex, "", "", gbDebug);
                     }
                 }
 
@@ -2091,7 +2093,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "AddSubscription", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "AddSubscription", ex, "", "", gbDebug);
                     }
                 }
 
@@ -2146,7 +2148,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CancelSubscription", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CancelSubscription", ex, "", "", gbDebug);
                     }
                 }
 
@@ -2174,7 +2176,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ResendCancelation", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ResendCancelation", ex, "", "", gbDebug);
                     }
                 }
 
@@ -2216,7 +2218,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ExpireSubscription", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ExpireSubscription", ex, "", "", gbDebug);
                         return "Expiry Failed";
                     }
                 }
@@ -2249,7 +2251,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CancelSubscription", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CancelSubscription", ex, "", "", gbDebug);
                     }
                 }
 
@@ -2260,8 +2262,8 @@ namespace Protean
                 public XmlElement SubcriptionReminders()
                 {
                     // send reminders to out for closing subscriptions 
-                    System.Collections.Specialized.NameValueCollection oSubConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/subscriptions");
-                    XmlElement moReminderCfg = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/subscriptionReminders");
+                    System.Collections.Specialized.NameValueCollection oSubConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/subscriptions");
+                    XmlElement moReminderCfg = (XmlElement)myWeb.moConfigMng.GetWebApplicationSection("protean/subscriptionReminders");
                     var moResponse = myWeb.moPageXml.CreateElement("Response");
                     try
                     {
@@ -2375,7 +2377,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug);
                         moReminderCfg.SetAttribute("exception", ex.Message);
                         moReminderCfg.SetAttribute("stackTrace", ex.StackTrace);
                         return moReminderCfg;
@@ -2563,7 +2565,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SubcriptionReminders", ex, "", "", gbDebug);
                         return null;
                     }
 
@@ -2649,7 +2651,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, cProcessInfo, ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, cProcessInfo, ex, "", "", gbDebug);
                         return null;
                     }
 
@@ -2666,7 +2668,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ExpireSubscriptionGroups", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ExpireSubscriptionGroups", ex, "", "", gbDebug);
                     }
                 }
 
@@ -2726,7 +2728,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ExpireSubscriptionGroups", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ExpireSubscriptionGroups", ex, "", "", gbDebug);
                     }
 
                 }
@@ -2891,9 +2893,9 @@ namespace Protean
                     // Private Const gbDebug As Boolean = True
                     public Cms.dbHelper moDbHelper;
                     public System.Collections.Specialized.NameValueCollection goConfig; // = WebConfigurationManager.GetWebApplicationSection("protean/web")
-                    public System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
+                    public System.Collections.Specialized.NameValueCollection moCartConfig; // = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/cart");
                     public bool mbAdminMode = false;
-                    public System.Web.HttpRequest moRequest;
+                    public IHttpRequest moRequest;
 
                     // Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
                     //public new event OnErrorEventHandler OnError;
@@ -2902,7 +2904,7 @@ namespace Protean
 
                     private void _OnError(object sender, Tools.Errors.ErrorEventArgs err)
                     {
-                        stdTools.returnException(ref Protean.xForm.msException, err.ModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug);
+                        stdTools.returnException(ref Protean.xForm.msException, this.myWeb.moCtx, err.ModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug);
                     }
 
                     // Public myWeb As Protean.Cms
@@ -2915,6 +2917,7 @@ namespace Protean
                         {
                             this.myWeb = aWeb;
                             goConfig = this.myWeb.moConfig;
+                            moCartConfig = (System.Collections.Specialized.NameValueCollection)this.myWeb.moConfigMng.GetWebApplicationSection("protean/cart");
                             moDbHelper = this.myWeb.moDbHelper;
                             moRequest = this.myWeb.moRequest;
 
@@ -2923,7 +2926,7 @@ namespace Protean
 
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref this.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug);
+                            stdTools.returnException(ref this.myWeb.msException, this.myWeb.moCtx, mcModuleName, "New", ex, "", "", gbDebug);
                         }
 
                         OnError += _OnError;
@@ -3055,7 +3058,7 @@ namespace Protean
 
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref this.myWeb.msException, mcModuleName, "xFrmConfirmSubscription", ex, "", cProcessInfo, gbDebug);
+                            stdTools.returnException(ref this.myWeb.msException, this.myWeb.moCtx, mcModuleName, "xFrmConfirmSubscription", ex, "", cProcessInfo, gbDebug);
                             return null;
                         }
                     }

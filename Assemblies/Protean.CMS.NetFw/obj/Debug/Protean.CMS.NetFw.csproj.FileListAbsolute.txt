@@ -1,0 +1,2 @@
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS.NetFw\obj\Debug\Protean.CMS.NetFw.csproj.AssemblyReference.cache
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS.NetFw\obj\Debug\Protean.CMS.NetFw.csproj.CoreCompileInputs.cache

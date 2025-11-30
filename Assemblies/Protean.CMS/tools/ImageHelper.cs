@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using static Protean.Tools.Text;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -7,8 +8,8 @@ namespace Protean
     public class ImgVerify
     {
 
-        private System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
-        public System.Web.SessionState.HttpSessionState goSession;
+        private IHttpContext moCtx;// = System.Web.HttpContext.Current;
+        public IHttpSessionState goSession;
 
         public ImgVerify()
         {

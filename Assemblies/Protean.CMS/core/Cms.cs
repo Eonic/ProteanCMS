@@ -15,13 +15,11 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
-using System.Web;
-using System.Web.Configuration;
 using System.Xml;
 using static Protean.IndexerAsync.IndexPageAsync;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
-using static System.Web.HttpUtility;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -39,7 +37,7 @@ namespace Protean
         protected override void OnComponentError(object sender, Tools.Errors.ErrorEventArgs e)
         {
             // deals with the error
-            returnException(ref msException, e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug);
+            returnException(ref msException, moCtx, e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug);
             // close connection poolinguseralerts
             if (moDbHelper != null)
             {
@@ -273,12 +271,12 @@ namespace Protean
 
         #region Constructors
 
-        public Cms() : this(System.Web.HttpContext.Current)
+        public Cms() 
         {
 
         }
 
-        public Cms(System.Web.HttpContext Context) : base(Context)
+        public Cms(IHttpContext Context) : base(Context)
         {
             string sProcessInfo = "";
             try
@@ -430,7 +428,7 @@ namespace Protean
         public XmlDocument GetStatus()
         {
             var oDb = new Tools.Database();
-            System.Collections.Specialized.NameValueCollection oVConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/versioncontrol");
+            System.Collections.Specialized.NameValueCollection oVConfig = (System.Collections.Specialized.NameValueCollection)moConfigMng.GetWebApplicationSection("protean/versioncontrol");
             var oRXML = new XmlDocument();
             var oResponseElmt = oRXML.CreateElement("Status");
             var bResult = default(bool);
@@ -633,7 +631,7 @@ namespace Protean
             {
                 bResult = false;
                 AddResponse(ex.ToString());
-                returnException(ref msException, mcModuleName, "GetPendingContent", ex, bDebug: gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "GetPendingContent", ex, bDebug: gbDebug);
             }
             finally
             {
@@ -985,11 +983,11 @@ namespace Protean
 
 
                 // goApp = Nothing
-                moRequest = (System.Web.HttpRequest)null;
+                moRequest = (IHttpRequest)null;
                 // we need this for redirect
                 // moResponse = Nothing
                 // moSession = Nothing
-                goServer = (System.Web.HttpServerUtility)null;
+                goServer = (IHttpServerUtility)null;
                 moConfig = (System.Collections.Specialized.NameValueCollection)null;
 
                 if (moTransform != null & ibIndexMode == false)
@@ -1082,7 +1080,7 @@ namespace Protean
                 if (!string.IsNullOrEmpty(moRequest["perfmon"]) | bSessionLogging)
                 {
                     if (PerfMon is null)
-                        PerfMon = new PerfLog(moConfig["DatabaseName"]);
+                        PerfMon = new PerfLog(moCtx, moConfig["DatabaseName"]);
                     if (moSession != null)
                     {
                         // only bother if we are not doing a scheduler thingie
@@ -1242,7 +1240,7 @@ namespace Protean
                     mcOriginalURL = moRequest.ServerVariables["HTTP_X_REWRITE_URL"];
                 }
 
-                System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
+                System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)moConfigMng.GetWebApplicationSection("protean/cart");
 
                 if (!string.IsNullOrEmpty(moRequest.ContentType))
                 {
@@ -1323,7 +1321,7 @@ namespace Protean
                     case "mail":
                     case "email":
                         {
-                            System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                            System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)moConfigMng.GetWebApplicationSection("protean/mailinglist");
                             if (!string.IsNullOrEmpty(moMailConfig["MailingXsl"]))
                             {
                                 gcEwSiteXsl = moMailConfig["MailingXsl"];
@@ -3333,7 +3331,7 @@ namespace Protean
                         {
                             // Dim assemblyInstance As [Assembly]
                             Type calledType;
-                            Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/bespokeProviders");
+                            Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)moConfigMng.GetWebApplicationSection("protean/bespokeProviders");
                             string providerName = moRequest["provider"];
                             var assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName].Type.ToString());
 
@@ -3725,7 +3723,7 @@ namespace Protean
             catch (Exception ex)
             {
 
-                returnException(ref msException, mcModuleName, "returnPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "returnPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug);
                 if (bReturnBlankError)
                 {
                     return "";
@@ -4167,7 +4165,7 @@ namespace Protean
 
                                 if (bUseCookies)
                                 {
-                                    var oCookie = new System.Web.HttpCookie(cCookieName, "voted");
+                                    var oCookie = new Protean.Env.HttpCookie(cCookieName, "voted");
                                     oCookie.Expires = dCurrentVotesExpiryDate;
                                     moResponse.Cookies.Add(oCookie);
                                 }
@@ -4333,7 +4331,7 @@ namespace Protean
                             if (!string.IsNullOrEmpty(providerName))
                             {
                                 // case for external Providers
-                                Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/" + providerType + "Providers");
+                                Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)moConfigMng.GetWebApplicationSection("protean/" + providerType + "Providers");
                                 Assembly assemblyInstance;
 
                                 if (moPrvConfig.Providers[providerName + "Local"] != null)
@@ -4415,7 +4413,7 @@ namespace Protean
                         {
                             // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo))
                             sProcessInfo = classPath + "." + methodName + " not found";
-                            ocNode.InnerXml = "<Content type=\"error\"><div>" + HtmlEncode(sProcessInfo + ex.Message + ex.StackTrace) + "</div></Content>";
+                            ocNode.InnerXml = "<Content type=\"error\"><div>" + moServer.HtmlEncode(sProcessInfo + ex.Message + ex.StackTrace) + "</div></Content>";
                         }
                     }
 
@@ -5501,7 +5499,7 @@ namespace Protean
                         }
                         else
                         {
-                            var castObject = WebConfigurationManager.GetWebApplicationSection("protean/filterProviders");
+                            var castObject = moConfigMng.GetWebApplicationSection("protean/filterProviders");
                             Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
                             System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[providerName];
                             Assembly assemblyInstance;
@@ -5860,7 +5858,7 @@ namespace Protean
 
                             // Redirect the user.
                             moResponse.Redirect(cUrl + "?token=" + cToken, false);
-                            moCtx.ApplicationInstance.CompleteRequest();
+                            moCtx.CompleteRequest();
                         }
 
                     }
@@ -6200,7 +6198,7 @@ namespace Protean
 
                 if (!string.IsNullOrEmpty(providerName))
                 {
-                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
+                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)moConfigMng.GetWebApplicationSection("protean/messagingProviders");
                     var assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName].Type);
                     var calledType = assemblyInstance.GetType(classPath, true);
 
@@ -6358,12 +6356,12 @@ namespace Protean
                     {
                         if (!string.IsNullOrEmpty(moRequest["utm_" + aVariables[i]]))
                         {
-                            var oCookie = new System.Web.HttpCookie("utm_" + aVariables[i], moRequest["utm_" + aVariables[i]]);
+                            var oCookie = new Protean.Env.HttpCookie("utm_" + aVariables[i], moRequest["utm_" + aVariables[i]]);
                             oCookie.Expires = DateAndTime.DateAdd(DateInterval.Day, 14d, DateTime.Now);
-                            moResponse.AppendCookie(oCookie);
+                            moResponse.Cookies.Add(oCookie);
                             // moSession("utm_" & aVariables(i)) = moRequest("utm_" & aVariables(i))
                         }
-                        if (!(moRequest.Cookies.Get("utm_" + aVariables[i]) is null & string.IsNullOrEmpty(moRequest["utm_" + aVariables[i]])))
+                        if (!(moRequest.Cookies["utm_" + aVariables[i]] is null & string.IsNullOrEmpty(moRequest["utm_" + aVariables[i]])))
                         {
                             newElem2 = moPageXml.CreateElement("Item");
                             newElem2.SetAttribute("name", "utm_" + aVariables[i]);
@@ -6373,7 +6371,7 @@ namespace Protean
                             }
                             else
                             {
-                                newElem2.InnerText = moRequest.Cookies.Get("utm_" + aVariables[i]).Value;
+                                newElem2.InnerText = moRequest.Cookies["utm_" + aVariables[i]].Value;
                             }
                             // newElem2.InnerText = moSession("utm_" & aVariables(i))
                             newElem.AppendChild(newElem2);
@@ -6431,8 +6429,8 @@ namespace Protean
 
                     var match = Regex.Match(Conversions.ToString(s), @"(?<Name>[^\.]*)\.(?<Value>[^;]*);?");
 
-                    System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
-                    System.Collections.Specialized.NameValueCollection oThemeConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/theme");
+                    System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)moConfigMng.GetWebApplicationSection("protean/cart");
+                    System.Collections.Specialized.NameValueCollection oThemeConfig = (System.Collections.Specialized.NameValueCollection)moConfigMng.GetWebApplicationSection("protean/theme");
                     string sCurrentTheme = null;
                     if (oThemeConfig != null)
                     {
@@ -9945,7 +9943,7 @@ namespace Protean
             }
         }
 
-        public void returnDocumentFromItem(ref System.Web.HttpContext ctx)
+        public void returnDocumentFromItem(ref IHttpContext ctx)
         {
             PerfMon.Log("Web", "returnDocumentFromItem");
             var oXML = new XmlDocument();
@@ -10225,7 +10223,7 @@ namespace Protean
 
                                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moCtx.Application["PageNotFoundId"], RootPageId, false)))
                                         {
-                                            moCtx.ApplicationInstance.CompleteRequest();
+                                            moCtx.CompleteRequest();
                                             Redirect404(NotFoundPagePath);
                                         }
                                         else
@@ -10256,7 +10254,7 @@ namespace Protean
                                 msRedirectOnEnd = AccessDeniedPagePath;
 
                                 moResponse.Redirect(msRedirectOnEnd, false);
-                                moCtx.ApplicationInstance.CompleteRequest();
+                                moCtx.CompleteRequest();
                                 return;
 
                             }
@@ -10297,7 +10295,7 @@ namespace Protean
             moResponse.Redirect(msRedirectOnEnd, false);
         }
 
-        public void returnPageAsPDF(ref System.Web.HttpContext ctx)
+        public void returnPageAsPDF(ref IHttpContext ctx)
         {
             PerfMon.Log("Web", "returnDocumentFromItem");
             var oXML = new XmlDocument();
@@ -11138,7 +11136,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "ProcessContentForLanguage", ex, "", "", gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "ProcessContentForLanguage", ex, "", "", gbDebug);
             }
         }
 
@@ -11526,7 +11524,7 @@ namespace Protean
             {
                 // if saving of a page fails we are not that bothered.
                 // cExError &= "<Error>" & filepath & filename & ex.Message & "</Error>" & vbCrLf
-                AddExceptionToEventLog(ex, cProcessInfo);
+                AddExceptionToEventLog(ex, moCtx, cProcessInfo);
                 // returnException(msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
                 // bIsError = True
                 // PerfMon.Log("Web", "SavePage - error")
@@ -11550,7 +11548,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -11678,7 +11676,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                stdTools.returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", "ClearPageCache", gbDebug);
+                stdTools.returnException(ref msException, moCtx, mcModuleName, "ClearPageCache", ex, "", "ClearPageCache", gbDebug);
             }
         }
         /// <summary>
@@ -11763,7 +11761,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "ClearPageCache", ex, "", cProcessInfo, gbDebug);
             }
         }
 

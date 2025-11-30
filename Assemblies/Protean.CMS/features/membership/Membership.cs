@@ -21,6 +21,7 @@ using System.Xml;
 using static Protean.Cms;
 using static Protean.Cms.Admin;
 using static Protean.stdTools;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -165,7 +166,7 @@ namespace Protean
                     cPassword = oConvElmt.InnerXml;
 
                     XmlElement moPolicy;
-                    moPolicy = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy");
+                    moPolicy = (XmlElement)myWeb.moConfigMng.GetWebApplicationSection("protean/PasswordPolicy");
                     int nHistoricPasswordCount = Conversions.ToInteger("0" + moPolicy.FirstChild.SelectSingleNode("blockHistoricPassword").InnerText);
 
                     string sSql2 = "select cActivityDetail as password, dDatetime from tblActivityLog where nActivityType=" + ((int)Cms.dbHelper.ActivityType.HistoricPassword).ToString() + " and nUserDirId = " + AccountID + " Order By dDateTime Desc";
@@ -230,7 +231,7 @@ namespace Protean
                     cPassword = oConvElmt.InnerXml;
 
                     XmlElement moPolicy;
-                    moPolicy = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy");
+                    moPolicy = (XmlElement)myWeb.moConfigMng.GetWebApplicationSection("protean/PasswordPolicy");
                     int nHistoricPasswordCount = Conversions.ToInteger("0" + moPolicy.FirstChild.SelectSingleNode("blockHistoricPassword").InnerText);
                     if (nHistoricPasswordCount > 0)
                     {
@@ -355,13 +356,13 @@ namespace Protean
 
             #region Secure Membership
 
-            public System.Web.HttpCookie SetCookie(string Name, object Value, DateTime Expires = default)
+            public IHttpCookie SetCookie(string Name, object Value, DateTime Expires = default)
             {
                 try
                 {
                     var Cookie = myWeb.moResponse.Cookies[Name];
                     if (Cookie is null)
-                        Cookie = new System.Web.HttpCookie(Name);
+                        Cookie = new Protean.Env.HttpCookie(Name);
                     Cookie.Value = Conversions.ToString(Value);
                     if (!string.IsNullOrEmpty(myWeb.moConfig["SecureMembershipDomain"]))
                     {
@@ -415,10 +416,11 @@ namespace Protean
 
 
                     // Session Cookie
-                    System.Web.HttpContext.Current.Response.Cookies[ASPSessionName].Value = System.Web.HttpContext.Current.Session.SessionID;
+                    myWeb.moCtx.Response.Cookies[ASPSessionName].Value = myWeb.moCtx.Session.SessionID;
+
                     if (!string.IsNullOrEmpty(SecureMembershipDomain))
                     {
-                        System.Web.HttpContext.Current.Response.Cookies[ASPSessionName].Domain = SecureMembershipDomain;
+                        myWeb.moResponse.Cookies[ASPSessionName].Domain = SecureMembershipDomain;
                     }
                     // Path
                     string cPath = "" + myWeb.moRequest.QueryString["path"];
@@ -535,7 +537,7 @@ namespace Protean
                 try
                 {
 
-                    var castObject = WebConfigurationManager.GetWebApplicationSection("protean/membershipProviders");
+                    var castObject = myWeb.moConfigMng.GetWebApplicationSection("protean/membershipProviders");
                     Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
                     foreach (ProviderSettingsCollection ourProvider in moPrvConfig.Providers)
                     {

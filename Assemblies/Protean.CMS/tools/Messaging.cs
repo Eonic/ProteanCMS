@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.stdTools;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -27,16 +28,15 @@ namespace Protean
         public bool mbIsBodyHtml = true;
         public static string msException = "";
 
-        public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
+        public IHttpContext moCtx; // = System.Web.HttpContext.Current;
 
-        public System.Web.HttpApplicationState goApp;
+        public IHttpApplicationState goApp;
 
-        public System.Web.HttpRequest goRequest;
-        public System.Web.HttpResponse goResponse;
-        public System.Web.SessionState.HttpSessionState goSession;
-        public System.Web.HttpServerUtility goServer;
-        public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-
+        public IHttpRequest goRequest;
+        public IHttpResponse goResponse;
+        public IHttpSessionState goSession;
+        public IHttpServerUtility goServer;
+        public System.Collections.Specialized.NameValueCollection goConfig; 
         public string mcModuleName = "Protean.Messaging";
         public bool sendAsync = false;
 
@@ -50,16 +50,17 @@ namespace Protean
         {
             if (moCtx != null)
             {
-                goApp = (System.Web.HttpApplicationState)Interaction.IIf(moCtx == null, null, moCtx.Application);
+                goApp = (IHttpApplicationState)Interaction.IIf(moCtx == null, null, moCtx.Application);
                 goRequest = moCtx.Request;
                 goResponse = moCtx.Response;
                 goSession = moCtx.Session;
                 goServer = moCtx.Server;
+                goConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/web");
             }
         }
         public Messaging(ref string sException)
         {
-            goApp = (System.Web.HttpApplicationState)Interaction.IIf(moCtx is null, null, moCtx.Application);
+            goApp = (IHttpApplicationState)Interaction.IIf(moCtx is null, null, moCtx.Application);
             goRequest = moCtx.Request;
             goResponse = moCtx.Response;
             goSession = moCtx.Session;
@@ -105,7 +106,7 @@ namespace Protean
             {
                 if (gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
+                    returnException(ref msException, moCtx, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
                 }
             }
         }
@@ -128,7 +129,7 @@ namespace Protean
             {
                 if (gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
+                    returnException(ref msException, moCtx, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
                 }
             }
         }
@@ -170,7 +171,7 @@ namespace Protean
             {
                 if (gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
+                    returnException(ref msException, moCtx, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
                 }
             }
         }
@@ -192,7 +193,7 @@ namespace Protean
             {
                 if (gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", "", gbDebug);
+                    returnException(ref msException, moCtx, mcModuleName, "addAttachment", ex, "", "", gbDebug);
                 }
             }
         }
@@ -263,7 +264,7 @@ namespace Protean
             {
                 if (gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", "", gbDebug);
+                    returnException(ref msException, moCtx, mcModuleName, "addAttachment", ex, "", "", gbDebug);
                 }
             }
         }
@@ -284,7 +285,7 @@ namespace Protean
             {
                 if (gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
+                    returnException(ref msException, moCtx, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
                 }
             }
         }
@@ -312,7 +313,7 @@ namespace Protean
             {
                 if (gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
+                    returnException(ref msException, moCtx, mcModuleName, "addAttachment", ex, "", cProcessInfo, gbDebug);
                 }
             }
         }
@@ -341,7 +342,7 @@ namespace Protean
             {
                 if (gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "deleteAttachmentPDF", ex, "", cProcessInfo, gbDebug);
+                    returnException(ref msException, moCtx, mcModuleName, "deleteAttachmentPDF", ex, "", cProcessInfo, gbDebug);
                 }
             }
         }
@@ -352,7 +353,7 @@ namespace Protean
             string cProcessInfo = "";
             try
             {
-                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/mailinglist");
                 if (moMailConfig != null)
                 {
 
@@ -385,7 +386,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
             }
 
         }
@@ -913,7 +914,7 @@ namespace Protean
                                     {
                                         if (gbDebug)
                                         {
-                                            returnException(ref msException, mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug);
+                                            returnException(ref msException, moCtx, mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug);
                                             failureMessage = "ex: " + ex.ToString();
                                             failedSend = true;
                                         }
@@ -935,7 +936,7 @@ namespace Protean
                                         {
                                             if (gbDebug)
                                             {
-                                                returnException(ref msException, mcModuleName, "emailer", ex3, "", cProcessInfo, gbDebug);
+                                                returnException(ref msException, moCtx, mcModuleName, "emailer", ex3, "", cProcessInfo, gbDebug);
                                                 failureMessage = "ex3: " + ex3.ToString();
                                                 failedSend = true;
                                             }
@@ -974,7 +975,7 @@ namespace Protean
                             {
                                 if (gbDebug)
                                 {
-                                    returnException(ref msException, mcModuleName, "emailer", ex2, "", cProcessInfo, gbDebug);
+                                    returnException(ref msException, moCtx, mcModuleName, "emailer", ex2, "", cProcessInfo, gbDebug);
                                     failureMessage = "ex2: " + ex2.ToString();
                                     failedSend = true;
                                 }
@@ -1100,7 +1101,7 @@ namespace Protean
                     {
 
 
-                        System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                        System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/mailinglist");
                         string sMessagingProvider = "";
                         if (moMailConfig != null)
                         {
@@ -1146,7 +1147,7 @@ namespace Protean
             {
                 if (gbDebug)
                 {
-                    returnException(ref msException, mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug);
+                    returnException(ref msException, moCtx, mcModuleName, "emailer", ex, "", cProcessInfo, gbDebug);
                     return ex.ToString();
                 }
                 else
@@ -1158,7 +1159,7 @@ namespace Protean
         }
 
 
-        private static void SendCompletedCallback(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
+        private void SendCompletedCallback(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             // Get the unique identifier for this asynchronous operation. 
             string token = Conversions.ToString(e.UserState);
@@ -1169,7 +1170,7 @@ namespace Protean
             }
             if (e.Error != null)
             {
-                returnException(ref msException, "messaging", "SendCompletedCallback", e.Error, "", "[{0}] Send Error.", gbDebug);
+                returnException(ref msException, moCtx, "messaging", "SendCompletedCallback", e.Error, "", "[{0}] Send Error.", gbDebug);
             }
             // Console.WriteLine("[{0}] {1}", token, e.Error.ToString())
             else
@@ -1352,7 +1353,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "emailerMultiUsers", ex, "", cProcessInfo);
+                returnException(ref msException, moCtx, mcModuleName, "emailerMultiUsers", ex, "", cProcessInfo);
                 return ex.ToString();
             }
 
@@ -1480,7 +1481,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "emailerWithXmlAttachment", ex, "", cProcessInfo);
+                returnException(ref msException, moCtx, mcModuleName, "emailerWithXmlAttachment", ex, "", cProcessInfo);
                 return "Error: " + ex.ToString();
             }
 
@@ -1504,7 +1505,7 @@ namespace Protean
                     {
                         if (oPostNode.Attributes.GetNamedItem("name").Value != null)
                         {
-                            cPostString = cPostString + System.Web.HttpUtility.UrlEncode("" + oPostNode.Attributes.GetNamedItem("name").Value.ToString()) + "=" + System.Web.HttpUtility.UrlEncode("" + oPostNode.InnerText) + "&";
+                            cPostString = cPostString + moCtx.Server.UrlEncode("" + oPostNode.Attributes.GetNamedItem("name").Value.ToString()) + "=" + moCtx.Server.UrlEncode("" + oPostNode.InnerText) + "&";
                         }
                         // what happens to IDs?
                     }
@@ -1530,7 +1531,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "PostToHTMLForm", ex, "", cProcessInfo);
+                returnException(ref msException, moCtx, mcModuleName, "PostToHTMLForm", ex, "", cProcessInfo);
                 return "Error: " + ex.ToString();
             }
         }
@@ -1555,7 +1556,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "SendQueuedMail", ex, "", "", gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "SendQueuedMail", ex, "", "", gbDebug);
                 return "Error";
             }
         }
@@ -1568,7 +1569,7 @@ namespace Protean
 
             try
             {
-                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/mailinglist");
                 var oAddressDic = GetGroupEmails(cGroups);
                 // max number of bcc
 
@@ -1643,7 +1644,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "SendMailToList_Queued", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "SendMailToList_Queued", ex, "", cProcessInfo, gbDebug);
                 return false;
             }
         }
@@ -1653,7 +1654,7 @@ namespace Protean
             // PerfMon.Log("Messaging", "SendSingleMail_Queued")
             try
             {
-                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/mailinglist");
 
 
                 if (Tools.Text.IsEmail(cFromEmail.Trim()) & Tools.Text.IsEmail(cRepientMail.Trim()))
@@ -1685,7 +1686,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "SendSingleMail_Queued", ex, "", "", gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "SendSingleMail_Queued", ex, "", "", gbDebug);
                 return false;
             }
         }
@@ -1769,7 +1770,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "SendSingleMail_Queued", ex, "", "", gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "SendSingleMail_Queued", ex, "", "", gbDebug);
                 return false;
             }
         }
@@ -1803,7 +1804,7 @@ namespace Protean
         {
             try
             {
-                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/mailinglist");
 
                 var oWeb = new Cms();
                 oWeb.InitializeVariables();
@@ -1908,7 +1909,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "emailer", ex, "GetGroupEmails", "", gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "emailer", ex, "GetGroupEmails", "", gbDebug);
                 return null;
             }
 

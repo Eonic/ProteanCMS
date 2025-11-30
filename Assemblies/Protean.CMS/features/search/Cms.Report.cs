@@ -34,7 +34,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "New", ex, "", bDebug: gbDebug);
                 }
             }
 
@@ -48,7 +48,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -95,7 +95,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "apply", ex, "", bDebug: gbDebug);
                 }
 
             }
@@ -206,7 +206,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "report_StoredProcedure", ex, "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "report_StoredProcedure", ex, "", bDebug: gbDebug);
                 }
             }
 

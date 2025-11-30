@@ -20,7 +20,7 @@ namespace Protean
 
             private void _OnError(object sender, Tools.Errors.ErrorEventArgs e)
             {
-                stdTools.returnException(ref Protean.xForm.msException, e.ModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug);
+                stdTools.returnException(ref Protean.xForm.msException, myWeb.moCtx, e.ModuleName, e.ProcedureName, e.Exception, "", e.AddtionalInformation, gbDebug);
             }
 
             #endregion
@@ -124,7 +124,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug);
                     return Conversions.ToBoolean("");
                 }
             }

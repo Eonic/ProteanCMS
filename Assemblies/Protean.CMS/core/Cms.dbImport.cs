@@ -17,6 +17,7 @@ using System.Threading;
 using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -41,10 +42,10 @@ namespace Protean
 
             public string oConnString;
             public long mnUserId;
-            public System.Web.HttpContext moCtx;
+            public IHttpContext moCtx;
             private string mcModuleName = "dbImport";
 
-            public dbImport(string cConnectionString, long nUserId, System.Web.HttpContext oCtx = null)
+            public dbImport(string cConnectionString, long nUserId, IHttpContext oCtx = null)
             {
                 // MyBase.New(cConnectionString)
                 try

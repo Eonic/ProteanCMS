@@ -19,7 +19,7 @@ namespace Protean
         public bool gbDebug = false;
 
 
-        public rest() : base(System.Web.HttpContext.Current)
+        public rest() : base()
         {
             InitialiseVariables();
 
@@ -132,8 +132,8 @@ namespace Protean
                     catch (Exception)
                     {
                         // Not a valid json string we want to make the request anyway
-                        string query = System.Web.HttpUtility.UrlDecode(jsonString);
-                        var formData = System.Web.HttpUtility.ParseQueryString(query);
+                        string query = moCtx.Server.UrlDecode(jsonString);
+                        var formData = moCtx.Server.ParseQueryString(query);
                         try
                         {
                             paramDictionary = formData.AllKeys.ToDictionary(k => k, k => formData[k]);
@@ -177,7 +177,7 @@ namespace Protean
                     if (ProviderName.Contains("."))
                     {
                         string[] pnArr = ProviderName.Split('.');
-                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/" + Strings.LCase(pnArr[0]) + "Providers");
+                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)moCtx.Config.GetWebApplicationSection("protean/" + Strings.LCase(pnArr[0]) + "Providers");
 
                         if (moPrvConfig != null)
                         {
@@ -201,7 +201,7 @@ namespace Protean
                     }
                     else
                     {
-                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
+                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)moCtx.Config.GetWebApplicationSection("protean/messagingProviders");
                         var assemblyInstance = Assembly.LoadFrom(goServer.MapPath(moPrvConfig.Providers[ProviderName].Parameters["path"]));
                         // Dim assemblyInstance As [Assembly] = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
                         classPath = moPrvConfig.Providers[ProviderName].Parameters["className"] + ".JSONActions";

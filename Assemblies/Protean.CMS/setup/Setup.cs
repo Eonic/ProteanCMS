@@ -16,6 +16,7 @@ using System.Web.Configuration;
 using System.Xml;
 using static Protean.Cms;
 using static Protean.stdTools;
+using static Protean.Env;
 
 
 namespace Protean
@@ -35,15 +36,15 @@ namespace Protean
         public XmlDocument moPageXml = new XmlDocument();
         public bool mbOutputXml = false;
 
-        public System.Web.HttpContext moCtx;
+        public IHttpContext moCtx;
 
-        public System.Web.HttpApplicationState goApp;
-        public System.Web.HttpRequest goRequest;
-        public System.Web.HttpResponse goResponse;
-        public System.Web.SessionState.HttpSessionState goSession;
-        public System.Web.HttpServerUtility goServer;
+        public IHttpApplicationState goApp;
+        public IHttpRequest goRequest;
+        public IHttpResponse goResponse;
+        public IHttpSessionState goSession;
+        public IHttpServerUtility goServer;
 
-        public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+        public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/web");
 
         public Cms myWeb;
         private Protean.Cms.dbHelper _moDbHelper;
@@ -111,7 +112,7 @@ namespace Protean
         protected virtual void OnComponentError(object sender, Tools.Errors.ErrorEventArgs e)
         {
             // deals with the error
-            stdTools.returnException(ref myWeb.msException, e.ModuleName, e.ProcedureName, e.Exception, "/ewcommon/xsl/admin/setup.xsl", e.AddtionalInformation, gbDebug);
+            stdTools.returnException(ref myWeb.msException, myWeb.moCtx, e.ModuleName, e.ProcedureName, e.Exception, "/ewcommon/xsl/admin/setup.xsl", e.AddtionalInformation, gbDebug);
             // close connection pooling
             if (myWeb.moDbHelper != null)
             {
@@ -134,12 +135,12 @@ namespace Protean
         #region Class Initialize Procedures
 
 
-        public Setup() : this(System.Web.HttpContext.Current)
+        public Setup() //: this(System.Web.HttpContext.Current)
         {
 
         }
 
-        public Setup(System.Web.HttpContext Context)
+        public Setup(IHttpContext Context)
         {
             string sProcessInfo = string.Empty;
             try
@@ -148,7 +149,7 @@ namespace Protean
 
                 if (moCtx is null)
                 {
-                    moCtx = System.Web.HttpContext.Current;
+                  //  moCtx = System.Web.HttpContext.Current;
                 }
 
                 goApp = moCtx.Application;
@@ -404,7 +405,7 @@ namespace Protean
             catch (Exception ex)
             {
 
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "getPageHtml", ex, "", sProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getPageHtml", ex, "", sProcessInfo, gbDebug);
 
             }
 
@@ -450,7 +451,7 @@ namespace Protean
             catch (Exception ex)
             {
 
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "returnPageHtml", ex, "/ewcommon/xsl/admin/setup.xsl", sProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "returnPageHtml", ex, "/ewcommon/xsl/admin/setup.xsl", sProcessInfo, gbDebug);
                 if (bReturnBlankError)
                 {
                     return "";
@@ -722,7 +723,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "GetSetupXML", ex, "", sProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetSetupXML", ex, "", sProcessInfo, gbDebug);
             }
 
         }
@@ -1120,7 +1121,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "SetupProcessXML", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SetupProcessXML", ex, "", cProcessInfo, gbDebug);
             }
 
         }
@@ -1228,7 +1229,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "appendMenuItem", ex, "", sProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "appendMenuItem", ex, "", sProcessInfo, gbDebug);
 
                 return null;
             }
@@ -1328,7 +1329,7 @@ namespace Protean
                         {
                             if (!string.IsNullOrEmpty(oAlternanteDatabase.Attributes["configName"].Value))
                             {
-                                mConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection(oAlternanteDatabase.Attributes["configName"].Value + "/web");
+                                mConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection(oAlternanteDatabase.Attributes["configName"].Value + "/web");
                             }
                         }
                         if (mConfig != null)
@@ -2918,7 +2919,7 @@ namespace Protean
         {
             string cImport = "";
             StreamReader oImportStream;
-            System.Web.HttpPostedFile fUpld;
+            IHttpPostedFile fUpld;
             var oXml = new XmlDocument();
             bool bIsXml = false;
             bool bIsUpload = false;
@@ -3019,7 +3020,7 @@ namespace Protean
             private const string mcModuleName = "Setup.SetupXForms";
             private Setup mySetup;
 
-            public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+            public System.Collections.Specialized.NameValueCollection goConfig;// = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
             public SetupXforms(ref Setup asetup) : base(ref asetup.myWeb.msException)
             {
@@ -3032,7 +3033,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "New", ex, "", "", true);
+                    stdTools.returnException(ref Protean.xForm.msException, moCtx, mcModuleName, "New", ex, "", "", true);
                 }
             }
 
@@ -3054,7 +3055,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "GuessDBName", ex, "", "", true);
+                    stdTools.returnException(ref Protean.xForm.msException, moCtx, mcModuleName, "GuessDBName", ex, "", "", true);
                     return "";
                 }
             }
@@ -3146,7 +3147,7 @@ namespace Protean
 
                             // Else
 
-                            var oCfg = WebConfigurationManager.OpenWebConfiguration("/");
+                            var oCfg = moCtx.Config.OpenWebConfiguration("/");
 
                             // Now lets create the database
                             Cms myWebArg = new Cms(moCtx);
@@ -3237,7 +3238,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, true);
+                    stdTools.returnException(ref Protean.xForm.msException, moCtx, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, true);
                     return null;
                 }
             }
@@ -3331,7 +3332,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmBackupDatabase", ex, "", cProcessInfo, true);
+                    stdTools.returnException(ref Protean.xForm.msException, moCtx, mcModuleName, "xFrmBackupDatabase", ex, "", cProcessInfo, true);
                     return null;
                 }
             }
@@ -3388,7 +3389,7 @@ namespace Protean
                             base.updateInstanceFromRequest();
                             base.validate();
                             // lets do some hacking 
-                            System.Web.HttpPostedFile fUpld;
+                            IHttpPostedFile fUpld;
                             fUpld = this.goRequest.Files["ewDatabaseUpload"];
 
                             if (fUpld.ContentLength == 0 & string.IsNullOrEmpty(this.goRequest["ewDatabaseFilename"]))
@@ -3442,7 +3443,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, true);
+                    stdTools.returnException(ref Protean.xForm.msException, moCtx, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, true);
                     return null;
                 }
             }
@@ -3516,7 +3517,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref Protean.xForm.msException, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, true);
+                    stdTools.returnException(ref Protean.xForm.msException, moCtx, mcModuleName, "xFrmRestoreDatabase", ex, "", cProcessInfo, true);
                     return null;
                 }
             }
@@ -3531,7 +3532,7 @@ namespace Protean
         public Setup oSetup;
         public string oEwVersion = "5.0";
         public double IISVersion = 7d;
-        public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+        public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/web");
         public string imageRootPath = "/images";
         public string docRootPath = "/docs";
         public string docMediaPath = "/media";
@@ -3662,14 +3663,14 @@ namespace Protean
         public Cms myWeb;
 
 
-        public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
+        public IHttpContext moCtx;// = System.Web.HttpContext.Current;
 
-        public System.Web.HttpApplicationState goApp;
-        public System.Web.HttpRequest goRequest;
-        public System.Web.HttpResponse goResponse;
-        public System.Web.SessionState.HttpSessionState goSession;
-        public System.Web.HttpServerUtility goServer;
-        public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+        public IHttpApplicationState goApp;
+        public IHttpRequest goRequest;
+        public IHttpResponse goResponse;
+        public IHttpSessionState goSession;
+        public IHttpServerUtility goServer;
+        public System.Collections.Specialized.NameValueCollection goConfig;// = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
         private Protean.XmlHelper.Transform oTransform = new Protean.XmlHelper.Transform();
 
@@ -3689,6 +3690,8 @@ namespace Protean
             goResponse = moCtx.Response;
             goSession = moCtx.Session;
             goServer = moCtx.Server;
+
+            goConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/web");
 
             oSetup = oTheSetup;
 

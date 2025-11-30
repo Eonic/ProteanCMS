@@ -21,7 +21,6 @@ namespace Protean
 
                 public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Protean.Cms.Cart.PurchaseActions";
-                private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
                 private Cms myWeb;
                 private Cart myCart;
 

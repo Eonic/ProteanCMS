@@ -24,12 +24,15 @@ namespace Protean.Integration.Directory
 
         public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
 
+        Protean.Cms myWeb;
 
         public Twitter(ref Cms aWeb) : base(ref aWeb)
         {
+            myWeb = aWeb;
         }
         public Twitter(ref Cms aWeb, ref long directoryId) : base(ref aWeb, ref directoryId)
         {
+            myWeb = aWeb;
         }
 
         public string GetRequestToken()
@@ -46,7 +49,7 @@ namespace Protean.Integration.Directory
                     callbackParameters.Add("integration", "Twitter.AccessTokens");
                     callbackParameters.Add("dirId", base.DirectoryId.ToString());
 
-                    var callback = Tools.Http.Utils.BuildURIFromRequest(this.myWeb.moRequest, callbackParameters);
+                    var callback = Tools.Http.Utils.BuildURIFromRequest(myWeb.moCtx, callbackParameters);
 
                     var twitterAPI = new Tools.Integration.Twitter.TwitterVB2.TwitterAPI();
                     string authenticationLink = twitterAPI.GetAuthenticationLink(twitterConsumerKey, twitterConsumerSecret, callback.ToString());
@@ -229,7 +232,7 @@ namespace Protean.Integration.Directory
                     string shortenedURL = "";
                     if (trackbackUri != null)
                     {
-                        shortenedURL = ShortenURL(trackbackUri.ToString());
+                        shortenedURL = ""; // ShortenURL(moCtx, trackbackUri.ToString());
                         // If shortening has failed check the original uri
                         if (string.IsNullOrEmpty(shortenedURL))
                             shortenedURL = trackbackUri.ToString();

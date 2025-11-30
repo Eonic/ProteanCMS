@@ -15,6 +15,7 @@ using System.Xml;
 using static Protean.Cms.dbHelper;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
+using static Protean.Env;
 using VB = Microsoft.VisualBasic;
 
 namespace Protean
@@ -29,9 +30,9 @@ namespace Protean
             #region Declarations
 
 
-            public System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
+            public System.Collections.Specialized.NameValueCollection moCartConfig;// = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
             public System.Collections.Specialized.NameValueCollection moConfig;
-            private System.Web.HttpServerUtility moServer;
+            private IHttpServerUtility moServer;
 
             public XmlDocument moPageXml;
 
@@ -515,11 +516,12 @@ namespace Protean
                     moDBHelper = myWeb.moDbHelper;
                     InitializeVariables();
                     moServer = aWeb.moCtx.Server;
+                    moCartConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/cart");
                 }
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -603,7 +605,7 @@ namespace Protean
                         // change currency based on language selection
                         if (!string.IsNullOrEmpty(myWeb.gcLang))
                         {
-                            XmlNode moLangCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/languages");
+                            XmlNode moLangCfg = (XmlNode)myWeb.moConfigMng.GetWebApplicationSection("protean/languages");
                             if (moLangCfg != null)
                             {
                                 XmlElement thisLangNode = (XmlElement)moLangCfg.SelectSingleNode("Language[@code='" + myWeb.gcLang + "']");
@@ -611,7 +613,7 @@ namespace Protean
                                 {
                                     mcCurrency = thisLangNode.GetAttribute("currency");
                                     mcCurrencyRef = thisLangNode.GetAttribute("currency");
-                                    moPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
+                                    moPaymentCfg = (XmlNode)myWeb.moConfigMng.GetWebApplicationSection("protean/payment");
                                     XmlElement thisCurrencyNode = (XmlElement)moPaymentCfg.SelectSingleNode("currencies/Currency[@ref='" + mcCurrency + "']");
                                     mcCurrencySymbol = thisCurrencyNode.GetAttribute("symbol");
                                 }
@@ -630,7 +632,7 @@ namespace Protean
                             {
                                 mcCurrency = userxml.GetAttribute("defaultCurrency");
                                 mcCurrencyRef = userxml.GetAttribute("defaultCurrency");
-                                moPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
+                                moPaymentCfg = (XmlNode)myWeb.moConfigMng.GetWebApplicationSection("protean/payment");
                                 XmlElement thisCurrencyNode = (XmlElement)moPaymentCfg.SelectSingleNode("currencies/Currency[@ref='" + mcCurrency + "']");
                                 mcCurrencySymbol = thisCurrencyNode.GetAttribute("symbol");
                             }
@@ -1062,7 +1064,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -1074,7 +1076,7 @@ namespace Protean
                 if (mcPersistCart == "on")
                 {
                     // make or update the session cookie
-                    var cookieEwSession = new System.Web.HttpCookie("ewSession" + myWeb.mnUserId.ToString());
+                    var cookieEwSession = new HttpCookie("ewSession" + myWeb.mnUserId.ToString());
                     cookieEwSession.Value = mcSessionId.ToString();
                     cookieEwSession.Expires = DateAndTime.DateAdd(DateInterval.Month, 1d, DateTime.Now);
                     myWeb.moResponse.Cookies.Add(cookieEwSession);
@@ -1090,7 +1092,7 @@ namespace Protean
                 {
                     // clear ewSession cookie so cart doesn't get persisted
                     // we don't need to check for mcPersistCart = "on"
-                    var cookieEwSession = new System.Web.HttpCookie(cSessionCookieName);
+                    var cookieEwSession = new Protean.Env.HttpCookie(cSessionCookieName);
                     cookieEwSession.Expires = DateTime.Now.AddDays(-1);
                     myWeb.moResponse.Cookies.Add(cookieEwSession);
                     cookieEwSession.Expires = DateAndTime.DateAdd(DateInterval.Month, 1d, DateTime.Now);
@@ -1107,7 +1109,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -1178,7 +1180,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -1272,7 +1274,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "checkButtons", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "checkButtons", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -1307,7 +1309,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", "CreateCartElement", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "apply", ex, "", "CreateCartElement", gbDebug);
                     return null;
                 }
 
@@ -2123,7 +2125,7 @@ namespace Protean
                             {
                                 bRedirect = true;
                                 myWeb.moResponse.Redirect(mcSiteURL + mcReturnPage, false);
-                                myWeb.moCtx.ApplicationInstance.CompleteRequest();
+                                myWeb.moCtx.CompleteRequest();
                                 break;
                             }
 
@@ -2174,7 +2176,7 @@ namespace Protean
                                     cPage = "?pgid=" + cPage;
                                 }
                                 myWeb.moResponse.Redirect(mcSiteURL + cPage, false);
-                                myWeb.moCtx.ApplicationInstance.CompleteRequest();
+                                myWeb.moCtx.CompleteRequest();
                                 break;
                             }
 
@@ -2226,7 +2228,7 @@ namespace Protean
                     // do nothing
                     else
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "apply", ex, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -2252,7 +2254,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddCartElement", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "AddCartElement", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -2295,7 +2297,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddBehavior", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "AddBehavior", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -2364,7 +2366,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "emailReceipts", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "emailReceipts", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -2396,7 +2398,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
                 finally
@@ -2496,7 +2498,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
                 finally
@@ -2517,7 +2519,7 @@ namespace Protean
                     if (!string.IsNullOrEmpty(moCartConfig["AccountingProvider"]))
                     {
                         object providerName = moCartConfig["AccountingProvider"];
-                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/accountingProviders");
+                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)myWeb.moConfigMng.GetWebApplicationSection("protean/accountingProviders");
                         var assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName.ToString()].Type.ToString());
                         Type calledType;
                         string classPath = Conversions.ToString(moPrvConfig.Providers[providerName.ToString()].Parameters["rootClass"]);
@@ -2575,7 +2577,7 @@ namespace Protean
                                 if (!string.IsNullOrEmpty(providerName))
                                 {
                                     // case for external Providers
-                                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
+                                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)myWeb.moConfigMng.GetWebApplicationSection("protean/messagingProviders");
                                     var assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName].Type);
                                     calledType = assemblyInstance.GetType(classPath, true);
                                 }
@@ -2618,7 +2620,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -2636,7 +2638,7 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                    System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/mailinglist");
                     if (moMailConfig != null)
                     {
 
@@ -2757,7 +2759,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -2795,7 +2797,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "RemoveDeliveryOption", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "RemoveDeliveryOption", ex, "", "", gbDebug);
                 }
             }
 
@@ -2831,7 +2833,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -2845,7 +2847,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetCart", ex, "", "", gbDebug);
                 }
             }
 
@@ -3833,19 +3835,20 @@ namespace Protean
                     }
 
                     // sonalis code for session set
-                    if (System.Web.HttpContext.Current.Request.Cookies["Flag"] is null)
+                    if (myWeb.moRequest.Cookies["Flag"] is null)
                     {
 
-                        var flagCookie = new System.Web.HttpCookie("Flag");
+                        var flagCookie = new HttpCookie("Flag");
                         flagCookie.Value = "1";
-                        System.Web.HttpContext.Current.Response.Cookies.Add(flagCookie);
+
+                        myWeb.moResponse.Cookies.Add(flagCookie);
 
                     }
                 }
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -4012,7 +4015,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateTotals", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "updateTotals", ex, "", cProcessInfo, gbDebug);
                 }
 
                 return default;
@@ -4039,7 +4042,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getShippingDetailXml", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getShippingDetailXml", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -4068,7 +4071,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductPricesByXml", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getProductPricesByXml", ex, "", "", gbDebug);
                 }
 
                 return default;
@@ -4112,7 +4115,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductTaxRate", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getProductTaxRate", ex, "", "", gbDebug);
                     return (double)default;
                 }
             }
@@ -4233,7 +4236,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getContentPricesNode", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getContentPricesNode", ex, "", "", gbDebug);
                     return null;
                 }
 
@@ -4307,7 +4310,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getOptionPricesByXml", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getOptionPricesByXml", ex, "", "", gbDebug);
                 }
 
                 return default;
@@ -4415,7 +4418,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckQuantities", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CheckQuantities", ex, "", "", gbDebug);
                 }
 
             }
@@ -4487,7 +4490,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckStock", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CheckStock", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -4570,7 +4573,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateStockLevels", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateStockLevels", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -4596,7 +4599,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, gbDebug);
                 }
             }
             // deprecated for the single call function above.
@@ -4641,7 +4644,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateGiftListLevels", ex, "", cProcessInfo, gbDebug);
                 }
                 finally
                 {
@@ -4677,7 +4680,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
             }
@@ -4909,7 +4912,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -4977,7 +4980,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug);
                     return false;
                 }
 
@@ -5552,7 +5555,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "contactXform", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "contactXform", ex, "", cProcessInfo, gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -6035,7 +6038,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "pickContactXform", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "pickContactXform", ex, "", cProcessInfo, gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -6093,7 +6096,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "setCurrentBillingAddress", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "setCurrentBillingAddress", ex, "", cProcessInfo, gbDebug);
                     return default;
                 }
             }
@@ -6177,7 +6180,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "useAddressesOnCart", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "useAddressesOnCart", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -6256,7 +6259,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateExistingUserAddress", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateExistingUserAddress", ex, "", cProcessInfo, gbDebug);
                 }
                 finally
                 {
@@ -6307,7 +6310,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "discountsProcess", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "discountsProcess", ex, "", cProcessInfo, gbDebug);
                     return "";
                 }
 
@@ -6451,7 +6454,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "discountsXform", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "discountsXform", ex, "", cProcessInfo, gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -6507,7 +6510,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "notesProcess", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "notesProcess", ex, "", cProcessInfo, gbDebug);
                     return "";
                 }
 
@@ -6985,7 +6988,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "notesXform", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "notesXform", ex, "", cProcessInfo, gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -7375,7 +7378,7 @@ namespace Protean
                         // Allow to Select Multiple Payment Methods or just one
                         XmlNode oPaymentCfg;
 
-                        oPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
+                        oPaymentCfg = (XmlNode)myWeb.moConfigMng.GetWebApplicationSection("protean/payment");
                         // more than one..
 
                         bool bPaymentTypeButtons = false;
@@ -7663,7 +7666,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "optionsXform", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "optionsXform", ex, "", cProcessInfo, gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -7750,7 +7753,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getParentCountries", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getParentCountries", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
             }
@@ -7784,7 +7787,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "iterateCountryList", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "iterateCountryList", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
 
@@ -7820,7 +7823,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addDateAndRef", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "addDateAndRef", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -7932,7 +7935,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CreateNewCart", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CreateNewCart", ex, "", cProcessInfo, gbDebug);
 
                 }
 
@@ -7960,7 +7963,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SetPaymentMethod", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SetPaymentMethod", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
             }
@@ -7985,7 +7988,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -8398,7 +8401,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addItem", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "addItem", ex, "", cProcessInfo, gbDebug);
                 }
 
                 return default;
@@ -8592,7 +8595,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addItems", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "addItems", ex, "", cProcessInfo, gbDebug);
                     return false;
                 }
 
@@ -8659,7 +8662,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -8752,7 +8755,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug);
                 }
 
                 return default;
@@ -8799,7 +8802,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "removeItem", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -8834,7 +8837,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "EmptyCart", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "EmptyCart", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -8885,7 +8888,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateCartDeposit", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateCartDeposit", ex, "", cProcessInfo, gbDebug);
                 }
                 finally
                 {
@@ -8922,7 +8925,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "QuitCart", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -8948,7 +8951,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "EndSession", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "EndSession", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -9074,7 +9077,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateCart", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateCart", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
             }
@@ -9116,7 +9119,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -9179,7 +9182,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -9216,7 +9219,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListDeliveryMethods", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListDeliveryMethods", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -9251,7 +9254,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListCarriers", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListCarriers", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -9274,7 +9277,7 @@ namespace Protean
                 try
                 {
 
-                    oPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
+                    oPaymentCfg = (XmlNode)myWeb.moConfigMng.GetWebApplicationSection("protean/payment");
                     oElmt = moPageXml.CreateElement("List");
 
 
@@ -9362,7 +9365,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListPaymentProviders", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListPaymentProviders", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -9412,7 +9415,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddDeliveryFromGiftList", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "AddDeliveryFromGiftList", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -9512,7 +9515,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateTaxRate", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateTaxRate", ex, "", cProcessInfo, gbDebug);
 
                 }
 
@@ -9618,7 +9621,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "populateCountriesDropDown", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "populateCountriesDropDown", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -9696,7 +9699,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "emailCart", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "emailCart", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
 
@@ -9905,7 +9908,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addItems", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "addItems", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -9925,7 +9928,7 @@ namespace Protean
                 int nRows = 100;
 
                 int nCurrentRow = 0;
-                XmlElement moPaymentCfg = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/payment");
+                XmlElement moPaymentCfg = (XmlElement)myWeb.moConfigMng.GetWebApplicationSection("protean/payment");
 
                 try
                 {
@@ -10195,7 +10198,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListOrders", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListOrders", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -10295,11 +10298,11 @@ namespace Protean
                     // now we need to redirect somewhere?
                     // bRedirect = True
                     myWeb.moResponse.Redirect("?cartCmd=Cart", false);
-                    myWeb.moCtx.ApplicationInstance.CompleteRequest();
+                    myWeb.moCtx.CompleteRequest();
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "MakeCurrent", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "MakeCurrent", ex, "", "", gbDebug);
                 }
             }
 
@@ -10339,7 +10342,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Delete Cart", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Delete Cart", ex, "", "", gbDebug);
                 }
 
                 return default;
@@ -10362,7 +10365,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartXML", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SaveCartXML", ex, "", "", gbDebug);
                 }
             }
 
@@ -10429,7 +10432,7 @@ namespace Protean
 
                     cProcessInfo = "Getting Currencies";
                     XmlNode moPaymentCfg;
-                    moPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
+                    moPaymentCfg = (XmlNode)myWeb.moConfigMng.GetWebApplicationSection("protean/payment");
                     if (moPaymentCfg is null)
                     {
                         cProcessInfo = "protean/payment Config node is missing";
@@ -10514,7 +10517,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SelectCurrency", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SelectCurrency", ex, "", cProcessInfo, gbDebug);
                 }
 
                 return default;
@@ -10536,7 +10539,7 @@ namespace Protean
 
                         XmlNode moPaymentCfg;
 
-                        moPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
+                        moPaymentCfg = (XmlNode)myWeb.moConfigMng.GetWebApplicationSection("protean/payment");
 
                         XmlElement oCurrency = (XmlElement)moPaymentCfg.SelectSingleNode("currencies/Currency[@ref='" + mcCurrencyRef + "']");
                         if (oCurrency is null)
@@ -10566,7 +10569,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCurrencyDefinition", ex, vstrFurtherInfo: cProcessInfo, bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetCurrencyDefinition", ex, vstrFurtherInfo: cProcessInfo, bDebug: gbDebug);
                 }
             }
 
@@ -10585,7 +10588,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartOverview", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CartOverview", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
 
@@ -10641,7 +10644,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
             }
@@ -10706,7 +10709,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
             }
@@ -10846,7 +10849,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
             }
@@ -10892,7 +10895,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
             }
@@ -10952,7 +10955,7 @@ namespace Protean
                         {
                             //xmlMethod = xmlMethod;
                             //xmlProduct = xmlProduct;
-                            stdTools.returnException(ref myWeb.msException, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                            stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                         }
 
                     }
@@ -10963,7 +10966,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: gbDebug);
 
                 }
 
@@ -10980,7 +10983,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
             }
@@ -10993,7 +10996,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
             }
@@ -11006,7 +11009,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
             }
@@ -11020,7 +11023,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
             }
@@ -11231,7 +11234,7 @@ namespace Protean
                 catch (Exception ex)
                 {
 
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
 
@@ -11259,7 +11262,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "calcShippingCost", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "calcShippingCost", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return 0;
                 }
             }
@@ -11325,7 +11328,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "makeShippingOptionsXML", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "makeShippingOptionsXML", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
 
@@ -11343,7 +11346,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
             }
@@ -11359,7 +11362,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
             }
@@ -11411,7 +11414,7 @@ namespace Protean
                 catch (Exception ex)
                 {
 
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateGCgetValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "updateGCgetValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                     return null;
                 }
             }
@@ -11634,7 +11637,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
             }
@@ -11685,7 +11688,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CheckPromocodeAppliedForDelivery", ex, "", "", gbDebug);
                     return null;
                 }
             }
@@ -11884,7 +11887,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "setDeliveryOptionByCountry", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "setDeliveryOptionByCountry", ex, "", "", gbDebug);
                     return null;
                 }
             }
@@ -12069,7 +12072,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CreateDuplicateOrder", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CreateDuplicateOrder", ex, "", "", gbDebug);
                     return null;
                 }
             }
@@ -12121,7 +12124,7 @@ namespace Protean
 
                                 }
                                 // OptOut from spotler mail +
-                                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/mailinglist");
                                 if (moMailConfig != null)
                                 {
                                     string sMessagingProvider = "";
@@ -12186,7 +12189,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GDPRAnonomize", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GDPRAnonomize", ex, "", "", gbDebug);
                     if (ex != null)
                     {
                         result = "Error: " + ex.Message;

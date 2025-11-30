@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -16,8 +17,8 @@ namespace Protean
         public string ServiceUrl;
         public string ServiceNamespace;
 
-        public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
-        public System.Web.HttpRequest goRequest;
+        public IHttpContext moCtx; // = System.Web.HttpContext.Current;
+        public IHttpRequest goRequest;
 
         public string mcModuleName = "Eonic.SoapClient";
         public SoapClient()
@@ -100,7 +101,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                stdTools.returnException(ref mcModuleName, cProcessInfo, "", ex, "", "", false);
+                stdTools.returnException(ref mcModuleName, moCtx, cProcessInfo, "", ex, "", "", false);
             }
 
         }

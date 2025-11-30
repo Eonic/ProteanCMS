@@ -36,6 +36,7 @@ using static Protean.Cms.dbHelper;
 using static Protean.Cms.dbImport;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -65,17 +66,17 @@ namespace Protean
 
             private const string mcModuleName = "Eonic.dbHelper";
 
-            private System.Web.HttpContext moCtx;
+            private Protean.Env.IHttpContext moCtx;
 
             // Private goApp As System.Web.HttpApplicationState
 
-            public System.Web.HttpRequest goRequest;
-            public System.Web.HttpResponse goResponse;
-            public System.Web.SessionState.HttpSessionState goSession; // we need to pass this through from Web
-            public System.Web.HttpServerUtility goServer;
+            public Protean.Env.IHttpRequest goRequest;
+            public Protean.Env.IHttpResponse goResponse;
+            public Protean.Env.IHttpSessionState goSession; // we need to pass this through from Web
+            public IHttpServerUtility goServer;
             public XmlDocument moPageXml;
 
-            public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+            public System.Collections.Specialized.NameValueCollection goConfig; // = (System.Collections.Specialized.NameValueCollection)moConfigMng.GetWebApplicationSection("protean/web");
 
             public long mnUserId;
 
@@ -111,6 +112,8 @@ namespace Protean
                     goSession = moCtx.Session;
                     goServer = moCtx.Server;
                     // End If
+                    goConfig = (System.Collections.Specialized.NameValueCollection)aWeb.moConfigMng.GetWebApplicationSection("protean/web");
+
 
                     ResetConnection("Data Source=" + goConfig["DatabaseServer"] + "; " + "Initial Catalog=" + goConfig["DatabaseName"] + "; " + GetDBAuth());
 
@@ -169,7 +172,7 @@ namespace Protean
             }
 
 
-            public dbHelper(string cConnectionString, long nUserId, System.Web.HttpContext moCtx = null)
+            public dbHelper(string cConnectionString, long nUserId, IHttpContext moCtx = null)
             {
                 // MyBase.New(cConnectionString)
                 try
@@ -177,7 +180,7 @@ namespace Protean
 
                     if (moCtx is null)
                     {
-                        moCtx = System.Web.HttpContext.Current;
+                      //  moCtx = System.Web.HttpContext.Current;
                     }
 
                     if (moCtx != null)
@@ -208,14 +211,14 @@ namespace Protean
                 base.OnError += _OnError;
             }
 
-            public dbHelper(string cDbServer, string cDbName, long nUserId, System.Web.HttpContext moCtx = null) : base()
+            public dbHelper(string cDbServer, string cDbName, long nUserId, IHttpContext moCtx = null) : base()
             {
 
                 try
                 {
                     if (moCtx is null)
                     {
-                        moCtx = System.Web.HttpContext.Current;
+                       // moCtx = System.Web.HttpContext.Current;
                     }
 
                     // goApp = moCtx.Application
@@ -6898,7 +6901,7 @@ namespace Protean
                             {
                                 // Keep Mailing List In Sync.
                                 // If Not cEmail !=hing Then
-                                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/mailinglist");
                                 string sMessagingProvider = "";
                                 if (moMailConfig != null)
                                 {
@@ -8298,7 +8301,7 @@ namespace Protean
 
                             else
                             {
-                                XmlElement moPolicy = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy");
+                                XmlElement moPolicy = (XmlElement)myWeb.moConfigMng.GetWebApplicationSection("protean/PasswordPolicy");
                                 string retryMsg = "";
                                 if (moPolicy != null)
                                 {
@@ -8382,7 +8385,7 @@ namespace Protean
 
                             // Keep Mailing List In Sync.
                             // If Not cEmail Is Nothing Then
-                            System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                            System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/mailinglist");
                             string sMessagingProvider = "";
                             if (moMailConfig != null)
                             {
@@ -9234,7 +9237,7 @@ namespace Protean
                 try
                 {
 
-                    System.Collections.Specialized.NameValueCollection oCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
+                    System.Collections.Specialized.NameValueCollection oCartConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/cart");
 
                     string cSiteURL = oCartConfig["SiteURL"];
                     string cCartURL = oCartConfig["SecureURL"];
@@ -12090,7 +12093,7 @@ namespace Protean
 
                     if (cStatus == "true")
                     {
-                        System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                        System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/mailinglist");
                         if (moMailConfig != null)
                         {
                             string sMessagingProvider = "";
@@ -13303,7 +13306,7 @@ namespace Protean
                 //string cProcessInfo = "createDB";
                 try
                 {
-                    System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                    System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/web");
                     var myConn = new SqlConnection("Data Source=" + oConfig["DatabaseServer"] + "; Initial Catalog=master;" + GetDBAuth());
                     string sSql;
                     oConn = myConn;
@@ -13509,7 +13512,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetMostPopularSearches", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetMostPopularSearches", ex, "", "", gbDebug);
                     return null;
                 }
             }
@@ -13681,7 +13684,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "savePayment", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "savePayment", ex, "", "", gbDebug);
                     return 0;
                 }
             }
@@ -13695,7 +13698,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartPaymentMethod", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CartPaymentMethod", ex, "", "", gbDebug);
                 }
             }
 
@@ -13708,7 +13711,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartStatus", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SaveCartStatus", ex, "", "", gbDebug);
                 }
             }
 
@@ -13732,7 +13735,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -13755,7 +13758,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -13779,7 +13782,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -13842,7 +13845,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListReports", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ListReports", ex, "", "", gbDebug);
                 }
             }
 
@@ -14036,7 +14039,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetReport", ex, "", processInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetReport", ex, "", processInfo, gbDebug);
                 }
             }
 
@@ -14423,7 +14426,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getCountryISO2Code", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getCountryISO2Code", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
             }
@@ -14456,7 +14459,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getCountryISO3Code", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getCountryISO3Code", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
             }
@@ -14655,7 +14658,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetMenuMetaTitleDescriptionDetailsXml", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetMenuMetaTitleDescriptionDetailsXml", ex, "", "", gbDebug);
                     return null;
                 }
             }

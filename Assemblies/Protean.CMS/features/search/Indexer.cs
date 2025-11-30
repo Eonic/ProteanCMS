@@ -101,7 +101,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", bDebug: gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "New", ex, "", bDebug: gbDebug);
             }
         }
 
@@ -139,7 +139,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", bDebug: gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "New", ex, "", bDebug: gbDebug);
                 return null;
             }
 
@@ -664,7 +664,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.InnerException.StackTrace.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug);
                 errElmt = oIndexInfo.CreateElement("error");
                 errElmt.InnerXml = cExError;
                 oIndexInfo.FirstChild.AppendChild(errElmt);
@@ -758,7 +758,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -803,7 +803,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.StackTrace.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug);
 
                 bIsError = true;
                 try
@@ -842,7 +842,7 @@ namespace Protean
                             catch (Exception ex)
                             {
                                 cExError += ex.StackTrace.ToString() + Constants.vbCrLf;
-                                stdTools.returnException(ref myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
+                                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
                                 return;
 
                             }
@@ -859,7 +859,7 @@ namespace Protean
                         catch (Exception ex)
                         {
                             cExError += ex.ToString() + Constants.vbCrLf;
-                            stdTools.returnException(ref myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
+                            stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
                             return;
                         }
                     }
@@ -877,7 +877,7 @@ namespace Protean
 
                 }
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -938,7 +938,7 @@ namespace Protean
                 {
                 }
                 cExError += ex.StackTrace.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, methodName, ex, "", processInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, methodName, ex, "", processInfo, gbDebug);
                 bIsError = true;
             }
         }
@@ -1083,7 +1083,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "indexMeta", ex, "", processInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "indexMeta", ex, "", processInfo, gbDebug);
                 bIsError = true;
             }
 
@@ -1144,7 +1144,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "IndexPage", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "IndexPage", ex, "", cProcessInfo, gbDebug);
                 bIsError = true;
             }
         }
@@ -1265,7 +1265,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug);
                 bIsError = true;
             }
         }
@@ -1282,7 +1282,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "DoCheck", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "DoCheck", ex, "", cProcessInfo, gbDebug);
                 return cOtherText;
             }
         }
@@ -1307,7 +1307,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "CopyFolderContents", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CopyFolderContents", ex, "", cProcessInfo, gbDebug);
             }
         }
 

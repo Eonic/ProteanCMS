@@ -24,7 +24,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Security;
-using System.Web.SessionState;
 using System.Xml;
 using static Protean.Cms;
 using static Protean.stdTools;
@@ -36,7 +35,7 @@ namespace Protean.Providers
     {
         public class CheapestFree : DiscountRule.DefaultProvider, IdiscountRuleProvider
         {
-            private System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+            private System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/web");
 
             public CheapestFree()
             {

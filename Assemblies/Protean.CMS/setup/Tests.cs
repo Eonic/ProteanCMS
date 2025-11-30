@@ -6,6 +6,8 @@ using System.Drawing;
 using System.IO;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Env;
+using static Protean.Syndication.Distributor;
 
 namespace Protean
 {
@@ -13,24 +15,25 @@ namespace Protean
     public class Tests
     {
 
-        public System.Web.HttpApplicationState goApp;
-        public System.Web.HttpRequest goRequest;
-        public System.Web.HttpResponse goResponse;
-        public System.Web.SessionState.HttpSessionState goSession;
-        public System.Web.HttpServerUtility goServer;
+        public IHttpApplicationState goApp;
+        public IHttpRequest goRequest;
+        public IHttpResponse goResponse;
+        public IHttpSessionState goSession;
+        public IHttpServerUtility goServer;
 
-        public System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-        public System.Web.HttpContext moCtx;
+        public System.Collections.Specialized.NameValueCollection goConfig;
+        public IHttpContext moCtx;
 
 
-        public Tests() : this(System.Web.HttpContext.Current)
+        public Tests() //: this()
         {
 
         }
-        public Tests(System.Web.HttpContext oCtx)
+        public Tests(IHttpContext oCtx)
         {
 
             moCtx = oCtx;
+            goConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/web");
 
         }
 

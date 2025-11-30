@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Xml;
+using static Protean.Env;
 
 namespace Protean.Tools
 {
@@ -183,7 +184,7 @@ namespace Protean.Tools
             public string FilePath;
             public string newImageFilepath;
             public short maxWidth;
-            public System.Web.HttpServerUtility goServer;
+            public IHttpServerUtility goServer;
         }
 
         public void GeneratePDFThumbNail(PDFThumbNail PDFThumbNail)

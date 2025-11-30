@@ -21,6 +21,7 @@ using static Protean.stdTools;
 // regular expressions
 using static Protean.Tools.FileHelper;
 using static Protean.Tools.Xml;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -109,7 +110,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", bDebug: gbDebug);
+                stdTools.returnException(ref myWeb.msException, moCtx, mcModuleName, "New", ex, "", bDebug: gbDebug);
             }
         }
 
@@ -147,7 +148,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", bDebug: gbDebug);
+                stdTools.returnException(ref myWeb.msException, moCtx, mcModuleName, "New", ex, "", bDebug: gbDebug);
                 return null;
             }
         }
@@ -420,7 +421,7 @@ namespace Protean
             {
 
                 cExError += ex.InnerException.StackTrace.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, moCtx, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug);
                 errElmt = oIndexInfo.CreateElement("error");
                 errElmt.InnerXml = cExError;
                 oIndexInfo.FirstChild.AppendChild(errElmt);
@@ -448,7 +449,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, moCtx, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug);
 
                 }
             }
@@ -502,7 +503,7 @@ namespace Protean
                 catch (Exception ex)
                 {
                     cExError += ex.StackTrace.ToString() + Constants.vbCrLf;
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, moCtx, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug);
 
                     bIsError = true;
                     try
@@ -543,7 +544,7 @@ namespace Protean
                         catch (Exception ex)
                         {
                             cExError += ex.StackTrace.ToString() + Constants.vbCrLf;
-                            stdTools.returnException(ref myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
+                            stdTools.returnException(ref myWeb.msException, moCtx, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
                             return;
 
                         }
@@ -558,7 +559,7 @@ namespace Protean
                         catch (Exception ex)
                         {
                             cExError += ex.ToString() + Constants.vbCrLf;
-                            stdTools.returnException(ref myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
+                            stdTools.returnException(ref myWeb.msException, moCtx, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
                             return;
                         }
                     }
@@ -576,7 +577,7 @@ namespace Protean
 
                 }
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, moCtx, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -602,7 +603,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, moCtx, mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug);
                 bIsError = true;
             }
         }
@@ -627,7 +628,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cExError += ex.ToString() + Constants.vbCrLf;
-                stdTools.returnException(ref myWeb.msException, mcModuleName, "CopyFolderContents", ex, "", cProcessInfo, gbDebug);
+                stdTools.returnException(ref myWeb.msException, moCtx, mcModuleName, "CopyFolderContents", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -815,7 +816,7 @@ namespace Protean
             public ManualResetEvent doneEvent;
             public long nRootId;
             public Protean.XmlHelper.Transform moTransform;
-            public System.Web.HttpContext moCtx;
+            public IHttpContext moCtx;
 
             private int nIndexed = 0; // count of the indexed items
 
@@ -839,7 +840,7 @@ namespace Protean
                 public string pagename;
             }
 
-            public IndexPageAsync(System.Web.HttpContext oCtx, Protean.XmlHelper.Transform oTransform, IndexWriter objIndexWriter, string pageXSL)
+            public IndexPageAsync(IHttpContext oCtx, Protean.XmlHelper.Transform oTransform, IndexWriter objIndexWriter, string pageXSL)
             {
 
                 try
@@ -1264,7 +1265,7 @@ namespace Protean
                             oPageErrElmt.SetAttribute("pgid", myWeb.mnPageId.ToString());
                             oPageErrElmt.SetAttribute("type", oElmt.GetAttribute("type"));
                             oPageErrElmt.SetAttribute("artid", oElmt.GetAttribute("id"));
-                            oPageErrElmt.InnerText = Protean.stdTools.exceptionReport(ex, oElmtURL.GetAttribute("url"), "");
+                            oPageErrElmt.InnerText = Protean.stdTools.exceptionReport(ex, myWeb.moCtx, oElmtURL.GetAttribute("url"), "");
                             oPageElmt.AppendChild(oPageErrElmt);
                             nContentSkipped += 1L;
                             cProcessInfo = cPageHtml;
@@ -1365,7 +1366,7 @@ namespace Protean
 
                     }
                     cExError += ex.StackTrace.ToString() + Constants.vbCrLf;
-                    returnException(ref sException, mcModuleName, methodName, ex, "", processInfo, gbDebug);
+                    returnException(ref sException, moCtx, mcModuleName, methodName, ex, "", processInfo, gbDebug);
                     bIsError = true;
                 }
             }
@@ -1419,7 +1420,7 @@ namespace Protean
                 catch (Exception ex)
                 {
                     cExError += ex.ToString() + Constants.vbCrLf;
-                    returnException(ref sException, mcModuleName, "IndexPage", ex, "", cProcessInfo, gbDebug);
+                    returnException(ref sException, moCtx, mcModuleName, "IndexPage", ex, "", cProcessInfo, gbDebug);
                     bIsError = true;
                 }
             }
@@ -1565,7 +1566,7 @@ namespace Protean
                 catch (Exception ex)
                 {
                     cExError += ex.ToString() + Constants.vbCrLf;
-                    returnException(ref sException, mcModuleName, "indexMeta", ex, "", processInfo, gbDebug);
+                    returnException(ref sException, moCtx, mcModuleName, "indexMeta", ex, "", processInfo, gbDebug);
                     bIsError = true;
                 }
 
@@ -1583,7 +1584,7 @@ namespace Protean
                 catch (Exception ex)
                 {
                     cExError += ex.ToString() + Constants.vbCrLf;
-                    returnException(ref sException, mcModuleName, "DoCheck", ex, "", cProcessInfo, gbDebug);
+                    returnException(ref sException, moCtx, mcModuleName, "DoCheck", ex, "", cProcessInfo, gbDebug);
                     return cOtherText;
                 }
             }

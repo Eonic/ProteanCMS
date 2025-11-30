@@ -24,6 +24,7 @@ using static Protean.stdTools;
 
 using static Protean.Tools.Number;
 using static Protean.Tools.Xml;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -132,7 +133,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetResults", ex, "", bDebug: gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetResults", ex, "", bDebug: gbDebug);
                     }
                 }
 
@@ -187,7 +188,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "New", ex, "", bDebug: gbDebug);
                 }
             }
 
@@ -239,7 +240,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "New", ex, "", bDebug: gbDebug);
                 }
             }
 
@@ -344,14 +345,14 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ExecuteSearch", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ExecuteSearch", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
 
             #region Search Methods
 
-            protected XmlElement BuildFiltersFromRequest(ref XmlDocument XmlDoc, ref HttpRequest currentRequest)
+            protected XmlElement BuildFiltersFromRequest(ref XmlDocument XmlDoc, ref IHttpRequest currentRequest)
             {
                 myWeb.PerfMon.Log("Search", "BuildFiltersFromRequest");
                 string processInfo = "";
@@ -450,7 +451,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "BuildFiltersFromRequest", ex, "", processInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "BuildFiltersFromRequest", ex, "", processInfo, gbDebug);
                     return null;
                 }
             }
@@ -927,7 +928,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Search", ex, "", processInfo, gbDebug);
                 }
             }
 
@@ -1273,7 +1274,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Search", ex, "", processInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Search", ex, "", processInfo, gbDebug);
                 }
             }
 
@@ -1418,7 +1419,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Search", ex, "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Search", ex, "", bDebug: gbDebug);
                 }
             }
 
@@ -1723,7 +1724,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "RegExpQuery", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "RegExpQuery", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -1941,7 +1942,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "RegExpQuery", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "RegExpQuery", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -2125,7 +2126,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, "Search", "SearchLatestContent", ex, "", bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Search", "SearchLatestContent", ex, "", bDebug: gbDebug);
                 }
 
             }
@@ -2181,7 +2182,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SetSearchTrackingCookie", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SetSearchTrackingCookie", ex, "", "", gbDebug);
                 }
             }
 
@@ -2273,7 +2274,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 catch (Exception ex)
                 {
 
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ParseKeywordsAndPhrases", ex, "", processInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ParseKeywordsAndPhrases", ex, "", processInfo, gbDebug);
 
                     var defaultString = new string[2];
                     defaultString[0] = searchString;
@@ -2383,7 +2384,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getContentXml", ex, vstrFurtherInfo: sProcessInfo, bDebug: gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getContentXml", ex, vstrFurtherInfo: sProcessInfo, bDebug: gbDebug);
                     return nResultCount;
                 }
 
@@ -2612,7 +2613,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "BuildLuceneQuery", ex, "", processInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "BuildLuceneQuery", ex, "", processInfo, gbDebug);
                     return null;
                 }
 
@@ -2766,13 +2767,13 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "BuildLuceneKeywordQuery", ex, "", processInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "BuildLuceneKeywordQuery", ex, "", processInfo, gbDebug);
                 }
 
             }
 
 
-            private Sort SetSortFieldFromRequest(HttpRequest currentRequest)
+            private Sort SetSortFieldFromRequest(IHttpRequest currentRequest)
             {
                 myWeb.PerfMon.Log("Search", "SetSortFieldFromRequest");
                 string processInfo = "";
@@ -2826,7 +2827,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SetSortFieldFromRequest", ex, "", processInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SetSortFieldFromRequest", ex, "", processInfo, gbDebug);
                     return null;
                 }
             }

@@ -46,7 +46,7 @@ namespace Protean.Providers
                 {
                     Type calledType;
                     string ProviderClass = "";
-                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/CDNProviders");
+                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)myWeb.moConfigMng.GetWebApplicationSection("protean/CDNProviders");
                     if(moPrvConfig != null)
                     {
                         ProviderClass = Convert.ToString(moPrvConfig.Providers[0].Name);

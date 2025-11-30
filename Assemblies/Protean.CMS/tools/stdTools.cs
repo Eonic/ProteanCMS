@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualBasic;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.VisualBasic;
+using Protean.Tools;
 using System;
 using System.Collections;
 using System.Data;
@@ -11,7 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
-using Protean.Tools;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -21,8 +23,9 @@ namespace Protean
         public static bool mbException;
         // Public oConfig As System.Collections.Specialized.NameValueCollection = WebConfigurationManager.GetWebApplicationSection("protean/web")
 
-        public static System.Web.HttpServerUtility goServer = System.Web.HttpContext.Current.Server;
-        public static System.Web.HttpApplicationState goApp = System.Web.HttpContext.Current.Application;
+        public static IHttpContext moCtx; //= System.Web.HttpContext.Current;
+        public static IHttpServerUtility goServer; //= System.Web.HttpContext.Current.Server;
+        public static IHttpApplicationState goApp; //= System.Web.HttpContext.Current.Application;
 
         // Public msException As String = "" 'TODO !-!IMPORTANT!-! WHEN ERROR EVENTS ARE ESTABLISHED THIS SHOULD BE MOVED INSIDE WEB!!!!!
         public static bool mbDBError = false;
@@ -60,7 +63,7 @@ namespace Protean
         public static string[] SortDirectionVal = new string[] { "descending", "ascending" };
 
 
-        public static void returnException(ref string sException, string vstrModuleName, string vstrRoutineName, Exception oException, string xsltTemplatePath = "/ewcommon/xsl/standard.xsl", string vstrFurtherInfo = "", bool bDebug = false, string cSubjectLinePrefix = "")
+        public static void returnException(ref string sException, IHttpContext ptnContext, string vstrModuleName, string vstrRoutineName, Exception oException, string xsltTemplatePath = "/ewcommon/xsl/standard.xsl", string vstrFurtherInfo = "", bool bDebug = false, string cSubjectLinePrefix = "")
         {
             // Author:        Trevor Spink
             // Copyright:     Eonic Ltd 2005
@@ -77,12 +80,12 @@ namespace Protean
             var sWriter = new System.IO.StringWriter();
             string sReturnHtml = "";
             string cHost = "";
-            System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-            System.Web.HttpRequest moRequest = null;
+            System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)ptnContext.Config.GetWebApplicationSection("protean/web");
+            IHttpRequest moRequest = null;
 
-            if (System.Web.HttpContext.Current != null)
+            if (ptnContext != null)
             {
-                moRequest = System.Web.HttpContext.Current.Request;
+                moRequest = ptnContext.Request;
             }
 
 
@@ -91,9 +94,9 @@ namespace Protean
 
 
 
-            if (System.Web.HttpContext.Current != null)
+            if (ptnContext != null)
             {
-                cHost = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"];
+                cHost = ptnContext.Request.ServerVariables["HTTP_HOST"];
             }
             if (string.IsNullOrEmpty(sException))
             {
@@ -129,7 +132,7 @@ namespace Protean
                     oElmt.SetAttribute("type", "Formatted Text");
                     oElmt.SetAttribute("name", "column1");
 
-                    strErrorHtml = exceptionReport(oException, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo);
+                    strErrorHtml = exceptionReport(oException, ptnContext, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo);
                     strMessageHtml = "<div style=\"font-family:Verdana,Tahoma,Arial\"><h2>Unfortunately this site has experienced an error.</h2>" + "<h3>We take all errors very seriously.</h3>" + "<p>" + "This error has been recorded and details sent to <a href=\"http://eonic.com\">Eonic</a> who provide technical support for this website." + "</p>" + "<p>" + "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=\"mailto:support@eonic.co.uk\">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." + "</p>" + "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" + "<a href=\"javascript:history.back();\">Click Here to return to the previous page.</a></div>";
 
                     try
@@ -208,7 +211,7 @@ namespace Protean
                                     }
                                     catch (Exception exp)
                                     {
-                                        AddExceptionToEventLog(exp, sProcessInfo, oException, vstrFurtherInfo);
+                                        AddExceptionToEventLog(exp, moCtx, sProcessInfo, oException, vstrFurtherInfo);
                                     }
                                 }
                             }
@@ -303,7 +306,7 @@ namespace Protean
 
                                 mbDBError = true;
                                 // sProcessInfo = "Found Error"
-                                AddExceptionToEventLog(ex, sProcessInfo, oException, vstrFurtherInfo);
+                                AddExceptionToEventLog(ex, moCtx, sProcessInfo, oException, vstrFurtherInfo);
                                 oElmt.InnerXml = strMessageHtml;
                                 oExceptionXml.SelectSingleNode("/Page/Contents").AppendChild(oElmt);
                             }
@@ -326,10 +329,10 @@ namespace Protean
                         // add Eonic Bespoke Functions
                         var xsltArgs = new System.Xml.Xsl.XsltArgumentList();
                         Protean.Cms errWeb;
-                        if (System.Web.HttpContext.Current != null)
+                        if (moCtx != null)
                         {
                             // so we compile errors out of debug mode too.
-                            errWeb = new Protean.Cms(System.Web.HttpContext.Current);
+                            errWeb = new Protean.Cms(moCtx);
                             errWeb.InitializeVariables();
                             var ewXsltExt = new Protean.xmlTools.xsltExtensions(ref errWeb);
                             xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
@@ -353,7 +356,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        AddExceptionToEventLog(ex, sProcessInfo, oException, vstrFurtherInfo);
+                        AddExceptionToEventLog(ex, ptnContext, sProcessInfo, oException, vstrFurtherInfo);
                         if (!gbDebug & !string.IsNullOrEmpty(strMessageHtml))
                         {
                             strErrorHtml = strMessageHtml;
@@ -368,7 +371,7 @@ namespace Protean
             }
         }
 
-        public static void reportException(ref string sException, string vstrModuleName, string vstrRoutineName, Exception oException, string xsltTemplatePath = "/ewcommon/xsl/standard.xsl", string vstrFurtherInfo = "", bool bDebug = false, string cSubjectLinePrefix = "")
+        public static void reportException(ref string sException,IHttpContext ptnContext, string vstrModuleName, string vstrRoutineName, Exception oException, string xsltTemplatePath = "/ewcommon/xsl/standard.xsl", string vstrFurtherInfo = "", bool bDebug = false, string cSubjectLinePrefix = "")
         {
 
             // Author:        Trevor Spink
@@ -385,13 +388,13 @@ namespace Protean
             var sWriter = new System.IO.StringWriter();
             string sReturnHtml = string.Empty;
             string cHost = "";
-            System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+            System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)ptnContext.Config.GetWebApplicationSection("protean/web");
 
             // Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
             sProcessInfo = "Getting Host";
-            if (System.Web.HttpContext.Current != null)
+            if (ptnContext != null)
             {
-                cHost = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"];
+                cHost = ptnContext.Request.ServerVariables["HTTP_HOST"];
             }
             if (string.IsNullOrEmpty(sException))
             {
@@ -422,7 +425,7 @@ namespace Protean
                     oElmt.SetAttribute("type", "Formatted Text");
                     oElmt.SetAttribute("name", "column1");
 
-                    strErrorHtml = exceptionReport(oException, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo);
+                    strErrorHtml = exceptionReport(oException, ptnContext, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo);
                     strMessageHtml = "<div style=\"font-family:Verdana,Tahoma,Arial\"><h2>Unfortunately this site has experienced an error.</h2>" + "<h3>We take all errors very seriously.</h3>" + "<p>" + "This error has been recorded and details sent to <a href=\"http://www.eonic.co.uk\">Eonic</a> who provide technical support for this website." + "</p>" + "<p>" + "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=\"mailto:support@eonic.co.uk\">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." + "</p>" + "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" + "<a href=\"javascript:history.back();\">Click Here to return to the previous page.</a></div>";
 
                     try
@@ -487,7 +490,7 @@ namespace Protean
                                 }
                                 catch (Exception exp)
                                 {
-                                    AddExceptionToEventLog(exp, sProcessInfo, oException, vstrFurtherInfo);
+                                    AddExceptionToEventLog(exp, ptnContext, sProcessInfo, oException, vstrFurtherInfo);
                                 }
                             }
                         }
@@ -495,19 +498,19 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        AddExceptionToEventLog(ex, sProcessInfo, oException, vstrFurtherInfo);
+                        AddExceptionToEventLog(ex, ptnContext, sProcessInfo, oException, vstrFurtherInfo);
                     }
                 }
             }
         }
 
 
-        private static void TransformErrorHandle(string cModuleName, string cRoutineName, Exception oException, string cFurtherInfo)
+        private static void TransformErrorHandle(string cModuleName, IHttpContext ptnContext, string cRoutineName, Exception oException, string cFurtherInfo)
         {
-            AddExceptionToEventLog(oException, cFurtherInfo);
+            AddExceptionToEventLog(oException, ptnContext, cFurtherInfo);
         }
 
-        public static void AddExceptionToEventLog(Exception oCurrentException, string cCurrentInfo, Exception oOriginalError = null, string cOriginalInfo = "")
+        public static void AddExceptionToEventLog(Exception oCurrentException,IHttpContext ptnContext, string cCurrentInfo, Exception oOriginalError = null, string cOriginalInfo = "")
         {
             // writes an event to the even log under the heading "EonicWebV4.1"
             string thisError;
@@ -529,10 +532,10 @@ namespace Protean
                     }
                 }
 
-                if (System.Web.HttpContext.Current != null)
+                if (ptnContext != null)
                 {
-                    cSource = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"];
-                    cMessage = "Site: " + System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"] + Constants.vbNewLine + Constants.vbNewLine;
+                    cSource = ptnContext.Request.ServerVariables["HTTP_HOST"];
+                    cMessage = "Site: " + ptnContext.Request.ServerVariables["HTTP_HOST"] + Constants.vbNewLine + Constants.vbNewLine;
                 }
 
                 if (oEventLog is null)
@@ -588,22 +591,22 @@ namespace Protean
         }
 
 
-        public static string exceptionReport(Exception oException, string sComponent, string sInfo)
+        public static string exceptionReport(Exception oException, IHttpContext ptnContext, string sComponent, string sInfo)
         {
             string exceptionReportRet = default;
 
             string cReport;
             string cSV;
             string cAssembly = "";
-            System.Web.HttpRequest moRequest = null;
-            System.Web.SessionState.HttpSessionState moSession = null;
+            IHttpRequest moRequest = null;
+            IHttpSessionState moSession = null;
 
-            if (System.Web.HttpContext.Current != null)
+            if (ptnContext != null)
             {
-                moRequest = System.Web.HttpContext.Current.Request;
-                moSession = System.Web.HttpContext.Current.Session;
+                moRequest = ptnContext.Request;
+                moSession = ptnContext.Session;
 
-                System.Web.HttpContext.Current.Server.MapPath("");
+                ptnContext.Server.MapPath("");
             }
 
             cReport = "<div style=\"font: normal .75em/1.5 Verdana, Tahoma, sans-serif;\"><h2>ProteanCMS has returned the following Error</h2>" + "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">";
@@ -612,7 +615,7 @@ namespace Protean
             addExceptionHeader(ref cReport, "Report Info");
             addExceptionLine(ref cReport, "Date + Time", Strings.FormatDateTime(DateTime.Now, DateFormat.GeneralDate));
             addExceptionLine(ref cReport, "Webserver:", Environment.MachineName);
-            addExceptionLine(ref cReport, "SiteName:", System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName());
+            addExceptionLine(ref cReport, "SiteName:", ""); //System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName()
 
             var a = Assembly.GetExecutingAssembly();
             addExceptionLine(ref cReport, "Assembly", a.FullName);
@@ -889,7 +892,7 @@ namespace Protean
 
 
 
-        public static bool ButtonSubmitted(ref System.Web.HttpRequest mroRequest, string cButtonName)
+        public static bool ButtonSubmitted(ref IHttpRequest mroRequest, string cButtonName)
         {
             bool ButtonSubmittedRet = default;
             // 'PerfMon.Log("stdTools", "ButtonSubmitted")
@@ -975,163 +978,163 @@ namespace Protean
             return sb.ToString();
         }
 
-        public static string EncryptString(string SourceText, bool bUseAsymmetric = true, string cSalt = "")
-        {
+        //public static string EncryptString(string SourceText, bool bUseAsymmetric = true, string cSalt = "")
+        //{
 
-            Encryption.EncData encryptedData;
-            try
-            {
-
-
-                if (bUseAsymmetric)
-                {
-
-                    var asym = new Encryption.Asymmetric();
-                    var pubkey = new Encryption.Asymmetric.PublicKey();
-                    var privkey = new Encryption.Asymmetric.PrivateKey();
-
-                    if (string.IsNullOrEmpty(WebConfigurationManager.AppSettings["PublicKey.Modulus"]))
-                    {
-                        // at the moment this writes a new file that needs to be included in web.config
-                        asym.GenerateNewKeySet(ref pubkey, ref privkey);
-                        pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
-                        privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
-                    }
-                    else
-                    {
-                        pubkey.LoadFromConfig();
-                        privkey.LoadFromConfig();
-                    }
-
-                    // End Try
+        //    Encryption.EncData encryptedData;
+        //    try
+        //    {
 
 
-                    encryptedData = asym.Encrypt(new Encryption.EncData(SourceText), pubkey);
-                }
+        //        if (bUseAsymmetric)
+        //        {
 
-                else
-                {
+        //            var asym = new Encryption.Asymmetric();
+        //            var pubkey = new Encryption.Asymmetric.PublicKey();
+        //            var privkey = new Encryption.Asymmetric.PrivateKey();
 
-                    // This may seem unnecessary, but symmetric encryption is relatively weak (often because of the choice of key),
-                    // so why not encrypt the symmetric key asymettrically to end up with a bastard-hard sym-key to guess.
-                    // UPDATE For some reason the assym encryption wouldn't consistently betwenn ENC and DEC so I've commented it out
-                    // for now - rely on salt.
-                    // UPDATE Get the right key size for Rijndael - try using the PrivateKey.D
-                    var sym = new Encryption.Symmetric(Encryption.Symmetric.Provider.Rijndael);
-                    sym.InitializationVector = new Encryption.EncData(WebConfigurationManager.AppSettings["SymmetricIV"]);
-                    sym.Key = new Encryption.EncData(WebConfigurationManager.AppSettings["PrivateKey.D"]);
-                    encryptedData = sym.Encrypt(new Encryption.EncData(SourceText));
+        //            if (string.IsNullOrEmpty(ptnContext.Config.AppSettings["PublicKey.Modulus"]))
+        //            {
+        //                // at the moment this writes a new file that needs to be included in web.config
+        //                asym.GenerateNewKeySet(ref pubkey, ref privkey);
+        //                pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
+        //                privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
+        //            }
+        //            else
+        //            {
+        //                pubkey.LoadFromConfig();
+        //                privkey.LoadFromConfig();
+        //            }
 
-                }
-
-                return encryptedData.ToHex();
-            }
-
-            catch (Exception)
-            {
-                return "";
-            }
+        //            // End Try
 
 
-        }
+        //            encryptedData = asym.Encrypt(new Encryption.EncData(SourceText), pubkey);
+        //        }
 
-        public static string DecryptString(string encryptedText, bool bUseAsymmetric = true, string cSalt = "")
-        {
-            try
-            {
+        //        else
+        //        {
 
-                var decryptedData = new Encryption.EncData();
+        //            // This may seem unnecessary, but symmetric encryption is relatively weak (often because of the choice of key),
+        //            // so why not encrypt the symmetric key asymettrically to end up with a bastard-hard sym-key to guess.
+        //            // UPDATE For some reason the assym encryption wouldn't consistently betwenn ENC and DEC so I've commented it out
+        //            // for now - rely on salt.
+        //            // UPDATE Get the right key size for Rijndael - try using the PrivateKey.D
+        //            var sym = new Encryption.Symmetric(Encryption.Symmetric.Provider.Rijndael);
+        //            sym.InitializationVector = new Encryption.EncData(WebConfigurationManager.AppSettings["SymmetricIV"]);
+        //            sym.Key = new Encryption.EncData(WebConfigurationManager.AppSettings["PrivateKey.D"]);
+        //            encryptedData = sym.Encrypt(new Encryption.EncData(SourceText));
 
-                var encryptedData = new Encryption.EncData();
-                encryptedData.Hex = encryptedText;
+        //        }
 
-                if (bUseAsymmetric)
-                {
-                    var asym = new Encryption.Asymmetric();
-                    var pubkey = new Encryption.Asymmetric.PublicKey();
-                    var privkey = new Encryption.Asymmetric.PrivateKey();
-                    pubkey.LoadFromConfig();
-                    privkey.LoadFromConfig();
+        //        return encryptedData.ToHex();
+        //    }
 
-                    var asym2 = new Encryption.Asymmetric();
-                    decryptedData = asym2.Decrypt(encryptedData, privkey);
-                }
+        //    catch (Exception)
+        //    {
+        //        return "";
+        //    }
 
-                else
-                {
-                    // UPDATE For some reason the assym encryption wouldn't consistently betwenn ENC and DEC so I've commented it out
-                    // for now - rely on salt.
-                    var sym = new Encryption.Symmetric(Encryption.Symmetric.Provider.Rijndael);
-                    sym.InitializationVector = new Encryption.EncData(WebConfigurationManager.AppSettings["SymmetricIV"]);
-                    sym.Key = new Encryption.EncData(WebConfigurationManager.AppSettings["PrivateKey.D"]);
-                    decryptedData = sym.Decrypt(encryptedData);
-                }
 
-                return decryptedData.ToString();
-            }
+        //}
 
-            catch (Exception)
-            {
-                return "";
-            }
+        //public static string DecryptString(string encryptedText, bool bUseAsymmetric = true, string cSalt = "")
+        //{
+        //    try
+        //    {
 
-        }
+        //        var decryptedData = new Encryption.EncData();
 
-        public static string EncryptStringOLD(string SourceText)
-        {
-            // PerfMon.Log("stdTools", "EncryptString")
-            var asym = new Encryption.Asymmetric();
-            var pubkey = new Encryption.Asymmetric.PublicKey();
-            var privkey = new Encryption.Asymmetric.PrivateKey();
+        //        var encryptedData = new Encryption.EncData();
+        //        encryptedData.Hex = encryptedText;
 
-            if (string.IsNullOrEmpty(WebConfigurationManager.AppSettings["PublicKey.Modulus"]))
-            {
-                // at the moment this writes a new file that needs to be included in web.config
-                asym.GenerateNewKeySet(ref pubkey, ref privkey);
-                pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
-                privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
-            }
-            else
-            {
-                pubkey.LoadFromConfig();
-                privkey.LoadFromConfig();
-            }
+        //        if (bUseAsymmetric)
+        //        {
+        //            var asym = new Encryption.Asymmetric();
+        //            var pubkey = new Encryption.Asymmetric.PublicKey();
+        //            var privkey = new Encryption.Asymmetric.PrivateKey();
+        //            pubkey.LoadFromConfig();
+        //            privkey.LoadFromConfig();
 
-            // End Try
+        //            var asym2 = new Encryption.Asymmetric();
+        //            decryptedData = asym2.Decrypt(encryptedData, privkey);
+        //        }
 
-            Encryption.EncData encryptedData;
-            encryptedData = asym.Encrypt(new Encryption.EncData(SourceText), pubkey);
+        //        else
+        //        {
+        //            // UPDATE For some reason the assym encryption wouldn't consistently betwenn ENC and DEC so I've commented it out
+        //            // for now - rely on salt.
+        //            var sym = new Encryption.Symmetric(Encryption.Symmetric.Provider.Rijndael);
+        //            sym.InitializationVector = new Encryption.EncData(WebConfigurationManager.AppSettings["SymmetricIV"]);
+        //            sym.Key = new Encryption.EncData(WebConfigurationManager.AppSettings["PrivateKey.D"]);
+        //            decryptedData = sym.Decrypt(encryptedData);
+        //        }
 
-            return encryptedData.ToHex();
+        //        return decryptedData.ToString();
+        //    }
 
-        }
+        //    catch (Exception)
+        //    {
+        //        return "";
+        //    } 
 
-        public static string DecryptStringOLD(string encryptedText)
-        {
-            // PerfMon.Log("stdTools", "DecryptString")
-            try
-            {
-                var asym = new Encryption.Asymmetric();
-                var pubkey = new Encryption.Asymmetric.PublicKey();
-                var privkey = new Encryption.Asymmetric.PrivateKey();
-                pubkey.LoadFromConfig();
-                privkey.LoadFromConfig();
+        //}
 
-                var encryptedData = new Encryption.EncData();
-                encryptedData.Hex = encryptedText;
+        //public static string EncryptStringOLD(string SourceText)
+        //{
+        //    // PerfMon.Log("stdTools", "EncryptString")
+        //    var asym = new Encryption.Asymmetric();
+        //    var pubkey = new Encryption.Asymmetric.PublicKey();
+        //    var privkey = new Encryption.Asymmetric.PrivateKey();
 
-                var decryptedData = new Encryption.EncData();
-                var asym2 = new Encryption.Asymmetric();
-                decryptedData = asym2.Decrypt(encryptedData, privkey);
+        //    if (string.IsNullOrEmpty(WebConfigurationManager.AppSettings["PublicKey.Modulus"]))
+        //    {
+        //        // at the moment this writes a new file that needs to be included in web.config
+        //        asym.GenerateNewKeySet(ref pubkey, ref privkey);
+        //        pubkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
+        //        privkey.ExportToConfigFile(goServer.MapPath("encrypt.config"));
+        //    }
+        //    else
+        //    {
+        //        pubkey.LoadFromConfig();
+        //        privkey.LoadFromConfig();
+        //    }
 
-                return decryptedData.ToString();
-            }
-            catch
-            {
-                return "";
-            }
+        //    // End Try
 
-        }
+        //    Encryption.EncData encryptedData;
+        //    encryptedData = asym.Encrypt(new Encryption.EncData(SourceText), pubkey);
+
+        //    return encryptedData.ToHex();
+
+        //}
+
+        //public static string DecryptStringOLD(string encryptedText)
+        //{
+        //    // PerfMon.Log("stdTools", "DecryptString")
+        //    try
+        //    {
+        //        var asym = new Encryption.Asymmetric();
+        //        var pubkey = new Encryption.Asymmetric.PublicKey();
+        //        var privkey = new Encryption.Asymmetric.PrivateKey();
+        //        pubkey.LoadFromConfig();
+        //        privkey.LoadFromConfig();
+
+        //        var encryptedData = new Encryption.EncData();
+        //        encryptedData.Hex = encryptedText;
+
+        //        var decryptedData = new Encryption.EncData();
+        //        var asym2 = new Encryption.Asymmetric();
+        //        decryptedData = asym2.Decrypt(encryptedData, privkey);
+
+        //        return decryptedData.ToString();
+        //    }
+        //    catch
+        //    {
+        //        return "";
+        //    }
+
+        //}
 
         public enum DiscountCategory
         {
@@ -1292,7 +1295,7 @@ namespace Protean
 
         }
 
-        public static void HTTPRedirect(ref System.Web.HttpContext oCtx, string cURL, [Optional, DefaultParameterValue(302)] ref int nStatusCode)
+        public static void HTTPRedirect(ref IHttpContext oCtx, string cURL, [Optional, DefaultParameterValue(302)] ref int nStatusCode)
         {
 
             // Response.Redirect always results in 302 (unless you use the .NET 3.0 Web.Extensions)
@@ -1372,21 +1375,6 @@ namespace Protean
         }
 
 
-        public static bool strongPassword(string password)
-        {
-            string pwdRegEx = "";
-
-            XmlElement moPolicy;
-
-            moPolicy = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy");
-
-            pwdRegEx = "(?=^.{" + moPolicy.FirstChild.SelectSingleNode("minLength").InnerText + "," + moPolicy.FirstChild.SelectSingleNode("maxLength").InnerText + "}$)" + @"(?=(?:.*?\d){" + moPolicy.FirstChild.SelectSingleNode("numsLength").InnerText + "})" + "(?=.*[a-z])" + "(?=(?:.*?[A-Z]){" + moPolicy.FirstChild.SelectSingleNode("upperLength").InnerText + "})" + "(?=(?:.*?[" + moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText + "]){" + moPolicy.FirstChild.SelectSingleNode("specialLength").InnerText + "})" + @"(?!.*\s)[0-9a-zA-Z" + moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText + "]*$";
-
-            // Validate the e-mail address
-            return new Regex(pwdRegEx, RegexOptions.IgnoreCase).IsMatch(password + "");
-
-
-        }
 
         // Sub SetDefaultSortColumn(ByRef moPageXml As XmlDocument, ByVal nSortColumn As Long, Optional ByVal nSortDirection As SortDirection = SortDirection.Ascending)
         // 'PerfMon.Log("stdTools", "SetDefaultSortColumn")

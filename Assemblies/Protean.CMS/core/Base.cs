@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
 using System.Collections.Specialized;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
+using static Protean.Env;
 
 
 namespace Protean
@@ -62,6 +63,9 @@ namespace Protean
         public Protean.Env.IHttpRequest moRequest;
         public Protean.Env.IHttpResponse moResponse;
         public Protean.Env.IHttpSessionState moSession;
+        public Protean.Env.IWebConfigurationManager moConfigMng;
+        public Protean.Env.IHttpServerUtility moServer;
+        public Protean.Env.ICache goCache;
 
         public string mcPagePath;
         public string mcPageLayout;
@@ -94,11 +98,11 @@ namespace Protean
         }
 
         // Application Level Properties   
-        public NameValueCollection moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+        public NameValueCollection moConfig; //= (NameValueCollection)moConfigMng.GetWebApplicationSection("protean/web");
         // Public goApp As System.Web.HttpApplicationState
-        public System.Web.Caching.Cache goCache;
-        public System.Web.HttpServerUtility goServer;
-        public XmlElement goLangConfig = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/languages");
+       // public System.Web.Caching.Cache goCache;
+        public IHttpServerUtility goServer;
+        public XmlElement goLangConfig; //= (XmlElement)moConfigMng.GetWebApplicationSection("protean/languages");
 
         public string mcModuleName = "Protean.Base";
 
@@ -113,12 +117,12 @@ namespace Protean
 
         #region Constructors
 
-        public Base() : this(System.Web.HttpContext.Current)
+        public Base() 
         {
 
         }
 
-        public Base(System.Web.HttpContext Context)
+        public Base(IHttpContext Context)
         {
 
             string sProcessInfo = "";
@@ -139,7 +143,7 @@ namespace Protean
                 goServer = moCtx.Server;
                 goCache = moCtx.Cache;
 
-                PerfMon = new PerfLog("");
+                PerfMon = new PerfLog(moCtx, "");
                 PerfMon.Log("Base", "New");
 
                 EnumberateFeatures();

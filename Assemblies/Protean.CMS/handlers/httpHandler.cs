@@ -1,10 +1,10 @@
 ﻿using System.Web;
-using System.Web.SessionState;
+using static Protean.Env;
 
 namespace Protean
 {
 
-    public class WebHttpHandler : IHttpHandler, IRequiresSessionState
+    public class WebHttpHandler // : IHttpHandler, IRequiresSessionState
     {
 
         public bool IsReusable
@@ -15,7 +15,7 @@ namespace Protean
             }
         }
 
-        public void ProcessRequest(HttpContext context)
+        public void ProcessRequest(IHttpContext context)
         {
 
             var oEw = new Cms();

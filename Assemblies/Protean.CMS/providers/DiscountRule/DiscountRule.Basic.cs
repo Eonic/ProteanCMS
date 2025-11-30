@@ -25,7 +25,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Security;
-using System.Web.SessionState;
 using System.Xml;
 using static Protean.Cms;
 
@@ -37,7 +36,7 @@ namespace Protean.Providers
 
         public class Basic : DiscountRule.DefaultProvider, IdiscountRuleProvider
         {
-            private System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+            private System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/web");
             
             public Basic()
             {
@@ -425,7 +424,7 @@ namespace Protean.Providers
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref exceptionMessage, "", "ApplyDiscount", ex, "", "", false);
+                    stdTools.returnException(ref exceptionMessage, moCtx, "", "ApplyDiscount", ex, "", "", false);
                 }
             }
 
@@ -590,7 +589,7 @@ namespace Protean.Providers
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref exceptionMessage, "", "FreeShipping", ex, "", "", false);
+                    stdTools.returnException(ref exceptionMessage, myWeb.moCtx, "", "FreeShipping", ex, "", "", false);
                 }
             }
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.Text;
-
+using static Protean.Env;
 // ' ---------------------------------------------------------
 // ' Class       :   Protean.Tools.Http.WebRequest
 // ' Author      :   Ali Granger
@@ -32,9 +32,9 @@ namespace Protean.Tools.Http
     public class Utils
     {
 
-        public static Uri BuildURIFromRequest(System.Web.HttpRequest currentRequest, NameValueCollection parameters = null, string parametersToExclude = "")
+        public static Uri BuildURIFromRequest(IHttpContext Ctx, NameValueCollection parameters = null, string parametersToExclude = "")
         {
-
+            IHttpRequest currentRequest = Ctx.Request;
             var uriBuilder = new StringBuilder();
             NameValueCollection queryString = null;
             string[] exclusions = parametersToExclude.Split(',');
@@ -44,7 +44,7 @@ namespace Protean.Tools.Http
                 Uri requestUri = currentRequest.Url;
 
                 // Build the Querystring.
-                queryString = System.Web.HttpUtility.ParseQueryString(currentRequest.QueryString.ToString());
+                queryString = currentRequest.QueryString; // System.Web.HttpUtility.ParseQueryString(currentRequest.QueryString.ToString());
 
                 // Add the parameters, if specified.
                 // Parameters override existing ones
@@ -136,7 +136,7 @@ namespace Protean.Tools.Http
         /// <param name="shorteningService"></param>
         /// <returns></returns>
         /// <remarks>This is derived from TwitterVB, as we wanted to add other services.</remarks>
-        public static string ShortenURL(string urlToShorten, URLShorteningService shorteningService = URLShorteningService.TinyUrl, string bitlyUser = "", string bitlyKey = "")
+        public string ShortenURL(IHttpContext moCtx, string urlToShorten, URLShorteningService shorteningService = URLShorteningService.TinyUrl, string bitlyUser = "", string bitlyKey = "")
         {
 
             var shorteningRequest = new Tools.Http.WebRequest("text/html", "GET");
@@ -147,13 +147,13 @@ namespace Protean.Tools.Http
             {
                 case URLShorteningService.Isgd:
                     {
-                        shortenedURL = shorteningRequest.Send(string.Format("http://is.gd/api.php?longurl={0}", System.Web.HttpUtility.UrlEncode(urlToShorten)));
+                        shortenedURL = shorteningRequest.Send(string.Format("http://is.gd/api.php?longurl={0}", moCtx.Server.UrlEncode(urlToShorten)));
                         break;
                     }
 
                 case URLShorteningService.TinyUrl:
                     {
-                        shortenedURL = shorteningRequest.Send(string.Format("http://tinyurl.com/api-create.php?url={0}", System.Web.HttpUtility.UrlEncode(urlToShorten)));
+                        shortenedURL = shorteningRequest.Send(string.Format("http://tinyurl.com/api-create.php?url={0}", moCtx.Server.UrlEncode(urlToShorten)));
                         break;
                     }
 

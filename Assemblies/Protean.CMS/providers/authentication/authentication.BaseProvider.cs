@@ -25,7 +25,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Security;
-using System.Web.SessionState;
 using System.Xml;
 using static Protean.Cms;
 using static Protean.stdTools;
@@ -63,7 +62,7 @@ namespace Protean.Providers
                                       
                     Type calledType;
                     string ProviderClass = "";
-                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/authenticationProviders");
+                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)moCtx.Config.GetWebApplicationSection("protean/authenticationProviders");
 
                     ICollection<IauthenticaitonProvider> providerList = new IauthenticaitonProvider[0];
                     var modifiable = providerList.ToList();
@@ -165,7 +164,7 @@ namespace Protean.Providers
         {
             private string _Name = "Default";
             public Protean.Cms _myWeb;
-            System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
+            //System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
 
             private NameValueCollection _Config;
             public Default()
@@ -213,7 +212,7 @@ namespace Protean.Providers
                 var authRequest = GenerateSamlRequestXml(issuer, assertionConsumerServiceUrl);
 
                 var compressedRequest = CompressAndEncode(authRequest);
-                var samlRequest = HttpUtility.UrlEncode(compressedRequest);
+                var samlRequest = moCtx.Server.UrlEncode(compressedRequest);
                 var returnUrl = string.Empty;
                 if(ProviderName.ToLower() == "google")
                 {

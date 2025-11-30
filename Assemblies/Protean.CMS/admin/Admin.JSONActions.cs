@@ -16,6 +16,7 @@ using Newtonsoft.Json.Linq;
 using static Protean.Cms;
 using static Protean.stdTools;
 using Protean.Tools;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -23,7 +24,7 @@ namespace Protean
     public partial class Cms
     {
 
-        private System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+        //private System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
 
         public partial class Admin
@@ -40,14 +41,13 @@ namespace Protean
 
                 public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Cms.Admin.JSONActions";
-                private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
                 private Cms myWeb;
                 private Cms.Cart myCart;
                 public Cms.xForm moAdXfm;
                 public Admin.AdminXforms moAdminXfm;
                 public Admin.Redirects moAdminRedirect;
                 public System.Collections.Specialized.NameValueCollection goConfig;
-                public System.Web.HttpContext moCtx;
+                public IHttpContext moCtx;
                 public bool impersonationMode = false;
 
 
@@ -77,7 +77,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Open", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, moCtx, mcModuleName, "Open", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -661,7 +661,7 @@ namespace Protean
                         string strUrl = "https://www.intotheblue.co.uk";
                         string CustomerName = string.Empty;
                         string strEmail = "";
-                        System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                        System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)myApi.moCtx.Config.GetWebApplicationSection("protean/mailinglist");
                         string xsltPath = moMailConfig["ReviewCompleteEmailTemplatePath"];
 
                         var dtReviewerEmail = new DataTable();
@@ -740,7 +740,7 @@ namespace Protean
                 public string RunPowershellOperations(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
                 {
                     System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-                    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)myApi.moConfigMng.GetWebApplicationSection("protean/web");
 
                     string cPS1FileName = "";
                     string result = "";

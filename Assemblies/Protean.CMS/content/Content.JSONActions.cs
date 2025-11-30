@@ -17,6 +17,7 @@ using System.Web.Configuration;
 using System.Xml;
 using System.Net;
 using WebGrease;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -36,12 +37,12 @@ namespace Protean
 
                 public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Content.JSONActions";
-                private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
-                private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                private System.Collections.Specialized.NameValueCollection moLmsConfig;// = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
+                private System.Collections.Specialized.NameValueCollection moWebConfig;// = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
                 private Cms myWeb;
                 private Protean.Cms.Cart myCart;
-                public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
+                public IHttpContext moCtx; // = System.Web.HttpContext.Current;
                 public string cleanUploadedPaths;
                 public JSONActions()
                 {
@@ -50,7 +51,8 @@ namespace Protean
                     myWeb.InitializeVariables();
                     myWeb.Open();
                     myCart = new Cms.Cart(ref myWeb);
-
+                    moLmsConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/lms");
+                    moWebConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/web");
                 }
 
                 public string TwitterFeed(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)

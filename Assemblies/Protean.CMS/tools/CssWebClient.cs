@@ -11,6 +11,7 @@ using System.Xml;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -22,8 +23,8 @@ namespace Protean
         public object query;
         public string ServiceNamespace;
 
-        public System.Web.HttpContext moCtx;
-        public System.Web.HttpRequest goRequest;
+        public IHttpContext moCtx;
+        public IHttpRequest goRequest;
         private string msException;
 
         private List<string> cssSplit = new List<string>();
@@ -59,7 +60,7 @@ namespace Protean
 
         public string mcModuleName = "Eonic.CssWebClient";
 
-        public CssWebClient(System.Web.HttpContext context, ref string sException)
+        public CssWebClient(IHttpContext context, ref string sException)
         {
             moCtx = context;
             goRequest = context.Request;
@@ -70,7 +71,7 @@ namespace Protean
         {
             WebRequest httpHandlerRequest;
             string cProcessInfo = "sendHttpHandlerRequest";
-            System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+            System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/web");
 
             try
             {
@@ -209,7 +210,7 @@ delegate (object sender, System.Security.Cryptography.X509Certificates.X509Certi
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "ComputeCSS", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "ComputeCSS", ex, "", cProcessInfo, gbDebug);
             }
         }
 

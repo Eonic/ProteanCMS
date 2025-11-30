@@ -1,9 +1,11 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using System;
 using System.Diagnostics;
 using System.Text;
 using System.Web.Configuration;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+using static Protean.Env;
 using static Protean.stdTools;
 
 namespace Protean
@@ -32,15 +34,15 @@ namespace Protean
         private PerformanceCounter _workingSetMemoryCounter;
 
 
-        private System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
+        private IHttpContext moCtx; // = System.Web.HttpContext.Current;
 
         // Session / Request Level Properties
-        public System.Web.HttpRequest moRequest;
-        public System.Web.HttpResponse moResponse;
-        public System.Web.SessionState.HttpSessionState moSession;
-        public System.Web.HttpServerUtility moServer;
+        public IHttpRequest moRequest;
+        public IHttpResponse moResponse;
+        public IHttpSessionState moSession;
+        public IHttpServerUtility moServer;
 
-        public System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+        public System.Collections.Specialized.NameValueCollection moConfig;// = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
 
 
@@ -57,12 +59,13 @@ namespace Protean
             }
         }
 
-        public PerfLog(string SiteName)
+        public PerfLog(IHttpContext ctx, string SiteName)
         {
             try
             {
+                moCtx = ctx;
                 cSiteName = SiteName;
-
+                moConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/web");
                 if (moCtx != null)
                 {
                     moRequest = moCtx.Request;
@@ -209,11 +212,11 @@ namespace Protean
                     // cEntryFull &= CStr(moSession("SessionRequest") & "") & "','"
                     // End If
                     string cPath = "";
-                    if (System.Web.HttpContext.Current != null)
+                    if (moCtx != null)
                     {
-                        if (System.Web.HttpContext.Current.Request != null)
+                        if (moCtx.Request != null)
                         {
-                            cPath = System.Web.HttpContext.Current.Request["path"];
+                            cPath = moCtx.Request["path"];
                         }
                     }
 

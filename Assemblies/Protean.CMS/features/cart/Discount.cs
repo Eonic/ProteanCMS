@@ -64,7 +64,7 @@ namespace Protean
                     {
                         myWeb = aWeb;
                         moConfig = myWeb.moConfig;
-                        moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
+                        moCartConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/cart");
                         mcGroups = getGroupsByName();
 
                         if (myWeb.HasSession)
@@ -103,7 +103,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "New", ex, "", "", gbDebug);
                     }
                 }
 
@@ -116,7 +116,7 @@ namespace Protean
                         myWeb.PerfMon.Log("Discount", "New");
                         myCart = aCart;
                         moConfig = myWeb.moConfig;
-                        moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
+                        moCartConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/cart");
 
                         mbRoundUp = myCart.mbRoundup;
                         mbRoundDown = myCart.mbRoundDown;
@@ -143,7 +143,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "New", ex, "", "", gbDebug);
                     }
                 }
 
@@ -304,7 +304,7 @@ namespace Protean
                                         return 0m; // exit early because discount is invalid
                                     }
                                     Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
-                                    IdiscountRuleProvider oDisProvider = oDiscRuleProv.Get();
+                                    IdiscountRuleProvider oDisProvider = oDiscRuleProv.Get(null,myWeb.moCtx);
                                     // put all db funtions in it                                  
                                     decimal nTotalSaved = oDisProvider.FinalCartUpdateDB(ref oCartXML, ref myWeb, mbRoundUp, ref myCart); 
 
@@ -375,7 +375,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckDiscounts", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CheckDiscounts", ex, "", "", gbDebug);
                     }
                     finally
                     {
@@ -533,7 +533,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckDiscounts", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CheckDiscounts", ex, "", "", gbDebug);
                     }
                     finally
                     {
@@ -796,7 +796,7 @@ namespace Protean
                     // Thats all folks!
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Discount_ApplyToCart", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Discount_ApplyToCart", ex, "", "", gbDebug);
                     }
 
                     return default;
@@ -999,7 +999,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug);
                     }
                 }
 
@@ -1164,7 +1164,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug);
                     }
                 }
                 private void Discount_Break_Product(ref XmlDocument oDiscountXML, ref int nPriceCount)
@@ -1318,7 +1318,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Discount_Basic_Money", ex, "", "", gbDebug);
                     }
                 }
 
@@ -1390,7 +1390,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Discount_Basic_Percent", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Discount_Basic_Percent", ex, "", "", gbDebug);
                     }
                 }
 
@@ -1471,7 +1471,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Discount_xForPriceY", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Discount_xForPriceY", ex, "", "", gbDebug);
                     }
                 }
 
@@ -1686,7 +1686,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Discount_CheapestFree", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Discount_CheapestFree", ex, "", "", gbDebug);
                     }
 
                 }
@@ -1802,7 +1802,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Discount_Break Group", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Discount_Break Group", ex, "", "", gbDebug);
                     }
                 }
 
@@ -2111,7 +2111,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
 
@@ -2186,7 +2186,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "ValidateDiscount", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ValidateDiscount", ex, "", cProcessInfo, gbDebug);
                     }
 
                     return default;
@@ -2435,7 +2435,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "getAvailableDiscounts", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getAvailableDiscounts", ex, "", "", gbDebug);
                     }
                     finally
                     {
@@ -2520,7 +2520,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "returnDocumentFromItem", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "returnDocumentFromItem", ex, "", "", gbDebug);
                     }
                 }
 
@@ -2570,7 +2570,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "RemoveDiscountCode", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
 
@@ -2602,7 +2602,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdatePackagingforRemovePromoCode", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UpdatePackagingforRemovePromoCode", ex, "", "", gbDebug);
                     }
                 }
                 #endregion
@@ -2680,7 +2680,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductPricesByXml", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getProductPricesByXml", ex, "", cProcessInfo, gbDebug);
                     }
 
                     return getProductPricesByXml_OLDRet;
@@ -2753,7 +2753,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductPricesByXml", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getProductPricesByXml", ex, "", "", gbDebug);
                     }
 
                     return default;
@@ -2829,7 +2829,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "applyDiscountsToPriceXml", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "applyDiscountsToPriceXml", ex, "", "", gbDebug);
                     }
                 }
 
@@ -2858,7 +2858,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }

@@ -8,6 +8,11 @@
 // $Copyright:   Copyright (c) 2002 - 2011 Eonicweb Ltd.
 // ***********************************************************************
 
+using AngleSharp.Io;
+using DelegateWrappers;
+using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,10 +23,7 @@ using System.Threading;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
-using AngleSharp.Io;
-using DelegateWrappers;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+using static Protean.Env;
 using static Protean.stdTools;
 
 namespace Protean
@@ -36,8 +38,9 @@ namespace Protean
         // as some calling methods may not be able to provide the System.Web.HttpContext.Current object for goServer
 
         private static string mcModuleName = "Protean.fsHelper";
-        private System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-        private HttpServerUtility goServer;
+        private System.Collections.Specialized.NameValueCollection goConfig; // = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/web");
+        private IHttpServerUtility goServer;
+        private IHttpContext moCtx;
 
         public XmlDocument moPageXML;
         public string mcStartFolder = "";
@@ -71,7 +74,7 @@ namespace Protean
         #endregion
         #region Constructor
 
-        public fsHelper() : this(HttpContext.Current)
+        public fsHelper() //: this(IHttpContext.Current)
         {
             if (!string.IsNullOrEmpty(goConfig["AdminAcct"]) & goConfig["AdminGroup"] != "AzureWebApp")
             {
@@ -79,9 +82,11 @@ namespace Protean
             }
         }
 
-        public fsHelper(HttpContext Context)
+        public fsHelper(IHttpContext ptnContext)
         {
-            goServer = Context.Server;
+            moCtx = ptnContext;
+            goServer = ptnContext.Server;
+            goConfig = ptnContext.Config.GetWebApplicationSection("protean/web") as System.Collections.Specialized.NameValueCollection;
             if (!string.IsNullOrEmpty(goConfig["AdminAcct"]) & goConfig["AdminGroup"] != "AzureWebApp")
             {
                 ImpersonationMode = true;
@@ -99,7 +104,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
             }
         }
         #endregion
@@ -135,7 +140,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "initialiseVariables", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "initialiseVariables", ex, "", cProcessInfo, gbDebug);
             }
 
         }
@@ -171,7 +176,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "initialiseVariables", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "initialiseVariables", ex, "", cProcessInfo, gbDebug);
             }
 
         }
@@ -196,13 +201,13 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "getConfigNode", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "getConfigNode", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
         }
 
-        public static string checkLeadingSlash(string filePath, bool removeSlash = false)
+        public  string checkLeadingSlash(string filePath, bool removeSlash = false)
         {
             // PerfMon.Log("fsHelper", "checkLeadingSlash")
             try
@@ -221,7 +226,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "checkLeadingSlash", ex, "", filePath, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "checkLeadingSlash", ex, "", filePath, gbDebug);
                 return filePath;
             }
 
@@ -255,7 +260,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "checkCommonFilePath", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "checkCommonFilePath", ex, "", cProcessInfo, gbDebug);
                 return "";
             }
 
@@ -278,7 +283,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "setConfigNode", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "setConfigNode", ex, "", cProcessInfo, gbDebug);
                 return oInstance;
             }
 
@@ -312,7 +317,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "getImageXhtml", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "getImageXhtml", ex, "", cProcessInfo, gbDebug);
                 return "";
             }
 
@@ -548,7 +553,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "getUniqueFilename", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "getUniqueFilename", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -582,12 +587,15 @@ namespace Protean
                         // FIX disable AppDomain restart when deleting subdirectory
                         // This code will turn off monitoring from the root website directory.
                         // Monitoring of Bin, App_Themes and other folders will still be operational, so updated DLLs will still auto deploy.
-                        var p = typeof(HttpRuntime).GetProperty("FileChangesMonitor", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
-                        var o = p.GetValue(null, null);
-                        var f = o.GetType().GetField("_dirMonSubdirs", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.IgnoreCase);
-                        var monitor = f.GetValue(o);
-                        var m = monitor.GetType().GetMethod("StopMonitoring", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-                        m.Invoke(monitor, new object[] { });
+
+                        // TS Removed as not .NetStandard compatible
+
+                        //var p = typeof(HttpRuntime).GetProperty("FileChangesMonitor", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                        //var o = p.GetValue(null, null);
+                        //var f = o.GetType().GetField("_dirMonSubdirs", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.IgnoreCase);
+                        //var monitor = f.GetValue(o);
+                        //var m = monitor.GetType().GetMethod("StopMonitoring", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                        //m.Invoke(monitor, new object[] { });
 
                         dir.Delete(true);
                     }
@@ -908,7 +916,7 @@ namespace Protean
             }
         }
 
-        public string SaveFile(ref HttpPostedFile postedFile, string cFolderPath)
+        public string SaveFile(ref IHttpPostedFile postedFile, string cFolderPath)
         {
             // PerfMon.Log("fsHelper", "SaveFile")
             try
@@ -1114,7 +1122,7 @@ namespace Protean
             catch (Exception ex)
             {
                 // Return ex.Message
-                returnException(ref msException, mcModuleName, "MoveFile", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "MoveFile", ex, "", cProcessInfo, gbDebug);
                 return false;
 
             }
@@ -1228,7 +1236,7 @@ namespace Protean
                 var thisDir = new DirectoryInfo(goServer.MapPath(path));
                 long newSavings = 0L;
                 //long nLengthBefore = 0L;
-                path = HttpUtility.UrlDecode(path);
+                path = moCtx.Server.UrlDecode(path);
 
                 foreach (var ofolder in thisDir.GetDirectories())
                     OptimiseImages(path + "/" + ofolder.Name, ref nFileCount, ref nSavings, lossless, tinyAPIKey);
@@ -1285,7 +1293,7 @@ namespace Protean
         {
             return sfilename.IndexOfAny("[~`!@#$%^&*()-+=|{}':;,<>/?]".ToCharArray()) != -1;
         }
-        public string UploadRequest(HttpContext context, string UploadDirPath = "")
+        public string UploadRequest(IHttpContext context, string UploadDirPath = "")
         {
             try
             {
@@ -1329,7 +1337,7 @@ namespace Protean
             }
         }
 
-        private void HandleUploads(HttpContext context)
+        private void HandleUploads(IHttpContext context)
         {
 
             // Check user has permissions
@@ -1360,14 +1368,14 @@ namespace Protean
             }
         }
 
-        private void ReturnOptions(HttpContext context)
+        private void ReturnOptions(IHttpContext context)
         {
             context.Response.AddHeader("Allow", "POST, PUT, OPTIONS");
             context.Response.StatusCode = 200;
         }
 
         // Upload file to the server
-        private void UploadFile(HttpContext context)
+        private void UploadFile(IHttpContext context)
         {
             object statuses = new List<FilesStatus>();
             System.Collections.Specialized.NameValueCollection headers = context.Request.Headers;
@@ -1376,7 +1384,7 @@ namespace Protean
 
             for (int i = 0, loopTo = context.Request.Files.Count - 1; i <= loopTo; i++)
             {
-                System.Web.HttpPostedFile file = context.Request.Files[i];
+                IHttpPostedFile file = context.Request.Files[i];
                 string cfileName = CleanfileName(Conversions.ToString(file.FileName));
                 string scleanFileName = cfileName;
                 string isExists = "true";
@@ -1429,11 +1437,11 @@ namespace Protean
         }
 
         // Upload partial file
-        private void UploadPartialFile(string fileName, HttpContext context, List<FilesStatus> statuses)
+        private void UploadPartialFile(string fileName, IHttpContext context, List<FilesStatus> statuses)
         {
-            if (context.Request.Files.Count != 1)
+            if (context.Request.FileCount != 1)
             {
-                throw new HttpRequestValidationException("Attempt To upload chunked file containing more than one fragment per request");
+               // throw new HttpRequestValidationException("Attempt To upload chunked file containing more than one fragment per request");
             }
             Stream inputStream = context.Request.Files[0].InputStream;
             string fullName = mcStartFolder + Path.GetFileName(fileName);
@@ -1483,7 +1491,7 @@ namespace Protean
             }
         }
 
-        public string CleanFileExists(string cFilename, HttpContext context)
+        public string CleanFileExists(string cFilename, IHttpContext context)
         {
 
             bool fileExists = false;
@@ -1536,11 +1544,11 @@ namespace Protean
         }
 
         // Upload entire file
-        private void UploadWholeFile(HttpContext context, List<FilesStatus> statuses)
+        private void UploadWholeFile(IHttpContext context, List<FilesStatus> statuses)
         {
             for (int i = 0, loopTo = context.Request.Files.Count - 1; i <= loopTo; i++)
             {
-                System.Web.HttpPostedFile file = context.Request.Files[i];
+               IHttpPostedFile file = context.Request.Files[i];
 
                 try
                 {
@@ -1553,7 +1561,7 @@ namespace Protean
                     if (Strings.LCase(mcStartFolder + cfileName).EndsWith(".jpg") | Strings.LCase(mcStartFolder + cfileName).EndsWith(".jpeg") | Strings.LCase(mcStartFolder + cfileName).EndsWith(".png"))
                     {
                         var eImg = new Tools.Image(mcStartFolder + cfileName);
-                        System.Collections.Specialized.NameValueCollection moWebCfg = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                        System.Collections.Specialized.NameValueCollection moWebCfg = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/web");
                         eImg.UploadProcessing(Conversions.ToString(moWebCfg["WatermarkText"]), Conversions.ToString(Operators.ConcatenateObject(mcRoot, moWebCfg["WatermarkImage"])));
                     }
 
@@ -1584,7 +1592,7 @@ namespace Protean
 
         private readonly System.Web.Script.Serialization.JavaScriptSerializer js = new System.Web.Script.Serialization.JavaScriptSerializer();
 
-        private void WriteJsonIframeSafe(HttpContext context, List<FilesStatus> statuses)
+        private void WriteJsonIframeSafe(IHttpContext context, List<FilesStatus> statuses)
         {
             context.Response.AddHeader("Vary", "Accept");
             try
@@ -1604,11 +1612,11 @@ namespace Protean
             }
 
             object jsonObj = js.Serialize(statuses.ToArray());
-            context.Response.Write(jsonObj);
+            context.Response.Write(jsonObj.ToString());
 
         }
 
-        private bool GivenFilename(HttpContext context)
+        private bool GivenFilename(IHttpContext context)
         {
             return !string.IsNullOrEmpty(context.Request["f"]);
         }

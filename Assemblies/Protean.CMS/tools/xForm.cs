@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.stdTools;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -16,13 +17,13 @@ namespace Protean
     public class xForm
     {
 
-        public System.Web.HttpContext moCtx;
+        public IHttpContext moCtx;
 
-        public System.Web.HttpApplicationState goApp;
-        public System.Web.HttpRequest goRequest;
-        public System.Web.HttpResponse goResponse;
-        public System.Web.SessionState.HttpSessionState goSession;
-        public System.Web.HttpServerUtility goServer;
+        public IHttpApplicationState goApp;
+        public IHttpRequest goRequest;
+        public IHttpResponse goResponse;
+        public IHttpSessionState goSession;
+        public IHttpServerUtility goServer;
 
         public static string msException;
 
@@ -139,7 +140,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    returnException(ref msException, mcModuleName, "RootGroup-xmlElement", ex, "", "", gbDebug);
+                    returnException(ref msException, moCtx, mcModuleName, "RootGroup-xmlElement", ex, "", "", gbDebug);
                 }
                 return oRootGroup;
             }
@@ -178,12 +179,12 @@ namespace Protean
         }
 
 
-        public xForm(ref string sException) : this(System.Web.HttpContext.Current, ref sException)
+        public xForm(ref string sException) //: this(moCtx, ref sException)
         {
 
         }
 
-        public xForm(System.Web.HttpContext Context, ref string sException)
+        public xForm(IHttpContext Context, ref string sException)
         {
 
             string sProcessInfo = string.Empty;
@@ -204,7 +205,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "New", ex, "", "", gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "New", ex, "", "", gbDebug);
             }
         }
 
@@ -226,7 +227,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "Loadinstance-xmlElement", ex, "", "", gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "Loadinstance-xmlElement", ex, "", "", gbDebug);
             }
 
 
@@ -258,7 +259,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "Loadinstance-xmlElement", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "Loadinstance-xmlElement", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -334,7 +335,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "Patchinstance-xmlElement", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "Patchinstance-xmlElement", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -359,7 +360,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "NewFrm", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "NewFrm", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -390,7 +391,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "submission", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "submission", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -488,7 +489,7 @@ namespace Protean
                         // XformInclude Features....
                     }
 
-                    System.Collections.Specialized.NameValueCollection moThemeConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/theme");
+                    System.Collections.Specialized.NameValueCollection moThemeConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/theme");
                     string currentTheme = "";
                     if (moThemeConfig != null)
                     {
@@ -539,7 +540,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "load", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "load", ex, "", cProcessInfo, gbDebug);
                 // If any problems are encountered return false.
                 // Return False
             }
@@ -601,7 +602,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "load(String,String())", ex, "", filePath, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "load(String,String())", ex, "", filePath, gbDebug);
                 return false;
             }
         }
@@ -620,7 +621,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "load", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "load", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -697,7 +698,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "load", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "load", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -724,7 +725,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "submission", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "submission", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -769,7 +770,7 @@ namespace Protean
                 {
                     if (!string.IsNullOrEmpty(goRequest["g-recaptcha-response"]))
                     {
-                        var moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                        var moConfig = (NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/web");
                         string version = moConfig["ReCaptchaVersion"] ?? "v3";
 
                         if (version == "v3")
@@ -1136,7 +1137,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "validate", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "validate", ex, "", cProcessInfo, gbDebug);
             }
 
         }
@@ -1248,7 +1249,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "evaluateByType", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "evaluateByType", ex, "", cProcessInfo, gbDebug);
                 return "";
             }
         }
@@ -1264,7 +1265,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug);
                 return Conversions.ToBoolean("");
             }
         }
@@ -1311,7 +1312,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addNoteFromBind", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addNoteFromBind", ex, "", cProcessInfo, gbDebug);
                 return false;
             }
 
@@ -1520,7 +1521,7 @@ namespace Protean
                                                         var oElmtFileStream = moPageXML.CreateElement(oElmtFile.Name + "Stream");
                                                         oElmtFile.ParentNode.InsertAfter(oElmtFileStream, oElmtFile);
 
-                                                        System.Web.HttpPostedFile fUpld;
+                                                        IHttpPostedFile fUpld;
                                                         fUpld = goRequest.Files[sRequest];
 
                                                         oElmtFile.InnerText = Tools.Text.filenameFromPath(fUpld.FileName);
@@ -1711,7 +1712,7 @@ namespace Protean
                             catch (Exception ex2)
                             {
                                 // no bind element found, do nothing
-                                returnException(ref msException, mcModuleName, "updateInstanceFromRequest", ex2, "", cProcessInfo, gbDebug);
+                                returnException(ref msException, moCtx, mcModuleName, "updateInstanceFromRequest", ex2, "", cProcessInfo, gbDebug);
                             }
                         }
                     }
@@ -1754,7 +1755,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -1839,7 +1840,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "updateInstanceFromRequest", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -1861,7 +1862,7 @@ namespace Protean
         /// <param name="bindElmt">The bind element</param>
         /// <param name="postedFile">The file uploaded</param>
         /// <remarks></remarks>
-        private void updateImageElement(ref XmlElement imgElmt, ref XmlElement bindElmt, ref System.Web.HttpPostedFile postedFile)
+        private void updateImageElement(ref XmlElement imgElmt, ref XmlElement bindElmt, ref IHttpPostedFile postedFile)
         {
 
             // TS To Do
@@ -2015,7 +2016,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "updateImageElement", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "updateImageElement", ex, "", cProcessInfo, gbDebug);
             }
 
         }
@@ -2158,7 +2159,7 @@ namespace Protean
                         }
                         catch (Exception ex2)
                         {
-                            returnException(ref msException, mcModuleName, "addValues", ex2, "", cProcessInfo, gbDebug);
+                            returnException(ref msException, moCtx, mcModuleName, "addValues", ex2, "", cProcessInfo, gbDebug);
                         }
                     }
                     if (!string.IsNullOrEmpty(sXpath))
@@ -2283,7 +2284,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addValues", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addValues", ex, "", cProcessInfo, gbDebug);
 
             }
 
@@ -2308,7 +2309,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "ProcessLanguageLabels", ex, "", "", gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "ProcessLanguageLabels", ex, "", "", gbDebug);
             }
         }
 
@@ -2331,7 +2332,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "resetXFormUI", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "resetXFormUI", ex, "", cProcessInfo, gbDebug);
             }
 
         }
@@ -2372,7 +2373,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -2417,7 +2418,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -2438,7 +2439,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addGroup", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -2470,7 +2471,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addRepeat", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addRepeat", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -2486,7 +2487,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -2502,7 +2503,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -2558,7 +2559,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -2587,7 +2588,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -2603,7 +2604,7 @@ namespace Protean
             
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addBind", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addBind", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -2644,7 +2645,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addBind", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addBind", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -2684,7 +2685,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSecret", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addSecret", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -2733,7 +2734,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addTextArea", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addTextArea", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -2782,7 +2783,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addTextArea", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addTextArea", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -2845,7 +2846,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addRange", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addRange", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -2894,7 +2895,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addUpload", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addUpload", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -2963,7 +2964,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSelect", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addSelect", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -2980,7 +2981,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -2995,7 +2996,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -3010,7 +3011,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -3081,7 +3082,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addSelect1", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -3104,7 +3105,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addValue", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addValue", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -3131,7 +3132,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOption", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addOption", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -3182,7 +3183,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOption", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addOption", ex, "", cProcessInfo, gbDebug);
                 return null;
 
             }
@@ -3225,7 +3226,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOptionsFromSqlDataReader", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addOptionsFromSqlDataReader", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -3268,7 +3269,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -3307,7 +3308,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -3339,7 +3340,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addOptionsFromRecordSet", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -3393,7 +3394,7 @@ namespace Protean
             catch (Exception ex)
             {
                 cProcessInfo = sRef + " - " + ((int)nTypes).ToString() + " - " + sMessage;
-                returnException(ref msException, mcModuleName, "addNote - by ref", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addNote - by ref", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -3458,7 +3459,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addNote - by node", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addNote - by node", ex, "", cProcessInfo, gbDebug);
             }
         }
 
@@ -3488,7 +3489,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addDiv", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addDiv", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -3551,7 +3552,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "addSubmit", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "addSubmit", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -3681,7 +3682,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "submit", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "submit", ex, "", cProcessInfo, gbDebug);
             }
 
             return default;
@@ -3733,7 +3734,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug);
             }
             return isSubmittedRet;
         }
@@ -3770,7 +3771,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "getSubmitted", ex, "", cProcessInfo, gbDebug);
             }
 
             return isDeletedRet;
@@ -3807,7 +3808,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "isSubmitted", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "isSubmitted", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
 
@@ -3886,7 +3887,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "getNewRef", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "getNewRef", ex, "", cProcessInfo, gbDebug);
                 return null;
             }
         }
@@ -3942,7 +3943,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "checkForDeleteCommand", ex, "", cProcessInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "checkForDeleteCommand", ex, "", cProcessInfo, gbDebug);
             }
 
             return default;
@@ -4181,7 +4182,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "processRepeats", ex, "", bDebug: gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "processRepeats", ex, "", bDebug: gbDebug);
             }
         }
 
@@ -4217,7 +4218,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "processFormParameters", ex, "", processInfo, gbDebug);
+                returnException(ref msException, moCtx, mcModuleName, "processFormParameters", ex, "", processInfo, gbDebug);
             }
         }
 
@@ -4425,6 +4426,23 @@ namespace Protean
                 sXpath = sXpath.Replace("$" + oElmt.Name, "\"" + oElmt.InnerText + "\"");
 
             return sXpath;
+        }
+
+
+        public bool strongPassword(string password)
+        {
+            string pwdRegEx = "";
+
+            XmlElement moPolicy;
+
+            moPolicy = (XmlElement)moCtx.Config.GetWebApplicationSection("protean/PasswordPolicy");
+
+            pwdRegEx = "(?=^.{" + moPolicy.FirstChild.SelectSingleNode("minLength").InnerText + "," + moPolicy.FirstChild.SelectSingleNode("maxLength").InnerText + "}$)" + @"(?=(?:.*?\d){" + moPolicy.FirstChild.SelectSingleNode("numsLength").InnerText + "})" + "(?=.*[a-z])" + "(?=(?:.*?[A-Z]){" + moPolicy.FirstChild.SelectSingleNode("upperLength").InnerText + "})" + "(?=(?:.*?[" + moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText + "]){" + moPolicy.FirstChild.SelectSingleNode("specialLength").InnerText + "})" + @"(?!.*\s)[0-9a-zA-Z" + moPolicy.FirstChild.SelectSingleNode("specialChars").InnerText + "]*$";
+
+            // Validate the e-mail address
+            return new Regex(pwdRegEx, RegexOptions.IgnoreCase).IsMatch(password + "");
+
+
         }
 
     }

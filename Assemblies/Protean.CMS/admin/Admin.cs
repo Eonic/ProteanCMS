@@ -24,6 +24,7 @@ using System.Xml;
 using static Protean.FeedHandler;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -47,7 +48,7 @@ namespace Protean
             // Public moXformEditor As XFormEditor
 
             private string mcPagePath;
-            public System.Web.HttpServerUtility goServer;
+            public IHttpServerUtility goServer;
             // preview mode info
             public bool mbPreviewMode; // Is Preview mode on?
             public Cms myWeb;
@@ -130,7 +131,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "open", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "open", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -145,7 +146,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -355,7 +356,7 @@ namespace Protean
                                 if (!string.IsNullOrEmpty(providerName))
                                 {
                                     // case for external Providers
-                                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/" + providerType + "Providers");
+                                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)myWeb.moConfigMng.GetWebApplicationSection("protean/" + providerType + "Providers");
                                     Assembly assemblyInstance;
 
                                     if (moPrvConfig.Providers[providerName + "Local"] != null)
@@ -733,7 +734,7 @@ namespace Protean
                         case "RewriteRules":
                             {
 
-                                var oCfg = WebConfigurationManager.OpenWebConfiguration("/");
+                                var oCfg = myWeb.moConfigMng.OpenWebConfiguration("/");
                                 Tools.Security.Impersonate oImp = null;
                                 if (Conversions.ToBoolean(myWeb.impersonationMode))
                                 {
@@ -865,7 +866,7 @@ namespace Protean
                         case "ThemeSettings":
                             {
 
-                                System.Collections.Specialized.NameValueCollection moThemeConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/theme");
+                                System.Collections.Specialized.NameValueCollection moThemeConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/theme");
 
                                 oPageDetail.AppendChild(moAdXfm.xFrmThemeSettings(moThemeConfig["CurrentTheme"] + "/xforms/Config/ThemeSettings"));
 
@@ -1364,7 +1365,7 @@ namespace Protean
                                     sAdminLayout = "";
                                     mcEwCmd = Conversions.ToString(myWeb.moSession["ewCmd"]);
                                     //clear cache when item is live only
-                                    if (myWeb.moRequest.Params["nStatus"] == "1")
+                                    if (myWeb.moRequest["nStatus"] == "1")
                                     {
                                         //'AllowContentSpecificClearCache' if on then clear contentid related cache pages.
                                         if (moConfig["AllowContentSpecificClearCache"] != null && moConfig["AllowContentSpecificClearCache"].ToLower() == "on")
@@ -3115,7 +3116,7 @@ namespace Protean
                                     }
                                     else
                                     {
-                                        myWeb.msRedirectOnEnd = Conversions.ToString(Operators.ConcatenateObject(myWeb.moRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + myWeb.moRequest.Form.Get("id"), Interaction.IIf(string.IsNullOrEmpty(myWeb.moRequest.QueryString["pgid"]), "", "&pgid=" + myWeb.moRequest.QueryString["pgid"])));
+                                        myWeb.msRedirectOnEnd = Conversions.ToString(Operators.ConcatenateObject(myWeb.moRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + myWeb.moRequest.Form["id"], Interaction.IIf(string.IsNullOrEmpty(myWeb.moRequest.QueryString["pgid"]), "", "&pgid=" + myWeb.moRequest.QueryString["pgid"])));
                                     }
                                 }
                                 else
@@ -3313,8 +3314,8 @@ namespace Protean
                         case "ListMailLists":
                             {
                                 bMailMenu = true;
-
-                                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                                
+                                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/mailinglist");
                                 string sMessagingProvider = "";
                                 if (moMailConfig != null)
                                 {
@@ -3524,7 +3525,7 @@ namespace Protean
                     {
                         if (moConfig["MailingList"] == "on")
                         {
-                            System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                            System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/mailinglist");
                             if (moMailConfig != null)
                             {
                                 oWeb.mnMailMenuId = Conversions.ToLong(moMailConfig["RootPageId"]);
@@ -3643,7 +3644,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "adminProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "adminProcess", ex, "", sProcessInfo, gbDebug);
                 }
                 finally
                 {
@@ -3837,7 +3838,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "adminAccessRights", ex, "", processInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "adminAccessRights", ex, "", processInfo, gbDebug);
                 }
                 finally
                 {
@@ -4021,7 +4022,7 @@ namespace Protean
                 // This is just a placeholder for overloading
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "EditXFormProcess", ex, "", processInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "EditXFormProcess", ex, "", processInfo, gbDebug);
                 }
                 finally
                 {
@@ -4276,7 +4277,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "FileImportProcess", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "FileImportProcess", ex, "", "", gbDebug);
                 }
             }
 
@@ -4357,7 +4358,7 @@ namespace Protean
                 catch (Exception ex)
                 {
 
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "buildPageXML", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "buildPageXML", ex, "", sProcessInfo, gbDebug);
 
                 }
 
@@ -4523,7 +4524,7 @@ namespace Protean
 
                     SupplimentalAdminMenu(ref oMenuRoot);
 
-                    System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                    System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/mailinglist");
                     string sMessagingProvider = "";
                     if (moMailConfig != null)
                     {
@@ -4572,7 +4573,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetAdminMenu", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetAdminMenu", ex, "", sProcessInfo, gbDebug);
                     return null;
                 }
 
@@ -4614,7 +4615,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetpreviewMenu", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetpreviewMenu", ex, "", sProcessInfo, gbDebug);
                 }
 
             }
@@ -4649,7 +4650,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "appendMenuItem", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "appendMenuItem", ex, "", sProcessInfo, gbDebug);
                     return null;
                 }
             }
@@ -4871,14 +4872,14 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "LibProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
             private void OrderProcess(ref XmlElement oPageDetail, ref string sAdminLayout, string cSchemaName)
             {
                 string sProcessInfo = "";
-                System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
+                System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/cart");
 
                 try
                 {
@@ -5205,7 +5206,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "OrderProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "OrderProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -5263,7 +5264,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ShippingLocationsProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ShippingLocationsProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -5347,7 +5348,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -5403,7 +5404,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CarriersProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "CarriersProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -5458,7 +5459,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -5587,7 +5588,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -5711,7 +5712,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -5820,7 +5821,7 @@ from tblContentIndexDef";
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "PollsProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -5893,7 +5894,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -5988,7 +5989,7 @@ from tblContentIndexDef";
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DiscountRulesProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "DiscountRulesProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -6090,7 +6091,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateLessVariables", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "updateLessVariables", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -6158,7 +6159,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateStandardXslVariables", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "updateStandardXslVariables", ex, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -6167,7 +6168,7 @@ from tblContentIndexDef";
             public void SchedulerProcess(ref string cewCmd, ref string cLayout, ref XmlElement oContentDetail)
             {
                 // Dim oScheduler As New Scheduler
-                System.Collections.Specialized.NameValueCollection oSchedulerConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/scheduler");
+                System.Collections.Specialized.NameValueCollection oSchedulerConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/scheduler");
                 // bool bHasScheduledItems = false;
                 string cConStr = "";
 
@@ -6418,7 +6419,7 @@ from tblContentIndexDef";
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SchedulerProcess", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SchedulerProcess", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -6770,7 +6771,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "VersionControlProcess", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "VersionControlProcess", ex, "", "", gbDebug);
                 }
             }
 
@@ -6832,7 +6833,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "MemberActivityProcess", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "MemberActivityProcess", ex, "", "", gbDebug);
                 }
             }
 
@@ -6993,7 +6994,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "MemberCodesProcess", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "MemberCodesProcess", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -7054,7 +7055,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "EventBookingProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "EventBookingProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -7083,7 +7084,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -7094,7 +7095,7 @@ from tblContentIndexDef";
 
                 try
                 {
-                    var myConfiguration = WebConfigurationManager.OpenWebConfiguration("~");
+                    var myConfiguration = myWeb.moConfigMng.OpenWebConfiguration("~");
                     string flag = myConfiguration.AppSettings.Settings["recompile"].Value.ToString();
                     if (flag.ToLower() == "true")
                     {
@@ -7109,7 +7110,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ResetWebConfig", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ResetWebConfig", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -7154,7 +7155,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ReIndexing", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "ReIndexing", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
@@ -7169,7 +7170,7 @@ from tblContentIndexDef";
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SEOReport", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "SEOReport", ex, "", sProcessInfo, gbDebug);
                 }
             }
 

@@ -9,7 +9,7 @@ Public Class ewDefault : Implements IHttpHandler, IRequiresSessionState
     Dim WithEvents oPcms As Protean.Cms
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
 
-        oPcms = New Protean.NetFw
+        oPcms = New Protean.NetFw()
 
         If context.Request("xml") <> "" Then
             oPcms.mbOutputXml = True

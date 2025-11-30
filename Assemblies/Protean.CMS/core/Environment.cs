@@ -1,14 +1,15 @@
-﻿using System;
+﻿using AngleSharp.Io;
+using DocumentFormat.OpenXml.Wordprocessing;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
-using System.Web;
-using System.Web.SessionState;
 using static Protean.Env;
 
 namespace Protean
@@ -22,6 +23,63 @@ namespace Protean
             IHttpRequest Request { get; }
             IHttpResponse Response { get; }
             IHttpSessionState Session { get; }
+            IHttpApplicationState Application { get; }
+            IHttpServerUtility Server { get; }
+            IWebConfigurationManager Config { get; }
+            IHttpContext Current { get; }
+
+            ICache Cache { get; }
+
+            void CompleteRequest();
+
+            // Legacy support for HttpApplication instance
+            object ApplicationInstance { get; }
+
+        }
+
+
+
+
+        public interface IWebConfigurationManager
+        {
+            string GetAppSetting(string key);
+            IDictionary<string, string> GetAllAppSettings();
+            string GetConnectionString(string name);
+            IDictionary<string, string> GetAllConnectionStrings();
+            Configuration OpenWebConfiguration(string path);
+            Configuration OpenMachineConfiguration();
+           // Configuration OpenMappedWebConfiguration(IWebConfigurationFileMap fileMap, string path); // Requires System.Web.Configuration
+            object GetSection(string sectionName);
+           // ConfigurationSectionGroup GetSectionGroup(string sectionGroupName);
+            object GetWebApplicationSection(string sectionName);
+        }
+
+
+        public interface IGetSectionGroup
+        {
+            /// <summary>
+            /// Retrieves a configuration section group by name.
+            /// </summary>
+            /// <param name="sectionGroupName">The name of the section group.</param>
+            /// <returns>The configuration section group object, or null if not found.</returns>
+            object GetSectionGroup(string sectionGroupName);
+        }
+
+
+        public interface IWebConfigurationFileMap
+        {
+            string MachineConfigFilename { get; set; }
+
+            void AddVirtualDirectory(string virtualDirectory, string physicalDirectory);
+
+            IDictionary<string, string> VirtualDirectories { get; }
+        }
+
+
+
+        public interface IHttpContextProvider
+        {
+            IHttpContext Current { get; }
         }
 
 
@@ -44,7 +102,7 @@ namespace Protean
             string ApplicationPath { get; }
             string PhysicalPath { get; }
             string PhysicalApplicationPath { get; }
-            string PathTranslated { get; }
+            //string PathTranslated { get; }
 
             // HTTP Metadata
             string HttpMethod { get; }
@@ -60,6 +118,7 @@ namespace Protean
             string UserAgent { get; }
             IEnumerable<string> AcceptTypes { get; }
             IEnumerable<string> UserLanguages { get; }
+            Version HttpVersion { get; }
 
             // Browser Capabilities
             string BrowserName { get; }
@@ -68,20 +127,28 @@ namespace Protean
             bool BrowserSupportsJavaScript { get; }
 
             // Collections
-            IDictionary<string, string> Query { get; }
+           // NameValueCollection Query { get; }
             IDictionary<string, string[]> QueryMulti { get; }
-            IDictionary<string, string> Form { get; }
+            NameValueCollection Form { get; }
             IDictionary<string, string[]> FormMulti { get; }
-            IDictionary<string, string> Headers { get; }
-            IDictionary<string, string> Cookies { get; }
-            IDictionary<string, string> ServerVariables { get; }
+            NameValueCollection Headers { get; }
+            IHttpCookieCollection Cookies { get; }
+            NameValueCollection ServerVariables { get; }
+
+            // Raw Collections
+            NameValueCollection QueryString { get; }
+            NameValueCollection FormCollection { get; }
+           // NameValueCollection RawHeaders { get; }
+            IEnumerable<KeyValuePair<string, string>> RawCookies { get; }
+            IEnumerable<KeyValuePair<string, IHttpPostedFile>> RawFiles { get; }
 
             // Content and Encoding
             string ContentType { get; }
-            string ContentEncoding { get; }
+            Encoding ContentEncoding { get; }
             Encoding ContentEncodingObject { get; }
             long? ContentLength { get; }
             int TotalBytes { get; }
+            bool HasEntityBody { get; }
 
             // Streams and Body
             Stream Body { get; }
@@ -90,7 +157,7 @@ namespace Protean
             byte[] BinaryRead(int count);
 
             // Files
-            IEnumerable<IHttpPostedFile> Files { get; }
+            IHttpFileCollection Files { get; } // Instead of IEnumerable<IHttpPostedFile>
             int FileCount { get; }
             bool HasFiles { get; }
             IHttpPostedFile GetFile(string key);
@@ -99,15 +166,23 @@ namespace Protean
             IEnumerable<string> AllFileKeys { get; }
 
             // Request Validation
-            bool ValidateRequest { get; }
+           // bool ValidateRequest { get; }
             void ValidateInput();
 
             // Utility Methods
             string MapPath(string virtualPath);
             bool IsAjaxRequest();
             void Abort();
+            void SaveAs(string filename, bool includeHeaders);
 
+            // Client Certificate
+            byte[] ClientCertificate { get; }
+
+            // Indexer for convenience
             string this[string key] { get; }
+
+
+
         }
 
 
@@ -140,7 +215,9 @@ namespace Protean
             /// Indicates whether the file is empty.
             /// </summary>
             bool IsEmpty { get; }
+            int ContentLength { get; }
 
+            Stream InputStream { get; } // ✅ NEW
             /// <summary>
             /// Opens a read-only stream for the uploaded file.
             /// </summary>
@@ -168,56 +245,122 @@ namespace Protean
         }
 
 
+        public interface IHttpFileCollection
+        {
+            int Count { get; }
+            string[] AllKeys { get; }
+            IHttpPostedFile this[int index] { get; }
+            IHttpPostedFile this[string key] { get; }
+        }
+
+
 
 
         public interface IHttpResponse
         {
-            /// <summary>
-            /// Gets or sets the HTTP status code for the response.
-            /// </summary>
+            // Core Response Properties
             int StatusCode { get; set; }
-
-            /// <summary>
-            /// Gets or sets the content type of the response.
-            /// </summary>
+            string StatusDescription { get; set; }
             string ContentType { get; set; }
+            Encoding ContentEncoding { get; set; }
+            long? ContentLength { get; set; }
+            bool Buffer { get; set; }
+            string CacheControl { get; set; }
+            bool IsClientConnected { get; }
+            bool SuppressContent { get; set; }
+            bool TrySkipIisCustomErrors { get; set; }
 
-            /// <summary>
-            /// Adds a header to the response.
-            /// </summary>
-            /// <param name="name">The name of the header.</param>
-            /// <param name="value">The value of the header.</param>
+            // Headers
+            IDictionary<string, string> Headers { get; }
             void AddHeader(string name, string value);
+            void AppendHeader(string name, string value);
+            void RemoveHeader(string name);
 
-            /// <summary>
-            /// Writes a string to the response body.
-            /// </summary>
-            /// <param name="content">The content to write.</param>
+            // Cookies
+            IHttpCookieCollection Cookies { get; }
+
+           // IHttpCookie GetCookie(string name);
+          //  void AddCookie(IHttpCookie cookie);
+          //  void RemoveCookie(string name);
+
+            // Output Writing
             void Write(string content);
-
-            /// <summary>
-            /// Writes a byte array to the response body.
-            /// </summary>
-            /// <param name="buffer">The byte array to write.</param>
+            void Write(char ch);
+            void Write(char[] buffer, int index, int count);
             void Write(byte[] buffer);
-
-            /// <summary>
-            /// Writes a stream to the response body asynchronously.
-            /// </summary>
-            /// <param name="stream">The stream to write.</param>
-            /// <returns>A task representing the asynchronous operation.</returns>
             Task WriteAsync(Stream stream);
+            void BinaryWrite(byte[] buffer);
+            void OutputStreamWrite(Stream stream);
+            TextWriter OutputWriter { get; }
 
-            /// <summary>
-            /// Redirects the client to the specified URL.
-            /// </summary>
-            /// <param name="url">The URL to redirect to.</param>
-            void Redirect(string url);
+            Stream OutputStream { get; }
 
-            /// <summary>
-            /// Ends the response (flushes and closes).
-            /// </summary>
+            // Lifecycle Control
+            void Flush();
+            void Clear();
+            void ClearHeaders();
+            void ClearContent();
             void End();
+            void Close();
+
+            // Redirection
+            void Redirect(string url, bool permanent = false);
+            void RedirectPermanent(string url);
+
+            void RedirectPermanent(string url, bool endResponse);
+
+            void RedirectToRoute(string routeName);
+            void RedirectToRoutePermanent(string routeName);
+
+            // File Transmission
+            void TransmitFile(string filename);
+            void WriteFile(string filename);
+            void WriteFile(string filename, bool readIntoMemory);
+            void WriteFile(string filename, long offset, long length);
+
+            // Charset and Encoding
+            Encoding CharsetEncoding { get; set; }
+            string Charset { get; set; }
+
+            // Cache Control
+            void SetCacheability(string cacheability);
+            void SetNoStore();
+
+            // Client Disconnect Handling
+            bool ClientDisconnectedToken { get; }
+
+            // Compression (if supported)
+            void ApplyAppPathModifier(string virtualPath);
+
+            
+            // NEW cache-related properties
+            int Expires { get; set; } // Minutes until expiration
+            DateTime ExpiresAbsolute { get; set; } // Absolute expiration date/time
+
+            Encoding HeaderEncoding { get; set; }
+            ICachePolicy Cache { get; }
+
+        }
+
+
+        public interface ICachePolicy
+        {
+            void SetNoStore();
+            void AppendCacheExtension(string extension);
+            void SetCacheability(string cacheability);
+            void SetExpires(DateTime date);
+            void SetValidUntilExpires(bool validUntilExpires);
+        }
+
+
+        public interface ICache
+        {
+            object this[string key] { get; set; } // Add indexer
+            void Insert(string key, object value, TimeSpan? slidingExpiration = null, DateTime? absoluteExpiration = null);
+            object Get(string key);
+            void Remove(string key);
+            bool Contains(string key);
+            void Clear();
         }
 
 
@@ -262,8 +405,8 @@ namespace Protean
             int Timeout { get; set; }
 
 
-            HttpCookieMode CookieMode { get; }       // Indicates how cookies are used for session state.
-            SessionStateMode Mode { get; }          // Indicates the session state mode (InProc, StateServer, SQLServer, Custom).
+            IHttpCookieMode CookieMode { get; }       // Indicates how cookies are used for session state.
+            ISessionStateMode Mode { get; }          // Indicates the session state mode (InProc, StateServer, SQLServer, Custom).
             bool IsCookieless { get; }              // Indicates whether the session is using cookieless mode.
 
             bool IsSynchronized { get; }          // Indicates whether access to the session is thread-safe.
@@ -277,7 +420,13 @@ namespace Protean
 
             object this[int index] { get; }        // Indexed access
             void Add(string name, object value);   // Add by name
-            void RemoveAt(int index);              // Remove by index
+            void RemoveAt(int index);
+
+
+
+            void RemoveAll();
+            
+            // Remove by index
             IEnumerator GetEnumerator();           // For iteration
             object Clone();                        // For cloning
 
@@ -288,6 +437,204 @@ namespace Protean
             /// <returns>A task representing the asynchronous operation.</returns>
             Task CommitAsync();
         }
+
+
+        public enum IHttpCookieMode
+        {
+            /// <summary>
+            /// Cookies are always used to store session identifiers.
+            /// </summary>
+            UseCookies,
+
+            /// <summary>
+            /// Session identifiers are stored in the URL (cookieless).
+            /// </summary>
+            UseUri,
+
+            /// <summary>
+            /// The application automatically detects whether to use cookies or cookieless mode.
+            /// </summary>
+            AutoDetect,
+
+            /// <summary>
+            /// The application uses device profile settings to determine cookie usage.
+            /// </summary>
+            UseDeviceProfile
+        }
+
+
+        public enum ISessionStateMode
+        {
+            /// <summary>
+            /// Session state is disabled.
+            /// </summary>
+            Off,
+
+            /// <summary>
+            /// Session state is stored in-process.
+            /// </summary>
+            InProc,
+
+            /// <summary>
+            /// Session state is stored in a state server.
+            /// </summary>
+            StateServer,
+
+            /// <summary>
+            /// Session state is stored in a SQL Server database.
+            /// </summary>
+            SQLServer,
+
+            /// <summary>
+            /// Session state is stored using a custom provider.
+            /// </summary>
+            Custom
+        }
+
+
+        public interface IHttpApplicationState
+        {
+            /// <summary>
+            /// Gets or sets a value by key.
+            /// </summary>
+            object this[string key] { get; set; }
+            object Get(string key);
+            /// <summary>
+            /// Adds a new item to the application state.
+            /// </summary>
+            void Add(string key, object value);
+
+            /// <summary>
+            /// Removes an item from the application state.
+            /// </summary>
+            void Remove(string key);
+
+            /// <summary>
+            /// Clears all items from the application state.
+            /// </summary>
+            void Clear();
+
+            /// <summary>
+            /// Gets all keys in the application state.
+            /// </summary>
+            IEnumerable<string> Keys { get; }
+
+            /// <summary>
+            /// Gets the number of items in the application state.
+            /// </summary>
+            int Count { get; }
+
+            /// <summary>
+            /// Locks the application state for exclusive access.
+            /// </summary>
+            void Lock();
+
+            /// <summary>
+            /// Unlocks the application state.
+            /// </summary>
+            void UnLock();
+        }
+
+
+        public interface IHttpCookie
+        {
+            string Name { get; }
+            string Value { get; set; }
+            DateTime? Expires { get; set; }
+            string Path { get; set; }
+            string Domain { get; set; } // Add this
+            bool HttpOnly { get; set; }
+            bool Secure { get; set; }
+        }
+
+
+        public interface IHttpCookieCollection
+        {
+            int Count { get; }
+            string[] AllKeys { get; }
+            IHttpCookie this[int index] { get; }
+            IHttpCookie this[string name] { get; }
+            void Add(IHttpCookie cookie);
+            void Remove(string name);
+        }
+
+        public interface IHttpServerUtility
+        {
+            /// <summary>
+            /// Maps a virtual path to a physical path on the server.
+            /// </summary>
+            string MapPath(string virtualPath);
+
+            /// <summary>
+            /// Encodes a string for use in a URL.
+            /// </summary>
+            string UrlEncode(string value);
+
+            /// <summary>
+            /// Decodes a URL-encoded string.
+            /// </summary>
+            string UrlDecode(string value);
+
+            /// <summary>
+            /// Encodes a string for HTML output.
+            /// </summary>
+            string HtmlEncode(string value);
+
+            /// <summary>
+            /// Decodes an HTML-encoded string.
+            /// </summary>
+            string HtmlDecode(string value);
+
+            /// <summary>
+            /// Executes a script on the server.
+            /// </summary>
+            void Execute(string path);
+
+            /// <summary>
+            /// Transfers execution to another page.
+            /// </summary>
+            void Transfer(string path);
+
+            /// <summary>
+            /// Clears the error collection.
+            /// </summary>
+            void ClearError();
+
+            string MachineName { get; }
+
+            /// <summary>
+            /// Gets the last error that occurred on the server.
+            /// </summary>
+            Exception GetLastError();
+
+            int ScriptTimeout { get; set; }
+        }
+
+
+        public class HttpCookie : IHttpCookie
+        {
+            public string Name { get; }
+            public string Value { get; set; }
+            public string Path { get; set; }
+            public string Domain { get; set; }
+            public DateTime? Expires { get; set; }
+            public bool HttpOnly { get; set; }
+            public bool Secure { get; set; }
+            public string SameSite { get; set; }
+            public NameValueCollection Values { get; } = new NameValueCollection();
+
+            public HttpCookie(string name, string value = null)
+            {
+                Name = name ?? throw new ArgumentNullException(nameof(name));
+                Value = value;
+            }
+
+            public override string ToString()
+            {
+                return $"{Name}={Value}";
+            }
+        }
+
 
     }
 }

@@ -11,6 +11,7 @@ using System.Web.Configuration;
 using System.Xml;
 using static Protean.Providers.DiscountRule.DefaultProvider;
 using static Protean.stdTools;
+using static Protean.Env;
 
 namespace Protean.Providers
 {
@@ -33,12 +34,13 @@ namespace Protean.Providers
         public class ReturnProvider
         {
             private const string mcModuleName = "Protean.Providers.Authentication.GetProvider";
-
-            public IdiscountRuleProvider Get(int? ProviderType = null)
+            public IHttpContext moCtx;
+            public IdiscountRuleProvider Get(int? ProviderType = null, IHttpContext Ctx = null)
             {
                 string ExceptionMessage = "";
                 try
                 {
+                    moCtx = Ctx;
                     string className = ProviderType.HasValue
                         ? Enum.GetName(typeof(DiscountProviderType), ProviderType.Value)
                         : "DefaultProvider";
@@ -61,7 +63,7 @@ namespace Protean.Providers
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref ExceptionMessage, "", "Get", ex, "", "", gbDebug);
+                    stdTools.returnException(ref ExceptionMessage, moCtx, "", "Get", ex, "", "", gbDebug);
                     return null;
                 }
             }
@@ -82,7 +84,7 @@ namespace Protean.Providers
                 CheapestFree = 4,
                 BreakGroup = 5  
             }
-            System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
+            System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)moCtx.Config.GetWebApplicationSection("protean/cart");
 
             private NameValueCollection _Config;
             public DefaultProvider()
@@ -114,7 +116,7 @@ namespace Protean.Providers
                 {
                     try
                     {
-                        string decodedXml = HttpUtility.HtmlDecode(cAddXml.InnerXml.Trim());
+                        string decodedXml = moCtx.Server.HtmlDecode(cAddXml.InnerXml.Trim());
                         string wrappedXml = "<root>" + decodedXml + "</root>";
                         XmlDocument addDoc = new XmlDocument();
                         addDoc.LoadXml(wrappedXml);
@@ -316,7 +318,7 @@ namespace Protean.Providers
                     // Get actual XML content
                     string additionalXmlRaw = discountNode.SelectSingleNode("cAdditionalXML")?.InnerXml ?? "";
                     // Decode HTML entities (e.g., &lt; becomes <)
-                    string decodedXml = HttpUtility.HtmlDecode(additionalXmlRaw);
+                    string decodedXml = moCtx.Server.HtmlDecode(additionalXmlRaw);
                     // Wrap in root and load
                     XmlDocument docAdditionalXml = new XmlDocument();
                     docAdditionalXml.LoadXml("<additionalXml>" + decodedXml + "</additionalXml>");
@@ -483,7 +485,7 @@ namespace Protean.Providers
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref exceptionMessage, "", "Discount_ApplyToCart", ex, "", "", gbDebug);
+                    stdTools.returnException(ref exceptionMessage, moCtx, "", "Discount_ApplyToCart", ex, "", "", gbDebug);
                 }
             }
 

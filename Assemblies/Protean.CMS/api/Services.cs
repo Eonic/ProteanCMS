@@ -14,6 +14,7 @@ using Microsoft.VisualBasic.CompilerServices;
 using static Lucene.Net.Documents.Field;
 using static Protean.stdTools;
 using static QRCoder.PayloadGenerator;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -24,12 +25,12 @@ namespace Protean
     public class Services : WebService
     {
         #region Declarations
-        public HttpContext moCtx = HttpContext.Current;
-        public HttpApplicationState moApp;
-        public HttpRequest moRequest;
-        public HttpResponse moResponse;
-        public System.Web.SessionState.HttpSessionState moSession;
-        public HttpServerUtility moServer;
+        public IHttpContext moCtx;
+        public IHttpApplicationState moApp;
+        public IHttpRequest moRequest;
+        public IHttpResponse moResponse;
+        public IHttpSessionState moSession;
+        public IHttpServerUtility moServer;
         private Tools.FTPClient _oFTP;
 
         private Tools.FTPClient oFTP
@@ -121,7 +122,7 @@ namespace Protean
         {
             try
             {
-                System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/web");
                 string SoapIps = moConfig["SoapIps"];
 
                 if (Strings.LCase(moConfig["Debug"]) == "on")
@@ -147,7 +148,7 @@ namespace Protean
             }
         }
 
-        public string GetIpAddress(HttpRequest request)
+        public string GetIpAddress(IHttpRequest request)
         {
             try
             {
@@ -189,7 +190,7 @@ namespace Protean
             AddResponse(e.ToString());
 
             // Try to generate an Eonic Error
-            returnException(ref myWeb.msException, e.ModuleName, e.ProcedureName, e.Exception, vstrFurtherInfo: e.AddtionalInformation, bDebug: gbDebug, cSubjectLinePrefix: "Services: ");
+            returnException(ref myWeb.msException, myWeb.moCtx, e.ModuleName, e.ProcedureName, e.Exception, vstrFurtherInfo: e.AddtionalInformation, bDebug: gbDebug, cSubjectLinePrefix: "Services: ");
         }
 
 
@@ -487,7 +488,7 @@ namespace Protean
                     // Dim myThread As System.Threading.Thread
                     // myThread = New System.Threading.Thread(AddressOf Services.LuceneIndexAsync)
                     // myThread.Start(HttpContext.Current)
-                    string sResult = LuceneIndexAsync(HttpContext.Current);
+                    string sResult = LuceneIndexAsync(moCtx);
 
                     Tools.Xml.addElement(ref oResponseElmt, "Message", sResult);
                     bResult = true;
@@ -520,7 +521,7 @@ namespace Protean
             return oRXML;
         }
 
-        public static string LuceneIndexAsync(HttpContext oCtx)
+        public static string LuceneIndexAsync(IHttpContext oCtx)
         {
             var bResult = default(bool);
             string sResult = "";
@@ -619,7 +620,7 @@ namespace Protean
                 oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
             }
 
-            HttpContext.Current.ApplicationInstance.CompleteRequest();
+            myWeb.moCtx.CompleteRequest();
             return oRXML;
             // moResponse.Flush()
             // moResponse.OutputStream.Close()
@@ -630,7 +631,7 @@ namespace Protean
         [WebMethod()]
         public XmlDocument SubscriptionProcess()
         {
-            var myWeb = new Cms(HttpContext.Current);
+            var myWeb = new Cms(moCtx.Current);
             myWeb.gbCart = false;
             myWeb.Open();
             try
@@ -720,7 +721,7 @@ namespace Protean
             {
                 bResult = false;
                 AddResponse(ex.ToString());
-                returnException(ref myWeb.msException, mcModuleName, "UserAlerts", ex, bDebug: gbDebug);
+                returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "UserAlerts", ex, bDebug: gbDebug);
             }
             finally
             {
@@ -754,7 +755,7 @@ namespace Protean
             {
                 bResult = false;
                 AddResponse(ex.ToString());
-                returnException(ref myWeb.msException, mcModuleName, "Monitor", ex, bDebug: gbDebug);
+                returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Monitor", ex, bDebug: gbDebug);
             }
             finally
             {
@@ -786,7 +787,7 @@ namespace Protean
             {
                 bResult = false;
                 AddResponse(ex.ToString());
-                returnException(ref myWeb.msException, mcModuleName, "Monitor", ex, bDebug: gbDebug);
+                returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "Monitor", ex, bDebug: gbDebug);
             }
             finally
             {
@@ -800,7 +801,7 @@ namespace Protean
         public XmlDocument GetPendingContent()
         {
             var oDb = new Tools.Database();
-            System.Collections.Specialized.NameValueCollection oVConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/versioncontrol");
+            System.Collections.Specialized.NameValueCollection oVConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/versioncontrol");
             try
             {
                 myWeb = new Cms();
@@ -848,7 +849,7 @@ namespace Protean
             {
                 bResult = false;
                 AddResponse(ex.ToString());
-                returnException(ref myWeb.msException, mcModuleName, "GetPendingContent", ex, bDebug: gbDebug);
+                returnException(ref myWeb.msException, myWeb.moCtx, mcModuleName, "GetPendingContent", ex, bDebug: gbDebug);
             }
             finally
             {
@@ -959,13 +960,13 @@ namespace Protean
         public XmlDocument GetStatus()
         {
             var oDb = new Tools.Database();
-            System.Collections.Specialized.NameValueCollection oVConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/versioncontrol");
+            System.Collections.Specialized.NameValueCollection oVConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/versioncontrol");
             try
             {
                 myWeb = new Cms();
                 myWeb.Open();
                 CreateResponse();
-                System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/web");
                 string sSql;
                 var oElmt = oRXML.CreateElement("Debug");
                 oElmt.InnerText = moConfig["debug"];
@@ -1021,11 +1022,11 @@ namespace Protean
 
                 // Start LocalOrCommonBin
                 oElmt = oRXML.CreateElement("LocalOrCommonBin");
-                if (!string.IsNullOrEmpty(FileSystem.Dir(Server.MapPath("../default.ashx"))))
+                if (!string.IsNullOrEmpty(FileSystem.Dir(myWeb.moServer.MapPath("../default.ashx"))))
                 {
                     oElmt.InnerText = "Local";
                 }
-                else if (!string.IsNullOrEmpty(FileSystem.Dir(Server.MapPath("../ewcommon/default.ashx"))))
+                else if (!string.IsNullOrEmpty(FileSystem.Dir(myWeb.moServer.MapPath("../ewcommon/default.ashx"))))
                 {
                     oElmt.InnerText = "Common";
                 }
@@ -1059,7 +1060,7 @@ namespace Protean
                 // Start LatestDBVersion
                 oElmt = oRXML.CreateElement("LatestDBVersion");
                 XmlTextReader LatestDBVersion;
-                LatestDBVersion = new XmlTextReader(Server.MapPath("../ewcommon/sqlUpdate/DatabaseUpgrade.xml"));
+                LatestDBVersion = new XmlTextReader(myWeb.moServer.MapPath("../ewcommon/sqlUpdate/DatabaseUpgrade.xml"));
                 LatestDBVersion.WhitespaceHandling = WhitespaceHandling.None;
                 // Disable whitespace so that it doesn't have to read over whitespaces
                 LatestDBVersion.Read();
@@ -1221,7 +1222,7 @@ namespace Protean
                 oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
             }
 
-            HttpContext.Current.ApplicationInstance.CompleteRequest();
+            moCtx.Current.CompleteRequest();
 
         }
        

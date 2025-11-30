@@ -9,6 +9,7 @@ using System.Web;
 using System.Xml;
 using System.Xml.XPath;
 using static Protean.stdTools;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -151,7 +152,7 @@ namespace Protean
                     catch (Exception ex)
                     {                        
                         transformException = ex;
-                        stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug);
                         bError = true;
                         if (mbCompiled)
                         {
@@ -231,7 +232,7 @@ namespace Protean
                         {
                             transformException = ex;
                         }
-                        stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "XSLFile.Set", ex, msXslFile, value);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.Transform", "XSLFile.Set", ex, msXslFile, value);
                         bError = true;
                     }
                 }
@@ -305,7 +306,7 @@ namespace Protean
                 catch (Exception ex)
                 {
                     transformException = ex;
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug);
                     bError = true;
                 }
             }
@@ -366,7 +367,7 @@ namespace Protean
                 catch (Exception ex)
                 {
                     transformException = ex;
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.Transform", "New", ex, msXslFile, sProcessInfo, mbDebug);
                     bError = true;
                 }
             }
@@ -388,18 +389,18 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "Dispose", ex, msXslFile, sProcessInfo, mbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.Transform", "Dispose", ex, msXslFile, sProcessInfo, mbDebug);
 
                 }
             }
 
 
-            public delegate void ProcessDelegate(XmlDocument oXml, HttpResponse oResponse);
+            public delegate void ProcessDelegate(XmlDocument oXml, IHttpResponse oResponse);
             public delegate void ProcessDelegate2(XmlDocument oXml, ref TextWriter oWriter);
             public delegate void ProcessDelegate3(XmlReader xReader, ref XmlWriter xWriter);
             public delegate XmlDocument ProcessDelegateDocument(XmlDocument oXml);
 
-            public void ProcessTimed(XmlDocument oXml, ref HttpResponse oResponse)
+            public void ProcessTimed(XmlDocument oXml, ref IHttpResponse oResponse)
             {
 
                 string sProcessInfo = "";
@@ -422,7 +423,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo, mbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo, mbDebug);
                     oResponse.Write(myWeb.msException);
                     bError = true;
                 }
@@ -450,7 +451,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo);
                     oWriter.Write(myWeb.msException);
                     bError = true;
                 }
@@ -479,7 +480,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.TransformTimed", "Process", ex, msXslFile, sProcessInfo);
                     xWriter.WriteCData(myWeb.msException);
                     bError = true;
                 }
@@ -513,7 +514,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug);
                     oWriter.Write(myWeb.msException);
                     bError = true;
                     return null;
@@ -540,13 +541,13 @@ namespace Protean
                 catch (Exception ex)
                 {
                     transformException = ex;
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug);
                     // oResponse.Write(msException)
                     bError = true;
                 }
             }
 
-            public void Process(XmlDocument oXml, HttpResponse oResponse)
+            public void Process(XmlDocument oXml, IHttpResponse oResponse)
             {
                 if (!CanProcess)
                     return;
@@ -614,7 +615,7 @@ namespace Protean
                 catch (Exception ex)
                 {
                     transformException = ex;
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug);
                     oResponse.Write(myWeb.msException);
                     bError = true;
                 }
@@ -671,7 +672,7 @@ namespace Protean
                     transformException = ex;
                     if (myWeb != null)
                     {
-                        stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug);
+                        stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.Transform", "Process", ex, msXslFile, sProcessInfo, mbDebug);
                         oWriter.Write(myWeb.msException);
                     }
                     bError = true;
@@ -808,7 +809,7 @@ namespace Protean
                     }
                     bError = true;
                     currentError = ex;
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "ProcessDocument", ex, msXslFile, sProcessInfo, mbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.Transform", "ProcessDocument", ex, msXslFile, sProcessInfo, mbDebug);
                     oWriter.Write(myWeb.msException);
                     return null;
                 }
@@ -945,7 +946,7 @@ namespace Protean
                 {
                     goApp["compileLock-" + classname] = null;
                     bError = true;
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "CompileXSLTassembly", ex, msXslFile, sProcessInfo, mbDebug);
+                    stdTools.returnException(ref myWeb.msException, myWeb.moCtx, "Protean.XmlHelper.Transform", "CompileXSLTassembly", ex, msXslFile, sProcessInfo, mbDebug);
                     return null;
                 }
             }
@@ -959,7 +960,7 @@ namespace Protean
 
         private class ProxyDomain : MarshalByRefObject
         {
-            public HttpContext _LocalContext;
+            public IHttpContext _LocalContext;
 
             public void GetAssembly(string AssemblyPath, string className)
             {
@@ -982,7 +983,7 @@ namespace Protean
             {
                 try
                 {
-                    HttpContext.Current = _LocalContext;
+                    //HttpContext.Current = _LocalContext;
 
                     var oReader = new XmlTextReader(new StringReader(PageXml));
 

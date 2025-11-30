@@ -2,11 +2,12 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Web;
+using static Protean.Env;
 
 namespace Protean
 {
 
-    public class FLVStreamingHandler : IHttpHandler, System.Web.SessionState.IReadOnlySessionState
+    public class FLVStreamingHandler : IHttpHandler, ISessionState.IReadOnlySessionState
     {
 
         // FLV header
@@ -17,7 +18,7 @@ namespace Protean
             // nothing to be done here
         }
 
-        public void ProcessRequest(HttpContext context)
+        public void ProcessRequest(IHttpContext context)
         {
 
             try
@@ -28,7 +29,7 @@ namespace Protean
                 string filename = Path.GetFileName(context.Request.FilePath);
                 using (var fs = new FileStream(context.Server.MapPath(filename), FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    string qs = context.Request.Params["start"];
+                    string qs = context.Request["start"];
                     if (string.IsNullOrEmpty(qs))
                     {
                         pos = 0;

@@ -36,7 +36,7 @@ namespace Protean
                 public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Cart.JSONActions";
                 private const string cContactType = "Venue";
-                private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
+                private System.Collections.Specialized.NameValueCollection moLmsConfig;
                 private Cms myWeb;
                 private Cart myCart;
 
@@ -45,6 +45,7 @@ namespace Protean
                 {
                     // string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
+                    moLmsConfig =   (System.Collections.Specialized.NameValueCollection)myWeb.moConfigMng.GetWebApplicationSection("protean/lms");
                     myWeb.InitializeVariables();
                     myWeb.Open();
                     myCart = new Cart(ref myWeb);

@@ -1,7 +1,9 @@
-﻿using System;
-using System.Xml;
+﻿using DocumentFormat.OpenXml.Bibliography;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using System;
+using System.Xml;
+using static Protean.Env;
 using static Protean.Tools.Xml;
 
 namespace Protean
@@ -28,7 +30,7 @@ namespace Protean
             #region    Declarations
 
             private const string mcModuleName = "Eonic.Calendar";
-            private System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
+            private IHttpContext moCtx;//  = System.Web.HttpContext.Current;
             private Cms myWeb;
             private Cms.dbHelper moDB;
             private XmlDocument moPageXml;
@@ -48,6 +50,7 @@ namespace Protean
                 try
                 {
                     myWeb = aWeb;
+                    moCtx = myWeb.moCtx;
                     moDB = myWeb.moDbHelper;
                     moPageXml = myWeb.moPageXml;
                 }
