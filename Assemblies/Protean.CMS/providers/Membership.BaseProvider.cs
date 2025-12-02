@@ -79,7 +79,7 @@ namespace Protean.Providers
 
             void addNote(string sRef, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
             void addNote(ref XmlNode oNode, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
-            string RedirectToIntranet(string username, string keyUrl);
+            string GenerateAuthenticatedRedirect(string username, string keyUrl);
         }
 
         public interface IMembershipAdminProcess
@@ -492,7 +492,7 @@ namespace Protean.Providers
                                                    // If Intranet User logged in from outside the intranet then log them out again.
                                                     if (!string.IsNullOrEmpty(keyUrl))
                                                     {
-                                                        RedirectToIntranet(samlUserEmail, keyUrl);
+                                                        GenerateAuthenticatedRedirect(samlUserEmail, keyUrl);
                                                     }
                                                 }
                                                 else
@@ -556,7 +556,7 @@ namespace Protean.Providers
                                         string keyUrl = myWeb.moRequest["key"];
                                         if (!string.IsNullOrEmpty(keyUrl))
                                         {
-                                            RedirectToIntranet(username, keyUrl);
+                                            GenerateAuthenticatedRedirect(username, keyUrl);
                                         }
 
                                         // Set the remember me cookie
@@ -629,7 +629,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public string RedirectToIntranet(string username, string keyUrl)
+                public string GenerateAuthenticatedRedirect(string username, string keyUrl)
                 {
                     try
                     {
@@ -646,13 +646,17 @@ namespace Protean.Providers
 
                             //SET SESSION FOR INTRANET HERE
                             string token = Encryption.RC4.Encrypt(username.ToString(), myWeb.moConfig["SharedKey"]);
-                            redirectUrl = redirectUrl + "?Userkey=" + HttpUtility.UrlEncode(token);
+                            if (redirectUrl.Contains("?"))
+                                redirectUrl += "&Userkey=" + HttpUtility.UrlEncode(token);
+                            else
+                                redirectUrl += "?Userkey=" + HttpUtility.UrlEncode(token);
 
                             // Security: allow only whitelisted domains
                             if (redirectUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
                                 redirectUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                             {
-                                myWeb.moResponse.Redirect(redirectUrl, true);
+                                myWeb.moResponse.Redirect(redirectUrl, false);
+                                HttpContext.Current.ApplicationInstance.CompleteRequest();
                                 myWeb.moSession["IntraRedirectUrl"] = null;
                                 return null; // Important to stop further processing
                             }

@@ -3052,7 +3052,7 @@ namespace Protean
                                     string encryptedUrl = Encryption.RC4.Encrypt(redirectUrl, myWeb.moConfig["SharedKey"]);
                                     Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                                     IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
-                                    oMembershipProv.AdminXforms.RedirectToIntranet(AdminUserName, encryptedUrl);
+                                    oMembershipProv.AdminXforms.GenerateAuthenticatedRedirect(AdminUserName, encryptedUrl);
                                 }
                               
                                 break;
