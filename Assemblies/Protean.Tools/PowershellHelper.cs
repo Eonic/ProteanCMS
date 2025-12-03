@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Configuration;
 //using Microsoft.Identity.Client;
-using Microsoft.AspNetCore.Http;
 
 namespace Protean.Tools
 {

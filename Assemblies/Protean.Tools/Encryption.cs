@@ -6,7 +6,6 @@ using Org.BouncyCastle.Crypto.Parameters;
 using System;
 using System.Configuration;
 using System.IO;
-using System.Management;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;

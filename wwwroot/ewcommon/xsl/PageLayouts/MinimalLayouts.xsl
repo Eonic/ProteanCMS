@@ -2601,13 +2601,13 @@
 					</xsl:when>
 				</xsl:choose>
 			</xsl:variable>
-			<link rel="preload" href="{$src}" as="image" type="{$MimeType}" />
+			<link rel="preload" href="{$src}" fetchpriority="high" as="image" type="{$MimeType}" />
 			<xsl:if test="not($src!='')">
 				<xsl:copy-of select="."/>
 			</xsl:if>
 		</xsl:if>	
 		<xsl:for-each select="ms:node-set($image)/descendant-or-self::*[local-name() = 'picture']/*[local-name() = 'source' and @type='image/webp']">
-			<link rel="preload" href="{@srcset}" as="image" type="image/webp" />
+			<link rel="preload" href="{@srcset}" fetchpriority="high" as="image" type="image/webp" />
 		</xsl:for-each>
 	</xsl:template>
 
