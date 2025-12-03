@@ -12013,7 +12013,10 @@ namespace Protean
                     try
                     {
                         DataTable dt = myWeb.moDbHelper.GetAllHiddenProducts();
-                        dt.Columns.Add("ProductUrl", typeof(string));
+                        if (!dt.Columns.Contains("ProductUrl"))
+                        {
+                            dt.Columns.Add("ProductUrl", typeof(string));
+                        }
                         // Load rewriteMaps.config
                         HashSet<string> mapUrls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 

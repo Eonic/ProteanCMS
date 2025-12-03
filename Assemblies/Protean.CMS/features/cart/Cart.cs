@@ -547,17 +547,34 @@ namespace Protean
                 mcOrderType = "Order";
                 cOrderReference = "";
                 mcModuleName = "Protean.Cart";
-
+                PaymentProviders oPay;
+                if (moPay is null)
+                {
+                    oPay = new PaymentProviders(ref myWeb);
+                }
+                else
+                {
+                    oPay = moPay;
+                }
+                
                 Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
-
+               
                 XmlElement oProvider = oEwProv.GetValidPaymentProviders();
 
                 XmlNode oProviderNode = oProvider.SelectSingleNode("provider");
                 string sProviderName = oProviderNode.Attributes["name"].Value;
                 XmlNode oPaymentProviderCfg = oProvider.SelectSingleNode("provider[@name='" + sProviderName + "']");
 
-                mcAllowUpdateCart = oPaymentProviderCfg.SelectSingleNode("AllowCartUpdatesOnPaymentPage").Attributes["value"].Value;
 
+                if (oPaymentProviderCfg != null)
+                {
+                    XmlNode allowNode = oPaymentProviderCfg.SelectSingleNode("AllowCartUpdatesOnPaymentPage");
+
+                    if (allowNode != null && allowNode.Attributes["value"] != null)
+                    {
+                        mcAllowUpdateCart = allowNode.Attributes["value"].Value;
+                    }
+                }
                 string cProcessInfo = Conversions.ToString(string.IsNullOrEmpty("initialise variables"));
                 try
                 {
@@ -1330,14 +1347,14 @@ namespace Protean
 
             }
 
-            public void CompleteOrder(XmlDocument oCartXML,ref XmlElement oContentElmt,ref XmlElement oElmt)
-            { 
+            public void CompleteOrder(XmlDocument oCartXML, ref XmlElement oContentElmt, ref XmlElement oElmt)
+            {
                 string cProcessInfo = "Cart.CompleteOrder";
-                try 
+                try
                 {
-                
-                      oContentElmt = (XmlElement)CreateCartElement(oCartXML);
-                     oElmt = (XmlElement)oContentElmt.FirstChild;
+
+                    oContentElmt = (XmlElement)CreateCartElement(oCartXML);
+                    oElmt = (XmlElement)oContentElmt.FirstChild;
                     PersistVariables();
 
                     if (oElmt.FirstChild is null)
@@ -1427,15 +1444,15 @@ namespace Protean
                     {
                         EndSession();
                     }
-                   // return oContentElmt;
+                    // return oContentElmt;
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", cProcessInfo, gbDebug);
-                   // return null;
+                    // return null;
                 }
             }
-     
+
             public virtual void apply()
             {
                 myWeb.PerfMon.Log("Cart", "apply");
@@ -2130,102 +2147,102 @@ namespace Protean
                                 }
                                 else
                                 {
-                                   
+
                                     CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
-                                  
-                                //    PersistVariables();
 
-                                //    if (oElmt.FirstChild is null)
-                                //    {
-                                //        GetCart(ref oElmt);
-                                //    }
+                                    //    PersistVariables();
 
-                                //    if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
-                                //    {
+                                    //    if (oElmt.FirstChild is null)
+                                    //    {
+                                    //        GetCart(ref oElmt);
+                                    //    }
 
-                                //        if (moCartConfig["StockControl"] == "on")
-                                //        {
-                                //            UpdateStockLevels(ref oElmt);
-                                //        }
-                                //        UpdateGiftListLevels();
-                                //        addDateAndRef(ref oElmt);
-                                //        if (myWeb.mnUserId > 0)
-                                //        {
-                                //            var userXml = myWeb.moDbHelper.GetUserXML((long)myWeb.mnUserId, false);
-                                //            if (userXml != null)
-                                //            {
-                                //                XmlElement cartElement = (XmlElement)oContentElmt.SelectSingleNode("Cart");
-                                //                if (cartElement != null)
-                                //                {
-                                //                    cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, true));
-                                //                }
-                                //            }
-                                //        }
+                                    //    if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
+                                    //    {
 
-                                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["Settlement"], "true", false)))
-                                //        {
-                                //            // modifiy the cartXml in line with settlement
-                                //            if (mnProcessId == (int)cartProcess.DepositPaid)
-                                //            {
-                                //                mnProcessId = (short)cartProcess.Complete;
+                                    //        if (moCartConfig["StockControl"] == "on")
+                                    //        {
+                                    //            UpdateStockLevels(ref oElmt);
+                                    //        }
+                                    //        UpdateGiftListLevels();
+                                    //        addDateAndRef(ref oElmt);
+                                    //        if (myWeb.mnUserId > 0)
+                                    //        {
+                                    //            var userXml = myWeb.moDbHelper.GetUserXML((long)myWeb.mnUserId, false);
+                                    //            if (userXml != null)
+                                    //            {
+                                    //                XmlElement cartElement = (XmlElement)oContentElmt.SelectSingleNode("Cart");
+                                    //                if (cartElement != null)
+                                    //                {
+                                    //                    cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, true));
+                                    //                }
+                                    //            }
+                                    //        }
 
-                                //            }
-                                //            myWeb.moSession["Settlement"] = (object)null;
-                                //        }
+                                    //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["Settlement"], "true", false)))
+                                    //        {
+                                    //            // modifiy the cartXml in line with settlement
+                                    //            if (mnProcessId == (int)cartProcess.DepositPaid)
+                                    //            {
+                                    //                mnProcessId = (short)cartProcess.Complete;
 
-
-
-                                //        if (mnProcessId == (int)cartProcess.DepositPaid)
-                                //        {
-                                //            AddToLists("Deposit", ref oContentElmt);
-                                //        }
-                                //        else
-                                //        {
-                                //            AddToLists("Invoice", ref oContentElmt);
-                                //        }
-
-                                //        purchaseActions(ref oContentElmt);
-                                //        // update the cart if purchase actions have changed it
-                                //        // GetCart(oElmt)
-                                //        // done for ammerdown as we have removed a product.
+                                    //            }
+                                    //            myWeb.moSession["Settlement"] = (object)null;
+                                    //        }
 
 
 
-                                //        if (myWeb.mnUserId > 0)
-                                //        {
-                                //            if (moSubscription != null)
-                                //            {
-                                //                moSubscription.AddUserSubscriptions(mnCartId, myWeb.mnUserId, ref oContentElmt, mnPaymentId);
-                                //            }
-                                //        }
+                                    //        if (mnProcessId == (int)cartProcess.DepositPaid)
+                                    //        {
+                                    //            AddToLists("Deposit", ref oContentElmt);
+                                    //        }
+                                    //        else
+                                    //        {
+                                    //            AddToLists("Invoice", ref oContentElmt);
+                                    //        }
 
-                                //        if (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] != null)
-                                //        {
-                                //            if ((oElmt.GetAttribute("statusId") ?? "") != (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] ?? ""))
-                                //            {
-                                //                emailReceipts(ref oContentElmt);
-                                //            }
-                                //        }
-                                //        else
-                                //        {
-                                //            emailReceipts(ref oContentElmt);
-                                //        }
-
-
-                                //        moDiscount.DisablePromotionalDiscounts();
-
-                                //    }
+                                    //        purchaseActions(ref oContentElmt);
+                                    //        // update the cart if purchase actions have changed it
+                                    //        // GetCart(oElmt)
+                                    //        // done for ammerdown as we have removed a product.
 
 
 
-                                //    if (mbQuitOnShowInvoice)
-                                //    {
-                                //        EndSession();
-                                //    }
+                                    //        if (myWeb.mnUserId > 0)
+                                    //        {
+                                    //            if (moSubscription != null)
+                                    //            {
+                                    //                moSubscription.AddUserSubscriptions(mnCartId, myWeb.mnUserId, ref oContentElmt, mnPaymentId);
+                                    //            }
+                                    //        }
+
+                                    //        if (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] != null)
+                                    //        {
+                                    //            if ((oElmt.GetAttribute("statusId") ?? "") != (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] ?? ""))
+                                    //            {
+                                    //                emailReceipts(ref oContentElmt);
+                                    //            }
+                                    //        }
+                                    //        else
+                                    //        {
+                                    //            emailReceipts(ref oContentElmt);
+                                    //        }
+
+
+                                    //        moDiscount.DisablePromotionalDiscounts();
+
+                                    //    }
+
+
+
+                                    //    if (mbQuitOnShowInvoice)
+                                    //    {
+                                    //        EndSession();
+                                    //    }
                                 }
-               
 
-           
+
+
 
                                 break;
                             }
@@ -8153,7 +8170,7 @@ namespace Protean
 
                     if (nQuantity < itemLimit)
                     {
-                       
+
                         if (mnProcessId < 5 || string.Equals(mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             oDS = moDBHelper.getDataSetForUpdate(cSQL, "CartItems", "Cart");
@@ -8739,7 +8756,7 @@ namespace Protean
 
             public int RemoveItem(long nItemId = 0L, long nContentId = 0L)
             {
-               
+
                 if (mnProcessId > 4 && !string.Equals(mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                 {
                     return 1;
