@@ -434,11 +434,11 @@ namespace Protean.Providers
                             if (oAuthProviders != null && oAuthProviders.Any())
                             {
                                 string samlResponse = myWeb.moRequest["SAMLResponse"];
-                                string relayState = myWeb.moRequest["RelayState"];
-                                string relayStateRaw = myWeb.moRequest["RelayState"];
+                                string relayState = myWeb.moRequest["RelayState"];                                 
                                 string keyUrl = string.Empty;
-                                if (relayStateRaw != null && relayStateRaw.Contains("|"))
+                                if (myWeb.moRequest["RelayState"] != null && myWeb.moRequest["RelayState"].Contains("|"))
                                 {
+                                    string relayStateRaw = myWeb.moRequest["RelayState"];
                                     var parts = relayStateRaw.Split('|');
                                     relayState = parts[0];
                                     keyUrl = parts[1];
@@ -552,11 +552,10 @@ namespace Protean.Providers
                                                 goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
                                             }
                                         }
-                                        // If Intranet User logged in from outside the intranet then log them out again.
-                                        string keyUrl = myWeb.moRequest["key"];
-                                        if (!string.IsNullOrEmpty(keyUrl))
+                                        // If Intranet User logged in from outside the intranet then log them out again.                                       
+                                        if (!string.IsNullOrEmpty(myWeb.moRequest["userkey"]))
                                         {
-                                            GenerateAuthenticatedRedirect(username, keyUrl);
+                                            GenerateAuthenticatedRedirect(username, myWeb.moRequest["userkey"]);
                                         }
 
                                         // Set the remember me cookie
@@ -634,10 +633,14 @@ namespace Protean.Providers
                     try
                     {
                         // 1. get encrypted value
-                        string encryptedUrl = myWeb.moRequest["key"];
-                        if (string.IsNullOrEmpty(encryptedUrl))
+                        string encryptedUrl = string.Empty;
+                        if (string.IsNullOrEmpty(myWeb.moRequest["userkey"]))
                         {
                             encryptedUrl = keyUrl;
+                        }
+                        else
+                        {
+                            encryptedUrl = myWeb.moRequest["userkey"];
                         }
                         if (!string.IsNullOrEmpty(encryptedUrl))
                         {
@@ -647,9 +650,9 @@ namespace Protean.Providers
                             //SET SESSION FOR INTRANET HERE
                             string token = Encryption.RC4.Encrypt(username.ToString(), myWeb.moConfig["SharedKey"]);
                             if (redirectUrl.Contains("?"))
-                                redirectUrl += "&Userkey=" + HttpUtility.UrlEncode(token);
+                                redirectUrl += "&userkey=" + HttpUtility.UrlEncode(token);
                             else
-                                redirectUrl += "?Userkey=" + HttpUtility.UrlEncode(token);
+                                redirectUrl += "?userkey=" + HttpUtility.UrlEncode(token);
 
                             // Security: allow only whitelisted domains
                             if (redirectUrl.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
@@ -657,7 +660,7 @@ namespace Protean.Providers
                             {
                                 myWeb.moResponse.Redirect(redirectUrl, false);
                                 HttpContext.Current.ApplicationInstance.CompleteRequest();
-                                myWeb.moSession["IntraRedirectUrl"] = null;
+                                myWeb.moSession["AuthRedirectURL"] = null;
                                 return null; // Important to stop further processing
                             }
                         }

@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew">
-  <xsl:variable name="Environment">
-    <xsl:call-template name="getXmlSettings">
-      <xsl:with-param name="sectionName" select="'web'"/>
-      <xsl:with-param name="valueName" select="'Environment'"/>
-    </xsl:call-template>
-  </xsl:variable>
    <xsl:template name="eonicwebProductName">
     <xsl:choose>
       <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
@@ -586,29 +580,11 @@
         </ul>
 			<ul class="nav navbar-nav navbar-right">
 				<xsl:if test="/Page/User/Role[@name='ITB Customer Services']">
-					 <xsl:choose>
-                          <xsl:when test="$Environment='staging'">
-                            <a href="{$appPath}?ewCmd=IsIntranetUser" class="btn btn-default btn-lg">
-                              ITB Intranet<xsl:text> </xsl:text><i class="fa fa-arrow-alt-circle-up fa-white">
-                                <xsl:text> </xsl:text>
-                              </i>
-                            </a>
-                          </xsl:when>
-                          <xsl:when test="$Environment='live'">
-                            <a href="{$appPath}?ewCmd=IsIntranetUser" class="btn btn-default btn-lg">
-                              ITB Intranet<xsl:text> </xsl:text><i class="fa fa-arrow-alt-circle-up fa-white">
-                                <xsl:text> </xsl:text>
-                              </i>
-                            </a>
-                          </xsl:when>
-                          <xsl:otherwise>
-                            <a href="{$appPath}?ewCmd=IsIntranetUser" class="btn btn-default btn-lg">
-                              ITB Intranet<xsl:text> </xsl:text><i class="fa fa-arrow-alt-circle-up fa-white">
-                                <xsl:text> </xsl:text>
-                              </i>
-                            </a>
-                          </xsl:otherwise>
-                      </xsl:choose>				
+					<a href="{$appPath}?ewCmd=AuthRedirectURL" class="btn btn-default btn-lg">
+						ITB Intranet<xsl:text> </xsl:text><i class="fa fa-arrow-alt-circle-up fa-white">
+							<xsl:text> </xsl:text>
+						</i>
+					</a>		
 				</xsl:if>
 			</ul>
         </div>
