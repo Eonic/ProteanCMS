@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                 },
 
-                // ✅ Total count of ALL reviews
+                // Total count of ALL reviews
                 totalReviewCount: function () {
                     if (
                         !this.GoogleReviewResponse ||
@@ -54,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 },
 
-                // ✅ Average rating of ALL reviews
+                //  Average rating of ALL reviews
                 overallAverageRating: function () {
                     if (
                         !this.GoogleReviewResponse ||
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         .then(function (response) {
                             self.GoogleReviewResponse = response.data;
 
-                            // ⭐ INIT SWIPER ONLY AFTER DATA IS AVAILABLE
+                          
                             self.$nextTick(() => {
                                 new Swiper(".myReviewSwiper", {
                                     slidesPerView: 3,

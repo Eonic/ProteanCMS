@@ -6,8 +6,7 @@ BEGIN
     SELECT  
         c.nContentKey,
         c.cContentSchemaName,
-        c.cContentName,
-        '/experience/' + REPLACE(c.cContentName, ' ', '-') AS ProductUrl
+        c.cContentName
     FROM tblContent c
     JOIN tblAudit a ON a.nAuditKey = c.nAuditId
     WHERE c.cContentSchemaName = 'Product'

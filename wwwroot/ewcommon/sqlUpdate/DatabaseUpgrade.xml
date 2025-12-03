@@ -694,6 +694,12 @@
 				  <Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.1.54.0/spGetValidShippingOptions.sql"/>
 			  </Sub3>
 		  </Sub2>
+      <Sub2 Number="55">
+        <Sub3 Number="0">
+          <Action Order="3" Type="Drop" ObjectType="Procedure" ObjectName="spGetHiddenProductUrls"/>
+          <Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.1.54.0/spGetHiddenProductUrls.sql"/>
+        </Sub3>
+      </Sub2>
 	  </Sub1>
   </Version>
 </DatabaseUpgrade>

@@ -32,6 +32,10 @@ namespace Protean
 
             public System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
             public System.Collections.Specialized.NameValueCollection moConfig;
+
+            //XmlElement moPaymentCfg = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/payment");
+
+
             private System.Web.HttpServerUtility moServer;
 
             public XmlDocument moPageXml;
@@ -184,6 +188,7 @@ namespace Protean
             public bool mbQuitOnShowInvoice = true;
             private bool mbDepositOnly = false;
             public bool mbBlockCartCmd = false; // Used for reseting payment on subscripitions
+            public string mcAllowUpdateCart;
 
 
             public enum cartError
@@ -541,6 +546,16 @@ namespace Protean
                 mcOrderType = "Order";
                 cOrderReference = "";
                 mcModuleName = "Protean.Cart";
+
+                Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
+
+                XmlElement oProvider = oEwProv.GetValidPaymentProviders();
+
+                XmlNode oProviderNode = oProvider.SelectSingleNode("provider");
+                string sProviderName = oProviderNode.Attributes["name"].Value;
+                XmlNode oPaymentProviderCfg = oProvider.SelectSingleNode("provider[@name='" + sProviderName + "']");
+
+                mcAllowUpdateCart = oPaymentProviderCfg.SelectSingleNode("AllowCartUpdatesOnPaymentPage").Attributes["value"].Value;
 
                 string cProcessInfo = Conversions.ToString(string.IsNullOrEmpty("initialise variables"));
                 try
@@ -3234,16 +3249,15 @@ namespace Protean
                         oCartElmt.SetAttribute("weight", weight.ToString());
                         oCartElmt.SetAttribute("orderType", mmcOrderType + "");
 
-                        string allowUpdate = moConfig["AllowCartUpdatesOnPaymentPage"];
 
-                        if (!string.IsNullOrEmpty(allowUpdate)
-                            && allowUpdate.Trim().ToLower() == "on")
+                        if (!string.IsNullOrEmpty(mcAllowUpdateCart)
+                            && mcAllowUpdateCart.Trim().ToLower() == "on")
                         {
-                            oCartElmt.SetAttribute("AllowCartUpdateConfig", "on");
+                            oCartElmt.SetAttribute("AllowCartUpdate", "on");
                         }
                         else
                         {
-                            oCartElmt.SetAttribute("AllowCartUpdateConfig", "off");
+                            oCartElmt.SetAttribute("AllowCartUpdate", "off");
                         }
                         if (nStatusId == 6L)
                         {
@@ -8030,10 +8044,8 @@ namespace Protean
 
                     if (nQuantity < itemLimit)
                     {
-                        var cAllowCartUpdateConfig = moConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
-
-
-                        if (mnProcessId < 5 || string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                       
+                        if (mnProcessId < 5 || string.Equals(mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             oDS = moDBHelper.getDataSetForUpdate(cSQL, "CartItems", "Cart");
                             oDS.EnforceConstraints = false;
@@ -8618,9 +8630,8 @@ namespace Protean
 
             public int RemoveItem(long nItemId = 0L, long nContentId = 0L)
             {
-                var cAllowCartUpdateConfig = moConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
-
-                if (mnProcessId > 4 && !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+               
+                if (mnProcessId > 4 && !string.Equals(mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                 {
                     return 1;
                 }

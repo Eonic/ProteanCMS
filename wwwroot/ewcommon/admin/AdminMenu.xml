@@ -182,7 +182,7 @@
 		<MenuItem name="Filter Indexes" cmd="FilterIndex" display="true" feature="FilterIndex" icon="fa-sign-in"/>
 		<MenuItem name="Reset WebConfig" cmd="ResetWebConfig" display="true" feature="ResetWebConfig" icon="fa-sign-in"/>
 		<MenuItem name="Page Titles and Descriptions" cmd="SEOReport" display="true" feature="SEOReport" icon="fa-sign-in"/>
-      <MenuItem name="Hidden Product without Redirection" cmd="404ProductReport" display="true" feature="404ProductReport" icon="fa-sign-in"/>
+      <MenuItem name="404 Product Report" cmd="404ProductReport" display="true" feature="404ProductReport" icon="fa-sign-in"/>
       </MenuItem>
   </MenuItem>
 </AdminMenu>

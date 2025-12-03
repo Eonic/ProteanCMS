@@ -142,7 +142,7 @@ namespace Protean
                             }
                             myCart.mnProcessId = (short)1;
                         }
-                        var cAllowCartUpdateConfig = moWebConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
+                        var cAllowCartUpdateConfig = myCart.mcAllowUpdateCart;
 
                         if ((int)myCart.mnProcessId > 4 &&
                             !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
@@ -219,10 +219,9 @@ namespace Protean
                 {
                     try
                     {
-                        var cAllowCartUpdateConfig = moWebConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
-
+                       
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -461,10 +460,9 @@ namespace Protean
 
                 public string UpdateDeliveryOptionByCountry(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    var cAllowCartUpdateConfig = moWebConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
-
+                    
                     if ((int)myCart.mnProcessId > 4 &&
-                        !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                        !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                     {
                         return "";
                     }
@@ -647,10 +645,9 @@ namespace Protean
                     try
                     {
 
-                        var cAllowCartUpdateConfig = moWebConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
-
+                       
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -695,10 +692,9 @@ namespace Protean
                     string jsonString = string.Empty;
                     try
                     {
-                        var cAllowCartUpdateConfig = moWebConfig["AllowCartUpdatesOnPaymentPage"]?.ToString();
-
+                            
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }

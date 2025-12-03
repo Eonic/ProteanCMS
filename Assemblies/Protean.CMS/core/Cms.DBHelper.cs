@@ -12,7 +12,6 @@ using AngleSharp.Dom;
 using AngleSharp.Io;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Authentication;

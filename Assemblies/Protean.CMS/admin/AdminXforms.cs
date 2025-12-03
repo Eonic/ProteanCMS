@@ -2924,7 +2924,7 @@ namespace Protean
                     try
                     {
                         string cssFramework = string.Empty;
-                        if(goConfig["cssFramework"] != null)
+                        if (goConfig["cssFramework"] != null)
                         {
                             cssFramework = goConfig["cssFramework"];
                         }
@@ -3208,14 +3208,14 @@ namespace Protean
                                     // If formPath.contains("/") Then
                                     // formPath = formPath.Split("/")(1)
                                     // End If
-                                    if(!string.IsNullOrEmpty(formPath))
+                                    if (!string.IsNullOrEmpty(formPath))
                                     {
                                         // do nothing, just checked here if formPath attribute is present and not blank
                                     }
                                     else
                                     {
                                         oContentType.SetAttribute("formPath", Conversions.ToString(Operators.ConcatenateObject(filepath.Replace("/ptn", "") + "/", formPath)));
-                                    }                                        
+                                    }
                                 }
                                 foreach (XmlElement currentOModuleType in ManifestDoc.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module"))
                                 {
@@ -4662,7 +4662,8 @@ namespace Protean
                                     {
                                         SpecElmt.InnerText = existingSpec.InnerText;
                                     }
-                                    else {
+                                    else
+                                    {
                                         SpecElmt.SetAttribute("noDel", "true");
                                     }
                                     SpecsElmt.AppendChild(SpecElmt);
@@ -4684,13 +4685,14 @@ namespace Protean
                     {
                         foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs"))
                         {
-                            if (InstanceSpecs.InnerXml == "") {
+                            if (InstanceSpecs.InnerXml == "")
+                            {
                                 InstanceSpecs.ParentNode.RemoveChild(InstanceSpecs);
-                            }                            
+                            }
                         }
                     }
                 }
-                
+
 
                 public XmlElement xFrmDeleteContent(long artid)
                 {
@@ -6045,7 +6047,7 @@ namespace Protean
                             }
                             if (oGrpRoot is null)
                                 oGrpRoot = moXformElmt;
-                            
+
                             var oGrp = base.addGroup(ref oGrpRoot, "adminRights", "adminRights", "Admin Rights");
 
                             XmlElement oGrp2;
@@ -10284,7 +10286,7 @@ namespace Protean
                                 if (RenewResponse == "Success")
                                 {
                                     base.valid = true;
-                                return base.moXformElmt;
+                                    return base.moXformElmt;
                                 }
                                 else
                                 {
@@ -11600,8 +11602,8 @@ namespace Protean
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Import Comma Separated Codes", "", "Please copy and paste the codes below separated by commas");
                         Int16 rows = 20;
                         Int16 cols = 80;
-                        string ClassName ="";
-                        base.addTextArea(ref oFrmElmt, "ImportCodes", true, "Import Codes", ClassName,  rows,  cols);
+                        string ClassName = "";
+                        base.addTextArea(ref oFrmElmt, "ImportCodes", true, "Import Codes", ClassName, rows, cols);
 
                         XmlElement argoBindParent1 = null;
                         base.addBind("ImportCodes", "ImportCodes", oBindParent: ref argoBindParent1, "true()");
@@ -11616,7 +11618,7 @@ namespace Protean
                         // Update the label
                         if (Xml.NodeState(ref base.moXformElmt, "group/label", "", "", XmlNodeState.IsEmpty, oElmt, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
                         {
-                        //    oElmt.InnerText += " for " + oParentInstance.SelectSingleNode("tblCodes/cCodeName").InnerText;
+                            //    oElmt.InnerText += " for " + oParentInstance.SelectSingleNode("tblCodes/cCodeName").InnerText;
                         }
 
 
@@ -11630,7 +11632,7 @@ namespace Protean
                                 // Generate the Codes
                                 oInstanceRoot = (XmlElement)base.Instance.SelectSingleNode("ImportCodes");
 
-                             
+
 
                                 string[] oCodes = oInstanceRoot.InnerText.Split(',');
                                 int nNoCodes = oCodes.Count();
@@ -11991,7 +11993,7 @@ namespace Protean
 
                 public XmlElement GetAllMenuMetaDetails()
                 {
-                    string cProcessInfo = "";                    
+                    string cProcessInfo = "";
                     try
                     {
                         // get menu
@@ -12011,7 +12013,7 @@ namespace Protean
                     try
                     {
                         DataTable dt = myWeb.moDbHelper.GetAllHiddenProducts();
-
+                        dt.Columns.Add("ProductUrl", typeof(string));
                         // Load rewriteMaps.config
                         HashSet<string> mapUrls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
@@ -12036,14 +12038,24 @@ namespace Protean
 
                         // Filter rows
                         List<DataRow> result = new List<DataRow>();
-
+                        string[] prefixs = goConfig["DetailPrefix"].Split(',');
+                        string thisPrefix = "";
+                        var loopTo = prefixs.Length - 1;
+                        thisPrefix = prefixs[0].Substring(0, prefixs[0].IndexOf("/"));
                         foreach (DataRow row in dt.Rows)
                         {
-                            string productUrl = (row["ProductUrl"]?.ToString() ?? "").Trim().ToLower();
-                            if (string.IsNullOrWhiteSpace(productUrl))
+
+                            string sContentName = (row["cContentName"]?.ToString() ?? "").Trim().ToLower();
+                            string sProductUrl = "";
+
+                            sProductUrl = "/" + thisPrefix + "/" + sContentName.Replace(" ", "-");
+
+                            row["ProductUrl"] = sProductUrl;
+
+                            if (string.IsNullOrWhiteSpace(sProductUrl))
                                 continue;
 
-                            string normalized = productUrl.Trim('/');
+                            string normalized = sProductUrl.Trim('/');
 
                             if (!mapUrls.Contains(normalized))
                                 result.Add(row);
@@ -12077,14 +12089,12 @@ namespace Protean
                         totalNode.SetAttribute("value", total.ToString());
                         paramsNode.AppendChild(totalNode);
 
-                        // Insert only paginated rows
                         for (int i = startIndex; i < endIndex; i++)
                         {
                             DataRow row = result[i];
 
                             XmlElement item = xmlDoc.CreateElement("Product");
 
-                            // IMPORTANT: use row.Table.Columns instead of dt.Columns
                             foreach (DataColumn col in row.Table.Columns)
                             {
                                 XmlElement node = xmlDoc.CreateElement(col.ColumnName);
@@ -14706,7 +14716,7 @@ namespace Protean
                 // Return Nothing
                 // End Try
                 // End Function 
-                
+
             }
 
 
