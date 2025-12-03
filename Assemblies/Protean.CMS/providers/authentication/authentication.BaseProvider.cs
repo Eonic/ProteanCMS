@@ -209,10 +209,10 @@ namespace Protean.Providers
                 //Note: For Google or Microsoft, ACS URL is the URL where SAML response is posted- here we are using the same URL as the original request URL
                 // like :https://local.intotheblue.co.uk/?ewCmd=admin
                 string keyUrl = string.Empty;
-                if (_myWeb.mcOriginalURL.Contains("key"))
+                if (!string.IsNullOrEmpty(_myWeb.moRequest.QueryString["userkey"]))
                 {
-                    keyUrl = "|" + _myWeb.moRequest.QueryString["key"];
-                    _myWeb.mcOriginalURL = Regex.Replace(_myWeb.mcOriginalURL, @"(&|\?)key=[^&]*", "");
+                    keyUrl = "|" + _myWeb.moRequest.QueryString["userkey"];
+                    _myWeb.mcOriginalURL = Regex.Replace(_myWeb.mcOriginalURL, @"(&|\?)userkey=[^&]*", "");
                 }
                 return GetSamlLoginUrl(config["ssoUrl"].ToString(), appId, gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName, keyUrl);
             }
