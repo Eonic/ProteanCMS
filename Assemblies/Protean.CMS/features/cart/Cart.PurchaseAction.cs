@@ -5,8 +5,6 @@ using Microsoft.VisualBasic.CompilerServices;
 
 namespace Protean
 {
-
-
     public partial class Cms
     {
 
@@ -42,29 +40,27 @@ namespace Protean
                     try
                     {
                         XmlElement cartItem = (XmlElement)oCartItemProductDetailXml.ParentNode;
-
-                        short CodeSetId = (short)Conversions.ToInteger("0" + oCartItemProductDetailXml.GetAttribute("codeBank"));
-                        short Quantity = (short)Conversions.ToInteger(cartItem.GetAttribute("quantity"));
-                        short thisQty;
                         short CartItemId = (short)Conversions.ToInteger(cartItem.GetAttribute("id"));
-                        if (CodeSetId > 0)
+
+                        if (oCartItemProductDetailXml.SelectSingleNode("IssueCodes") != null)
                         {
-                            for (thisQty = Quantity; thisQty >= 1; thisQty += -1)
+                            foreach (XmlNode codeNode in oCartItemProductDetailXml.SelectNodes("IssueCodes/code"))
                             {
-                                // fix to set xIssueDate - earlier it was put to xUseDate
-                                string Code = myWeb.moDbHelper.IssueCode((int)CodeSetId, (int)CartItemId, false, (XmlElement)null);
-                                var TicketElement = oCartItemProductDetailXml.OwnerDocument.CreateElement("Ticket");
-                                TicketElement.SetAttribute("code", Code);
-                                oCartItemProductDetailXml.AppendChild(TicketElement);
+                                XmlElement codeElmt = (XmlElement)codeNode;
+
+                                short CodeSetId = (short)Conversions.ToInteger("0" + codeElmt.GetAttribute("codeBank"));
+                                short Quantity = (short)(Conversions.ToInteger(cartItem.GetAttribute("quantity")) + Conversions.ToInteger(codeElmt.GetAttribute("noOfCodes")));
+                                string SetName = cartItem.GetAttribute("name");
+                                AddCode(ref oCartItemProductDetailXml, CartItemId, CodeSetId, Quantity, SetName);
                             }
                         }
-                        string copyNode = oCartItemProductDetailXml.OuterXml;
+                        else
+                        {
 
-                        copyNode = copyNode.Replace("<productDetail", "<Content");
-                        copyNode = copyNode.Replace("</productDetail>", "</Content>");
-
-                        myWeb.moDbHelper.updateInstanceField(Cms.dbHelper.objectTypes.CartItem, (int)CartItemId, "xItemXml", copyNode.Replace("&lt;", "<").Replace("&gt;", ">"));
-
+                            short CodeSetId = (short)Conversions.ToInteger("0" + oCartItemProductDetailXml.GetAttribute("codeBank"));
+                            short Quantity = (short)Conversions.ToInteger(cartItem.GetAttribute("quantity"));
+                            AddCode(ref oCartItemProductDetailXml, CartItemId, CodeSetId, Quantity, "");
+                        }
                         myWeb.moCart.SaveCartXML((XmlElement)cartItem.ParentNode);
                     }
 
@@ -78,10 +74,42 @@ namespace Protean
                 }
 
 
+
+                private void AddCode(ref XmlElement ProductXml, int CartItemId, long CodeSetId, short Quantity, string codeName)
+                {
+                    try
+                    {
+                        short thisQty;
+                        if (CodeSetId > 0)
+                        {
+                            for (thisQty = Quantity; thisQty >= 1; thisQty += -1)
+                            {
+                                // fix to set xIssueDate - earlier it was put to xUseDate
+                                string Code = myWeb.moDbHelper.IssueCode((int)CodeSetId, (int)CartItemId, false, (XmlElement)null);
+                                var TicketElement = ProductXml.OwnerDocument.CreateElement("Ticket");
+                                TicketElement.SetAttribute("code", Code);
+                                TicketElement.SetAttribute("code", codeName);
+                                ProductXml.AppendChild(TicketElement);
+                            }
+                        }
+                        string copyNode = ProductXml.OuterXml;
+
+                        copyNode = copyNode.Replace("<productDetail", "<Content");
+                        copyNode = copyNode.Replace("</productDetail>", "</Content>");
+
+                        myWeb.moDbHelper.updateInstanceField(Cms.dbHelper.objectTypes.CartItem, (int)CartItemId, "xItemXml", copyNode.Replace("&lt;", "<").Replace("&gt;", ">"));
+                    }
+
+                    catch (Exception ex)
+                    {
+                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddCode", ex, ""));
+                        // return Conversions.ToBoolean(ex.Message);
+                    }
+
+                }
+                #endregion
             }
 
-            #endregion
         }
-
     }
 }

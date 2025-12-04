@@ -1717,12 +1717,18 @@ namespace Protean
                                         ods = GetDataSet(sSql, "Pages");
                                         if (bCheckPermissions)
                                         {
-                                            // Check the permissions for the page - this will either return 0, the page id or a system page.
-                                            long checkPermissionPageId = checkPagePermission(Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]));
-                                            if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
-
+                                            if (ods.Tables["Pages"].Rows.Count > 0)
                                             {
-                                                nPageId = checkPermissionPageId;
+                                                // Check the permissions for the page - this will either return 0, the page id or a system page.
+                                                long checkPermissionPageId = checkPagePermission(Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]));
+                                                if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
+
+                                                {
+                                                    nPageId = checkPermissionPageId;
+                                                }
+                                            }
+                                            else { 
+                                            
                                             }
                                         }
                                         else
