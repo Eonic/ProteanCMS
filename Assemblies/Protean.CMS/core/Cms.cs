@@ -273,7 +273,7 @@ namespace Protean
 
         #region Constructors
 
-        public Cms() : this(System.Web.HttpContext.Current)
+        public Cms() :  this(System.Web.HttpContext.Current)
         {
 
         }
