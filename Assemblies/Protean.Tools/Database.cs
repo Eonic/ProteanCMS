@@ -546,10 +546,10 @@ namespace Protean.Tools
                     try
                     {
                         byte[] bFile = System.IO.File.ReadAllBytes(filepath);
-                        System.IO.Stream miStream = miRequest.GetRequestStream();
-                        miStream.Write(bFile, 0, bFile.Length);
-                        miStream.Close();
-                        miStream.Dispose();
+                        using (System.IO.Stream miStream = miRequest.GetRequestStream())
+                        {
+                            miStream.Write(bFile, 0, bFile.Length);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -666,14 +666,13 @@ namespace Protean.Tools
             string cProcessInfo = "Running: " + sql;
             try
             {
-                SqlCommand oCmd = new SqlCommand(sql, oConn);
-
-                if (oConn.State == System.Data.ConnectionState.Closed)
-                    oConn.Open();
-                cProcessInfo = "Running Sql: " + sql;
-                nUpdateCount = oCmd.ExecuteNonQuery();
-
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
+                using (SqlCommand oCmd = new SqlCommand(sql, oConn))
+                {
+                    if (oConn.State == System.Data.ConnectionState.Closed)
+                        oConn.Open();
+                    cProcessInfo = "Running Sql: " + sql;
+                    nUpdateCount = oCmd.ExecuteNonQuery();
+                }
             }
             catch (Exception ex)
             {
@@ -693,33 +692,32 @@ namespace Protean.Tools
             string cProcessInfo = "Running Sql: " + sql;
             try
             {
-                SqlCommand oCmd = new SqlCommand(sql, oConn);
-
-                // Set the command type
-                oCmd.CommandType = commandtype;
-
-
-                // Set the command timeout
-                if (nConnectTimeout == 15)
+                using (SqlCommand oCmd = new SqlCommand(sql, oConn))
                 {
-                    // oCmd.CommandTimeout = nConnectTimeout;
-                    oCmd.CommandTimeout = 1800;
+                    // Set the command type
+                    oCmd.CommandType = commandtype;
+
+                    // Set the command timeout
+                    if (nConnectTimeout == 15)
+                    {
+                        // oCmd.CommandTimeout = nConnectTimeout;
+                        oCmd.CommandTimeout = 1800;
+                    }
+
+                    // Set the Paremeters if any
+                    if (!(parameters == null))
+                    {
+                        foreach (DictionaryEntry oEntry in parameters)
+                            oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                    }
+
+                    // Open the connection
+                    if (oConn.State == ConnectionState.Closed)
+                        oConn.Open();
+
+                    oCmd.ExecuteNonQuery();
+                    oConn.Close();
                 }
-
-                // Set the Paremeters if any
-                if (!(parameters == null))
-                {
-                    foreach (DictionaryEntry oEntry in parameters)
-                        oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
-                }
-
-                // Open the connection
-                if (oConn.State == ConnectionState.Closed)
-                    oConn.Open();
-
-                oCmd.ExecuteNonQuery();
-                oConn.Close();
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
             }
             catch (Exception ex)
             {
@@ -752,13 +750,13 @@ namespace Protean.Tools
                 oFr = System.IO.File.OpenText(filepath);
                 vstrSql = oFr.ReadToEnd();
                 oFr.Close();
-                SqlCommand oCmd = new SqlCommand(vstrSql, oConn);
-                if (oConn.State == ConnectionState.Closed)
-                    oConn.Open();
-                cProcessInfo = "Running Sql ('" + filepath + "'): "; // & vstrSql
-                nUpdateCount = oCmd.ExecuteNonQuery();
-
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
+                using (SqlCommand oCmd = new SqlCommand(vstrSql, oConn))
+                {
+                    if (oConn.State == ConnectionState.Closed)
+                        oConn.Open();
+                    cProcessInfo = "Running Sql ('" + filepath + "'): "; // & vstrSql
+                    nUpdateCount = oCmd.ExecuteNonQuery();
+                }
             }
             catch (Exception ex)
             {
@@ -780,16 +778,15 @@ namespace Protean.Tools
             string cProcessInfo = "Running: " + sql;
             try
             {
-                SqlCommand oCmd = new SqlCommand(sql, oConn);
-                if (oConn.State == ConnectionState.Closed)
-                    oConn.Open();
+                using (SqlCommand oCmd = new SqlCommand(sql, oConn))
+                {
+                    if (oConn.State == ConnectionState.Closed)
+                        oConn.Open();
 
-                cProcessInfo = "Running Sql: " + sql;
-                nUpdateCount = oCmd.ExecuteNonQuery();
-
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
+                    cProcessInfo = "Running Sql: " + sql;
+                    nUpdateCount = oCmd.ExecuteNonQuery();
+                }
             }
-
             catch
             {
                 // Dont Handle errors!
@@ -808,17 +805,18 @@ namespace Protean.Tools
             string cProcessInfo = "Running: " + sql;
             try
             {
-                SqlCommand oCmd = new SqlCommand(sql, oConn);
-                if (oConn.State == ConnectionState.Closed)
-                    oConn.Open();
-                cProcessInfo = "Running Sql: " + sql;
-                cRes = oCmd.ExecuteScalar();
+                using (SqlCommand oCmd = new SqlCommand(sql, oConn))
+                {
+                    if (oConn.State == ConnectionState.Closed)
+                        oConn.Open();
+                    cProcessInfo = "Running Sql: " + sql;
+                    cRes = oCmd.ExecuteScalar();
 
-                if (oConn.State != ConnectionState.Closed)
-                    oConn.Close();
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
-                if (cRes == System.DBNull.Value)
-                    cRes = null;
+                    if (oConn.State != ConnectionState.Closed)
+                        oConn.Close();
+                    if (cRes == System.DBNull.Value)
+                        cRes = null;
+                }
             }
             catch (Exception ex)
             {
@@ -850,26 +848,25 @@ namespace Protean.Tools
             {
                 SqlConnection oLConn = new SqlConnection(DatabaseConnectionString);
                 oLConn.StateChange += _ConnectionState;
-                SqlCommand oCmd = new SqlCommand(sql, oLConn);
-
-                // Set the command type
-                oCmd.CommandType = commandtype;
-
-                // Set the Paremeters if any
-                if (!(parameters == null))
+                using (SqlCommand oCmd = new SqlCommand(sql, oLConn))
                 {
-                    foreach (DictionaryEntry oEntry in parameters)
-                        oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                    // Set the command type
+                    oCmd.CommandType = commandtype;
+
+                    // Set the Paremeters if any
+                    if (!(parameters == null))
+                    {
+                        foreach (DictionaryEntry oEntry in parameters)
+                            oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                    }
+
+                    // Open the connection
+                    if (oLConn.State == ConnectionState.Closed)
+                        oLConn.Open();
+
+                    oReader = oCmd.ExecuteReader(CommandBehavior.CloseConnection);
+                    return oReader;
                 }
-
-                // Open the connection
-                if (oLConn.State == ConnectionState.Closed)
-                    oLConn.Open();
-
-                oReader = oCmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
-                return oReader;
             }
             catch (Exception ex)
             {
@@ -948,30 +945,31 @@ namespace Protean.Tools
                 {
                     oConnection = new SqlConnection(cConn);
                 }
-                SqlDataAdapter oDataAdpt = new SqlDataAdapter(sql, oConnection);
-
-                if (oConn.State == ConnectionState.Closed)
-                    oConn.Open();
-
-                if (oConnection.State == ConnectionState.Closed)
-                    oConnection.Open();
-
-                if (datasetname != "")
-                    oDs.DataSetName = datasetname;
-
-                oDataAdpt.SelectCommand.CommandType = querytype;
-                if (nConnectTimeout > 15)
-                    oDataAdpt.SelectCommand.CommandTimeout = nConnectTimeout;
-                // Set the Paremeters if any
-                if (!(parameters == null))
+                using (SqlDataAdapter oDataAdpt = new SqlDataAdapter(sql, oConnection))
                 {
-                    foreach (DictionaryEntry oEntry in parameters)
-                        oDataAdpt.SelectCommand.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                    if (oConn.State == ConnectionState.Closed)
+                        oConn.Open();
+
+                    if (oConnection.State == ConnectionState.Closed)
+                        oConnection.Open();
+
+                    if (datasetname != "")
+                        oDs.DataSetName = datasetname;
+
+                    oDataAdpt.SelectCommand.CommandType = querytype;
+                    if (nConnectTimeout > 15)
+                        oDataAdpt.SelectCommand.CommandTimeout = nConnectTimeout;
+                    // Set the Paremeters if any
+                    if (!(parameters == null))
+                    {
+                        foreach (DictionaryEntry oEntry in parameters)
+                            oDataAdpt.SelectCommand.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                    }
+                    if (pageSize > 0)
+                        oDataAdpt.Fill(oDs, nStartIndex, pageSize, tablename);
+                    else
+                        oDataAdpt.Fill(oDs, tablename);
                 }
-                if (pageSize > 0)
-                    oDataAdpt.Fill(oDs, nStartIndex, pageSize, tablename);
-                else
-                    oDataAdpt.Fill(oDs, tablename);
                 return oDs;
             }
             catch (System.Data.SqlClient.SqlException ex)
@@ -1007,26 +1005,25 @@ namespace Protean.Tools
             object oScalarValue;
             try
             {
-                SqlCommand oCmd = new SqlCommand(sql, oConn);
-
-                // Set the command type
-                oCmd.CommandType = commandtype;
-
-                // Set the Paremeters if any
-                if (!(parameters == null))
+                using (SqlCommand oCmd = new SqlCommand(sql, oConn))
                 {
+                    // Set the command type
+                    oCmd.CommandType = commandtype;
 
-                    foreach (DictionaryEntry oEntry in parameters)
-                        oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                    // Set the Paremeters if any
+                    if (!(parameters == null))
+                    {
+                        foreach (DictionaryEntry oEntry in parameters)
+                            oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                    }
+
+                    // Open the connection
+                    if (oConn.State == ConnectionState.Closed)
+                        oConn.Open();
+
+                    oScalarValue = oCmd.ExecuteScalar();
+                    oConn.Close();
                 }
-
-                // Open the connection
-                if (oConn.State == ConnectionState.Closed)
-                    oConn.Open();
-
-                oScalarValue = oCmd.ExecuteScalar();
-                oConn.Close();
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
 
                 // If the return value is NULL and a default return value for NULLs has been specififed, then return this instead
                 if ((!(nullreturnvalue == null)) & (oScalarValue == null | oScalarValue == null))
@@ -1076,26 +1073,25 @@ namespace Protean.Tools
                 {
                     oConnection = oConn;
                 }
-                SqlCommand oCmd = new SqlCommand(sql, oConnection);
-
-                // Set the command type
-                oCmd.CommandType = commandtype;
-
-                // Set the Paremeters if any
-                if (!(parameters == null))
+                using (SqlCommand oCmd = new SqlCommand(sql, oConnection))
                 {
+                    // Set the command type
+                    oCmd.CommandType = commandtype;
 
-                    foreach (DictionaryEntry oEntry in parameters)
-                        oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                    // Set the Paremeters if any
+                    if (!(parameters == null))
+                    {
+                        foreach (DictionaryEntry oEntry in parameters)
+                            oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                    }
+
+                    // Open the connection
+                    if (oConnection.State == ConnectionState.Closed)
+                        oConnection.Open();
+
+                    oScalarValue = oCmd.ExecuteScalar();
+                    oConnection.Close();
                 }
-
-                // Open the connection
-                if (oConnection.State == ConnectionState.Closed)
-                    oConnection.Open();
-
-                oScalarValue = oCmd.ExecuteScalar();
-                oConnection.Close();
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
 
                 // If the return value is NULL and a default return value for NULLs has been specififed, then return this instead
                 if ((!(nullreturnvalue == null)) & (oScalarValue == null | oScalarValue == null))
@@ -1136,41 +1132,41 @@ namespace Protean.Tools
             {
                 bAsync = true;
                 ResetConnection();
-                SqlCommand oCmd = new SqlCommand(sql, oConn);
-
-                // Set the command type
-                oCmd.CommandType = commandtype;
-
-                // Set the Paremeters if any
-                if (!(parameters == null))
+                using (SqlCommand oCmd = new SqlCommand(sql, oConn))
                 {
-                    foreach (DictionaryEntry oEntry in parameters)
-                        oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
-                }
+                    // Set the command type
+                    oCmd.CommandType = commandtype;
 
-                // Open the connection
-                if (oConn.State == ConnectionState.Closed)
-                    oConn.Open();
-
-                //IAsyncResult result;
-                //result = oCmd.BeginExecuteXmlReader();
-
-                //using (XmlReader reader = oCmd.EndExecuteXmlReader(result))
-                //{
-                //    cXmlValue += reader.ReadOuterXml();
-                //}
-
-                using (XmlReader reader = oCmd.ExecuteXmlReader())
-                {
-                    while (reader.Read())
+                    // Set the Paremeters if any
+                    if (!(parameters == null))
                     {
-                        cXmlValue = reader.ReadOuterXml();                        
+                        foreach (DictionaryEntry oEntry in parameters)
+                            oCmd.Parameters.AddWithValue(oEntry.Key.ToString(), oEntry.Value);
+                    }
+
+                    // Open the connection
+                    if (oConn.State == ConnectionState.Closed)
+                        oConn.Open();
+
+                    //IAsyncResult result;
+                    //result = oCmd.BeginExecuteXmlReader();
+
+                    //using (XmlReader reader = oCmd.EndExecuteXmlReader(result))
+                    //{
+                    //    cXmlValue += reader.ReadOuterXml();
+                    //}
+
+                    using (XmlReader reader = oCmd.ExecuteXmlReader())
+                    {
+                        while (reader.Read())
+                        {
+                            cXmlValue = reader.ReadOuterXml();                        
+                        }
                     }
                 }
                 bAsync = false;
                 ResetConnection();
                 // oConn.Close()
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
 
                 // If the return value is NULL and a default return value for NULLs has been specififed, then return this instead
                 if ((!(nullreturnvalue == null)) & (cXmlValue == null | cXmlValue == null))
@@ -1325,17 +1321,17 @@ namespace Protean.Tools
         public Hashtable getHashTable(string sSql, string sNameField, ref string sValueField)
         {
             // PerfMon.Log("dbTools", "getHashTable")
-            SqlDataAdapter oDataAdpt = new SqlDataAdapter(sSql, oConn);
-            DataSet oDs = new DataSet();
-
             Hashtable oHash = new Hashtable();
             string cProcessInfo = "getDataSet";
             try
             {
-                oDataAdpt.Fill(oDs, "HashPairs");
-                foreach (DataRow oDr in oDs.Tables["HashPairs"].Rows)
-                    oHash.Add(System.Convert.ToString(oDr[sNameField]), System.Convert.ToString(oDr[sValueField]));
-
+                using (SqlDataAdapter oDataAdpt = new SqlDataAdapter(sSql, oConn))
+                {
+                    DataSet oDs = new DataSet();
+                    oDataAdpt.Fill(oDs, "HashPairs");
+                    foreach (DataRow oDr in oDs.Tables["HashPairs"].Rows)
+                        oHash.Add(System.Convert.ToString(oDr[sNameField]), System.Convert.ToString(oDr[sValueField]));
+                }
                 oConn.Close();
                 return oHash;
             }
@@ -1353,18 +1349,19 @@ namespace Protean.Tools
             string cProcessInfo = "Running: " + sql;
             try
             {
-                SqlCommand oCmd = new SqlCommand(sql + ";select scope_identity();", oConn);
-                if (oConn == null)
-                    oConn.Open();
-                else if (oConn.State == ConnectionState.Closed)
-                    oConn.Open();
-                cProcessInfo = "Running Sql: " + sql;
-                dr = oCmd.ExecuteReader();
-                while (dr.Read())
-                    nInsertId = Convert.ToInt32(dr[0]);
-                dr.Close();
-                dr = null/* TODO Change to default(_) if this is not a reference type */;
-                oCmd = null/* TODO Change to default(_) if this is not a reference type */;
+                using (SqlCommand oCmd = new SqlCommand(sql + ";select scope_identity();", oConn))
+                {
+                    if (oConn == null)
+                        oConn.Open();
+                    else if (oConn.State == ConnectionState.Closed)
+                        oConn.Open();
+                    cProcessInfo = "Running Sql: " + sql;
+                    using (dr = oCmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                            nInsertId = Convert.ToInt32(dr[0]);
+                    }
+                }
                 oConn.Close();
             }
             catch (Exception ex)
@@ -1705,8 +1702,10 @@ namespace Protean.Tools
             string cProcessInfo = "tablename:" + tablename + " sql:" + sql;
             try
             {
-                SqlDataAdapter oDdpt = new SqlDataAdapter(sql, oConn);
-                oDdpt.Fill(ds, tablename);
+                using (SqlDataAdapter oDdpt = new SqlDataAdapter(sql, oConn))
+                {
+                    oDdpt.Fill(ds, tablename);
+                }
             }
             catch (Exception ex)
             {
@@ -1870,14 +1869,19 @@ namespace Protean.Tools
             {
                 try
                 {
-                    oDA = new SqlDataAdapter(sql, oCN);
-                    int nResult = oDA.Fill(this, destinationtablename);
-                    SqlCommandBuilder oCB = new SqlCommandBuilder(oDA);
-                    oDA.TableMappings.Add(sourcetablename, destinationtablename);
-                    oDA.DeleteCommand = oCB.GetDeleteCommand(true);
-                    oDA.InsertCommand = oCB.GetInsertCommand(true);
-                    oDA.UpdateCommand = oCB.GetUpdateCommand(true);
-                    return nResult;
+                    using (SqlDataAdapter tempDA = new SqlDataAdapter(sql, oCN))
+                    {
+                        oDA = tempDA;
+                        int nResult = oDA.Fill(this, destinationtablename);
+                        using (SqlCommandBuilder oCB = new SqlCommandBuilder(oDA))
+                        {
+                            oDA.TableMappings.Add(sourcetablename, destinationtablename);
+                            oDA.DeleteCommand = oCB.GetDeleteCommand(true);
+                            oDA.InsertCommand = oCB.GetInsertCommand(true);
+                            oDA.UpdateCommand = oCB.GetUpdateCommand(true);
+                        }
+                        return nResult;
+                    }
                 }
                 catch (Exception ex)
                 {
