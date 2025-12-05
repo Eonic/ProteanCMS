@@ -16,7 +16,7 @@
             <div class="modal-body " aria-automic="true">
               <div class="alert alert-danger">
                 <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
-                <xsl:text disable-output-escaping="yes">&amp;</xsl:text>&#160;
+                &#160;
                 <span id="errorMessage">&#160;</span>
               </div>
             </div>
@@ -222,13 +222,13 @@
             <p class="buttons">
               <xsl:if test="not(submit[contains(@class,'hide-required')])">
                 <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
-                  <label class="required">
+                  <span class="required">
                     <span class="req">
                       *<span class="visually-hidden"> (required)</span>
                     </span>
                     <xsl:text> </xsl:text>
                     <xsl:call-template name="msg_required"/>
-                  </label>
+                  </span>
                 </xsl:if>
               </xsl:if>
               <!-- For xFormQuiz change how these buttons work -->
@@ -1319,6 +1319,9 @@
           </xsl:choose>
         </xsl:variable>
         <button type="submit" name="delete:{@bind}" value="{./parent::trigger/label/node()}" class="btn btn-danger btn-delete">
+			<xsl:if test="./parent::trigger/@disabled='disabled'">
+				<xsl:attribute name="disabled">disabled</xsl:attribute>
+			</xsl:if>
           <i class="fa {$icon} fa-white">
             <xsl:text> </xsl:text>
           </i>

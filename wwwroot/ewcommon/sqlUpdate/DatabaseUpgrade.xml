@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<DatabaseUpgrade LatestVersion="6.0.81.0">
+<DatabaseUpgrade LatestVersion="6.1.54.0">
 	<!-- Instructions	
 	   Add SQL scripts to the directory structure as below.
 	   Separate each "create" into its own file
@@ -661,8 +661,8 @@
 		</Sub2>
 		<Sub2 Number="81">
 			<Sub3 Number="0">
-				<Action Order="1" Type="File" ObjectType="" ObjectName="tblCartContact.sql"/>
-				<Action Order="2" Type="File" ObjectType="" ObjectName="tblEmailActivityLog.sql"/>
+				<Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/tblCartContact.sql"/>
+				<Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/tblEmailActivityLog.sql"/>
 				<Action Order="3" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/AltertblCartDiscountRules.sql"/>
 				<Action Order="4" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/AltertblSingleusePromoCode.sql"/>
 				<Action Order="5" Type="Drop" ObjectType="Procedure" ObjectName="spRecordDiscountUsage"/>
@@ -673,9 +673,17 @@
 				<Action Order="10" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/spCleanDatabase.sql"/>
 				<Action Order="11" Type="Drop" ObjectType="Procedure" ObjectName="spCleaningOldOrder"/>
 				<Action Order="12" Type="File" ObjectType="" ObjectName="/v5/6.0.81.0/spCleaningOldOrder.sql"/>
-				</Sub3>
-			
+			</Sub3>			
 		</Sub2>
     </Sub1>
+	  <Sub1 Number="1">
+		  <Sub2 Number="54">
+			  <Sub3 Number="0">
+				  <Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.1.54.0/tblDirectory.sql"/>
+				  <Action Order="1" Type="File" ObjectType="" ObjectName="/v5/6.1.54.0/tblCartShippingMethod.sql"/>
+				  <Action Order="2" Type="File" ObjectType="" ObjectName="/v5/6.1.54.0/spGetValidShippingOptions.sql"/>	  
+			  </Sub3>
+		  </Sub2>
+	  </Sub1>
   </Version>
 </DatabaseUpgrade>

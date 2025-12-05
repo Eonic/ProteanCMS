@@ -2,7 +2,6 @@
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
 
 	<xsl:template match="Page" mode="xform_control_scripts">
-
 		<xsl:if test="descendant-or-self::instance">
 			<!--################################################ modal for alert-->
 			<div class="modal fade" id="xFrmAlertModal" role="dialog" style ="padding-top:15%!important">
@@ -134,6 +133,9 @@
 							<xsl:call-template name="msg_required"/>
 						</span>
 					</xsl:if>
+					
+					
+					
 					<xsl:apply-templates select="submit" mode="xform"/>
 
 				</p>
@@ -168,6 +170,10 @@
 					</xsl:for-each>
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="alert">
+				<h1>alert!</h1>
+			</xsl:if>
+
 			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
 			<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
 			<xsl:if test="count(submit) &gt; 0">
@@ -191,6 +197,7 @@
 									</label>
 								</xsl:if>
 							</xsl:if>
+														
 							<!-- For xFormQuiz change how these buttons work -->
 							<xsl:apply-templates select="submit" mode="xform"/>
 							<!-- Terminus needed for CHROME ! -->
@@ -4212,7 +4219,6 @@
 				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}">
 					<xsl:text> </xsl:text>
 				</script>
-
 				<script>
 					var hiddenInput = document.getElementById('recaptcha-token');
 					var form = hiddenInput.closest('form');
@@ -4228,7 +4234,6 @@
 					});
 				</script>
 			</xsl:when>
-
 			<!-- reCAPTCHA v2 -->
 			<xsl:otherwise>
 				<script src="https://www.google.com/recaptcha/api.js" async="" defer="">

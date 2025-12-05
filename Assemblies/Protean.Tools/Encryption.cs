@@ -6,7 +6,6 @@ using Org.BouncyCastle.Crypto.Parameters;
 using System;
 using System.Configuration;
 using System.IO;
-using System.Management;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -113,6 +112,7 @@ namespace Protean.Tools
                             break;
                         }
                     case "sha2_512":
+                    case "sha2_512_salt":
 
                         using (SHA512 sha512 = SHA512.Create())
                         {

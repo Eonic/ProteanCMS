@@ -350,6 +350,28 @@ form.xform {
     button i.iconleft {
         float: none;
     }
+
+    .separator {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        margin-top:1em
+    }
+
+    .separator::before,
+    .separator::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #000;
+    }
+
+    .separator:not(:empty)::before {
+        margin-right: .25em;
+    }
+
+    .separator:not(:empty)::after {
+        margin-left: .25em;
+    }
 }
 
 .ewXform > div:first-child > h3 {
@@ -1306,6 +1328,7 @@ form .form-actions .required {
     }
 
 }
+
 .footer-btn-padding {
     padding-left:1rem;
     padding-right:1rem;

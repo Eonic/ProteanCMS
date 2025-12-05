@@ -548,60 +548,9 @@
 				<div class="admin-body {@class}">
 					<xsl:apply-templates select="label" mode="legend"/>
 					<p>Welcome back, please sign in to your account</p>
-					<xsl:choose>
-						<xsl:when test="contains(@class,'2col') or contains(@class,'2Col') ">
-							<div class="row">
-								<xsl:for-each select="group | repeat">
-									<xsl:apply-templates select="." mode="xform">
-										<xsl:with-param name="class">
-											<xsl:text>col-md-</xsl:text>
-											<xsl:choose>
-												<xsl:when test="position()='1'">4</xsl:when>
-												<xsl:when test="position()='2'">8</xsl:when>
-											</xsl:choose>
-										</xsl:with-param>
-									</xsl:apply-templates>
-								</xsl:for-each>
-							</div>
-						</xsl:when>
-						<xsl:when test="contains(@class,'2col5050') or contains(@class,'2Col5050') ">
-							<div class="row">
-								<xsl:for-each select="group | repeat">
-									<xsl:apply-templates select="." mode="xform">
-										<xsl:with-param name="class">
-											<xsl:text>col-md-</xsl:text>
-											<xsl:choose>
-												<xsl:when test="position()='1'">6</xsl:when>
-												<xsl:when test="position()='2'">6</xsl:when>
-											</xsl:choose>
-										</xsl:with-param>
-									</xsl:apply-templates>
-								</xsl:for-each>
-							</div>
-						</xsl:when>
-						<xsl:when test="contains(@class,'3col') or contains(@class,'3Col') ">
-							<div class="row">
-								<xsl:for-each select="group | repeat">
-									<xsl:apply-templates select="." mode="xform">
-										<xsl:with-param name="class">
-											<xsl:text>col-lg-4</xsl:text>
-										</xsl:with-param>
-									</xsl:apply-templates>
-								</xsl:for-each>
-							</div>
-						</xsl:when>
-					
-						<xsl:otherwise>
-						<div>
-							<xsl:apply-templates select="group | repeat " mode="xform"/>
-						</div>
-						</xsl:otherwise>
-					</xsl:choose>	
 					<xsl:apply-templates select="parent::*/alert" mode="xform"/>						
-					<xsl:apply-templates select="legend | input | secret | select | select1 | range | textarea | upload | hint | help | alert | div | submit" mode="control-outer"/>
-				
+					<xsl:apply-templates select="group | repeat | legend | input | secret | select | select1 | range | textarea | upload | hint | help | alert | div | submit" mode="control-outer"/>
 				</div>
-				
 			</xsl:for-each>
 		</form>
 		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
@@ -642,58 +591,8 @@
 			<xsl:for-each select="group">
 				<div class="admin-body {@class}">
 					<xsl:apply-templates select="label" mode="legend"/>
-					<xsl:choose>
-						<xsl:when test="contains(@class,'2col') or contains(@class,'2Col') ">
-							<div class="row">
-								<xsl:for-each select="group | repeat">
-									<xsl:apply-templates select="." mode="xform">
-										<xsl:with-param name="class">
-											<xsl:text>col-md-</xsl:text>
-											<xsl:choose>
-												<xsl:when test="position()='1'">4</xsl:when>
-												<xsl:when test="position()='2'">8</xsl:when>
-											</xsl:choose>
-										</xsl:with-param>
-									</xsl:apply-templates>
-								</xsl:for-each>
-							</div>
-						</xsl:when>
-						<xsl:when test="contains(@class,'2col5050') or contains(@class,'2Col5050') ">
-							<div class="row">
-								<xsl:for-each select="group | repeat">
-									<xsl:apply-templates select="." mode="xform">
-										<xsl:with-param name="class">
-											<xsl:text>col-md-</xsl:text>
-											<xsl:choose>
-												<xsl:when test="position()='1'">6</xsl:when>
-												<xsl:when test="position()='2'">6</xsl:when>
-											</xsl:choose>
-										</xsl:with-param>
-									</xsl:apply-templates>
-								</xsl:for-each>
-							</div>
-						</xsl:when>
-						<xsl:when test="contains(@class,'3col') or contains(@class,'3Col') ">
-							<div class="row">
-								<xsl:for-each select="group | repeat">
-									<xsl:apply-templates select="." mode="xform">
-										<xsl:with-param name="class">
-											<xsl:text>col-lg-4</xsl:text>
-										</xsl:with-param>
-									</xsl:apply-templates>
-								</xsl:for-each>
-							</div>
-						</xsl:when>
-
-						<xsl:otherwise>
-							<div>
-								<xsl:apply-templates select="group | repeat " mode="xform"/>
-							</div>
-						</xsl:otherwise>
-					</xsl:choose>
 					<xsl:apply-templates select="parent::*/alert" mode="xform"/>
-					<xsl:apply-templates select="legend | input | secret | select | select1 | range | textarea | upload | hint | help | alert | div | submit" mode="control-outer"/>
-
+					<xsl:apply-templates select="group | repeat | legend | input | secret | select | select1 | range | textarea | upload | hint | help | alert | div | submit" mode="control-outer"/>
 				</div>
 
 			</xsl:for-each>
@@ -4260,6 +4159,10 @@
 			<a href="?ewCmd=PasswordReminder">I have forgotten my password</a>
 		</div>
 
+	</xsl:template>
+	
+	<xsl:template match="div[@class='separator']" mode="xform">
+		<div class="separator">OR</div>
 	</xsl:template>
 	
 </xsl:stylesheet>

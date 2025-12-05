@@ -569,8 +569,8 @@
                                                             </xsl:with-param>
                                                         </xsl:call-template>
                                                     </xsl:variable-->
-                <div class="popoverContent" id="imgpopover{position()}" role="tooltip">
-                  <img src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}" class="img-responsive"/>
+                <!--<div class="popoverContent" id="imgpopover{position()}" role="tooltip">
+                  <img class="lazy img-responsive" src="/ptn/core/images/loader.gif" data-src="{concat('/',@root,'/',translate(parent::folder/@path,'\', '/'),'/',@name)}"/>
                   <div class="popup-description">
 						<xsl:choose>
 							<xsl:when test="contains(/Page/Request/QueryString/Item[@name='multiple'],'true')">
@@ -599,11 +599,13 @@
                       <xsl:value-of select="@height"/>
                     </xsl:if>
                   </div>
-                </div>
-                <a rel="popover" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container=".pickImageModal" data-bs-contentwrapper="#imgpopover{position()}" data-bs-placement="top">
+                </div>-->
+                <!--<a rel="popover" data-bs-toggle="popover" data-bs-trigger="hover" data-bs-container=".pickImageModal" data-bs-contentwrapper="#imgpopover{position()}" data-bs-placement="top">-->
                   <xsl:choose>
 					  <xsl:when test="@width&gt;125 and @height&gt;125">
 						  <img class="lazy" src="/ptn/core/images/loader.gif" data-src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>
+						  <!--<img src="/{@root}{translate(parent::folder/@path,'\', '/')}/{@thumbnail}"/>-->
+
 					  </xsl:when>
                     <xsl:otherwise>
                       <div class="img-overflow">
@@ -611,7 +613,7 @@
                       </div>
                     </xsl:otherwise>
                   </xsl:choose>
-                </a>
+               <!-- </a> -->
               </xsl:if>
             </xsl:when>
             <xsl:when test="$Extension='.svg'">
@@ -905,7 +907,6 @@
 		</xsl:variable>
 
 		<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
-
 			<!-- The jQuery UI widget factory, can be omitted if jQuery UI is already included -->
 			<script src="/ptn/libs/blueimp-file-upload/js/vendor/jquery.ui.widget.js">/* */</script>
 			<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
@@ -920,7 +921,13 @@
 			<script src="/ptn/libs/blueimp-file-upload/js/jquery.fileupload.js">/* */</script>
 			<script src="/ptn/libs/jquery.lazy/jquery.lazy.min.js">/* */</script>
 		</xsl:if>
-
+		<script>
+			$(function() {
+			$('.lazy').lazy({
+			visibleOnly: true,
+			effect: 'fadeIn'});
+			});
+		</script>
 		<script>
 			<xsl:text>
 
@@ -982,14 +989,7 @@ function primeFileUpload(){
 			primeFileUpload();
 		</script>
 
-		<script>
-			$(function() {
-			$('.lazy').lazy({
-			visibleOnly: true,
-			delay:500,
-			effect: 'fadeIn'});
-			});
-		</script>
+
 
 		<script>
 
