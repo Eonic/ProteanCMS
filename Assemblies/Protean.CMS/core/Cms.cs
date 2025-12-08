@@ -11317,7 +11317,7 @@ namespace Protean
         private bool disposedValue = false;        // To detect redundant calls
 
         // IDisposable
-        protected override void Dispose(bool disposing)
+        public override void Dispose(bool disposing)
         {
             if (!disposedValue)
             {

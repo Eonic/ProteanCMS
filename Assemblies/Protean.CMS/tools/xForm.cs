@@ -770,7 +770,7 @@ namespace Protean
                     if (!string.IsNullOrEmpty(goRequest["g-recaptcha-response"]))
                     {
                         var moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-                        string version = moConfig["ReCaptchaVersion"] ?? "v3";
+                        string version = moConfig["ReCaptchaVersion"] ?? "v2";
 
                         if (version == "v3")
                         {
