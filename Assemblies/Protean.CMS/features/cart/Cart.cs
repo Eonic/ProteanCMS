@@ -24,7 +24,7 @@ namespace Protean
     public partial class Cms
     {
 
-        public partial class Cart
+        public partial class Cart : IDisposable
         {
             #region Declarations
 
@@ -1097,19 +1097,6 @@ namespace Protean
                 }
             }
 
-            public void close()
-            {
-                myWeb.PerfMon.Log("Cart", "close");
-                string cProcessInfo = "";
-                try
-                {
-                    PersistVariables();
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
-                }
-            }
 
             public virtual void PersistVariables()
             {
@@ -12194,6 +12181,161 @@ namespace Protean
                     return result;
                 }
             }
+
+            #region IDisposable Implementation
+
+            private bool disposedValue = false; // To detect redundant calls
+
+            // IDisposable
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        try
+                        {
+                            // ====================
+                            // 1. DISPOSE CHILD COMPONENTS
+                            // ====================
+
+                            // Discount engine
+                            if (moDiscount != null)
+                            {
+                                try
+                                {
+                                    if (moDiscount is IDisposable disposableDiscount)
+                                    {
+                                        disposableDiscount.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moDiscount: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moDiscount = null;
+                                }
+                            }
+
+                            // Subscription engine
+                            if (moSubscription != null)
+                            {
+                                try
+                                {
+                                    if (moSubscription is IDisposable disposableSubscription)
+                                    {
+                                        disposableSubscription.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moSubscription: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moSubscription = null;
+                                }
+                            }
+
+                            // Payment provider
+                            if (moPay != null)
+                            {
+                                try
+                                {
+                                    if (moPay is IDisposable disposablePay)
+                                    {
+                                        disposablePay.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moPay: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moPay = null;
+                                }
+                            }
+
+                            // Database helper (DO NOT dispose - owned by parent Cms object)
+                            // moDBHelper is a reference to myWeb.moDbHelper, not owned by Cart
+                            moDBHelper = null;
+
+                            // ====================
+                            // 2. NULL OUT LARGE OBJECTS
+                            // ====================
+                            moPageXml = null;
+                            moCartXml = null;
+                            oShippingOptions = null;
+
+                            // ====================
+                            // 3. NULL OUT REFERENCES
+                            // ====================
+                            myWeb = null;
+                            moConfig = null;
+                            moCartConfig = null;
+                            moServer = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log disposal errors but don't throw
+                            System.Diagnostics.Debug.WriteLine(
+                                $"Error in Cart.Dispose: {ex.Message}");
+                        }
+                    }
+
+                    // Free unmanaged resources (if any)
+
+                    disposedValue = true;
+                }
+            }
+
+            // Finalizer
+            ~Cart()
+            {
+                Dispose(false);
+            }
+
+            // Public Dispose method
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+
+            public void close()
+            {
+                myWeb.PerfMon.Log("Cart", "close");
+                string cProcessInfo = "";
+                try
+                {
+                    PersistVariables();
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
+                }
+                finally {
+                    Dispose();
+                }
+            }
+
+            // Helper method to prevent use after disposal
+            protected void ThrowIfDisposed()
+            {
+                if (disposedValue)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+            }
+
+            #endregion
         }
     }
 }
