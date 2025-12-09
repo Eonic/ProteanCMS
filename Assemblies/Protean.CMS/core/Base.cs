@@ -232,7 +232,7 @@ namespace Protean
         }
 
         // ✅ Complete the protected Dispose(bool) pattern
-        protected virtual void Dispose(bool disposing)
+        public virtual void Dispose(bool disposing)
         {
             if (!disposedValue)  // ✅ Now checks the flag
             {

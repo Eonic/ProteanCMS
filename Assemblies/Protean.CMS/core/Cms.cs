@@ -11750,7 +11750,7 @@ namespace Protean
         #region  IDisposable Support 
 
 
-        protected override void Dispose(bool disposing)
+        public override void Dispose(bool disposing)
         {
             if (!disposedValue)
             {

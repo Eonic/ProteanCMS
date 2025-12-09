@@ -939,57 +939,80 @@ namespace Protean
                     // case for required 
                     if (oBindElmt.GetAttribute("required") != "" & bIsThisBindValid)
                     {
-
-                        cProcessInfo = cProcessInfo + " - Required Compile Error: " + oBindElmt.GetAttribute("required");
-                        expr = xPathNav2.Compile(oBindElmt.GetAttribute("required"));
-
-                        cProcessInfo = cProcessInfo + " - Required Expression Error: " + oBindElmt.GetAttribute("required");
-                        expr.SetContext(nsMgr);
-
-                        // Looking for true() or false()
-                        if (Conversions.ToBoolean(xPathNav2.Evaluate(expr)))
-                        {
-
-                            // Look for data
-                            if (objValue.ToString() == "")
-                            {
-                                // No data - error message
-                                bIsValid = false;
-                                bIsThisBindValid = false;
-                                string sRef = oBindElmt.GetAttribute("id");
-                                string validationMsg = "";
-                                if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg") != null) {
-                                    validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg").InnerText;
+                        string requiredXpath = (oBindElmt.GetAttribute("required"));
+                        cProcessInfo = cProcessInfo + " - Required Compile Error: " + oBindElmt.GetAttribute("required");                
+                        Boolean bBindValue = false;
+                        switch (requiredXpath) { 
+                            case "true()":
+                            case "true":
+                                bBindValue = true;
+                            break;
+                            case "false()":
+                            case "false":
+                                bBindValue = false;
+                                break;
+                            default:
+                                if (requiredXpath.StartsWith("boolean"))
+                                {
+                                    expr = xPathNav2.Compile(requiredXpath);
                                 }
-                                if (validationMsg == "") {
-                                    if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label") != null)
+                                else
+                                {
+                                    expr = xPathNav2.Compile("boolean(" + requiredXpath + ")");
+
+                                }                           
+                                cProcessInfo = cProcessInfo + " - Required Expression Error: " + oBindElmt.GetAttribute("required");
+                                expr.SetContext(nsMgr);
+                                object xPathResult = xPathNav2.Evaluate(expr);
+                                bBindValue = Conversions.ToBoolean(xPathResult);
+                                break;
+                        }
+                        // Looking for true() or false()
+                        if (bBindValue)
+                            {
+                                // Look for data
+                                if (objValue.ToString() == "")
+                                {
+                                    // No data - error message
+                                    bIsValid = false;
+                                    bIsThisBindValid = false;
+                                    string sRef = oBindElmt.GetAttribute("id");
+                                    string validationMsg = "";
+                                    if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg") != null)
                                     {
-                                        validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerText;
-                                        if (validationMsg == "")
+                                        validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg").InnerText;
+                                    }
+                                    if (validationMsg == "")
+                                    {
+                                        if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label") != null)
                                         {
-                                            string innerHtml = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerXml;
-                                            validationMsg = $"<span class=\"term4053\">Please Complete</span>&#160;{innerHtml}";
+                                            validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerText;
+                                            if (validationMsg == "")
+                                            {
+                                                string innerHtml = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerXml;
+                                                validationMsg = $"<span class=\"term4053\">Please Complete</span>&#160;{innerHtml}";
+                                            }
+                                            else
+                                            {
+                                                validationMsg = $"<span class=\"term4053\">Please Complete</span>&#160;{validationMsg}";
+                                            }
                                         }
                                         else
                                         {
-                                            validationMsg = $"<span class=\"term4053\">Please Complete</span>&#160;{validationMsg}";
+                                            //control not found so add error to form.
+                                            cValidationError = $"<span class=\"term4053\">Control not found : Please Complete </span>&#160;{sRef}";
                                         }
                                     }
-                                    else {
-                                        //control not found so add error to form.
-                                        cValidationError = $"<span class=\"term4053\">Control not found : Please Complete </span>&#160;{sRef}";
+                                    if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=\"msg-1007\">" + validationMsg + " </span>") == false)
+                                    {
+                                        missedError = true;
+                                    }
+                                    if (cValidationError.Contains(validationMsg) != true)
+                                    {
+                                        cValidationError += validationMsg;
                                     }
                                 }
-                                if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=\"msg-1007\">" + validationMsg + " </span>") == false)
-                                {
-                                    missedError = true;
-                                }
-                                if (cValidationError.Contains(validationMsg) != true)
-                                {
-                                    cValidationError += validationMsg;
-                                }
                             }
-                        }
                     }
 
                     // case for constraint
