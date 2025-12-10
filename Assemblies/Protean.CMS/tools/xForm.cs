@@ -3211,7 +3211,7 @@ namespace Protean
             }
         }
 
-        public void addOptionsFromSqlDataReader(ref XmlElement oSelectNode, ref System.Data.SqlClient.SqlDataReader oDr, string sNameFld = "name", string sValueFld = "value")
+        public void addOptionsFromSqlDataReader(XmlElement oSelectNode, System.Data.SqlClient.SqlDataReader oDr, string sNameFld = "name", string sValueFld = "value")
         {
 
             string cProcessInfo = "";
@@ -3222,8 +3222,6 @@ namespace Protean
             int valueOrdinal = 1;
             try
             {
-
-
                 // AG - I'm adding this ordinal check in because previously this relied on the fields being called "name" and "value"
                 // which is really annoying when you go to the trouble of passing only two column.
                 // If name and value do not exist, then assume that the first column is name and the second is value.
@@ -3237,13 +3235,11 @@ namespace Protean
                     valueOrdinal = oDr.GetOrdinal(sValueFld);
                 }
 
-
                 while (oDr.Read())
                     // update audit
                     // NB Change! Needs auth :S
                     addOption(ref oSelectNode, Strings.Replace(oDr[nameOrdinal].ToString(), "&amp;", "&"), Strings.Replace(oDr[valueOrdinal].ToString(), "&amp;", "&"));
                 oDr.Close();
-                oDr = null;
             }
 
             catch (Exception ex)

@@ -114,6 +114,7 @@ namespace Protean
 
                     ResetConnection("Data Source=" + goConfig["DatabaseServer"] + "; " + "Initial Catalog=" + goConfig["DatabaseName"] + "; " + GetDBAuth());
 
+                    InitializeConnectionPooling();
 
                     moPageXml = myWeb.moPageXml;
                     mnUserId = (long)myWeb.mnUserId;
@@ -131,6 +132,89 @@ namespace Protean
 
                 base.OnError += _OnError;
             }
+
+
+
+
+            public dbHelper(string cConnectionString, long nUserId, System.Web.HttpContext moCtx = null)
+            {
+                // MyBase.New(cConnectionString)
+                try
+                {
+
+                    if (moCtx is null)
+                    {
+                        moCtx = System.Web.HttpContext.Current;
+                    }
+
+                    if (moCtx != null)
+                    {
+                        // goApp = moCtx.Application
+                        goRequest = moCtx.Request;
+                        goResponse = moCtx.Response;
+                        goSession = moCtx.Session;
+                        goServer = moCtx.Server;
+                    }
+
+
+                    myWeb = null;
+                    // moPageXml = myWeb.moPageXml
+                    mnUserId = nUserId;
+
+                    ResetConnection(cConnectionString);
+
+                    InitializeConnectionPooling();
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""));
+                }
+
+                base.OnError += _OnError;
+            }
+
+            public dbHelper(string cDbServer, string cDbName, long nUserId, System.Web.HttpContext moCtx = null) : base()
+            {
+
+                try
+                {
+                    if (moCtx is null)
+                    {
+                        moCtx = System.Web.HttpContext.Current;
+                    }
+
+                    // goApp = moCtx.Application
+                    goRequest = moCtx.Request;
+                    goResponse = moCtx.Response;
+                    goSession = moCtx.Session;
+                    goServer = moCtx.Server;
+
+                    ResetConnection("Data Source=" + cDbServer + "; " + "Initial Catalog=" + cDbName + "; " + GetDBAuth());
+
+                    InitializeConnectionPooling();
+
+                    myWeb = null;
+                    // moPageXml = myWeb.moPageXml
+                    mnUserId = nUserId;
+                }
+
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""));
+                }
+
+                base.OnError += _OnError;
+            }
+
+            // ADD THIS HELPER METHOD after line 240
+            private void InitializeConnectionPooling()
+            {
+                ConnectionPooling = true;
+                ConnectTimeout = 15;
+                MinPoolSize = 5;        // Optimized from 0
+                MaxPoolSize = 100;
+            }
+
 
             public void PerfMonLog(string classname, string desc, string desc2 = null)
             {
@@ -166,77 +250,6 @@ namespace Protean
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "getDBAuth", ex, ""));
                     return null;
                 }
-            }
-
-
-            public dbHelper(string cConnectionString, long nUserId, System.Web.HttpContext moCtx = null)
-            {
-                // MyBase.New(cConnectionString)
-                try
-                {
-
-                    if (moCtx is null)
-                    {
-                        moCtx = System.Web.HttpContext.Current;
-                    }
-
-                    if (moCtx != null)
-                    {
-                        // goApp = moCtx.Application
-                        goRequest = moCtx.Request;
-                        goResponse = moCtx.Response;
-                        goSession = moCtx.Session;
-                        goServer = moCtx.Server;
-                    }
-
-
-                    myWeb = null;
-                    // moPageXml = myWeb.moPageXml
-                    mnUserId = nUserId;
-
-                    ResetConnection(cConnectionString);
-                    ConnectionPooling = true;
-                    ConnectTimeout = 15;
-                    MinPoolSize = 0;
-                    MaxPoolSize = 100;
-                }
-                catch (Exception ex)
-                {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""));
-                }
-
-                base.OnError += _OnError;
-            }
-
-            public dbHelper(string cDbServer, string cDbName, long nUserId, System.Web.HttpContext moCtx = null) : base()
-            {
-
-                try
-                {
-                    if (moCtx is null)
-                    {
-                        moCtx = System.Web.HttpContext.Current;
-                    }
-
-                    // goApp = moCtx.Application
-                    goRequest = moCtx.Request;
-                    goResponse = moCtx.Response;
-                    goSession = moCtx.Session;
-                    goServer = moCtx.Server;
-
-                    ResetConnection("Data Source=" + cDbServer + "; " + "Initial Catalog=" + cDbName + "; " + GetDBAuth());
-
-                    myWeb = null;
-                    // moPageXml = myWeb.moPageXml
-                    mnUserId = nUserId;
-                }
-
-                catch (Exception ex)
-                {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""));
-                }
-
-                base.OnError += _OnError;
             }
 
             public void ResetConnection(string cConnectionString)
@@ -1294,7 +1307,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "getNameByKey", ex, cProcessInfo));
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "getKeyByNameAndSchema", ex, cProcessInfo));
                     return "";
                 }
 

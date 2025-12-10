@@ -1514,9 +1514,9 @@
     <xsl:variable name="caseId" select="ancestor::case[last()]/@id" />
     <xsl:variable name="thisCaseValue" select="//toggle[@case=$caseId]/preceding-sibling::value/node()" />
     <xsl:variable name="selectedValue" select="//toggle[@case=$caseId]/ancestor::select1/value" />
-    <xsl:if test="normalize-space($thisCaseValue)!=normalize-space($selectedValue)">
+	  <!--xsl:if test="normalize-space($thisCaseValue)!=normalize-space($selectedValue)">
       <xsl:text>~inactive</xsl:text>
-    </xsl:if>
+    </xsl:if-->
   </xsl:template>
 
 

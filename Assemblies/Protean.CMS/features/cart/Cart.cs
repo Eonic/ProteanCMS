@@ -9593,8 +9593,7 @@ namespace Protean
                                 }
                                 using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
-                                    var argoDr = oDr;
-                                    oXform.addOptionsFromSqlDataReader(ref oCountriesDropDown, ref argoDr);
+                                    oXform.addOptionsFromSqlDataReader( oCountriesDropDown, oDr);
                                     // this closes the oDr too
                                 }
 

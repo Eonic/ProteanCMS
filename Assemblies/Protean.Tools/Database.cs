@@ -914,6 +914,80 @@ namespace Protean.Tools
             }
         }
 
+        // ADD THIS NEW METHOD to Database.cs class
+        /// <summary>
+        /// Executes a query and processes results with automatic disposal.
+        /// This ensures SqlDataReader is always disposed even if exceptions occur.
+        /// </summary>
+        /// <param name="sql">SQL query to execute</param>
+        /// <param name="processAction">Action to process each row</param>
+        /// <param name="commandtype">Command type (Text, StoredProcedure, etc.)</param>
+        /// <param name="parameters">Optional parameters</param>
+        /// <remarks>
+        /// Use this instead of getDataReader() to ensure proper resource cleanup.
+        /// Example: ExecuteReader("SELECT * FROM Users", dr => ProcessUser(dr));
+        /// </remarks>
+        public void ExecuteReader(string sql, Action<SqlDataReader> processAction,
+            CommandType commandtype = CommandType.Text, Hashtable parameters = null)
+        {
+            const string mcModuleName = "Protean.Tools.Database";
+
+            try
+            {
+                using (SqlDataReader oDr = getDataReaderDisposable(sql, commandtype, parameters))
+                {
+                    while (oDr != null && oDr.Read())
+                    {
+                        processAction?.Invoke(oDr);
+                    }
+                } // ✅ Automatic disposal here
+            }
+            catch (SqlException ex)
+            {
+                // Log SQL-specific errors
+                ErrorMsg = $"SQL Error in {mcModuleName}.ExecuteReader: {ex.Message}";
+                throw;
+            }
+            catch (Exception ex)
+            {
+                // Log general errors
+                ErrorMsg = $"Error in {mcModuleName}.ExecuteReader: {ex.Message}";
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Executes a query that returns a single scalar value with automatic disposal.
+        /// </summary>
+        /// <typeparam name="T">Return type</typeparam>
+        /// <param name="sql">SQL query</param>
+        /// <param name="defaultValue">Default value if no results</param>
+        /// <param name="commandtype">Command type</param>
+        /// <param name="parameters">Optional parameters</param>
+        /// <returns>First column of first row, or defaultValue</returns>
+        public T ExecuteScalar<T>(string sql, T defaultValue = default(T),
+            CommandType commandtype = CommandType.Text, Hashtable parameters = null)
+        {
+            const string mcModuleName = "Protean.Tools.Database";
+
+            try
+            {
+                using (SqlDataReader oDr = getDataReaderDisposable(sql, commandtype, parameters))
+                {
+                    if (oDr != null && oDr.Read() && !oDr.IsDBNull(0))
+                    {
+                        return (T)Convert.ChangeType(oDr[0], typeof(T));
+                    }
+                } // ✅ Automatic disposal
+
+                return defaultValue;
+            }
+            catch (Exception ex)
+            {
+                ErrorMsg = $"Error in {mcModuleName}.ExecuteScalar: {ex.Message}";
+                throw;
+            }
+        }
 
 
 

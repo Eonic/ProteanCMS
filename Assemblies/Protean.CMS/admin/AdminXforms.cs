@@ -5903,7 +5903,7 @@ namespace Protean
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
                             var argoDr = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt3, ref argoDr, "name", "value");
+                            base.addOptionsFromSqlDataReader(oElmt3, argoDr, "name", "value");
                         }
                         base.addSubmit(ref oFrmElmt, "", "Copy " + sType);
 
@@ -6285,7 +6285,7 @@ namespace Protean
                                     using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                                     {
                                         var argoDr = oDr;
-                                        base.addOptionsFromSqlDataReader(ref oElmt3, ref argoDr, "name", "value");
+                                        base.addOptionsFromSqlDataReader(oElmt3, argoDr, "name", "value");
                                     }
 
                                     break;
@@ -6309,8 +6309,7 @@ namespace Protean
 
                                     using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                                     {
-                                        var argoDr1 = oDr;
-                                        base.addOptionsFromSqlDataReader(ref oElmt3, ref argoDr1, "name", "value");
+                                        base.addOptionsFromSqlDataReader(oElmt3, oDr, "name", "value");
                                     } // "Group", "Role"
 
                                     break;
@@ -6328,8 +6327,8 @@ namespace Protean
                                     sSql = "SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d where d.cDirSchema='" + sType + "' and d.nDirKey<>" + dirId + " order by cDirName";
                                     using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                                     {
-                                        var argoDr2 = oDr;
-                                        base.addOptionsFromSqlDataReader(ref oElmt3, ref argoDr2, "name", "value");
+                                       
+                                        base.addOptionsFromSqlDataReader(oElmt3, oDr, "name", "value");
                                     }
 
                                     break;
@@ -6902,9 +6901,8 @@ namespace Protean
                             oElmt2 = base.addSelect(ref oFrmGrp1, cSchema, false, cSchema, Conversions.ToString(Interaction.IIf(cSchema == "User", "scroll_30", "scroll_10")), Protean.xForm.ApperanceTypes.Minimal);
                             sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d " + "left outer join tblDirectoryPermission p on p.nDirId = d.nDirKey and p.nStructId = " + id + " " + "where d.cDirSchema='", SqlFmt(cSchema)), "' and p.nPermKey is null order by d.cDirName"));
                             using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
-                            {
-                                var argoDr = oDr;
-                                base.addOptionsFromSqlDataReader(ref oElmt2, ref argoDr, "name", "value");
+                            {                           
+                                base.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value");
                             }
                         }
 
@@ -6920,9 +6918,8 @@ namespace Protean
                         oElmt4 = base.addSelect(ref oFrmGrp3, "Items", false, "Allowed", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
                         sSql = "SELECT p.nDirId as value, '['+ d.cDirSchema + '] ' + d.cDirName as name from tblDirectoryPermission p " + "inner join tblDirectory d on d.nDirKey = p.nDirId " + "where p.nStructId=" + id + " and p.nAccessLevel = 2" + " order by d.cDirSchema";
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
-                        {
-                            var argoDr1 = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt4, ref argoDr1, "name", "value");
+                        {               
+                            base.addOptionsFromSqlDataReader( oElmt4, oDr, "name", "value");
                         }
 
 
@@ -6934,13 +6931,10 @@ namespace Protean
                         //oFrmGrp3 = (XmlElement)argoNode2;
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
-                            var argoDr2 = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt4, ref argoDr2, "name", "value");
+                            base.addOptionsFromSqlDataReader( oElmt4,  oDr, "name", "value");
                         }
 
-
                         base.Instance.InnerXml = "<permissions/>";
-
 
                         // Rights Alert - to give a user an idea that Rights exists on this page, we'll highlight
                         // this on the Rights page in an alert
@@ -7074,9 +7068,8 @@ namespace Protean
                                 oElmt = base.addSelect(ref oFrmGrp1, cSchema, false, cSchema, Conversions.ToString(Interaction.IIf(cSchema == "User", "scroll_30", "scroll_10")), Protean.xForm.ApperanceTypes.Minimal);
                                 sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d " + "left outer join tblDirectoryPermission p on p.nDirId = d.nDirKey and p.nStructId = " + id + " " + "where d.cDirSchema='", SqlFmt(cSchema)), "' and p.nPermKey is null order by d.cDirName"));
                                 using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
-                                {
-                                    var argoDr = oDr;
-                                    base.addOptionsFromSqlDataReader(ref oElmt, ref argoDr, "name", "value");
+                                {                      
+                                    base.addOptionsFromSqlDataReader( oElmt, oDr, "name", "value");
                                 }
                             }
                         }
@@ -7098,12 +7091,9 @@ namespace Protean
                                 oElmt4 = base.addSelect(ref oFrmGrp3, "Items" + cSchema, false, "Allowed " + cSchema, Conversions.ToString(Interaction.IIf(cSchema == "User", "scroll_30", "scroll_10")), Protean.xForm.ApperanceTypes.Minimal);
                                 sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT p.nDirId as value, '['+ str(p.nAccessLevel) + '] ' + d.cDirName as name from tblDirectoryPermission p " + "inner join tblDirectory d on d.nDirKey = p.nDirId " + "where p.nStructId=" + id + " and d.cDirSchema = '", SqlFmt(cSchema)), "' "), "order by d.cDirSchema"));
                                 using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
-                                {
-                                    var argoDr1 = oDr;
-                                    base.addOptionsFromSqlDataReader(ref oElmt4, ref argoDr1, "name", "value");
+                                {                                 
+                                    base.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value");
                                 }
-
-
                             }
                         }
 
@@ -7201,8 +7191,8 @@ namespace Protean
 
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
-                            var argoDr = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt1, ref argoDr, "name", "value");
+                          
+                            base.addOptionsFromSqlDataReader( oElmt1,  oDr, "name", "value");
                         }
 
 
@@ -7212,8 +7202,7 @@ namespace Protean
 
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
-                            var argoDr1 = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt2, ref argoDr1, "name", "value");
+                            base.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value");
                         }
 
 
@@ -7227,8 +7216,7 @@ namespace Protean
                         sSql = "SELECT d.nDirKey as value, '['+ d.cDirSchema + '] ' + d.cDirName as name from tblDirectory d " + "inner join tblDirectoryRelation dr on dr.nDirParentId = d.nDirKey and dr.nDirChildId = " + UserId + " " + "where d.cDirSchema='Group' or d.cDirSchema='Department'  order by d.cDirName";
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
-                            var argoDr2 = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt4, ref argoDr2, "name", "value");
+                            base.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value");
                         }
 
 
@@ -7398,8 +7386,7 @@ namespace Protean
                                     }
                                     else
                                     {
-                                        var argoDr1 = oDr;
-                                        addOptionsFromSqlDataReader(ref oElmt1, ref argoDr1, "name", "value");
+                                        addOptionsFromSqlDataReader( oElmt1, oDr, "name", "value");
                                     }
                                 }
                             }
@@ -8126,9 +8113,8 @@ namespace Protean
                                 var CarrierSelect = base.addSelect1(ref oCarrierElmt, "nCarrierId", true, "Carrier");
                                 // Dim oDr As SqlDataReader = moDbHelper.getDataReader("select cCarrierName as name, nCarrierKey as value from tblCartCarrier")
                                 using (var oDr = moDbHelper.getDataReaderDisposable("select cCarrierName as name, nCarrierKey as value from tblCartCarrier"))  // Done by nita on 6/7/22
-                                {
-                                    var argoDr = oDr;
-                                    base.addOptionsFromSqlDataReader(ref CarrierSelect, ref argoDr);
+                                {                                  
+                                    base.addOptionsFromSqlDataReader( CarrierSelect, oDr);
                                 }
 
                                 XmlElement argoBindParent1 = null;
@@ -8960,9 +8946,8 @@ namespace Protean
                         oElmt2 = base.addSelect(ref oFrmGrp1, "Groups", false, "Product Groups", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
                         sSql = "SELECT nCatKey AS value, cCatName AS name" + " FROM tblCartProductCategories" + " WHERE (cCatSchemaName = N'Discount') AND" + " (((SELECT nDiscountProdCatRelationKey" + " FROM tblCartDiscountProdCatRelations" + " WHERE (nProductCatId = tblCartProductCategories.nCatKey) AND (nDiscountId = " + id + "))) IS NULL)" + " ORDER BY cCatName";
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
-                        {
-                            var argoDr = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt2, ref argoDr, "name", "value");
+                        {                         
+                            base.addOptionsFromSqlDataReader( oElmt2, oDr, "name", "value");
                         }
 
 
@@ -8976,9 +8961,8 @@ namespace Protean
 
                         sSql = "SELECT tblCartDiscountProdCatRelations.nDiscountProdCatRelationKey as value, tblCartProductCategories.cCatName as name" + " FROM tblCartDiscountProdCatRelations INNER JOIN tblCartProductCategories ON tblCartDiscountProdCatRelations.nProductCatId = tblCartProductCategories.nCatKey" + " WHERE (tblCartDiscountProdCatRelations.nDiscountId = " + id + ") ORDER BY tblCartProductCategories.cCatName";
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
-                        {
-                            var argoDr1 = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt4, ref argoDr1, "name", "value");
+                        {                 
+                            base.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value");
                         }
 
                         base.Instance.InnerXml = "<relations/>";
@@ -9068,8 +9052,8 @@ namespace Protean
                         sSql = "SELECT nDirKey as value, cDirName as name FROM tblDirectory WHERE (cDirSchema = N'Group') AND" + " (((SELECT nDiscountDirRelationKey" + " FROM tblCartDiscountDirRelations" + " WHERE (nDiscountId = " + id + ") AND (nDirId = tblDirectory.nDirKey))) IS NULL)" + "ORDER BY cDirName";
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
-                            var argoDr = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt2, ref argoDr, "name", "value");
+                         
+                            base.addOptionsFromSqlDataReader( oElmt2, oDr, "name", "value");
                         }
 
 
@@ -9083,8 +9067,7 @@ namespace Protean
                         sSql = "SELECT tblCartDiscountDirRelations.nDiscountDirRelationKey AS value, " + " CASE WHEN tblCartDiscountDirRelations.nDirid = 0 THEN '<<All Users>>' ELSE tblDirectory.cDirName END AS name" + " FROM tblCartDiscountDirRelations LEFT OUTER JOIN" + "  tblDirectory ON tblCartDiscountDirRelations.nDirId = tblDirectory.nDirKey" + " WHERE (tblCartDiscountDirRelations.ndiscountid = " + id + ")" + cDenyFilter + " ORDER BY cDirName";
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
-                            var argoDr1 = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt4, ref argoDr1, "name", "value");
+                            base.addOptionsFromSqlDataReader( oElmt4, oDr, "name", "value");
                         }
 
 
@@ -9095,9 +9078,8 @@ namespace Protean
 
                             sSql = "SELECT tblCartDiscountDirRelations.nDiscountDirRelationKey AS value, " + " CASE WHEN tblCartDiscountDirRelations.nDirid = 0 THEN '<<All Users>>' ELSE tblDirectory.cDirName END AS name" + " FROM tblCartDiscountDirRelations LEFT OUTER JOIN" + "  tblDirectory ON tblCartDiscountDirRelations.nDirId = tblDirectory.nDirKey" + " WHERE (tblCartDiscountDirRelations.ndiscountid = " + id + ") and nPermLevel = 0 ORDER BY cDirName";
                             using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
-                            {
-                                var argoDr2 = oDr;
-                                base.addOptionsFromSqlDataReader(ref oElmt5, ref argoDr2, "name", "value");
+                            {                               
+                                base.addOptionsFromSqlDataReader(oElmt5, oDr, "name", "value");
                             }
 
                         }
@@ -9205,8 +9187,7 @@ namespace Protean
 
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
-                            var argoDr = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt2, ref argoDr, "name", "value");
+                            base.addOptionsFromSqlDataReader( oElmt2, oDr, "name", "value");
                         }
                         oElmt2 = base.addSelect(ref oFrmGrp1, "Roles", false, "User Roles", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
 
@@ -9214,8 +9195,7 @@ namespace Protean
 
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
-                            var argoDr1 = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt2, ref argoDr1, "name", "value");
+                            base.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value");
                         }
 
 
@@ -9231,8 +9211,8 @@ namespace Protean
 
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
-                            var argoDr2 = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt4, ref argoDr2, "name", "value");
+                           
+                            base.addOptionsFromSqlDataReader(oElmt4,  oDr, "name", "value");
                         }
                         if (bDeny)
                         {
@@ -9242,10 +9222,8 @@ namespace Protean
                             sSql = "SELECT tblCartShippingPermission.nCartShippingPermissionKey AS value, " + " CASE WHEN tblCartShippingPermission.nDirid = 0 THEN '<<All Users>>' ELSE tblDirectory.cDirName END AS name" + " FROM tblCartShippingPermission LEFT OUTER JOIN" + "  tblDirectory ON tblCartShippingPermission.nDirId = tblDirectory.nDirKey" + " WHERE (tblCartShippingPermission.nShippingMethodId = " + id + ") and nPermLevel = 0 ORDER BY cDirName";
                             using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                             {
-                                var argoDr3 = oDr;
-                                base.addOptionsFromSqlDataReader(ref oElmt5, ref argoDr3, "name", "value");
+                                base.addOptionsFromSqlDataReader( oElmt5, oDr, "name", "value");
                             }
-
                         }
 
                         base.Instance.InnerXml = "<Dirs/>";
@@ -9347,8 +9325,7 @@ namespace Protean
 
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
-                            var argoDr = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt2, ref argoDr, "name", "value");
+                            base.addOptionsFromSqlDataReader( oElmt2, oDr, "name", "value");
                         }
                         // oElmt2 = MyBase.addSelect(oFrmGrp1, "Roles", False, "User Roles", "scroll_10", xForm.ApperanceTypes.Minimal)
 
@@ -9373,8 +9350,7 @@ namespace Protean
 
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
-                            var argoDr1 = oDr;
-                            base.addOptionsFromSqlDataReader(ref oElmt4, ref argoDr1, "name", "value");
+                            base.addOptionsFromSqlDataReader( oElmt4, oDr, "name", "value");
                         }
                         if (bDeny)
                         {
@@ -9384,8 +9360,7 @@ namespace Protean
                             sSql = "SELECT tblCartShippingProductCategoryRelations.nShipProdCatRelKey AS value, " + "  CASE WHEN tblCartShippingProductCategoryRelations.nCatId = 0 THEN '<<All Users>>' ELSE tblCartProductCategories.cCatName END AS name" + " FROM tblCartShippingProductCategoryRelations LEFT OUTER JOIN" + " tblCartProductCategories ON tblCartShippingProductCategoryRelations.nCatId = tblCartProductCategories.nCatKey" + " WHERE (tblCartShippingProductCategoryRelations.nShipOptId = " + id + ") and nRuleType = 2 ORDER BY cCatName";
                             using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                             {
-                                var argoDr2 = oDr;
-                                base.addOptionsFromSqlDataReader(ref oElmt5, ref argoDr2, "name", "value");
+                                base.addOptionsFromSqlDataReader(oElmt5, oDr, "name", "value");
                             }
 
                         }
@@ -11016,8 +10991,7 @@ namespace Protean
 
                                 oSel1 = base.addSelect1(ref oGrp0Elmt, "cProductType", true, "Select Product Type");
                                 base.addOption(ref oSel1, "All", "");
-                                var argoDr = oDR;
-                                base.addOptionsFromSqlDataReader(ref oSel1, ref argoDr, "cContentSchemaName", "cContentSchemaName");
+                                base.addOptionsFromSqlDataReader( oSel1,  oDR, "cContentSchemaName", "cContentSchemaName");
 
                             }
                         }
@@ -11031,8 +11005,7 @@ namespace Protean
 
                             oSel1 = base.addSelect1(ref oGrp0Elmt, "nProductId", true, "Single Product");
                             base.addOption(ref oSel1, "All", "0");
-                            var argoDr1 = oDR;
-                            base.addOptionsFromSqlDataReader(ref oSel1, ref argoDr1, "cContentName", "nContentKey");
+                            base.addOptionsFromSqlDataReader( oSel1, oDR, "cContentName", "nContentKey");
 
                             base.addSubmit(ref oGrp0Elmt, "Results", "See Results", "Results");
 
@@ -11275,8 +11248,7 @@ namespace Protean
                         cSQL += " ORDER BY cDirName";
                         using (var oDR = moDbHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                         {
-                            var argoDr = oDR;
-                            base.addOptionsFromSqlDataReader(ref oSel, ref argoDr, "cDirName", "nDirKey");
+                            base.addOptionsFromSqlDataReader( oSel, oDR, "cDirName", "nDirKey");
                         }
                         XmlElement argoBindParent = null;
                         base.addBind("dFrom", "Criteria/dFrom", oBindParent: ref argoBindParent, "true()");
@@ -11349,8 +11321,7 @@ namespace Protean
                             cSQL += " ORDER BY cDirSchema, cDirName";
                             using (var oDR = moDbHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                             {
-                                var argoDr = oDR;
-                                base.addOptionsFromSqlDataReader(ref oElmt, ref argoDr, "DirName", "nDirKey");
+                                base.addOptionsFromSqlDataReader(oElmt, oDR, "DirName", "nDirKey");
                             }
                         }
 
@@ -12076,8 +12047,7 @@ namespace Protean
                                 string sSql = "select nLkpId as value, cLkpKey as name from tblLookup where cLkpCategory like '" + oDict[Category] + "'";
                                 using (var oDr = moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
-                                    var argoDr = oDr;
-                                    base.addOptionsFromSqlDataReader(ref SelectElmt, ref argoDr);
+                                    base.addOptionsFromSqlDataReader( SelectElmt, oDr);
                                 }
                             }
                         }
@@ -12208,8 +12178,7 @@ namespace Protean
                         {
                             // Adding controls to the form like dropdown, radiobuttons
                             oSelElmt = base.addSelect1(ref oGrp1Elmt, "cContentSchemaName", true, "Schema Name", ((int)Protean.xForm.ApperanceTypes.Minimal).ToString());
-                            var argoDr = oDr;
-                            base.addOptionsFromSqlDataReader(ref oSelElmt, ref argoDr, "cContentSchemaName", "cContentSchemaName");
+                            base.addOptionsFromSqlDataReader( oSelElmt, oDr, "cContentSchemaName", "cContentSchemaName");
                         }
                         XmlElement argoBindParent2 = null;
                         base.addBind("cContentSchemaName", "tblContentIndexDef/cContentSchemaName", oBindParent: ref argoBindParent2, "true()");
