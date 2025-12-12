@@ -222,13 +222,13 @@
             <p class="buttons">
               <xsl:if test="not(submit[contains(@class,'hide-required')])">
                 <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
-                  <label class="required">
+                  <span class="required">
                     <span class="req">
                       *<span class="visually-hidden"> (required)</span>
                     </span>
                     <xsl:text> </xsl:text>
                     <xsl:call-template name="msg_required"/>
-                  </label>
+                  </span>
                 </xsl:if>
               </xsl:if>
               <!-- For xFormQuiz change how these buttons work -->

@@ -1,9 +1,5 @@
-﻿using AngleSharp.Io;
-using Lucene.Net.Support;
-using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic;
+﻿using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
-using Protean.Models;
 using Protean.Providers.Membership;
 using System;
 using System.Collections;
@@ -18,7 +14,6 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
-using static Protean.IndexerAsync.IndexPageAsync;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using static System.Web.HttpUtility;
@@ -273,7 +268,7 @@ namespace Protean
 
         #region Constructors
 
-        public Cms() : this(System.Web.HttpContext.Current)
+        public Cms() :  this(System.Web.HttpContext.Current)
         {
 
         }
@@ -3197,8 +3192,8 @@ namespace Protean
                     moAdmin.GetPreviewMenu();
                 }
 
-                moAdmin.close();
-                moAdmin = (Cms.Admin)null;
+                moAdmin.Dispose();
+                moAdmin = null;
 
 
                 sProcessInfo = "Transform PageXML using XSLT";
@@ -10340,8 +10335,8 @@ namespace Protean
                     moAdmin.open(moPageXml);
                     var argoWeb = this;
                     moAdmin.adminProcess(ref argoWeb);
-                    moAdmin.close();
-                    moAdmin = (Cms.Admin)null;
+                    moAdmin.Dispose();
+                    moAdmin = null;
                 }
                 else if (string.IsNullOrEmpty(moPageXml.OuterXml))
                 {
@@ -11316,24 +11311,7 @@ namespace Protean
 
         private bool disposedValue = false;        // To detect redundant calls
 
-        // IDisposable
-        protected override void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // free managed resources when explicitly called
-                    if (icPageWriter != null)
-                    {
-                        icPageWriter.Dispose();
-                    }
-                }
-
-                // free shared unmanaged resources
-            }
-            disposedValue = true;
-        }
+       
         public virtual string UserFolder()
         {
             // NB : Empty to hold a place for Brokerage's bespoky-er-ness
@@ -11770,15 +11748,327 @@ namespace Protean
 
 
         #region  IDisposable Support 
-        // This code added by Visual Basic to correctly implement the disposable pattern.
-        public void Dispose()
+
+
+        protected override void Dispose(bool disposing)
         {
-            // Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    try
+                    {
+                        // ====================
+                        // 1. UNSUBSCRIBE EVENT HANDLERS FIRST
+                        // ====================
+                        if (OnError != null)
+                        {
+                            foreach (var handler in OnError.GetInvocationList())
+                            {
+                                OnError -= (OnErrorEventHandler)handler;
+                            }
+                        }
+
+                        if (_moCalendar != null)
+                        {
+                            _moCalendar.OnError -= OnComponentError;
+                            try
+                            {
+                                if (_moCalendar is IDisposable disposableCalendar)
+                                {
+                                    disposableCalendar.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing _moCalendar: {ex.Message}");
+                            }
+                            finally
+                            {
+                                _moCalendar = null;
+                            }
+                        }
+
+                        if (_oSync != null)
+                        {
+                            _oSync.OnError -= OnComponentError;
+                        }
+
+                        // ====================
+                        // 2. DISPOSE CHILD COMPONENTS
+                        // ====================
+
+                        // StringWriter (already being disposed - keep it)
+                        if (icPageWriter != null)
+                        {
+                            icPageWriter.Dispose();
+                            icPageWriter = null;
+                        }
+
+                        // Membership Provider
+                        if (moMemProv != null)
+                        {
+                            try
+                            {
+                                if (moSession != null)
+                                {
+                                    Cms argmyWeb = this;
+                                    moMemProv.Activities.SetUserId(ref argmyWeb);
+                                }
+                                moMemProv.Dispose();
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moMemProv: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moMemProv = null;
+                            }
+                        }
+
+                        // Transform
+                        if (moTransform != null && !ibIndexMode)
+                        {
+                            try
+                            {
+                                moTransform.Close(); // Assuming Close() calls Dispose
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moTransform: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moTransform = null;
+                            }
+                        }
+
+                        // Cart instances
+                        if (gbCart && moCart != null)
+                        {
+                            try
+                            {
+                                moCart.close(); // TODO: Change to Dispose() when Cart implements it properly
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moCart: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moCart = null;
+                            }
+                        }
+
+                        // Discount
+                        if (moDiscount != null)
+                        {
+                            try
+                            {
+                                if (moDiscount is IDisposable disposableDiscount)
+                                {
+                                    disposableDiscount.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moDiscount: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moDiscount = null;
+                            }
+                        }
+
+                        // E-commerce Cart (oEc)
+                        if (oEc != null)
+                        {
+                            try
+                            {
+                                oEc.close(); // TODO: Change to Dispose() when Cart implements it properly
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing oEc: {ex.Message}");
+                            }
+                            finally
+                            {
+                                oEc = null;
+                            }
+                        }
+
+                        // Admin
+                        if (moAdmin != null)
+                        {
+                            try
+                            {
+                                moAdmin.Dispose(); // ✅ Now uses proper disposal pattern
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moAdmin: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moAdmin = null;
+                            }
+                        }
+
+                        // Search
+                        if (oSrch != null)
+                        {
+                            try
+                            {
+                                if (oSrch is IDisposable disposableSearch)
+                                {
+                                    disposableSearch.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing oSrch: {ex.Message}");
+                            }
+                            finally
+                            {
+                                oSrch = null;
+                            }
+                        }
+
+                        // File System Helper
+                        if (moFSHelper != null)
+                        {
+                            try
+                            {
+                                if (moFSHelper is IDisposable disposableFSHelper)
+                                {
+                                    disposableFSHelper.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moFSHelper: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moFSHelper = null;
+                            }
+                        }
+
+                        // External Synchronisation
+                        if (_oSync != null)
+                        {
+                            try
+                            {
+                                if (_oSync is IDisposable disposableSync)
+                                {
+                                    disposableSync.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing _oSync: {ex.Message}");
+                            }
+                            finally
+                            {
+                                _oSync = null;
+                            }
+                        }
+
+                        // Calendar
+                        if (_moCalendar != null)
+                        {
+                            try
+                            {
+                                if (_moCalendar is IDisposable disposableCalendar)
+                                {
+                                    disposableCalendar.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing _moCalendar: {ex.Message}");
+                            }
+                            finally
+                            {
+                                _moCalendar = null;
+                            }
+                        }
+
+                        // XForm
+                        if (oXform != null)
+                        {
+                            try
+                            {
+                                if (oXform is IDisposable disposableXform)
+                                {
+                                    disposableXform.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing oXform: {ex.Message}");
+                            }
+                            finally
+                            {
+                                oXform = null;
+                            }
+                        }
+
+                        // ====================
+                        // 3. NULL OUT LARGE OBJECTS
+                        // ====================
+                        moPageXml = null;
+                        moContentDetail = null;
+                        _responses = null;
+
+                        // Context references (handled by base class, but null them anyway)
+                        moRequest = null;
+                        goServer = null;
+                        moConfig = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log disposal errors but don't throw
+                        System.Diagnostics.Debug.WriteLine(
+                            $"Error in Cms.Dispose: {ex.Message}");
+                    }
+                }
+
+                // Free unmanaged resources (if any)
+
+                disposedValue = true;
+            }
+
+            // ✅ CRITICAL: Call base class Dispose
+            base.Dispose(disposing);
+        }
+
+        // ✅ Add finalizer for safety
+        ~Cms()
+        {
+            Dispose(false);
+        }
+
+        // ✅ Add public Dispose() method (ensure it's present)
+        public new void Dispose()
+        {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
         #endregion
-
-
     }
 }

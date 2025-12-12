@@ -30,11 +30,11 @@ namespace Protean
 
     public partial class Cms
     {
-        public partial class Admin
+        public partial class Admin : IDisposable
         {
 
             #region Declarations
-
+            private bool disposedValue = false; // To detect redundant calls
 
             public XmlDocument moPageXML = new XmlDocument();
 
@@ -134,20 +134,7 @@ namespace Protean
                 }
             }
 
-            public void close()
-            {
-                string cProcessInfo = "";
-                try
-                {
 
-                    moAdXfm = (Admin.AdminXforms)null;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
-                }
-            }
 
             public string Command
             {
@@ -7221,12 +7208,118 @@ from tblContentIndexDef";
                     oPageDetail.AppendChild(oElmt);
 
                 }
+            }
+
+            #region IDisposable Implementation
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        try
+                        {
+                            // ====================
+                            // DISPOSE CHILD COMPONENTS
+                            // ====================
+
+                            // AdminXforms instance
+                            if (moAdXfm != null)
+                            {
+                                try
+                                {
+                                    if (moAdXfm is IDisposable disposableAdXfm)
+                                    {
+                                        disposableAdXfm.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moAdXfm: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moAdXfm = null;
+                                }
+                            }
+
+                            // ====================
+                            // NULL OUT LARGE OBJECTS
+                            // ====================
+                            moPageXML = null;
+                            moDeniedAdminMenuElmt = null;
+
+                            // ====================
+                            // NULL OUT REFERENCES (NOT OWNED - DO NOT DISPOSE)
+                            // ====================
+
+                            // myWeb is owned by parent/caller, just clear reference
+                            myWeb = null;
+
+                            // Configuration references (owned by parent)
+                            moConfig = null;
+                            goServer = null;
+
+                            // Clear command strings
+                            mcEwCmd = null;
+                            mcEwCmd2 = null;
+                            mcEwCmd3 = null;
+                            mcPagePath = null;
+                            lEditContext = null;
+                            adminLayout = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log disposal errors but don't throw
+                            System.Diagnostics.Debug.WriteLine(
+                                $"Error in Admin.Dispose: {ex.Message}");
+                        }
+                    }
+
+                    // Free unmanaged resources (if any)
+
+                    disposedValue = true;
+                }
+            }
 
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "HeiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
                 }
             }          
+            // Finalizer
+            ~Admin()
+            {
+                Dispose(false);
+            }
+
+            // Public Dispose method
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            // Legacy close() method for backward compatibility
+            public void close()
+            {
+                // Simply call Dispose() - maintains backward compatibility
+                Dispose();
+            }
+
+            // Helper method to prevent use after disposal
+            protected void ThrowIfDisposed()
+            {
+                if (disposedValue)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+            }
+
+            #endregion
+
         }
 
 

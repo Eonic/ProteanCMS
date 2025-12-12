@@ -186,7 +186,7 @@
 	<xsl:template match="/" mode="cartBrief">
 		<div id="cartBrief">
 			<div class="cartinfo">
-				<a href="{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
+				<a href="{$currentPage/@url}?cartCmd=Cart" aria-label="Shopping Cart" role="button">
 					<div class="cart-icon">
 						<i class="fa fa-shopping-basket">
 							<xsl:text> </xsl:text>

@@ -8158,6 +8158,7 @@
     </xsl:choose>
   </xsl:template>
 
+
   <xsl:template match="Content | MenuItem" mode="displaySubPageThumb">
     <xsl:param name="crop"/>
     <xsl:param name="fixedThumb"/>
@@ -8181,7 +8182,7 @@
           <xsl:value-of select="true()"/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:value-of select="false()"/>
+          <xsl:apply-templates select="." mode="getThCrop"/>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
