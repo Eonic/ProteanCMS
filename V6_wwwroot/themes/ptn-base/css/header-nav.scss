@@ -98,6 +98,10 @@ header.header-menu-right {
             display: flex;
             justify-content: flex-end;
         }
+
+        .cartinfo, .cartinfo a {
+            color: $footer-color;
+        }
     }
 }
 
