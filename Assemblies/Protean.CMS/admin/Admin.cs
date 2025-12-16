@@ -7208,6 +7208,10 @@ from tblContentIndexDef";
                     oPageDetail.AppendChild(oElmt);
 
                 }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "HeiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
+                }
             }
 
             #region IDisposable Implementation
@@ -7282,13 +7286,8 @@ from tblContentIndexDef";
 
                     disposedValue = true;
                 }
-            }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "HeiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
-                }
-            }          
+            }             
+                    
             // Finalizer
             ~Admin()
             {
