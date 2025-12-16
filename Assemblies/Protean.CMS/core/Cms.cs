@@ -122,7 +122,7 @@ namespace Protean
         public static bool gbUseLanguageStylesheets = false;
         public static string gcProjectPath = "";
         public static bool gbUserIntegrations = false;
-        public static bool gbSingleLoginSessionPerUser = false;
+        public bool gbSingleLoginSessionPerUser = false;
         public static short gnSingleLoginSessionTimeout = 900;
         // Site cache
         public static bool gbSiteCacheMode = false;
@@ -2368,8 +2368,11 @@ namespace Protean
                  
                         sProcessInfo = "Check Admin Mode";
                         if (moConfig["ActionsBeforeAddBulk"] != "on")
+                    {
+                        if (!ibIndexMode)
                         {
                             ContentActions();
+                        }
                         }
 
                     if (!ibIndexMode)

@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.SessionState;
+using static Protean.Syndication.Distributor;
 
 namespace Protean.Handlers
 {
     /// <summary>
     /// HTTP Handler for delivering CMS pages
     /// </summary>
-    public class DeliverPage : IHttpHandler, IRequiresSessionState
+    public class DeliverAjaxElmt : IHttpHandler, IRequiresSessionState
     {
         private Cms oCms;
 
@@ -19,10 +22,25 @@ namespace Protean.Handlers
         {
             try
             {
-                oCms = new Cms();
-                oCms.InitializeVariables();
-                context.Response.ContentType = "text/html";
-                oCms.GetPageHTML();
+                using (oCms = new Cms())
+                {
+                    NameValueCollection moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+
+                    oCms.InitializeVariables();
+                    oCms.Open();
+
+                    if (moConfig["AjaxXsl"] != null && moConfig["AjaxXsl"] != "")
+                    {
+                        oCms.mcEwSiteXsl = moConfig["AjaxXsl"];
+                    }
+                    else
+                    {
+                        oCms.mcEwSiteXsl = "/ptn/core/ajax.xsl";
+                    }
+
+                    oCms.GetAjaxHTML();
+                    moConfig = null;
+                }
             }
             catch (Exception ex)
             {

@@ -154,6 +154,7 @@
         margin-bottom: -28px;
         //margin-top:4px;
         z-index: 10;
+        pointer-events: none;
     }
 
     .not-over-content {
@@ -169,6 +170,7 @@
 
     .ptn-edit > .btn-default, .ptn-edit > .btn-primary, .ptn-edit > .dropdown > .btn-primary, .ptn-edit > .dropdown .dropdown-menu a {
         font-family: $admin-header-font;
+        pointer-events: auto;
 
         i {
             font-size: 13px !important;

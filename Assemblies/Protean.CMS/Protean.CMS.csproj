@@ -345,6 +345,13 @@
     <Compile Include="core\Cms.DBHelper-Import.cs" />
     <Compile Include="core\Cms.dbImport.cs" />
     <Compile Include="features\membership\Membership.Modules.cs" />
+    <Compile Include="handlers\DeliverAjaxElmt.cs" />
+    <Compile Include="handlers\DeliverExport.cs" />
+    <Compile Include="handlers\DeliverExcel.cs" />
+    <Compile Include="handlers\KeepAlive.cs" />
+    <Compile Include="handlers\UploadFiles.cs" />
+    <Compile Include="handlers\DeliverPageAsPdf.cs" />
+    <Compile Include="handlers\docDownload.cs" />
     <Compile Include="providers\Authentication\Authentication.Microsoft.cs" />
     <Compile Include="providers\Authentication\Authentication.Google.cs" />
     <Compile Include="providers\Authentication\Authentication.BaseProvider.cs" />
@@ -381,7 +388,7 @@
     <Compile Include="features\subscriptions\Subscriptions.Modules.cs" />
     <Compile Include="handlers\FeedHandler.cs" />
     <Compile Include="handlers\FLVHandler.cs" />
-    <Compile Include="handlers\httpHandler.cs" />
+    <Compile Include="handlers\DeliverPage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="providers\DiscountRule\DiscountRule.BaseProvider.cs" />
     <Compile Include="providers\DiscountRule\DiscountRule.Basic.cs" />

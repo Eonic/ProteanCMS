@@ -131,12 +131,13 @@ namespace Protean
                 }
 
                 // goApp = moCtx.Application
-                moRequest = moCtx.Request;
-                moResponse = moCtx.Response;
-                moSession = moCtx.Session;
-                goServer = moCtx.Server;
-                goCache = moCtx.Cache;
-
+               
+                    moRequest = moCtx.Request;
+                    moResponse = moCtx.Response;
+                    moSession = moCtx.Session;
+                    goServer = moCtx.Server;
+                    goCache = moCtx.Cache;
+               
                 PerfMon = new PerfLog("");
                 PerfMon.Log("Base", "New");
 

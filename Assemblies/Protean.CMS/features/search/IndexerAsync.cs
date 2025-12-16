@@ -1116,6 +1116,7 @@ namespace Protean
                     myWeb.mcEwSiteXsl = cXslPath;
                     myWeb.mnArtId = Convert.ToInt32(oElmt.GetAttribute("id"));
                     myWeb.moContentDetail = null;
+                        
                     cPageHtml = myWeb.ReturnPageHTML(0, true);
                     // remove any declarations that might affect and Xpath Search
                     cPageHtml = Strings.Replace(cPageHtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
