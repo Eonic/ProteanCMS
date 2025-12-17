@@ -1,13 +1,10 @@
-﻿using AngleSharp.Io;
-using DocumentFormat.OpenXml.Wordprocessing;
+﻿
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
 using System.IO;
-using System.Linq;
-using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using static Protean.Env;
