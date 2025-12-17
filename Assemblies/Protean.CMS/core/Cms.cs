@@ -1636,6 +1636,7 @@ namespace Protean
 
                                 if (mbAdminMode)
                                 {
+                                    goApp.Clear();
                                     ClearPageCache();
                                     ClearBundleCache("js");
                                     ClearBundleCache("css");

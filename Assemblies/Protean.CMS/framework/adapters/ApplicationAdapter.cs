@@ -211,6 +211,8 @@ namespace Protean.Framework.Adapters
             }
         }
 
+  
+
         /// <summary>
         /// Disposes the site-specific cache instance.
         /// </summary>
