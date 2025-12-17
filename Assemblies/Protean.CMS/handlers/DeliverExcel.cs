@@ -7,7 +7,7 @@ namespace Protean.Handlers
     /// <summary>
     /// HTTP Handler for delivering CMS pages
     /// </summary>
-    public class DeliverExport: IHttpHandler, IRequiresSessionState
+    public class DeliverExcel : IHttpHandler, IRequiresSessionState
     {
         private Cms oCms;
 
@@ -19,103 +19,20 @@ namespace Protean.Handlers
         {
             try
             {
-                // Declarations
-                string contentType = "";
-                string siteXSL = "";
-                string fileExtension = "";
-
-                // Get the values from request string
-                string mode = context.Request["format"] ?? "";
-                string filename = context.Request["ewCmd"] + DateTime.Now.ToString("yyyyMMddhhmmss");
-                string reportXsl = context.Request["reportXsl"] ?? "";
-
-                // Customise the output
-                // Default is Excel
-                Protean.fsHelper ofs = new Protean.fsHelper();
-
-                switch (mode.ToLower())
-                {
-                    case "txt":
-                        contentType = "text/plain";
-                        if (!string.IsNullOrEmpty(reportXsl))
-                        {
-                            siteXSL = ofs.checkCommonFilePath("/admin/reports/" + reportXsl + ".xsl");
-                        }
-                        else
-                        {
-                            siteXSL = ofs.checkCommonFilePath("/admin/reports/txt.xsl");
-                        }
-                        fileExtension = "txt";
-                        break;
-
-                    case "csv":
-                        // contentType = "text/csv"
-                        contentType = "text/plain";
-                        if (!string.IsNullOrEmpty(reportXsl))
-                        {
-                            siteXSL = ofs.checkCommonFilePath("/admin/reports/" + reportXsl + ".xsl");
-                        }
-                        else
-                        {
-                            siteXSL = ofs.checkCommonFilePath("/admin/reports/csv.xsl");
-                        }
-                        fileExtension = "csv";
-                        break;
-
-                    case "xml":
-                        contentType = "text/xml";
-                        if (!string.IsNullOrEmpty(reportXsl))
-                        {
-                            siteXSL = ofs.checkCommonFilePath("/admin/reports/" + reportXsl + ".xsl");
-                        }
-                        else
-                        {
-                            siteXSL = ofs.checkCommonFilePath("/admin/reports/xml.xsl");
-                        }
-                        fileExtension = "xml";
-                        break;
-
-                    default:
-                        contentType = "application/vnd.ms-excel";
-                        if (!string.IsNullOrEmpty(reportXsl))
-                        {
-                            siteXSL = ofs.checkCommonFilePath("/admin/reports/" + reportXsl + ".xsl");
-                        }
-                        else
-                        {
-                            siteXSL = ofs.checkCommonFilePath("/admin/reports/formats/Report-Excel-2000.xsl");
-                        }
-                        fileExtension = "xlsx";
-                        break;
-                }
-
                 using (oCms = new Cms())
                 {
                     oCms.InitializeVariables();
-                    oCms.mcEwSiteXsl = siteXSL;
-
-                    // Determine whether to show the XML or not
-                    if (context.Request["format"] == "rawxml")
-                    {
-                        oCms.mcContentType = "application/xml";
-                        oCms.mbOutputXml = true;
-                    }
-                    else
-                    {
-                        // Set the response headers
-                        oCms.mcContentType = contentType;
-                        oCms.mcContentDisposition = "attachment;filename=" + filename + "." + fileExtension;
-                        // oEw.mcContentType = "application/xml"
-                    }
-
-                    // Get the output
+                    oCms.mcEwSiteXsl = "/ptn/admin/reports/excel_2000.xsl";
+                    oCms.mcContentType = "application/vnd.ms-excel";
+                    context.Response.ContentType = "application/vnd.ms-excel";
+                    context.Response.AddHeader("Content-Disposition", "attachment;filename=" + context.Request["ewCmd"] + ".xls");
                     oCms.GetPageHTML();
                 }
             }
             catch (Exception ex)
             {
                 // Log error
-                System.Diagnostics.Trace.TraceError("DeliverExport error: {0}", ex.ToString());
+                System.Diagnostics.Trace.TraceError("DeliverPageHandler error: {0}", ex.ToString());
 
                 // Return appropriate error response
                 context.Response.StatusCode = 500;
