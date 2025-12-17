@@ -694,7 +694,7 @@ namespace Protean
                                 if (moAdXfm.valid)
                                 {
                                     mcEwCmd = "Normal";
-                                    myWeb.moCtx.Application["ewSettings"] = (object)null;
+                                    myWeb.goApp["ewSettings"] = (object)null;
                                     myWeb.msRedirectOnEnd = "/?ewCmd=SettingsDash";
                                     myWeb.ClearPageCache();
                                 }
@@ -871,7 +871,7 @@ namespace Protean
                                         Protean.Config.UpdateConfigValue(ref myWeb, "protean/web", "SiteXsl", myWeb.moRequest["SiteXsl"]);
                                     }
 
-                                    myWeb.moCtx.Application["ewSettings"] = (object)null;
+                                    myWeb.goApp["ewSettings"] = (object)null;
                                     mcEwCmd = "Normal";
                                     myWeb.msRedirectOnEnd = "/?rebundle=true";
                                 }

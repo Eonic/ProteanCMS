@@ -122,7 +122,7 @@ namespace Protean
         public static bool gbUseLanguageStylesheets = false;
         public static string gcProjectPath = "";
         public static bool gbUserIntegrations = false;
-        public bool gbSingleLoginSessionPerUser = false;
+        public static bool gbSingleLoginSessionPerUser = false;
         public static short gnSingleLoginSessionTimeout = 900;
         // Site cache
         public static bool gbSiteCacheMode = false;
@@ -689,27 +689,27 @@ namespace Protean
                     }
 
                     // Get system page ID's for application level
-                    if (moCtx.Application["PageNotFoundId"] is null)
+                    if (goApp["PageNotFoundId"] is null)
                     {
-                        moCtx.Application["PageNotFoundId"] = (object)moDbHelper.getPageIdFromPath(NotFoundPagePath, false, false);
+                        goApp["PageNotFoundId"] = (object)moDbHelper.getPageIdFromPath(NotFoundPagePath, false, false);
                     }
-                    if (moCtx.Application["PageAccessDeniedId"] is null)
+                    if (goApp["PageAccessDeniedId"] is null)
                     {
-                        moCtx.Application["PageAccessDeniedId"] = (object)moDbHelper.getPageIdFromPath(AccessDeniedPagePath, false, false);
+                        goApp["PageAccessDeniedId"] = (object)moDbHelper.getPageIdFromPath(AccessDeniedPagePath, false, false);
                     }
-                    if (moCtx.Application["PageLoginRequiredId"] is null)
+                    if (goApp["PageLoginRequiredId"] is null)
                     {
-                        moCtx.Application["PageLoginRequiredId"] = (object)moDbHelper.getPageIdFromPath(LoginRequiredPagePath, false, false);
+                        goApp["PageLoginRequiredId"] = (object)moDbHelper.getPageIdFromPath(LoginRequiredPagePath, false, false);
                     }
-                    if (moCtx.Application["PageErrorId"] is null)
+                    if (goApp["PageErrorId"] is null)
                     {
-                        moCtx.Application["PageErrorId"] = (object)moDbHelper.getPageIdFromPath(ProteanErrorPagePath, false, false);
+                        goApp["PageErrorId"] = (object)moDbHelper.getPageIdFromPath(ProteanErrorPagePath, false, false);
                     }
 
-                    gnPageNotFoundId = Conversions.ToLong(moCtx.Application["PageNotFoundId"]);
-                    gnPageAccessDeniedId = Conversions.ToLong(moCtx.Application["PageAccessDeniedId"]);
-                    gnPageLoginRequiredId = Conversions.ToLong(moCtx.Application["PageLoginRequiredId"]);
-                    gnPageErrorId = Conversions.ToLong(moCtx.Application["PageErrorId"]);
+                    gnPageNotFoundId = Conversions.ToLong(goApp["PageNotFoundId"]);
+                    gnPageAccessDeniedId = Conversions.ToLong(goApp["PageAccessDeniedId"]);
+                    gnPageLoginRequiredId = Conversions.ToLong(goApp["PageLoginRequiredId"]);
+                    gnPageErrorId = Conversions.ToLong(goApp["PageErrorId"]);
 
                     mcPagePath = moRequest["path"] + "";
                     mcPagePath = mcPagePath.Replace("//", "/");

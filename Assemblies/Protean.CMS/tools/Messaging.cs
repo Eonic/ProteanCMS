@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.stdTools;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -29,7 +30,6 @@ namespace Protean
 
         public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
 
-        public System.Web.HttpApplicationState goApp;
 
         public System.Web.HttpRequest goRequest;
         public System.Web.HttpResponse goResponse;
@@ -50,7 +50,6 @@ namespace Protean
         {
             if (moCtx != null)
             {
-                goApp = (System.Web.HttpApplicationState)Interaction.IIf(moCtx == null, null, moCtx.Application);
                 goRequest = moCtx.Request;
                 goResponse = moCtx.Response;
                 goSession = moCtx.Session;
@@ -59,7 +58,6 @@ namespace Protean
         }
         public Messaging(ref string sException)
         {
-            goApp = (System.Web.HttpApplicationState)Interaction.IIf(moCtx is null, null, moCtx.Application);
             goRequest = moCtx.Request;
             goResponse = moCtx.Response;
             goSession = moCtx.Session;

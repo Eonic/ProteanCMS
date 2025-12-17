@@ -2857,7 +2857,7 @@ namespace Protean
                             }
                         }
                         bool bAppVarExists = false;
-                        if (myWeb.moCtx.Application.Get(AppVariableName.ToString()) != null)
+                        if (myWeb.goApp.Get(AppVariableName.ToString()) != null)
                         {
                             bAppVarExists = true;
                         }
@@ -2869,14 +2869,14 @@ namespace Protean
                             {
                                 // regenerate the application variable from the files in the folder
                                 // we do not want to recreate all js everytime the application pool is reset anymore.
-                                myWeb.moCtx.Application.Set(AppVariableName.ToString(), "/" + myWeb.moConfig["ProjectPath"] + "js" + TargetPath.Replace("~", "") + "/script.js");
+                                myWeb.goApp.Set(AppVariableName.ToString(), "/" + myWeb.moConfig["ProjectPath"] + "js" + TargetPath.Replace("~", "") + "/script.js");
                                 bAppVarExists = true;
                             }
                         }
 
-                        if (myWeb.moCtx.Application.Get(AppVariableName.ToString()) != null & bReset == false)
+                        if (myWeb.goApp.Get(AppVariableName.ToString()) != null & bReset == false)
                         {
-                            sReturnString = Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName.ToString()));
+                            sReturnString = Convert.ToString(myWeb.goApp.Get(AppVariableName.ToString()));
                         }
                         else
                         {
@@ -2981,7 +2981,7 @@ namespace Protean
                                 scriptFile = "/" + myWeb.moConfig["ProjectPath"] + "js" + scriptFile;
                                 if (Conversions.ToBoolean(VirtualFileExists(scriptFile)))
                                 {
-                                    myWeb.moCtx.Application.Set(AppVariableName.ToString(), scriptFile);
+                                    myWeb.goApp.Set(AppVariableName.ToString(), scriptFile);
                                 }
                             }
                             else
@@ -3072,7 +3072,7 @@ namespace Protean
 
                             bool bAppVarExists = false;
                             // New logic to stop rebuilding css when application is killed or restarted.
-                            if (myWeb.moCtx.Application.Get(AppVariableName) != null)
+                            if (myWeb.goApp.Get(AppVariableName) != null)
                             {
                                 bAppVarExists = true;
                             }
@@ -3087,7 +3087,7 @@ namespace Protean
                                     string sReturnStringNew = "";
                                     foreach (var myFile in Directory.GetFiles(goServer.MapPath("/" + cProjectPath + "css" + TargetPath.Replace("~", "")), "*.css"))
                                         sReturnStringNew = sReturnStringNew + "/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/" + Path.GetFileName(myFile) + ",";
-                                    myWeb.moCtx.Application.Set(AppVariableName, sReturnStringNew.Trim(','));
+                                    myWeb.goApp.Set(AppVariableName, sReturnStringNew.Trim(','));
                                     bAppVarExists = true;
                                 }
                             }
@@ -3097,7 +3097,7 @@ namespace Protean
                             {
                                 // check to see if the filename is saved in the application variable.
 
-                                sReturnString = Convert.ToString(myWeb.moCtx.Application.Get(AppVariableName));
+                                sReturnString = Convert.ToString(myWeb.goApp.Get(AppVariableName));
 
                                 if (!sReturnString.StartsWith("/" + cProjectPath + "css" + TargetPath.TrimStart('~')))
                                 {
@@ -3216,7 +3216,7 @@ namespace Protean
                                     // check the file exists before we set the application variable...
                                     if (Conversions.ToBoolean(VirtualFileExists("/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css")))
                                     {
-                                        myWeb.moCtx.Application.Set(AppVariableName, sReturnString);
+                                        myWeb.goApp.Set(AppVariableName, sReturnString);
                                     }
                                 }
                                 else

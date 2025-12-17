@@ -1,5 +1,4 @@
 ﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections.Specialized;
 using System.IO;
@@ -889,7 +888,7 @@ namespace Protean
 
                     if (oBindElmt.GetAttribute("type") != "" && (oBindElmt.GetAttribute("required") == "true()" && objValue.ToString() !=""))
                     {
-                        sMessage = evaluateByType(Conversions.ToString(objValue), oBindElmt.GetAttribute("type"), cExtensions, Strings.LCase(oBindElmt.GetAttribute("required")) == "true()");
+                        sMessage = evaluateByType(Convert.ToString(objValue), oBindElmt.GetAttribute("type"), cExtensions, Strings.LCase(oBindElmt.GetAttribute("required")) == "true()");
                     }
                     string labelText = oBindElmt.GetAttribute("id");
                     XmlElement oIptElmt = (XmlElement)moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" + oBindElmt.GetAttribute("id") + "' or @bind='" + oBindElmt.GetAttribute("id") + "']");
@@ -922,7 +921,7 @@ namespace Protean
                         // Get the current object value
                         expr = xPathNav2.Compile(oBindElmt.GetAttribute("calculate"));
                         expr.SetContext(nsMgr);
-                        string sValue2 = Conversions.ToString(xPathNav2.Evaluate(expr));
+                        string sValue2 = Convert.ToString(xPathNav2.Evaluate(expr));
 
                         if (!string.IsNullOrEmpty(sAttribute))
                         {
@@ -964,7 +963,7 @@ namespace Protean
                                 cProcessInfo = cProcessInfo + " - Required Expression Error: " + oBindElmt.GetAttribute("required");
                                 expr.SetContext(nsMgr);
                                 object xPathResult = xPathNav2.Evaluate(expr);
-                                bBindValue = Conversions.ToBoolean(xPathResult);
+                                bBindValue = Convert.ToBoolean(xPathResult);
                                 break;
                         }
                         // Looking for true() or false()
@@ -1057,9 +1056,9 @@ namespace Protean
 
                     if (!string.IsNullOrEmpty(oBindElmt.GetAttribute("unique")) & bIsThisBindValid)
                     {
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(objValue, "", false)))
+                        if (objValue != null && objValue.ToString() != "")
                         {
-                            if (isUnique(Conversions.ToString(objValue), oBindElmt.GetAttribute("unique")))
+                            if (isUnique(Convert.ToString(objValue), oBindElmt.GetAttribute("unique")))
                             {
                             }
                             else
@@ -1103,7 +1102,7 @@ namespace Protean
 
                         // maxSize has been found and an item for that bind has been submitted.
                         // Compare the sizes.
-                        if (goRequest.Files[oFileCheck.GetAttribute("id")].ContentLength > Conversions.ToInteger(oFileCheck.GetAttribute("maxSize")) * 1024)
+                        if (goRequest.Files[oFileCheck.GetAttribute("id")].ContentLength > Convert.ToInt16(oFileCheck.GetAttribute("maxSize")) * 1024)
                         {
                             if (oFileCheck is null)
                             {
@@ -1213,8 +1212,9 @@ namespace Protean
 
                         case "imgverification":
                             {
-                                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(Strings.LCase(sValue),(goSession["imgVerification"]), false)))
+                                if (!string.Equals(sValue?.ToLower(), goSession["imgVerification"]?.ToString()?.ToLower(), StringComparison.Ordinal))
                                     cReturn = "<span class=\"msg-1003\">Please complete the correct letters and numbers as shown.</span>";
+                             
                                 break;
                             }
                         case "strongpassword":
@@ -1288,7 +1288,7 @@ namespace Protean
             catch (Exception ex)
             {
                 returnException(ref msException, mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug);
-                return Conversions.ToBoolean("");
+                return Convert.ToBoolean("");
             }
         }
 
@@ -1658,9 +1658,9 @@ namespace Protean
 
                                                         // First check if there's a value in the session variable, which would indicate that 
                                                         // this has been uploaded but the form had to go through a couple of stages of validation
-                                                        else if (goSession != null && !string.IsNullOrEmpty(Conversions.ToString(goSession["formFileUploaded"])))
+                                                        else if (goSession != null && !string.IsNullOrEmpty(Convert.ToString(goSession["formFileUploaded"])))
                                                         {
-                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = Conversions.ToString(goSession["formFileUploaded"].ToString().Trim());
+                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = Convert.ToString(goSession["formFileUploaded"].ToString().Trim());
                                                         }
                                                         else
                                                         {
@@ -1820,7 +1820,7 @@ namespace Protean
                 // scan each form item
                 foreach (var item in goRequest.Form)
                 {
-                    sBind = Conversions.ToString(item);
+                    sBind = Convert.ToString(item);
 
                     foreach (XmlElement oBindNode in model.SelectNodes("descendant-or-self::bind[@id='" + sBind + "']"))
                     {
@@ -1842,11 +1842,11 @@ namespace Protean
                         else if (!string.IsNullOrEmpty(sAttribute))
                         {
                             oinstanceElmt = (XmlElement)oInstance.SelectSingleNode(sXpath, nsMgr);
-                            oinstanceElmt.SetAttribute(sAttribute, (goRequest[Conversions.ToString(item)] + "").Trim());
+                            oinstanceElmt.SetAttribute(sAttribute, (goRequest[Convert.ToString(item)] + "").Trim());
                         }
                         else
                         {
-                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = (goRequest[Conversions.ToString(item)] + "").Trim();
+                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = (goRequest[Convert.ToString(item)] + "").Trim();
                         }
                     }
                 }
@@ -1940,15 +1940,15 @@ namespace Protean
                             uniqueId = bindElmt.SelectSingleNode("ancestor::model/instance/" + idPath).InnerText + "";
                         }
 
-                        maxWidth = Conversions.ToLong("0" + eonicImgElmt.GetAttribute("maxwidth"));
-                        maxHeight = Conversions.ToLong("0" + eonicImgElmt.GetAttribute("maxheight"));
+                        maxWidth = Convert.ToInt64("0" + eonicImgElmt.GetAttribute("maxwidth"));
+                        maxHeight = Convert.ToInt64("0" + eonicImgElmt.GetAttribute("maxheight"));
                         cIsCrop = eonicImgElmt.GetAttribute("crop");
                         cNoStretch = eonicImgElmt.GetAttribute("noStretch");
                         newFileName = eonicImgElmt.GetAttribute("fileName");
                         filePath = eonicImgElmt.GetAttribute("filePath").Replace("$userId$", mnUserId.ToString());
                         if (!string.IsNullOrEmpty(uniqueId))
                             filePath = filePath.Replace("$id$", uniqueId);
-                        nQuality = Conversions.ToLong("0" + eonicImgElmt.GetAttribute("quality"));
+                        nQuality = Convert.ToInt64("0" + eonicImgElmt.GetAttribute("quality"));
                         makeFileNameUnique = eonicImgElmt.GetAttribute("uniqueFileName").ToLower() == "true";
 
 
@@ -2255,20 +2255,17 @@ namespace Protean
 
                                                 var Now = DateTime.Now;
 
-                                                sValue = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("uID_", goSession["pgid"]), "_"), Now.Year.ToString()), Now.DayOfYear.ToString()), Now.Hour.ToString()), Now.Minute.ToString()), Now.Second.ToString()), Now.Millisecond.ToString()));
-
-                                            }
-                                            // If Not moXformElmt.OwnerDocument.SelectSingleNode("Page/Request/Form/Item[@name='" & oElmt.GetAttribute("bind") & "']") Is Nothing Then
-                                            // Dim tempNode As XmlElement = moXformElmt.OwnerDocument.SelectSingleNode("Page/Request/Form/Item[@name='" & oElmt.GetAttribute("bind") & "']")
-                                            // sValue = tempNode.InnerText
-                                            // End If
-
-
-
+                                               // sValue = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("uID_", goSession["pgid"]), "_"), Now.Year.ToString()), Now.DayOfYear.ToString()), Now.Hour.ToString()), Now.Minute.ToString()), Now.Second.ToString()), Now.Millisecond.ToString()));
+                                                sValue = $"uID_{goSession["pgid"]}_{Now.Year}{Now.DayOfYear}{Now.Hour:D2}{Now.Minute:D2}{Now.Second:D2}{Now.Millisecond:D3}";
+                                                // If Not moXformElmt.OwnerDocument.SelectSingleNode("Page/Request/Form/Item[@name='" & oElmt.GetAttribute("bind") & "']") Is Nothing Then
+                                                // Dim tempNode As XmlElement = moXformElmt.OwnerDocument.SelectSingleNode("Page/Request/Form/Item[@name='" & oElmt.GetAttribute("bind") & "']")
+                                                // sValue = tempNode.InnerText
+                                                // End If
+                                             }
                                         }
 
-                                        break;
-                                    }
+                                     break;
+                                }
 
                             }
 
@@ -2840,7 +2837,7 @@ namespace Protean
                 }
                 else
                 {
-                    oIptElmt.SetAttribute("start", Conversions.ToString(oStart));
+                    oIptElmt.SetAttribute("start", Convert.ToString(oStart));
                 }
                 if (Information.IsDate(oEnd))
                 {
@@ -2848,12 +2845,12 @@ namespace Protean
                 }
                 else
                 {
-                    oIptElmt.SetAttribute("end", Conversions.ToString(oEnd));
+                    oIptElmt.SetAttribute("end", Convert.ToString(oEnd));
                 }
-                oIptElmt.SetAttribute("step", Conversions.ToString(oStep));
+                oIptElmt.SetAttribute("step", Convert.ToString(oStep));
                 if (!string.IsNullOrEmpty(Convert.ToString(oStep)))
                 {
-                    oIptElmt.SetAttribute("step", Conversions.ToString(oStep));
+                    oIptElmt.SetAttribute("step", Convert.ToString(oStep));
                 }
                 if (!string.IsNullOrEmpty(sLabel))
                 {
@@ -3263,7 +3260,7 @@ namespace Protean
                     var oXml = new XmlDocument();
                     if (oDr.FieldCount > 2)
                     {
-                        oXml.LoadXml(Conversions.ToString(oDr["detail"]));
+                        oXml.LoadXml(Convert.ToString(oDr["detail"]));
                         if (oXml.DocumentElement.Name == "User")
                         {
                             cName = oXml.SelectSingleNode("User/LastName").InnerText + ", " + oXml.SelectSingleNode("User/FirstName").InnerText;
@@ -3889,14 +3886,14 @@ namespace Protean
                     oElmt = (XmlElement)oNode;
                     if (string.IsNullOrEmpty(oElmt.GetAttribute("ref"))) // its not a ref its a bind
                     {
-                        if (Conversions.ToLong("0" + Strings.Replace(oElmt.GetAttribute("bind"), refPrefix, "")) > nLastNum)
+                        if (Convert.ToInt64("0" + Strings.Replace(oElmt.GetAttribute("bind"), refPrefix, "")) > nLastNum)
                         {
-                            nLastNum = Conversions.ToLong("0" + Strings.Replace(oElmt.GetAttribute("bind"), refPrefix, ""));
+                            nLastNum = Convert.ToInt64("0" + Strings.Replace(oElmt.GetAttribute("bind"), refPrefix, ""));
                         }
                     }
-                    else if (Conversions.ToLong("0" + Strings.Replace(oElmt.GetAttribute("ref"), refPrefix, "")) > nLastNum) // it is a ref
+                    else if (Convert.ToInt64("0" + Strings.Replace(oElmt.GetAttribute("ref"), refPrefix, "")) > nLastNum) // it is a ref
                     {
-                        nLastNum = Conversions.ToLong("0" + Strings.Replace(oElmt.GetAttribute("ref"), refPrefix, ""));
+                        nLastNum = Convert.ToInt64("0" + Strings.Replace(oElmt.GetAttribute("ref"), refPrefix, ""));
                     }
 
                 }
@@ -3933,7 +3930,7 @@ namespace Protean
 
                     // get the index of the options group and node from the delete command
                     string cControlName = rxDelete.Match(cRequestForm).Groups[1].ToString();
-                    int nNodeIndex = Conversions.ToInteger(rxDelete.Match(cRequestForm).Groups[2].ToString());
+                    int nNodeIndex = Convert.ToInt16(rxDelete.Match(cRequestForm).Groups[2].ToString());
                     string cXpathOptions;
 
                     foreach (XmlElement bindNode in xmlForm.SelectNodes("descendant-or-self::bind[@id='" + cControlName + "']"))
@@ -4042,7 +4039,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    object oInstanceNodeSetCount = 0;
+                                    int oInstanceNodeSetCount = 0;
                                     bool bSkipBinds = false;
                                     bool bNoDel = false;
                                     foreach (XmlElement currentONode in oInstanceNodeSet)
@@ -4053,8 +4050,8 @@ namespace Protean
                                             bNoDel = true;
                                         }
 
-                                        oInstanceNodeSetCount = Operators.AddObject(oInstanceNodeSetCount, 1);
-                                        if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oInstanceNodeSet.Count, oInstanceNodeSetCount, false), isInserted)))
+                                        oInstanceNodeSetCount++;
+                                        if (oInstanceNodeSet.Count == oInstanceNodeSetCount && isInserted)
                                         {
                                             bSkipBinds = true;
                                         }
@@ -4150,7 +4147,7 @@ namespace Protean
                                                     {
                                                         oRptElmtCopySub = currentORptElmtCopySub3;
                                                         string cBindStart = oRptElmtCopySub.GetAttribute("bind").Split('_')[0];
-                                                        string cOldBindId = cBindStart + "_" + (Conversions.ToDouble(nNodePosition.ToString()) + 1d);
+                                                        string cOldBindId = cBindStart + "_" + (Convert.ToDouble(nNodePosition.ToString()) + 1d);
                                                         string cNewBindId = cBindStart + "_" + nNodePosition.ToString();
 
                                                         oForm.Set(cNewBindId, oForm[cOldBindId]);

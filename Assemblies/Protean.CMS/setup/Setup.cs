@@ -37,7 +37,6 @@ namespace Protean
 
         public System.Web.HttpContext moCtx;
 
-        public System.Web.HttpApplicationState goApp;
         public System.Web.HttpRequest goRequest;
         public System.Web.HttpResponse goResponse;
         public System.Web.SessionState.HttpSessionState goSession;
@@ -151,7 +150,6 @@ namespace Protean
                     moCtx = System.Web.HttpContext.Current;
                 }
 
-                goApp = moCtx.Application;
                 goRequest = moCtx.Request;
                 goResponse = moCtx.Response;
                 goSession = moCtx.Session;

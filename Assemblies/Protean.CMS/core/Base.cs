@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Web.Configuration;
 using System.Xml;
 using Microsoft.VisualBasic;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -93,7 +94,7 @@ namespace Protean
 
         // Application Level Properties   
         public NameValueCollection moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-        // Public goApp As System.Web.HttpApplicationState
+        public IHttpApplicationState goApp;
         public System.Web.Caching.Cache goCache;
         public System.Web.HttpServerUtility goServer;
         public XmlElement goLangConfig = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/languages");
@@ -104,6 +105,7 @@ namespace Protean
 
         public bool mbPreview = false;
         public bool mbPreviewHidden = false;
+        public string sitename = "";
 
         public PerfLog PerfMon;
 
@@ -129,15 +131,15 @@ namespace Protean
                 {
                     moCtx = Context;
                 }
+                moRequest = moCtx.Request;
+                moResponse = moCtx.Response;
+                moSession = moCtx.Session;
+                goServer = moCtx.Server;
+                goCache = moCtx.Cache;
+                sitename = moRequest.ServerVariables["HTTP_HOST"];
 
-                // goApp = moCtx.Application
-               
-                    moRequest = moCtx.Request;
-                    moResponse = moCtx.Response;
-                    moSession = moCtx.Session;
-                    goServer = moCtx.Server;
-                    goCache = moCtx.Cache;
-               
+                goApp = new Protean.Framework.Adapters.FrameworkApplicationStateAdapter(sitename);
+
                 PerfMon = new PerfLog("");
                 PerfMon.Log("Base", "New");
 

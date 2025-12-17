@@ -1290,7 +1290,6 @@ namespace Protean
             try
             {
 
-
                 context.Response.AddHeader("Pragma", "no-cache");
                 context.Response.AddHeader("Cache-Control", "Private, no - cache");
 

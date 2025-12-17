@@ -702,7 +702,7 @@ namespace Protean
                         if (myWeb.mnUserId > 0 & mnEwUserId == 0)
                             mnEwUserId = myWeb.mnUserId;
                         // MEMB - eEDIT
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moCtx.Application["bFullCartOption"], true, false)))
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.goApp["bFullCartOption"], true, false)))
                         {
                             bFullCartOption = true;
                         }

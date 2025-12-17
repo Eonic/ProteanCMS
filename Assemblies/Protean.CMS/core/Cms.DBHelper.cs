@@ -67,8 +67,6 @@ namespace Protean
 
             private System.Web.HttpContext moCtx;
 
-            // Private goApp As System.Web.HttpApplicationState
-
             public System.Web.HttpRequest goRequest;
             public System.Web.HttpResponse goResponse;
             public System.Web.SessionState.HttpSessionState goSession; // we need to pass this through from Web
@@ -105,7 +103,6 @@ namespace Protean
                         moCtx = aWeb.moCtx;
                     }
                     // If Not (moCtx Is Nothing) Then
-                    // goApp = moCtx.Application
                     goRequest = moCtx.Request;
                     goResponse = moCtx.Response;
                     goSession = moCtx.Session;
@@ -1180,7 +1177,7 @@ namespace Protean
                 {
                     if (string.IsNullOrEmpty(dbObjectName))
                     {
-                        appcheckName = Conversions.ToString(moCtx.Application["getdb-" + dbObjectName]);
+                        appcheckName = Conversions.ToString(myWeb.goApp["getdb-" + dbObjectName]);
                         if (string.IsNullOrEmpty(appcheckName))
                         {
 
@@ -1194,7 +1191,7 @@ namespace Protean
                             }
 
                             // goApp.Lock()
-                            moCtx.Application["getdb-" + dbObjectName] = appcheckName;
+                            myWeb.goApp["getdb-" + dbObjectName] = appcheckName;
                             // goApp.UnLock()
 
                         }
@@ -7969,7 +7966,7 @@ namespace Protean
                         // clear from app level too
                         if (myWeb != null)
                         {
-                            myWeb.moCtx.Application["AdminStructureCache"] = (object)null;
+                            myWeb.goApp["AdminStructureCache"] = (object)null;
                         }
                         ExeProcessSql(sSql);
                     }
@@ -14078,7 +14075,7 @@ namespace Protean
                         }
                         else
                         {
-                            var oApp = myWeb.moCtx.Application;
+                            var oApp = myWeb.goApp;
                             colState = Conversions.ToString(oApp[tableName + "-" + columnName]);
                             switch (colState ?? "")
                             {
