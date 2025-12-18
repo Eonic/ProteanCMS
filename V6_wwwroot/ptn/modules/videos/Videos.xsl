@@ -551,10 +551,10 @@
       <div id="FVPlayer{@id}" >
         <xsl:if test="VideoSize!='Manual'">
           <xsl:attribute name="class">
-            <xsl:text>embed-responsive </xsl:text>
+            <xsl:text>ratio </xsl:text>
             <xsl:choose>
-              <xsl:when test="VideoRatio='FourThree'">embed-responsive-4x3</xsl:when>
-              <xsl:otherwise>embed-responsive-16x9 2</xsl:otherwise>
+              <xsl:when test="VideoRatio='FourThree'">ratio-4x3</xsl:when>
+              <xsl:otherwise>ratio-16x9</xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
         </xsl:if>
@@ -609,10 +609,10 @@
       <div>
         <xsl:if test="VideoSize!='Manual'">
           <xsl:attribute name="class">
-            <xsl:text>embed-responsive </xsl:text>
+            <xsl:text>ratio </xsl:text>
             <xsl:choose>
-              <xsl:when test="VideoRatio='FourThree'">embed-responsive-4x3</xsl:when>
-              <xsl:otherwise>embed-responsive-16x9 1</xsl:otherwise>
+              <xsl:when test="VideoRatio='FourThree'">ratio-4x3</xsl:when>
+              <xsl:otherwise>ratio-16x9 1</xsl:otherwise>
             </xsl:choose>
           </xsl:attribute>
         </xsl:if>
@@ -709,10 +709,10 @@
     <div id="Video{@id}" class="Video">
       <xsl:if test="VideoSize!='Manual'">
         <xsl:attribute name="class">
-          <xsl:text>embed-responsive </xsl:text>
+          <xsl:text>ratio </xsl:text>
           <xsl:choose>
-            <xsl:when test="VideoRatio='FourThree'">embed-responsive-4x3</xsl:when>
-            <xsl:otherwise>embed-responsive-16x9 </xsl:otherwise>
+            <xsl:when test="VideoRatio='FourThree'">ratio-4x3</xsl:when>
+            <xsl:otherwise>ratio-16x9 </xsl:otherwise>
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
