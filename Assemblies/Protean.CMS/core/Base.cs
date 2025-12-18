@@ -224,7 +224,7 @@ namespace Protean
         private bool disposedValue = false;        // To detect redundant calls
 
         // IDisposable
-        protected virtual void Dispose(bool disposing)
+        public virtual void Dispose(bool disposing)
         {
 
             disposedValue = true;
