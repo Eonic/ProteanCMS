@@ -2,6 +2,14 @@
 PRODUCT GALLERY
 -------------------*/
 .Site {
+    .product-detail {
+        #productScroller{
+            .swiper-video{
+                width:100%;
+            }
+        }
+    }
+
     #gallery {
         text-align: center;
     }

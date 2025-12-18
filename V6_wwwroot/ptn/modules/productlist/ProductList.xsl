@@ -380,6 +380,7 @@
 												<img src="{Images/img[@class='detail']/@src}" alt="{Images/img[@class='detail']/@alt}"/>
 											</div>
 											<xsl:apply-templates select="Content[@type='LibraryImage']" mode="scrollerImage"/>
+											<xsl:apply-templates select="Content[@type='Video']" mode="scrollerVideo"/>
 										</div>
 										<div class="swiper-pagination">&#160;</div>
 										<div class="swiper-button-prev" id="swiper-button-prev-{@id}">
@@ -609,6 +610,26 @@
 					</xsl:attribute>
 				</xsl:if>
 			</img>
+		</div>
+	</xsl:template>
+	
+	<xsl:template match="Content" mode="scrollerVideo">
+		<xsl:param name="showImage"/>
+		<xsl:variable name="imgId">
+			<xsl:text>picture_</xsl:text>
+			<xsl:value-of select="@id"/>
+		</xsl:variable>
+		<!-- Needed to create unique grouping for lightbox -->
+		<xsl:variable name="parId">
+			<xsl:text>group</xsl:text>
+			<xsl:value-of select="@type"/>
+		</xsl:variable>	
+		<div class="swiper-slide">
+			<div class="swiper-video">
+				<xsl:apply-templates select="." mode="VideoDetailDisplay">
+					<xsl:with-param name="classes"> swiper-video</xsl:with-param>
+				</xsl:apply-templates>
+			</div>
 		</div>
 	</xsl:template>
 

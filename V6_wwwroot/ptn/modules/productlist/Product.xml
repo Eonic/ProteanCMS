@@ -466,7 +466,7 @@
 				<label>
 					<i class="fas fa-image"> </i>
 					<span class="space"> </span>
-					<span>Images</span>
+					<span>Images &amp; Video</span>
 				</label>
 				<group>
 					<input bind="cContentFullSizePicture" class="short pickImage">
@@ -491,6 +491,13 @@
 						<label>Image gallery</label>
 						<help>Besides the main product images, You can add additional images below to display as a gallery.</help>
 						<relatedContent search="add" type="LibraryImage" relationType="" direction="1way"/>
+					</group>
+				</group>
+				<group>
+					<group class="form-section-wrapper">
+						<label>Video gallery</label>
+						<help>Besides the main product images, You can add additional videos below to display as a gallery.</help>
+						<relatedContent search="add" type="Video" relationType="" direction="1way"/>
 					</group>
 				</group>
 			</group>

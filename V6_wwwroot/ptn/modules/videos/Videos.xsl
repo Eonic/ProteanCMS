@@ -753,6 +753,7 @@
   </xsl:template>
 
   <xsl:template match="Content[@type='Video' and VideoType='YouTube']" mode="VideoDetailDisplay">
+	  <xsl:param name="classes"/>
     <xsl:variable name="code">
       <xsl:variable name="raw" select="YouTube/@code"/>
       <xsl:choose>
@@ -772,18 +773,20 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:apply-templates select="." mode="inlinePopupOptions"/>
+	  <xsl:apply-templates select="." mode="inlinePopupOptions">
+		  <xsl:with-param name="class" select="$classes"/>
+	  </xsl:apply-templates>
     <div id="Video{@id}" class="Video">
       <xsl:if test="VideoSize!='Manual'">
         <xsl:attribute name="class">
-          <xsl:text>embed-responsive </xsl:text>
+          <xsl:text>ratio </xsl:text>
           <xsl:choose>
-            <xsl:when test="VideoRatio='FourThree'">embed-responsive-4x3</xsl:when>
-            <xsl:otherwise>embed-responsive-16x9 </xsl:otherwise>
+            <xsl:when test="VideoRatio='FourThree'">ratio-4x3</xsl:when>
+            <xsl:otherwise>ratio-16x9 </xsl:otherwise>
           </xsl:choose>
         </xsl:attribute>
       </xsl:if>
-      <iframe frameborder="0" class="embed-responsive-item" allowfullscreen="allowfullscreen">
+      <iframe frameborder="0" allowfullscreen="allowfullscreen">
         <xsl:attribute name="src">
           <xsl:text>http</xsl:text>
           <xsl:if test="YouTube/@useHttps='true'">
