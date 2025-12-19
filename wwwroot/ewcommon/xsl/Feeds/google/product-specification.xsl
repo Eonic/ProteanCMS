@@ -162,23 +162,7 @@
         </g:gtin>
 
         <g:mpn>
-          <!--<xsl:apply-templates select="." mode="get-google-mpn"/>-->
-			<xsl:choose>
-
-				<!-- If SKU exists, use its StockCode -->
-				<xsl:when test="Content[@type='SKU']/StockCode">
-					<xsl:value-of select="Content[@type='SKU'][1]/StockCode"/>
-				</xsl:when>
-
-				<!-- Fallback to product StockCode (if any) -->
-				<xsl:when test="StockCode">
-					<xsl:value-of select="StockCode"/>
-				</xsl:when>
-
-				<!-- Else output nothing -->
-				<xsl:otherwise/>
-
-			</xsl:choose>
+          <xsl:apply-templates select="." mode="get-google-mpn"/>         
         </g:mpn>
 
       <xsl:apply-templates select="." mode="getShippingCharges" /> 
