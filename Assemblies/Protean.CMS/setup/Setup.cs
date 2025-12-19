@@ -512,6 +512,10 @@ namespace Protean
             var testCount = default(int);
             string testResponse = "";
 
+
+
+
+
             testResponse = oTests.TestImpersonation();
             if (!testResponse.StartsWith("Impersonation"))
             {
@@ -616,6 +620,12 @@ namespace Protean
             testResponse = oTests.TestReadPDF();
 
             AddResponse("<p><i class=\"fa fa-check text-success\">&#160;</i>" + testResponse + "</p>");
+            testCount = testCount + 1;
+
+
+            testResponse = oTests.SkiaSharpDiagnostics();
+            AddResponse(testResponse);
+
             testCount = testCount + 1;
 
             // 6 test the ability to update config settins

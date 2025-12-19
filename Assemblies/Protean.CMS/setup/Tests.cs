@@ -1,9 +1,11 @@
 ﻿using Imazen.WebP;
 using Microsoft.VisualBasic;
 using Microsoft.Win32;
+using SkiaSharp;
 using System;
-using System.Drawing;
+using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Web.Configuration;
 using System.Xml;
 
@@ -332,26 +334,36 @@ namespace Protean
                 }
 
                 string webpFileName = Strings.Replace(cVirtualPath, ".png", ".webp");
-                string newFilepath = string.Empty;
                 var oEw = new Cms();
                 oEw.InitializeVariables();
+
                 try
                 {
                     oEw.moFSHelper.DeleteFile(webpFileName);
                 }
                 catch
                 {
-                };
+                    // Ignore if file doesn't exist
+                }
+
                 short WebPQuality = 60;
-                using (var bitMap = new Bitmap(oEw.goServer.MapPath(cVirtualPath)))
+
+                // ✅ Use SkiaSharp for both decoding AND encoding
+                using (var bitmap = SKBitmap.Decode(oEw.goServer.MapPath(cVirtualPath)))
                 {
-                    using (var saveImageStream = File.Open(oEw.goServer.MapPath(webpFileName), FileMode.Create))
+                    if (bitmap == null)
                     {
-                        var encoder = new SimpleEncoder();
-                        encoder.Encode(bitMap, saveImageStream, WebPQuality);
-                        encoder = null;
+                        return "Error: Could not decode image at " + cVirtualPath;
+                    }
+
+                    using (var image = SKImage.FromBitmap(bitmap))
+                    using (var data = image.Encode(SKEncodedImageFormat.Webp, WebPQuality))
+                    using (var saveImageStream = File.OpenWrite(oEw.goServer.MapPath(webpFileName)))
+                    {
+                        data.SaveTo(saveImageStream);
                     }
                 }
+
                 return "Protean Logo converted to WebP <img src='" + webpFileName + "'/>";
             }
             catch (Exception ex)
@@ -414,6 +426,194 @@ namespace Protean
             }
         }
 
+
+        public string SkiaSharpDiagnostics()
+        {
+            var html = new System.Text.StringBuilder();
+
+            try
+            {
+                html.AppendLine("<div class='skiasharp-diagnostics'>");
+                html.AppendLine("<h3>SkiaSharp Diagnostics</h3>");
+
+                // Get the executing assembly location (where your app is running from)
+                string assemblyDir = AppDomain.CurrentDomain.BaseDirectory;
+                html.AppendLine($"<p><strong>Application Base Directory:</strong> {assemblyDir}</p>");
+
+                // Check if running in IIS
+                bool isIIS = System.Web.HttpContext.Current != null;
+                html.AppendLine($"<p><strong>Running in IIS:</strong> {isIIS}</p>");
+
+                if (isIIS)
+                {
+                    html.AppendLine($"<p><strong>Physical Application Path:</strong> {System.Web.HttpContext.Current.Server.MapPath("~")}</p>");
+                }
+
+                // Check architecture
+                bool is64Bit = Environment.Is64BitProcess;
+                html.AppendLine($"<p><strong>Process Architecture:</strong> {(is64Bit ? "x64" : "x86")}</p>");
+                html.AppendLine($"<p><strong>OS Architecture:</strong> {(Environment.Is64BitOperatingSystem ? "x64" : "x86")}</p>");
+
+                // Define search paths for libSkiaSharp.dll
+                var searchPaths = new List<string>
+        {
+            // Bin directory
+            System.IO.Path.Combine(assemblyDir, "bin", "libSkiaSharp.dll"),
+            System.IO.Path.Combine(assemblyDir, "libSkiaSharp.dll"),
+            
+            // Runtime-specific paths
+            System.IO.Path.Combine(assemblyDir, "bin", "runtimes", is64Bit ? "win-x64" : "win-x86", "native", "libSkiaSharp.dll"),
+            System.IO.Path.Combine(assemblyDir, "runtimes", is64Bit ? "win-x64" : "win-x86", "native", "libSkiaSharp.dll"),
+            
+            // Architecture-specific paths
+            System.IO.Path.Combine(assemblyDir, "bin", is64Bit ? "x64" : "x86", "libSkiaSharp.dll"),
+            System.IO.Path.Combine(assemblyDir, is64Bit ? "x64" : "x86", "libSkiaSharp.dll")
+        };
+
+                html.AppendLine("<h4>Searching for libSkiaSharp.dll:</h4>");
+                html.AppendLine("<ul>");
+
+                bool found = false;
+                string foundPath = null;
+
+                foreach (var path in searchPaths)
+                {
+                    bool exists = System.IO.File.Exists(path);
+                    string icon = exists ? "<i class='fa fa-check text-success'></i>" : "<i class='fa fa-times text-danger'></i>";
+                    html.AppendLine($"<li>{icon} {path}</li>");
+
+                    if (exists && !found)
+                    {
+                        found = true;
+                        foundPath = path;
+                    }
+                }
+
+                html.AppendLine("</ul>");
+
+                if (found)
+                {
+                    html.AppendLine($"<div class='alert alert-success'>");
+                    html.AppendLine($"<strong>✓ Native library found at:</strong><br/>{foundPath}");
+
+                    // Try to get file version info
+                    try
+                    {
+                        var fileInfo = new System.IO.FileInfo(foundPath);
+                        html.AppendLine($"<br/><strong>File Size:</strong> {fileInfo.Length:N0} bytes");
+                        html.AppendLine($"<br/><strong>Last Modified:</strong> {fileInfo.LastWriteTime}");
+
+                        var versionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(foundPath);
+                        if (!string.IsNullOrEmpty(versionInfo.FileVersion))
+                        {
+                            html.AppendLine($"<br/><strong>File Version:</strong> {versionInfo.FileVersion}");
+                        }
+                    }
+                    catch (Exception vex)
+                    {
+                        html.AppendLine($"<br/><em>Could not read file details: {vex.Message}</em>");
+                    }
+
+                    html.AppendLine("</div>");
+
+                    // Try to actually use SkiaSharp
+                    try
+                    {
+                        html.AppendLine("<h4>Testing SkiaSharp Functionality:</h4>");
+
+                        using (var surface = SkiaSharp.SKSurface.Create(new SkiaSharp.SKImageInfo(100, 100)))
+                        {
+                            if (surface != null)
+                            {
+                                var canvas = surface.Canvas;
+                                canvas.Clear(SkiaSharp.SKColors.White);
+                                canvas.DrawRect(10, 10, 80, 80, new SkiaSharp.SKPaint { Color = SkiaSharp.SKColors.Blue });
+
+                                html.AppendLine("<div class='alert alert-success'>");
+                                html.AppendLine("<i class='fa fa-check'></i> <strong>SkiaSharp is working correctly!</strong> Successfully created a surface and rendered graphics.");
+                                html.AppendLine("</div>");
+                            }
+                        }
+                    }
+                    catch (Exception skex)
+                    {
+                        html.AppendLine("<div class='alert alert-danger'>");
+                        html.AppendLine($"<i class='fa fa-exclamation-triangle'></i> <strong>SkiaSharp Error:</strong><br/>");
+                        html.AppendLine($"{skex.Message}<br/>");
+                        if (skex.InnerException != null)
+                        {
+                            html.AppendLine($"<strong>Inner Exception:</strong> {skex.InnerException.Message}");
+                        }
+                        html.AppendLine("</div>");
+                    }
+                }
+                else
+                {
+                    html.AppendLine("<div class='alert alert-danger'>");
+                    html.AppendLine("<i class='fa fa-exclamation-triangle'></i> <strong>libSkiaSharp.dll NOT FOUND</strong>");
+                    html.AppendLine("<h5>Recommended Actions:</h5>");
+                    html.AppendLine("<ol>");
+                    html.AppendLine("<li>Ensure <code>SkiaSharp.NativeAssets.Win32</code> NuGet package is installed</li>");
+                    html.AppendLine("<li>Rebuild your solution</li>");
+                    html.AppendLine($"<li>Check that native assets are being copied to: <code>{System.IO.Path.Combine(assemblyDir, "bin")}</code></li>");
+                    html.AppendLine("<li>Verify the correct platform target (x64/x86) is set</li>");
+                    html.AppendLine("</ol>");
+                    html.AppendLine("</div>");
+                }
+
+                // Check PATH environment variable
+                html.AppendLine("<h4>Checking System PATH:</h4>");
+                var pathDirs = Environment.GetEnvironmentVariable("PATH")?.Split(';');
+                bool foundInPath = false;
+
+                if (pathDirs != null)
+                {
+                    foreach (var dir in pathDirs)
+                    {
+                        if (!string.IsNullOrWhiteSpace(dir))
+                        {
+                            var dllPath = System.IO.Path.Combine(dir.Trim(), "libSkiaSharp.dll");
+                            if (System.IO.File.Exists(dllPath))
+                            {
+                                html.AppendLine($"<p><i class='fa fa-check text-success'></i> Found in PATH: {dllPath}</p>");
+                                foundInPath = true;
+                            }
+                        }
+                    }
+                }
+
+                if (!foundInPath)
+                {
+                    html.AppendLine("<p><em>libSkiaSharp.dll not found in system PATH (this is normal)</em></p>");
+                }
+
+                // Check loaded assemblies
+                html.AppendLine("<h4>Loaded SkiaSharp Assemblies:</h4>");
+                html.AppendLine("<ul>");
+                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    if (assembly.FullName.Contains("SkiaSharp"))
+                    {
+                        html.AppendLine($"<li><strong>{assembly.GetName().Name}</strong> v{assembly.GetName().Version} <br/><small>{assembly.Location}</small></li>");
+                    }
+                }
+                html.AppendLine("</ul>");
+
+                html.AppendLine("</div>");
+
+                return html.ToString();
+            }
+            catch (Exception ex)
+            {
+                html.Clear();
+                html.AppendLine("<div class='alert alert-danger'>");
+                html.AppendLine("<h3>SkiaSharp Diagnostics Error</h3>");
+                html.AppendLine($"<p><strong>Error:</strong> {ex.Message}</p>");
+                html.AppendLine($"<pre>{ex.StackTrace}</pre>");
+                html.AppendLine("</div>");
+                return html.ToString();
+            }
+        }
 
     }
 }

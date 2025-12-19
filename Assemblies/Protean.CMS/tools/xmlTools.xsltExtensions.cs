@@ -2,16 +2,16 @@
 using BundleTransformer.Core.Bundles;
 using BundleTransformer.Core.Orderers;
 using BundleTransformer.Core.Transformers;
-using Imazen.WebP;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
+using SkiaSharp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
-using System.Drawing;
+//using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -1806,13 +1806,13 @@ namespace Protean
                             // create a WEBP version of the image.
                             if (VirtualFileExists(webpFileName) == 0)
                             {
-                                using (var bitMap = new Bitmap(goServer.MapPath(cVirtualPath)))
+                                using (var bitmap = SKBitmap.Decode(goServer.MapPath(cVirtualPath)))
                                 {
-                                    using (var saveImageStream = File.Open(goServer.MapPath(webpFileName), FileMode.Create))
+                                    using (var image = SKImage.FromBitmap(bitmap))
+                                    using (var data = image.Encode(SKEncodedImageFormat.Webp, WebPQuality))
+                                    using (var saveImageStream = File.OpenWrite(goServer.MapPath(webpFileName)))
                                     {
-                                        var encoder = new SimpleEncoder();
-                                        encoder.Encode(bitMap, saveImageStream, WebPQuality);
-                                        encoder = null;
+                                        data.SaveTo(saveImageStream);
                                     }
                                 }
                             }

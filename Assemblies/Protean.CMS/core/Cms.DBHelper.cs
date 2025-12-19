@@ -31,6 +31,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web.Configuration;
 using System.Xml;
+using SkiaSharp;
 using static Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.Cms.dbImport;
@@ -9646,24 +9647,31 @@ namespace Protean
                             oLibraryImageInstance = moAdXfm.Instance;
                             XmlElement imgElement = (XmlElement)oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlBrief/Content/Images/img[@class='display']");
                             XmlElement imgElementDetail = (XmlElement)oLibraryImageInstance.SelectSingleNode("tblContent/cContentXmlDetail/Content/Images/img[@class='display']");
-                            // Dim oImg As System.Drawing.Bitmap = New System.Drawing.Bitmap(goServer.MapPath("/") & cImage.Trim.Replace("/", "\"))
-                            System.Drawing.Bitmap oImg;
+                            SKBitmap oImg;
+                            string imagePath;
 
-                            if (!string.IsNullOrEmpty(myWeb.moCtx.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(myWeb.moCtx.Request.Form["cImageBasePath"]))
+                            if (!string.IsNullOrEmpty(myWeb.moCtx.Request.Form["cImageBasePath"]))
                             {
-                                oImg = new System.Drawing.Bitmap(myWeb.moCtx.Request.Form["cImageBasePath"] + cImage.Trim().Replace("/", @"\"));
+                                imagePath = myWeb.moCtx.Request.Form["cImageBasePath"] + cImage.Trim().Replace("/", @"\");
                             }
                             else
                             {
-                                oImg = new System.Drawing.Bitmap(goServer.MapPath("/") + cImage.Trim().Replace("/", @"\"));
+                                imagePath = goServer.MapPath("/") + cImage.Trim().Replace("/", @"\");
                             }
 
+                            oImg = SKBitmap.Decode(imagePath);
+
+                            if (oImg != null)
+                            {
+                                imgElement.SetAttribute("height", oImg.Height.ToString());
+                                imgElement.SetAttribute("width", oImg.Width.ToString());
+                                imgElementDetail.SetAttribute("height", oImg.Height.ToString());
+                                imgElementDetail.SetAttribute("width", oImg.Width.ToString());
+                                // Don't forget to dispose!
+                                oImg.Dispose();
+                            }
                             imgElement.SetAttribute("src", cImage.Trim());
-                            imgElement.SetAttribute("height", oImg.Height.ToString());
-                            imgElement.SetAttribute("width", oImg.Width.ToString());
                             imgElementDetail.SetAttribute("src", cImage.Trim());
-                            imgElementDetail.SetAttribute("height", oImg.Height.ToString());
-                            imgElementDetail.SetAttribute("width", oImg.Width.ToString());
                             long nContentId;
                             nContentId = Conversions.ToLong(setObjectInstance(objectTypes.Content, oLibraryImageInstance));
                             // If we have an action here we need to relate the item

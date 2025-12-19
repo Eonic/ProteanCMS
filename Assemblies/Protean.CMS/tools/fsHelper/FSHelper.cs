@@ -22,6 +22,7 @@ using AngleSharp.Io;
 using DelegateWrappers;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using SkiaSharp;
 using static Protean.stdTools;
 
 namespace Protean
@@ -303,13 +304,10 @@ namespace Protean
                 }
                 else
                 {
-                    var oImg = new System.Drawing.Bitmap(goServer.MapPath("/" + mcRoot + cPath));
+                    SKBitmap oImg = SKBitmap.Decode(goServer.MapPath("/" + mcRoot + cPath));
                     return "<img src=\"" + ImagePath + "\" height=\"" + oImg.Height + "\" width=\"" + oImg.Width + "\" alt=\"\"/> ";
                 }
             }
-
-
-
             catch (Exception ex)
             {
                 returnException(ref msException, mcModuleName, "getImageXhtml", ex, "", cProcessInfo, gbDebug);
@@ -943,7 +941,7 @@ namespace Protean
             Stream remoteStream = new System.IO.MemoryStream();
             //StreamReader readStream;
             WebRequest request;
-            System.Drawing.Image img = null;
+            SKBitmap img = null;
             try
             {
                 httpURL = httpURL.Replace(@"\", "/");
@@ -980,7 +978,7 @@ namespace Protean
                         remoteStream = response.GetResponseStream();
                         try
                         {
-                            img = System.Drawing.Image.FromStream(remoteStream);
+                            img = SKBitmap.Decode(remoteStream);
                         }
                         catch (Exception ex2)
                         {
@@ -996,30 +994,39 @@ namespace Protean
                         {
                             if (dir.Exists)
                             {
-                                switch (Strings.Right(httpURL, httpURL.Length - httpURL.LastIndexOf(".") - 1) ?? "")
+                                using (var image = SKImage.FromBitmap(img))
                                 {
-                                    case "gif":
-                                        {
-                                            img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Gif);
-                                            return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
-                                        }
-                                    case "jpg":
-                                    case "jpeg":
-                                        {
-                                            img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Jpeg);
-                                            return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
-                                        }
-                                    case "png":
-                                        {
-                                            img.Save(mcStartFolder + cFolderPath + @"\" + filename, System.Drawing.Imaging.ImageFormat.Png);
-                                            return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
-                                        }
+                                    SKEncodedImageFormat format;
+                                    int quality = 90;
 
-                                    default:
-                                        {
+                                    switch (Strings.Right(httpURL, httpURL.Length - httpURL.LastIndexOf(".") - 1) ?? "")
+                                    {
+                                        case "gif":
+                                            // GIF -> convert to PNG (SkiaSharp doesn't support GIF encoding)
+                                            format = SKEncodedImageFormat.Png;
+                                            quality = 100;
+                                            filename = filename.Replace(".gif", ".png");
+                                            break;
+                                        case "jpg":
+                                        case "jpeg":
+                                            format = SKEncodedImageFormat.Jpeg;
+                                            quality = 85;
+                                            break;
+                                        case "png":
+                                            format = SKEncodedImageFormat.Png;
+                                            quality = 100;
+                                            break;
+                                        default:
                                             return "filetype not handled:" + filename;
-                                        }
+                                    }
+
+                                    using (var data = image.Encode(format, quality))
+                                    using (var fileStream = File.OpenWrite(mcStartFolder + cFolderPath + @"\" + filename))
+                                    {
+                                        data.SaveTo(fileStream);
+                                    }
                                 }
+
                             }
                             else
                             {
