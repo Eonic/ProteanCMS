@@ -415,10 +415,10 @@ namespace Protean
 
 
                     // Session Cookie
-                    System.Web.HttpContext.Current.Response.Cookies[ASPSessionName].Value = System.Web.HttpContext.Current.Session.SessionID;
+                    myWeb.moResponse.Cookies[ASPSessionName].Value = myWeb.moSession.SessionID;
                     if (!string.IsNullOrEmpty(SecureMembershipDomain))
                     {
-                        System.Web.HttpContext.Current.Response.Cookies[ASPSessionName].Domain = SecureMembershipDomain;
+                        myWeb.moResponse.Cookies[ASPSessionName].Domain = SecureMembershipDomain;
                     }
                     // Path
                     string cPath = "" + myWeb.moRequest.QueryString["path"];

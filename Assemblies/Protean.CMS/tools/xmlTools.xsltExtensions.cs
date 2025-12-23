@@ -1110,7 +1110,6 @@ namespace Protean
 
                             while (oDr.Read())
                                 cLocations += "," + oDr[0].ToString();
-                            oDr.Close();
                         }
 
                         cLocations = cLocations.TrimStart(',');

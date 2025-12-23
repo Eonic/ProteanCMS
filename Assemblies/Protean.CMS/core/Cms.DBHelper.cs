@@ -8,10 +8,7 @@
 // $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
 // ***********************************************************************
 
-using AngleSharp.Dom;
-using AngleSharp.Io;
-using DocumentFormat.OpenXml.Bibliography;
-using DocumentFormat.OpenXml.Drawing.Charts;
+
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Authentication;
@@ -24,11 +21,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Net.FtpClient.Extensions;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Web.Configuration;
 using System.Xml;
 using SkiaSharp;

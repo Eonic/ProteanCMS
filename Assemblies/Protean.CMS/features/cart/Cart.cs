@@ -3820,12 +3820,12 @@ namespace Protean
                     }
 
                     // sonalis code for session set
-                    if (System.Web.HttpContext.Current.Request.Cookies["Flag"] is null)
+                    if (myWeb.moRequest.Cookies["Flag"] is null)
                     {
 
                         var flagCookie = new System.Web.HttpCookie("Flag");
                         flagCookie.Value = "1";
-                        System.Web.HttpContext.Current.Response.Cookies.Add(flagCookie);
+                        myWeb.moRequest.Cookies.Add(flagCookie);
 
                     }
                 }

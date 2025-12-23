@@ -7,10 +7,12 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
 using System.Xml;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Protean.Tools
 {
-    public class Database : IDisposable
+    public partial class Database : IDisposable
     {
         private driverType oDriver;
         private string cServer = "";
@@ -314,8 +316,6 @@ namespace Protean.Tools
                 bTimeoutException = value;
             }
         }
-
-
 
         private void _ConnectionState(object sender, System.Data.StateChangeEventArgs e)
         {
@@ -728,6 +728,9 @@ namespace Protean.Tools
                 CloseConnection();
             }
         }
+
+       
+
         public int ExeProcessSqlfromFile(string filepath)
         {
             string errmsg = "";
@@ -913,6 +916,10 @@ namespace Protean.Tools
                 return null/* TODO Change to default(_) if this is not a reference type */;
             }
         }
+
+
+
+       
 
         // ADD THIS NEW METHOD to Database.cs class
         /// <summary>
@@ -1130,8 +1137,6 @@ namespace Protean.Tools
             };
         }
 
-
-
         public object GetDataValue(string sql, string cConn, CommandType commandtype = CommandType.Text, Hashtable parameters = null, object nullreturnvalue = null)
         {
             string cProcessInfo = "Running Sql: " + sql;
@@ -1291,7 +1296,6 @@ namespace Protean.Tools
             return oXmlValue;
         }
 
-
         public XmlDocument GetXml(DataSet src)
         {
             // TS This function was added when we move to C# as GetXML does not return null fields in the XML. Need to convert to string and return empty string.
@@ -1350,8 +1354,6 @@ namespace Protean.Tools
             }
 
         }
-
-
 
         public void AddXMLValueToNode(string sql, ref XmlElement oElmt)
         {
@@ -1415,6 +1417,8 @@ namespace Protean.Tools
                 return null/* TODO Change to default(_) if this is not a reference type */;
             }
         }
+
+     
 
         public string GetIdInsertSql(string sql)
         {
@@ -1738,9 +1742,6 @@ namespace Protean.Tools
             return false;
         }
 
-
-
-
         public void CloseConnection(bool bDispose = false)
         {
             try
@@ -1790,6 +1791,9 @@ namespace Protean.Tools
                 CloseConnection();
             }
         }
+
+ 
+
 
         public void ReturnEmptyNulls(ref DataSet ds)
         {

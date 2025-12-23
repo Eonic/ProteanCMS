@@ -168,6 +168,10 @@
         z-index: 2;
     }
 
+    .ui-draggable-handle {
+        pointer-events: auto;
+    }
+
     .ptn-edit > .btn-default, .ptn-edit > .btn-primary, .ptn-edit > .dropdown > .btn-primary, .ptn-edit > .dropdown .dropdown-menu a {
         font-family: $admin-header-font;
         pointer-events: auto;

@@ -625,7 +625,7 @@ namespace Protean
                         case "Admin":
                             {
                                 var statusElmt = moPageXML.CreateElement("Status");
-                                statusElmt.InnerXml = myWeb.GetStatus().OuterXml;
+                                statusElmt.InnerXml = myWeb.GetAdminStatus().OuterXml;
                                 oPageDetail.AppendChild(statusElmt);
                                 myWeb.moSession["tempInstance"] = (object)null;
                                 break;

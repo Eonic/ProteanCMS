@@ -32,6 +32,13 @@ namespace Protean.Tools
             return date.ToString("ddd") + ", " + date.ToString("dd MM yyyy HH:mm:ss") + " GMT";
         }
 
+        public static bool IsNumeric(object Expression)
+        {
+            bool isNum;
+            double retNum;
+            isNum = Double.TryParse(Convert.ToString(Expression), System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out retNum);
+            return isNum;
+        }
 
         public static string MaskString(string cInitialString, string cMaskchar = "*", bool bKeepSpaces = false, int nNoCharsToLeave = 4)
         {

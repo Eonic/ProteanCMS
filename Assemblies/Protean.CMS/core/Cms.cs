@@ -422,7 +422,7 @@ namespace Protean
 
         }
 
-        public XmlDocument GetStatus()
+        public XmlDocument GetAdminStatus()
         {
             var oDb = new Tools.Database();
             System.Collections.Specialized.NameValueCollection oVConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/versioncontrol");
@@ -2238,6 +2238,124 @@ namespace Protean
                 // moResponse.End()
             }
 
+        }
+
+
+        /// <summary>
+        /// Transforms the page XML to HTML using XSLT.
+        /// This is a synchronous transform that can be called from both sync and async pipelines.
+        /// </summary>
+        /// <returns>The transformed HTML string</returns>
+        public virtual string TransformPageHTML()
+        {
+            PerfMon.Log("Web", "TransformPageHTML");
+            string sProcessInfo = "";
+            string cPageHTML = "";
+
+            try
+            {
+                if (string.IsNullOrEmpty(moPageXml.OuterXml))
+                {
+                    GetPageXML();
+                }
+
+                // Determine the stylesheet to use
+                string styleFile;
+                if (mbAdminMode == true)
+                {
+                    if (Strings.LCase(moPageXml.DocumentElement.GetAttribute("adminMode")) == "false"
+                        || mbPopupMode == true
+                        || mcContentType != "text/html")
+                    {
+                        styleFile = goServer.MapPath(mcEwSiteXsl);
+                    }
+                    else if (Strings.LCase(moConfig["AdminXsl"]) == "common")
+                    {
+                        styleFile = goServer.MapPath("/ewcommon/xsl/admin/page.xsl");
+                    }
+                    else if (!string.IsNullOrEmpty(moConfig["AdminXsl"]))
+                    {
+                        styleFile = goServer.MapPath(moConfig["AdminXsl"]);
+                    }
+                    else
+                    {
+                        styleFile = goServer.MapPath(mcEwSiteXsl);
+                    }
+
+                    if (moResponseType == pageResponseType.pdf)
+                    {
+                        styleFile = goServer.MapPath(mcEwSiteXsl);
+                    }
+                }
+                else
+                {
+                    if (moResponseType == pageResponseType.Page)
+                    {
+                        if (!string.IsNullOrEmpty(moConfig["xframeoptions"]))
+                        {
+                            moResponse.AddHeader("X-Frame-Options", moConfig["xframeoptions"]);
+                        }
+                        else
+                        {
+                            moResponse.AddHeader("X-Frame-Options", "DENY");
+                        }
+                    }
+
+                    if (mbSetNoBrowserCache)
+                    {
+                        moResponse.Cache.SetNoStore();
+                        moResponse.Cache.AppendCacheExtension("no-cache");
+                        moResponse.Expires = 0;
+                    }
+
+                    styleFile = goServer.MapPath(mcEwSiteXsl);
+                }
+
+                // Create transform
+                sProcessInfo = "TransformPageHTML-loadxsl";
+                PerfMon.Log("Web", sProcessInfo);
+
+                var argaWeb = this;
+                var oTransform = new Protean.XmlHelper.Transform(
+                    ref argaWeb,
+                    styleFile,
+                    gbCompiledTransform,
+                    15000L);
+
+                if (!string.IsNullOrEmpty(moConfig["XslTimeout"]))
+                {
+                    oTransform.TimeOut = Conversions.ToLong(moConfig["XslTimeout"]);
+                }
+
+                oTransform.mbDebug = gbDebug;
+
+                // Transform to string
+                sProcessInfo = "TransformPageHTML-startxsl";
+                PerfMon.Log("Web", sProcessInfo);
+
+                var textWriter = new StringWriterWithEncoding(System.Text.Encoding.UTF8);
+                TextWriter argoWriter = textWriter;
+                oTransform.ProcessTimed(moPageXml, ref argoWriter);
+                textWriter = (StringWriterWithEncoding)argoWriter;
+
+                sProcessInfo = "TransformPageHTML-endxsl";
+                PerfMon.Log("Web", sProcessInfo);
+
+                cPageHTML = textWriter.ToString();
+
+                // Cleanup
+                oTransform.Close();
+                oTransform = null;
+                textWriter.Dispose();
+
+                return cPageHTML;
+            }
+            catch (Exception ex)
+            {
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(
+                    mcModuleName, "TransformPageHTML", ex, sProcessInfo));
+                return msException;
+            }
         }
 
         public virtual XmlDocument GetPageXML()
