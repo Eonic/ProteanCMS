@@ -44,12 +44,33 @@ Public Class google_base : Implements IHttpHandler, IRequiresSessionState
         If cContentSchema = "product" Then
             bContentDetail = True
         End If
+
         Dim GroupId As Int32 = 0
         If context.Request("groupId") <> "" Then
             GroupId = context.Request("groupId")
         End If
 
-        oEw.GetFeedXML(cContentSchema, bShowRelated, bContentDetail, cRelatedSchemasToShow, GroupId)
+        If LCase(context.Request("showRelated")) = "sku" AndAlso context.Request("SaveFile") <> String.Empty Then
+            If oEw.msException Is Nothing Then
+                oEw.msException = String.Empty
+            End If
+            ' SKU feed XSLT
+            Dim Skudoc As XmlDocument = oEw.BuildFeedXML(cContentSchema, bShowRelated, 0, True, bContentDetail, cRelatedSchemasToShow, GroupId)
+
+            Dim StyleFile As String = oEw.goServer.MapPath("/xsl/feeds/google/product-specification.xsl")
+            context.Response.ContentType = "application/xml"
+            Dim oTransform As New Protean.XmlHelper.Transform(oEw, StyleFile, False, , False)
+            Using sw As New System.IO.StreamWriter(System.IO.File.Open(oEw.goServer.MapPath("/feeds/" + context.Request("SaveFile") + ".xml"), System.IO.FileMode.OpenOrCreate))
+                oTransform.Process(Skudoc, sw)
+                oTransform.Process(Skudoc, context.Response)
+            End Using
+            'If context.Request("SaveFile") <> String.Empty Then
+            '    Skudoc.Save(oEw.goServer.MapPath("/feeds/" + context.Request("SaveFile") + "Raw.xml"))
+            'End If
+        Else
+            ' Existing product feed XSLT
+            oEw.GetFeedXML(cContentSchema, bShowRelated, bContentDetail, cRelatedSchemasToShow, GroupId)
+        End If
 
         oEw = Nothing
 
