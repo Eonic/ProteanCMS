@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.Collections.Specialized;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -832,9 +831,10 @@ namespace Protean
                     {
 
                         // if we are an attribute then get the parent xpath
-                        if (Strings.InStr(oBindElmt.GetAttribute("nodeset"), "@") == 1)
+                        if (oBindElmt.GetAttribute("nodeset").StartsWith("@"))
                         {
-                            sAttribute = Strings.Right(oBindElmt.GetAttribute("nodeset"), Strings.Len(oBindElmt.GetAttribute("nodeset")) - 1);
+                            string nodesetVal3 = oBindElmt.GetAttribute("nodeset");
+                            sAttribute = nodesetVal3.Substring(1);
                         }
 
                         sXpathNoAtt = getBindXpath(ref oBindElmt);
@@ -857,7 +857,7 @@ namespace Protean
                         obj = xPathNav.Select(expr);
                         obj.MoveNext();
 
-                        if (Strings.LCase(obj.Current.Name) == "instance")
+                        if (obj.Current.Name.ToLower() == "instance")
                         {
                             // object not found so we returns root instance we don't want all nodes returned in a dirty long string
                             objValue = "";
@@ -888,7 +888,7 @@ namespace Protean
 
                     if (oBindElmt.GetAttribute("type") != "" && (oBindElmt.GetAttribute("required") == "true()" && objValue.ToString() !=""))
                     {
-                        sMessage = evaluateByType(Convert.ToString(objValue), oBindElmt.GetAttribute("type"), cExtensions, Strings.LCase(oBindElmt.GetAttribute("required")) == "true()");
+                        sMessage = evaluateByType(Convert.ToString(objValue), oBindElmt.GetAttribute("type"), cExtensions, oBindElmt.GetAttribute("required").ToLower() == "true()");
                     }
                     string labelText = oBindElmt.GetAttribute("id");
                     XmlElement oIptElmt = (XmlElement)moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" + oBindElmt.GetAttribute("id") + "' or @bind='" + oBindElmt.GetAttribute("id") + "']");
@@ -1173,7 +1173,7 @@ namespace Protean
                 // Only evaulate if there is data to evaluate against!
                 if (!string.IsNullOrEmpty(sValue))
                 {
-                    switch (Strings.LCase(sType) ?? "")
+                    switch (sType.ToLower() ?? "")
                     {
                         case "float":
                         case "number":
@@ -1185,7 +1185,7 @@ namespace Protean
                             }
                         case "date":
                             {
-                                if (!Information.IsDate(sValue))
+                                if (!DateTime.TryParse(sValue, out _))
                                     cReturn = "<span class=\"msg-1001\">This must be a valid date</span>";
                                 break;
                             }
@@ -1228,7 +1228,7 @@ namespace Protean
                                 cProcessInfo = sValue;
 
                                 string cExtension = Path.GetExtension(sValue);
-                                if (!cExtensions.Contains(Strings.Right(cExtension, 3)))
+                                if (!cExtensions.Contains(cExtension.Length >= 3 ? cExtension.Substring(cExtension.Length - 3) : cExtension))
                                     cReturn = "<span class=\"msg-1004\">Invalid File Extension</span>";
                                 break;
                             }
@@ -1240,7 +1240,7 @@ namespace Protean
                                 {
                                     // Extract the regexp and compare it.
                                     string cPattern = "";
-                                    cPattern = Strings.Mid(sType, 8);
+                                    cPattern = sType.Substring(7);
                                     if (!string.IsNullOrEmpty(cPattern))
                                     {
                                         try
@@ -1376,15 +1376,15 @@ namespace Protean
                     sAttribute = "";
 
                     // Readonly Textarea need to treat any value as Xml
-                    if (oElmt.Name == "textarea" & oElmt.GetAttribute("class") == "readonly")
+                    if (oElmt.Name == "textarea" && oElmt.GetAttribute("class") == "readonly")
                         bIsXml = true;
-                    if (oElmt.Name == "textarea" & Strings.InStr(oElmt.GetAttribute("class"), "xhtml") > 0)
+                    if (oElmt.Name == "textarea" && oElmt.GetAttribute("class").Contains("xhtml"))
                         bIsXml = true;
-                    if (oElmt.Name == "textarea" & Strings.InStr(oElmt.GetAttribute("class"), "xml") > 0)
+                    if (oElmt.Name == "textarea" && oElmt.GetAttribute("class").Contains("xml"))
                         bIsXml = true;
-                    if (oElmt.Name == "textarea" & Strings.InStr(oElmt.GetAttribute("class"), "xsledit") > 0)
+                    if (oElmt.Name == "textarea" && oElmt.GetAttribute("class").Contains("xsledit"))
                         bIsXml = true;
-                    if (oElmt.Name == "input" & Strings.InStr(oElmt.GetAttribute("class"), "pickImage") > 0)
+                    if (oElmt.Name == "input" && oElmt.GetAttribute("class").Contains("pickImage"))
                         bIsXml = true;
 
                     // if the ref contains the instance xpath
@@ -1422,9 +1422,10 @@ namespace Protean
                                     if (oBindElmt.SelectSingleNode("@nodeset") != null)
                                     {
                                         // if we are an attribute then get the parent xpath
-                                        if (Strings.InStr(oBindElmt.GetAttribute("nodeset"), "@") == 1)
+                                        if (oBindElmt.GetAttribute("nodeset").StartsWith("@"))
                                         {
-                                            sAttribute = Strings.Right(oBindElmt.GetAttribute("nodeset"), Strings.Len(oBindElmt.GetAttribute("nodeset")) - 1);
+                                            string nodesetVal4 = oBindElmt.GetAttribute("nodeset");
+                                            sAttribute = nodesetVal4.Substring(1);
 
                                         }
                                         sXpath = getBindXpath(ref oBindElmt);
@@ -1433,7 +1434,7 @@ namespace Protean
                                         // Allow the submitted value to substitue in the Xpath
 
                                         // first we need to reset the other values
-                                        if (Strings.InStr(sXpath, "$submittedValue") > 0)
+                                        if (sXpath.Contains("$submittedValue"))
                                         {
                                             string falseValue = oBindNode.GetAttribute("falseValue");
                                             if (string.IsNullOrEmpty(falseValue))
@@ -1606,7 +1607,7 @@ namespace Protean
                                                             if (!string.IsNullOrEmpty(cSavePath))
                                                             {
                                                                 string cExtension = Path.GetExtension(Filename);
-                                                                if (cExtensions.Contains(Strings.Right(cExtension, 3)))
+                                                                if (cExtensions.Contains(cExtension.Length >= 3 ? cExtension.Substring(cExtension.Length - 3) : cExtension))
                                                                 {
                                                                     upload = true;
                                                                 }
@@ -1687,9 +1688,9 @@ namespace Protean
                                                         // pull the first value in an array and populate the instance
                                                         XmlElement oElmtTemp;
                                                         oElmtTemp = moPageXML.CreateElement("Temp");
-                                                        if (Strings.InStr(1, submittedValue, ",") > 0)
+                                                    if (submittedValue.IndexOf(",") > -1)
                                                         {
-                                                            string cFirstPath = Strings.Left(submittedValue, Strings.InStr(submittedValue, ","));
+                                                            string cFirstPath = submittedValue.Substring(0, submittedValue.IndexOf(",") + 1);
                                                             cFirstPath = cFirstPath.TrimEnd(',');
                                                             oElmtTemp.InnerXml = (Tools.Xml.convertEntitiesToCodes(cFirstPath) + "").Trim();
                                                             // oInstance.SelectSingleNode(sXpath, nsMgr).ParentNode.ReplaceChild(oElmtTemp.FirstChild.Clone, oInstance.SelectSingleNode(sXpath, nsMgr))
@@ -1826,9 +1827,10 @@ namespace Protean
                     {
                         oBindElmt = oBindNode;
                         // if we are an attribute then get the parent xpath
-                        if (Strings.InStr(oBindElmt.GetAttribute("nodeset"), "@") == 1)
+                        if (oBindElmt.GetAttribute("nodeset").StartsWith("@"))
                         {
-                            sAttribute = Strings.Right(oBindElmt.GetAttribute("nodeset"), Strings.Len(oBindElmt.GetAttribute("nodeset")) - 1);
+                            string nodeset1 = oBindElmt.GetAttribute("nodeset");
+                            sAttribute = nodeset1.Substring(1);
                         }
                         sXpath = getBindXpath(ref oBindElmt);
                         sXpath = Tools.Xml.addNsToXpath(sXpath, ref nsMgr);
@@ -1926,8 +1928,8 @@ namespace Protean
                         var oFs = new Protean.fsHelper();
 
                         fileName = postedFile.FileName;
-                        fileName = Strings.Right(fileName, fileName.Length - fileName.LastIndexOf(@"\") - 1);
-                        fileName = Strings.Replace(fileName, " ", "-");
+                        fileName = fileName.Substring(fileName.LastIndexOf(@"\") + 1);
+                        fileName = fileName.Replace(" ", "-");
 
                         // lets load the settings from the bind node
 
@@ -1960,7 +1962,7 @@ namespace Protean
 
                         if (cProcessInfo != "1")
                         {
-                            Information.Err().Raise(1009, "updateImageElement", "EonicWeb Filesystem: you don't have permissions to write to " + filePath);
+                            throw new UnauthorizedAccessException("EonicWeb Filesystem: you don't have permissions to write to " + filePath);
                         }
 
                         cProcessInfo = oFs.SaveFile(ref postedFile, filePath);
@@ -2101,11 +2103,11 @@ namespace Protean
                         bReadOnly = true;
                     }
 
-                    if (oElmt.Name == "textarea" & Strings.InStr(oElmt.GetAttribute("class"), "xhtml") > 0)
+                    if (oElmt.Name == "textarea" && oElmt.GetAttribute("class").Contains("xhtml"))
                         bIsXml = true;
-                    if (oElmt.Name == "textarea" & Strings.InStr(oElmt.GetAttribute("class"), "xml") > 0)
+                    if (oElmt.Name == "textarea" && oElmt.GetAttribute("class").Contains("xml"))
                         bIsXml = true;
-                    if (oElmt.Name == "textarea" & Strings.InStr(oElmt.GetAttribute("class"), "xsl") > 0)
+                    if (oElmt.Name == "textarea" && oElmt.GetAttribute("class").Contains("xsl"))
                         bIsXml = true;
 
                     sXpath = oElmt.GetAttribute("ref");
@@ -2139,9 +2141,10 @@ namespace Protean
                                 // End If
 
                                 // if we are an attribute then get the parent xpath
-                                if (Strings.InStr(oBindElmt.GetAttribute("nodeset"), "@") == 1)
+                                if (oBindElmt.GetAttribute("nodeset").StartsWith("@"))
                                 {
-                                    sAttribute = Strings.Right(oBindElmt.GetAttribute("nodeset"), Strings.Len(oBindElmt.GetAttribute("nodeset")) - 1);
+                                    string nodeset2 = oBindElmt.GetAttribute("nodeset");
+                                    sAttribute = nodeset2.Substring(1);
                                 }
                                 sXpath = getBindXpath(ref oBindElmt);
                                 if (string.IsNullOrEmpty(sXpath))
@@ -2152,7 +2155,7 @@ namespace Protean
 
                                 // if bind has selected value then we need some clever stuff
                                 // first we step through the possible values
-                                if (Strings.InStr(sXpath, "$submittedValue") > 0)
+                                if (sXpath.Contains("$submittedValue"))
                                 {
                                     string oldXpath = sXpath;
                                     string modifiedXpath;
@@ -2831,17 +2834,17 @@ namespace Protean
                 {
                     oIptElmt.SetAttribute("class", sClass);
                 }
-                if (Information.IsDate(oStart))
+                if (DateTime.TryParse(oStart, out DateTime startDate))
                 {
-                    oIptElmt.SetAttribute("start", Tools.Xml.XmlDate(oStart));
+                    oIptElmt.SetAttribute("start", Tools.Xml.XmlDate(startDate));
                 }
                 else
                 {
                     oIptElmt.SetAttribute("start", Convert.ToString(oStart));
                 }
-                if (Information.IsDate(oEnd))
+                if (DateTime.TryParse(oEnd, out DateTime endDate))
                 {
-                    oIptElmt.SetAttribute("end", Tools.Xml.XmlDate(oEnd));
+                    oIptElmt.SetAttribute("end", Tools.Xml.XmlDate(endDate));
                 }
                 else
                 {
@@ -3235,7 +3238,7 @@ namespace Protean
                 while (oDr.Read())
                     // update audit
                     // NB Change! Needs auth :S
-                    addOption(ref oSelectNode, Strings.Replace(oDr[nameOrdinal].ToString(), "&amp;", "&"), Strings.Replace(oDr[valueOrdinal].ToString(), "&amp;", "&"));
+                    addOption(ref oSelectNode, oDr[nameOrdinal].ToString().Replace("&amp;", "&"), oDr[valueOrdinal].ToString().Replace("&amp;", "&"));
                 oDr.Close();
             }
 
@@ -3840,7 +3843,7 @@ namespace Protean
             {
                 sNodeSet = sXpath;
             }
-            else if (Strings.InStr(oBindElmt.GetAttribute("nodeset"), "@") == 1)
+            else if (oBindElmt.GetAttribute("nodeset").StartsWith("@"))
             {
                 // ignore for attributes
                 sNodeSet = "";
@@ -3886,14 +3889,14 @@ namespace Protean
                     oElmt = (XmlElement)oNode;
                     if (string.IsNullOrEmpty(oElmt.GetAttribute("ref"))) // its not a ref its a bind
                     {
-                        if (Convert.ToInt64("0" + Strings.Replace(oElmt.GetAttribute("bind"), refPrefix, "")) > nLastNum)
+                        if (Convert.ToInt64("0" + oElmt.GetAttribute("bind").Replace(refPrefix, "")) > nLastNum)
                         {
-                            nLastNum = Convert.ToInt64("0" + Strings.Replace(oElmt.GetAttribute("bind"), refPrefix, ""));
+                            nLastNum = Convert.ToInt64("0" + oElmt.GetAttribute("bind").Replace(refPrefix, ""));
                         }
                     }
-                    else if (Convert.ToInt64("0" + Strings.Replace(oElmt.GetAttribute("ref"), refPrefix, "")) > nLastNum) // it is a ref
+                    else if (Convert.ToInt64("0" + oElmt.GetAttribute("ref").Replace(refPrefix, "")) > nLastNum) // it is a ref
                     {
-                        nLastNum = Convert.ToInt64("0" + Strings.Replace(oElmt.GetAttribute("ref"), refPrefix, ""));
+                        nLastNum = Convert.ToInt64("0" + oElmt.GetAttribute("ref").Replace(refPrefix, ""));
                     }
 
                 }

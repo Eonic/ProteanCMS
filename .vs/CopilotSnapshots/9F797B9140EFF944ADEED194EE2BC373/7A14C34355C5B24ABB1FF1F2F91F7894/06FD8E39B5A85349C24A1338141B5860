@@ -1,0 +1,297 @@
+﻿# Async Migration Plan for GetPageXML
+
+## Overview
+This plan outlines the systematic migration of `GetPageXML()` and all methods it calls to async methodology in the ProteanCMS codebase.
+
+## Target Framework
+- .NET Framework 4.8
+- C# 7.3
+- ASP.NET Web Forms
+
+## Call Chain Diagram
+
+```mermaid
+flowchart TD
+    A[GetPageXML] --> B[BuildPageXML]
+    A --> C[ContentActions]
+    A --> D[CommonActions]
+    A --> E[LayoutActions]
+    A --> F[AddCart]
+    A --> G[MembershipProcess]
+    A --> H[ProcessReports]
+    A --> I[ProcessCalendar]
+    
+    B --> J[GetStructureXML]
+    B --> K[GetContentXml]
+    B --> L[GetContentDetailXml]
+    
+    J --> M[dbHelper.GetDataSet]
+    K --> N[GetPageContentXml]
+    N --> M
+    
+    C --> O[Module Actions]
+    E --> P[AddSearch]
+    F --> Q[Cart.apply]
+    G --> R[moMemProv.Activities]
+    
+    M --> S[SQL Server]
+    
+    style A fill:#ff6b6b
+    style B fill:#feca57
+    style J fill:#48dbfb
+    style K fill:#48dbfb
+    style M fill:#1dd1a1
+    style S fill:#54a0ff
+```
+
+---
+
+## Step 1: Create Method Inventory
+
+### Action
+Create an inventory of all synchronous methods in the CMS call chain that are directly or indirectly invoked by `Cms.GetPageXML()`.
+
+### Reasoning
+This inventory is the foundation for systematic conversion to async. By listing every method, we can ensure no synchronous call is missed, preserving functional parity after migration.
+
+### Implementation Details
+- Open `Assemblies\Protean.CMS\core\Cms.cs` and search for calls made inside `GetPageXML()`.
+- Record the full namespace, class, and method name for each of the following (and any additional discovered): `BuildPageXML`, `GetStructureXML`, `GetContentXml`, `ContentActions`, `LayoutActions`, `MembershipProcess`, `AddCart`, `ProcessReports`, `ProcessCalendar`, `CommonActions`.
+- For each of those methods, recursively scan their bodies for further synchronous calls (especially database helper methods like `dbHelper.GetDataSet`, `dbHelper.addBulkRelatedContent`, etc.).
+- Document the results in a markdown table (Method → Calls → Database Interaction) and include a mermaid flowchart that visualises the call hierarchy.
+
+### Error Handling
+- If any method uses reflection or dynamically constructed delegate calls, note them for manual review.
+- Capture and log any compile-time errors encountered during the scan (e.g., missing files) and abort the step with a clear message.
+
+### Testing
+- Verify that the generated table contains at least all methods listed in the user task.
+- Run a quick build to ensure the file paths are correct.
+
+---
+
+## Step 2: Introduce Async Database Helper Methods
+
+### Action
+Introduce async counterparts for all database helper methods in `dbHelper` and its base class `Tools.Database`.
+
+### Reasoning
+All I/O-bound work must be performed with async ADO.NET APIs to achieve true asynchrony. Providing async versions first allows higher-level CMS methods to `await` them.
+
+### Implementation Details
+- In `Assemblies\Protean.CMS\core\Cms.DBHelper.cs`, add methods:
+  - `Task<DataSet> GetDataSetAsync(string sql, SqlParameter[] parameters = null)`
+  - `Task<DataSet> GetPageBlockedContentAsync(int pageId)`
+  - `Task<DataSet> GetPageLayoutAsync(int pageId)`
+  - `Task AddBulkRelatedContentAsync(XmlDocument xmlDoc, int pageId)` (if it performs DB writes)
+- In `Assemblies\Protean.Tools\Database.cs` (and the .NET Standard copy), add protected helper:
+  `protected async Task<SqlDataReader> ExecuteReaderAsync(SqlCommand cmd, CancellationToken ct = default)`.
+- Use `await cmd.ExecuteReaderAsync(ct).ConfigureAwait(false)` and manually load a `DataTable`/`DataSet` because `SqlDataAdapter.FillAsync` is unavailable in .NET Framework 4.8.
+- Ensure `using` statements (or `await using` where possible) correctly dispose `SqlCommand` and `SqlConnection`.
+- Preserve the existing synchronous signatures; they will call the new async methods via `.GetAwaiter().GetResult()`.
+
+### Error Handling
+- Wrap each async DB call in try/catch; rethrow using `OnComponentError?.Invoke(this, ex)` to respect the existing error-handling pattern.
+- Log performance via `PerfMon.Log` before and after the async call.
+
+### Testing
+- Write unit tests that call each `*Async` method against a test DB and assert that the returned `DataSet` matches the synchronous version.
+- Ensure that the synchronous wrappers still function correctly.
+
+---
+
+## Step 3: Create Async Versions of CMS Content-Generation Methods
+
+### Action
+Create async versions of all CMS content-generation methods identified in Step 1.
+
+### Reasoning
+These methods form the call chain from the entry point down to the DB layer. Converting them to async and using `await` ensures end-to-end asynchrony while still allowing a synchronous wrapper for compatibility.
+
+### Implementation Details
+For each method (`BuildPageXML`, `GetStructureXML`, `GetContentXml`, `ContentActions`, `LayoutActions`, `MembershipProcess`, `AddCart`, `ProcessReports`, `ProcessCalendar`, `CommonActions`):
+
+1. Duplicate the method with an `Async` suffix (e.g., `BuildPageXMLAsync`).
+2. Change the return type to `Task<...>` (most return `void` → `Task`; ones returning `XmlNode`/`XmlDocument` → `Task<XmlNode>`/`Task<XmlDocument>`).
+3. Replace every synchronous DB call with the newly created `*Async` equivalents and prepend `await` + `.ConfigureAwait(false)`.
+4. Propagate `async` up the call chain: if `BuildPageXMLAsync` calls `GetStructureXMLAsync`, it must `await` it.
+5. Preserve existing exception handling (use the `OnComponentError` pattern) and add `catch (Exception ex)` where necessary.
+- Update any internal helper methods that are pure CPU-bound to remain synchronous (no need for async).
+- Add XML documentation indicating the async nature and deprecation notice for the sync overload.
+
+### Error Handling
+- Ensure any `Task` returned from a method that previously threw exceptions now propagates them correctly (no swallow).
+- For methods that originally used `return;` after an error, keep the same behaviour after `await`.
+
+### Testing
+- For each async method, add a unit test that awaits the method and verifies the resulting XML structure matches the synchronous version.
+- Run the existing test suite to confirm no regression.
+
+---
+
+## Step 4: Convert Primary Entry Point
+
+### Action
+Convert the primary entry point `GetPageXML` to an async method and retain a synchronous wrapper.
+
+### Reasoning
+`GetPageXMLAsync` will be the public API for new callers. The old `GetPageXML` must remain for legacy code, delegating to the async version without causing deadlocks.
+
+### Implementation Details
+- In `Cms.cs`, rename the existing method to `GetPageXMLAsync` with signature `public async Task<XmlDocument> GetPageXMLAsync(...)` (preserve parameters).
+- Change its body to `await BuildPageXMLAsync(...).ConfigureAwait(false);` and return the final `XmlDocument`.
+- Add a new synchronous method:
+  ```csharp
+  public XmlDocument GetPageXML(...)
+  {
+      return GetPageXMLAsync(...).ConfigureAwait(false).GetAwaiter().GetResult();
+  }
+  ```
+- Add `[Obsolete("Use GetPageXMLAsync instead.")]` attribute to the sync method to guide developers.
+- Ensure any internal calls that previously used `GetPageXML()` within the same class are updated to call `GetPageXMLAsync` with `await`.
+
+### Error Handling
+- Preserve the existing `try/catch` / `OnComponentError` pattern inside `GetPageXMLAsync`.
+- In the sync wrapper, catch `AggregateException` and rethrow the inner exception to keep old behaviour.
+
+### Testing
+- Write an integration test that calls `GetPageXMLAsync` and asserts the XML output.
+- Run a legacy test that still uses `GetPageXML` to ensure the wrapper still works.
+
+---
+
+## Step 5: Update Callers
+
+### Action
+Update all internal and external callers of the CMS methods to use the new async signatures where feasible.
+
+### Reasoning
+To reap the benefits of asynchrony, callers (e.g., Web Forms pages, user controls, other services) must await the async methods. Leaving synchronous calls untouched would block threads.
+
+### Implementation Details
+- Search the solution for `GetPageXML(`, `BuildPageXML(`, etc., and replace with `await GetPageXMLAsync(` etc.
+- For ASP.NET Web Forms code-behind, change the page method signatures to `protected async void Page_Load(object sender, EventArgs e)` **only** if the call is the final async operation; otherwise use `protected async Task Page_LoadAsync(...)` and register with `Async="true"` in the .aspx page directive.
+- Where a synchronous call is required (e.g., third-party libraries), keep the existing call; it will automatically use the sync wrapper added in Step 4.
+- Add `ConfigureAwait(false)` to all awaited calls in library code (non-UI layers).
+
+### Error Handling
+- Verify that no `async void` methods are introduced unintentionally; only Web Forms page lifecycle events may remain `async void`.
+- Ensure proper exception propagation from awaited methods to the page's error handling pipeline.
+
+### Testing
+- Run the full web application in a staging environment and perform typical page loads; monitor thread pool usage to confirm threads are not blocked.
+- Add automated UI tests (e.g., Selenium) that navigate pages relying on the CMS methods.
+
+---
+
+## Step 6: Introduce Comprehensive Tests
+
+### Action
+Introduce comprehensive unit and integration tests for the async path.
+
+### Reasoning
+Async code can introduce subtle timing and concurrency bugs. Tests guarantee functional parity and guard against regressions.
+
+### Implementation Details
+- In `ProteanCMS.UnitTests`, add a new test class `CmsAsyncTests`.
+- Use the `async` test pattern (e.g., `public async Task GetPageXMLAsync_ReturnsCorrectXml()`).
+- Mock `dbHelper` using a library such as Moq to return predefined `DataSet`s for async methods.
+- Verify that the generated XML matches the expected output using XML comparison utilities.
+- Add performance benchmarks comparing sync vs async execution time under load (optional).
+
+### Error Handling
+- Ensure the test runner supports async tests (e.g., MSTest V2, NUnit 3).
+- If any test deadlocks, verify that `ConfigureAwait(false)` is applied correctly.
+
+### Testing
+- Execute the full test suite; all existing tests must still pass.
+- Confirm the new async tests pass and achieve >90% coverage on the modified methods.
+
+---
+
+## Step 7: Update Documentation
+
+### Action
+Update documentation, XML comments, and release notes to reflect the new async API.
+
+### Reasoning
+Developers consuming the CMS need clear guidance on the new method signatures and migration path.
+
+### Implementation Details
+- In each modified file, add `<summary>` tags indicating the async nature and reference the synchronous wrapper.
+- Add a `README.AsyncMigration.md` in the repository root describing:
+  - Why the change was made.
+  - How to call the async methods.
+  - Guidance on configuring ASP.NET Web Forms pages for async (`Async="true"`).
+  - Deprecated sync signatures.
+- Update the project's `.csproj` XML to include the new files if they are split into partial classes.
+
+### Error Handling
+- Validate that the XML documentation builds without warnings (`/doc` compile flag).
+
+### Testing
+- Build the solution with `DocumentationFile` enabled and confirm no warnings.
+- Review the generated `.xml` doc file for the new method entries.
+
+---
+
+## Step 8: Regression Test and Performance Profiling
+
+### Action
+Perform a final regression test and performance profiling.
+
+### Reasoning
+Ensures that the async migration has not introduced regressions or performance regressions, especially under typical web load.
+
+### Implementation Details
+- Deploy the updated solution to a local staging IIS instance.
+- Use a load-testing tool (e.g., Apache JMeter or Visual Studio Load Test) to simulate concurrent page requests.
+- Capture thread-pool usage, request latency, and CPU utilization.
+- Compare metrics against the pre-migration baseline.
+
+### Error Handling
+- If latency spikes are observed, revisit `ConfigureAwait(false)` usage or possible synchronization contexts.
+- Ensure any long-running DB calls are still configured with appropriate command timeouts.
+
+### Testing
+- Verify that under load of 100 concurrent users, the average response time does not exceed the baseline by more than 10%.
+- Confirm that no deadlocks or unobserved task exceptions appear in the logs.
+
+---
+
+## Key Methods to Convert (Summary Table)
+
+| Method | File | Return Type | Async Return Type | DB Interaction |
+|--------|------|-------------|-------------------|----------------|
+| `GetPageXML()` | Cms.cs:2361 | `XmlDocument` | `Task<XmlDocument>` | Indirect |
+| `BuildPageXML()` | Cms.cs:2590 | `XmlDocument` | `Task<XmlDocument>` | Yes |
+| `GetStructureXML()` | Cms.cs:6680+ | `XmlElement` | `Task<XmlElement>` | Yes |
+| `GetContentXml()` | Cms.cs:8268 | `void` | `Task` | Yes |
+| `ContentActions()` | Cms.cs:4362 | `void` | `Task` | Yes |
+| `LayoutActions()` | Cms.cs:4724 | `string` | `Task<string>` | Indirect |
+| `CommonActions()` | Cms.cs | `void` | `Task` | Possible |
+| `MembershipProcess()` | Cms.cs:5823 | `string` | `Task<string>` | Yes |
+| `AddCart()` | Cms.cs:3921 | `void` | `Task` | Yes |
+| `ProcessReports()` | Cms.cs:3957 | `void` | `Task` | Possible |
+| `ProcessCalendar()` | Cms.cs:3983 | `void` | `Task` | Possible |
+| `dbHelper.GetDataSet()` | Cms.DBHelper.cs | `DataSet` | `Task<DataSet>` | Yes |
+| `dbHelper.addBulkRelatedContent()` | Cms.DBHelper.cs | `void` | `Task` | Yes |
+
+---
+
+## Dependencies and Considerations
+
+### .NET Framework 4.8 Constraints
+- `SqlDataAdapter.FillAsync()` is not available - must use `SqlDataReader.ReadAsync()` and manually populate DataSet/DataTable
+- Use `ConfigureAwait(false)` to avoid deadlocks in ASP.NET context
+- C# 7.3 - no `await using`, use `try/finally` for disposal
+
+### ASP.NET Web Forms Considerations
+- Add `<%@ Page Async="true" %>` directive to pages using async methods
+- Use `RegisterAsyncTask()` for complex async operations
+- Be cautious with `async void` - only for event handlers
+
+### Backward Compatibility
+- Keep synchronous method signatures
+- Use `.GetAwaiter().GetResult()` pattern in sync wrappers
+- Add `[Obsolete]` attributes to guide developers to async versions

@@ -1,7 +1,4 @@
 ﻿using System;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-
 using static Protean.stdTools;
 
 namespace Protean
@@ -82,7 +79,7 @@ namespace Protean
                             case "reValidateUser":
                                 {
                                     cReturn = myWeb.moDbHelper.validateUser(this.mnUserId, sValue);
-                                    if (Information.IsNumeric(cReturn))
+                                    if (Tools.Text.IsNumeric(cReturn))
                                         cReturn = "";
                                     break;
                                 }
@@ -125,7 +122,7 @@ namespace Protean
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "isUnique", ex, "", cProcessInfo, gbDebug);
-                    return Conversions.ToBoolean("");
+                    return false;
                 }
             }
 
