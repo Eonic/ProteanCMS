@@ -11484,7 +11484,7 @@ namespace Protean
             }
 
 
-            public void AddProductOption(ref Newtonsoft.Json.Linq.JObject jObj)
+            public void AddProductOption(Newtonsoft.Json.Linq.JObject jObj)
             {
 
                 try
@@ -11495,6 +11495,7 @@ namespace Protean
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);
+
 
                     var json = jObj;
 
@@ -11560,8 +11561,13 @@ namespace Protean
                     XmlNode argoNode18 = oelmt;
                     addNewTextNode("xItemXml", ref argoNode18, (string)json.SelectToken("ItemXml"));
                     oelmt = (XmlElement)argoNode18;
+                    XmlNode argoNode19 = oelmt;
+                    addNewTextNode("nDepositAmount", ref argoNode19, (string)json.SelectToken("DepositAmount"));
+                    oelmt = (XmlElement)argoNode19;
 
                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
+                    
+                   
                 }
                 // UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
                 catch (Exception)
@@ -11580,7 +11586,7 @@ namespace Protean
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);
-
+                  
                     // Dim json As Newtonsoft.Json.Linq.JObject = jObj
 
                     // Dim CartItemId As Long = json.SelectToken("CartItemId")
@@ -12389,8 +12395,8 @@ namespace Protean
             // Public Dispose method
             public void Dispose()
             {
-                Dispose(true);
-                GC.SuppressFinalize(this);
+                //Dispose(true);
+               // GC.SuppressFinalize(this);
             }
 
 
@@ -12406,7 +12412,8 @@ namespace Protean
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
                 }
-                finally {
+                finally
+                {
                     Dispose();
                 }
             }

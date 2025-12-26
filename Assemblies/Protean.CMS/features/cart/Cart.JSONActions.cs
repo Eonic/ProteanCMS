@@ -589,22 +589,23 @@ namespace Protean
                     return JsonConvert.ToString(isSuccess);
                 }
 
-                public string AddProductOption(ref Protean.rest myApi, ref JObject jObj)
+                public string AddProductOption(Protean.rest myApi, JObject jObj)
                 {
                     string jsonString = string.Empty;
 
                     try
                     {
+                       
 
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
                         // myCart.GetCart(CartXml.FirstChild)
 
                         // add product option
-                        myCart.AddProductOption(ref jObj);
+                        myCart.AddProductOption(jObj);
                         // myCart.UpdatePackagingANdDeliveryType()
                         // myCart.GetCart(CartXml.FirstChild)   //Comment out this extra called method because this code already added in UpdatePackagingDeliveryOptions method - change on 5th jan 23
                         /// persist cart
-                        // myCart.close();  // no need to disclose cart here
+                        //myCart.close();
 
                         // CartXml = updateCartforJSON(CartXml)
 
