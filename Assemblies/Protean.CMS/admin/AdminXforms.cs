@@ -1,10 +1,10 @@
 ﻿// ***********************************************************************
-// $Library:     eonic.adminXforms
+// $Library:     protean.cms.adminXforms
 // $Revision:    3.1  
 // $Date:        2006-03-02
 // $Author:      Trevor Spink (trevor@eonic.com)
 // &Website:     eonic.com
-// &Licence:     All Rights Reserved.
+// &Licence:     Apache-2.0 license
 // $Copyright:   Copyright (c) 2002 - 2022 Eonic Digital LLP.
 // ***********************************************************************
 

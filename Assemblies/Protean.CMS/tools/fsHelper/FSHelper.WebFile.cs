@@ -3,8 +3,8 @@
 // $Revision:    4.0  
 // $Date:        2011-03-01
 // $Author:      Ali Granger
-// &Website:     www.eonic.co.uk
-// &Licence:     All Rights Reserved.
+// &Website:     eonic.digital
+// &Licence:     Apache-2.0 license
 // $Copyright:   Copyright (c) 2002 - 2011 EonicWeb Ltd.
 // ***********************************************************************
 

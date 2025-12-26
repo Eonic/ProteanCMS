@@ -1,4 +1,4 @@
-﻿using Protean.Tools;
+﻿
 using System;
 using System.Collections;
 using System.Data;
@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using static Lucene.Net.QueryParsers.QueryParser;
+using Protean.Tools;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 

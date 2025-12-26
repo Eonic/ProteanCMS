@@ -2,9 +2,9 @@
 // $Library:     Protean.Providers.membership.base
 // $Revision:    3.1  
 // $Date:        2012-07-21
-// $Author:      Trevor Spink (trevor@eonic.co.uk)
-// &Website:     www.eonic.co.uk
-// &Licence:     All Rights Reserved.
+// $Author:      Trevor Spink (trevor@eonic.digital)
+// &Website:     eonic.digital
+// &Licence:     Apache-2.0 license
 // $Copyright:   Copyright (c) 2002 - 2010 Eonic Ltd.
 // ***********************************************************************
 

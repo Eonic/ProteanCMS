@@ -1,11 +1,11 @@
 ﻿// ***********************************************************************
-// $Library:     eonic.dbhelper
+// $Library:     protean.cms.dbhelper
 // $Revision:    3.1  
 // $Date:        2006-03-02
-// $Author:      Trevor Spink (trevor@eonic.co.uk)
-// &Website:     www.eonic.co.uk
-// &Licence:     All Rights Reserved.
-// $Copyright:   Copyright (c) 2002 - 2024 Trevor Spink Consultants Ltd.
+// $Author:      Trevor Spink (trevor@eonic.digital)
+// &Website:     eonic.digital
+// &Licence:     Apache-2.0 license
+// $Copyright:   Copyright (c) 2002 - 2026 Eonic Digital Group Ltd.
 // ***********************************************************************
 
 

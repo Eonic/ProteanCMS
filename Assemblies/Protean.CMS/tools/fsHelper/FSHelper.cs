@@ -2,9 +2,9 @@
 // $Library:     Protean.fsHelper
 // $Revision:    4.0  
 // $Date:        2006-09-22
-// $Author:      Trevor Spink (trevor@eonic.co.uk) et al.
-// &Website:     www.eonic.co.uk
-// &Licence:     All Rights Reserved.
+// $Author:      Trevor Spink (trevor@eonic.digital) et al.
+// &Website:     eonic.digital
+// &Licence:     Apache-2.0 license
 // $Copyright:   Copyright (c) 2002 - 2011 Eonicweb Ltd.
 // ***********************************************************************
 
