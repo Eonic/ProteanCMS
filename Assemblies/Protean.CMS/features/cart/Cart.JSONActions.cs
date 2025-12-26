@@ -604,7 +604,7 @@ namespace Protean
                         // myCart.UpdatePackagingANdDeliveryType()
                         // myCart.GetCart(CartXml.FirstChild)   //Comment out this extra called method because this code already added in UpdatePackagingDeliveryOptions method - change on 5th jan 23
                         /// persist cart
-                        myCart.close();
+                        // myCart.close();  // no need to disclose cart here
 
                         // CartXml = updateCartforJSON(CartXml)
 
@@ -1339,6 +1339,151 @@ namespace Protean
                     }
 
                 }
+                #endregion
+
+                #region Pay360 Apple Pay and Google Pay functionality
+
+                public object ProcessGooglePayPaymentApi(ref Protean.rest myApi, ref JObject jObj)
+                {
+                    try
+                    {
+                        string googlePayToken = jObj["token"]?.ToString();
+                        if (string.IsNullOrEmpty(googlePayToken))
+                            throw new Exception("Google Pay token is missing");
+
+                        XmlDocument cartDoc = new XmlDocument();
+                        myCart.CreateCartElement(cartDoc);
+                        myCart.GetCart();
+                        XmlElement oOrder = (XmlElement)myCart.moCartXml.FirstChild;
+
+                        // Get payment provider(Pay360)
+                        Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+
+                        IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, myWeb.moRequest["PaymentMethod"]);
+
+                        // Call your modified GetPaymentFormLocal with extra token
+                        var response = oPaymentProv.Activities.ProcessGooglePayPayment(ref myWeb, ref myCart, ref oOrder, googlePayToken);
+
+                        return response; // send back to JS
+                    }
+                    catch(Exception ex)
+                    {
+                        Protean.stdTools.returnException(ref myWeb.msException, "ProcessGooglePayPaymentApi", "", ex);
+                        return null;
+                    }
+                }
+
+                public object ApplePayMerchantValidation(string validationURL)
+                {
+                    if (string.IsNullOrEmpty(validationURL))
+                    {
+                        return new
+                        {
+                            error = "validationURL is required"
+                        };
+                    }
+
+                    try
+                    {
+                        // Get payment provider (Pay360)
+                        Protean.Providers.Payment.ReturnProvider oPayProv =
+                            new Protean.Providers.Payment.ReturnProvider();
+
+                        IPaymentProvider oPaymentProv =
+                            oPayProv.Get(ref myWeb, myWeb.moRequest["PaymentMethod"]);
+
+                        // Call Pay360 Activities method
+                        var sessionObject =
+                            oPaymentProv.Activities.ValidateApplePayMerchant(validationURL);
+
+                        /*
+                         IMPORTANT:
+                         - Do NOT wrap
+                         - Do NOT stringify
+                         - Do NOT modify
+                         - Return raw object
+                        */
+
+                        return sessionObject;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Apple Pay expects JSON, even on error
+                        return new
+                        {
+                            error = ex.Message
+                        };
+                    }
+                }
+
+
+                public object ProcessApplePayPaymentApi(string applePayToken)
+                {
+                    try
+                    {
+                        XmlDocument cartDoc = new XmlDocument();
+                        myCart.CreateCartElement(cartDoc);
+                        myCart.GetCart();
+                        XmlElement oOrder = (XmlElement)myCart.moCartXml.FirstChild;
+
+                        Protean.Providers.Payment.ReturnProvider oPayProv =
+                            new Protean.Providers.Payment.ReturnProvider();
+
+                        IPaymentProvider oPaymentProv =
+                            oPayProv.Get(ref myWeb, "Pay360");
+
+                        dynamic result =
+                            oPaymentProv.Activities.ProcessApplePayPayment( oOrder.OwnerDocument,applePayToken);
+
+                        // or GetOrderXml() depending on your project
+                        XmlElement oContentElmt = null;
+                        XmlElement oElmt = null;
+
+                        // Set process state to COMPLETE
+                        myCart.mnProcessId = (int)cartProcess.Complete;
+
+                        // 3Attach payment info BEFORE completing order
+                        XmlElement cartElmt = cartDoc.SelectSingleNode("//Cart") as XmlElement;
+
+                        if (cartElmt != null)
+                        {
+                            cartElmt.SetAttribute("paymentMethod", "ApplePay");
+                            cartElmt.SetAttribute("paymentStatus", "success");
+                            cartElmt.SetAttribute("paymentRef", (string)result.transactionReference);
+
+                            // Store gateway response safely (CDDATA)
+                            XmlElement paymentNode = cartElmt.SelectSingleNode("Payment") as XmlElement ?? cartDoc.CreateElement("Payment");
+
+                            paymentNode.RemoveAll();
+                            paymentNode.AppendChild(
+                                cartDoc.CreateCDataSection((string)result.rawResponse ?? string.Empty)
+                            );
+
+                            if (paymentNode.ParentNode == null)
+                                cartElmt.AppendChild(paymentNode);
+                        }
+
+                        // Call EXISTING CompleteOrder method
+                        myCart.CompleteOrder(cartDoc, ref oContentElmt, ref oElmt );
+
+                        return new
+                        {
+                            success = false,
+                            message = (string)result.message
+                        };
+                    }
+                    catch (Exception ex)
+                    {
+                        return new
+                        {
+                            success = false,
+                            message = ex.Message
+                        };
+                    }
+                }
+
+
+
 
 
                 //public string GetPaymentSession(ref Protean.rest myApi, ref JObject jObj)

@@ -44,7 +44,6 @@ Public Class google_base : Implements IHttpHandler, IRequiresSessionState
         If cContentSchema = "product" Then
             bContentDetail = True
         End If
-
         Dim GroupId As Int32 = 0
         If context.Request("groupId") <> "" Then
             GroupId = context.Request("groupId")

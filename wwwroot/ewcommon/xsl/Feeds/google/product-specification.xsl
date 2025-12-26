@@ -64,23 +64,8 @@
         <link>
           <xsl:value-of select="$siteURL"/>
         </link>
-        <!--<xsl:apply-templates select="Contents/Content[@type='Product']" mode="contentItem"/>-->
-		  <xsl:choose>
-
-			  <!-- SKU FEED -->
-			  <xsl:when test="Contents/Content[@type='Product']/Content[@type='SKU']">
-				  <!-- DEBUG: SKU FEED -->
-				  <xsl:apply-templates	select="Contents/Content[@type='Product']/Content[@type='SKU']"	mode="contentItem"/>
-			  </xsl:when>
-
-			  <!-- PRODUCT FEED (OLD BEHAVIOUR) -->
-			  <xsl:otherwise>
-				  <!-- DEBUG: PRODUCT FEED -->
-				  <xsl:apply-templates	select="Contents/Content[@type='Product']" mode="contentItem"/>
-			  </xsl:otherwise>
-
-		  </xsl:choose>
-
+        <xsl:apply-templates select="Contents/Content[@type='Product']" mode="contentItem"/>
+		 
       </channel>
     </rss>
   </xsl:template>
@@ -169,93 +154,7 @@
    
     </item>
 
-  </xsl:template>
-
-	<!-- Template for showing SKU's details-  -->
-	<xsl:template match="Content[@type='SKU']" mode="contentItem">
-
-		<!-- Parent Product -->
-		<xsl:variable name="product" select="ancestor::Content[@type='Product'][1]"/>
-
-		<xsl:variable name="parId">
-			<xsl:value-of select="$product/@parId"/>
-		</xsl:variable>
-
-		<xsl:variable name="parentURL">
-			<xsl:call-template name="getContentParURL">
-				<xsl:with-param name="parId" select="$parId"/>
-			</xsl:call-template>
-		</xsl:variable>
-
-		<!-- Unique ID should be SKU based -->
-		<xsl:variable name="uniqueId">
-			<xsl:value-of select="@ref"/>
-		</xsl:variable>
-
-		<item>
-
-			<guid>
-				<xsl:value-of select="$uniqueId"/>
-			</guid>
-
-			<g:id>
-				<xsl:value-of select="$uniqueId"/>
-			</g:id>
-
-			<!-- SKU name -->
-			<title>
-				<xsl:value-of select="Name"/>
-			</title>
-
-			<!-- Product description -->
-			<description>
-				<xsl:apply-templates select="$product" mode="get-google-description"/>
-			</description>
-
-			<g:product_type>
-				<xsl:apply-templates select="$product" mode="get-product_type"/>
-			</g:product_type>
-
-			<!-- Google product category -->
-			<xsl:apply-templates select="$product" mode="get-google_product_type"/>
-
-			<link>
-				<xsl:apply-templates select="$product" mode="get-google-url"/>
-			</link>
-
-			<!-- Images from Product -->
-			<xsl:apply-templates select="$product" mode="get-google-image_link"/>
-			<xsl:apply-templates select="$product" mode="get-google-additional_image_link"/>
-
-			<g:condition>
-				<xsl:apply-templates select="$product" mode="get-google-condition"/>
-			</g:condition>
-
-			<g:availability>
-				<xsl:apply-templates select="." mode="get-google-availability"/>
-			</g:availability>
-
-			<!-- SKU price -->
-			<g:price>
-				<xsl:value-of select="Prices/Price[@type='sale']"/>
-				<xsl:text> GBP</xsl:text>
-			</g:price>
-
-			<!-- SKU StockCode -->
-			<g:mpn>
-				<xsl:value-of select="StockCode"/>
-			</g:mpn>
-
-			<!-- Brand from Product -->
-			<g:brand>
-				<xsl:apply-templates select="$product" mode="get-google-brand"/>
-			</g:brand>
-
-			<xsl:apply-templates select="$product" mode="getShippingCharges"/>
-
-		</item>
-
-	</xsl:template>
+  </xsl:template>	
   
   <!-- HANDLES SKU's as seperate items, using some elements of its parent products.-->
   <xsl:template match="Content[@type='Product' and @SkuOptions='skus']" mode="contentItem">
