@@ -307,8 +307,8 @@ namespace Protean
                                 errorElmt.InnerText = myWeb.msException;
                                 try
                                 {
-                                    errorElmt.SetAttribute("pgid", Conversions.ToString(oDR["nStructKey"]));
-                                    errorElmt.SetAttribute("name", Conversions.ToString(oDR["cStructName"]));
+                                    errorElmt.SetAttribute("pgid", Convert.ToString(oDR["nStructKey"]));
+                                    errorElmt.SetAttribute("name", Convert.ToString(oDR["cStructName"]));
                                 }
                                 catch (Exception)
                                 {
@@ -414,8 +414,8 @@ namespace Protean
                                                 errorElmt.InnerXml = myWeb.msException;
                                                 try
                                                 {
-                                                    errorElmt.SetAttribute("pgid", Conversions.ToString(oDR["nStructKey"]));
-                                                    errorElmt.SetAttribute("name", Conversions.ToString(oDR["cStructName"]));
+                                                    errorElmt.SetAttribute("pgid", Convert.ToString(oDR["nStructKey"]));
+                                                    errorElmt.SetAttribute("name", Convert.ToString(oDR["cStructName"]));
                                                 }
                                                 catch (Exception)
                                                 {
@@ -509,8 +509,8 @@ namespace Protean
                                                                     oPageElmt.SetAttribute("updated", oElmt.GetAttribute("update"));
                                                                     oInfoElmt.AppendChild(oPageElmt);
 
-                                                                    DateTime dPublish = Conversions.ToDate(Interaction.IIf(Information.IsDate(oElmt.GetAttribute("publish")), Conversions.ToDate(oElmt.GetAttribute("publish")), null));
-                                                                    DateTime dUpdate = Conversions.ToDate(Interaction.IIf(Information.IsDate(oElmt.GetAttribute("update")), Conversions.ToDate(oElmt.GetAttribute("update")), null));
+                                                                    DateTime dPublish = Convert.ToDateTime(Interaction.IIf(Information.IsDate(oElmt.GetAttribute("publish")), Convert.ToDateTime(oElmt.GetAttribute("publish")), null));
+                                                                    DateTime dUpdate = Convert.ToDateTime(Interaction.IIf(Information.IsDate(oElmt.GetAttribute("update")), Convert.ToDateTime(oElmt.GetAttribute("update")), null));
 
                                                                     IndexPage(xWeb.mnPageId, "<h1>" + DocName + "</h1>" + fileAsText, oDocElmt.InnerText, DocName, "Download", xWeb.mnArtId, cPageExtract, dPublish, dUpdate);
 
@@ -850,11 +850,11 @@ namespace Protean
                     }
 
                     // try deleting a hidden folder
-                    if (Directory.Exists(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cDirectory, Interaction.IIf(Strings.Right(cDirectory, 1) == @"\", "", @"\")), "_vti_cnf"))))
+                    if (Directory.Exists(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cDirectory, Interaction.IIf(Strings.Right(cDirectory, 1) == @"\", "", @"\")), "_vti_cnf"))))
                     {
                         try
                         {
-                            Directory.Delete(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cDirectory, Interaction.IIf(Strings.Right(cDirectory, 1) == @"\", "", @"\")), "_vti_cnf")), true);
+                            Directory.Delete(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cDirectory, Interaction.IIf(Strings.Right(cDirectory, 1) == @"\", "", @"\")), "_vti_cnf")), true);
                         }
                         catch (Exception ex)
                         {
@@ -966,10 +966,10 @@ namespace Protean
             {
 
                 // Determine whether to tokenize this - by default, no
-                indexContent = (Field.Index)Conversions.ToInteger(Interaction.IIf(metaContent.GetAttribute("tokenize") == "true" & !forSorting, Field.Index.ANALYZED, Field.Index.NOT_ANALYZED));
+                indexContent = (Field.Index)Convert.ToInt16(Interaction.IIf(metaContent.GetAttribute("tokenize") == "true" & !forSorting, Field.Index.ANALYZED, Field.Index.NOT_ANALYZED));
 
                 // Determine whether to store this - by default, YES
-                storeContent = (Field.Store)Conversions.ToInteger(Interaction.IIf(metaContent.GetAttribute("store") == "false" | forSorting, Field.Store.NO, Field.Store.YES));
+                storeContent = (Field.Store)Convert.ToInt16(Interaction.IIf(metaContent.GetAttribute("store") == "false" | forSorting, Field.Store.NO, Field.Store.YES));
 
                 metaName = metaContent.GetAttribute("name");
                 if (forSorting)
@@ -1011,13 +1011,13 @@ namespace Protean
 
                                     case "float":
                                         {
-                                            metaNumericField.SetFloatValue(Conversions.ToSingle(convertedNumber));
+                                            metaNumericField.SetFloatValue(Convert.ToSingle(convertedNumber));
                                             break;
                                         }
 
                                     default:
                                         {
-                                            metaNumericField.SetLongValue(Conversions.ToLong(convertedNumber));
+                                            metaNumericField.SetLongValue(Convert.ToInt64(convertedNumber));
                                             break;
                                         }
 
@@ -1045,7 +1045,7 @@ namespace Protean
                             if (!string.IsNullOrEmpty(metaContentValue) && DateTime.TryParse(metaContentValue, out convertedDate))
                             {
 
-                                metaField = new Field(metaName, DateTools.DateToString(Conversions.ToDate(metaContentValue), DateTools.Resolution.SECOND), storeContent, indexContent);
+                                metaField = new Field(metaName, DateTools.DateToString(Convert.ToDateTime(metaContentValue), DateTools.Resolution.SECOND), storeContent, indexContent);
                             }
                             else
                             {
@@ -1089,7 +1089,7 @@ namespace Protean
 
         }
 
-        private void IndexPage(int nPageId, string cPageText, string cURL, string cPageTitle, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime dPublish = default, DateTime dUpdate = default)
+        private void IndexPage(long nPageId, string cPageText, string cURL, string cPageTitle, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime dPublish = default, DateTime dUpdate = default)
         {
             // PerfMon.Log("Indexer", "IndexPage")
             string cProcessInfo = cURL;

@@ -1,14 +1,9 @@
-﻿using DocumentFormat.OpenXml.Office.Word;
-using Org.BouncyCastle.Crypto.Engines;
-using SkiaSharp;
-using System;
+﻿using System;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
 using System.Runtime.CompilerServices;
 using System.Xml;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Protean.Tools
 {

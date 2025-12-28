@@ -13,8 +13,6 @@ namespace Protean
 {
     public class Env
     {
-
-
         public interface IHttpContext
         {
             IHttpRequest Request { get; }

@@ -114,7 +114,7 @@ namespace Protean.Integration.Directory
             }
             set
             {
-                _directoryId = Conversions.ToLong(Interaction.IIf(value < 0L, 0, value));
+                _directoryId = Convert.ToInt64(Interaction.IIf(value < 0L, 0, value));
             }
         }
 
@@ -159,7 +159,7 @@ namespace Protean.Integration.Directory
                     if (oDr.HasRows)
                     {
                         while (oDr.Read())
-                            return Conversions.ToLong(oDr["nDirectoryId"]);
+                            return Convert.ToInt64(oDr["nDirectoryId"]);
                     }
                     else
                     {
@@ -302,7 +302,7 @@ namespace Protean.Integration.Directory
                 // Save the instance.
                 long userid = 0L;
                 string updateStatus = myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Directory, _directoryInstance, _directoryId);
-                bool localCheckAndReturnStringAsNumber() { object argnumberReturn = userid; var ret = CheckAndReturnStringAsNumber(updateStatus, ref argnumberReturn, typeof(long)); userid = Conversions.ToLong(argnumberReturn); return ret; }
+                bool localCheckAndReturnStringAsNumber() { object argnumberReturn = userid; var ret = CheckAndReturnStringAsNumber(updateStatus, ref argnumberReturn, typeof(long)); userid = Convert.ToInt64(argnumberReturn); return ret; }
 
                 if (localCheckAndReturnStringAsNumber())
                 {
@@ -442,7 +442,7 @@ namespace Protean.Integration.Directory
                         {
 
                             // Match up the permissions for this scenario
-                            integrationsSelector = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("[Permissions/Permission[@type='postContent' and @contentType='" + contentSchema + "' and @", Interaction.IIf(isUpdatedContent, "edit", "add")), "='true']]"));
+                            integrationsSelector = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("[Permissions/Permission[@type='postContent' and @contentType='" + contentSchema + "' and @", Interaction.IIf(isUpdatedContent, "edit", "add")), "='true']]"));
                         }
 
                         // Check for the presence of Credentials
@@ -597,7 +597,7 @@ namespace Protean.Integration.Directory
                         addElement(ref group, "label", "Share Content");
 
                         // First search for automatic content postings for the content type
-                        string automaticPostingsXPath = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("//Credentials[Permissions/Permission[@contentType='" + contentSchema + "' and @", Interaction.IIf(isContentBeingUpdated, "edit", "add")), "='true']]"));
+                        string automaticPostingsXPath = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("//Credentials[Permissions/Permission[@contentType='" + contentSchema + "' and @", Interaction.IIf(isContentBeingUpdated, "edit", "add")), "='true']]"));
                         var automaticPostingProviders = userXml.SelectNodes(automaticPostingsXPath);
                         string postingProviders = "";
                         if (automaticPostingProviders.Count > 0)

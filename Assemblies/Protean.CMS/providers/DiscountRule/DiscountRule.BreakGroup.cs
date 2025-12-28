@@ -139,7 +139,7 @@ namespace Protean.Providers
 
                                         if (counter < itemsToDiscount)
                                         {
-                                            if (Conversions.ToDouble(oDiscount.GetAttribute("bDiscountIsPercent")) == 1d)
+                                            if (Convert.ToDouble(oDiscount.GetAttribute("bDiscountIsPercent")) == 1d)
                                             {
                                                 discountedUnitPrice = priceRound(originalUnitPrice * (100 - Convert.ToDecimal(oDiscount.GetAttribute("nDiscountValue"))) / 100m, bForceRoundup: mbRoundUp);
                                             }

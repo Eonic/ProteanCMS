@@ -101,7 +101,7 @@ namespace Protean
                             string sProcessesQty = Strings.Mid(FeedCheck, FeedCheck.IndexOf("Objects, ") + 10, FeedCheck.IndexOf(" Processed") - FeedCheck.IndexOf("Objects, ") - 9);
                             if (Information.IsNumeric(sProcessesQty))
                             {
-                                startNo = Conversions.ToLong(sProcessesQty);
+                                startNo = Convert.ToInt64(sProcessesQty);
                                 logActivity(ActivityType.Custom1, mnUserId, 0L, 0L, "Previous Feed Restarted:" + startNo);
                             }
                             else
@@ -178,7 +178,7 @@ namespace Protean
                             {
                                 if (Information.IsNumeric(resetNode.GetAttribute("enabled")))
                                 {
-                                    nResetLocationIfHere = Conversions.ToLong(resetNode.GetAttribute("enabled"));
+                                    nResetLocationIfHere = Convert.ToInt64(resetNode.GetAttribute("enabled"));
                                 }
                             }
                         }
@@ -195,7 +195,7 @@ namespace Protean
 
                         var Tasks = new dbImport(oConn.ConnectionString, mnUserId);
 
-                        short nThreads = (short)Conversions.ToInteger("0" + myWeb.moConfig["ImportThreads"]);
+                        short nThreads = (short)Convert.ToInt16("0" + myWeb.moConfig["ImportThreads"]);
                         if (nThreads == 0)
                             nThreads = 10;
                         ThreadPool.SetMaxThreads(nThreads, nThreads);
@@ -398,13 +398,13 @@ namespace Protean
                                         foreach (XmlElement oLocation in oInstance.SelectNodes("Location"))
                                         {
                                             long sPrimary = 0L;
-                                            long displayOrder = Conversions.ToInteger("0" + oLocation.GetAttribute("displayOrder"));
+                                            long displayOrder = Convert.ToInt16("0" + oLocation.GetAttribute("displayOrder"));
                                             if (ReferenceEquals(oLocation, oPrmLoc))
                                                 sPrimary = 1L;
                                             if (!string.IsNullOrEmpty(oLocation.GetAttribute("foriegnRef")))
                                             {
                                                 string cleanFref = oLocation.GetAttribute("foriegnRef");
-                                                if (Conversions.ToBoolean(Strings.InStr(cleanFref, "&")))
+                                                if (Convert.ToBoolean(Strings.InStr(cleanFref, "&")))
                                                 {
                                                     cleanFref = cleanFref.Replace("&amp;", "&");
                                                 }
@@ -414,7 +414,7 @@ namespace Protean
                                                     // does the item have a primary location that does not match the fRef ?
                                                     // if so we want to remove the location associated with the fRef because the client has moved the product manually to a more appropreate page/
                                                     string sSQL = "select count(*)  FROM tblContentLocation cl inner join tblContentStructure cs on cl.nStructId = cs.nStructKey where bPrimary = 1 and nContentId = " + savedId + " and cStructForiegnRef != '" + SqlFmt(cleanFref) + "'";
-                                                    if (Conversions.ToDouble(ExeProcessSqlScalar(sSQL)) > 0d)
+                                                    if (Convert.ToDouble(ExeProcessSqlScalar(sSQL)) > 0d)
                                                     {
                                                         // this item has an alternate primary location, then make sure we don't add it 
                                                         updateLocation = false;
@@ -422,7 +422,7 @@ namespace Protean
                                                         var loopTo = pageids.Length - 1;
                                                         for (i = 0; i <= loopTo; i++)
                                                             // and delete the existing location for that fRef
-                                                            RemoveContentLocation(Conversions.ToLong(pageids[i]), savedId);
+                                                            RemoveContentLocation(Convert.ToInt64(pageids[i]), savedId);
 
 
                                                     }
@@ -435,7 +435,7 @@ namespace Protean
 
                                             else if (!string.IsNullOrEmpty(oLocation.GetAttribute("id")))
                                             {
-                                                setContentLocation(Conversions.ToLong(oLocation.GetAttribute("id")), savedId, Conversions.ToBoolean(sPrimary), false, false, oLocation.GetAttribute("position"), true, displayOrder);
+                                                setContentLocation(Convert.ToInt64(oLocation.GetAttribute("id")), savedId, Convert.ToBoolean(sPrimary), false, false, oLocation.GetAttribute("position"), true, displayOrder);
                                             }
                                         }
                                     }
@@ -511,7 +511,7 @@ namespace Protean
                                         }
                                         else
                                         {
-                                            nloc = Conversions.ToInteger("0" + oRelation.GetAttribute("relatedDirId"));
+                                            nloc = Convert.ToInt16("0" + oRelation.GetAttribute("relatedDirId"));
                                         }
 
                                         if (nloc > 0L)
@@ -558,7 +558,7 @@ namespace Protean
                                             }
                                         }
 
-                                        nContentId = Conversions.ToLong(setObjectInstance(oObjType2, oContentInstance, nContentId));
+                                        nContentId = Convert.ToInt64(setObjectInstance(oObjType2, oContentInstance, nContentId));
                                         processInstanceExtras(nContentId, oContentInstance, bResetLocations, bOrphan);
 
                                     }

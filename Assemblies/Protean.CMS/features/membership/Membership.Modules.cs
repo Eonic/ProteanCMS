@@ -55,7 +55,7 @@ namespace Protean
 
                             oXfmElmt = (XmlElement)oAdXfm.GetProviderXFrmUserLogon(cmdPrefix: cmdPrefix);
                             bool bAdditionalChecks = false;
-                            if (Conversions.ToBoolean(!oAdXfm.valid))
+                            if (Convert.ToBoolean(!oAdXfm.valid))
                             {
                                 // Call in additional authentication checks
                                 if (myWeb.moConfig["AlternativeAuthentication"] == "On")
@@ -64,7 +64,7 @@ namespace Protean
                                 }
                             }
 
-                            if (Conversions.ToBoolean(Operators.OrObject(oAdXfm.valid, bAdditionalChecks)))
+                            if (Convert.ToBoolean(Operators.OrObject(oAdXfm.valid, bAdditionalChecks)))
                             {
                                 myWeb.moContentDetail = (XmlElement)null;
                                 // mnUserId = adXfm.mnUserId
@@ -82,18 +82,18 @@ namespace Protean
                                 {
                                     if (myWeb.moSession["cLogonCmd"] != null)
                                     {
-                                        cLogonCmd = Strings.Split(Conversions.ToString(myWeb.moSession["cLogonCmd"]), "=")[0];
+                                        cLogonCmd = Strings.Split(Convert.ToString(myWeb.moSession["cLogonCmd"]), "=")[0];
                                         if (myWeb.mcOriginalURL.Contains(cLogonCmd + "="))
                                         {
                                             cLogonCmd = "";
                                         }
                                         else if (myWeb.mcOriginalURL.Contains("="))
                                         {
-                                            cLogonCmd = Conversions.ToString(Operators.ConcatenateObject("&", myWeb.moSession["cLogonCmd"]));
+                                            cLogonCmd = Convert.ToString(Operators.ConcatenateObject("&", myWeb.moSession["cLogonCmd"]));
                                         }
                                         else
                                         {
-                                            cLogonCmd = Conversions.ToString(Operators.ConcatenateObject("?", myWeb.moSession["cLogonCmd"]));
+                                            cLogonCmd = Convert.ToString(Operators.ConcatenateObject("?", myWeb.moSession["cLogonCmd"]));
                                         }
                                     }
                                 }
@@ -228,7 +228,7 @@ namespace Protean
                             //    if (!string.IsNullOrEmpty(recipientEmail))
                             //    {
                             //        Cms.dbHelper argodbHelper = null;
-                            //        String cProcessInfo = Conversions.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
+                            //        String cProcessInfo = Convert.ToString(oMsg.emailer(oUserElmt, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
                             //    }
                             //    oMsg = (Protean.Messaging)null;
                             //    oContentNode.SetAttribute("activationMsg", "Activation Link Sent");
@@ -278,7 +278,7 @@ namespace Protean
                                                 break;
                                             }
                                     }
-                                    myWeb.msRedirectOnEnd = Conversions.ToString(sRedirectPath);
+                                    myWeb.msRedirectOnEnd = Convert.ToString(sRedirectPath);
                                 }
                                 else
                                 {
@@ -295,7 +295,7 @@ namespace Protean
                                             sProcessInfo = "Facebook Response";
                                             var fbClient = new Integration.Directory.Facebook(ref myWeb, moConfig["OauthFacebookId"], moConfig["OauthFacebookKey"]);
                                             List<Integration.Directory.Facebook.User> fbUsers;
-                                            fbUsers = fbClient.GetFacebookUserData(moRequest["code"], Conversions.ToString(redirectURI));
+                                            fbUsers = fbClient.GetFacebookUserData(moRequest["code"], Convert.ToString(redirectURI));
                                             sProcessInfo = fbUsers[0].first_name + " " + fbUsers[0].last_name;
 
                                             var tmp = fbUsers;
@@ -375,9 +375,9 @@ namespace Protean
                                 }
 
                                 // ok if the user is valid we then need to handle what happens next.
-                                if (Conversions.ToBoolean(oAdXfm.valid) && oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText != "")
+                                if (Convert.ToBoolean(oAdXfm.valid) && oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText != "")
                                 {
-                                    myWeb.mnUserId = Conversions.ToInteger(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
+                                    myWeb.mnUserId = Convert.ToInt16(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
                                     var oMembership = new Membership(ref myWeb);
                                     oMembership.RegistrationActions(CmdPrefix);
                                     switch (myWeb.moConfig["RegisterBehaviour"] ?? "")
@@ -437,18 +437,18 @@ namespace Protean
                                 {
                                     if (moSession["cLogonCmd"] != null)
                                     {
-                                        cLogonCmd = Strings.Split(Conversions.ToString(moSession["cLogonCmd"]), "=")[0];
+                                        cLogonCmd = Strings.Split(Convert.ToString(moSession["cLogonCmd"]), "=")[0];
                                         if (myWeb.mcOriginalURL.Contains(cLogonCmd + "="))
                                         {
                                             cLogonCmd = "";
                                         }
                                         else if (myWeb.mcOriginalURL.Contains("="))
                                         {
-                                            cLogonCmd = Conversions.ToString(Operators.ConcatenateObject("&", moSession["cLogonCmd"]));
+                                            cLogonCmd = Convert.ToString(Operators.ConcatenateObject("&", moSession["cLogonCmd"]));
                                         }
                                         else
                                         {
-                                            cLogonCmd = Conversions.ToString(Operators.ConcatenateObject("?", moSession["cLogonCmd"]));
+                                            cLogonCmd = Convert.ToString(Operators.ConcatenateObject("?", moSession["cLogonCmd"]));
                                         }
                                     }
                                 }
@@ -583,7 +583,7 @@ namespace Protean
 
                     try
                     {
-                        if (Conversions.ToDouble(UserId) != 0d)
+                        if (Convert.ToDouble(UserId) != 0d)
                         {
                             myWeb.mbAdminMode = true;
                             XmlElement argoPageDetail = null;
@@ -608,7 +608,7 @@ namespace Protean
 
                         string cSchemaName = contentNode.Attributes["parentSchemaType"].InnerText;
                         string sArrDirKeys = contentNode.Attributes["parentIds"].InnerText; // comma separated int array
-                        int nStatus = Conversions.ToInteger(contentNode.Attributes["parentStatus"].InnerText);
+                        int nStatus = Convert.ToInt16(contentNode.Attributes["parentStatus"].InnerText);
                         string nParDirId = contentNode.Attributes["parentParId"].InnerText;
 
                         if (sArrDirKeys.Length > 0)
@@ -641,7 +641,7 @@ namespace Protean
                             // add each result to content node xml
                             var oDsUsers = myWeb.moDbHelper.GetDataSet(strSql.ToString(), "User", "UserGroups");
                             foreach (DataRow oDrUser in oDsUsers.Tables[0].Rows)
-                                contentNode.AppendChild(myWeb.GetUserXML(Conversions.ToLong(oDrUser["id"])).Clone());
+                                contentNode.AppendChild(myWeb.GetUserXML(Convert.ToInt64(oDrUser["id"])).Clone());
 
                         }
                     }
@@ -679,7 +679,7 @@ namespace Protean
                                 case "editContact":
                                     {
                                         XmlElement oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryContact(Convert.ToInt64(myWeb.moRequest["id"]), myWeb.mnUserId);
-                                        if (Conversions.ToBoolean(!adXfm.valid))
+                                        if (Convert.ToBoolean(!adXfm.valid))
                                         {
                                             contentNode.AppendChild(oXfmElmt);
                                         }
@@ -699,7 +699,7 @@ namespace Protean
                                             {
                                                 if ((oId.InnerText ?? "") == (myWeb.moRequest["id"] ?? ""))
                                                 {
-                                                    myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, Conversions.ToLong(myWeb.moRequest["id"]));
+                                                    myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, Convert.ToInt64(myWeb.moRequest["id"]));
                                                     myWeb.RefreshUserXML();
                                                 }
                                             }
@@ -721,7 +721,7 @@ namespace Protean
 
                 public void CompanyContact(ref Cms myWeb, ref XmlElement contentNode)
                 {
-                    long CompanyId = Conversions.ToLong(myWeb.moRequest["ParentDirId"]);
+                    long CompanyId = Convert.ToInt64(myWeb.moRequest["ParentDirId"]);
                     bool bUserValid = true;
                     try
                     {
@@ -734,7 +734,7 @@ namespace Protean
                             var adXfm = myWeb.getAdminXform();
                             adXfm.open(myWeb.moPageXml);
 
-                            if (Conversions.ToInteger("0" + myWeb.moRequest["id"]) > 0 & myWeb.moPageXml.SelectSingleNode("User/Company/Contacts/Contact/nContactKey[text()='" + myWeb.moRequest["id"] + "']") != null)
+                            if (Convert.ToInt16("0" + myWeb.moRequest["id"]) > 0 & myWeb.moPageXml.SelectSingleNode("User/Company/Contacts/Contact/nContactKey[text()='" + myWeb.moRequest["id"] + "']") != null)
                             {
                                 bUserValid = false;
                             }
@@ -753,7 +753,7 @@ namespace Protean
                                     case "editContact":
                                         {
                                             XmlElement oXfmElmt = (XmlElement)adXfm.xFrmEditDirectoryContact(Convert.ToInt64(myWeb.moRequest["id"]), Convert.ToInt16(CompanyId), "/xforms/directory/CompanyContact.xml");
-                                            if (Conversions.ToBoolean(!adXfm.valid))
+                                            if (Convert.ToBoolean(!adXfm.valid))
                                             {
                                                 contentNode.AppendChild(oXfmElmt);
                                             }
@@ -773,7 +773,7 @@ namespace Protean
                                                 {
                                                     if ((oId.InnerText ?? "") == (myWeb.moRequest["id"] ?? ""))
                                                     {
-                                                        myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, Conversions.ToLong(myWeb.moRequest["id"]));
+                                                        myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, Convert.ToInt64(myWeb.moRequest["id"]));
                                                         myWeb.RefreshUserXML();
                                                     }
                                                 }
@@ -812,7 +812,7 @@ namespace Protean
                                     // Dim cUserEmail As String = myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, myWeb.mnUserId)
                                     // Dim cGroupName As String = myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, CLng(groupId))
 
-                                    myWeb.moDbHelper.maintainDirectoryRelation(Conversions.ToLong(groupId), (long)myWeb.mnUserId, false);
+                                    myWeb.moDbHelper.maintainDirectoryRelation(Convert.ToInt64(groupId), (long)myWeb.mnUserId, false);
                                 }
                             }
 
@@ -833,8 +833,8 @@ namespace Protean
                     string cProcessInfo = string.Empty;
                     var moConfig = myWeb.moConfig;
                     XmlElement oElmt;
-                    long JobId = Conversions.ToLong("0" + myWeb.moRequest["JobId"]);
-                    long FormId = Conversions.ToLong("0" + myWeb.moRequest["FormId"]);
+                    long JobId = Convert.ToInt64("0" + myWeb.moRequest["JobId"]);
+                    long FormId = Convert.ToInt64("0" + myWeb.moRequest["FormId"]);
                     try
                     {
                         if (myWeb.mnUserId == 0)
@@ -905,7 +905,7 @@ namespace Protean
                                 strSql.Append("SELECT eal.nEmailActivityKey FROM [tblEmailActivityLog] eal ");
                                 strSql.Append("INNER JOIN tblActivityLog al on al.nOtherId = eal.nEmailActivityKey ");
                                 strSql.Append("where al.nUserDirId = " + myWeb.mnUserId + " and al.nArtId = " + JobId);
-                                long EmailActivityId = Conversions.ToLong(Operators.ConcatenateObject("0", myWeb.moDbHelper.GetDataValue(strSql.ToString())));
+                                long EmailActivityId = Convert.ToInt64(Operators.ConcatenateObject("0", myWeb.moDbHelper.GetDataValue(strSql.ToString())));
                                 if (EmailActivityId > 0L)
                                 {
                                     // load in a saved instance
@@ -914,7 +914,7 @@ namespace Protean
                                     strSql2.Append("INNER JOIN tblActivityLog al on al.nOtherId = eal.nEmailActivityKey ");
                                     strSql2.Append("where al.nUserDirId = " + myWeb.mnUserId + " and al.nArtId = " + JobId);
 
-                                    string loadedInstance = Conversions.ToString(myWeb.moDbHelper.GetDataValue(strSql2.ToString()));
+                                    string loadedInstance = Convert.ToString(myWeb.moDbHelper.GetDataValue(strSql2.ToString()));
                                     if (!string.IsNullOrEmpty(loadedInstance) & myWeb.moSession["tempInstance"] is null)
                                     {
                                         var oLoadedInstance = myWeb.moPageXml.CreateElement("instance");
@@ -982,7 +982,7 @@ namespace Protean
                                             var oMsg = new Protean.Messaging(ref myWeb.msException);
 
                                             Cms.dbHelper argodbHelper = null;
-                                            sMessage = Conversions.ToString(oMsg.emailer((XmlElement)oXform.Instance.SelectSingleNode("emailer/oBodyXML"), oXform.Instance.SelectSingleNode("emailer/xsltPath").InnerText, oXform.Instance.SelectSingleNode("emailer/fromName").InnerText, oXform.Instance.SelectSingleNode("emailer/fromEmail").InnerText, oXform.Instance.SelectSingleNode("emailer/recipientEmail").InnerText, oXform.Instance.SelectSingleNode("emailer/SubjectLine").InnerText, ccRecipient: oXform.Instance.SelectSingleNode("emailer/ccRecipient").InnerText, bccRecipient: oXform.Instance.SelectSingleNode("emailer/bccRecipient").InnerText, cSeperator: "", odbHelper: ref argodbHelper));
+                                            sMessage = Convert.ToString(oMsg.emailer((XmlElement)oXform.Instance.SelectSingleNode("emailer/oBodyXML"), oXform.Instance.SelectSingleNode("emailer/xsltPath").InnerText, oXform.Instance.SelectSingleNode("emailer/fromName").InnerText, oXform.Instance.SelectSingleNode("emailer/fromEmail").InnerText, oXform.Instance.SelectSingleNode("emailer/recipientEmail").InnerText, oXform.Instance.SelectSingleNode("emailer/SubjectLine").InnerText, ccRecipient: oXform.Instance.SelectSingleNode("emailer/ccRecipient").InnerText, bccRecipient: oXform.Instance.SelectSingleNode("emailer/bccRecipient").InnerText, cSeperator: "", odbHelper: ref argodbHelper));
                                             // Return sMessage
                                             XmlElement oEmailer = (XmlElement)oXform.Instance.SelectSingleNode("emailer");
                                             oEmailer.SetAttribute("SubmitMessage", sMessage);

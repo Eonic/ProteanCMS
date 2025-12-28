@@ -179,14 +179,14 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     UploadPhotoRet.ScreenName = xnResponse.SelectSingleNode("//screen_name").InnerText;
                     UploadPhotoRet.UserID = xnResponse.SelectSingleNode("//user_id").InnerText;
                     UploadPhotoRet.URL = xnResponse.SelectSingleNode("//url").InnerText;
-                    UploadPhotoRet.Comments_Count = Conversions.ToInteger(xnResponse.SelectSingleNode("//num_comments").InnerText);
-                    UploadPhotoRet.UserTags_Count = Conversions.ToInteger(xnResponse.SelectSingleNode("//num_user_tags").InnerText);
-                    UploadPhotoRet.Views_Count = Conversions.ToInteger(xnResponse.SelectSingleNode("//num_views").InnerText);
+                    UploadPhotoRet.Comments_Count = Convert.ToInt16(xnResponse.SelectSingleNode("//num_comments").InnerText);
+                    UploadPhotoRet.UserTags_Count = Convert.ToInt16(xnResponse.SelectSingleNode("//num_user_tags").InnerText);
+                    UploadPhotoRet.Views_Count = Convert.ToInt16(xnResponse.SelectSingleNode("//num_views").InnerText);
                     if (p_bShowMap)
                     {
                         UploadPhotoRet.ShowMap = true;
-                        UploadPhotoRet.Latitude = Conversions.ToDouble(xnResponse.SelectSingleNode("//latitude").InnerText);
-                        UploadPhotoRet.Longitude = Conversions.ToDouble(xnResponse.SelectSingleNode("//longitude").InnerText);
+                        UploadPhotoRet.Latitude = Convert.ToDouble(xnResponse.SelectSingleNode("//latitude").InnerText);
+                        UploadPhotoRet.Longitude = Convert.ToDouble(xnResponse.SelectSingleNode("//longitude").InnerText);
                     }
                     else
                     {
@@ -194,7 +194,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     }
                     UploadPhotoRet.CameraMake = xnResponse.SelectSingleNode("//camera_make").InnerText;
                     UploadPhotoRet.CameraModel = xnResponse.SelectSingleNode("//camera_model").InnerText;
-                    UploadPhotoRet.InsertUnixTime(Conversions.ToDouble(xnResponse.SelectSingleNode("//timestamp").InnerText));
+                    UploadPhotoRet.InsertUnixTime(Convert.ToDouble(xnResponse.SelectSingleNode("//timestamp").InnerText));
                 }
 
 
@@ -314,14 +314,14 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     UploadPhotoAndTweetRet.ScreenName = xnResponse.SelectSingleNode("//screen_name").InnerText;
                     UploadPhotoAndTweetRet.UserID = xnResponse.SelectSingleNode("//user_id").InnerText;
                     UploadPhotoAndTweetRet.URL = xnResponse.SelectSingleNode("//url").InnerText;
-                    UploadPhotoAndTweetRet.Comments_Count = Conversions.ToInteger(xnResponse.SelectSingleNode("//num_comments").InnerText);
-                    UploadPhotoAndTweetRet.UserTags_Count = Conversions.ToInteger(xnResponse.SelectSingleNode("//num_user_tags").InnerText);
-                    UploadPhotoAndTweetRet.Views_Count = Conversions.ToInteger(xnResponse.SelectSingleNode("//num_views").InnerText);
+                    UploadPhotoAndTweetRet.Comments_Count = Convert.ToInt16(xnResponse.SelectSingleNode("//num_comments").InnerText);
+                    UploadPhotoAndTweetRet.UserTags_Count = Convert.ToInt16(xnResponse.SelectSingleNode("//num_user_tags").InnerText);
+                    UploadPhotoAndTweetRet.Views_Count = Convert.ToInt16(xnResponse.SelectSingleNode("//num_views").InnerText);
                     if (p_bShowMap)
                     {
                         UploadPhotoAndTweetRet.ShowMap = true;
-                        UploadPhotoAndTweetRet.Latitude = Conversions.ToDouble(xnResponse.SelectSingleNode("//latitude").InnerText);
-                        UploadPhotoAndTweetRet.Longitude = Conversions.ToDouble(xnResponse.SelectSingleNode("//longitude").InnerText);
+                        UploadPhotoAndTweetRet.Latitude = Convert.ToDouble(xnResponse.SelectSingleNode("//latitude").InnerText);
+                        UploadPhotoAndTweetRet.Longitude = Convert.ToDouble(xnResponse.SelectSingleNode("//longitude").InnerText);
                     }
                     else
                     {
@@ -329,7 +329,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     }
                     UploadPhotoAndTweetRet.CameraMake = xnResponse.SelectSingleNode("//camera_make").InnerText;
                     UploadPhotoAndTweetRet.CameraModel = xnResponse.SelectSingleNode("//camera_model").InnerText;
-                    UploadPhotoAndTweetRet.InsertUnixTime(Conversions.ToDouble(xnResponse.SelectSingleNode("//timestamp").InnerText));
+                    UploadPhotoAndTweetRet.InsertUnixTime(Convert.ToDouble(xnResponse.SelectSingleNode("//timestamp").InnerText));
                 }
                 else
                 {
@@ -451,9 +451,9 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     UploadVideoRet.UserID = xnResponse.SelectSingleNode("//user_id").InnerText;
 
                     UploadVideoRet.URL = xnResponse.SelectSingleNode("//url").InnerText;
-                    UploadVideoRet.Comments_Count = Conversions.ToInteger(xnResponse.SelectSingleNode("//num_comments").InnerText);
-                    UploadVideoRet.Views_Count = Conversions.ToInteger(xnResponse.SelectSingleNode("//num_views").InnerText);
-                    UploadVideoRet.InsertUnixTime(Conversions.ToDouble(xnResponse.SelectSingleNode("//timestamp").InnerText));
+                    UploadVideoRet.Comments_Count = Convert.ToInt16(xnResponse.SelectSingleNode("//num_comments").InnerText);
+                    UploadVideoRet.Views_Count = Convert.ToInt16(xnResponse.SelectSingleNode("//num_views").InnerText);
+                    UploadVideoRet.InsertUnixTime(Convert.ToDouble(xnResponse.SelectSingleNode("//timestamp").InnerText));
                     UploadVideoRet.ThumbNailURL = xnResponse.SelectSingleNode("//thumb_image_url").InnerText;
                 }
 
@@ -587,8 +587,8 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     UploadVideoAndTweetRet.UserID = xnResponse.SelectSingleNode("//user_id").InnerText;
                     UploadVideoAndTweetRet.ScreenName = xnResponse.SelectSingleNode("//screen_name").InnerText;
                     UploadVideoAndTweetRet.ThumbNailURL = xnResponse.SelectSingleNode("//thumb_image_url").InnerText;
-                    UploadVideoAndTweetRet.Comments_Count = Conversions.ToInteger(xnResponse.SelectSingleNode("//num_comments").InnerText);
-                    UploadVideoAndTweetRet.Views_Count = Conversions.ToInteger(xnResponse.SelectSingleNode("//num_views").InnerText);
+                    UploadVideoAndTweetRet.Comments_Count = Convert.ToInt16(xnResponse.SelectSingleNode("//num_comments").InnerText);
+                    UploadVideoAndTweetRet.Views_Count = Convert.ToInt16(xnResponse.SelectSingleNode("//num_views").InnerText);
                 }
 
                 else
@@ -681,9 +681,9 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     UploadAudioRet.ScreenName = xnResult.SelectSingleNode("//screen_name").InnerText;
                     UploadAudioRet.UserID = xnResult.SelectSingleNode("//user_id").InnerText;
                     UploadAudioRet.URL = xnResult.SelectSingleNode("//url").InnerText;
-                    UploadAudioRet.Views_Count = Conversions.ToInteger(xnResult.SelectSingleNode("//num_views").InnerText);
-                    UploadAudioRet.Comments_Count = Conversions.ToInteger(xnResult.SelectSingleNode("//num_comments").InnerText);
-                    UploadAudioRet.InsertUnixTime(Conversions.ToDouble(xnResult.SelectSingleNode("//timestamp").InnerText));
+                    UploadAudioRet.Views_Count = Convert.ToInt16(xnResult.SelectSingleNode("//num_views").InnerText);
+                    UploadAudioRet.Comments_Count = Convert.ToInt16(xnResult.SelectSingleNode("//num_comments").InnerText);
+                    UploadAudioRet.InsertUnixTime(Convert.ToDouble(xnResult.SelectSingleNode("//timestamp").InnerText));
                 }
                 else
                 {
@@ -778,9 +778,9 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     UploadAudioAndTweetRet.ScreenName = xnResult.SelectSingleNode("//screen_name").InnerText;
                     UploadAudioAndTweetRet.UserID = xnResult.SelectSingleNode("//user_id").InnerText;
                     UploadAudioAndTweetRet.URL = xnResult.SelectSingleNode("//url").InnerText;
-                    UploadAudioAndTweetRet.Views_Count = Conversions.ToInteger(xnResult.SelectSingleNode("//num_views").InnerText);
-                    UploadAudioAndTweetRet.Comments_Count = Conversions.ToInteger(xnResult.SelectSingleNode("//num_comments").InnerText);
-                    UploadAudioAndTweetRet.InsertUnixTime(Conversions.ToDouble(xnResult.SelectSingleNode("//timestamp").InnerText));
+                    UploadAudioAndTweetRet.Views_Count = Convert.ToInt16(xnResult.SelectSingleNode("//num_views").InnerText);
+                    UploadAudioAndTweetRet.Comments_Count = Convert.ToInt16(xnResult.SelectSingleNode("//num_comments").InnerText);
+                    UploadAudioAndTweetRet.InsertUnixTime(Convert.ToDouble(xnResult.SelectSingleNode("//timestamp").InnerText));
                 }
                 else
                 {
@@ -823,14 +823,14 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                             Photo.ScreenName = xnContent.SelectSingleNode("//screen_name").InnerText;
                             Photo.UserID = xnContent.SelectSingleNode("//user_id").InnerText;
                             Photo.URL = xnContent.SelectSingleNode("//url").InnerText;
-                            Photo.UserTags_Count = Conversions.ToInteger(xnContent.SelectSingleNode("//num_user_tags").InnerText);
-                            Photo.Comments_Count = Conversions.ToInteger(xnContent.SelectSingleNode("//num_comments").InnerText);
-                            Photo.Views_Count = Conversions.ToInteger(xnContent.SelectSingleNode("//num_views").InnerText);
+                            Photo.UserTags_Count = Convert.ToInt16(xnContent.SelectSingleNode("//num_user_tags").InnerText);
+                            Photo.Comments_Count = Convert.ToInt16(xnContent.SelectSingleNode("//num_comments").InnerText);
+                            Photo.Views_Count = Convert.ToInt16(xnContent.SelectSingleNode("//num_views").InnerText);
                             if (xnContent.SelectSingleNode("//show_map").InnerText == "1")
                             {
                                 Photo.ShowMap = true;
-                                Photo.Latitude = Conversions.ToDouble(xnContent.SelectSingleNode("//latitude").InnerText);
-                                Photo.Longitude = Conversions.ToDouble(xnContent.SelectSingleNode("//longitude").InnerText);
+                                Photo.Latitude = Convert.ToDouble(xnContent.SelectSingleNode("//latitude").InnerText);
+                                Photo.Longitude = Convert.ToDouble(xnContent.SelectSingleNode("//longitude").InnerText);
                             }
                             else
                             {
@@ -839,7 +839,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
 
                             Photo.CameraMake = xnContent.SelectSingleNode("//camera_make").InnerText;
                             Photo.CameraModel = xnContent.SelectSingleNode("//camera_model").InnerText;
-                            Photo.InsertUnixTime(Conversions.ToDouble(xnContent.SelectSingleNode("//timestamp").InnerText));
+                            Photo.InsertUnixTime(Convert.ToDouble(xnContent.SelectSingleNode("//timestamp").InnerText));
                             ReturnValue = Photo;
                             break;
                         }
@@ -851,9 +851,9 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                             Audio.URL = xnContent.SelectSingleNode("//url").InnerText;
                             Audio.UserID = xnContent.SelectSingleNode("//user_id").InnerText;
                             Audio.ScreenName = xnContent.SelectSingleNode("//screen_name").InnerText;
-                            Audio.Comments_Count = Conversions.ToInteger(xnContent.SelectSingleNode("//num_comments").InnerText);
-                            Audio.Views_Count = Conversions.ToInteger(xnContent.SelectSingleNode("//num_views").InnerText);
-                            Audio.InsertUnixTime(Conversions.ToDouble(xnContent.SelectSingleNode("//timestamp").InnerText));
+                            Audio.Comments_Count = Convert.ToInt16(xnContent.SelectSingleNode("//num_comments").InnerText);
+                            Audio.Views_Count = Convert.ToInt16(xnContent.SelectSingleNode("//num_views").InnerText);
+                            Audio.InsertUnixTime(Convert.ToDouble(xnContent.SelectSingleNode("//timestamp").InnerText));
                             ReturnValue = Audio;
                             break;
                         }
@@ -865,9 +865,9 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                             video.URL = xnContent.SelectSingleNode("//url").InnerText;
                             video.UserID = xnContent.SelectSingleNode("//user_id").InnerText;
                             video.ScreenName = xnContent.SelectSingleNode("//screen_name").InnerText;
-                            video.Comments_Count = Conversions.ToInteger(xnContent.SelectSingleNode("//num_comments").InnerText);
-                            video.Views_Count = Conversions.ToInteger(xnContent.SelectSingleNode("//num_views").InnerText);
-                            video.InsertUnixTime(Conversions.ToDouble(xnContent.SelectSingleNode("//timestamp").InnerText));
+                            video.Comments_Count = Convert.ToInt16(xnContent.SelectSingleNode("//num_comments").InnerText);
+                            video.Views_Count = Convert.ToInt16(xnContent.SelectSingleNode("//num_views").InnerText);
+                            video.InsertUnixTime(Convert.ToDouble(xnContent.SelectSingleNode("//timestamp").InnerText));
                             ReturnValue = video;
                             break;
                         }
@@ -904,14 +904,14 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     Photo.UserID = xPhoto.SelectSingleNode("user_id").InnerText;
                     Photo.ScreenName = xPhoto.SelectSingleNode("screen_name").InnerText;
                     Photo.URL = xPhoto.SelectSingleNode("url").InnerText;
-                    Photo.Comments_Count = Conversions.ToInteger(xPhoto.SelectSingleNode("num_comments").InnerText);
-                    Photo.UserTags_Count = Conversions.ToInteger(xPhoto.SelectSingleNode("num_user_tags").InnerText);
-                    Photo.Views_Count = Conversions.ToInteger(xPhoto.SelectSingleNode("num_views").InnerText);
+                    Photo.Comments_Count = Convert.ToInt16(xPhoto.SelectSingleNode("num_comments").InnerText);
+                    Photo.UserTags_Count = Convert.ToInt16(xPhoto.SelectSingleNode("num_user_tags").InnerText);
+                    Photo.Views_Count = Convert.ToInt16(xPhoto.SelectSingleNode("num_views").InnerText);
                     if (xPhoto.SelectSingleNode("show_map").InnerText == "1")
                     {
                         Photo.ShowMap = true;
-                        Photo.Latitude = Conversions.ToDouble(xPhoto.SelectSingleNode("latitude").InnerText);
-                        Photo.Longitude = Conversions.ToDouble(xPhoto.SelectSingleNode("longitude").InnerText);
+                        Photo.Latitude = Convert.ToDouble(xPhoto.SelectSingleNode("latitude").InnerText);
+                        Photo.Longitude = Convert.ToDouble(xPhoto.SelectSingleNode("longitude").InnerText);
                     }
                     else
                     {
@@ -919,7 +919,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     }
                     Photo.CameraMake = xPhoto.SelectSingleNode("camera_make").InnerText;
                     Photo.CameraModel = xPhoto.SelectSingleNode("camera_model").InnerText;
-                    Photo.InsertUnixTime(Conversions.ToDouble(xPhoto.SelectSingleNode("timestamp").InnerText));
+                    Photo.InsertUnixTime(Convert.ToDouble(xPhoto.SelectSingleNode("timestamp").InnerText));
                     GetUsersPhotosRet.Add(Photo);
 
                 }
@@ -954,14 +954,14 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     Photo.UserID = xPhoto.SelectSingleNode("user_id").InnerText;
                     Photo.ScreenName = xPhoto.SelectSingleNode("screen_name").InnerText;
                     Photo.URL = xPhoto.SelectSingleNode("url").InnerText;
-                    Photo.Comments_Count = Conversions.ToInteger(xPhoto.SelectSingleNode("num_comments").InnerText);
-                    Photo.UserTags_Count = Conversions.ToInteger(xPhoto.SelectSingleNode("num_user_tags").InnerText);
-                    Photo.Views_Count = Conversions.ToInteger(xPhoto.SelectSingleNode("num_views").InnerText);
+                    Photo.Comments_Count = Convert.ToInt16(xPhoto.SelectSingleNode("num_comments").InnerText);
+                    Photo.UserTags_Count = Convert.ToInt16(xPhoto.SelectSingleNode("num_user_tags").InnerText);
+                    Photo.Views_Count = Convert.ToInt16(xPhoto.SelectSingleNode("num_views").InnerText);
                     if (xPhoto.SelectSingleNode("show_map").InnerText == "1")
                     {
                         Photo.ShowMap = true;
-                        Photo.Latitude = Conversions.ToDouble(xPhoto.SelectSingleNode("latitude").InnerText);
-                        Photo.Longitude = Conversions.ToDouble(xPhoto.SelectSingleNode("longitude").InnerText);
+                        Photo.Latitude = Convert.ToDouble(xPhoto.SelectSingleNode("latitude").InnerText);
+                        Photo.Longitude = Convert.ToDouble(xPhoto.SelectSingleNode("longitude").InnerText);
                     }
                     else
                     {
@@ -969,7 +969,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     }
                     Photo.CameraMake = xPhoto.SelectSingleNode("camera_make").InnerText;
                     Photo.CameraModel = xPhoto.SelectSingleNode("camera_model").InnerText;
-                    Photo.InsertUnixTime(Conversions.ToDouble(xPhoto.SelectSingleNode("timestamp").InnerText));
+                    Photo.InsertUnixTime(Convert.ToDouble(xPhoto.SelectSingleNode("timestamp").InnerText));
                     GetUsersPhotosRet.Add(Photo);
 
                 }
@@ -1002,9 +1002,9 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     Audio.URL = xAudio.SelectSingleNode("url").InnerText;
                     Audio.UserID = xAudio.SelectSingleNode("user_id").InnerText;
                     Audio.ScreenName = xAudio.SelectSingleNode("screen_name").InnerText;
-                    Audio.Comments_Count = Conversions.ToInteger(xAudio.SelectSingleNode("num_comments").InnerText);
-                    Audio.Views_Count = Conversions.ToInteger(xAudio.SelectSingleNode("num_views").InnerText);
-                    Audio.InsertUnixTime(Conversions.ToDouble(xAudio.SelectSingleNode("timestamp").InnerText));
+                    Audio.Comments_Count = Convert.ToInt16(xAudio.SelectSingleNode("num_comments").InnerText);
+                    Audio.Views_Count = Convert.ToInt16(xAudio.SelectSingleNode("num_views").InnerText);
+                    Audio.InsertUnixTime(Convert.ToDouble(xAudio.SelectSingleNode("timestamp").InnerText));
                     GetUsersAudiosRet.Add(Audio);
                 }
             }
@@ -1038,9 +1038,9 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     Audio.URL = xAudio.SelectSingleNode("url").InnerText;
                     Audio.UserID = xAudio.SelectSingleNode("user_id").InnerText;
                     Audio.ScreenName = xAudio.SelectSingleNode("screen_name").InnerText;
-                    Audio.Comments_Count = Conversions.ToInteger(xAudio.SelectSingleNode("num_comments").InnerText);
-                    Audio.Views_Count = Conversions.ToInteger(xAudio.SelectSingleNode("num_views").InnerText);
-                    Audio.InsertUnixTime(Conversions.ToDouble(xAudio.SelectSingleNode("timestamp").InnerText));
+                    Audio.Comments_Count = Convert.ToInt16(xAudio.SelectSingleNode("num_comments").InnerText);
+                    Audio.Views_Count = Convert.ToInt16(xAudio.SelectSingleNode("num_views").InnerText);
+                    Audio.InsertUnixTime(Convert.ToDouble(xAudio.SelectSingleNode("timestamp").InnerText));
                     GetUsersAudiosRet.Add(Audio);
                 }
             }
@@ -1074,9 +1074,9 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     video.URL = xVideo.SelectSingleNode("url").InnerText;
                     video.UserID = xVideo.SelectSingleNode("user_id").InnerText;
                     video.ScreenName = xdVideos.SelectSingleNode("screen_name").InnerText;
-                    video.Comments_Count = Conversions.ToInteger(xVideo.SelectSingleNode("num_comments").InnerText);
-                    video.Views_Count = Conversions.ToInteger(xVideo.SelectSingleNode("num_views").InnerText);
-                    video.InsertUnixTime(Conversions.ToDouble(xVideo.SelectSingleNode("timestamp").InnerText));
+                    video.Comments_Count = Convert.ToInt16(xVideo.SelectSingleNode("num_comments").InnerText);
+                    video.Views_Count = Convert.ToInt16(xVideo.SelectSingleNode("num_views").InnerText);
+                    video.InsertUnixTime(Convert.ToDouble(xVideo.SelectSingleNode("timestamp").InnerText));
                     GetUsersVideosRet.Add(video);
                 }
             }
@@ -1109,9 +1109,9 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2
                     video.URL = xVideo.SelectSingleNode("url").InnerText;
                     video.UserID = xVideo.SelectSingleNode("user_id").InnerText;
                     video.ScreenName = xdVideos.SelectSingleNode("screen_name").InnerText;
-                    video.Comments_Count = Conversions.ToInteger(xVideo.SelectSingleNode("num_comments").InnerText);
-                    video.Views_Count = Conversions.ToInteger(xVideo.SelectSingleNode("num_views").InnerText);
-                    video.InsertUnixTime(Conversions.ToDouble(xVideo.SelectSingleNode("timestamp").InnerText));
+                    video.Comments_Count = Convert.ToInt16(xVideo.SelectSingleNode("num_comments").InnerText);
+                    video.Views_Count = Convert.ToInt16(xVideo.SelectSingleNode("num_views").InnerText);
+                    video.InsertUnixTime(Convert.ToDouble(xVideo.SelectSingleNode("timestamp").InnerText));
                     GetUsersVideosRet.Add(video);
                 }
             }

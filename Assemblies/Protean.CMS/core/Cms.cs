@@ -75,8 +75,8 @@ namespace Protean
         public string msException = "";
 
         // Clone Page Info
-        public int mnClonePageId = 0;
-        public int mnClonePageVersionId = 0;
+        public long mnClonePageId = 0;
+        public long mnClonePageVersionId = 0;
         public bool mbIsClonePage = false;
         public int mnCloneContextPageId = 0;
 
@@ -463,7 +463,7 @@ namespace Protean
                         if (oDr.HasRows)
                         {
                             while (oDr.Read())
-                                sResult = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oDr[1], "."), oDr[2]), "."), oDr[3]), "."), oDr[4]));
+                                sResult = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oDr[1], "."), oDr[2]), "."), oDr[3]), "."), oDr[4]));
                         }
                         else
                         {
@@ -494,7 +494,7 @@ namespace Protean
                     if (oDr.HasRows)
                     {
                         while (oDr.Read())
-                            oResponseElmt.SetAttribute("activePageCount", Conversions.ToString(oDr[0]));
+                            oResponseElmt.SetAttribute("activePageCount", Convert.ToString(oDr[0]));
                     }
                 }
                 sSql = "select count(nStructKey) from tblContentStructure where cUrl = null or cUrl = ''";
@@ -503,7 +503,7 @@ namespace Protean
                     if (oDr.HasRows)
                     {
                         while (oDr.Read())
-                            oResponseElmt.SetAttribute("totalPageCount", Conversions.ToString(oDr[0]));
+                            oResponseElmt.SetAttribute("totalPageCount", Convert.ToString(oDr[0]));
                     }
                 }
                 sSql = "select count(nStructKey) from tblContentStructure";
@@ -512,7 +512,7 @@ namespace Protean
                     if (oDr.HasRows)
                     {
                         while (oDr.Read())
-                            oResponseElmt.SetAttribute("totalPageRedirects", Conversions.ToString(Operators.SubtractObject(oDr[0], Conversions.ToInteger("0" + oResponseElmt.GetAttribute("totalPageCount")))));
+                            oResponseElmt.SetAttribute("totalPageRedirects", Convert.ToString(Operators.SubtractObject(oDr[0], Convert.ToInt16("0" + oResponseElmt.GetAttribute("totalPageCount")))));
                     }
                 }
 
@@ -523,7 +523,7 @@ namespace Protean
                     if (oDr.HasRows)
                     {
                         while (oDr.Read())
-                            oResponseElmt.SetAttribute("contentCount", Conversions.ToString(oDr[0]));
+                            oResponseElmt.SetAttribute("contentCount", Convert.ToString(oDr[0]));
                     }
                 }
 
@@ -632,7 +632,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
             }
 
             return oRXML;
@@ -676,7 +676,7 @@ namespace Protean
 
                     if (moSession != null)
                     {
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
+                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
                         {
                             mbAdminMode = true;
                             moDbHelper.gbAdminMode = mbAdminMode;
@@ -706,10 +706,10 @@ namespace Protean
                         goApp["PageErrorId"] = (object)moDbHelper.getPageIdFromPath(ProteanErrorPagePath, false, false);
                     }
 
-                    gnPageNotFoundId = Conversions.ToLong(goApp["PageNotFoundId"]);
-                    gnPageAccessDeniedId = Conversions.ToLong(goApp["PageAccessDeniedId"]);
-                    gnPageLoginRequiredId = Conversions.ToLong(goApp["PageLoginRequiredId"]);
-                    gnPageErrorId = Conversions.ToLong(goApp["PageErrorId"]);
+                    gnPageNotFoundId = Convert.ToInt64(goApp["PageNotFoundId"]);
+                    gnPageAccessDeniedId = Convert.ToInt64(goApp["PageAccessDeniedId"]);
+                    gnPageLoginRequiredId = Convert.ToInt64(goApp["PageLoginRequiredId"]);
+                    gnPageErrorId = Convert.ToInt64(goApp["PageErrorId"]);
 
                     mcPagePath = moRequest["path"] + "";
                     mcPagePath = mcPagePath.Replace("//", "/");
@@ -731,7 +731,7 @@ namespace Protean
                             moMemProv = RetProv.Get(ref argmyWeb, moConfig["MembershipProvider"]);
                             RetProv = null;
                         }
-                        mnUserId = Conversions.ToInteger(moMemProv.Activities.GetUserId(ref argmyWeb));
+                        mnUserId = Convert.ToInt16(moMemProv.Activities.GetUserId(ref argmyWeb));
                     }
                     // We need the userId placed into dbhelper.
                     moDbHelper.mnUserId = (long)mnUserId;
@@ -767,23 +767,23 @@ namespace Protean
                     {
                         // Admin mode
                         string ewCmd;
-                        if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(moSession["ewCmd"], "PreviewOn", false), Strings.LCase(moRequest["ewCmd"]) == "logoff")))
+                        if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(moSession["ewCmd"], "PreviewOn", false), Strings.LCase(moRequest["ewCmd"]) == "logoff")))
                         {
                             // case to cater for logoff in preview mode
                             ewCmd = "PreviewOn";
                         }
                         else
                         {
-                            ewCmd = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(moRequest["ewCmd"]), moSession["ewCmd"], moRequest["ewCmd"]));
+                            ewCmd = Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(moRequest["ewCmd"]), moSession["ewCmd"], moRequest["ewCmd"]));
                         }
 
 
-                        if (Conversions.ToLong("0" + moConfig["AdminRootPageId"]) > 0L & Strings.LCase(ewCmd) != "logoff")
+                        if (Convert.ToInt64("0" + moConfig["AdminRootPageId"]) > 0L & Strings.LCase(ewCmd) != "logoff")
                         {
                             rootPageIdFromConfig = moConfig["AdminRootPageId"];
                         }
 
-                        else if (Conversions.ToLong("0" + moConfig["AuthenticatedRootPageId"]) > 0L && mnUserId > 0 && !moDbHelper.checkUserRole("Administrator"))
+                        else if (Convert.ToInt64("0" + moConfig["AuthenticatedRootPageId"]) > 0L && mnUserId > 0 && !moDbHelper.checkUserRole("Administrator"))
                         {
                             // This is to accomodate users in admin who have admin rights revoked and therefore must 
                             // be sent back to the user site, but also are logged in, thus they need to go to the authenticatedpageroot if it exists.
@@ -791,7 +791,7 @@ namespace Protean
                         }
                     }
                     // Not admin mode
-                    else if (mnUserId > 0 & Conversions.ToLong("0" + moConfig["AuthenticatedRootPageId"]) > 0L)
+                    else if (mnUserId > 0 & Convert.ToInt64("0" + moConfig["AuthenticatedRootPageId"]) > 0L)
                     {
                         rootPageIdFromConfig = moConfig["AuthenticatedRootPageId"];
                     }
@@ -815,9 +815,9 @@ namespace Protean
                             object sPageId = Regex.Replace("0" + moRequest["pgid"], @"[^\d]", "");
                             // check not too large for an int
                             int argresult = 0;
-                            if (int.TryParse(Conversions.ToString(sPageId), out argresult))
+                            if (int.TryParse(Convert.ToString(sPageId), out argresult))
                             {
-                                mnPageId = Conversions.ToInteger(sPageId);
+                                mnPageId = Convert.ToInt16(sPageId);
                             }
 
                             // specified pgid takes priority
@@ -841,11 +841,11 @@ namespace Protean
                             if (!(string.IsNullOrEmpty(moRequest["path"]) | mcPagePath == "/"))
                             {
                                 // then pathname
-                                long argnPageId = (long)mnPageId;
-                                long argnArtId = (long)mnArtId;
-                                moDbHelper.getPageAndArticleIdFromPath(ref argnPageId, ref argnArtId, mcPagePath);
-                                mnPageId = (int)argnPageId;
-                                mnArtId = (int)argnArtId;
+                                //long argnPageId = (long)mnPageId;
+                                //long argnArtId = (long)mnArtId;
+                                moDbHelper.getPageAndArticleIdFromPath(ref mnPageId,ref mnArtId, mcPagePath);
+                                //mnPageId = (int)argnPageId;
+                                //mnArtId = (int)argnArtId;
                                 // mnPageId = moDbHelper.getPageIdFromPath(mcPagePath).ToString
                                 if (!mbAdminMode)
                                 {
@@ -896,8 +896,6 @@ namespace Protean
                     {
 
                         if ((long)mnPageId == gnPageNotFoundId | (long)mnPageId == gnPageAccessDeniedId | (long)mnPageId == gnPageLoginRequiredId | (long)mnPageId == gnPageErrorId)
-
-
                         {
                             if (RootPageId != mnPageId)
                             {
@@ -1068,7 +1066,7 @@ namespace Protean
                 bool bSessionLogging = false;
                 if (moSession != null)
                 {
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["Logging"], "On", false)))
+                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["Logging"], "On", false)))
                     {
                         bSessionLogging = true;
                     }
@@ -1089,7 +1087,7 @@ namespace Protean
                         {
                             PerfMon.Stop();
                         }
-                        else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["Logging"], "On", false)))
+                        else if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["Logging"], "On", false)))
                         {
                             PerfMon.Start();
                         }
@@ -1163,7 +1161,7 @@ namespace Protean
                 gbVersionControl = Strings.LCase(moConfig["VersionControl"]) == "on";
                 gbIPLogging = Strings.LCase(moConfig["IPLogging"]) == "on";
                 gbUseLanguageStylesheets = Strings.LCase(moConfig["LanguageStylesheets"]) == "on";
-                gcProjectPath = Conversions.ToString(Interaction.IIf(moConfig["ProjectPath"] is null, "", moConfig["ProjectPath"] + ""));
+                gcProjectPath = Convert.ToString(Interaction.IIf(moConfig["ProjectPath"] is null, "", moConfig["ProjectPath"] + ""));
                 gbUserIntegrations = Strings.LCase(moConfig["UserIntegrations"]) == "on";
                 gbSingleLoginSessionPerUser = Strings.LCase(moConfig["SingleLoginSessionPerUser"]) == "on";
                 if (!string.IsNullOrEmpty(moConfig["SingleLoginSessionTimeout"]))
@@ -1175,7 +1173,7 @@ namespace Protean
 
                 // Get referenced assembly info
                 // Given that assemblies are loaded at an application level, we can store the info we find in an application object
-                if (string.IsNullOrEmpty(Conversions.ToString(goCache["GENERATOR"])))
+                if (string.IsNullOrEmpty(Convert.ToString(goCache["GENERATOR"])))
                 {
                     var CodeGenerator = Generator;
                     gcGenerator = CodeGenerator.FullName;
@@ -1188,13 +1186,13 @@ namespace Protean
                 }
                 else
                 {
-                    gcGenerator = Conversions.ToString(goCache["GENERATOR"]);
-                    gcCodebase = Conversions.ToString(goCache["CODEBASE"]);
-                    gcReferencedAssemblies = Conversions.ToString(goCache["REFERENCED_ASSEMBLIES"]);
+                    gcGenerator = Convert.ToString(goCache["GENERATOR"]);
+                    gcCodebase = Convert.ToString(goCache["CODEBASE"]);
+                    gcReferencedAssemblies = Convert.ToString(goCache["REFERENCED_ASSEMBLIES"]);
                 }
                 if (!string.IsNullOrEmpty(moConfig["ShowRelatedBriefDepth"]))
                 {
-                    gnShowRelatedBriefDepth = Conversions.ToInteger(moConfig["ShowRelatedBriefDepth"]);
+                    gnShowRelatedBriefDepth = Convert.ToInt16(moConfig["ShowRelatedBriefDepth"]);
                 }
                 if (moConfig["cssFramework"] == "bs5")
                 {
@@ -1329,7 +1327,7 @@ namespace Protean
                                 if (bs5)
                                     mcEwSiteXsl = "/ptn/features/mailer/mailer-core.xsl";
                             }
-                            mnMailMenuId = Conversions.ToLong(moMailConfig["RootPageId"]);
+                            mnMailMenuId = Convert.ToInt64(moMailConfig["RootPageId"]);
                             mcContentType = "text/html";
                             moResponseType = pageResponseType.mail;
                             break;
@@ -1387,7 +1385,7 @@ namespace Protean
                         moMemProv = RetProv.Get(ref argmyWeb, moConfig["MembershipProvider"]);
                         RetProv = null;
                     }
-                    mnUserId = Conversions.ToInteger(moMemProv.Activities.GetUserSessionId(ref argmyWeb));
+                    mnUserId = Convert.ToInt16(moMemProv.Activities.GetUserSessionId(ref argmyWeb));
 
                     if (mnUserId > 0)
                     {
@@ -1415,7 +1413,7 @@ namespace Protean
                     gcEwBaseUrl = moConfig["BaseUrl"];
                 }
 
-                mcRequestDomain = Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(mbIsUsingHTTPS, "https://", "http://"), moRequest.ServerVariables["SERVER_NAME"]));
+                mcRequestDomain = Convert.ToString(Operators.ConcatenateObject(Interaction.IIf(mbIsUsingHTTPS, "https://", "http://"), moRequest.ServerVariables["SERVER_NAME"]));
 
                 // Language sites.
                 // If LanguageStyleSheets is on, then we look for the xsl with the language as a suffix
@@ -1440,7 +1438,7 @@ namespace Protean
 
                 var commonfolders = new ArrayList();
 
-                mcClientCommonFolder = Conversions.ToString(Interaction.IIf(moConfig["ClientCommonFolder"] is null, "", moConfig["ClientCommonFolder"] + ""));
+                mcClientCommonFolder = Convert.ToString(Interaction.IIf(moConfig["ClientCommonFolder"] is null, "", moConfig["ClientCommonFolder"] + ""));
 
                 if (!string.IsNullOrEmpty(gcProjectPath))
                     commonfolders.Add(gcProjectPath);
@@ -1478,7 +1476,7 @@ namespace Protean
             bool bTrailingSlash = false;
             if (moSession != null)
             {
-                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
+                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
                 {
                     mbAdminMode = true;
                 }
@@ -1509,7 +1507,7 @@ namespace Protean
                 }
                 if ((bTrailingSlash | bLowerCaseUrl) & pageUrl.Length != 0)
                 {
-                    mbRedirectPerm = Conversions.ToString(true);
+                    mbRedirectPerm = Convert.ToString(true);
                     msRedirectOnEnd = moRequest.Url.Scheme.ToString().ToLower() + "://" + moRequest.Url.Host.ToString().ToLower() + pageUrl;
                 }
             }
@@ -1523,14 +1521,14 @@ namespace Protean
                 int nDuration = 0;
                 int nUserId = 0;
                 object sSql = "select top 1 nUserDirId, datediff(SS,getdate(),dDateTime) as Duration from tblActivityLog where cSessionId='" + sSessionId + "' order by dDateTime desc";
-                using (var oDr = moDbHelper.getDataReaderDisposable(Conversions.ToString(sSql)))
+                using (var oDr = moDbHelper.getDataReaderDisposable(Convert.ToString(sSql)))
                 {
                     if (oDr != null)
                     {
                         while (oDr.Read())
                         {
                             nDuration = Convert.ToInt32(oDr["Duration"]);
-                            nUserId = Conversions.ToInteger(oDr["nUserDirId"]);
+                            nUserId = Convert.ToInt16(oDr["nUserDirId"]);
                         }
 
                     }
@@ -1602,7 +1600,7 @@ namespace Protean
                             {
                                 isSecure = "http://";
                             }
-                            QRPath = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(isSecure, moRequest.ServerVariables["SERVER_NAME"]), QRPath));
+                            QRPath = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(isSecure, moRequest.ServerVariables["SERVER_NAME"]), QRPath));
                             var qrGenerator = new QRCoder.QRCodeGenerator();
                             var qrCodeData = qrGenerator.CreateQrCode(QRPath, QRCoder.QRCodeGenerator.ECCLevel.Q);
                             var qrCode = new QRCoder.QRCode(qrCodeData);
@@ -1619,7 +1617,7 @@ namespace Protean
                             if (moSession != null) {
                                 if (gbCart | gbQuote)
                                 {
-                                    if (Conversions.ToInteger("0" + moSession["CartId"] ?? string.Empty) > 0)
+                                    if (Convert.ToInt16("0" + moSession["CartId"] ?? string.Empty) > 0)
                                     {
                                         bPageCache = false;
                                     }
@@ -1666,12 +1664,12 @@ namespace Protean
                                 long nCacheTimeout = 24L;
                                 if (Information.IsNumeric(moConfig["PageCacheTimeout"]))
                                 {
-                                    nCacheTimeout = Conversions.ToLong(moConfig["PageCacheTimeout"]);
+                                    nCacheTimeout = Convert.ToInt64(moConfig["PageCacheTimeout"]);
                                 }
                                 var oFS = new Protean.fsHelper(moCtx);
                                 oFS.mcRoot = gcProjectPath;
                                 oFS.mcStartFolder = goServer.MapPath(@"\" + gcProjectPath).TrimEnd('\\') + mcPageCacheFolder;
-                                if (Conversions.ToBoolean(oFS.VirtualFileExistsAndRecent(sCachePath, nCacheTimeout)))
+                                if (Convert.ToBoolean(oFS.VirtualFileExistsAndRecent(sCachePath, nCacheTimeout)))
                                 {
                                     sServeFile = mcPageCacheFolder + sCachePath;
                                 }
@@ -1914,7 +1912,7 @@ namespace Protean
                                             var oTransform = new Protean.XmlHelper.Transform(ref argaWeb1, styleFile, gbCompiledTransform, 15000L, brecompile);
                                             if (!string.IsNullOrEmpty(moConfig["XslTimeout"]))
                                             {
-                                                oTransform.TimeOut = Conversions.ToLong(moConfig["XslTimeout"]);
+                                                oTransform.TimeOut = Convert.ToInt64(moConfig["XslTimeout"]);
                                             }
                                             oTransform.mbDebug = gbDebug;
                                             PerfMon.Log("Web", "GetPageHTML-loadxsl3");
@@ -2213,7 +2211,7 @@ namespace Protean
                     {
                         msRedirectOnEnd = msRedirectOnEnd.Replace("//", "/");
                     }
-                    if (Conversions.ToBoolean(mbRedirectPerm))
+                    if (Convert.ToBoolean(mbRedirectPerm))
                     {
                         moResponse.RedirectPermanent(msRedirectOnEnd, false);
                     }
@@ -2324,7 +2322,7 @@ namespace Protean
 
                 if (!string.IsNullOrEmpty(moConfig["XslTimeout"]))
                 {
-                    oTransform.TimeOut = Conversions.ToLong(moConfig["XslTimeout"]);
+                    oTransform.TimeOut = Convert.ToInt64(moConfig["XslTimeout"]);
                 }
 
                 oTransform.mbDebug = gbDebug;
@@ -2437,7 +2435,7 @@ namespace Protean
                     string layoutCmd = "";
                     if (moSession != null & !ibIndexMode)
                     {
-                        if (((double)mnUserId != Conversions.ToDouble("0") | Strings.LCase(moConfig["LogAll"]) == "On") & mbAdminMode == false & Features.ContainsKey("ActivityReporting"))
+                        if (((double)mnUserId != Convert.ToDouble("0") | Strings.LCase(moConfig["LogAll"]) == "On") & mbAdminMode == false & Features.ContainsKey("ActivityReporting"))
                         {
                             if (moRequest["noFrames"] != "True") // Fix for frameset double counting                   
                             {
@@ -2477,7 +2475,7 @@ namespace Protean
                             int nMaxDepth = 1;
                             if (!string.IsNullOrEmpty(cShowRelatedBriefDepth) && Information.IsNumeric(cShowRelatedBriefDepth))
                             {
-                                nMaxDepth = Conversions.ToInteger(cShowRelatedBriefDepth);
+                                nMaxDepth = Convert.ToInt16(cShowRelatedBriefDepth);
                             }
                             XmlElement argoContentParent = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
                             DateTime UpdatedTime = mdPageUpdateDate ?? DateTime.Now;
@@ -2565,10 +2563,10 @@ namespace Protean
 
                     if (moSession != null)
                     {
-                        if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(moSession["RedirectReason"], "", false), !bRedirectStarted))) // bRegistrationSuccessful is a local variable and is only set before the redirection occurs - hence looking for it being False.
+                        if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(moSession["RedirectReason"], "", false), !bRedirectStarted))) // bRegistrationSuccessful is a local variable and is only set before the redirection occurs - hence looking for it being False.
                         {
                             // Add a flag - the XSL can pick this up
-                            moPageXml.DocumentElement.SetAttribute("RedirectReason", Conversions.ToString(moSession["RedirectReason"]));
+                            moPageXml.DocumentElement.SetAttribute("RedirectReason", Convert.ToString(moSession["RedirectReason"]));
                             // Remove the Registration flag.
                             moSession.Remove("RedirectReason");
                         }
@@ -2665,9 +2663,9 @@ namespace Protean
                                 object sArtId = Regex.Replace("0" + moRequest["artid"], @"[^\d]", "");
                                 // check not too large for an int
                                 int argresult = 0;
-                                if (int.TryParse(Conversions.ToString(sArtId), out argresult))
+                                if (int.TryParse(Convert.ToString(sArtId), out argresult))
                                 {
-                                    mnArtId = Conversions.ToInteger(sArtId);
+                                    mnArtId = Convert.ToInt16(sArtId);
                                 }
                             }
                         }
@@ -2681,9 +2679,9 @@ namespace Protean
                         oPageElmt.SetAttribute("id", mnPageId.ToString());
                         if (moSession != null)
                         {
-                            if (Conversions.ToBoolean(Operators.AndObject(Conversions.ToInteger(Operators.ConcatenateObject("0", moSession["LogonRedirectId"])) > 0, !Operators.ConditionalCompareObjectEqual(moSession["LogonRedirectId"], mnPageId, false))))
+                            if (Convert.ToBoolean(Operators.AndObject(Convert.ToInt16(Operators.ConcatenateObject("0", moSession["LogonRedirectId"])) > 0, !Operators.ConditionalCompareObjectEqual(moSession["LogonRedirectId"], mnPageId, false))))
                             {
-                                oPageElmt.SetAttribute("requestedId", Conversions.ToString(moSession["LogonRedirectId"]));
+                                oPageElmt.SetAttribute("requestedId", Convert.ToString(moSession["LogonRedirectId"]));
                             }
                         }
 
@@ -2712,19 +2710,19 @@ namespace Protean
                                 long validatedVersion = 0L;
                                 if (mbPreview & !string.IsNullOrEmpty(moRequest["verId"]))
                                 {
-                                    validatedVersion = Conversions.ToLong(moRequest["verId"]);
+                                    validatedVersion = Convert.ToInt64(moRequest["verId"]);
                                 }
                                 if (mbPreview == false & !string.IsNullOrEmpty(moRequest["verId"]))
                                 {
                                     if ((Tools.Encryption.RC4.Decrypt(moRequest["previewKey"], moConfig["SharedKey"]) ?? "") == (moRequest["verId"] ?? ""))
                                     {
-                                        validatedVersion = Conversions.ToLong(moRequest["verId"]);
+                                        validatedVersion = Convert.ToInt64(moRequest["verId"]);
                                     }
                                 }
 
-                                if (Conversions.ToBoolean(validatedVersion))
+                                if (Convert.ToBoolean(validatedVersion))
                                 {
-                                    moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Conversions.ToLong(moRequest["verId"]));
+                                    moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Convert.ToInt64(moRequest["verId"]));
                                 }
                                 else if (Strings.LCase(moConfig["AllowContentDetailAccess"]) == "On")
                                 {
@@ -2764,20 +2762,20 @@ namespace Protean
                                         {
                                             if (mcOriginalURL.EndsWith("-/"))
                                             {
-                                                mbRedirectPerm = Conversions.ToString(true);
+                                                mbRedirectPerm = Convert.ToString(true);
                                                 msRedirectOnEnd = mcOriginalURL + cContentDetailName;
                                             }
                                             else
                                             {
                                                 string PathBefore = mcOriginalURL.Substring(0, mcOriginalURL.LastIndexOf("/Item"));
-                                                mbRedirectPerm = Conversions.ToString(true);
+                                                mbRedirectPerm = Convert.ToString(true);
                                                 msRedirectOnEnd = PathBefore + "/" + mnArtId + "-/" + cContentDetailName;
                                             }
                                         }
                                         else
                                         {
                                             string PathBefore = mcOriginalURL.Substring(0, mcOriginalURL.Length - RequestedContentName.Length);
-                                            mbRedirectPerm = Conversions.ToString(true);
+                                            mbRedirectPerm = Convert.ToString(true);
                                             msRedirectOnEnd = PathBefore + cContentDetailName;
                                         }
                                         if (!string.IsNullOrEmpty(myQueryString))
@@ -2804,7 +2802,7 @@ namespace Protean
                         oPageElmt.SetAttribute("updateDate", Tools.Xml.XmlDate(mdPageUpdateDate));
                         oPageElmt.SetAttribute("userIntegrations", gbUserIntegrations.ToString().ToLower());
                         oPageElmt.SetAttribute("pageViewDate", Tools.Xml.XmlDate(mdDate));
-                        oPageElmt.SetAttribute("previewHidden", Conversions.ToString(Interaction.IIf(mbPreviewHidden, "on", "off")));
+                        oPageElmt.SetAttribute("previewHidden", Convert.ToString(Interaction.IIf(mbPreviewHidden, "on", "off")));
 
                         // Assess if this page is a cloned page.
                         // Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
@@ -2873,7 +2871,7 @@ namespace Protean
                 // AJG - application/xhtml+xml is interpretly correctly by many browsers, especially IE
                 // Default Content type returned to be XHTML (to clear warning on XHTML validator)
                 processInfo = "Determine the mimeType";
-                mimeType = Conversions.ToString(Interaction.IIf(ValidatedOutputXml | string.IsNullOrEmpty(mimeType), System.Net.Mime.MediaTypeNames.Text.Xml, Strings.Replace(mimeType, " ", "+")));
+                mimeType = Convert.ToString(Interaction.IIf(ValidatedOutputXml | string.IsNullOrEmpty(mimeType), System.Net.Mime.MediaTypeNames.Text.Xml, Strings.Replace(mimeType, " ", "+")));
                 mcContentType = mimeType;
                 moResponse.ContentType = mcContentType;
 
@@ -2944,7 +2942,7 @@ namespace Protean
                     string mimeTypeFlattened = new Regex("[^A-Z0-9]", RegexOptions.IgnoreCase).Replace(mimeType, "-");
 
                     // Determine a default feedName, just in case it's blank
-                    feedName = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(feedName), "generic", feedName));
+                    feedName = Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(feedName), "generic", feedName));
 
                     // Add the paths to an array
                     rootPaths.Add(pathprefix + feedName + "/" + contentSchema + "-" + mimeTypeFlattened + ".xsl");
@@ -2962,7 +2960,7 @@ namespace Protean
                     {
                         paths.Add(path);
                         foreach (string commonFolders in maCommonFolders)
-                            paths.Add("/" + commonFolders.Trim(Conversions.ToChar(@"/\")) + path);
+                            paths.Add("/" + commonFolders.Trim(Convert.ToChar(@"/\")) + path);
                     }
                     rootPaths = null;
 
@@ -3128,21 +3126,21 @@ namespace Protean
 
                     if (!string.IsNullOrEmpty(moConfig["LimitFeed"]))
                     {
-                        pageSize = Conversions.ToInteger(moConfig["LimitFeed"]);
+                        pageSize = Convert.ToInt16(moConfig["LimitFeed"]);
                         pageNumber = 1;
                     }
 
-                    if (Conversions.ToDouble(moRequest["pageSize"]) > 0d)
+                    if (Convert.ToDouble(moRequest["pageSize"]) > 0d)
                     {
-                        pageSize = Conversions.ToInteger(moRequest["pageSize"]);
-                        pageNumber = Conversions.ToInteger(moRequest["pageNumber"]);
+                        pageSize = Convert.ToInt16(moRequest["pageSize"]);
+                        pageNumber = Convert.ToInt16(moRequest["pageNumber"]);
                         if (pageNumber == 0)
                             pageNumber = 1;
                     }
 
                     if (!string.IsNullOrEmpty(moConfig["feedRelatedBriefDepth"]))
                     {
-                        gnShowRelatedBriefDepth = Conversions.ToInteger(moConfig["feedRelatedBriefDepth"]);
+                        gnShowRelatedBriefDepth = Convert.ToInt16(moConfig["feedRelatedBriefDepth"]);
                     }
 
                     string productGrpSql = "";
@@ -3172,11 +3170,11 @@ namespace Protean
                         oElmt = currentOElmt1;
                         processInfo = "Cleaning parId for: " + oElmt.OuterXml;
                         string parId = oElmt.GetAttribute("parId");
-                        if (Conversions.ToBoolean(parId.Contains(",")))
+                        if (Convert.ToBoolean(parId.Contains(",")))
                         {
                             parId = oElmt.GetAttribute("parId").Split(',')[1];
                         }
-                        if (Conversions.ToLong(Operators.ConcatenateObject("0", parId)) > 0L)
+                        if (Convert.ToInt64(Operators.ConcatenateObject("0", parId)) > 0L)
                         {
                             // processInfo = "Cleaning parId for: " & oElmt.OuterXml
                             long primaryParId = 0L;
@@ -3190,7 +3188,7 @@ namespace Protean
                                 {
                                     if (oPageElmt.SelectSingleNode("descendant-or-self::MenuItem[@id='" + cParId + "']") != null)
                                     {
-                                        primaryParId = Conversions.ToLong(cParId);
+                                        primaryParId = Convert.ToInt64(cParId);
                                     }
                                 }
 
@@ -3221,7 +3219,7 @@ namespace Protean
                                         nWeight = "0";
                                     if (Information.IsNumeric(nWeight) & Information.IsNumeric(nPrice))
                                     {
-                                        oEc.AddShippingCosts(ref oElmt, Conversions.ToDouble(nPrice).ToString(), Conversions.ToDouble(nWeight).ToString());
+                                        oEc.AddShippingCosts(ref oElmt, Convert.ToDouble(nPrice).ToString(), Convert.ToDouble(nWeight).ToString());
                                     }
                                 }
 
@@ -3309,7 +3307,7 @@ namespace Protean
                 // Dim oAdmin As Admin = New Admin(Me)
                 // Dim oAdmin As Protean.Cms.Admin = New Protean.Cms.Admin(Me)
                 moAdmin.open(moPageXml);
-                if (Conversions.ToInteger(Operators.ConcatenateObject("0", moSession["nUserId"])) > 0)
+                if (Convert.ToInt16(Operators.ConcatenateObject("0", moSession["nUserId"])) > 0)
                 {
                     moAdmin.GetPreviewMenu();
                 }
@@ -3410,7 +3408,7 @@ namespace Protean
                 // establish the artid
                 if (!string.IsNullOrEmpty(moRequest["artid"]))
                 {
-                    mnArtId = Conversions.ToInteger(moRequest["artid"]);
+                    mnArtId = Convert.ToInt16(moRequest["artid"]);
                 }
                 // set the page attributes
                 if (mnArtId > 0)
@@ -3421,10 +3419,10 @@ namespace Protean
                 string NodeId = moRequest["pgid"];
                 if (Information.IsNumeric(NodeId))
                 {
-                    nPageId = Conversions.ToLong("0" + moRequest["pgid"]);
+                    nPageId = Convert.ToInt64("0" + moRequest["pgid"]);
                 }
 
-                long nContentParId = Conversions.ToLong("0" + moRequest["contentParId"]);
+                long nContentParId = Convert.ToInt64("0" + moRequest["contentParId"]);
                 if (nPageId > 0L)
                 {
                     mnPageId = (int)nPageId;
@@ -3478,7 +3476,7 @@ namespace Protean
                             Cms.Admin.AdminXforms moAdXfm = (Cms.Admin.AdminXforms)getAdminXform();
                             moAdXfm.open(moPageXml);
 
-                            long nContentId = Conversions.ToLong("0" + moRequest["id"]);
+                            long nContentId = Convert.ToInt64("0" + moRequest["id"]);
                             bool bUserValid = false;
                             long nPagePermissionCheck = nPageId;
                             long nContentPermissionCheck = nContentId;
@@ -3487,12 +3485,12 @@ namespace Protean
                             if (mbPreview & moConfig["inlineContentPermissions"] == "AdminUser")
                             {
                                 // commented out because it was breaking PSMG edit jobs
-                                mnUserId = Conversions.ToInteger(moSession["nUserId"]);
+                                mnUserId = Convert.ToInt16(moSession["nUserId"]);
                             }
 
                             if (mnUserId == 0)
                             {
-                                mnUserId = Conversions.ToInteger(moConfig["NonAuthUserID"]);
+                                mnUserId = Convert.ToInt16(moConfig["NonAuthUserID"]);
                                 moDbHelper.mnUserId = (long)mnUserId;
                                 bResetUser = true;
                             }
@@ -3508,8 +3506,8 @@ namespace Protean
                                 var hUnorphanedAncestor = moDbHelper.getUnorphanedAncestor((int)nContentParId, 1L);
                                 if (hUnorphanedAncestor != null)
                                 {
-                                    nPagePermissionCheck = Conversions.ToLong(hUnorphanedAncestor["page"]);
-                                    nContentPermissionCheck = Conversions.ToLong(hUnorphanedAncestor["id"]);
+                                    nPagePermissionCheck = Convert.ToInt64(hUnorphanedAncestor["page"]);
+                                    nContentPermissionCheck = Convert.ToInt64(hUnorphanedAncestor["id"]);
                                 }
                             }
 
@@ -3549,14 +3547,14 @@ namespace Protean
                                             var tmp = moRequest;
                                             string argAlternateFormName = tmp["formName"];
                                             string zcReturnSchema = null;
-                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId: ref argnReturnId, ref zcReturnSchema, AlternateFormName: ref argAlternateFormName, nVersionId: Conversions.ToLong("0" + moRequest["verId"]));
+                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId: ref argnReturnId, ref zcReturnSchema, AlternateFormName: ref argAlternateFormName, nVersionId: Convert.ToInt64("0" + moRequest["verId"]));
                                             nContentId = argnReturnId;
                                             if (moAdXfm.valid)
                                             {
                                                 // if we have a parent releationship lets add it
                                                 if (!string.IsNullOrEmpty(moRequest["contentParId"]))
                                                 {
-                                                    moDbHelper.insertContentRelation(Conversions.ToInteger(moRequest["contentParId"]), nContentId.ToString(), Conversions.ToBoolean(Interaction.IIf(moRequest["2way"] == "true", true, false)));
+                                                    moDbHelper.insertContentRelation(Convert.ToInt16(moRequest["contentParId"]), nContentId.ToString(), Convert.ToBoolean(Interaction.IIf(moRequest["2way"] == "true", true, false)));
                                                 }
                                                 // simply output the content detail XML
                                                 // As this is content that we must've been able to get,
@@ -3568,7 +3566,7 @@ namespace Protean
 
                                                 if (!string.IsNullOrEmpty(moRequest["showParent"]))
                                                 {
-                                                    GetContentDetailXml(oPageElmt, Conversions.ToLong(moRequest["contentParId"]));
+                                                    GetContentDetailXml(oPageElmt, Convert.ToInt64(moRequest["contentParId"]));
                                                 }
                                                 else
                                                 {
@@ -3635,7 +3633,7 @@ namespace Protean
                                 // raise error or do nothing
                                 var oPageDetail = moPageXml.CreateElement("ContentDetail");
                                 oPageElmt.AppendChild(oPageDetail);
-                                oPageDetail.InnerXml = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<Content type=\" error\"><div>Sorry you do not have permission to ", Interaction.IIf(AjaxCmd == "Delete", "delete", "update")), " this item, please contact the site administrator.</div></Content>"));
+                                oPageDetail.InnerXml = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<Content type=\" error\"><div>Sorry you do not have permission to ", Interaction.IIf(AjaxCmd == "Delete", "delete", "update")), " this item, please contact the site administrator.</div></Content>"));
 
                             }
 
@@ -3665,17 +3663,17 @@ namespace Protean
                             // TS Force to Admin Mode because you might not be calling from the same application
                             // mbAdminMode = True
 
-                            long expId = Conversions.ToLong(moRequest["pgid"]);
+                            long expId = Convert.ToInt64(moRequest["pgid"]);
                             long nContextId = 0L;
                             if (!string.IsNullOrEmpty(moRequest["expid"]))
                             {
-                                expId = Conversions.ToLong(moRequest["expid"]);
+                                expId = Convert.ToInt64(moRequest["expid"]);
                             }
 
                             // Check for a context node
-                            if (!string.IsNullOrEmpty(moRequest["context"]) && Information.IsNumeric(moRequest["context"]) && Conversions.ToLong(moRequest["context"]) > 0L)
+                            if (!string.IsNullOrEmpty(moRequest["context"]) && Information.IsNumeric(moRequest["context"]) && Convert.ToInt64(moRequest["context"]) > 0L)
                             {
-                                nContextId = Conversions.ToLong(moRequest["context"]);
+                                nContextId = Convert.ToInt64(moRequest["context"]);
                             }
 
                             // make sure we don't check for permissions.
@@ -3740,7 +3738,7 @@ namespace Protean
                             oFsh.moPageXML = moPageXml;
                             oFsh.mcStartFolder = oFsh.mcStartFolder + moRequest["pgid"].Replace("~", @"\");
                             oPageDetail.AppendChild(oFsh.getDirectoryTreeXml(libType, "+++", moRequest["pgid"].Replace("~", @"\")));
-                            moPageXml.DocumentElement.SetAttribute("ewCmd", Conversions.ToString(thisEwCmd));
+                            moPageXml.DocumentElement.SetAttribute("ewCmd", Convert.ToString(thisEwCmd));
                             break;
                         }
 
@@ -4075,11 +4073,11 @@ namespace Protean
                         // Check open and close dates
                         if (ocNode.SelectSingleNode("dOpenDate") != null && Information.IsDate(ocNode.SelectSingleNode("dOpenDate").InnerText))
                         {
-                            openDate = Conversions.ToDate(ocNode.SelectSingleNode("dOpenDate").InnerText);
+                            openDate = Convert.ToDateTime(ocNode.SelectSingleNode("dOpenDate").InnerText);
                         }
                         if (ocNode.SelectSingleNode("dCloseDate") != null && Information.IsDate(ocNode.SelectSingleNode("dCloseDate").InnerText))
                         {
-                            closeDate = Conversions.ToDate(ocNode.SelectSingleNode("dCloseDate").InnerText);
+                            closeDate = Convert.ToDateTime(ocNode.SelectSingleNode("dCloseDate").InnerText);
                         }
                         if (openDate > DateTime.Now | closeDate < DateTime.Now)
                         {
@@ -4223,7 +4221,7 @@ namespace Protean
 
 
 
-                                    string blocked = Conversions.ToString(moDbHelper.GetDataValue(blockingScopeQuery, CommandType.Text, null, ""));
+                                    string blocked = Convert.ToString(moDbHelper.GetDataValue(blockingScopeQuery, CommandType.Text, null, ""));
                                     if (!string.IsNullOrEmpty(blocked))
                                     {
                                         // Block has been found
@@ -4237,11 +4235,11 @@ namespace Protean
 
 
 
-                                        string cLastVoted = Conversions.ToString(moDbHelper.GetDataValue(sSql, CommandType.Text, null, ""));
+                                        string cLastVoted = Convert.ToString(moDbHelper.GetDataValue(sSql, CommandType.Text, null, ""));
                                         if (!string.IsNullOrEmpty(cLastVoted) && Information.IsDate(cLastVoted))
                                         {
                                             // We found a vote, check the date
-                                            if (bVoteOnce || Conversions.ToDate(cLastVoted) > dPreviousVotesCreationDate)
+                                            if (bVoteOnce || Convert.ToDateTime(cLastVoted) > dPreviousVotesCreationDate)
                                             {
                                                 // Block the vote
                                                 bCanVote = false;
@@ -4307,7 +4305,7 @@ namespace Protean
                         // Add the status node
 
                         var oCStatusNode = moPageXml.CreateElement("Status");
-                        oCStatusNode.SetAttribute("canVote", Conversions.ToString(Interaction.IIf(bCanVote, "true", "false")));
+                        oCStatusNode.SetAttribute("canVote", Convert.ToString(Interaction.IIf(bCanVote, "true", "false")));
                         if (bHasVoted)
                             oCStatusNode.SetAttribute("justVoted", "true");
                         if (nVoteBlockReason != PollBlockReason.None)
@@ -4327,8 +4325,8 @@ namespace Protean
                             while (oDr.Read())
                             {
                                 var oResNode = moPageXml.CreateElement("PollResult");
-                                oResNode.SetAttribute("entryId", Conversions.ToString(oDr[0]));
-                                oResNode.SetAttribute("votes", Conversions.ToString(oDr[1]));
+                                oResNode.SetAttribute("entryId", Convert.ToString(oDr[0]));
+                                oResNode.SetAttribute("votes", Convert.ToString(oDr[1]));
                                 oCResNode.AppendChild(oResNode);
                             }
                             oDr.Close();
@@ -4585,10 +4583,10 @@ namespace Protean
 
                         while (oDr.Read())
                         {
-                            foreach (XmlElement currentOcNode7 in moPageXml.SelectNodes(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/Page/Contents/descendant-or-self::Content[@id='", oDr["nContentChildId"]), "']"))))
+                            foreach (XmlElement currentOcNode7 in moPageXml.SelectNodes(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/Page/Contents/descendant-or-self::Content[@id='", oDr["nContentChildId"]), "']"))))
                             {
                                 ocNode = currentOcNode7;
-                                ocNode.SetAttribute("relatedCount", Conversions.ToString(oDr["count"]));
+                                ocNode.SetAttribute("relatedCount", Convert.ToString(oDr["count"]));
                             }
                         }
                     }
@@ -4684,10 +4682,10 @@ namespace Protean
                     // Directory integrations take a directory ID
                     string requestedDirectoryId = moRequest["dirId"];
                     long directoryId = (long)mnUserId;
-                    if (!string.IsNullOrEmpty(requestedDirectoryId) && Information.IsNumeric(requestedDirectoryId) && Conversions.ToInteger(requestedDirectoryId) > 0)
+                    if (!string.IsNullOrEmpty(requestedDirectoryId) && Information.IsNumeric(requestedDirectoryId) && Convert.ToInt16(requestedDirectoryId) > 0)
 
                     {
-                        directoryId = Conversions.ToLong(requestedDirectoryId);
+                        directoryId = Convert.ToInt64(requestedDirectoryId);
                     }
 
                     if (directoryId > 0L)
@@ -4883,7 +4881,7 @@ namespace Protean
                 // this will delete all but the first found.
                 foreach (XmlElement oContentElmt in moPageXml.SelectNodes("/Page/Contents/Content"))
                 {
-                    nContentId = Conversions.ToLong(oContentElmt.GetAttribute("id"));
+                    nContentId = Convert.ToInt64(oContentElmt.GetAttribute("id"));
                     if (hContentIds[nContentId] is null)
                     {
                         hContentIds.Add(nContentId, nContentId);
@@ -4973,7 +4971,7 @@ namespace Protean
                 else
                 {
                     oRoot = oContentsNode;
-                    nItemCount = Conversions.ToInteger("0" + oContentsNode.GetAttribute("stepCount"));
+                    nItemCount = Convert.ToInt16("0" + oContentsNode.GetAttribute("stepCount"));
                 }
 
 
@@ -5149,7 +5147,7 @@ namespace Protean
                         cSQL += " " + cAdditionalJoins + " ";
                     cSQL = cSQL + " where (" + combinedWhereSQL + ")";
 
-                    long nTotal = Conversions.ToLong(moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
+                    long nTotal = Convert.ToInt64(moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
 
                     oContentsNode.SetAttribute("resultCount", nTotal.ToString());
                 }
@@ -5345,7 +5343,7 @@ namespace Protean
                 else
                 {
                     oRoot = oContentsNode;
-                    nItemCount = Conversions.ToInteger("0" + oContentsNode.GetAttribute("stepCount"));
+                    nItemCount = Convert.ToInt16("0" + oContentsNode.GetAttribute("stepCount"));
                 }
 
                 if (bContentDetail == false)
@@ -5625,7 +5623,7 @@ namespace Protean
 
                             if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
                             {
-                                assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
+                                assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"])));
                             }
                             else
                             {
@@ -5637,7 +5635,7 @@ namespace Protean
                             }
                             else
                             {
-                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                                calledType = assemblyInstance.GetType(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
                             }
                         }
                         string methodname = "PostFilterContentUpdates";
@@ -5700,7 +5698,7 @@ namespace Protean
                 }
 
                 sSql = "SET ARITHABORT ON ";
-                sSql = Conversions.ToString(sSql + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT ", Interaction.IIf(distinct, "DISTINCT ", "")), sTopSql), " c.nContentKey as id, cl.nStructId as locId,"));
+                sSql = Convert.ToString(sSql + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT ", Interaction.IIf(distinct, "DISTINCT ", "")), sTopSql), " c.nContentKey as id, cl.nStructId as locId,"));
                 if (bPrimaryOnly)
                 {
                     sSql += " CL.nStructId as parId,";
@@ -5830,7 +5828,7 @@ namespace Protean
             {
 
                 Cms argmyWeb = this;
-                return Conversions.ToString(moMemProv.Activities.MembershipProcess(ref argmyWeb));
+                return Convert.ToString(moMemProv.Activities.MembershipProcess(ref argmyWeb));
 
             }
 
@@ -5862,7 +5860,7 @@ namespace Protean
             try
             {
                 Cms argmyWeb = this;
-                return Conversions.ToBoolean(moMemProv.Activities.AlternativeAuthentication(ref argmyWeb));
+                return Convert.ToBoolean(moMemProv.Activities.AlternativeAuthentication(ref argmyWeb));
             }
 
             // ' Look for the RC4 token
@@ -6083,9 +6081,9 @@ namespace Protean
                 if (moRequest.QueryString["cartCmd"] != "Logon")
                 {
 
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["LogonRedirect"], "", false)))
+                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["LogonRedirect"], "", false)))
                     {
-                        sRedirectPath = Conversions.ToString(moSession["LogonRedirect"]);
+                        sRedirectPath = Convert.ToString(moSession["LogonRedirect"]);
                         moSession["LogonRedirect"] = "";
                     }
                     else
@@ -6179,9 +6177,9 @@ namespace Protean
                         {
 
                             // Try to find the product
-                            long nArtId = Conversions.ToLong(moRequest["artid"]);
-                            string cSql = Conversions.ToString(Operators.ConcatenateObject("SELECT cContentName FROM tblContent WHERE nContentKey = ", SqlFmt(nArtId.ToString())));
-                            string cName = Conversions.ToString(moDbHelper.GetDataValue(cSql, CommandType.Text, null, ""));
+                            long nArtId = Convert.ToInt64(moRequest["artid"]);
+                            string cSql = Convert.ToString(Operators.ConcatenateObject("SELECT cContentName FROM tblContent WHERE nContentKey = ", SqlFmt(nArtId.ToString())));
+                            string cName = Convert.ToString(moDbHelper.GetDataValue(cSql, CommandType.Text, null, ""));
 
 
 
@@ -6215,7 +6213,7 @@ namespace Protean
                         }
 
                         // Redirect
-                        if (Conversions.ToBoolean(Operators.AndObject(bRedirect, Operators.ConditionalCompareObjectNotEqual(moSession["legacyRedirect"], "on", false))))
+                        if (Convert.ToBoolean(Operators.AndObject(bRedirect, Operators.ConditionalCompareObjectNotEqual(moSession["legacyRedirect"], "on", false))))
                         {
                             // Stop recursive redirects
                             moSession["legacyRedirect"] = "on";
@@ -6230,7 +6228,7 @@ namespace Protean
                                 case "304":
                                 case "307":
                                     {
-                                        nResponseCode = Conversions.ToInteger(moRequest["redirect"]);
+                                        nResponseCode = Convert.ToInt16(moRequest["redirect"]);
                                         break;
                                     }
                             }
@@ -6368,18 +6366,18 @@ namespace Protean
                     item = currentItem;
                     try
                     {
-                        if (!(Conversions.ToString(item) == "ALL_HTTP" | Conversions.ToString(item) == "ALL_RAW" | string.IsNullOrEmpty(moRequest.ServerVariables[Conversions.ToString(item)])))
+                        if (!(Convert.ToString(item) == "ALL_HTTP" | Convert.ToString(item) == "ALL_RAW" | string.IsNullOrEmpty(moRequest.ServerVariables[Convert.ToString(item)])))
                         {
                             newElem2 = moPageXml.CreateElement("Item");
-                            newElem2.SetAttribute("name", Conversions.ToString(item));
-                            newElem2.InnerText = moRequest.ServerVariables[Conversions.ToString(item)];
+                            newElem2.SetAttribute("name", Convert.ToString(item));
+                            newElem2.InnerText = moRequest.ServerVariables[Convert.ToString(item)];
                             newElem.AppendChild(newElem2);
                         }
                     }
                     catch
                     {
                         newElem2 = moPageXml.CreateElement("Item");
-                        newElem2.SetAttribute("name", Conversions.ToString(item));
+                        newElem2.SetAttribute("name", Convert.ToString(item));
                         newElem.AppendChild(newElem2);
                     }
 
@@ -6409,7 +6407,7 @@ namespace Protean
                 newElem2 = moPageXml.CreateElement("Item");
                 newElem2.SetAttribute("name", "PREVIOUS_PAGE");
                 if (moSession != null)
-                    newElem2.InnerText = Conversions.ToString(moSession["previousPage"]);
+                    newElem2.InnerText = Convert.ToString(moSession["previousPage"]);
                 newElem.AppendChild(newElem2);
 
                 newElem2 = moPageXml.CreateElement("Item");
@@ -6441,8 +6439,8 @@ namespace Protean
                 {
                     item = currentItem1;
                     newElem2 = moPageXml.CreateElement("Item");
-                    newElem2.SetAttribute("name", Conversions.ToString(item));
-                    newElem2.InnerText = moRequest.QueryString[Conversions.ToString(item)];
+                    newElem2.SetAttribute("name", Convert.ToString(item));
+                    newElem2.InnerText = moRequest.QueryString[Convert.ToString(item)];
                     newElem.AppendChild(newElem2);
                 }
                 root.AppendChild(newElem);
@@ -6453,8 +6451,8 @@ namespace Protean
                 {
                     item = currentItem2;
                     newElem2 = moPageXml.CreateElement("Item");
-                    newElem2.SetAttribute("name", Conversions.ToString(item));
-                    newElem2.InnerText = moRequest.Form[Conversions.ToString(item)];
+                    newElem2.SetAttribute("name", Convert.ToString(item));
+                    newElem2.InnerText = moRequest.Form[Convert.ToString(item)];
                     newElem.AppendChild(newElem2);
                 }
                 root.AppendChild(newElem);
@@ -6546,7 +6544,7 @@ namespace Protean
                     s = Operators.AddObject(s, "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;");
                     s = Operators.ConcatenateObject(Operators.AddObject(s, moConfig["XmlSettings"]), ";");
 
-                    var match = Regex.Match(Conversions.ToString(s), @"(?<Name>[^\.]*)\.(?<Value>[^;]*);?");
+                    var match = Regex.Match(Convert.ToString(s), @"(?<Name>[^\.]*)\.(?<Value>[^;]*);?");
 
                     System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
                     System.Collections.Specialized.NameValueCollection oThemeConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/theme");
@@ -6606,7 +6604,7 @@ namespace Protean
                 else
                 {
                     root = moPageXml.CreateElement("Settings");
-                    root.InnerXml = Conversions.ToString(moCtx.Application["ewSettings"]);
+                    root.InnerXml = Convert.ToString(moCtx.Application["ewSettings"]);
                 }
                 oPageElmt.AppendChild(root);
             }
@@ -6877,7 +6875,7 @@ namespace Protean
             string cFilePathModifier = "";
             bool bAuth = true;
 
-            string sProcessInfo = Conversions.ToString(string.IsNullOrEmpty("GetStructureXML"));
+            string sProcessInfo = Convert.ToString(string.IsNullOrEmpty("GetStructureXML"));
             string cCacheType;
 
             try
@@ -6911,7 +6909,7 @@ namespace Protean
                 // User Id
                 // If AdminMode and no user then set user to be -1 otherwise apply the userid
                 if (nUserId == 0L)
-                    nUserId = Conversions.ToLong(Interaction.IIf(mbAdminMode, (object)-1, (object)mnUserId));
+                    nUserId = Convert.ToInt64(Interaction.IIf(mbAdminMode, (object)-1, (object)mnUserId));
                 if (nUserId == -1)
                     bAuth = false;
 
@@ -6952,13 +6950,13 @@ namespace Protean
                     sProcessInfo = "GetStructureXML-CheckCaching";
                     PerfMon.Log("Web", sProcessInfo);
 
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["cacheMode"], "", false)))
+                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["cacheMode"], "", false)))
                     {
-                        cCacheMode = Conversions.ToString(moSession["cacheMode"]);
+                        cCacheMode = Convert.ToString(moSession["cacheMode"]);
                     }
                     else if (!string.IsNullOrEmpty(moConfig["SiteCache"]))
                     {
-                        cCacheMode = Conversions.ToString(Interaction.IIf(gbSiteCacheMode, "on", "off"));
+                        cCacheMode = Convert.ToString(Interaction.IIf(gbSiteCacheMode, "on", "off"));
                     }
 
                     // Check out of a caching override has been passed through
@@ -6978,13 +6976,13 @@ namespace Protean
 
                         if (mbAdminMode & cCacheType == "Menu/MenuItem")
                         {
-                            oCache.InnerXml = Conversions.ToString(moCtx.Application["AdminStructureCache"]);
+                            oCache.InnerXml = Convert.ToString(moCtx.Application["AdminStructureCache"]);
                         }
                         else
                         {
 
 
-                            string cacheSearchCriteria = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE nCacheDirId = ", SqlFmt(nUserId.ToString())), " AND cCacheType='"), cCacheType), "'"));
+                            string cacheSearchCriteria = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE nCacheDirId = ", SqlFmt(nUserId.ToString())), " AND cCacheType='"), cCacheType), "'"));
                             if (bAuth)
                             {
                                 cacheSearchCriteria += " AND cCacheSessionID = '" + moSession.SessionID + "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12";
@@ -7055,7 +7053,7 @@ namespace Protean
                         bIncludeExpiredAndHidden = true;
                     }
 
-                    sSql = "EXEC getContentStructure_v2 @userId=" + nUserId + ", @bAdminMode=" + Conversions.ToInteger(mbAdminMode) + ", @dateNow=" + sqlDate(mdDate) + ", @authUsersGrp = " + nAuthUsers + ", @bReturnDenied=1";
+                    sSql = "EXEC getContentStructure_v2 @userId=" + nUserId + ", @bAdminMode=" + Convert.ToInt16(mbAdminMode) + ", @dateNow=" + sqlDate(mdDate) + ", @authUsersGrp = " + nAuthUsers + ", @bReturnDenied=1";
 
                     sProcessInfo = "GetStructureXML-getContentStrcuture";
                     PerfMon.Log("Web", sProcessInfo);
@@ -7216,7 +7214,7 @@ namespace Protean
                         }
                         else
                         {
-                            nTempRootId = Conversions.ToInteger(oElmt.FirstChild.FirstChild.Attributes["id"].Value);
+                            nTempRootId = Convert.ToInt16(oElmt.FirstChild.FirstChild.Attributes["id"].Value);
                         }
 
 
@@ -7236,7 +7234,7 @@ namespace Protean
                             {
                                 oMenuItem = currentOMenuItem;
                                 // Go and get the cloned node
-                                nCloneId = Conversions.ToInteger(oMenuItem.GetAttribute("clone"));
+                                nCloneId = Convert.ToInt16(oMenuItem.GetAttribute("clone"));
                                 if (!(Tools.Xml.NodeState(ref oElmt, "descendant-or-self::" + cMenuItemNodeName + "[@id='" + nCloneId + "']", ref oClone) == Tools.Xml.XmlNodeState.NotInstantiated))
                                 {
                                     if (oClone != null)
@@ -7255,12 +7253,12 @@ namespace Protean
                                 oMenuItem = currentOMenuItem1;
 
                                 // Go and get the cloned node
-                                nCloneId = Conversions.ToInteger(oMenuItem.GetAttribute("clone"));
-                                nCloneParentId = Conversions.ToInteger(oMenuItem.GetAttribute("id"));
+                                nCloneId = Convert.ToInt16(oMenuItem.GetAttribute("clone"));
+                                nCloneParentId = Convert.ToInt16(oMenuItem.GetAttribute("id"));
                                 if (!(Tools.Xml.NodeState(ref oElmt, "descendant-or-self::" + cMenuItemNodeName + "[@id='" + nCloneId + "']", "", "", XmlNodeState.IsEmpty, oClone, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) == Tools.Xml.XmlNodeState.NotInstantiated))
                                 {
 
-                                    oMenuItem.InnerXml = Conversions.ToString(cNodeSnapshot[nCloneId]);
+                                    oMenuItem.InnerXml = Convert.ToString(cNodeSnapshot[nCloneId]);
 
                                     // Add the cloned flag to nodes and children
                                     foreach (XmlElement oChild in oMenuItem.SelectNodes("descendant-or-self::" + cMenuItemNodeName))
@@ -7333,7 +7331,7 @@ namespace Protean
                             sProcessInfo = "GetStructureXML-lockRoot";
                             PerfMon.Log("Web", sProcessInfo);
                             XmlElement oMenuFirstChild = (XmlElement)oElmt.FirstChild;
-                            oMenuFirstChild.SetAttribute("Locked", Conversions.ToString(true));
+                            oMenuFirstChild.SetAttribute("Locked", Convert.ToString(true));
                         }
                     }
 
@@ -7440,24 +7438,24 @@ namespace Protean
                             if (verNode != null)
                             {
                                 // Case for if our version is also the root page
-                                if (nRootId == Conversions.ToDouble(oMenuItem.GetAttribute("id")))
+                                if (nRootId == Convert.ToDouble(oMenuItem.GetAttribute("id")))
                                 {
-                                    nRootId = Conversions.ToLong(verNode.GetAttribute("id"));
+                                    nRootId = Convert.ToInt64(verNode.GetAttribute("id"));
                                 }
 
                                 // Case if we are on the current page then we reset the mnPageId so we pull in the right content
-                                if ((double)mnPageId == Conversions.ToDouble(oMenuItem.GetAttribute("id")))
+                                if ((double)mnPageId == Convert.ToDouble(oMenuItem.GetAttribute("id")))
                                 {
                                     // If (verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "") And verNode.GetAttribute("verType") <> 1 Then
                                     // If (verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "") Then
-                                    switch (Conversions.ToInteger(verNode.GetAttribute("verType")))
+                                    switch (Convert.ToInt16(verNode.GetAttribute("verType")))
                                     {
                                         case 1: // case for permission version
                                             {
                                                 // Dim permLevel As dbHelper.PermissionLevel = moDbHelper.getPagePermissionLevel(verNode.GetAttribute("id"))
                                                 if (!mbAdminMode)
                                                 {
-                                                    mnPageId = Conversions.ToInteger(verNode.GetAttribute("id"));
+                                                    mnPageId = Convert.ToInt16(verNode.GetAttribute("id"));
                                                 }
 
                                                 break;
@@ -7466,7 +7464,7 @@ namespace Protean
                                             {
                                                 if ((verNode.GetAttribute("lang") ?? "") == (gcLang ?? ""))
                                                 {
-                                                    mnPageId = Conversions.ToInteger(verNode.GetAttribute("id"));
+                                                    mnPageId = Convert.ToInt16(verNode.GetAttribute("id"));
                                                 }
 
                                                 break;
@@ -7474,7 +7472,7 @@ namespace Protean
 
                                         default:
                                             {
-                                                mnPageId = Conversions.ToInteger(verNode.GetAttribute("id"));
+                                                mnPageId = Convert.ToInt16(verNode.GetAttribute("id"));
                                                 break;
                                             }
                                     }
@@ -7547,10 +7545,10 @@ namespace Protean
                             foreach (XmlElement currentVerNode in oMenuItem.SelectNodes("PageVersion[@id=" + mnPageId + "]"))
                             {
                                 verNode = currentVerNode;
-                                if (Conversions.ToDouble(oMenuItem.GetAttribute("id")) == nRootId)
+                                if (Convert.ToDouble(oMenuItem.GetAttribute("id")) == nRootId)
                                 {
                                     // case for replacing homepage in admin
-                                    nRootId = Conversions.ToLong(verNode.GetAttribute("id"));
+                                    nRootId = Convert.ToInt64(verNode.GetAttribute("id"));
                                 }
                                 // update menu item with current page
                                 oMenuItem.SetAttribute("id", verNode.GetAttribute("id"));
@@ -7561,7 +7559,7 @@ namespace Protean
                                 oMenuItem.SetAttribute("status", verNode.GetAttribute("status"));
                                 oMenuItem.SetAttribute("access", verNode.GetAttribute("access"));
                                 oMenuItem.SetAttribute("layout", verNode.GetAttribute("layout"));
-                                oMenuItem.SetAttribute("clone", Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(verNode.GetAttribute("clone")), "0", verNode.GetAttribute("clone"))));
+                                oMenuItem.SetAttribute("clone", Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(verNode.GetAttribute("clone")), "0", verNode.GetAttribute("clone"))));
                                 oMenuItem.SetAttribute("lang", verNode.GetAttribute("lang"));
                                 oMenuItem.SetAttribute("verDesc", verNode.GetAttribute("desc"));
                                 oMenuItem.SetAttribute("verType", verNode.GetAttribute("verType"));
@@ -7707,18 +7705,18 @@ namespace Protean
                                                     // catch for page version
                                                     if (oMenuItem.SelectSingleNode("PageVersion[@id='" + mnPageId + "']") is null)
                                                     {
-                                                        mnPageId = Conversions.ToInteger(oMenuItem.GetAttribute("id"));
+                                                        mnPageId = Convert.ToInt16(oMenuItem.GetAttribute("id"));
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    mnPageId = Conversions.ToInteger(oMenuItem.GetAttribute("id"));
+                                                    mnPageId = Convert.ToInt16(oMenuItem.GetAttribute("id"));
                                                 }
 
                                                 if (mnUserId != 0 | mbAdminMode != true)
                                                 {
                                                     // case for personalisation and admin TS 14/02/2021
-                                                    mnPageId = Conversions.ToInteger(oMenuItem.GetAttribute("id"));
+                                                    mnPageId = Convert.ToInt16(oMenuItem.GetAttribute("id"));
                                                 }
                                                 // If oMenuItem.GetAttribute("verType") = "3" Then
                                                 mnClonePageVersionId = mnPageId;
@@ -7738,9 +7736,9 @@ namespace Protean
                         if (gbClone)
                         {
                             cCloneParent = oMenuItem.GetAttribute("cloneparent");
-                            if (Information.IsNumeric(cCloneParent) && Conversions.ToInteger(cCloneParent) > 0)
+                            if (Information.IsNumeric(cCloneParent) && Convert.ToInt16(cCloneParent) > 0)
                             {
-                                sUrl = Conversions.ToString(sUrl + Interaction.IIf(sUrl.Contains("?"), "&", "?"));
+                                sUrl = Convert.ToString(sUrl + Interaction.IIf(sUrl.Contains("?"), "&", "?"));
                                 sUrl += "context=" + cCloneParent;
                             }
                         }
@@ -7842,7 +7840,7 @@ namespace Protean
 
                         }
 
-                        if ((double)mnPageId == Conversions.ToDouble(oMenuItem.GetAttribute("id")))
+                        if ((double)mnPageId == Convert.ToDouble(oMenuItem.GetAttribute("id")))
                         {
                             mcPageURL = sUrl;
                         }
@@ -7939,12 +7937,12 @@ namespace Protean
                 {
                     while (oDR.Read())
                     {
-                        oElmt = (XmlElement)oMenu.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("descendant::MenuItem[@id='", oDR["nStructId"]), "']")));
+                        oElmt = (XmlElement)oMenu.SelectSingleNode(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("descendant::MenuItem[@id='", oDR["nStructId"]), "']")));
                         if (oElmt != null)
                         {
                             var newElmt = moPageXml.CreateElement("ContentCount");
                             newElmt.SetAttribute("type", Strings.Trim(SchemaType));
-                            newElmt.SetAttribute("count", Conversions.ToString(oDR["count"]));
+                            newElmt.SetAttribute("count", Convert.ToString(oDR["count"]));
                             oElmt.AppendChild(newElmt);
                         }
 
@@ -8097,7 +8095,7 @@ namespace Protean
                 cContentTypes = cContentTypes.TrimEnd(',');
                 var pageDict = new SortedDictionary<long, string>();
                 foreach (XmlElement MenuItem in oMenuElmt.SelectNodes("descendant-or-self::MenuItem"))
-                    pageDict.Add(Conversions.ToLong(MenuItem.GetAttribute("id")), MenuItem.GetAttribute("url"));
+                    pageDict.Add(Convert.ToInt64(MenuItem.GetAttribute("id")), MenuItem.GetAttribute("url"));
 
                 // Dim keys As List(Of Long) = pageDict.KeyCollection
                 // keys.Sort()
@@ -8121,9 +8119,9 @@ namespace Protean
                     {
                         string cURL = "";
                         var oContElmt = moPageXml.CreateElement("MenuItem");
-                        long ContentId = Conversions.ToLong(oDR[0]);
+                        long ContentId = Convert.ToInt64(oDR[0]);
                         ContentIdsCSV = ContentIdsCSV + ContentId + ",";
-                        cURL = GetDetailURL(ContentId, oDR[5].ToString(), oDR[1].ToString(), "", Conversions.ToLong(oDR[2]), pageDict);
+                        cURL = GetDetailURL(ContentId, oDR[5].ToString(), oDR[1].ToString(), "", Convert.ToInt64(oDR[2]), pageDict);
 
                         #region old code
                         //switch (moConfig["DetailPathType"] ?? "")
@@ -8163,9 +8161,9 @@ namespace Protean
 
                         //    default:
                         //        {
-                        //            if (pageDict.ContainsKey(Conversions.ToLong(oDR[2])))
+                        //            if (pageDict.ContainsKey(Convert.ToInt64(oDR[2])))
                         //            {
-                        //                cURL = pageDict[Conversions.ToLong(oDR[2])];
+                        //                cURL = pageDict[Convert.ToInt64(oDR[2])];
                         //                // If moConfig("LegacyRedirect") = "on" Then
                         //                cURL += "/" + oDR[0].ToString() + "-/" + Tools.Text.CleanName(oDR[1].ToString(), false, true);
                         //            }
@@ -8213,7 +8211,7 @@ namespace Protean
                                 {
                                     string cURL2 = "";
                                     var oContElmt2 = moPageXml.CreateElement("MenuItem");
-                                    cURL2 = GetDetailURL(Conversions.ToLong(oDR2[0]), oDR2[4].ToString(), oDR2[1].ToString(), "", 0, pageDict);
+                                    cURL2 = GetDetailURL(Convert.ToInt64(oDR2[0]), oDR2[4].ToString(), oDR2[1].ToString(), "", 0, pageDict);
                                     if (!string.IsNullOrEmpty(cURL2))
                                     {
                                         oContElmt2.SetAttribute("url", cURL2);
@@ -8272,7 +8270,7 @@ namespace Protean
             string sNodeName = string.Empty;
             string cXPathModifier = "";
             string sContent = string.Empty;
-            string IsInTree = Conversions.ToString(false);
+            string IsInTree = Convert.ToString(false);
             string sProcessInfo = "building the Content XML";
 
             try
@@ -8355,20 +8353,20 @@ namespace Protean
 
                         // Set the paging variables, if provided.
                         if (moRequest["startPos"] != null && Information.IsNumeric(moRequest["startPos"]))
-                            nStart = Conversions.ToInteger(moRequest["startPos"]);
+                            nStart = Convert.ToInt16(moRequest["startPos"]);
                         if (moRequest["rows"] != null && Information.IsNumeric(moRequest["rows"]))
-                            nRows = Conversions.ToInteger(moRequest["rows"]);
+                            nRows = Convert.ToInt16(moRequest["rows"]);
                         // In admin mode want active and hidden products separatly
                         if (mbAdminMode)
                         {
                             if (moRequest["status"] != null && Information.IsNumeric(moRequest["status"]))
                             {
-                                int nstatus = Conversions.ToInteger(moRequest["status"]);
+                                int nstatus = Convert.ToInt16(moRequest["status"]);
                                 if (nstatus == 0)
                                 {
                                     sFilterSql = sFilterSql + " and nstructid=" + mnPageId + " and a.nStatus!=1";
                                     nStart = 0;
-                                    nRows = Conversions.ToInteger(moRequest["TotalCount"]);  // getting all hidden products in list
+                                    nRows = Convert.ToInt16(moRequest["TotalCount"]);  // getting all hidden products in list
                                 }
                                 else
                                 {
@@ -8380,7 +8378,7 @@ namespace Protean
                         {
                             sFilterSql = sFilterSql + " and nstructid=" + mnPageId;
                         }
-                        if (moSession["FilterWhereCondition"] != null && Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["FilterWhereCondition"], string.Empty, false)))
+                        if (moSession["FilterWhereCondition"] != null && Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["FilterWhereCondition"], string.Empty, false)))
                         {
                             string whereSQL = Convert.ToString(moSession["FilterWhereCondition"]);
                             string cAdditionalColumns = Convert.ToString(moSession["AdditionalColumns"]);
@@ -8423,20 +8421,20 @@ namespace Protean
                         foreach (XmlElement oElmt in oPageElmt.SelectNodes(parentXpath))
                         {
                             oElmt.SetAttribute("active", "1");
-                            long nPageId = Conversions.ToLong(oElmt.GetAttribute("id"));
+                            long nPageId = Convert.ToInt64(oElmt.GetAttribute("id"));
                             GetPageContentXml(nPageId);
                             nPageId = default;
-                            IsInTree = Conversions.ToString(true);
+                            IsInTree = Convert.ToString(true);
                         }
 
-                        if (mbPreview & Conversions.ToBoolean(IsInTree) == false)
+                        if (mbPreview & Convert.ToBoolean(IsInTree) == false)
                         {
                             GetPageContentXml((long)mnPageId);
                         }
 
                         if (Features.ContainsKey("PageVersions"))
                         {
-                            if (Conversions.ToBoolean(IsInTree) == false & mbAdminMode == true)
+                            if (Convert.ToBoolean(IsInTree) == false & mbAdminMode == true)
                             {
                                 GetPageContentXml((long)mnPageId);
                             }
@@ -8480,10 +8478,10 @@ namespace Protean
                                     // Paging variables
                                     int nStart = 0;
                                     int nRows = 500;
-                                    nRows = Conversions.ToInteger("0" + ContentModule.GetAttribute("stepCount"));
-                                    if (Conversions.ToInteger("0" + ContentModule.GetAttribute("firstPageCount")) > 0)
+                                    nRows = Convert.ToInt16("0" + ContentModule.GetAttribute("stepCount"));
+                                    if (Convert.ToInt16("0" + ContentModule.GetAttribute("firstPageCount")) > 0)
                                     {
-                                        nRows = 0;// Conversions.ToInteger("0" + ContentModule.GetAttribute("firstPageCount"));
+                                        nRows = 0;// Convert.ToInt16("0" + ContentModule.GetAttribute("firstPageCount"));
                                     }
                                     if (nRows > 0)
                                     {
@@ -8555,7 +8553,7 @@ namespace Protean
 
                 string nCurrentPageId = nPageId.ToString();
                 // Adjust the page id if it's a cloned page.
-                if (Conversions.ToDouble(nCurrentPageId) != (double)mnPageId)
+                if (Convert.ToDouble(nCurrentPageId) != (double)mnPageId)
                 {
                     // we are only pulling in cascaded items
                     sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
@@ -8611,7 +8609,7 @@ namespace Protean
                 var oDs = new DataSet();
                 oDs = moDbHelper.GetDataSet(sSql, "Content", "Contents");
                 PerfMon.Log("Web", "AddDataSetToContent - For Page ", sSql);
-                moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, ref mdPageExpireDate, ref mdPageUpdateDate, Conversions.ToLong(nCurrentPageId), false, "");
+                moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, ref mdPageExpireDate, ref mdPageUpdateDate, Convert.ToInt64(nCurrentPageId), false, "");
             }
 
             // If gbCart Or gbQuote Then
@@ -8669,15 +8667,15 @@ namespace Protean
                 foreach (DataRow oDR in oDS.Tables["ContentGroup"].Rows)
                 {
 
-                    foreach (XmlElement currentOContElmt1 in oContentElmt.SelectNodes(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Content[@id='", oDR["nContentId"]), "']"))))
+                    foreach (XmlElement currentOContElmt1 in oContentElmt.SelectNodes(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Content[@id='", oDR["nContentId"]), "']"))))
                     {
                         oContElmt = currentOContElmt1;
                         var oGroupElmt = oContentElmt.OwnerDocument.CreateElement("ContentGroup");
-                        oGroupElmt.SetAttribute("id", Conversions.ToString(Operators.ConcatenateObject(oDR["id"], "")));
-                        oGroupElmt.SetAttribute("type", Conversions.ToString(Operators.ConcatenateObject(oDR["type"], "")));
-                        oGroupElmt.SetAttribute("name", Conversions.ToString(Operators.ConcatenateObject(oDR["name"], "")));
-                        oGroupElmt.SetAttribute("parent", Conversions.ToString(Operators.ConcatenateObject(oDR["parent"], "")));
-                        oGroupElmt.InnerText = Conversions.ToString(Operators.ConcatenateObject(oDR["description"], ""));
+                        oGroupElmt.SetAttribute("id", Convert.ToString(Operators.ConcatenateObject(oDR["id"], "")));
+                        oGroupElmt.SetAttribute("type", Convert.ToString(Operators.ConcatenateObject(oDR["type"], "")));
+                        oGroupElmt.SetAttribute("name", Convert.ToString(Operators.ConcatenateObject(oDR["name"], "")));
+                        oGroupElmt.SetAttribute("parent", Convert.ToString(Operators.ConcatenateObject(oDR["parent"], "")));
+                        oGroupElmt.InnerText = Convert.ToString(Operators.ConcatenateObject(oDR["description"], ""));
                         oContElmt.AppendChild(oGroupElmt);
                     }
                 }
@@ -8718,7 +8716,7 @@ namespace Protean
                     foreach (DataRow oRow in oDs.Tables[0].Rows)
                     {
 
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow["type"], "SKU", false)))
+                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow["type"], "SKU", false)))
                         {
                             // get the id of the parent product
 
@@ -8728,38 +8726,38 @@ namespace Protean
                             oDs2 = moDbHelper.GetDataSet(sSql, "Content", "Contents");
                             foreach (DataRow oRow2 in oDs2.Tables[0].Rows)
                             {
-                                ContentName = Conversions.ToString(oRow2["name"]);
+                                ContentName = Convert.ToString(oRow2["name"]);
                                 if (oRow2["parId"].ToString().Contains(","))
                                 {
                                     ParentPages = oRow2["parId"].ToString().Split(',');
-                                    if (Conversions.ToDouble(ParentPages[0]) > 0d)
+                                    if (Convert.ToDouble(ParentPages[0]) > 0d)
                                     {
-                                        PrimaryPageId = Conversions.ToLong(ParentPages[0]);
+                                        PrimaryPageId = Convert.ToInt64(ParentPages[0]);
                                     }
                                 }
                                 else if (Information.IsNumeric(oRow2["parId"]))
                                 {
-                                    PrimaryPageId = Conversions.ToLong(oRow2["parId"]);
+                                    PrimaryPageId = Convert.ToInt64(oRow2["parId"]);
                                 }
-                                ContentURL = "/" + Conversions.ToString(oRow2["id"]) + "-/";
+                                ContentURL = "/" + Convert.ToString(oRow2["id"]) + "-/";
                             }
                         }
 
                         else
                         {
 
-                            ContentName = Conversions.ToString(oRow["name"]);
+                            ContentName = Convert.ToString(oRow["name"]);
                             if (oRow["parId"].ToString().Contains(","))
                             {
                                 ParentPages = oRow["parId"].ToString().Split(',');
-                                if (Conversions.ToDouble(ParentPages[0]) > 0d)
+                                if (Convert.ToDouble(ParentPages[0]) > 0d)
                                 {
-                                    PrimaryPageId = Conversions.ToLong(ParentPages[0]);
+                                    PrimaryPageId = Convert.ToInt64(ParentPages[0]);
                                 }
                             }
                             else if (Information.IsNumeric(oRow["parId"]))
                             {
-                                PrimaryPageId = Conversions.ToLong(oRow["parId"]);
+                                PrimaryPageId = Convert.ToInt64(oRow["parId"]);
                             }
                         }
 
@@ -8844,7 +8842,7 @@ namespace Protean
                     {
 
                         // Add the id if it is not null or zero
-                        if (!string.IsNullOrEmpty(oContent.GetAttribute("id")) && Information.IsNumeric(oContent.GetAttribute("id")) && Conversions.ToLong(oContent.GetAttribute("id")) > 0L)
+                        if (!string.IsNullOrEmpty(oContent.GetAttribute("id")) && Information.IsNumeric(oContent.GetAttribute("id")) && Convert.ToInt64(oContent.GetAttribute("id")) > 0L)
 
                         {
                             if (!string.IsNullOrEmpty(cCheckContentList))
@@ -9264,27 +9262,27 @@ namespace Protean
                 string cDoneIds = ",";
                 string ochkStr = "";
                 if (Information.IsNumeric(cTop))
-                    nMax = Conversions.ToInteger(cTop);
+                    nMax = Convert.ToInt16(cTop);
                 foreach (DataRow oDR in oDS.Tables["Content1"].Rows)
                 {
                     if (oDS.Tables["Content"].Rows.Count < nMax | nMax == 0)
                     {
-                        if (Conversions.ToBoolean(Operators.AndObject(Information.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
+                        if (Convert.ToBoolean(Operators.AndObject(Information.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
                         {
-                            ochkStr = moDbHelper.checkPagePermission(Conversions.ToLong(oDR["parId"])).ToString();
+                            ochkStr = moDbHelper.checkPagePermission(Convert.ToInt64(oDR["parId"])).ToString();
                             if (Information.IsNumeric(ochkStr))
                             {
-                                if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(Conversions.ToInteger(ochkStr), oDR["parId"], false), !cDoneIds.Contains(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(",", oDR["id"]), ","))))))
+                                if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(Convert.ToInt16(ochkStr), oDR["parId"], false), !cDoneIds.Contains(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(",", oDR["id"]), ","))))))
                                 {
                                     oDS.Tables["Content"].ImportRow(oDR);
-                                    cDoneIds = Conversions.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
+                                    cDoneIds = Convert.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
                                 }
                             }
                         }
                         else if (mbAdminMode) // if in adminmode get everything regardless
                         {
                             oDS.Tables["Content"].ImportRow(oDR);
-                            cDoneIds = Conversions.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
+                            cDoneIds = Convert.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
                         }
 
                     }
@@ -9359,7 +9357,7 @@ namespace Protean
                 {
                     cSQL += sqlFilter;
                 }
-                long nTotal = Conversions.ToLong(moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
+                long nTotal = Convert.ToInt64(moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
 
                 if (nTotal > 0L)
                 {
@@ -9393,27 +9391,27 @@ namespace Protean
                     string cDoneIds = ",";
                     string ochkStr = "";
                     if (Information.IsNumeric(cTop))
-                        nMax = Conversions.ToInteger(cTop);
+                        nMax = Convert.ToInt16(cTop);
                     foreach (DataRow oDR in oDS.Tables["Content1"].Rows)
                     {
                         if (oDS.Tables["Content"].Rows.Count < nMax | nMax == 0)
                         {
-                            if (Conversions.ToBoolean(Operators.AndObject(Information.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
+                            if (Convert.ToBoolean(Operators.AndObject(Information.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
                             {
-                                ochkStr = moDbHelper.checkPagePermission(Conversions.ToLong(oDR["parId"])).ToString();
+                                ochkStr = moDbHelper.checkPagePermission(Convert.ToInt64(oDR["parId"])).ToString();
                                 if (Information.IsNumeric(ochkStr))
                                 {
-                                    if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(Conversions.ToInteger(ochkStr), oDR["parId"], false), !cDoneIds.Contains(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(",", oDR["id"]), ","))))))
+                                    if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(Convert.ToInt16(ochkStr), oDR["parId"], false), !cDoneIds.Contains(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(",", oDR["id"]), ","))))))
                                     {
                                         oDS.Tables["Content"].ImportRow(oDR);
-                                        cDoneIds = Conversions.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
+                                        cDoneIds = Convert.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
                                     }
                                 }
                             }
                             else if (mbAdminMode) // if in adminmode get everything regardless
                             {
                                 oDS.Tables["Content"].ImportRow(oDR);
-                                cDoneIds = Conversions.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
+                                cDoneIds = Convert.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
                             }
 
                         }
@@ -9590,7 +9588,7 @@ namespace Protean
                                 sContent = oElmt.InnerText;
 
                                 if (Information.IsDate(oElmt.GetAttribute("update")))
-                                    mdPageUpdateDate = Conversions.ToDate(oElmt.GetAttribute("update"));
+                                    mdPageUpdateDate = Convert.ToDateTime(oElmt.GetAttribute("update"));
 
 
                                 // Try to convert the InnerText to InnerXml
@@ -9641,7 +9639,7 @@ namespace Protean
                                         string cContentType = oElmt.GetAttribute("type");
                                         if (moConfig["ShowOwnerOnDetail"].Contains(cContentType))
                                         {
-                                            long nOwner = Conversions.ToLong("0" + oElmt.GetAttribute("owner"));
+                                            long nOwner = Convert.ToInt64("0" + oElmt.GetAttribute("owner"));
                                             if (nOwner > 0L)
                                             {
                                                 oElmt.AppendChild(GetUserXML(nOwner));
@@ -9699,7 +9697,7 @@ namespace Protean
                                 if ((myOrigURL ?? "") != (mcPageURL + "/" + mnArtId + "-/" + SafeURLName ?? ""))
                                 {
                                     // we redirect perminently
-                                    mbRedirectPerm = Conversions.ToString(true);
+                                    mbRedirectPerm = Convert.ToString(true);
                                     msRedirectOnEnd = mcPageURL + "/" + mnArtId + "-/" + SafeURLName + myQueryString;
                                 }
 
@@ -9719,20 +9717,20 @@ namespace Protean
                                     double nPrice = 0d;
                                     if (contentElmt.SelectSingleNode("Prices/Price[@type='sale']") != null)
                                     {
-                                        nPrice = Conversions.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText);
+                                        nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText);
                                     }
 
                                     if (nPrice == 0d)
                                     {
                                         if (contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") != null)
                                         {
-                                            nPrice = Conversions.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText);
+                                            nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText);
                                         }
                                     }
                                     double nWeight = 0d;
                                     if (contentElmt.SelectSingleNode("ShippingWeight") != null)
                                     {
-                                        nWeight = Conversions.ToDouble("0" + contentElmt.SelectSingleNode("ShippingWeight").InnerText);
+                                        nWeight = Convert.ToDouble("0" + contentElmt.SelectSingleNode("ShippingWeight").InnerText);
                                     }
                                     // Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
                                     var dsShippingOption = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1L, nWeight, mnArtId);
@@ -9857,7 +9855,7 @@ namespace Protean
                             oElmt = (XmlElement)oNode;
                             sContent = oElmt.InnerText;
                             if (Information.IsDate(oElmt.GetAttribute("update")))
-                                mdPageUpdateDate = Conversions.ToDate(oElmt.GetAttribute("update"));
+                                mdPageUpdateDate = Convert.ToDateTime(oElmt.GetAttribute("update"));
 
                             // Try to convert the InnerText to InnerXml
                             // Also if the innerxml has Content as a first node, then get the innerxml of the content node.
@@ -10035,7 +10033,7 @@ namespace Protean
             XmlElement oElmt;
             XmlElement oElmt2;
 
-            string sProcessInfo = Conversions.ToString(string.IsNullOrEmpty("adding Link to Breadcrumb"));
+            string sProcessInfo = Convert.ToString(string.IsNullOrEmpty("adding Link to Breadcrumb"));
 
             try
             {
@@ -10212,7 +10210,7 @@ namespace Protean
                     {
                         if (!Information.IsNumeric(aDocId[0]))
                             throw new Exception("Incorrect Document Id Format");
-                        nDocId = Conversions.ToLong(aDocId[0]);
+                        nDocId = Convert.ToInt64(aDocId[0]);
                         sSql = "select * from tblContent where nContentKey = " + aDocId[0];
                         oDS = moDbHelper.GetDataSet(sSql, "Item");
 
@@ -10243,7 +10241,7 @@ namespace Protean
 
                                 GetStructureXML("Site");
 
-                                allowAccess = moDbHelper.checkContentLocationsInCurrentMenu(Conversions.ToLong(aDocId[0]), true);
+                                allowAccess = moDbHelper.checkContentLocationsInCurrentMenu(Convert.ToInt64(aDocId[0]), true);
 
 
                             }
@@ -10269,7 +10267,7 @@ namespace Protean
                                     if (fso.Exists)
                                     {
                                         Tools.Security.Impersonate oImp = null;
-                                        if (Conversions.ToBoolean(impersonationMode))
+                                        if (Convert.ToBoolean(impersonationMode))
                                         {
                                             oImp = new Tools.Security.Impersonate();
                                             oImp.ImpersonateValidUser(moConfig["AdminAcct"], moConfig["AdminDomain"], moConfig["AdminPassword"], cInGroup: moConfig["AdminGroup"]);
@@ -10279,8 +10277,8 @@ namespace Protean
                                         var oFileStream = new FileStream(strFilePath, FileMode.Open);
                                         strFileSize = oFileStream.Length.ToString();
 
-                                        var Buffer = new byte[Conversions.ToInteger(strFileSize) + 1];
-                                        oFileStream.Read(Buffer, 0, Conversions.ToInteger(strFileSize));
+                                        var Buffer = new byte[Convert.ToInt16(strFileSize) + 1];
+                                        oFileStream.Read(Buffer, 0, Convert.ToInt16(strFileSize));
                                         oFileStream.Close();
 
                                         ctx.Response.Clear();
@@ -10294,7 +10292,7 @@ namespace Protean
                                         {
                                             ctx.Response.AddHeader("Content-Disposition", "attachment; filename=" + strFileName);
                                         }
-                                        ctx.Response.AddHeader("Content-Length", (Conversions.ToDouble(strFileSize) + 1d).ToString());
+                                        ctx.Response.AddHeader("Content-Length", (Convert.ToDouble(strFileSize) + 1d).ToString());
                                         ctx.Response.Charset = "UTF-8";
                                         ctx.Response.ContentType = Tools.FileHelper.GetMIMEType(FileExt);
                                         ctx.Response.BinaryWrite(Buffer);
@@ -10303,12 +10301,12 @@ namespace Protean
                                         objStream = null;
 
                                         // Activity Log
-                                        if ((double)mnUserId != Conversions.ToDouble("0") & mbAdminMode == false & Features.ContainsKey("ActivityReporting"))
+                                        if ((double)mnUserId != Convert.ToDouble("0") & mbAdminMode == false & Features.ContainsKey("ActivityReporting"))
                                         {
                                             // NB: 30-03-2010 New check to add in the ArtId (original line is the 2nd, with ArtId hardcoded as 0?)
                                             if (moRequest["docId"] != null)
                                             {
-                                                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.DocumentDownloaded, mnUserId, moSession.SessionID, DateTime.Now, mnPageId, Conversions.ToInteger(moRequest["docId"]), strFileName);
+                                                moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.DocumentDownloaded, mnUserId, moSession.SessionID, DateTime.Now, mnPageId, Convert.ToInt16(moRequest["docId"]), strFileName);
                                             }
                                             else
                                             {
@@ -10316,7 +10314,7 @@ namespace Protean
                                             }
                                         }
 
-                                        if (Conversions.ToBoolean(impersonationMode))
+                                        if (Convert.ToBoolean(impersonationMode))
                                         {
                                             oImp.UndoImpersonation();
                                             oImp = null;
@@ -10335,12 +10333,12 @@ namespace Protean
                                         // ---------------------------------------------Original
 
                                         // -----------------------------------------------------
-                                        if ((double)mnUserId != Conversions.ToDouble("0") & mbAdminMode == false & Features.ContainsKey("ActivityReporting"))
+                                        if ((double)mnUserId != Convert.ToDouble("0") & mbAdminMode == false & Features.ContainsKey("ActivityReporting"))
                                         {
                                             moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.DocumentDownloaded, mnUserId, moSession.SessionID, DateTime.Now, mnPageId, 0, "ERROR NOT FOUND:" + strFileName);
                                         }
 
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moCtx.Application["PageNotFoundId"], RootPageId, false)))
+                                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moCtx.Application["PageNotFoundId"], RootPageId, false)))
                                         {
                                             moCtx.ApplicationInstance.CompleteRequest();
                                             Redirect404(NotFoundPagePath);
@@ -10429,8 +10427,8 @@ namespace Protean
             string sProcessInfo = "returnDocumentFromItem";
             string sPath = string.Empty;
             var oErrorXml = new XmlDocument();
-            long nArtId = Conversions.ToInteger(moRequest["artId"]);
-            long nPageId = Conversions.ToInteger(moRequest["pgid"]);
+            long nArtId = Convert.ToInt16(moRequest["artId"]);
+            long nPageId = Convert.ToInt16(moRequest["pgid"]);
 
             try
             {
@@ -10631,7 +10629,7 @@ namespace Protean
         /// <param name="oPage">The Page XML Element</param>
         /// <param name="nCurrentPage">The current Page ID</param>
         /// <remarks></remarks>
-        public void CheckMultiParents(ref XmlElement oPage, int nCurrentPage)
+        public void CheckMultiParents(ref XmlElement oPage, long nCurrentPage)
         {
             PerfMon.Log("Web", "CheckMultiParents-Start");
             try
@@ -10687,7 +10685,7 @@ namespace Protean
         }
 
         // TS - now overloaded to preseve existing public function
-        public int GetParId(string nParids, int nCurrentPage)
+        public long GetParId(string nParids, long nCurrentPage)
         {
             PerfMon.Log("Web", "GetParId");
             string cProcessInfo = string.Empty;
@@ -10709,11 +10707,11 @@ namespace Protean
             catch (Exception ex)
             {
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetParId", ex, ""));
-                return Conversions.ToInteger(oParents[0]);
+                return Convert.ToInt16(oParents[0]);
             }
         }
 
-        public int GetParId(string nParids, int nCurrentPage, ref XmlElement oMenu, ref XmlElement oCurPage)
+        public long GetParId(string nParids, long nCurrentPage, ref XmlElement oMenu, ref XmlElement oCurPage)
         {
             // PerfMon.Log("Web", "GetParId")
             string cProcessInfo = string.Empty;
@@ -10733,7 +10731,7 @@ namespace Protean
                         if (!string.IsNullOrEmpty(cXPath))
                             cXPath += " or ";
                         cXPath += "@id='" + oParents[i] + "'";
-                        if (Conversions.ToDouble(oParents[i]) > nCurrentPage)
+                        if (Convert.ToDouble(oParents[i]) > nCurrentPage)
                         {
                             sFilteredParents = oParents[i] + ",";
                         }
@@ -10752,7 +10750,7 @@ namespace Protean
 
                     if (oFilteredParents.Length == 1)
                     {
-                        return Conversions.ToInteger(oFilteredParents[0]);
+                        return Convert.ToInt16(oFilteredParents[0]);
                     }
                     else
                     {
@@ -10774,7 +10772,7 @@ namespace Protean
 
                         if (nNewPage == 0)
                         {
-                            return Conversions.ToInteger(oFilteredParents[0]);
+                            return Convert.ToInt16(oFilteredParents[0]);
                         }
                         else
                         {
@@ -10791,7 +10789,7 @@ namespace Protean
             {
                 // returnException(msException, mcModuleName, "GetParId", ex, gcEwSiteXsl, , gbDebug)
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetParId", ex, ""));
-                return Conversions.ToInteger(oParents[0]);
+                return Convert.ToInt16(oParents[0]);
             }
         }
 
@@ -10808,7 +10806,7 @@ namespace Protean
                     oChild = currentOChild;
                     Array.Resize(ref oIDs, Information.UBound(oIDs) + 1);
                     Array.Resize(ref oSteps, Information.UBound(oSteps) + 1);
-                    oIDs[Information.UBound(oIDs)] = Conversions.ToInteger(oChild.GetAttribute("id"));
+                    oIDs[Information.UBound(oIDs)] = Convert.ToInt16(oChild.GetAttribute("id"));
                     oSteps[Information.UBound(oSteps)] = nStep;
                 }
                 foreach (XmlElement currentOChild1 in oElmt.SelectNodes("MenuItem"))
@@ -10840,7 +10838,7 @@ namespace Protean
                 {
                     if ((oParentElmt.GetAttribute("id") ?? "") == (oParents[i] ?? ""))
                     {
-                        oIDs[Information.UBound(oIDs)] = Conversions.ToInteger(oParentElmt.GetAttribute("id"));
+                        oIDs[Information.UBound(oIDs)] = Convert.ToInt16(oParentElmt.GetAttribute("id"));
                         oSteps[Information.UBound(oSteps)] = nStep;
                     }
                 }
@@ -10865,7 +10863,7 @@ namespace Protean
 
                     if (moSession != null)
                     {
-                        mcSessionReferrer = Conversions.ToString(moSession["Referrer"]);
+                        mcSessionReferrer = Convert.ToString(moSession["Referrer"]);
                     }
                     else
                     {
@@ -10879,7 +10877,7 @@ namespace Protean
                             if ((moRequest.UrlReferrer.Host ?? "") != (moRequest.ServerVariables["HTTP_HOST"] ?? ""))
                             {
                                 moSession.Add("Referrer", moRequest.UrlReferrer.AbsoluteUri);
-                                mcSessionReferrer = Conversions.ToString(moSession["Referrer"]);
+                                mcSessionReferrer = Convert.ToString(moSession["Referrer"]);
                             }
                         }
                     }
@@ -10926,7 +10924,7 @@ namespace Protean
                 try
                 {
                     string xmlAllowedIPList = moConfig["XmlAllowedIPList"];
-                    return Conversions.ToBoolean(Interaction.IIf(string.IsNullOrEmpty(xmlAllowedIPList), (object)mbOutputXml, IsCurrentIPAddressInList(xmlAllowedIPList)));
+                    return Convert.ToBoolean(Interaction.IIf(string.IsNullOrEmpty(xmlAllowedIPList), (object)mbOutputXml, IsCurrentIPAddressInList(xmlAllowedIPList)));
                 }
                 catch (Exception ex)
                 {
@@ -11116,7 +11114,7 @@ namespace Protean
                         mcPreferredLanguage = moRequest.Cookies["language"].Value.ToString();
                     }
 
-                    moPageXml.DocumentElement.SetAttribute("translang", Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(mcPreferredLanguage), mcPageLanguage, mcPreferredLanguage)));
+                    moPageXml.DocumentElement.SetAttribute("translang", Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(mcPreferredLanguage), mcPageLanguage, mcPreferredLanguage)));
                 }
 
                 if (!string.IsNullOrEmpty(mcPageLanguage))
@@ -11576,7 +11574,7 @@ namespace Protean
                 if (sError == "1")
                 {
                     Tools.Security.Impersonate oImp = null;
-                    if (Conversions.ToBoolean(impersonationMode))
+                    if (Convert.ToBoolean(impersonationMode))
                     {
                         PerfMon.Log(mcModuleName, "Impersonation - Start");
                         oImp = new Tools.Security.Impersonate();
@@ -11604,7 +11602,7 @@ namespace Protean
                         sError = cProcessInfo;
                     }
 
-                    if (Conversions.ToBoolean(impersonationMode))
+                    if (Convert.ToBoolean(impersonationMode))
                     {
                         oImp.UndoImpersonation();
                         oImp = null;
@@ -11699,9 +11697,9 @@ namespace Protean
                 default:
                     {
                         //This pageDict passed from addPageDetailLinksToStructure method.
-                        if (pageDict.ContainsKey(Conversions.ToLong(cChildId)))
+                        if (pageDict.ContainsKey(Convert.ToInt64(cChildId)))
                         {
-                            cURL = pageDict[Conversions.ToLong(cChildId)];
+                            cURL = pageDict[Convert.ToInt64(cChildId)];
                             // If moConfig("LegacyRedirect") = "on" Then
                             cURL += "/" + ContentId.ToString() + "-/" + Tools.Text.CleanName(contentName.ToString(), false, true);
                         }
@@ -11760,7 +11758,7 @@ namespace Protean
                                 sPagePath = paths[0];
                                 sFoldersUrlslist.Add(filePath + @"\" + sPagePath.Replace("/", @"\"));
                                 //Create Product Url here
-                                productUrl = GetDetailURL(Convert.ToInt32(ContentId), cContentSchemaName, cContentName, sPagePath, Conversions.ToLong(cChildID), pageDict);
+                                productUrl = GetDetailURL(Convert.ToInt32(ContentId), cContentSchemaName, cContentName, sPagePath, Convert.ToInt64(cChildID), pageDict);
                                 sFoldersUrlslist.Add(filePath + @"\" + productUrl.Replace("/", @"\"));
                             }                          
                          

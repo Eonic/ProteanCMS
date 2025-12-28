@@ -111,16 +111,16 @@ namespace Protean
                         int nID = 0;
                         // check if exists
                         cSQL = "SELECT nCatProductRelKey FROM tblCartCatProductRelations WHERE nContentId = " + nSubId + " AND nCatId = " + nSubGroup;
-                        nID = Conversions.ToInteger(myWeb.moDbHelper.ExeProcessSqlScalar(cSQL));
+                        nID = Convert.ToInt16(myWeb.moDbHelper.ExeProcessSqlScalar(cSQL));
                         // if it does then fine, just return id
                         if (nID > 0)
                             return nID;
                         // if not need to get the last order number
                         cSQL = "SELECT nCatProductRelKey, nDisplayOrder FROM tblCartCatProductRelations WHERE nCatId = " + nSubGroup + " ORDER BY nDisplayOrder DESC";
-                        nID = Conversions.ToInteger(myWeb.moDbHelper.ExeProcessSqlScalar(cSQL));
+                        nID = Convert.ToInt16(myWeb.moDbHelper.ExeProcessSqlScalar(cSQL));
                         // add to group as bottom
                         cSQL = "INSERT INTO tblCartCatProductRelations (nContentId, nCatId, nDisplayOrder, nAuditId) VALUES (" + nSubId + ", " + nSubGroup + ", " + (nID + 1) + ", " + myWeb.moDbHelper.getAuditId() + ")";
-                        nID = Conversions.ToInteger(myWeb.moDbHelper.GetIdInsertSql(cSQL));
+                        nID = Convert.ToInt16(myWeb.moDbHelper.GetIdInsertSql(cSQL));
                         return nID;
                     }
                     catch (Exception ex)
@@ -188,7 +188,7 @@ namespace Protean
                                 }
                         }
 
-                        if (expiredMarginDays == Conversions.ToDouble("0"))
+                        if (expiredMarginDays == Convert.ToDouble("0"))
                         {
                             XmlElement NextElmt = (XmlElement)oParentElmt.NextSibling;
                             string sNextElementAction = "";
@@ -203,17 +203,17 @@ namespace Protean
                                 {
                                     case "month":
                                         {
-                                            StartRangeDate = DateTime.Now.AddMonths((int)Math.Round(Conversions.ToDouble(NextElmt.GetAttribute("count")) * 1d));
+                                            StartRangeDate = DateTime.Now.AddMonths((int)Math.Round(Convert.ToDouble(NextElmt.GetAttribute("count")) * 1d));
                                             break;
                                         }
                                     case "week":
                                         {
-                                            StartRangeDate = DateTime.Now.AddDays(Conversions.ToDouble(NextElmt.GetAttribute("count")) * 7d);
+                                            StartRangeDate = DateTime.Now.AddDays(Convert.ToDouble(NextElmt.GetAttribute("count")) * 7d);
                                             break;
                                         }
                                     case "day":
                                         {
-                                            StartRangeDate = DateTime.Now.AddDays(Conversions.ToDouble(NextElmt.GetAttribute("count")) * 1d);
+                                            StartRangeDate = DateTime.Now.AddDays(Convert.ToDouble(NextElmt.GetAttribute("count")) * 1d);
                                             break;
                                         }
                                 }
@@ -287,7 +287,7 @@ namespace Protean
                                 }
                         }
 
-                        if (expiredMarginDays == Conversions.ToDouble("0"))
+                        if (expiredMarginDays == Convert.ToDouble("0"))
                         {
                             XmlElement NextElmt = (XmlElement)oParentElmt.NextSibling;
                             string sNextElementAction = "";
@@ -302,17 +302,17 @@ namespace Protean
                                 {
                                     case "month":
                                         {
-                                            StartRangeDate = DateTime.Now.AddMonths((int)Math.Round(Conversions.ToDouble(NextElmt.GetAttribute("count")) * 1d));
+                                            StartRangeDate = DateTime.Now.AddMonths((int)Math.Round(Convert.ToDouble(NextElmt.GetAttribute("count")) * 1d));
                                             break;
                                         }
                                     case "week":
                                         {
-                                            StartRangeDate = DateTime.Now.AddDays(Conversions.ToDouble(NextElmt.GetAttribute("count")) * 7d);
+                                            StartRangeDate = DateTime.Now.AddDays(Convert.ToDouble(NextElmt.GetAttribute("count")) * 7d);
                                             break;
                                         }
                                     case "day":
                                         {
-                                            StartRangeDate = DateTime.Now.AddDays(Conversions.ToDouble(NextElmt.GetAttribute("count")) * 1d);
+                                            StartRangeDate = DateTime.Now.AddDays(Convert.ToDouble(NextElmt.GetAttribute("count")) * 1d);
                                             break;
                                         }
                                 }
@@ -609,7 +609,7 @@ namespace Protean
                         foreach (DataRow oDr in oDs.Tables[0].Rows)
                         {
                             oElmt = oParentElmt.OwnerDocument.CreateElement("Subscription");
-                            oElmt.InnerXml = Conversions.ToString(oDr["cSubXml"]);
+                            oElmt.InnerXml = Convert.ToString(oDr["cSubXml"]);
                             oElmt.SetAttribute("status", oDr["status"].ToString());
                             oElmt.SetAttribute("id", oDr["id"].ToString());
                             oElmt.SetAttribute("contentId", oDr["contentId"].ToString());
@@ -655,7 +655,7 @@ namespace Protean
 
                             // Get user Info                      
 
-                            oElmt.AppendChild(oElmt.OwnerDocument.ImportNode((XmlNode)myWeb.GetUserXML(Conversions.ToLong(oDr["userId"])), true));
+                            oElmt.AppendChild(oElmt.OwnerDocument.ImportNode((XmlNode)myWeb.GetUserXML(Convert.ToInt64(oDr["userId"])), true));
 
                             // Get the renewal Info
                             sSQL = "select a.dPublishDate as startDate, a.dExpireDate as endDate, sub.nPaymentMethodId as payMthdId,  pay.cPayMthdProviderName as providerName, a.dInsertDate as renewedOn, sub.xNotesXml, sub.nOrderId as orderId" + " from tblSubscriptionRenewal sub INNER JOIN tblAudit a ON sub.nAuditId = a.nAuditKey " + " LEFT OUTER JOIN tblCartPaymentMethod pay on pay.nPayMthdKey = sub.nPaymentMethodId " + " where sub.nSubId = " + nSubId + " order by a.dInsertDate desc";
@@ -796,7 +796,7 @@ namespace Protean
                                         {
                                             // Select the subscriptions that are caught up in this case
                                             XmlElement xmloReminder = oReminder;
-                                            ListUpcomingRenewals(ref xmloReminder, (short)Conversions.ToInteger("0" + xmloReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
+                                            ListUpcomingRenewals(ref xmloReminder, (short)Convert.ToInt16("0" + xmloReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Convert.ToInt16(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
                                             foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
                                             {
                                                 bool force = false;
@@ -818,12 +818,12 @@ namespace Protean
                                                 DateTime ActionDate = default;
                                                 if (subxml.SelectSingleNode("dActionDate") != null)
                                                 {
-                                                    ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
+                                                    ActionDate = Convert.ToDateTime(subxml.SelectSingleNode("dActionDate").InnerText);
                                                 }
 
 
 
-                                                long argSubId = Conversions.ToLong(subxml.SelectSingleNode("nSubKey").InnerText);
+                                                long argSubId = Convert.ToInt64(subxml.SelectSingleNode("nSubKey").InnerText);
                                                 actionResult = RenewalAction(subxml, ref argSubId, oReminder.GetAttribute("action"), ref ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate);
                                                 subxml.SetAttribute("actionResult", actionResult);
                                             }
@@ -834,7 +834,7 @@ namespace Protean
                                         {
                                             // Select the subscriptions that are caught up in this case
                                             XmlElement xmloReminder = oReminder;
-                                            ListRenewalDue(ref xmloReminder, (short)Conversions.ToInteger("0" + oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
+                                            ListRenewalDue(ref xmloReminder, (short)Convert.ToInt16("0" + oReminder.GetAttribute("startRange")), oReminder.GetAttribute("period"), Convert.ToInt16(oReminder.GetAttribute("count")), oReminder.GetAttribute("name"));
                                             foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
                                             {
                                                 bool force = false;
@@ -856,10 +856,10 @@ namespace Protean
                                                 DateTime ActionDate = default;
                                                 if (subxml.SelectSingleNode("dActionDate") != null)
                                                 {
-                                                    ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
+                                                    ActionDate = Convert.ToDateTime(subxml.SelectSingleNode("dActionDate").InnerText);
                                                 }
 
-                                                long argSubId1 = Conversions.ToLong(subxml.SelectSingleNode("nSubKey").InnerText);
+                                                long argSubId1 = Convert.ToInt64(subxml.SelectSingleNode("nSubKey").InnerText);
                                                 actionResult = RenewalAction(subxml, ref argSubId1, oReminder.GetAttribute("action"), ref ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate);
                                                 subxml.SetAttribute("actionResult", actionResult);
                                             }
@@ -873,11 +873,11 @@ namespace Protean
                                             XmlElement xmloReminder = oReminder;
                                             if (oReminder.GetAttribute("action") == "expire")
                                             {                                           
-                                                ListExpiredSubscriptions(ref xmloReminder, Conversions.ToShort(oReminder.GetAttribute("count")), "", 0, Conversions.ToString(true));
+                                                ListExpiredSubscriptions(ref xmloReminder, Convert.ToInt16(oReminder.GetAttribute("count")), "", 0, Convert.ToString(true));
                                             }
                                             else
                                             {
-                                                ListExpiredSubscriptions(ref xmloReminder, 0, oReminder.GetAttribute("period"), Conversions.ToShort(oReminder.GetAttribute("count")), oReminder.GetAttribute("subType"), oReminder.GetAttribute("name"));
+                                                ListExpiredSubscriptions(ref xmloReminder, 0, oReminder.GetAttribute("period"), Convert.ToInt16(oReminder.GetAttribute("count")), oReminder.GetAttribute("subType"), oReminder.GetAttribute("name"));
                                             }
                                             foreach (XmlElement subxml in oReminder.SelectNodes("Subscribers"))
                                             {
@@ -906,9 +906,9 @@ namespace Protean
                                                 DateTime ActionDate = default;
                                                 if (subxml.SelectSingleNode("dActionDate") != null)
                                                 {
-                                                    ActionDate = Conversions.ToDate(subxml.SelectSingleNode("dActionDate").InnerText);
+                                                    ActionDate = Convert.ToDateTime(subxml.SelectSingleNode("dActionDate").InnerText);
                                                 }
-                                                long argSubId2 = Conversions.ToLong(subxml.SelectSingleNode("nSubKey").InnerText);
+                                                long argSubId2 = Convert.ToInt64(subxml.SelectSingleNode("nSubKey").InnerText);
                                                 actionResult = RenewalAction(subxml, ref argSubId2, oReminder.GetAttribute("action"), ref ProcessedCount, oReminder.GetAttribute("name"), bProcess, force, ingoreIfPaymentActive, ActionDate);
                                                 subxml.SetAttribute("actionResult", actionResult);
                                             }
@@ -960,7 +960,7 @@ namespace Protean
                                     // Dim sSql As String = "Select dDateTime from tblActivityLog where nUserDirId = " & UserId & " and nOtherId = " & SubId & " and cActivityDetail like '" & SqlFmt(messageType) & "'"
                                     // Dim actionDate As DateTime = myWeb.moDbHelper.GetDataValue(sSql)
 
-                                    if (actionDate == Conversions.ToDate("#1/1/0001 12:00:00 AM#") | force & gbDebug)
+                                    if (actionDate == Convert.ToDateTime("#1/1/0001 12:00:00 AM#") | force & gbDebug)
                                     {
 
                                         if (PaymentActive & ingoreIfPaymentActive)
@@ -970,8 +970,8 @@ namespace Protean
                                         else if (force | process)
                                         {
                                             Cms.dbHelper argodbHelper = null;
-                                            string cRetMessage = Conversions.ToString(oMessager.emailer(SubXml, oSubConfig["ReminderXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], UserEmail, "", bccRecipient: oSubConfig["bccReminders"], odbHelper: ref argodbHelper));
-                                            myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SubscriptionAlert, Conversions.ToLong(UserId), 0L, 0L, SubId, messageType, false);
+                                            string cRetMessage = Convert.ToString(oMessager.emailer(SubXml, oSubConfig["ReminderXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], UserEmail, "", bccRecipient: oSubConfig["bccReminders"], odbHelper: ref argodbHelper));
+                                            myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SubscriptionAlert, Convert.ToInt64(UserId), 0L, 0L, SubId, messageType, false);
                                             actionResult = "sent";
                                         }
                                         else
@@ -981,7 +981,7 @@ namespace Protean
                                     }
                                     else
                                     {
-                                        actionResult = Conversions.ToString(actionDate);
+                                        actionResult = Convert.ToString(actionDate);
                                     }
 
                                     break;
@@ -1003,7 +1003,7 @@ namespace Protean
                                                     actionResult = "Renewal Failed";
                                                     SubXml.SetAttribute("actionResult", actionResult);
                                                     Cms.dbHelper argodbHelper1 = null;
-                                                    string cRetMessage = Conversions.ToString(oMessager.emailer(SubXml, oSubConfig["ReminderXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], UserEmail, "", bccRecipient: oSubConfig["bccReminders"], odbHelper: ref argodbHelper1));
+                                                    string cRetMessage = Convert.ToString(oMessager.emailer(SubXml, oSubConfig["ReminderXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], UserEmail, "", bccRecipient: oSubConfig["bccReminders"], odbHelper: ref argodbHelper1));
                                                     break;
                                                 }
                                         }
@@ -1034,7 +1034,7 @@ namespace Protean
                                 {
                                     // Dim sSql As String = "Select dDateTime from tblActivityLog where nUserDirId = " & UserId & " and nOtherId = " & SubId & " and cActivityDetail like '" & SqlFmt(messageType) & "'"
                                     // Dim actionDate As DateTime = myWeb.moDbHelper.GetDataValue(sSql)
-                                    if (actionDate == Conversions.ToDate("#1/1/0001 12:00:00 AM#") | force & gbDebug)
+                                    if (actionDate == Convert.ToDateTime("#1/1/0001 12:00:00 AM#") | force & gbDebug)
                                     {
 
                                         if (PaymentActive & ingoreIfPaymentActive)
@@ -1044,8 +1044,8 @@ namespace Protean
                                         else if (force)
                                         {
                                             Cms.dbHelper argodbHelper2 = null;
-                                            string cRetMessage = Conversions.ToString(oMessager.emailer(SubXml, oSubConfig["ReminderXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], UserEmail, "", bccRecipient: oSubConfig["bccReminders"], odbHelper: ref argodbHelper2));
-                                            myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SubscriptionAlert, Conversions.ToLong(UserId), 0L, 0L, SubId, messageType, false);
+                                            string cRetMessage = Convert.ToString(oMessager.emailer(SubXml, oSubConfig["ReminderXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], UserEmail, "", bccRecipient: oSubConfig["bccReminders"], odbHelper: ref argodbHelper2));
+                                            myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.SubscriptionAlert, Convert.ToInt64(UserId), 0L, 0L, SubId, messageType, false);
                                             actionResult = "sent";
                                         }
                                         else
@@ -1055,7 +1055,7 @@ namespace Protean
                                     }
                                     else
                                     {
-                                        actionResult = Conversions.ToString(actionDate);
+                                        actionResult = Convert.ToString(actionDate);
                                     }
 
                                     break;
@@ -1098,7 +1098,7 @@ namespace Protean
                     try
                     {
 
-                        double VatRate = Conversions.ToDouble(oCartXml.GetAttribute("vatRate"));
+                        double VatRate = Convert.ToDouble(oCartXml.GetAttribute("vatRate"));
 
 
                         foreach (XmlElement oelmt in oCartXml.SelectNodes("descendant-or-self::Item[productDetail/SubscriptionPrices]"))
@@ -1118,25 +1118,25 @@ namespace Protean
                             {
                                 startDate = XmlDate(DateTime.Now);
                             }
-                            repeatPrice = repeatPrice + Conversions.ToDouble("0" + oelmt.SelectSingleNode("productDetail/SubscriptionPrices/Price[@type='sale']").InnerText);
+                            repeatPrice = repeatPrice + Convert.ToDouble("0" + oelmt.SelectSingleNode("productDetail/SubscriptionPrices/Price[@type='sale']").InnerText);
                             repeatInterval = oelmt.SelectSingleNode("productDetail/PaymentUnit").InnerText;
                             repeatFrequency = 1;
                             if (oelmt.SelectSingleNode("productDetail/PaymentFrequency") != null)
                             {
                                 if (Information.IsNumeric(oelmt.SelectSingleNode("productDetail/PaymentFrequency").InnerText))
                                 {
-                                    repeatFrequency = Conversions.ToInteger(oelmt.SelectSingleNode("productDetail/PaymentFrequency").InnerText);
+                                    repeatFrequency = Convert.ToInt16(oelmt.SelectSingleNode("productDetail/PaymentFrequency").InnerText);
                                 }
                             }
                             interval = oelmt.SelectSingleNode("productDetail/Duration/Unit").InnerText;
-                            length = Conversions.ToInteger("0" + oelmt.SelectSingleNode("productDetail/Duration/Length").InnerText);
-                            minimumTerm = Conversions.ToInteger(oelmt.SelectSingleNode("productDetail/Duration/MinimumTerm").InnerText);
-                            renewalTerm = Conversions.ToInteger(oelmt.SelectSingleNode("productDetail/Duration/RenewalTerm").InnerText);
+                            length = Convert.ToInt16("0" + oelmt.SelectSingleNode("productDetail/Duration/Length").InnerText);
+                            minimumTerm = Convert.ToInt16(oelmt.SelectSingleNode("productDetail/Duration/MinimumTerm").InnerText);
+                            renewalTerm = Convert.ToInt16(oelmt.SelectSingleNode("productDetail/Duration/RenewalTerm").InnerText);
                             XmlElement SubPrices = (XmlElement)oelmt.SelectSingleNode("productDetail/SubscriptionPrices");
                             delayStart = SubPrices.GetAttribute("delayStart");
                             vatAmt = (double)Round(repeatPrice * (VatRate / 100d), bForceRoundup: mbRoundup);
                         }
-                        repeatPrice = Conversions.ToDouble(Strings.FormatNumber(repeatPrice + vatAmt, (int)TriState.True, TriState.False, TriState.False));
+                        repeatPrice = Convert.ToDouble(Strings.FormatNumber(repeatPrice + vatAmt, (int)TriState.True, TriState.False, TriState.False));
                         oCartXml.SetAttribute("repeatPrice", repeatPrice.ToString());
                         oCartXml.SetAttribute("repeatVAT", Strings.FormatNumber(vatAmt, 2, TriState.True, TriState.False, TriState.False));
                         oCartXml.SetAttribute("repeatInterval", repeatInterval);
@@ -1162,7 +1162,7 @@ namespace Protean
                     }
                 }
 
-                public bool CheckCartForSubscriptions(int nCartID, int nSubUserId)
+                public bool CheckCartForSubscriptions(int nCartID, long nSubUserId)
                 {
                     try
                     {
@@ -1172,7 +1172,7 @@ namespace Protean
                         // 1) Make sure there is only 1 subscription per subscritpion group (will remove the least valuable)
                         // 2) Change all subscription quantities to 1 (you dont want more)
                         // 3) Return true if there are subscription and user is logged in, OR, no subscriptions. Returns false if there are subscriptions but not logged in
-                        string cSQL = "SELECT tblCartItem.nCartItemKey, tblContent.nContentKey, tblContent.cContentXmlDetail, tblCartCatProductRelations.nCatId, tblCartCatProductRelations.nDisplayOrder" + " FROM tblCartItem INNER JOIN" + " tblContent ON tblCartItem.nItemId = tblContent.nContentKey LEFT OUTER JOIN" + " tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentId" + " WHERE (tblCartItem.nCartOrderId = " + nCartID + ") AND (tblContent.cContentSchemaName = N'Subscription')" + " ORDER BY tblCartItem.nCartItemKey";
+                        string cSQL = $"SELECT tblCartItem.nCartItemKey, tblContent.nContentKey, tblContent.cContentXmlDetail, tblCartCatProductRelations.nCatId, tblCartCatProductRelations.nDisplayOrder  FROM tblCartItem INNER JOIN tblContent ON tblCartItem.nItemId = tblContent.nContentKey LEFT OUTER JOIN tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentIdWHERE (tblCartItem.nCartOrderId = { nCartID }) AND (tblContent.cContentSchemaName = N'Subscription') ORDER BY tblCartItem.nCartItemKey";
                         // " ORDER BY tblCartCatProductRelations.nDisplayOrder"
                         var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Subs");
                         if (oDS.Tables["Subs"].Rows.Count > 0)
@@ -1197,7 +1197,7 @@ namespace Protean
                                         if (!(oDR2.RowState == DataRowState.Deleted))
                                         {
 
-                                            if (Conversions.ToBoolean(Operators.AndObject(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oDR2["nCatId"], oDR["nCatId"], false), !Operators.ConditionalCompareObjectEqual(oDR2["nContentKey"], oDR["nContentKey"], false)), Operators.ConditionalCompareObjectLess(oDR2["nCartItemKey"], oDR["nCartItemKey"], false))))
+                                            if (Convert.ToBoolean(Operators.AndObject(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oDR2["nCatId"], oDR["nCatId"], false), !Operators.ConditionalCompareObjectEqual(oDR2["nContentKey"], oDR["nContentKey"], false)), Operators.ConditionalCompareObjectLess(oDR2["nCartItemKey"], oDR["nCartItemKey"], false))))
                                             {
                                                 // oDR2("nDisplayOrder") < oDR("nDisplayOrder") Then
 
@@ -1215,7 +1215,7 @@ namespace Protean
                                 oDR2 = currentODR21;
                                 if (!(oDR2.RowState == DataRowState.Deleted))
                                 {
-                                    cSQL = Conversions.ToString(Operators.ConcatenateObject("UPDATE tblCartItem SET nQuantity = 1 WHERE nCartItemKey = ", oDR2["nCartItemKey"]));
+                                    cSQL = Convert.ToString(Operators.ConcatenateObject("UPDATE tblCartItem SET nQuantity = 1 WHERE nCartItemKey = ", oDR2["nCartItemKey"]));
                                     myWeb.moDbHelper.ExeProcessSql(cSQL);
                                 }
                             }
@@ -1243,7 +1243,7 @@ namespace Protean
                     return default;
                 }
 
-                public double CartSubscriptionPrice(int nSubscriptionID, int nSubUserId)
+                public double CartSubscriptionPrice(int nSubscriptionID, long nSubUserId)
                 {
                     try
                     {
@@ -1298,7 +1298,7 @@ namespace Protean
                             {
                                 if (Information.IsNumeric(oCurSubElmt.SelectSingleNode("Content/PaymentFrequency").InnerText))
                                 {
-                                    nPaymentFrequency = Conversions.ToInteger(oCurSubElmt.SelectSingleNode("Content/PaymentFrequency").InnerText);
+                                    nPaymentFrequency = Convert.ToInt16(oCurSubElmt.SelectSingleNode("Content/PaymentFrequency").InnerText);
                                 }
                             }
                             if (oCurSubElmt.SelectSingleNode("Content/SubscriptionPrices/@delayStart").Value == "true")
@@ -1330,10 +1330,10 @@ namespace Protean
                             XmlElement oNewElmt = (XmlElement)oXML.DocumentElement.FirstChild;
                             XmlElement oOldElmt = (XmlElement)oExXML.DocumentElement.FirstChild;
                             double nCurPrice = myCart.getProductPricesByXml(oNewElmt.InnerXml, "", 1);
-                            nTotalPrice = SubscriptionPrice(nCurPrice, oNewElmt.SelectSingleNode("Content/PaymentUnit").InnerText, Conversions.ToInteger(oNewElmt.SelectSingleNode("Content/Duration/Length").InnerText), oNewElmt.SelectSingleNode("Content/Duration/Unit").InnerText, Conversions.ToDate(oOldElmt.GetAttribute("dExpireDate")));
-                            if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDS.Tables["Content"].Rows[0]["nSubContentId"], nSubscriptionID, false)))
+                            nTotalPrice = SubscriptionPrice(nCurPrice, oNewElmt.SelectSingleNode("Content/PaymentUnit").InnerText, Convert.ToInt16(oNewElmt.SelectSingleNode("Content/Duration/Length").InnerText), oNewElmt.SelectSingleNode("Content/Duration/Unit").InnerText, Convert.ToDateTime(oOldElmt.GetAttribute("dExpireDate")));
+                            if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDS.Tables["Content"].Rows[0]["nSubContentId"], nSubscriptionID, false)))
                             {
-                                nTotalPrice = (double)(nTotalPrice - UpgradeCredit(myCart.getProductPricesByXml(oOldElmt.InnerXml, "", 1), oOldElmt.SelectSingleNode("Content/PaymentUnit").InnerText, DateTime.Now, Conversions.ToDate(oOldElmt.GetAttribute("dExpireDate"))));
+                                nTotalPrice = (double)(nTotalPrice - UpgradeCredit(myCart.getProductPricesByXml(oOldElmt.InnerXml, "", 1), oOldElmt.SelectSingleNode("Content/PaymentUnit").InnerText, DateTime.Now, Convert.ToDateTime(oOldElmt.GetAttribute("dExpireDate"))));
                             }
                         }
                         return nTotalPrice;
@@ -1346,12 +1346,12 @@ namespace Protean
                     return default;
                 }
 
-                public void UpdateSubscriptionPrice(XmlElement oSubscriptionXml, int nSubUserId)
+                public void UpdateSubscriptionPrice(XmlElement oSubscriptionXml, long nSubUserId)
                 {
                     try
                     {
                         double nTotalPrice = 0d;
-                        int nSubscriptionId = Conversions.ToInteger(oSubscriptionXml.GetAttribute("id"));
+                        int nSubscriptionId = Convert.ToInt16(oSubscriptionXml.GetAttribute("id"));
                         // first we need to find out if its:
                         // 1) New (No existing ones in the same group or none at all)
                         // 2) Renewal (so it tacks onto the end)
@@ -1415,13 +1415,13 @@ namespace Protean
                             XmlElement oNewElmt = (XmlElement)oXML.DocumentElement.FirstChild;
                             XmlElement oOldElmt = (XmlElement)oExXML.DocumentElement.FirstChild;
                             double nCurPrice = myCart.getProductPricesByXml(oNewElmt.InnerXml, "", 1);
-                            nTotalPrice = SubscriptionPrice(nCurPrice, oNewElmt.SelectSingleNode("Content/PaymentUnit").InnerText, Conversions.ToInteger(oNewElmt.SelectSingleNode("Content/Duration/Length").InnerText), oNewElmt.SelectSingleNode("Content/Duration/Unit").InnerText, Conversions.ToDate(oOldElmt.GetAttribute("dExpireDate")));
-                            if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDS.Tables["Content"].Rows[0]["nSubContentId"], nSubscriptionId, false)))
+                            nTotalPrice = SubscriptionPrice(nCurPrice, oNewElmt.SelectSingleNode("Content/PaymentUnit").InnerText, Convert.ToInt16(oNewElmt.SelectSingleNode("Content/Duration/Length").InnerText), oNewElmt.SelectSingleNode("Content/Duration/Unit").InnerText, Convert.ToDateTime(oOldElmt.GetAttribute("dExpireDate")));
+                            if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDS.Tables["Content"].Rows[0]["nSubContentId"], nSubscriptionId, false)))
                             {
-                                nTotalPrice = (double)(nTotalPrice - UpgradeCredit(myCart.getProductPricesByXml(oOldElmt.InnerXml, "", 1), oOldElmt.SelectSingleNode("Content/PaymentUnit").InnerText, DateTime.Now, Conversions.ToDate(oOldElmt.GetAttribute("dExpireDate"))));
+                                nTotalPrice = (double)(nTotalPrice - UpgradeCredit(myCart.getProductPricesByXml(oOldElmt.InnerXml, "", 1), oOldElmt.SelectSingleNode("Content/PaymentUnit").InnerText, DateTime.Now, Convert.ToDateTime(oOldElmt.GetAttribute("dExpireDate"))));
                                 XmlElement PricesNode = (XmlElement)oSubscriptionXml.SelectSingleNode("Prices/Price[@type='sale']");
                                 PricesNode.SetAttribute("originalPrice", PricesNode.InnerText);
-                                PricesNode.SetAttribute("discountValue", (Conversions.ToDouble(PricesNode.InnerText) - nTotalPrice).ToString());
+                                PricesNode.SetAttribute("discountValue", (Convert.ToDouble(PricesNode.InnerText) - nTotalPrice).ToString());
                                 PricesNode.SetAttribute("upgradeFrom", oOldElmt.SelectSingleNode("Content/Name").InnerText);
                                 PricesNode.InnerText = nTotalPrice.ToString();
                             }
@@ -1608,7 +1608,7 @@ namespace Protean
                                 }
 
                         }
-                        nPrice = Conversions.ToDouble(Strings.FormatNumber(nPrice * nUnitsCredit, 2));
+                        nPrice = Convert.ToDouble(Strings.FormatNumber(nPrice * nUnitsCredit, 2));
                         return (int)Math.Round(nPrice);
                     }
 
@@ -1628,7 +1628,7 @@ namespace Protean
                         string cDurationUnit;
                         if (Information.IsNumeric(oSubDetailElmt.SelectSingleNode("Duration/Length").InnerText))
                         {
-                            cDuration = Conversions.ToInteger(oSubDetailElmt.SelectSingleNode("Duration/Length").InnerText);
+                            cDuration = Convert.ToInt16(oSubDetailElmt.SelectSingleNode("Duration/Length").InnerText);
                         }
                         if (cDuration == 0)
                         {
@@ -1676,7 +1676,7 @@ namespace Protean
                         string sRenew = myWeb.moDbHelper.ExeProcessSqlScalar(cSQL);
                         if (Information.IsDate(sRenew))
                         {
-                            DateTime dRenew = Conversions.ToDate(sRenew);
+                            DateTime dRenew = Convert.ToDateTime(sRenew);
                             if (dRenew < DateTime.Now.Date)
                                 dRenew = DateTime.Now.AddDays(-1).Date;
                             return dRenew;
@@ -1695,7 +1695,7 @@ namespace Protean
                     return default;
                 }
 
-                public virtual void AddUserSubscriptions(int nCartId, int nSubUserId, ref XmlElement oCartXml, int nPaymentMethodId = 0)
+                public virtual void AddUserSubscriptions(int nCartId, long nSubUserId, ref XmlElement oCartXml, int nPaymentMethodId = 0)
                 {
 
                     string cLastSubXml = "";
@@ -1728,11 +1728,11 @@ namespace Protean
                                     var xItemDoc = new XmlDocument();
                                     if (myWeb.moDbHelper.checkTableColumnExists("tblCartItem", "xItemXml"))
                                     {
-                                        xItemDoc.LoadXml(Conversions.ToString(oDR["xItemXml"]));
+                                        xItemDoc.LoadXml(Convert.ToString(oDR["xItemXml"]));
                                     }
                                     else
                                     {
-                                        xItemDoc.LoadXml(Conversions.ToString(oDR["cContentXmlBrief"]));
+                                        xItemDoc.LoadXml(Convert.ToString(oDR["cContentXmlBrief"]));
                                     }
 
                                     // Add OrderNotes to Subscription XML
@@ -1742,14 +1742,14 @@ namespace Protean
                                     oNotes.InnerXml = notes;
                                     xItemDoc.FirstChild.AppendChild(oNotes);
 
-                                    AddUserSubscription(Conversions.ToInteger(oDR["nContentKey"]), nSubUserId, nPaymentMethodId, xItemDoc.DocumentElement, nCartId);
+                                    AddUserSubscription(Convert.ToInt16(oDR["nContentKey"]), nSubUserId, nPaymentMethodId, xItemDoc.DocumentElement, nCartId);
 
                                     // Hustle in the renewal end so we can show on receipt.
                                     if (oCartXml != null)
                                     {
                                         if (!string.IsNullOrEmpty(xItemDoc.DocumentElement.GetAttribute("id")))
                                         {
-                                            long contentId = Conversions.ToLong(xItemDoc.DocumentElement.GetAttribute("id"));
+                                            long contentId = Convert.ToInt64(xItemDoc.DocumentElement.GetAttribute("id"));
                                             XmlElement ItemXml = (XmlElement)oCartXml.SelectSingleNode("Order/Item[@contentId='" + contentId + "']");
                                             if (ItemXml != null)
                                             {
@@ -1789,7 +1789,7 @@ namespace Protean
                                 if (oMenu.SelectSingleNode("//MenuItem[@id=" + myWeb.mnPageId + "]") is null)
                                 {
 
-                                    int nRootId = Conversions.ToInteger("0" + Conversions.ToString(Interaction.IIf(myWeb.moConfig["AuthenticatedRootPageId"] is null, Interaction.IIf(myWeb.moConfig["RootPageId"] is null, (object)1, myWeb.moConfig["RootPageId"]), myWeb.moConfig["AuthenticatedRootPageId"])));
+                                    int nRootId = Convert.ToInt16("0" + Convert.ToString(Interaction.IIf(myWeb.moConfig["AuthenticatedRootPageId"] is null, Interaction.IIf(myWeb.moConfig["RootPageId"] is null, (object)1, myWeb.moConfig["RootPageId"]), myWeb.moConfig["AuthenticatedRootPageId"])));
 
                                     // Load in the last subscription
                                     if (string.IsNullOrEmpty(cLastSubXml))
@@ -1812,7 +1812,7 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                myWeb.mnPageId = Conversions.ToInteger(oSub.SelectSingleNode("//AccessPage[.!='']").InnerText);
+                                                myWeb.mnPageId = Convert.ToInt16(oSub.SelectSingleNode("//AccessPage[.!='']").InnerText);
                                             }
                                         }
                                         catch (Exception)
@@ -1860,7 +1860,7 @@ namespace Protean
 
                 }
 
-                public void AddUserSubscription(int nSubscriptionID, int nSubUserId, int nPaymentMethodId = 0, XmlElement cartItemXml = null, long nCartId = default)
+                public void AddUserSubscription(int nSubscriptionID, long nSubUserId, int nPaymentMethodId = 0, XmlElement cartItemXml = null, long nCartId = default)
                 {
                     try
                     {
@@ -1920,7 +1920,7 @@ namespace Protean
                             string dateString = oCurSubElmt.SelectSingleNode(oSubConfig["SubscriptionStartDateXpath"]).InnerText;
                             if (Information.IsDate(dateString))
                             {
-                                SubStartDate = Conversions.ToDate(oCurSubElmt.SelectSingleNode(oSubConfig["SubscriptionStartDateXpath"]).InnerText);
+                                SubStartDate = Convert.ToDateTime(oCurSubElmt.SelectSingleNode(oSubConfig["SubscriptionStartDateXpath"]).InnerText);
                             }
                         }
 
@@ -1968,17 +1968,17 @@ namespace Protean
 
                             // its a regrade
                             // cancel earlier subscription
-                            else if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDS.Tables["Content"].Rows[0]["nContentKey"], nSubscriptionID, false)))
+                            else if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDS.Tables["Content"].Rows[0]["nContentKey"], nSubscriptionID, false)))
                             {
                                 foreach (DataRow oRows in oDS.Tables["Content"].Rows)
-                                    CancelSubscription(Conversions.ToInteger(oRows["nSubKey"]));
+                                    CancelSubscription(Convert.ToInt16(oRows["nSubKey"]));
                                 AddSubscription(nSubscriptionID, oCurSubElmt, SubStartDate, SubscriptionEndDate(DateTime.Now, oCurSubElmt), nSubUserId, nPaymentMethodId);
                             }
                             else
                             {
                                 // its a renewal of an existing policy
                                 // add
-                                var dRenStart = GetRenewalDate(Conversions.ToInteger(oNewElmt.GetAttribute("nSubKey")));
+                                var dRenStart = GetRenewalDate(Convert.ToInt16(oNewElmt.GetAttribute("nSubKey")));
                                 dRenStart = dRenStart.AddDays(1d);
                                 AddSubscription(nSubscriptionID, oCurSubElmt, dRenStart, SubscriptionEndDate(dRenStart, oCurSubElmt), nSubUserId, nPaymentMethodId);
                             }
@@ -2035,7 +2035,7 @@ namespace Protean
                     }
                 }
 
-                public void AddSubscription(int nid, XmlElement oSubDetailElmt, DateTime dStart, DateTime dFinish, int nSubUserId, int nPaymentMethodId = 0, long nCartId = 0L)
+                public void AddSubscription(int nid, XmlElement oSubDetailElmt, DateTime dStart, DateTime dFinish, long nSubUserId, int nPaymentMethodId = 0, long nCartId = 0L)
                 {
                     try
                     {
@@ -2052,7 +2052,7 @@ namespace Protean
                         addNewTextNode("cSubName", ref oElmt, oSubDetailElmt.SelectSingleNode("Name").InnerText);
                         addNewTextNode("nPeriod", ref oElmt, oSubDetailElmt.SelectSingleNode("Duration/Length").InnerText);
                         addNewTextNode("cPeriodUnit", ref oElmt, oSubDetailElmt.SelectSingleNode("Duration/Unit").InnerText);
-                        addNewTextNode("nValueNet", ref oElmt, Conversions.ToDouble("0" + oSubDetailElmt.SelectSingleNode("SubscriptionPrices/Price[@type='sale']").InnerText).ToString());
+                        addNewTextNode("nValueNet", ref oElmt, Convert.ToDouble("0" + oSubDetailElmt.SelectSingleNode("SubscriptionPrices/Price[@type='sale']").InnerText).ToString());
                         addNewTextNode("nPaymentMethodId", ref oElmt, nPaymentMethodId.ToString());
                         addNewTextNode("bPaymentMethodActive", ref oElmt, "true");
                         addNewTextNode("nMinimumTerm", ref oElmt, oSubDetailElmt.SelectSingleNode("Duration/MinimumTerm").InnerText);
@@ -2067,8 +2067,8 @@ namespace Protean
                         addNewTextNode("nAuditId", ref oElmt);
                         // addNewTextNode("nAuditId", oElmt, myWeb.moDbHelper.getAuditId(1, myWeb.mnUserId, "Subscription", dStart, dFinish, Now))
                         addNewTextNode("nAuditKey", ref oElmt);
-                        addNewTextNode("dPublishDate", ref oElmt, Conversions.ToString(dStart));
-                        addNewTextNode("dExpireDate", ref oElmt, Conversions.ToString(dFinish));
+                        addNewTextNode("dPublishDate", ref oElmt, Convert.ToString(dStart));
+                        addNewTextNode("dExpireDate", ref oElmt, Convert.ToString(dFinish));
                         addNewTextNode("dInsertDate", ref oElmt);
                         addNewTextNode("nInsertDirId", ref oElmt);
                         addNewTextNode("dUpdateDate", ref oElmt);
@@ -2077,13 +2077,13 @@ namespace Protean
                         addNewTextNode("cDescription", ref oElmt);
 
                         oInstance.AppendChild(oElmt);
-                        int nSubId = Conversions.ToInteger(myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Subscription, oInstance));
+                        int nSubId = Convert.ToInt16(myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Subscription, oInstance));
                         if (nSubId > 0)
                         {
                             foreach (XmlNode currentOElmt in oSubDetailElmt.SelectNodes("UserGroups/Group[@id!='']"))
                             {
                                 oElmt = currentOElmt;
-                                int nGrpID = Conversions.ToInteger(oElmt.Attributes["id"].Value);
+                                int nGrpID = Convert.ToInt16(oElmt.Attributes["id"].Value);
                                 myWeb.moDbHelper.saveDirectoryRelations((long)nSubUserId, nGrpID.ToString());
                             }
                         }
@@ -2113,12 +2113,12 @@ namespace Protean
                         editElmt.SelectSingleNode("cDescription").InnerText = cReason;
 
                         // Cancel the payment method
-                        long PaymentMethodId = Conversions.ToLong("0" + editElmt.SelectSingleNode("nPaymentMethodId").InnerText);
+                        long PaymentMethodId = Convert.ToInt64("0" + editElmt.SelectSingleNode("nPaymentMethodId").InnerText);
 
                         // Cancel the payment method
                         if (PaymentMethodId > 0L)
                         {
-                            CancelPaymentMethod(Conversions.ToInteger(editElmt.SelectSingleNode("nPaymentMethodId").InnerText));
+                            CancelPaymentMethod(Convert.ToInt16(editElmt.SelectSingleNode("nPaymentMethodId").InnerText));
                         }
 
                         // We only remove user from groups (this needs to happen by schduler to remove once expired)
@@ -2136,10 +2136,10 @@ namespace Protean
                             string CustomerEmail = SubXml.FirstChild.SelectSingleNode("User/Email").InnerText;
                             // Inform the client
                             Cms.dbHelper argodbHelper = null;
-                            string cRetMessage = Conversions.ToString(oMessager.emailer((XmlElement)SubXml.FirstChild, oSubConfig["CancellationXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], CustomerEmail, "Cancel Subscription", odbHelper: ref argodbHelper));
+                            string cRetMessage = Convert.ToString(oMessager.emailer((XmlElement)SubXml.FirstChild, oSubConfig["CancellationXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], CustomerEmail, "Cancel Subscription", odbHelper: ref argodbHelper));
                             // Inform the site owner
                             Cms.dbHelper argodbHelper1 = null;
-                            string cRetMessage2 = Conversions.ToString(oMessager.emailer((XmlElement)SubXml.FirstChild, oSubConfig["CancellationXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], oSubConfig["SubscriptionEmail"], "Cancel Subscription", odbHelper: ref argodbHelper1));
+                            string cRetMessage2 = Convert.ToString(oMessager.emailer((XmlElement)SubXml.FirstChild, oSubConfig["CancellationXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], oSubConfig["SubscriptionEmail"], "Cancel Subscription", odbHelper: ref argodbHelper1));
                         }
                     }
 
@@ -2165,10 +2165,10 @@ namespace Protean
                             string CustomerEmail = SubXml.FirstChild.SelectSingleNode("User/Email").InnerText;
                             // Inform the client
                             Cms.dbHelper argodbHelper = null;
-                            string cRetMessage = Conversions.ToString(oMessager.emailer((XmlElement)SubXml.FirstChild, oSubConfig["CancellationXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], CustomerEmail, "Cancel Subscription", odbHelper: ref argodbHelper));
+                            string cRetMessage = Convert.ToString(oMessager.emailer((XmlElement)SubXml.FirstChild, oSubConfig["CancellationXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], CustomerEmail, "Cancel Subscription", odbHelper: ref argodbHelper));
                             // Inform the site owner
                             Cms.dbHelper argodbHelper1 = null;
-                            string cRetMessage2 = Conversions.ToString(oMessager.emailer((XmlElement)SubXml.FirstChild, oSubConfig["CancellationXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], oSubConfig["SubscriptionEmail"], "Cancel Subscription", odbHelper: ref argodbHelper1));
+                            string cRetMessage2 = Convert.ToString(oMessager.emailer((XmlElement)SubXml.FirstChild, oSubConfig["CancellationXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], oSubConfig["SubscriptionEmail"], "Cancel Subscription", odbHelper: ref argodbHelper1));
                         }
                     }
 
@@ -2195,18 +2195,18 @@ namespace Protean
                         editElmt.SelectSingleNode("nUpdateDirId").InnerText = myWeb.mnUserId.ToString();
                         editElmt.SelectSingleNode("cDescription").InnerText = cReason;
 
-                        long PaymentMethodId = Conversions.ToLong("0" + editElmt.SelectSingleNode("nPaymentMethodId").InnerText);
+                        long PaymentMethodId = Convert.ToInt64("0" + editElmt.SelectSingleNode("nPaymentMethodId").InnerText);
 
                         // Cancel the payment method
                         if (PaymentMethodId > 0L)
                         {
-                            CancelPaymentMethod(Conversions.ToInteger(editElmt.SelectSingleNode("nPaymentMethodId").InnerText));
+                            CancelPaymentMethod(Convert.ToInt16(editElmt.SelectSingleNode("nPaymentMethodId").InnerText));
                         }
 
                         myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Subscription, SubInstance.DocumentElement);
 
                         // Remove the user from any user groups
-                        if (Conversions.ToDate(editElmt.SelectSingleNode("dExpireDate").InnerText) < Conversions.ToDate(XmlDate(DateTime.Now)))
+                        if (Convert.ToDateTime(editElmt.SelectSingleNode("dExpireDate").InnerText) < Convert.ToDateTime(XmlDate(DateTime.Now)))
                         {
                             ExpireSubscriptionGroups(nId);
                         }
@@ -2238,7 +2238,7 @@ namespace Protean
                             try
                             {
                                 string providerRef = PayInstance.DocumentElement.SelectSingleNode("cPayMthdProviderRef").InnerText;
-                                paymentStatus = Conversions.ToString(oPaymentProv.Activities.CancelPayments(ref myWeb,ref providerRef));
+                                paymentStatus = Convert.ToString(oPaymentProv.Activities.CancelPayments(ref myWeb,ref providerRef));
                             }
                             catch (Exception)
                             {
@@ -2295,7 +2295,7 @@ namespace Protean
                                 {
                                     cSQL = "SELECT tblSubscription.*,DATEDIFF(dd,tblAudit.dExpireDate,getdate()) as renewaldays, tblDirectory.cDirXml, tblCartPaymentMethod.*, tblAudit.*" + " FROM tblSubscription  INNER JOIN tblAudit ON tblSubscription.nAuditId = tblAudit.nAuditKey " + " INNER JOIN tblDirectory On tblSubscription.nDirId = tblDirectory.nDirKey" + " INNER Join tblCartPaymentMethod ON tblSubscription.nPaymentMethodId = tblCartPaymentMethod.nPayMthdKey ";
 
-                                    double count = Conversions.ToDouble(reminderNode.GetAttribute("count"));
+                                    double count = Convert.ToDouble(reminderNode.GetAttribute("count"));
                                     string startDate = Tools.Database.SqlDate(DateTime.Now.AddDays(count * -1));
                                     string endDate = Tools.Database.SqlDate(DateTime.Now.AddDays(count * -1 + 1d));
                                     string action = reminderNode.GetAttribute("action");
@@ -2335,29 +2335,29 @@ namespace Protean
                                             ProcessedCount = ProcessedCount + 1L;
                                             string actionResult = "";
                                             XmlElement argoParentElmt = null;
-                                            var SubXml = GetSubscriptionDetail(ref argoParentElmt, Conversions.ToInteger(oDr["nSubKey"]));
+                                            var SubXml = GetSubscriptionDetail(ref argoParentElmt, Convert.ToInt16(oDr["nSubKey"]));
                                             SubXml.SetAttribute("messageType", reminderNode.GetAttribute("name"));
                                             SubXml.SetAttribute("action", action);
                                             string UserEmail = SubXml.SelectSingleNode("Subscription/User/Email").InnerText;
 
                                             if (action == "renewal" & count == 0d)
                                             {
-                                                actionResult = RenewSubscription(SubXml, Conversions.ToBoolean(1));
+                                                actionResult = RenewSubscription(SubXml, Convert.ToBoolean(1));
                                                 if (actionResult == "Failed")
                                                 {
                                                     SubXml.SetAttribute("actionResult", actionResult);
                                                     Cms.dbHelper argodbHelper = null;
-                                                    string cRetMessage = Conversions.ToString(oMessager.emailer(SubXml, oSubConfig["ReminderXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], UserEmail, reminderNode.GetAttribute("subject"), odbHelper: ref argodbHelper));
+                                                    string cRetMessage = Convert.ToString(oMessager.emailer(SubXml, oSubConfig["ReminderXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], UserEmail, reminderNode.GetAttribute("subject"), odbHelper: ref argodbHelper));
                                                 }
                                             }
                                             else if (action == "expire" & count == 0d)
                                             {
-                                                actionResult = ExpireSubscription(Conversions.ToInteger(oDr["nSubKey"]), "Scheduled Expiration");
+                                                actionResult = ExpireSubscription(Convert.ToInt16(oDr["nSubKey"]), "Scheduled Expiration");
                                             }
                                             else
                                             {
                                                 Cms.dbHelper argodbHelper1 = null;
-                                                string cRetMessage = Conversions.ToString(oMessager.emailer(SubXml, oSubConfig["ReminderXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], UserEmail, reminderNode.GetAttribute("subject"), odbHelper: ref argodbHelper1));
+                                                string cRetMessage = Convert.ToString(oMessager.emailer(SubXml, oSubConfig["ReminderXSL"], oSubConfig["SubscriptionEmailName"], oSubConfig["SubscriptionEmail"], UserEmail, reminderNode.GetAttribute("subject"), odbHelper: ref argodbHelper1));
                                                 actionResult = cRetMessage;
                                             }
                                             SubXml.SetAttribute("actionResult", actionResult);
@@ -2411,17 +2411,17 @@ namespace Protean
                                     break;
                                 }
                         }
-                        long SubId = Conversions.ToLong("0" + SubXml.GetAttribute("id"));
+                        long SubId = Convert.ToInt64("0" + SubXml.GetAttribute("id"));
 
-                        var dNewStart = DateAndTime.DateAdd(DateInterval.Day, 1d, Conversions.ToDate(SubXml.GetAttribute("expireDate")));
-                        var dNewEnd = DateAndTime.DateAdd(renewInterval, Conversions.ToInteger(SubXml.GetAttribute("period")), Conversions.ToDate(SubXml.GetAttribute("expireDate")));
+                        var dNewStart = DateAndTime.DateAdd(DateInterval.Day, 1d, Convert.ToDateTime(SubXml.GetAttribute("expireDate")));
+                        var dNewEnd = DateAndTime.DateAdd(renewInterval, Convert.ToInt16(SubXml.GetAttribute("period")), Convert.ToDateTime(SubXml.GetAttribute("expireDate")));
 
-                        double Amount = Conversions.ToDouble(SubXml.GetAttribute("value"));
-                        long OrderId = Conversions.ToLong(0 + SubXml.GetAttribute("orderId"));
-                        long SubContentId = Conversions.ToLong(SubXml.GetAttribute("contentId"));
-                        long UserId = Conversions.ToLong(SubXml.GetAttribute("userId"));
+                        double Amount = Convert.ToDouble(SubXml.GetAttribute("value"));
+                        long OrderId = Convert.ToInt64(0 + SubXml.GetAttribute("orderId"));
+                        long SubContentId = Convert.ToInt64(SubXml.GetAttribute("contentId"));
+                        long UserId = Convert.ToInt64(SubXml.GetAttribute("userId"));
                         string SubName = SubXml.GetAttribute("name") + " Renewal";
-                        long nPaymentMethodId = Conversions.ToLong(SubXml.GetAttribute("providerId"));
+                        long nPaymentMethodId = Convert.ToInt64(SubXml.GetAttribute("providerId"));
 
                         // Create the invoice
                         // Add quote to cart
@@ -2441,7 +2441,7 @@ namespace Protean
                         myWeb.moCart.mnProcessId = 1; // add the process id because it needs to be less than 5
                         myWeb.moCart.AddItem(SubContentId, 1, default, SubName, Amount, oSubContent.OuterXml);
 
-                        long billingId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue("select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartId = 0 and nContactDirId = " + UserId));
+                        long billingId = Convert.ToInt64(myWeb.moDbHelper.GetDataValue("select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartId = 0 and nContactDirId = " + UserId));
                         long deliveryId = billingId;
                         myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId, null);
 
@@ -2464,7 +2464,7 @@ namespace Protean
                                 IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, PaymentMethod);
                                 try
                                 {
-                                    paymentStatus = Conversions.ToString(oPaymentProv.Activities.CollectPayment(ref myWeb, nPaymentMethodId, Amount, CurrencyCode, PaymentDescription,ref myWeb.moCart));
+                                    paymentStatus = Convert.ToString(oPaymentProv.Activities.CollectPayment(ref myWeb, nPaymentMethodId, Amount, CurrencyCode, PaymentDescription,ref myWeb.moCart));
                                 }
                                 catch (Exception ex2)
                                 {
@@ -2504,14 +2504,14 @@ namespace Protean
 
                             // On Success update subscription
                             var SubInstance = new XmlDocument();
-                            SubInstance.LoadXml("<instance>" + myWeb.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Subscription, Conversions.ToLong(SubXml.GetAttribute("id"))) + "</instance>");
+                            SubInstance.LoadXml("<instance>" + myWeb.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Subscription, Convert.ToInt64(SubXml.GetAttribute("id"))) + "</instance>");
                             XmlElement editElmt = (XmlElement)SubInstance.DocumentElement.FirstChild;
 
                             editElmt.SelectSingleNode("dExpireDate").InnerText = XmlDate(dNewEnd);
 
                             editElmt.SelectSingleNode("dUpdateDate").InnerText = XmlDate(DateTime.Now);
                             editElmt.SelectSingleNode("nUpdateDirId").InnerText = myWeb.mnUserId.ToString();
-                            editElmt.SelectSingleNode("cDescription").InnerText = "Policy Renewed " + Conversions.ToString(DateTime.Now);
+                            editElmt.SelectSingleNode("cDescription").InnerText = "Policy Renewed " + Convert.ToString(DateTime.Now);
 
                             // We only remove user from groups (this needs to happen by schduler to remove once expired)
 
@@ -2577,7 +2577,7 @@ namespace Protean
                     try
                     {
 
-                        long SubId = Conversions.ToLong("0" + SubXml.GetAttribute("id"));
+                        long SubId = Convert.ToInt64("0" + SubXml.GetAttribute("id"));
 
 
                         var renewInterval = DateInterval.Day;
@@ -2595,15 +2595,15 @@ namespace Protean
                                 }
                         }
 
-                        var dNewStart = DateAndTime.DateAdd(renewInterval, Conversions.ToInteger(SubXml.GetAttribute("period")) * -1, Conversions.ToDate(SubXml.GetAttribute("expireDate")));
-                        DateTime dNewEnd = Conversions.ToDate(SubXml.GetAttribute("expireDate"));
+                        var dNewStart = DateAndTime.DateAdd(renewInterval, Convert.ToInt16(SubXml.GetAttribute("period")) * -1, Convert.ToDateTime(SubXml.GetAttribute("expireDate")));
+                        DateTime dNewEnd = Convert.ToDateTime(SubXml.GetAttribute("expireDate"));
 
-                        double Amount = Conversions.ToDouble(SubXml.GetAttribute("value"));
-                        long OrderId = Conversions.ToLong(0 + SubXml.GetAttribute("orderId"));
-                        long SubContentId = Conversions.ToLong(SubXml.GetAttribute("contentId"));
-                        long UserId = Conversions.ToLong(SubXml.GetAttribute("userId"));
+                        double Amount = Convert.ToDouble(SubXml.GetAttribute("value"));
+                        long OrderId = Convert.ToInt64(0 + SubXml.GetAttribute("orderId"));
+                        long SubContentId = Convert.ToInt64(SubXml.GetAttribute("contentId"));
+                        long UserId = Convert.ToInt64(SubXml.GetAttribute("userId"));
                         string SubName = SubXml.GetAttribute("name") + " Renewal";
-                        long nPaymentMethodId = Conversions.ToLong(SubXml.GetAttribute("providerId"));
+                        long nPaymentMethodId = Convert.ToInt64(SubXml.GetAttribute("providerId"));
 
                         // Create the invoice
                         // Add quote to cart
@@ -2625,7 +2625,7 @@ namespace Protean
                         myWeb.moCart.mnProcessId = 1; // add the process id because it needs to be less than 5
                         myWeb.moCart.AddItem(SubContentId, 1, default, SubName, Amount, oSubContent.OuterXml);
 
-                        long billingId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue("select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartId = 0 and nContactDirId = " + UserId));
+                        long billingId = Convert.ToInt64(myWeb.moDbHelper.GetDataValue("select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartId = 0 and nContactDirId = " + UserId));
                         long deliveryId = billingId;
                         myWeb.moCart.useSavedAddressesOnCart(billingId, deliveryId,null);
 
@@ -2676,8 +2676,8 @@ namespace Protean
                     try
                     {
                         string cSQL;
-                        long nSubId = Conversions.ToLong(SubXml.GetAttribute("id"));
-                        long nUserId = Conversions.ToLong(SubXml.GetAttribute("userId"));
+                        long nSubId = Convert.ToInt64(SubXml.GetAttribute("id"));
+                        long nUserId = Convert.ToInt64(SubXml.GetAttribute("userId"));
 
                         // Set status
                         // Remove member from groups subscription allows (checking first any other active subscriptions so we don't block the user if they have another active subscription at this time)
@@ -2693,11 +2693,11 @@ namespace Protean
                             foreach (DataRow oDr in oDS.Tables["Subscriptions"].Rows)
                             {
                                 var thisSubXml = new XmlDocument();
-                                thisSubXml.LoadXml(Conversions.ToString(oDr["cSubXml"]));
+                                thisSubXml.LoadXml(Convert.ToString(oDr["cSubXml"]));
                                 foreach (XmlElement grpElmt in thisSubXml.SelectNodes("Content/UserGroups/Group[@id!='']"))
                                 {
                                     Array.Resize(ref aPermittedGroups, aPermittedGroups.Length + 1);
-                                    aPermittedGroups[aPermittedGroups.Length - 1] = Conversions.ToLong(grpElmt.GetAttribute("id"));
+                                    aPermittedGroups[aPermittedGroups.Length - 1] = Convert.ToInt64(grpElmt.GetAttribute("id"));
                                 }
                             }
 
@@ -2705,7 +2705,7 @@ namespace Protean
                         }
                         foreach (XmlElement grpElmt2 in SubXml.SelectNodes("Content/UserGroups/Group[@id!='']"))
                         {
-                            long grpId = Conversions.ToLong(grpElmt2.GetAttribute("id"));
+                            long grpId = Convert.ToInt64(grpElmt2.GetAttribute("id"));
                             // takes user out of 
                             bool bDelete = true;
                             foreach (var compareGrpId in aPermittedGroups)
@@ -2963,7 +2963,7 @@ namespace Protean
 
                                     this.Instance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Subscription, SubscriptionId);
 
-                                    long PaymentMethodId = Conversions.ToLong("0" + this.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText);
+                                    long PaymentMethodId = Convert.ToInt64("0" + this.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText);
 
                                     var contactXml = this.Instance.OwnerDocument.CreateElement("Contact");
 
@@ -2983,7 +2983,7 @@ namespace Protean
 
                                     XmlElement PaymentOptionsSelect = (XmlElement)this.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='cPaymentMethod']");
 
-                                    double PaymentAmount = Conversions.ToDouble("0" + this.Instance.SelectSingleNode("tblSubscription/nValueNet").InnerText);
+                                    double PaymentAmount = Convert.ToDouble("0" + this.Instance.SelectSingleNode("tblSubscription/nValueNet").InnerText);
                                     string PaymentMethod = "0" + this.Instance.SelectSingleNode("tblCartPaymentMethod/cPayMthdProviderName").InnerText;
 
                                     XmlElement xfrmGroup = (XmlElement)PaymentOptionsSelect.SelectSingleNode("ancestor::group[1]");

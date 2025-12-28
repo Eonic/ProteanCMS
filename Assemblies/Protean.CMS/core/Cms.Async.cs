@@ -1,4 +1,6 @@
 ﻿
+//using Microsoft.VisualBasic;
+using Protean.Tools;
 using System;
 using System.Collections;
 using System.Data;
@@ -7,7 +9,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Protean.Tools;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 
@@ -128,7 +129,7 @@ namespace Protean
                                 }
 
                                 long nCacheTimeout = 24L;
-                                if (Protean.Tools.Text.IsNumeric(moConfig["PageCacheTimeout"]))
+                                if (Protean.Tools.Number.IsNumeric(moConfig["PageCacheTimeout"]))
                                 {
                                     nCacheTimeout = Convert.ToInt64(moConfig["PageCacheTimeout"]);
                                 }
@@ -584,7 +585,7 @@ namespace Protean
 
             try
             {
-                // INITIALIZE PAGE XML DOCUMENT
+                // Initialize page XML document
                 if (moPageXml.DocumentElement is null)
                 {
                     moPageXml.CreateXmlDeclaration("1.0", "UTF-8", "yes");
@@ -598,30 +599,22 @@ namespace Protean
                     oPageElmt = moPageXml.DocumentElement;
                 }
 
-                // CHECK LICENCE
                 if (CheckLicence(moLicenceMode))
                 {
                     SetPageLanguage();
 
-                    // Handle special pages
                     long specialPageId = 0L;
-                    if ((long)mnPageId == gnPageNotFoundId |
-                        (long)mnPageId == gnPageAccessDeniedId |
-                        (long)mnPageId == gnPageLoginRequiredId |
+                    if ((long)mnPageId == gnPageNotFoundId ||
+                        (long)mnPageId == gnPageAccessDeniedId ||
+                        (long)mnPageId == gnPageLoginRequiredId ||
                         (long)mnPageId == gnPageErrorId)
                     {
                         specialPageId = (long)mnPageId;
                     }
 
-                    // ✅ ASYNC DATABASE CALL #1 - Get main site structure
-                    sProcessInfo = "BuildPageXMLAsync-GetStructureXML-Site";
+                    // Async: Get main site structure
                     await GetStructureXMLAsync(
-                        "Site",
-                        0L,
-                        0L,
-                        false,
-                        0L,
-                        cancellationToken
+                        "Site", 0L, 0L, false, 0L, cancellationToken
                     ).ConfigureAwait(false);
 
                     // Reset special page ID if needed
@@ -632,37 +625,20 @@ namespace Protean
 
                     if (string.IsNullOrEmpty(msException))
                     {
-                        // ✅ ASYNC DATABASE CALL #2 - Get newsletter menu if configured
+                        // Async: Get newsletter menu if configured
                         if (mnMailMenuId > 0L)
                         {
-                            sProcessInfo = "BuildPageXMLAsync-GetStructureXML-Newsletter";
                             await GetStructureXMLAsync(
-                                "Newsletter",
-                                0L,
-                                mnMailMenuId,
-                                true,
-                                0L,
-                                cancellationToken
+                                "Newsletter", 0L, mnMailMenuId, true, 0L, cancellationToken
                             ).ConfigureAwait(false);
                         }
 
-                        // ✅ ASYNC DATABASE CALL #3 - Get system pages if configured
-                        if (mnSystemPagesId > 0L & !(mnSystemPagesId == RootPageId))
+                        // Async: Get system pages if configured
+                        if (mnSystemPagesId > 0L && !(mnSystemPagesId == RootPageId))
                         {
-                            sProcessInfo = "BuildPageXMLAsync-GetStructureXML-SystemPages";
                             await GetStructureXMLAsync(
-                                0L,
-                                mnSystemPagesId,
-                                0L,
-                                "SystemPages",
-                                true,
-                                true,
-                                false,
-                                true,
-                                false,
-                                "",
-                                "",
-                                cancellationToken
+                                0L, mnSystemPagesId, 0L, "SystemPages",
+                                true, true, false, true, false, "", "", cancellationToken
                             ).ConfigureAwait(false);
                         }
 
@@ -722,7 +698,6 @@ namespace Protean
                         if (moSession != null)
                         {
                             var logonRedirectId = moSession["LogonRedirectId"];
-
                             if (logonRedirectId != null &&
                                 int.TryParse(logonRedirectId.ToString(), out int redirectId) &&
                                 redirectId > 0 &&
@@ -753,9 +728,129 @@ namespace Protean
                         // Get content XML
                         if (mnPageId > 0)
                         {
-                            sProcessInfo = "BuildPageXMLAsync-GetContentXml";
                             await GetContentXmlAsync(oPageElmt, cancellationToken).ConfigureAwait(false);
+
+                            // Only get the detail if we are not on a system page and not at root
+                            if (RootPageId == mnPageId ||
+                                !((long)mnPageId == gnPageNotFoundId ||
+                                  (long)mnPageId == gnPageAccessDeniedId ||
+                                  (long)mnPageId == gnPageLoginRequiredId ||
+                                  (long)mnPageId == gnPageErrorId))
+                            {
+                                long validatedVersion = 0L;
+                                if (mbPreview && !string.IsNullOrEmpty(moRequest["verId"]))
+                                {
+                                    validatedVersion = Convert.ToInt64(moRequest["verId"]);
+                                }
+                                if (!mbPreview && !string.IsNullOrEmpty(moRequest["verId"]))
+                                {
+                                    if ((Tools.Encryption.RC4.Decrypt(moRequest["previewKey"], moConfig["SharedKey"]) ?? "") == (moRequest["verId"] ?? ""))
+                                    {
+                                        validatedVersion = Convert.ToInt64(moRequest["verId"]);
+                                    }
+                                }
+
+                                if (Convert.ToBoolean(validatedVersion))
+                                {
+                                    moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Convert.ToInt64(moRequest["verId"]));
+                                }
+                                else if ((moConfig["AllowContentDetailAccess"] ?? "").ToLower() == "on")
+                                {
+                                    moContentDetail = GetContentDetailXml(oPageElmt);
+                                }
+                                else
+                                {
+                                    moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true);
+                                }
+                            }
+
+                            // Detail path checking and redirect logic
+                            if (mbCheckDetailPath && mbAdminMode == false && mnArtId > 0 && (mcOriginalURL.Contains("-/") || mcOriginalURL.Contains("/Item")))
+                            {
+                                var node = oPageElmt.SelectSingleNode("ContentDetail/Content/@name");
+                                if (node != null)
+                                {
+                                    string cContentDetailName = node.InnerText;
+                                    cContentDetailName = Tools.Text.CleanName(cContentDetailName, false, true);
+                                    string RequestedContentName = "";
+                                    string myQueryString = "";
+
+                                    if (mcOriginalURL.Contains("?"))
+                                    {
+                                        myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"));
+                                        mcOriginalURL = mcOriginalURL.Substring(0, mcOriginalURL.LastIndexOf("?"));
+                                    }
+
+                                    mcOriginalURL = mcOriginalURL.TrimEnd('?');
+                                    if (mcOriginalURL.Contains("-/"))
+                                    {
+                                        RequestedContentName = mcOriginalURL.Substring(mcOriginalURL.IndexOf("-/") + 2);
+                                    }
+
+                                    if ((RequestedContentName ?? "") != (cContentDetailName ?? ""))
+                                    {
+                                        if (string.IsNullOrEmpty(RequestedContentName))
+                                        {
+                                            if (mcOriginalURL.EndsWith("-/"))
+                                            {
+                                                mbRedirectPerm = Convert.ToString(true);
+                                                msRedirectOnEnd = mcOriginalURL + cContentDetailName;
+                                            }
+                                            else
+                                            {
+                                                string PathBefore = mcOriginalURL.Substring(0, mcOriginalURL.LastIndexOf("/Item"));
+                                                mbRedirectPerm = Convert.ToString(true);
+                                                msRedirectOnEnd = PathBefore + "/" + mnArtId + "-/" + cContentDetailName;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            string PathBefore = mcOriginalURL.Substring(0, mcOriginalURL.Length - RequestedContentName.Length);
+                                            mbRedirectPerm = Convert.ToString(true);
+                                            msRedirectOnEnd = PathBefore + cContentDetailName;
+                                        }
+                                        if (!string.IsNullOrEmpty(myQueryString))
+                                        {
+                                            msRedirectOnEnd = msRedirectOnEnd + myQueryString;
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Multi-parent check
+                            CheckMultiParents(ref oPageElmt, mnPageId);
                         }
+                        else
+                        {
+                            mnProteanCMSError = 1005L;
+                        }
+                        if (mnProteanCMSError > 0L)
+                        {
+                            GetErrorXml(ref oPageElmt);
+                        }
+
+                        SetPageLanguage(); // Called again as in sync version
+
+                        oPageElmt.SetAttribute("expireDate", Tools.Xml.XmlDate(mdPageExpireDate));
+                        oPageElmt.SetAttribute("updateDate", Tools.Xml.XmlDate(mdPageUpdateDate));
+                        oPageElmt.SetAttribute("userIntegrations", gbUserIntegrations.ToString().ToLower());
+                        oPageElmt.SetAttribute("pageViewDate", Tools.Xml.XmlDate(mdDate));
+                        oPageElmt.SetAttribute("previewHidden", mbPreviewHidden ? "on" : "off");
+                       
+                        // Clone page detection
+                        if (gbClone && oPageElmt.SelectSingleNode("//MenuItem[@id = /Page/@id and (@clone > 0 or (@cloneparent='" + mnCloneContextPageId + "' and @cloneparent > 0 ))]") != null)
+                        {
+                            oPageElmt.SetAttribute("clone", "true");
+                        }
+                    }
+                }
+                else
+                {
+                    // Invalid Licence
+                    mnProteanCMSError = 1008L;
+                    if (mnProteanCMSError > 0L)
+                    {
+                        GetErrorXml(ref oPageElmt);
                     }
                 }
 
@@ -768,7 +863,6 @@ namespace Protean
                 return null;
             }
         }
-
         /// <summary>
         /// Asynchronously gets the complete page XML.
         /// </summary>
@@ -815,7 +909,7 @@ namespace Protean
                         string cShowRelatedBriefDepth = moConfig["ShowRelatedBriefDepth"] + "";
                         int nMaxDepth = 1;
                         if (!string.IsNullOrEmpty(cShowRelatedBriefDepth) &&
-                            Tools.Text.IsNumeric(cShowRelatedBriefDepth))
+                            Tools.Number.IsNumeric(cShowRelatedBriefDepth))
                         {
                             nMaxDepth = Convert.ToInt32(cShowRelatedBriefDepth);
                         }
@@ -1643,7 +1737,7 @@ namespace Protean
                                 if (gbClone)
                                 {
                                     cCloneParent = oMenuItem.GetAttribute("cloneparent");
-                                    if (Tools.Text.IsNumeric(cCloneParent) && Convert.ToInt32(cCloneParent) > 0)
+                                    if (Tools.Number.IsNumeric(cCloneParent) && Convert.ToInt32(cCloneParent) > 0)
                                     {
                                         sUrl = sUrl + (sUrl.Contains("?") ? "&" : "?");
                                         sUrl += "context=" + cCloneParent;
@@ -1834,9 +1928,7 @@ namespace Protean
         {
             PerfMon.Log("Web", "GetContentXmlAsync");
 
-            string sNodeName = string.Empty;
             string cXPathModifier = "";
-            string sContent = string.Empty;
             string IsInTree = "false";
             string sProcessInfo = "building the Content XML";
 
@@ -1849,12 +1941,10 @@ namespace Protean
                     {
                         if (mbIsClonePage)
                         {
-                            // Is this a clone page that directly references its cloned page.
                             cXPathModifier = " and @clone='" + mnClonePageId.ToString() + "'";
                         }
                         else if (mnCloneContextPageId > 0)
                         {
-                            // Is this a child of a clone page
                             cXPathModifier = " and @cloneparent='" + mnCloneContextPageId.ToString() + "'";
                         }
                         else if (mnClonePageVersionId > 0)
@@ -1863,21 +1953,13 @@ namespace Protean
                         }
                         else
                         {
-                            // this is not a cloned page, make sure we don't accidentally look for the cloned pages.
                             cXPathModifier = " and (((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0)) or (starts-with(@url,'" + mcPageLanguageUrlPrefix + mcPagePath + "') or starts-with(@url,'" + mcRequestDomain + mcPageLanguageUrlPrefix.Replace(mcRequestDomain, "") + mcPagePath + "')))";
                         }
                     }
 
-                    // Check for blocked content
-                    gcBlockContentType = moDbHelper.GetPageBlockedContent((long)mnPageId);
-                    string parentXpath = "/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" + mnPageId + "'" + cXPathModifier + "]]";
-
-                    oPageElmt.SetAttribute("blockedContent", Regex.Replace(gcBlockContentType, @"^[|\d]+", ""));
-
                     // Handle single content type requests (load more steppers)
                     if (!string.IsNullOrEmpty(moRequest["singleContentType"]))
                     {
-                        // sql for content on page and permissions etc
                         string sFilterSql = GetStandardFilterSQLForContent();
                         sFilterSql = sFilterSql + " and nstructid=" + mnPageId;
                         string cSort = "|ASC_cl.nDisplayOrder";
@@ -1897,15 +1979,15 @@ namespace Protean
                         int nRows = 500;
 
                         // Set the paging variables, if provided.
-                        if (moRequest["startPos"] != null && Tools.Text.IsNumeric(moRequest["startPos"]))
+                        if (moRequest["startPos"] != null && Tools.Number.IsNumeric(moRequest["startPos"]))
                             nStart = Convert.ToInt32(moRequest["startPos"]);
-                        if (moRequest["rows"] != null && Tools.Text.IsNumeric(moRequest["rows"]))
+                        if (moRequest["rows"] != null && Tools.Number.IsNumeric(moRequest["rows"]))
                             nRows = Convert.ToInt32(moRequest["rows"]);
 
                         // In admin mode want active and hidden products separately
                         if (mbAdminMode)
                         {
-                            if (moRequest["status"] != null && Tools.Text.IsNumeric(moRequest["status"]))
+                            if (moRequest["status"] != null && Tools.Number.IsNumeric(moRequest["status"]))
                             {
                                 int nstatus = Convert.ToInt32(moRequest["status"]);
                                 if (nstatus == 0)
@@ -1925,7 +2007,7 @@ namespace Protean
                             sFilterSql = sFilterSql + " and nstructid=" + mnPageId;
                         }
 
-                        if (moSession["FilterWhereCondition"] != null &&
+                        if (moSession != null && moSession["FilterWhereCondition"] != null &&
                             !string.IsNullOrEmpty(moSession["FilterWhereCondition"].ToString()))
                         {
                             string whereSQL = Convert.ToString(moSession["FilterWhereCondition"]);
@@ -1937,41 +2019,52 @@ namespace Protean
                             int nCount = 0;
                             string cGroupBySql = string.Empty;
 
-                            GetPageContentFromSelectFilterPagination(
-                                ref nCount,
-                                oContentsNode: ref oPageElmt,
-                                oPageDetail: ref argoPageDetail,
+                            // Async version of GetPageContentFromSelectFilterPagination
+                            await GetPageContentFromSelectFilterPaginationAsync(
+                                nCount,
+                                oPageElmt,
+                                argoPageDetail,
                                 whereSQL,
+                                bPrimaryOnly: false,
                                 bIgnorePermissionsCheck: true,
+                                nReturnRows: 0,
+                                cOrderBy: cOrderBySql,
+                                cAdditionalJoins: cAdditionalJoins,
+                                bContentDetail: false,
+                                pageNumber: 0L,
+                                distinct: true,
                                 cShowSpecificContentTypes: moRequest["singleContentType"],
                                 ignoreActiveAndDate: false,
                                 nStartPos: (long)nStart,
                                 nItemCount: (long)nRows,
-                                distinct: true,
-                                cAdditionalJoins: cAdditionalJoins,
+                                bShowContentDetails: true,
                                 cAdditionalColumns: cAdditionalColumns,
-                                cOrderBy: cOrderBySql,
                                 cAdminMode: cAdminMode,
-                                cGroupBySql: cGroupBySql);
+                                cGroupBySql: cGroupBySql,
+                                cancellationToken: cancellationToken
+                            ).ConfigureAwait(false);
                         }
                         else
                         {
                             var argoPageElmt = moPageXml.DocumentElement;
                             XmlElement argoPageDetail1 = null;
                             XmlElement argoContentModule = null;
-                            GetContentXMLByTypeAndOffset(
-                                ref argoPageElmt,
+                            await GetContentXMLByTypeAndOffsetAsync(
+                                argoPageElmt,
                                 moRequest["singleContentType"] + cSort,
                                 (long)nStart,
                                 (long)nRows,
-                                oPageDetail: ref argoPageDetail1,
-                                oContentModule: ref argoContentModule,
-                                sFilterSql);
+                                argoPageDetail1,
+                                argoContentModule,
+                                sFilterSql,
+                                bShowContentDetails: true,
+                                cancellationToken: cancellationToken
+                            ).ConfigureAwait(false);
                         }
                     }
                     else
                     {
-                        // Set nothing to Filter Pagination session
+                        // Clear Filter Pagination session if present
                         if (moSession != null)
                         {
                             if (moSession["FilterWhereCondition"] != null)
@@ -1983,7 +2076,8 @@ namespace Protean
                             }
                         }
 
-                        // ✅ ASYNC: Step through the tree from home to our current page
+                        // Walk up the menu tree and load content for each ancestor
+                        string parentXpath = $"/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='{mnPageId.ToString()}' {cXPathModifier}]]";
                         foreach (XmlElement oElmt in oPageElmt.SelectNodes(parentXpath))
                         {
                             oElmt.SetAttribute("active", "1");
@@ -2011,7 +2105,7 @@ namespace Protean
                             await GetPageContentXmlAsync((long)mnPageId, cancellationToken).ConfigureAwait(false);
                         }
 
-                        // get the first records in the case of a load more stepper.
+                        // Handle block content types (steppers)
                         if (!string.IsNullOrEmpty(gcBlockContentType))
                         {
                             string[] cContentTypes = gcBlockContentType.Split(',');
@@ -2021,7 +2115,7 @@ namespace Protean
                                 string[] cContentType = cContentTypes[i].Split('|');
 
                                 string SingleContentType = cContentType[0];
-                                string ModuleId = cContentType[1];
+                                string ModuleId = cContentType.Length > 1 ? cContentType[1] : "";
                                 XmlElement ContentModule = (XmlElement)moPageXml.SelectSingleNode("/Page/Contents/Content[@id='" + ModuleId + "']");
 
                                 if (ContentModule != null)
@@ -2040,7 +2134,7 @@ namespace Protean
                                     // Paging variables
                                     int nStart = 0;
                                     int nRows = 500;
-                                    nRows = Convert.ToInt32("0" + ContentModule.GetAttribute("stepCount"));
+                                    int.TryParse(ContentModule.GetAttribute("stepCount"), out nRows);
 
                                     if (Convert.ToInt32("0" + ContentModule.GetAttribute("firstPageCount")) > 0)
                                     {
@@ -2052,22 +2146,24 @@ namespace Protean
                                         string sFilterSql = GetStandardFilterSQLForContent();
                                         sFilterSql = sFilterSql + " and nstructid=" + mnPageId;
 
-                                        if (ContentModule.HasAttribute("TotalCount") == false)
+                                        if (!ContentModule.HasAttribute("TotalCount"))
                                         {
                                             ContentModule.SetAttribute("TotalCount", "0");
                                         }
 
                                         var argoPageElmt1 = moPageXml.DocumentElement;
                                         XmlElement oPagedetail = null;
-                                        GetContentXMLByTypeAndOffset(
-                                            ref argoPageElmt1,
+                                        await GetContentXMLByTypeAndOffsetAsync(
+                                            argoPageElmt1,
                                             SingleContentType + cSort,
                                             (long)nStart,
                                             (long)nRows,
-                                            ref oPagedetail,
-                                            oContentModule: ref ContentModule,
+                                            oPagedetail,
+                                            ContentModule,
                                             sFilterSql,
-                                            bShowContentDetails: false);
+                                            bShowContentDetails: false,
+                                            cancellationToken: cancellationToken
+                                        ).ConfigureAwait(false);
                                     }
                                 }
                             }
@@ -2076,7 +2172,7 @@ namespace Protean
                 }
                 else
                 {
-                    // if we are on a system page we only want the content on that page not parents.
+                    // If we are on a system page, only want the content on that page not parents.
                     await GetPageContentXmlAsync((long)mnPageId, cancellationToken).ConfigureAwait(false);
                     oPageElmt.SetAttribute("systempage", "true");
                 }
@@ -2093,6 +2189,284 @@ namespace Protean
             {
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(
                     mcModuleName, "GetContentXmlAsync", ex, sProcessInfo));
+            }
+        }
+
+        public async Task GetPageContentFromSelectFilterPaginationAsync(
+    int nCount,
+    XmlElement oContentsNode,
+    XmlElement oPageDetail,
+    string sWhereSql,
+    bool bPrimaryOnly = false,
+    bool bIgnorePermissionsCheck = false,
+    int nReturnRows = 0,
+    string cOrderBy = "type, cl.nDisplayOrder",
+    string cAdditionalJoins = "",
+    bool bContentDetail = false,
+    long pageNumber = 0L,
+    bool distinct = false,
+    string cShowSpecificContentTypes = "",
+    bool ignoreActiveAndDate = false,
+    long nStartPos = 0L,
+    long nItemCount = 0L,
+    bool bShowContentDetails = true,
+    string cAdditionalColumns = "",
+    string cAdminMode = "false",
+    string cGroupBySql = "",
+    CancellationToken cancellationToken = default(CancellationToken))
+        {
+            PerfMon.Log("Web", "GetPageContentFromSelectFilterPaginationAsync");
+            XmlElement oRoot;
+            string sSql;
+
+            string sPrimarySql = "";
+            string sTopSql = "";
+            string sMembershipSql = "";
+            string sFilterSql = "";
+            string sProcessInfo = "";
+            DataSet oDs;
+            long nAuthUserId;
+            long nAuthGroup;
+            string cContentField = "";
+            string cFilterTarget = string.Empty;
+            string sGroupByClause;
+
+            try
+            {
+                if (oContentsNode != null)
+                {
+                    if (oContentsNode.Attributes["contentType"] != null)
+                    {
+                        cFilterTarget = oContentsNode.Attributes["contentType"].Value;
+                    }
+                    if (oContentsNode.Attributes["filterTarget"] != null)
+                    {
+                        cFilterTarget = oContentsNode.Attributes["filterTarget"].Value;
+                    }
+                    if (oContentsNode.Attributes["resultCount"] != null)
+                    {
+                        nCount = Convert.ToInt32(oContentsNode.Attributes["resultCount"].Value);
+                    }
+                }
+
+                // Apply the possibility of getting contents into a node other than the page contents node
+                if (oContentsNode is null)
+                {
+                    oRoot = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
+                    if (oRoot is null)
+                    {
+                        oRoot = moPageXml.CreateElement("Contents");
+                        moPageXml.DocumentElement.AppendChild(oRoot);
+                    }
+                }
+                else
+                {
+                    oRoot = oContentsNode;
+                    nItemCount = Convert.ToInt16("0" + oContentsNode.GetAttribute("stepCount"));
+                }
+
+                cContentField = bContentDetail ? "cContentXmlDetail" : "cContentXmlBrief";
+
+                if (nReturnRows > 0 && pageNumber == 0L)
+                {
+                    sTopSql = "TOP " + nReturnRows + " ";
+                }
+
+                sSql = "SET ARITHABORT ON ";
+                sSql += " SELECT " + (distinct ? "DISTINCT " : "") + sTopSql +
+                        " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, " +
+                        "CAST(" + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
+
+                if (!string.IsNullOrEmpty(cAdditionalColumns))
+                {
+                    sSql += cAdditionalColumns;
+                }
+                sSql += "FROM tblContent AS c INNER JOIN ";
+                sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
+                sSql += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
+
+                // Add the extra joins if specified.
+                if (!string.IsNullOrEmpty(cAdditionalJoins))
+                    sSql += " " + cAdditionalJoins + " ";
+
+                if (bPrimaryOnly)
+                {
+                    sPrimarySql = " CL.bPrimary = 1 ";
+                }
+
+                if (!string.IsNullOrEmpty(cFilterTarget))
+                {
+                    cFilterTarget = " and c.cContentSchemaName ='" + cFilterTarget + "' ";
+                }
+
+                if (gbMembership == true && bIgnorePermissionsCheck == false)
+                {
+                    if (mnUserId == 0 && gnNonAuthUsers != 0)
+                    {
+                        nAuthUserId = gnNonAuthUsers;
+                        nAuthGroup = gnNonAuthUsers;
+                    }
+                    else if (mnUserId == 0)
+                    {
+                        nAuthUserId = (long)mnUserId;
+                        nAuthGroup = -1;
+                    }
+                    else
+                    {
+                        nAuthUserId = (long)mnUserId;
+                        nAuthGroup = gnAuthUsers;
+                    }
+
+                    sMembershipSql = "NOT(dbo.fxn_checkPermission(CL.nStructId," + nAuthUserId + "," + nAuthGroup + ") LIKE '%DENIED%')";
+                    if (!string.IsNullOrEmpty(sPrimarySql))
+                        sMembershipSql = " and " + sMembershipSql;
+                }
+
+                if (!ignoreActiveAndDate)
+                {
+                    sFilterSql = GetStandardFilterSQLForContent(!string.IsNullOrEmpty(sPrimarySql) || !string.IsNullOrEmpty(sMembershipSql));
+                }
+
+                if (!string.IsNullOrEmpty(sPrimarySql) || !string.IsNullOrEmpty(sMembershipSql) || !string.IsNullOrEmpty(sFilterSql))
+                    sWhereSql = " and " + sWhereSql;
+
+                string combinedWhereSQL = sPrimarySql + sMembershipSql + sFilterSql + sWhereSql;
+                if (combinedWhereSQL.TrimStart().StartsWith("and", StringComparison.OrdinalIgnoreCase))
+                {
+                    combinedWhereSQL = combinedWhereSQL.Substring(4);
+                }
+
+                if (cAdminMode == "true")
+                {
+                    cOrderBy = " a.nStatus desc," + cOrderBy;
+                }
+
+                sSql += " where (" + combinedWhereSQL + ")";
+                sGroupByClause = "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+
+                if (!string.IsNullOrEmpty(cOrderBy))
+                {
+                    if (distinct)
+                    {
+                        if (!string.IsNullOrEmpty(cGroupBySql))
+                        {
+                            sSql += cGroupBySql;
+                        }
+                        else
+                        {
+                            sSql += sGroupByClause;
+                        }
+                        sSql += " ORDER BY ";
+                        sSql += cOrderBy;
+
+                        if (cOrderBy.Contains("a.nStatus"))
+                        {
+                            sSql += " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        }
+                        else
+                        {
+                            sSql += " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        }
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(cGroupBySql))
+                        {
+                            sSql += cGroupBySql;
+                        }
+                        sSql += " ORDER BY ";
+                        sSql += cOrderBy;
+                    }
+                }
+                else
+                {
+                    if (distinct)
+                    {
+                        if (!string.IsNullOrEmpty(cGroupBySql))
+                        {
+                            sSql += cGroupBySql;
+                        }
+                        else
+                        {
+                            sSql += sGroupByClause;
+                        }
+                        sSql += " ORDER BY ";
+                        sSql += "  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                    }
+                    else
+                    {
+                        sSql += " ORDER BY";
+                        sSql += "(SELECT NULL)";
+                    }
+                }
+
+                // Default page size if not set
+                if (nItemCount == 0)
+                    nItemCount = 24;
+
+                sSql += " offset " + nStartPos + " rows fetch next " + nItemCount + " rows only";
+
+                sSql = sSql.Replace("&lt;", "<");
+
+                PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect:" + sSql);
+
+                if (pageNumber > 0L)
+                {
+                    oDs = await moDbHelper.GetDataSetAsync(
+                        sSql, "Content", "Contents",
+                        pageSize: nReturnRows,
+                        pageNumber: (int)pageNumber,
+                        cancellationToken: cancellationToken
+                    ).ConfigureAwait(false);
+                }
+                else
+                {
+                    oDs = await moDbHelper.GetDataSetAsync(
+                        sSql, "Content", "Contents",
+                        cancellationToken: cancellationToken
+                    ).ConfigureAwait(false);
+                }
+                nCount = oDs.Tables["Content"].Rows.Count;
+                PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect: " + nCount + " returned");
+
+                oRoot = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
+                if (oRoot is null)
+                {
+                    oRoot = moPageXml.CreateElement("Contents");
+                    moPageXml.DocumentElement.AppendChild(oRoot);
+                }
+
+                moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, ref mdPageExpireDate, ref mdPageUpdateDate, (long)mnPageId, false, "");
+                if (bShowContentDetails)
+                {
+                    // Get the content Detail element
+                    XmlElement oContentDetails;
+                    if (oPageDetail is null)
+                    {
+                        oContentDetails = (XmlElement)moPageXml.SelectSingleNode("Page/ContentDetail");
+                        if (oContentDetails is null)
+                        {
+                            oContentDetails = moPageXml.CreateElement("ContentDetail");
+                            if (!string.IsNullOrEmpty(moPageXml.InnerXml))
+                            {
+                                moPageXml.FirstChild.AppendChild(oContentDetails);
+                            }
+                            else if (oPageDetail != null)
+                            {
+                                oPageDetail.AppendChild(oContentDetails);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        oContentDetails = oPageDetail;
+                    }
+                }
+                CallPostFilterContentUpdates();
+            }
+            catch (Exception ex)
+            {
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageContentFromSelect", ex, sProcessInfo));
             }
         }
 
@@ -2171,7 +2545,7 @@ namespace Protean
                 }
 
                 string cContentLimit = "";
-                if (!string.IsNullOrEmpty(moConfig["ContentLimit"]) && Tools.Text.IsNumeric(moConfig["ContentLimit"]))
+                if (!string.IsNullOrEmpty(moConfig["ContentLimit"]) && Tools.Number.IsNumeric(moConfig["ContentLimit"]))
                 {
                     cContentLimit = $"TOP {moConfig["ContentLimit"]} ";
                 }
@@ -2209,6 +2583,130 @@ namespace Protean
             {
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(
                     mcModuleName, "GetPageContentXmlAsync", ex, sProcessInfo));
+            }
+        }
+
+        public async Task GetContentXMLByTypeAndOffsetAsync(
+     XmlElement oPageElmt,
+    string cContentType,
+    long nStartPos,
+    long nItemCount,
+     XmlElement oPageDetail,
+     XmlElement oContentModule,
+    string sqlFilter = "",
+    string fullSQL = "",
+    bool bShowContentDetails = true,
+    CancellationToken cancellationToken = default(CancellationToken))
+        {
+            PerfMon.Log("Web", "GetContentXMLByTypeAndOffsetAsync");
+            string sProcessInfo = "building Content XML by type and offset";
+            try
+            {
+                // Prepare the root <Contents> node
+                XmlElement oRoot = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
+                if (oRoot == null)
+                {
+                    oRoot = moPageXml.CreateElement("Contents");
+                    moPageXml.DocumentElement.AppendChild(oRoot);
+                }
+
+                // Build SQL
+                string sSql;
+                string sOrderBy = "";
+                string sTop = "";
+                string sWhere = "";
+                string sContentField = bShowContentDetails ? "cContentXmlDetail" : "cContentXmlBrief";
+
+                // Parse content type and sort
+                string[] typeParts = cContentType.Split('|');
+                string contentType = typeParts[0];
+                if (typeParts.Length > 1)
+                {
+                    sOrderBy = typeParts[1].Replace("_", " ");
+                }
+                else
+                {
+                    sOrderBy = "type, cl.nDisplayOrder";
+                }
+
+                // Paging
+                if (nItemCount > 0)
+                {
+                    sTop = $"TOP {nItemCount} ";
+                }
+
+                // WHERE clause
+                if (!string.IsNullOrEmpty(fullSQL))
+                {
+                    sSql = fullSQL;
+                }
+                else
+                {
+                    sWhere = $"c.cContentSchemaName = '{contentType}'";
+                    if (!string.IsNullOrEmpty(sqlFilter))
+                    {
+                        sWhere += " " + sqlFilter;
+                    }
+
+                    sSql = $@"
+                SELECT {sTop}c.nContentKey as id, 
+                    dbo.fxn_getContentParents(c.nContentKey) as parId,
+                    cContentForiegnRef as ref, 
+                    cContentName as name, 
+                    cContentSchemaName as type, 
+                    {sContentField} as content, 
+                    a.nStatus as status, 
+                    a.dpublishDate as publish, 
+                    a.dExpireDate as expire, 
+                    a.dUpdateDate as [update], 
+                    a.nInsertDirId as owner, 
+                    CL.cPosition as position 
+                FROM tblContent c
+                INNER JOIN tblContentLocation CL ON c.nContentKey = CL.nContentId
+                INNER JOIN tblAudit a ON c.nAuditId = a.nAuditKey
+                WHERE {sWhere}
+                ORDER BY {sOrderBy}";
+                }
+
+                // Async DB call
+                var oDs = await moDbHelper.GetDataSetAsync(
+                    sql: sSql,
+                    tablename: "Content",
+                    datasetname: "Contents",
+                    pageSize: (int)nItemCount,
+                    pageNumber: nStartPos > 0 && nItemCount > 0 ? (int)(nStartPos / nItemCount) + 1 : 1,
+                    cancellationToken: cancellationToken
+                ).ConfigureAwait(false);
+
+                // Import results into XML
+                if (oDs != null && oDs.Tables.Count > 0 && oDs.Tables[0].Rows.Count > 0)
+                {
+                    DateTime updatedTime = mdPageUpdateDate ?? DateTime.Now;
+                    DateTime expireTime = mdPageExpireDate ?? DateTime.Now;
+
+                    var oXml = moDbHelper.ContentDataSetToXml(ref oDs, ref updatedTime);
+                    var oXml2 = oRoot.OwnerDocument.ImportNode(oXml.DocumentElement, true);
+
+                    foreach (XmlElement oNode in oXml2.SelectNodes("Content"))
+                    {
+                        XmlElement xmloContent = (XmlElement)oNode;
+                        oRoot.AppendChild(moDbHelper.SimpleTidyContentNode(ref xmloContent, ref expireTime, ref updatedTime, ""));
+                        // Optionally set oContentModule or oPageDetail if needed
+                        if (oContentModule == null)
+                        {
+                            oContentModule = xmloContent;
+                        }
+                        if (oPageDetail == null && bShowContentDetails)
+                        {
+                            oPageDetail = xmloContent;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(
+                    mcModuleName, "GetContentXMLByTypeAndOffsetAsync", ex, sProcessInfo));
             }
         }
 

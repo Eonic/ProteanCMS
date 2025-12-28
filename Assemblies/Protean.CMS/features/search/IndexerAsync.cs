@@ -192,7 +192,7 @@ namespace Protean
             int idxConcurrency = 10;
             if (!string.IsNullOrEmpty(moConfig["indexConcurrency"]))
             {
-                idxConcurrency = Conversions.ToInteger(moConfig["indexConcurrency"]);
+                idxConcurrency = Convert.ToInt16(moConfig["indexConcurrency"]);
             }
             var lcts = new LimitedConcurrencyLevelTaskScheduler(idxConcurrency);
             var factory = new TaskFactory(lcts);
@@ -230,7 +230,7 @@ namespace Protean
                     // End If
                     if (moConfig["SiteSearchIndexResultPaging"] != null)
                     {
-                        minInterval = Conversions.ToInteger(moConfig["SiteSearchIndexResultPaging"]);
+                        minInterval = Convert.ToInt16(moConfig["SiteSearchIndexResultPaging"]);
                     }
                     // If moConfig("SiteSearchIndexResultPaging") <> "" Then
                     // minInterval = moConfig("SiteSearchIndexResultPaging")
@@ -239,10 +239,10 @@ namespace Protean
                     if (oLastIndexInfo != null)
                     {
                         var oLastInfoElmt = oLastIndexInfo.DocumentElement;
-                        dLastRun = Conversions.ToDate(oLastInfoElmt.GetAttribute("startTime"));
+                        dLastRun = Convert.ToDateTime(oLastInfoElmt.GetAttribute("startTime"));
                         if (string.IsNullOrEmpty(oLastInfoElmt.GetAttribute("endTime")) & dLastRun > DateTime.Now.AddHours(minInterval * -1))
                         {
-                            ResponseMessage = "Last Index is still running. Started:" + Conversions.ToString(dLastRun);
+                            ResponseMessage = "Last Index is still running. Started:" + Convert.ToString(dLastRun);
                         }
                     }
                 }
@@ -342,8 +342,8 @@ namespace Protean
                         {
 
                             var pageObj = new IndexPageAsync.oPage();
-                            pageObj.pgid = Conversions.ToLong(oDR["nStructKey"]);
-                            pageObj.pagename = Conversions.ToString(oDR["cStructName"]);
+                            pageObj.pgid = Convert.ToInt64(oDR["nStructKey"]);
+                            pageObj.pagename = Convert.ToString(oDR["cStructName"]);
 
                             // checking index file size start
                             infoReader = new FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.goServer.MapPath(@"\"))) + @"\Index\Write\indexInfo.xml");
@@ -549,11 +549,11 @@ namespace Protean
                         }
                     }
                     // try deleting a hidden folder
-                    if (Directory.Exists(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cDirectory, Interaction.IIf(Strings.Right(cDirectory, 1) == @"\", "", @"\")), "_vti_cnf"))))
+                    if (Directory.Exists(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cDirectory, Interaction.IIf(Strings.Right(cDirectory, 1) == @"\", "", @"\")), "_vti_cnf"))))
                     {
                         try
                         {
-                            Directory.Delete(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cDirectory, Interaction.IIf(Strings.Right(cDirectory, 1) == @"\", "", @"\")), "_vti_cnf")), true);
+                            Directory.Delete(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cDirectory, Interaction.IIf(Strings.Right(cDirectory, 1) == @"\", "", @"\")), "_vti_cnf")), true);
                         }
                         catch (Exception ex)
                         {
@@ -915,8 +915,8 @@ namespace Protean
                             errorElmt.InnerText = myWeb.msException;
                             try
                             {
-                                errorElmt.SetAttribute("pgid", Conversions.ToString(oPage.pgid));
-                                errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
+                                errorElmt.SetAttribute("pgid", Convert.ToString(oPage.pgid));
+                                errorElmt.SetAttribute("name", Convert.ToString(oPage.pagename));
                             }
                             catch (Exception)
                             {
@@ -1134,7 +1134,7 @@ namespace Protean
                             try
                             {
                                 errorElmt.SetAttribute("pgid", "0");
-                                errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
+                                errorElmt.SetAttribute("name", Convert.ToString(oPage.pagename));
                             }
                             catch (Exception)
                             {
@@ -1374,7 +1374,7 @@ namespace Protean
 
 
             //Indexes each page and does not use metatags on the page additional fields to be specified. used for indexing documents that do not return metadata, for webpages with metadate use other function:
-            private void IndexPage(int nPageId, string cPageText, string cURL, string cPageTitle, ref string sException, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime? dPublish = null, DateTime? dUpdate = null)
+            private void IndexPage(long nPageId, string cPageText, string cURL, string cPageTitle, ref string sException, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime? dPublish = null, DateTime? dUpdate = null)
             {
                 // PerfMon.Log("Indexer", "IndexPage")
                 string cProcessInfo = cURL;
@@ -1449,10 +1449,10 @@ namespace Protean
                 {
 
                     // Determine whether to tokenize this - by default, no
-                    indexContent = (Field.Index)Conversions.ToInteger(Interaction.IIf(metaContent.GetAttribute("tokenize") == "true" & !forSorting, Field.Index.ANALYZED, Field.Index.NOT_ANALYZED));
+                    indexContent = (Field.Index)Convert.ToInt16(Interaction.IIf(metaContent.GetAttribute("tokenize") == "true" & !forSorting, Field.Index.ANALYZED, Field.Index.NOT_ANALYZED));
 
                     // Determine whether to store this - by default, YES
-                    storeContent = (Field.Store)Conversions.ToInteger(Interaction.IIf(metaContent.GetAttribute("store") == "false" | forSorting, Field.Store.NO, Field.Store.YES));
+                    storeContent = (Field.Store)Convert.ToInt16(Interaction.IIf(metaContent.GetAttribute("store") == "false" | forSorting, Field.Store.NO, Field.Store.YES));
 
                     metaName = metaContent.GetAttribute("name");
                     if (forSorting)
@@ -1494,13 +1494,13 @@ namespace Protean
 
                                         case "float":
                                             {
-                                                metaNumericField.SetFloatValue(Conversions.ToSingle(convertedNumber));
+                                                metaNumericField.SetFloatValue(Convert.ToSingle(convertedNumber));
                                                 break;
                                             }
 
                                         default:
                                             {
-                                                metaNumericField.SetLongValue(Conversions.ToLong(convertedNumber));
+                                                metaNumericField.SetLongValue(Convert.ToInt64(convertedNumber));
                                                 break;
                                             }
 
@@ -1528,7 +1528,7 @@ namespace Protean
                                 if (!string.IsNullOrEmpty(metaContentValue) && DateTime.TryParse(metaContentValue, out convertedDate))
                                 {
 
-                                    metaField = new Field(metaName, DateTools.DateToString(Conversions.ToDate(metaContentValue), DateTools.Resolution.SECOND), storeContent, indexContent);
+                                    metaField = new Field(metaName, DateTools.DateToString(Convert.ToDateTime(metaContentValue), DateTools.Resolution.SECOND), storeContent, indexContent);
                                 }
                                 else
                                 {

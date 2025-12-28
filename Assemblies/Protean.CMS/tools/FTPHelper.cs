@@ -62,7 +62,7 @@ namespace Protean
                 this.host = host;
             }
 
-            if (Conversions.ToString(this.host.Last()) == "/")
+            if (Convert.ToString(this.host.Last()) == "/")
             {
                 this.host = this.host.Remove(this.host.Length - 1);
             }
@@ -72,7 +72,7 @@ namespace Protean
 
             {
                 ref var withBlock = ref conn;
-                withBlock.Host = Conversions.ToString(host.Last()) == "/" ? host.Remove(host.Length - 1) : host;
+                withBlock.Host = Convert.ToString(host.Last()) == "/" ? host.Remove(host.Length - 1) : host;
                 withBlock.Credentials = new NetworkCredential(this.user, this.pass);
             }
 

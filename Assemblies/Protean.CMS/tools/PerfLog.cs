@@ -75,7 +75,7 @@ namespace Protean
 
                 if (moSession != null)
                 {
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["Logging"], "On", false)))
+                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["Logging"], "On", false)))
                     {
                         TurnOn();
                     }
@@ -106,10 +106,10 @@ namespace Protean
                         // do nothing
                     }
 
-                    string cSessionRequest = Conversions.ToString(moSession["SessionRequest"]);
+                    string cSessionRequest = Convert.ToString(moSession["SessionRequest"]);
                     if (Information.IsNumeric(cSessionRequest))
                     {
-                        moSession["SessionRequest"] = Conversions.ToInteger(cSessionRequest) + 1;
+                        moSession["SessionRequest"] = Convert.ToInt16(cSessionRequest) + 1;
                         dLast = DateTime.Now;
                         nTimeAccumalative = 0d;
                         nMemLast = 0;
@@ -190,7 +190,7 @@ namespace Protean
                         try
                         {
                             cEntryFull += moSession.SessionID + "" + "','";
-                            cEntryFull += Conversions.ToString(Operators.ConcatenateObject(moSession["SessionRequest"], "")) + "','";
+                            cEntryFull += Convert.ToString(Operators.ConcatenateObject(moSession["SessionRequest"], "")) + "','";
                         }
                         catch (Exception)
                         {
@@ -217,10 +217,10 @@ namespace Protean
                         }
                     }
 
-                    cEntryFull = Conversions.ToString(cEntryFull + Operators.ConcatenateObject(SqlFmt(cPath), "','"));
-                    cEntryFull = Conversions.ToString(cEntryFull + Operators.ConcatenateObject(SqlFmt(cModuleName), "','"));
-                    cEntryFull += Strings.Left(Conversions.ToString(SqlFmt(cProcessName)), 254) + "','";
-                    cEntryFull += Strings.Left(Conversions.ToString(SqlFmt(cDescription)), 3999) + "',";
+                    cEntryFull = Convert.ToString(cEntryFull + Operators.ConcatenateObject(SqlFmt(cPath), "','"));
+                    cEntryFull = Convert.ToString(cEntryFull + Operators.ConcatenateObject(SqlFmt(cModuleName), "','"));
+                    cEntryFull += Strings.Left(Convert.ToString(SqlFmt(cProcessName)), 254) + "','";
+                    cEntryFull += Strings.Left(Convert.ToString(SqlFmt(cDescription)), 3999) + "',";
                     cEntryFull += nStep + ",";
                     cEntryFull += oLN.TotalMilliseconds + ",";
                     cEntryFull += nTimeAccumalative + ",";

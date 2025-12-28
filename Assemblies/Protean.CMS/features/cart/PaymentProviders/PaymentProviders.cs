@@ -382,7 +382,7 @@ namespace Protean
                             }
 
                             // Allow preview users to use additional payment methods
-                            if (Conversions.ToLong(Operators.ConcatenateObject("0", myWeb.moSession["nUserId"])) > 0L)
+                            if (Convert.ToInt64(Operators.ConcatenateObject("0", myWeb.moSession["nUserId"])) > 0L)
                             {
                                 string[] aGroups = Strings.Split(oElmt.GetAttribute("validGroups"), ",");
                                 string[] aInvalidGroups = Strings.Split(oElmt.GetAttribute("invalidGroups"), ",");
@@ -391,11 +391,11 @@ namespace Protean
                                 var loopTo1 = Information.UBound(aGroups);
                                 for (i = 0; i <= loopTo1; i++)
                                 {
-                                    if (modbHelper.checkUserRole(aGroups[i], "Group", Conversions.ToLong(myWeb.moSession["nUserId"])))
+                                    if (modbHelper.checkUserRole(aGroups[i], "Group", Convert.ToInt64(myWeb.moSession["nUserId"])))
                                     {
                                         bAllowUser = true;
                                     }
-                                    if (modbHelper.checkUserRole(aGroups[i], "Role", Conversions.ToLong(myWeb.moSession["nUserId"])))
+                                    if (modbHelper.checkUserRole(aGroups[i], "Role", Convert.ToInt64(myWeb.moSession["nUserId"])))
                                     {
                                         bAllowUser = true;
                                     }
@@ -403,11 +403,11 @@ namespace Protean
                                 var loopTo2 = Information.UBound(aInvalidGroups);
                                 for (i2 = 0; i2 <= loopTo2; i2++)
                                 {
-                                    if (modbHelper.checkUserRole(aInvalidGroups[i2], "Group", Conversions.ToLong(myWeb.moSession["nUserId"])))
+                                    if (modbHelper.checkUserRole(aInvalidGroups[i2], "Group", Convert.ToInt64(myWeb.moSession["nUserId"])))
                                     {
                                         bAllowUser = false;
                                     }
-                                    if (modbHelper.checkUserRole(aInvalidGroups[i2], "Role", Conversions.ToLong(myWeb.moSession["nUserId"])))
+                                    if (modbHelper.checkUserRole(aInvalidGroups[i2], "Role", Convert.ToInt64(myWeb.moSession["nUserId"])))
                                     {
                                         bAllowUser = false;
                                     }
@@ -544,17 +544,17 @@ namespace Protean
                 //        oDictOpt.Add("currency", mcCurrency);
 
                 //        // Set common variables
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
                 //            bCv2 = true;
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
                 //            b3DSecure = true;
 
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["allowSavePayment"], "on", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["allowSavePayment"], "on", false)))
                 //            bAllowSavePayment = true;
 
                 //        // Load the Xform
 
-                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), bCv2, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")), b3DSecure, bSavePayment: bAllowSavePayment);
+                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Convert.ToString(oDictOpt["cardsAccepted"]), bCv2, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")), b3DSecure, bSavePayment: bAllowSavePayment);
 
                 //        if (b3DSecure)
                 //        {
@@ -570,12 +570,12 @@ namespace Protean
 
 
                 //            // Set up card options
-                //            sOpts = Conversions.ToString(Operators.ConcatenateObject("test_status=", oDictOpt["opperationMode"]));
+                //            sOpts = Convert.ToString(Operators.ConcatenateObject("test_status=", oDictOpt["opperationMode"]));
                 //            sOpts = sOpts + ",dups=false,card_type=" + this.goRequest["creditCard/type"];
 
                 //            // Account for scheduled payments from the payment config.
-                //            string scheduleInterval = Conversions.ToString(Operators.ConcatenateObject(oDictOpt["scheduleInterval"], ""));
-                //            string scheduleMaxRepeats = Conversions.ToString(Operators.ConcatenateObject(oDictOpt["scheduleMaxRepeats"], ""));
+                //            string scheduleInterval = Convert.ToString(Operators.ConcatenateObject(oDictOpt["scheduleInterval"], ""));
+                //            string scheduleMaxRepeats = Convert.ToString(Operators.ConcatenateObject(oDictOpt["scheduleMaxRepeats"], ""));
                 //            if (!string.IsNullOrEmpty(scheduleInterval) && Array.IndexOf(paypointScheduleIntervals, scheduleInterval) >= 0)
                 //            {
 
@@ -584,7 +584,7 @@ namespace Protean
                 //                if (!string.IsNullOrEmpty(scheduleMaxRepeats) && Information.IsNumeric(scheduleMaxRepeats) && Convert.ToInt16(scheduleMaxRepeats) > 0)
 
                 //                {
-                //                    maxRepeats = Conversions.ToInteger(scheduleMaxRepeats);
+                //                    maxRepeats = Convert.ToInt16(scheduleMaxRepeats);
                 //                }
                 //                else
                 //                {
@@ -653,22 +653,22 @@ namespace Protean
                 //                sOpts = sOpts + ",cv2=" + this.goRequest["creditCard/CV2"];
                 //            }
                 //            // Optional - 3DSecure
-                //            if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oDictOpt["opperationMode"], "true", false), b3DSecure)))
+                //            if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oDictOpt["opperationMode"], "true", false), b3DSecure)))
                 //            {
                 //                sOpts = sOpts + ",test_mpi_status=true";
                 //            }
 
                 //            // If test mode, then we must turn on cv2-avs checks - mandatory Visa mandate May 2009
-                //            if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual((oDictOpt["opperationMode"]), "true", false), Operators.ConditionalCompareObjectEqual((oDictOpt["opperationMode"]), "false", false))))
+                //            if (Convert.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual((oDictOpt["opperationMode"]), "true", false), Operators.ConditionalCompareObjectEqual((oDictOpt["opperationMode"]), "false", false))))
                 //            {
                 //                sOpts = sOpts + ",default_cv2avs=ALL MATCH";
                 //            }
 
-                //            if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual((oDictOpt["transactionType"]), "defer", false), Operators.ConditionalCompareObjectEqual((oDictOpt["transactionType"]), "deferred", false))))
+                //            if (Convert.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual((oDictOpt["transactionType"]), "defer", false), Operators.ConditionalCompareObjectEqual((oDictOpt["transactionType"]), "deferred", false))))
                 //            {
                 //                if (Information.IsNumeric(oDictOpt["ccDeferDays"]) & Information.IsNumeric(oDictOpt["dcDeferDays"]))
                 //                {
-                //                    sOpts = Conversions.ToString(sOpts + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(",deferred=reuse:", oDictOpt["ccDeferDays"]), ":"), oDictOpt["dcDeferDays"]));
+                //                    sOpts = Convert.ToString(sOpts + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(",deferred=reuse:", oDictOpt["ccDeferDays"]), ":"), oDictOpt["dcDeferDays"]));
                 //                }
                 //                else
                 //                {
@@ -676,12 +676,12 @@ namespace Protean
                 //                }
 
                 //            }
-                //            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["digest"], "on", false)))
+                //            if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["digest"], "on", false)))
                 //            {
                 //                string cDigest = "";
-                //                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDictOpt["accountId"], "secpay", false)))
+                //                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDictOpt["accountId"], "secpay", false)))
                 //                {
-                //                    cDigest = mnCartId.ToString() + mnPaymentAmount.ToString() + Conversions.ToString(oDictOpt["accountPassword"]);
+                //                    cDigest = mnCartId.ToString() + mnPaymentAmount.ToString() + Convert.ToString(oDictOpt["accountPassword"]);
                 //                }
                 //                else
                 //                {
@@ -708,13 +708,13 @@ namespace Protean
                 //            var oSecVpn = new Protean.Paypoint.SECVPNClient();
 
                 //            cOrderType = oRoot.GetAttribute("orderType");
-                //            if (!(!string.IsNullOrEmpty(cOrderType) & Conversions.ToString(oDictOpt["UseOrderType"]) == "true"))
-                //                cOrderType = Conversions.ToString(oDictOpt["accountId"]);
+                //            if (!(!string.IsNullOrEmpty(cOrderType) & Convert.ToString(oDictOpt["UseOrderType"]) == "true"))
+                //                cOrderType = Convert.ToString(oDictOpt["accountId"]);
                 //            if (!b3DSecure)
                 //            {
                 //                string argsType = "Delivery Address";
                 //                string argsType1 = "Billing Address";
-                //                cResponse = oSecVpn.validateCardFull(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, this.goRequest["creditCard/number"], mnPaymentAmount.ToString(), this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]), this.goRequest["creditCard/issueNumber"], this.fmtSecPayDate(this.goRequest["creditCard/issueDate"]), getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType), getSecPayAddress(ref oRoot, ref argsType1), sOpts);
+                //                cResponse = oSecVpn.validateCardFull(cOrderType, Convert.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, this.goRequest["creditCard/number"], mnPaymentAmount.ToString(), this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]), this.goRequest["creditCard/issueNumber"], this.fmtSecPayDate(this.goRequest["creditCard/issueDate"]), getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType), getSecPayAddress(ref oRoot, ref argsType1), sOpts);
 
                 //                bSavePayment = true;
                 //            }
@@ -723,7 +723,7 @@ namespace Protean
                 //            {
                 //                string argsType2 = "Delivery Address";
                 //                string argsType3 = "Billing Address";
-                //                cResponse = oSecVpn.threeDSecureEnrolmentRequest(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, this.goRequest["creditCard/number"], mnPaymentAmount.ToString(), this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]), this.goRequest["creditCard/issueNumber"], this.fmtSecPayDate(this.goRequest["creditCard/issueDate"]), getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType2), getSecPayAddress(ref oRoot, ref argsType3), sOpts, "0", this.goRequest.ServerVariables["HTTP_ACCEPT"], this.goRequest.ServerVariables["HTTP_USER_AGENT"], "", "", "", "", "", "");
+                //                cResponse = oSecVpn.threeDSecureEnrolmentRequest(cOrderType, Convert.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, this.goRequest["creditCard/number"], mnPaymentAmount.ToString(), this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]), this.goRequest["creditCard/issueNumber"], this.fmtSecPayDate(this.goRequest["creditCard/issueDate"]), getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType2), getSecPayAddress(ref oRoot, ref argsType3), sOpts, "0", this.goRequest.ServerVariables["HTTP_ACCEPT"], this.goRequest.ServerVariables["HTTP_USER_AGENT"], "", "", "", "", "", "");
 
                 //                bSavePayment = true;
                 //            }
@@ -731,7 +731,7 @@ namespace Protean
                 //            else
                 //            {
                 //                // Pass the process back to Secpay
-                //                cResponse = oSecVpn.threeDSecureAuthorisationRequest(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest["MD"], this.goRequest["PaRes"], sOpts);
+                //                cResponse = oSecVpn.threeDSecureAuthorisationRequest(cOrderType, Convert.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest["MD"], this.goRequest["PaRes"], sOpts);
                 //                // Save in the session the MD and the instance to save
 
                 //            }
@@ -753,7 +753,7 @@ namespace Protean
                 //                    string cPos = Strings.InStr(aResponse[i], "=").ToString();
                 //                    if (Information.IsNumeric(cPos))
                 //                    {
-                //                        nPos = Conversions.ToInteger(cPos);
+                //                        nPos = Convert.ToInt16(cPos);
                 //                        oDictResp.Add(Strings.Left(aResponse[i], nPos - 1), Strings.Right(aResponse[i], Strings.Len(aResponse[i]) - nPos));
                 //                    }
                 //                    else
@@ -763,7 +763,7 @@ namespace Protean
                 //                }
 
 
-                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
+                //                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
                 //                {
                 //                    if (!b3DSecure)
                 //                    {
@@ -790,7 +790,7 @@ namespace Protean
                 //                                        sRedirectURL = moCartConfig["SecureURL"] + "/?cartCmd=Redirect3ds";
                 //                                    }
 
-                //                                    string cleanACSURL = myWeb.goServer.UrlDecode(Conversions.ToString(oDictResp["acs_url"]));
+                //                                    string cleanACSURL = myWeb.goServer.UrlDecode(Convert.ToString(oDictResp["acs_url"]));
                 //                                    cleanACSURL = Strings.Replace(cleanACSURL, "&amp;", "&");
 
                 //                                    bIsValid = false;
@@ -798,10 +798,10 @@ namespace Protean
                 //                                    err_msg = "customer redirected to:" + cleanACSURL;
 
                 //                                    // Save MD as paymentRef
-                //                                    sPaymentRef = Conversions.ToString(oDictResp["MD"]);
+                //                                    sPaymentRef = Convert.ToString(oDictResp["MD"]);
                 //                                    // Save the payment instance in the session
 
-                //                                    Xform3dSec = xfrmSecure3D(Conversions.ToString(oDictResp["acs_url"]), Conversions.ToString(oDictResp["MD"]), Conversions.ToString(oDictResp["PaReq"]), sRedirectURL);
+                //                                    Xform3dSec = xfrmSecure3D(Convert.ToString(oDictResp["acs_url"]), Convert.ToString(oDictResp["MD"]), Convert.ToString(oDictResp["PaReq"]), sRedirectURL);
                 //                                    break;
                 //                                }
 
@@ -810,7 +810,7 @@ namespace Protean
                 //                                    // not subscribes to 3D Secure
                 //                                    bIsValid = true;
                 //                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
-                //                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                    err_msg = Convert.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
                 //                                    ccXform.valid = true;
                 //                                    break;
                 //                                }
@@ -820,7 +820,7 @@ namespace Protean
                 //                                    // Payer Authenticated
                 //                                    bIsValid = true;
                 //                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
-                //                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                    err_msg = Convert.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
                 //                                    ccXform.valid = true;
                 //                                    break;
                 //                                }
@@ -831,7 +831,7 @@ namespace Protean
                 //                                    // the(authentication)
                 //                                    bIsValid = true;
                 //                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
-                //                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                    err_msg = Convert.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
                 //                                    ccXform.valid = true;
                 //                                    break;
                 //                                }
@@ -842,7 +842,7 @@ namespace Protean
                 //                                    // unable to verify erolement but secpay passes
                 //                                    bIsValid = true;
                 //                                    err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
-                //                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                    err_msg = Convert.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
                 //                                    ccXform.valid = true;
                 //                                    break;
                 //                                }
@@ -853,17 +853,17 @@ namespace Protean
                 //                                    // Payer Not Authenticated
                 //                                    bIsValid = false;
                 //                                    ccXform.valid = false;
-                //                                    err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                    err_msg = Convert.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
                 //                                    break;
                 //                                }
 
                 //                            default:
                 //                                {
-                //                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["code"], "A", false)))
+                //                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["code"], "A", false)))
                 //                                    {
                 //                                        bIsValid = true;
                 //                                        err_msg = "Payment Authorised Ref: " + mnCartId.ToString();
-                //                                        err_msg = Conversions.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
+                //                                        err_msg = Convert.ToString(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_message"]));
                 //                                        ccXform.valid = true;
                 //                                    }
                 //                                    else
@@ -871,7 +871,7 @@ namespace Protean
                 //                                        // Payer Not Authenticated
                 //                                        bIsValid = false;
                 //                                        ccXform.valid = false;
-                //                                        err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_status_code"]), " - "), oDictResp["mpi_message"]));
+                //                                        err_msg = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(err_msg + " 3D Secure:", oDictResp["mpi_status_code"]), " - "), oDictResp["mpi_message"]));
                 //                                    }
 
                 //                                    break;
@@ -883,7 +883,7 @@ namespace Protean
                 //                {
                 //                    ccXform.valid = false;
                 //                    bIsValid = false;
-                //                    err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
+                //                    err_msg_log = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
 
                 //                    // Produce nice format error messages.
                 //                    switch (oDictResp["code"])
@@ -976,7 +976,7 @@ namespace Protean
 
                 //                        default:
                 //                            {
-                //                                err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]));
+                //                                err_msg = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]));
                 //                                break;
                 //                            }
                 //                    }
@@ -1000,11 +1000,11 @@ namespace Protean
                 //                // only do this for a valid payment method
                 //                XmlElement oSaveElmt = (XmlElement)ccXform.Instance.SelectSingleNode("creditCard/bSavePayment");
                 //                Debug.WriteLine(this.goRequest["creditCard/expireDate"]);
-                //                var oDate = new DateTime(Conversions.ToInteger("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Conversions.ToInteger(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
+                //                var oDate = new DateTime(Convert.ToInt16("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Convert.ToInt16(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
                 //                oDate = oDate.AddMonths(1);
                 //                oDate = oDate.AddDays(-1);
                 //                string cMethodName = this.goRequest["creditCard/type"] + ": " + stdTools.MaskString(this.goRequest["creditCard/number"], "*", false, 4) + " Expires: " + oDate.ToShortDateString();
-                //                cAuthCode = Conversions.ToString(oDictResp["auth_code"]);
+                //                cAuthCode = Convert.ToString(oDictResp["auth_code"]);
 
                 //                var oSecPayElmt = ccXform.Instance.OwnerDocument.CreateElement("SecPay");
                 //                oSecPayElmt.SetAttribute("AuthCode", cAuthCode);
@@ -1149,21 +1149,21 @@ namespace Protean
                 //        }
 
                 //        // Load the Xform
-                //        ccXform = UkashXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Ukash")));
+                //        ccXform = UkashXform(ref oRoot, "PayForm", sSubmitPath, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Ukash")));
 
                 //        if (ccXform.valid == true)
                 //        {
 
                 //            // Validate Card
-                //            sOpts = Conversions.ToString(Operators.ConcatenateObject("test_status=", oDictOpt["opperationMode"]));
-                //            if (mnPaymentAmount < Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]))
+                //            sOpts = Convert.ToString(Operators.ConcatenateObject("test_status=", oDictOpt["opperationMode"]));
+                //            if (mnPaymentAmount < Convert.ToDouble(this.goRequest["Ukash/VoucherValue"]))
                 //            {
                 //                sOpts = sOpts + ",sv_txn_type=PS";
                 //                sOpts = sOpts + ",sv_ps_number=" + this.goRequest["Ukash/VoucherNumber"];
                 //                sOpts = sOpts + ",sv_ps_value=" + this.goRequest["Ukash/VoucherValue"];
-                //                sOpts = sOpts + ",sv_ps_newvalue=" + Strings.FormatNumber((object)(Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]) - mnPaymentAmount), 2);
+                //                sOpts = sOpts + ",sv_ps_newvalue=" + Strings.FormatNumber((object)(Convert.ToDouble(this.goRequest["Ukash/VoucherValue"]) - mnPaymentAmount), 2);
                 //            }
-                //            else if (mnPaymentAmount == Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]))
+                //            else if (mnPaymentAmount == Convert.ToDouble(this.goRequest["Ukash/VoucherValue"]))
                 //            {
                 //                sOpts = sOpts + ",sv_txn_type=RD";
                 //                sOpts = sOpts + ",sv_rd_number=" + this.goRequest["Ukash/VoucherNumber"];
@@ -1173,12 +1173,12 @@ namespace Protean
                 //            var oSecVpn = new Protean.Paypoint.SECVPNClient();
 
                 //            cOrderType = oRoot.GetAttribute("orderType");
-                //            if (!(!string.IsNullOrEmpty(cOrderType) & Conversions.ToString(oDictOpt["orderType"]) == "true"))
-                //                cOrderType = Conversions.ToString(oDictOpt["accountId"]);
+                //            if (!(!string.IsNullOrEmpty(cOrderType) & Convert.ToString(oDictOpt["orderType"]) == "true"))
+                //                cOrderType = Convert.ToString(oDictOpt["accountId"]);
 
                 //            string argsType = "Delivery Address";
                 //            string argsType1 = "Billing Address";
-                //            cResponse = oSecVpn.validateCardFull(cOrderType, Conversions.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, "", mnPaymentAmount.ToString(), "", "", "", getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType), getSecPayAddress(ref oRoot, ref argsType1), sOpts);
+                //            cResponse = oSecVpn.validateCardFull(cOrderType, Convert.ToString(oDictOpt["accountPassword"]), mnCartId.ToString(), this.goRequest.ServerVariables["REMOTE_ADDR"], mcCardHolderName, "", mnPaymentAmount.ToString(), "", "", "", getSecPayOrder(ref oRoot), getSecPayAddress(ref oRoot, ref argsType), getSecPayAddress(ref oRoot, ref argsType1), sOpts);
 
 
                 //            // Parse the response
@@ -1196,21 +1196,21 @@ namespace Protean
                 //                    oDictResp.Add(Strings.Left(aResponse[i], nPos - 1), Strings.Right(aResponse[i], Strings.Len(aResponse[i]) - nPos));
                 //                }
 
-                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
+                //                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
                 //                {
                 //                    bIsValid = true;
                 //                    ccXform.valid = true;
 
-                //                    err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Authorised Ref: " + mnCartId.ToString() + " - ", oDictResp["sv_rd_newnumber"]), oDictResp["sv_ps_newnumber"]));
+                //                    err_msg = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Authorised Ref: " + mnCartId.ToString() + " - ", oDictResp["sv_rd_newnumber"]), oDictResp["sv_ps_newnumber"]));
 
                 //                    // add the response to the instance so we can save it against the transaction
 
                 //                    var argoNode = ccXform.Instance.FirstChild;
-                //                    Tools.Xml.addNewTextNode("NewVoucherNumber", ref argoNode, Conversions.ToString(oDictResp["sv_ps_newnumber"]));
+                //                    Tools.Xml.addNewTextNode("NewVoucherNumber", ref argoNode, Convert.ToString(oDictResp["sv_ps_newnumber"]));
                 //                    var argoNode1 = ccXform.Instance.FirstChild;
-                //                    Tools.Xml.addNewTextNode("NewVoucherValue", ref argoNode1, Conversions.ToString(oDictResp["sv_ps_newvalue"]));
+                //                    Tools.Xml.addNewTextNode("NewVoucherValue", ref argoNode1, Convert.ToString(oDictResp["sv_ps_newvalue"]));
                 //                    var argoNode2 = ccXform.Instance.FirstChild;
-                //                    Tools.Xml.addNewTextNode("NewVoucherExpires", ref argoNode2, Conversions.ToString(oDictResp["sv_ps_expiry"]));
+                //                    Tools.Xml.addNewTextNode("NewVoucherExpires", ref argoNode2, Convert.ToString(oDictResp["sv_ps_expiry"]));
 
                 //                    savePayment((long)myWeb.mnUserId, "SecPayUkash", mnCartId.ToString(), err_msg, (XmlElement)ccXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
                 //                }
@@ -1219,7 +1219,7 @@ namespace Protean
                 //                {
                 //                    ccXform.valid = false;
                 //                    bIsValid = false;
-                //                    err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
+                //                    err_msg_log = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
 
                 //                    // Produce nice format error messages.
                 //                    switch (oDictResp["code"])
@@ -1347,7 +1347,7 @@ namespace Protean
 
                 //                        default:
                 //                            {
-                //                                err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]), ")"));
+                //                                err_msg = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]), ")"));
                 //                                break;
                 //                            }
                 //                    }
@@ -1397,16 +1397,16 @@ namespace Protean
 
                 //                // let see if we have any ukash specific email settings.
                 //                string uKashMerchantEmail = moCartConfig["MerchantEmail"];
-                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantEmail"], "", false)))
-                //                    uKashMerchantEmail = Conversions.ToString(oDictOpt["altMerchantEmail"]);
+                //                if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantEmail"], "", false)))
+                //                    uKashMerchantEmail = Convert.ToString(oDictOpt["altMerchantEmail"]);
 
                 //                string uKashMerchantName = moCartConfig["MerchantName"];
-                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantName"], "", false)))
-                //                    uKashMerchantName = Conversions.ToString(oDictOpt["altMerchantName"]);
+                //                if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantName"], "", false)))
+                //                    uKashMerchantName = Convert.ToString(oDictOpt["altMerchantName"]);
 
                 //                string uKashEmailTemplatePath = moCartConfig["MerchantEmailTemplatePath"];
-                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantSubject"], "", false)))
-                //                    uKashEmailTemplatePath = Conversions.ToString(oDictOpt["altMerchantSubject"]);
+                //                if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["altMerchantSubject"], "", false)))
+                //                    uKashEmailTemplatePath = Convert.ToString(oDictOpt["altMerchantSubject"]);
 
                 //            }
 
@@ -1473,7 +1473,7 @@ namespace Protean
 
                 //        if (this.goSession["attemptCount"] != null)
                 //        {
-                //            nAttemptCount = Conversions.ToLong(this.goSession["attemptCount"]);
+                //            nAttemptCount = Convert.ToInt64(this.goSession["attemptCount"]);
                 //            nAttemptCount = nAttemptCount + 1L;
                 //        }
                 //        else
@@ -1493,16 +1493,16 @@ namespace Protean
 
                 //        oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
 
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
                 //            bCv2 = true;
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
                 //        {
                 //            b3dSecure = true;
                 //            // Check the IP Addresses for a block
                 //            if (oDictOpt["secure3dIpBlock"] != null)
                 //            {
                 //                var oRE = new Regex("(,|^)" + Strings.Replace(cIPAddress, ".", @"\.") + "(,|$)");
-                //                if (oRE.IsMatch(Conversions.ToString(oDictOpt["secure3dIpBlock"])))
+                //                if (oRE.IsMatch(Convert.ToString(oDictOpt["secure3dIpBlock"])))
                 //                    b3dSecure = false;
                 //            }
                 //        }
@@ -1537,7 +1537,7 @@ namespace Protean
 
 
                 //        // Load the Xform
-                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), true, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")));
+                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Convert.ToString(oDictOpt["cardsAccepted"]), true, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")));
 
                 //        if (b3dSecure)
                 //        {
@@ -1550,9 +1550,9 @@ namespace Protean
 
                 //        string orderPrefix = "";
 
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["sendPrefix"], "true", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["sendPrefix"], "true", false)))
                 //        {
-                //            orderPrefix = Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(nTransactionMode == TransactionMode.Test, "D-", ""), moCartConfig["OrderNoPrefix"]));
+                //            orderPrefix = Convert.ToString(Operators.ConcatenateObject(Interaction.IIf(nTransactionMode == TransactionMode.Test, "D-", ""), moCartConfig["OrderNoPrefix"]));
                 //        }
 
                 //        if (ccXform.valid == true | b3dAuthorised)
@@ -1567,8 +1567,8 @@ namespace Protean
                 //            {
                 //                // standard card validation request
                 //                cRequest = "VPSProtocol=" + sAPIVer + "&";
-                //                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "TxType=", oDictOpt["transactionType"]), "&")); // 0=omited 1=full auth 2=pre-auth only
-                //                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "Vendor=", oDictOpt["accountId"]), "&")); // 0=omited 1=full auth 2=pre-auth only
+                //                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "TxType=", oDictOpt["transactionType"]), "&")); // 0=omited 1=full auth 2=pre-auth only
+                //                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "Vendor=", oDictOpt["accountId"]), "&")); // 0=omited 1=full auth 2=pre-auth only
                 //                if (nAttemptCount > 1L)
                 //                {
                 //                    cRequest = cRequest + "VendorTXCode=" + this.goServer.UrlEncode(orderPrefix + mnCartId.ToString()) + "-" + nAttemptCount + "&";
@@ -1578,7 +1578,7 @@ namespace Protean
                 //                    cRequest = cRequest + "VendorTXCode=" + this.goServer.UrlEncode(orderPrefix + mnCartId.ToString()) + "&";
                 //                }
                 //                cRequest = cRequest + "Amount=" + this.goServer.UrlEncode(FullMoneyString(mnPaymentAmount.ToString())) + "&";
-                //                cRequest = cRequest + "Currency=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["currency"])) + "&";
+                //                cRequest = cRequest + "Currency=" + this.goServer.UrlEncode(Convert.ToString(oDictOpt["currency"])) + "&";
                 //                cRequest = cRequest + "Description=" + this.goServer.UrlEncode(Strings.Left(mcPaymentOrderDescription, 90)) + "&";
                 //                cRequest = cRequest + "CardHolder=" + this.goServer.UrlEncode(mcCardHolderName) + "&";
                 //                cRequest = cRequest + "CardNumber=" + this.goServer.UrlEncode(this.FormatCreditCardNumber(this.goRequest["creditCard/number"]).ToString()) + "&";
@@ -1600,7 +1600,7 @@ namespace Protean
                 //                }
                 //                else
                 //                {
-                //                    cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "CustomerEmail=", oDictOpt["MerchantEmail"]), "&"));
+                //                    cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "CustomerEmail=", oDictOpt["MerchantEmail"]), "&"));
                 //                }
 
                 //                string cIP = this.goRequest.ServerVariables["REMOTE_ADDR"];
@@ -1665,7 +1665,7 @@ namespace Protean
                 //                cProcessInfo = "Error translating response:" + cResponse;
                 //                oResponseDict = UrlResponseToHashTable(cResponse, Constants.vbCrLf, "=", false);
 
-                //                nResult = Conversions.ToLong(oResponseDict["intStatus"]);
+                //                nResult = Convert.ToInt64(oResponseDict["intStatus"]);
 
                 //                switch (oResponseDict["Status"])
                 //                {
@@ -1675,7 +1675,7 @@ namespace Protean
                 //                    case "REGISTERED":
                 //                        {
                 //                            // Successful Authorisation
-                //                            err_msg = Conversions.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", oResponseDict["VPSTxId"]));
+                //                            err_msg = Convert.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", oResponseDict["VPSTxId"]));
                 //                            bIsValid = true;
 
                 //                            this.goSession["attemptCount"] = (object)null;
@@ -1703,10 +1703,10 @@ namespace Protean
                 //                            bIsValid = false;
                 //                            ccXform.valid = false;
 
-                //                            err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("ACS URL:", oResponseDict["ACSURL"]), " ACS URLDecoded:"), this.goServer.UrlDecode(Conversions.ToString(oResponseDict["ACSURL"]))), " MD:"), oResponseDict["MD"]), " PAReq:"), oResponseDict["PAReq"]));
+                //                            err_msg_log = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("ACS URL:", oResponseDict["ACSURL"]), " ACS URLDecoded:"), this.goServer.UrlDecode(Convert.ToString(oResponseDict["ACSURL"]))), " MD:"), oResponseDict["MD"]), " PAReq:"), oResponseDict["PAReq"]));
                 //                            err_msg = "This card has subscribed to 3D Secure. You will now be re-directed to your banks website for further verification.";
 
-                //                            ccXform = this.xfrmSecure3D(this.goServer.UrlDecode(Conversions.ToString(oResponseDict["ACSURL"])), Conversions.ToString(oResponseDict["MD"]), Conversions.ToString(oResponseDict["PAReq"]), sRedirectURL);
+                //                            ccXform = this.xfrmSecure3D(this.goServer.UrlDecode(Convert.ToString(oResponseDict["ACSURL"])), Convert.ToString(oResponseDict["MD"]), Convert.ToString(oResponseDict["PAReq"]), sRedirectURL);
                 //                            break;
                 //                        }
 
@@ -1718,7 +1718,7 @@ namespace Protean
                 //                        {
                 //                            // Failed / Error Authorisation
 
-                //                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
+                //                            cMessage = Convert.ToString(oResponseDict["StatusDetail"]);
 
                 //                            if (Strings.InStr(cMessage, "card number") > 0)
                 //                                ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number given is not valid.");
@@ -1748,7 +1748,7 @@ namespace Protean
                 //                    default:
                 //                        {
                 //                            // Response not recognised.
-                //                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
+                //                            cMessage = Convert.ToString(oResponseDict["StatusDetail"]);
 
                 //                            if (gbDebug)
                 //                            {
@@ -1771,7 +1771,7 @@ namespace Protean
 
                 //            if (bIsValid)
                 //            {
-                //                cSellerNotes = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Received) " + Constants.vbLf + "Transaction Ref:", oResponseDict["VPSTxId"]), Constants.vbLf), "comment: "), err_msg));
+                //                cSellerNotes = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Convert.ToString(DateTime.Today) + " " + Convert.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Received) " + Constants.vbLf + "Transaction Ref:", oResponseDict["VPSTxId"]), Constants.vbLf), "comment: "), err_msg));
                 //            }
                 //            else
                 //            {
@@ -1779,7 +1779,7 @@ namespace Protean
                 //                {
                 //                    err_msg_log = err_msg;
                 //                }
-                //                cSellerNotes = Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Failed) " + Constants.vbLf + "comment: " + err_msg_log;
+                //                cSellerNotes = Convert.ToString(DateTime.Today) + " " + Convert.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Failed) " + Constants.vbLf + "comment: " + err_msg_log;
                 //            }
 
                 //            ccXform.valid = bIsValid;
@@ -1792,16 +1792,16 @@ namespace Protean
 
                 //            if (!b3dAuthorised)
                 //            {
-                //                var oDate = new DateTime(Conversions.ToInteger("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Conversions.ToInteger(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
+                //                var oDate = new DateTime(Convert.ToInt16("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Convert.ToInt16(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
                 //                oDate = oDate.AddMonths(1);
                 //                oDate = oDate.AddDays(-1);
                 //                string cMethodName = this.goRequest["creditCard/type"] + ": " + stdTools.MaskString(this.goRequest["creditCard/number"], "*", false, 4) + " Expires: " + oDate.ToShortDateString();
 
                 //                var oCustomElmt = ccXform.Instance.OwnerDocument.CreateElement("ProTx");
 
-                //                oCustomElmt.SetAttribute("VPSTxId", Conversions.ToString(oResponseDict["VPSTxId"]));
-                //                oCustomElmt.SetAttribute("SecurityKey", Conversions.ToString(oResponseDict["SecurityKey"]));
-                //                oCustomElmt.SetAttribute("TxAuthNo", Conversions.ToString(oResponseDict["TxAuthNo"]));
+                //                oCustomElmt.SetAttribute("VPSTxId", Convert.ToString(oResponseDict["VPSTxId"]));
+                //                oCustomElmt.SetAttribute("SecurityKey", Convert.ToString(oResponseDict["SecurityKey"]));
+                //                oCustomElmt.SetAttribute("TxAuthNo", Convert.ToString(oResponseDict["TxAuthNo"]));
                 //                ccXform.Instance.FirstChild.AppendChild(oCustomElmt);
 
                 //                if (oSaveElmt != null)
@@ -1826,11 +1826,11 @@ namespace Protean
                 //        {
                 //            if (ccXform.isSubmitted())
                 //            {
-                //                cSellerNotes = Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Form EonicWeb Validation Failed) " + Constants.vbLf + "comment: " + ccXform.validationError;
+                //                cSellerNotes = Convert.ToString(DateTime.Today) + " " + Convert.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Form EonicWeb Validation Failed) " + Constants.vbLf + "comment: " + ccXform.validationError;
                 //            }
                 //            else
                 //            {
-                //                cSellerNotes = Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Form Presented) " + Constants.vbLf + "comment: " + err_msg_log;
+                //                cSellerNotes = Convert.ToString(DateTime.Today) + " " + Convert.ToString(DateAndTime.TimeOfDay) + ": changed to: (Payment Form Presented) " + Constants.vbLf + "comment: " + err_msg_log;
                 //            }
                 //            ccXform.valid = false;
                 //        }
@@ -1931,9 +1931,9 @@ namespace Protean
                 //        oDictOpt.Add("currency", mcCurrency);
 
                 //        // Set common variables
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
                 //            bCv2 = true;
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
                 //            b3DSecure = true;
 
                 //        // Check if we are getting a callback from Secure Trading - if so get the encrypted instance.
@@ -1941,7 +1941,7 @@ namespace Protean
                 //        {
 
                 //            sSql = "select cPayMthdDetailXml from tblCartPaymentMethod INNER JOIN tblCartOrder ON nPayMthdId = nPayMthdKey where nCartOrderkey=" + mnCartId;
-                //            string oInstance = Conversions.ToString(myWeb.moDbHelper.GetDataValue(sSql));
+                //            string oInstance = Convert.ToString(myWeb.moDbHelper.GetDataValue(sSql));
                 //            if (!string.IsNullOrEmpty(oInstance))
                 //            {
                 //                var oElmt2 = moPageXml.CreateElement("elmt");
@@ -1951,9 +1951,9 @@ namespace Protean
                 //            bIsCallback = true;
                 //        }
 
-                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), true, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")), cInstance: cInstanceFromCallback, bOverrideValidity: bIsCallback);
+                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Convert.ToString(oDictOpt["cardsAccepted"]), true, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")), cInstance: cInstanceFromCallback, bOverrideValidity: bIsCallback);
 
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["disableAmpersandsInCallbackURL"], "on", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["disableAmpersandsInCallbackURL"], "on", false)))
                 //        {
                 //            // Change the URL to be tokenised because Secure Trading can't handle 
                 //            // ampersands in their callback URLs.  Gits. 
@@ -1999,7 +1999,7 @@ namespace Protean
 
                 //            // Build the RequestBlock XML
                 //            oRequestBlockXml = moPageXml.CreateElement("RequestBlock");
-                //            oRequestBlockXml.SetAttribute("Version", Conversions.ToString(oDictOpt["appVersion"]));
+                //            oRequestBlockXml.SetAttribute("Version", Convert.ToString(oDictOpt["appVersion"]));
 
                 //            // RequestBlock - Add the Request
                 //            oRequestXml = addElement(ref oRequestBlockXml, "Request");
@@ -2008,11 +2008,11 @@ namespace Protean
                 //            // Request - Add the Operation
                 //            oParent = addElement(ref oRequestXml, "Operation");
                 //            oElmt = addElement(ref oParent, "Amount", (mnPaymentAmount * 100d).ToString()); // Note - need to convert to base unit. e.g. pence/cents etc.
-                //            oElmt = addElement(ref oParent, "SiteReference", Conversions.ToString(oDictOpt["siteReference"]));
+                //            oElmt = addElement(ref oParent, "SiteReference", Convert.ToString(oDictOpt["siteReference"]));
                 //            // Add the Currency if available
-                //            if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oDictOpt["currency"], "", false), Strings.Len(Strings.Trim(Conversions.ToString(oDictOpt["currency"]))) == 3)))
+                //            if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oDictOpt["currency"], "", false), Strings.Len(Strings.Trim(Convert.ToString(oDictOpt["currency"]))) == 3)))
                 //            {
-                //                oElmt = addElement(ref oParent, "Currency", Conversions.ToString(oDictOpt["currency"]));
+                //                oElmt = addElement(ref oParent, "Currency", Convert.ToString(oDictOpt["currency"]));
                 //            }
                 //            // Request specific elements
                 //            switch (cRequestType ?? "")
@@ -2026,7 +2026,7 @@ namespace Protean
 
                 //                default:
                 //                    {
-                //                        oElmt = addElement(ref oParent, "SettlementDay", Conversions.ToString(oDictOpt["settlementDay"]));
+                //                        oElmt = addElement(ref oParent, "SettlementDay", Convert.ToString(oDictOpt["settlementDay"]));
                 //                        break;
                 //                    }
                 //            }
@@ -2100,7 +2100,7 @@ namespace Protean
                 //                    cReqEnrolled = "N";
                 //                    cReqPTR = cReturnTransRef;
                 //                }
-                //                else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["disableAmpersandsInCallbackURL"], "on", false)))
+                //                else if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["disableAmpersandsInCallbackURL"], "on", false)))
                 //                {
                 //                    cReqEnrolled = stdTools.SimpleRegexFind(myWeb.moRequest.QueryString["cartCmd"], cTokenAmp + "Enrolled" + cTokenEqual + "([^(" + cTokenAmp + ")]+)" + cTokenAmp, 1, RegexOptions.IgnoreCase);
                 //                    cReqPTR = stdTools.SimpleRegexFind(myWeb.moRequest.QueryString["cartCmd"], cTokenAmp + "PTR" + cTokenEqual + "([^(" + cTokenAmp + ")]+)" + cTokenAmp, 1, RegexOptions.IgnoreCase);
@@ -2126,7 +2126,7 @@ namespace Protean
                 //            oElmt = addElement(ref oParent, "OrderReference", mnCartId.ToString());
 
                 //            // Get Certificate from file.  Not a wholly secure means as not encrypted but good for now.
-                //            var oStreamreader = new StreamReader(Conversions.ToString(oDictOpt["certificatePath"]));
+                //            var oStreamreader = new StreamReader(Convert.ToString(oDictOpt["certificatePath"]));
 
                 //            // RequestBlock - Add the Certificate
                 //            oParent = addElement(ref oRequestBlockXml, "Certificate", Constants.vbCrLf + oStreamreader.ReadToEnd());
@@ -2165,7 +2165,7 @@ namespace Protean
                 //            }
                 //            else
                 //            {
-                //                nResult = Conversions.ToLong(oOpResponse.SelectSingleNode("Result").InnerText);
+                //                nResult = Convert.ToInt64(oOpResponse.SelectSingleNode("Result").InnerText);
                 //                oResponseType = oOpResponse.ParentNode.Attributes["Type"].InnerText;
                 //                // Process the repsonse by Type
                 //                switch (oResponseType ?? "")
@@ -2483,17 +2483,17 @@ namespace Protean
                 //        oDictOpt = modbHelper.getHashTable(sSql, "cPymtStgName", ref argsValueField);
 
                 //        // Load the Xform
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["CV2"], "1", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["CV2"], "1", false)))
                 //            bCv2 = true;
 
-                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["CardsAccepted"]), true, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["Currency"]), " by Credit/Debit Card")));
+                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Convert.ToString(oDictOpt["CardsAccepted"]), true, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["Currency"]), " by Credit/Debit Card")));
 
                 //        if (ccXform.valid == true)
                 //        {
 
                 //            // Build the RequestBlock XML
                 //            oRequestBlockXml = moPageXml.CreateElement("RequestBlock");
-                //            oRequestBlockXml.SetAttribute("Version", Conversions.ToString(oDictOpt["STAppVersion"]));
+                //            oRequestBlockXml.SetAttribute("Version", Convert.ToString(oDictOpt["STAppVersion"]));
 
                 //            // RequestBlock - Add the Request
                 //            oRequestXml = addElement(ref oRequestBlockXml, "Request");
@@ -2502,12 +2502,12 @@ namespace Protean
                 //            // Request - Add the Operation
                 //            oParent = addElement(ref oRequestXml, "Operation");
                 //            oElmt = addElement(ref oParent, "Amount", (mnPaymentAmount * 100d).ToString()); // Note - need to convert to base unit. e.g. pence/cents etc.
-                //            oElmt = addElement(ref oParent, "SiteReference", Conversions.ToString(oDictOpt["SiteReference"]));
-                //            oElmt = addElement(ref oParent, "SettlementDay", Conversions.ToString(oDictOpt["SettlementDay"]));
+                //            oElmt = addElement(ref oParent, "SiteReference", Convert.ToString(oDictOpt["SiteReference"]));
+                //            oElmt = addElement(ref oParent, "SettlementDay", Convert.ToString(oDictOpt["SettlementDay"]));
                 //            // Add the Currency if available
-                //            if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oDictOpt["Currency"], "", false), Strings.Len(Strings.Trim(Conversions.ToString(oDictOpt["Currency"]))) == 3)))
+                //            if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oDictOpt["Currency"], "", false), Strings.Len(Strings.Trim(Convert.ToString(oDictOpt["Currency"]))) == 3)))
                 //            {
-                //                oElmt = addElement(ref oParent, "Currency", Conversions.ToString(oDictOpt["Currency"]));
+                //                oElmt = addElement(ref oParent, "Currency", Convert.ToString(oDictOpt["Currency"]));
                 //            }
 
                 //            // Request - Add the CustomerInfo
@@ -2557,7 +2557,7 @@ namespace Protean
                 //            oElmt = addElement(ref oParent, "OrderReference", mnCartId.ToString());
 
                 //            // Get Certificate from file.  Not a wholly secure means as not encrypted but good for now.
-                //            var oStreamreader = new StreamReader(Conversions.ToString(oDictOpt["CertificatePath"]));
+                //            var oStreamreader = new StreamReader(Convert.ToString(oDictOpt["CertificatePath"]));
 
                 //            // RequestBlock - Add the Certificate
                 //            oParent = addElement(ref oRequestBlockXml, "Certificate", Constants.vbCrLf + oStreamreader.ReadToEnd());
@@ -2595,7 +2595,7 @@ namespace Protean
                 //            }
                 //            else
                 //            {
-                //                nResult = Conversions.ToLong(oOpResponse.SelectSingleNode("Result").InnerText);
+                //                nResult = Convert.ToInt64(oOpResponse.SelectSingleNode("Result").InnerText);
                 //                switch (nResult)
                 //                {
                 //                    case 0L:
@@ -2753,16 +2753,16 @@ namespace Protean
 
                         oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
 
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
+                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
                             //bCv2 = true;
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
+                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
                         {
                             b3dSecure = true;
                             // Check the IP Addresses for a block
                             if (oDictOpt["secure3dIpBlock"] != null)
                             {
                                 var oRE = new Regex("(,|^)" + Strings.Replace(cIPAddress, ".", @"\.") + "(,|$)");
-                                if (oRE.IsMatch(Conversions.ToString(oDictOpt["secure3dIpBlock"])))
+                                if (oRE.IsMatch(Convert.ToString(oDictOpt["secure3dIpBlock"])))
                                     b3dSecure = false;
                             }
                         }
@@ -2777,7 +2777,7 @@ namespace Protean
                         }
 
                         // Load the Xform
-                        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), true, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")));
+                        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Convert.ToString(oDictOpt["cardsAccepted"]), true, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")));
 
                         if (b3dSecure)
                         {
@@ -2793,13 +2793,13 @@ namespace Protean
                             if (b3dAuthorised)
                             {
                                 // 3D Secure Resume
-                                cRequest = "intInstID=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["installationId"])) + "&";
+                                cRequest = "intInstID=" + this.goServer.UrlEncode(Convert.ToString(oDictOpt["installationId"])) + "&";
                                 cRequest = cRequest + "fltAPIVersion=" + sAPIVer + "&";
-                                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intTestMode=", oDictOpt["testMode"]), "&"));
-                                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intTransID=", this.goSession["intTransID"]), "&"));
-                                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "strSecurityToken=", this.goSession["strSecurityToken"]), "&"));
+                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intTestMode=", oDictOpt["testMode"]), "&"));
+                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intTransID=", this.goSession["intTransID"]), "&"));
+                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "strSecurityToken=", this.goSession["strSecurityToken"]), "&"));
                                 cRequest = cRequest + "strTransType=S3DAUTH&";
-                                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "strS3DTransID=", this.goSession["strS3DTransID"]), "&"));
+                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "strS3DTransID=", this.goSession["strS3DTransID"]), "&"));
                                 cRequest = cRequest + "strS3DResponse=" + this.goServer.UrlEncode(this.goRequest["PaRes"]) + "&";
                                 cRequest = cRequest + "strS3DMerchantData=" + this.goServer.UrlEncode(this.goRequest["MD"]);
                             }
@@ -2807,13 +2807,13 @@ namespace Protean
                             else
                             {
                                 // standard card validation request
-                                cRequest = "intInstID=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["installationId"])) + "&";
+                                cRequest = "intInstID=" + this.goServer.UrlEncode(Convert.ToString(oDictOpt["installationId"])) + "&";
                                 cRequest = cRequest + "strCartID=" + this.goServer.UrlEncode(mnCartId.ToString()) + "&";
                                 cRequest = cRequest + "strDesc=" + this.goServer.UrlEncode(mcPaymentOrderDescription) + "&";
                                 cRequest = cRequest + "fltAmount=" + this.goServer.UrlEncode(mnPaymentAmount.ToString()) + "&";
-                                cRequest = cRequest + "strCurrency=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["currency"])) + "&";
-                                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intAuthMode=", oDictOpt["authMode"]), "&")); // 0=omited 1=full auth 2=pre-auth only
-                                cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intTestMode=", oDictOpt["testMode"]), "&")); // 0=omited 1=allsuccess auth 2=all failed
+                                cRequest = cRequest + "strCurrency=" + this.goServer.UrlEncode(Convert.ToString(oDictOpt["currency"])) + "&";
+                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intAuthMode=", oDictOpt["authMode"]), "&")); // 0=omited 1=full auth 2=pre-auth only
+                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intTestMode=", oDictOpt["testMode"]), "&")); // 0=omited 1=allsuccess auth 2=all failed
                                 cRequest = cRequest + "strCardHolder=" + this.goServer.UrlEncode(mcCardHolderName) + "&";
                                 cRequest = cRequest + "strAddress=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Street").InnerText) + "&";
                                 cRequest = cRequest + "strCity=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("City").InnerText) + "&";
@@ -2831,7 +2831,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "strEmail=", oDictOpt["MerchantEmail"]), "&"));
+                                    cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "strEmail=", oDictOpt["MerchantEmail"]), "&"));
                                 }
 
                                 cRequest = cRequest + "strCardNumber=" + this.goServer.UrlEncode(this.FormatCreditCardNumber(this.goRequest["creditCard/number"]).ToString()) + "&";
@@ -2889,9 +2889,9 @@ namespace Protean
                                 cProcessInfo = "error tranlating response:" + cMChgResponse;
                                 oResponseDict = UrlResponseToHashTable(cMChgResponse);
 
-                                nResult = Conversions.ToLong(oResponseDict["intStatus"]);
+                                nResult = Convert.ToInt64(oResponseDict["intStatus"]);
 
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oResponseDict["strTransType"], "S3DVALIDATE", false)))
+                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oResponseDict["strTransType"], "S3DVALIDATE", false)))
                                 {
 
                                     // create an xform that automatically redirects to Aquiring Banks 3DS portal.
@@ -2907,7 +2907,7 @@ namespace Protean
                                     ccXform.valid = false;
                                     err_msg = "This card has subscribed to 3D Secure. You will now be re-directed to your banks website for further verification.";
 
-                                    ccXform = xfrmSecure3D(Conversions.ToString(oResponseDict["strS3DURL"]), Conversions.ToString(oResponseDict["strS3DMerchantData"]), Conversions.ToString(oResponseDict["strS3DRequest"]), sRedirectURL);
+                                    ccXform = xfrmSecure3D(Convert.ToString(oResponseDict["strS3DURL"]), Convert.ToString(oResponseDict["strS3DMerchantData"]), Convert.ToString(oResponseDict["strS3DRequest"]), sRedirectURL);
                                 }
 
                                 else
@@ -2919,7 +2919,7 @@ namespace Protean
                                         case 0L:
                                             {
                                                 // Failed / Error Authorisation
-                                                cMessage = Conversions.ToString(oResponseDict["strMessage"]);
+                                                cMessage = Convert.ToString(oResponseDict["strMessage"]);
 
                                                 if (Strings.InStr(cMessage, "card number") > 0)
                                                     ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number given is not valid.");
@@ -2947,7 +2947,7 @@ namespace Protean
                                         case 1L:
                                             {
                                                 // Successful Authorisation
-                                                err_msg = Conversions.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", oResponseDict["strSecurityToken"]));
+                                                err_msg = Convert.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", oResponseDict["strSecurityToken"]));
                                                 bIsValid = true;
                                                 break;
                                             }
@@ -3048,11 +3048,11 @@ namespace Protean
 
                 //        oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
 
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
                 //            bCv2 = true;
 
                 //        // Load the Xform
-                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Conversions.ToString(oDictOpt["cardsAccepted"]), true, "Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " " + mcCurrency + " by Credit/Debit Card");
+                //        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Convert.ToString(oDictOpt["cardsAccepted"]), true, "Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " " + mcCurrency + " by Credit/Debit Card");
 
                 //        switch (oDictOpt["opperationMode"])
                 //        {
@@ -3082,8 +3082,8 @@ namespace Protean
                 //            cRequest = "x_version=" + sAPIVer + "&";
                 //            cRequest = cRequest + "x_delim_data=True&";
                 //            cRequest = cRequest + "x_relay_response=False&";
-                //            cRequest = cRequest + "x_login=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["accountId"])) + "&";
-                //            cRequest = cRequest + "x_tran_key=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["transactionKey"])) + "&";
+                //            cRequest = cRequest + "x_login=" + this.goServer.UrlEncode(Convert.ToString(oDictOpt["accountId"])) + "&";
+                //            cRequest = cRequest + "x_tran_key=" + this.goServer.UrlEncode(Convert.ToString(oDictOpt["transactionKey"])) + "&";
                 //            if (bTest)
                 //            {
                 //                cRequest = cRequest + "x_test_request=TRUE&";
@@ -3091,7 +3091,7 @@ namespace Protean
                 //            cRequest = cRequest + "x_amount=" + this.goServer.UrlEncode(mnPaymentAmount.ToString()) + "&";
                 //            cRequest = cRequest + "x_currency_code=" + mcCurrency + "&";
                 //            cRequest = cRequest + "x_method=CC&";
-                //            cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "x_type=", oDictOpt["transactionType"]), "&"));
+                //            cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "x_type=", oDictOpt["transactionType"]), "&"));
                 //            cRequest = cRequest + "x_card_num=" + this.goServer.UrlEncode(this.FormatCreditCardNumber(this.goRequest["creditCard/number"]).ToString()) + "&";
                 //            cRequest = cRequest + "x_exp_date=" + this.fmtSecPayDate(this.goRequest["creditCard/expireDate"]) + "&";
                 //            if (bCv2)
@@ -3118,7 +3118,7 @@ namespace Protean
                 //            if (!string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Email").InnerText))
                 //            {
                 //                cRequest = cRequest + "x_email=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Email").InnerText) + "&";
-                //                cRequest = cRequest + "x_email_customer=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["emailCustomer"])) + "&";
+                //                cRequest = cRequest + "x_email_customer=" + this.goServer.UrlEncode(Convert.ToString(oDictOpt["emailCustomer"])) + "&";
                 //            }
 
                 //            // If Not goRequest("creditCard/issueDate") = "" Then
@@ -3165,7 +3165,7 @@ namespace Protean
                 //                    case "3":
                 //                        {
                 //                            // Error 
-                //                            err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(aResponse((object)3), " desc:"), aResponse((object)4)));
+                //                            err_msg_log = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(aResponse((object)3), " desc:"), aResponse((object)4)));
 
                 //                            if (gbDebug)
                 //                            {
@@ -3182,7 +3182,7 @@ namespace Protean
                 //                    case "2":
                 //                        {
                 //                            // Failed / Error Authorisation
-                //                            cMessage = Conversions.ToString(oResponseDict["strMessage"]);
+                //                            cMessage = Convert.ToString(oResponseDict["strMessage"]);
 
                 //                            if (Strings.InStr(cMessage, "card number") > 0)
                 //                                ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number given is not valid.");
@@ -3210,9 +3210,9 @@ namespace Protean
                 //                    case "1":
                 //                        {
                 //                            // Successful Authorisation
-                //                            err_msg = Conversions.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", aResponse((object)5)));
+                //                            err_msg = Convert.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", aResponse((object)5)));
                 //                            bIsValid = true;
-                //                            var oDate = new DateTime(Conversions.ToInteger("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Conversions.ToInteger(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
+                //                            var oDate = new DateTime(Convert.ToInt16("20" + Strings.Right(this.goRequest["creditCard/expireDate"], 2)), Convert.ToInt16(Strings.Left(this.goRequest["creditCard/expireDate"], 2)), 1);
                 //                            oDate = oDate.AddMonths(1);
                 //                            oDate = oDate.AddDays(-1);
                 //                            string cMethodName = this.goRequest["creditCard/type"] + ": " + stdTools.MaskString(this.goRequest["creditCard/number"], "*", false, 4) + " Expires: " + oDate.ToShortDateString();
@@ -3226,7 +3226,7 @@ namespace Protean
 
                 //                            if (gbDebug)
                 //                            {
-                //                                err_msg = Conversions.ToString(Operators.ConcatenateObject("<br/>Full Request:", aResponse((object)1)));
+                //                                err_msg = Convert.ToString(Operators.ConcatenateObject("<br/>Full Request:", aResponse((object)1)));
                 //                            }
                 //                            else
                 //                            {
@@ -3285,7 +3285,7 @@ namespace Protean
                 //    string cIsTaxable = "N";
                 //    try
                 //    {
-                //        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
+                //        if (Convert.ToInt16("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
                 //        {
                 //            cIsTaxable = "Y";
                 //        }
@@ -3301,12 +3301,12 @@ namespace Protean
                 //            nCount = nCount + 1L;
                 //        }
                 //        // add the shipping
-                //        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@shippingCost").InnerText) > 0)
+                //        if (Convert.ToInt16("0" + oRoot.SelectSingleNode("@shippingCost").InnerText) > 0)
                 //        {
                 //            sOrder = sOrder + "x_freight=" + oRoot.SelectSingleNode("@shippingCost").InnerText + "&";
                 //        }
                 //        // add the tax
-                //        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
+                //        if (Convert.ToInt16("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
                 //        {
                 //            sOrder = sOrder + "x_tax=" + oRoot.SelectSingleNode("@vatAmt").InnerText + "&";
                 //        }
@@ -3374,17 +3374,17 @@ namespace Protean
                 //        wpXform.valid = false;
 
                 //        // Add the values
-                //        wpXform.Instance.SelectSingleNode("instId").InnerText = Conversions.ToString(oDictOpt["InstallationID"]);
+                //        wpXform.Instance.SelectSingleNode("instId").InnerText = Convert.ToString(oDictOpt["InstallationID"]);
                 //        wpXform.Instance.SelectSingleNode("cartId").InnerText = mnCartId.ToString();
                 //        wpXform.Instance.SelectSingleNode("amount").InnerText = mnPaymentAmount.ToString();
-                //        wpXform.Instance.SelectSingleNode("currency").InnerText = Conversions.ToString(oDictOpt["Currency"]);
+                //        wpXform.Instance.SelectSingleNode("currency").InnerText = Convert.ToString(oDictOpt["Currency"]);
                 //        wpXform.Instance.SelectSingleNode("desc").InnerText = getWorldPayOrder(ref oRoot);
-                //        wpXform.Instance.SelectSingleNode("accId1").InnerText = Conversions.ToString(oDictOpt["AccountID"]);
+                //        wpXform.Instance.SelectSingleNode("accId1").InnerText = Convert.ToString(oDictOpt["AccountID"]);
                 //        switch (oDictOpt["TestMode"])
                 //        {
                 //            case "0":
                 //                {
-                //                    wpXform.Instance.SelectSingleNode("testMode").InnerText = Conversions.ToString(oDictOpt["TestMode"]);
+                //                    wpXform.Instance.SelectSingleNode("testMode").InnerText = Convert.ToString(oDictOpt["TestMode"]);
                 //                    wpXform.Instance.SelectSingleNode("name").InnerText = mcCardHolderName;
                 //                    break;
                 //                }
@@ -3392,7 +3392,7 @@ namespace Protean
                 //            default:
                 //                {
                 //                    wpXform.Instance.SelectSingleNode("testMode").InnerText = "100";
-                //                    wpXform.Instance.SelectSingleNode("name").InnerText = Conversions.ToString(oDictOpt["TestMode"]);
+                //                    wpXform.Instance.SelectSingleNode("name").InnerText = Convert.ToString(oDictOpt["TestMode"]);
                 //                    break;
                 //                }
                 //        }
@@ -3405,7 +3405,7 @@ namespace Protean
                 //        wpXform.Instance.SelectSingleNode("email").InnerText = oCartAdd.SelectSingleNode("Email").InnerText;
                 //        wpXform.Instance.SelectSingleNode("MC_pgid").InnerText = nPageId.ToString();
 
-                //        if (Conversions.ToBoolean(Operators.OrObject(oDictOpt["CallbackURL"] is DBNull, Operators.ConditionalCompareObjectEqual(oDictOpt["CallbackURL"], "", false))))
+                //        if (Convert.ToBoolean(Operators.OrObject(oDictOpt["CallbackURL"] is DBNull, Operators.ConditionalCompareObjectEqual(oDictOpt["CallbackURL"], "", false))))
                 //        {
                 //            // No callback URL, let's get the current page.
                 //            if (this.goRequest.ServerVariables["HTTPS"] == "on")
@@ -3416,7 +3416,7 @@ namespace Protean
                 //        else
                 //        {
                 //            // /ewcommon/tools/cartCallback.ashx?provider=WorldPay
-                //            wpXform.Instance.SelectSingleNode("MC_callback").InnerText = Conversions.ToString(oDictOpt["CallbackURL"]);
+                //            wpXform.Instance.SelectSingleNode("MC_callback").InnerText = Convert.ToString(oDictOpt["CallbackURL"]);
                 //        }
 
                 //        // TS possbily this should be the logic
@@ -3558,12 +3558,12 @@ namespace Protean
 
                 //        // Add the values
                 //        wpXform.Instance.SelectSingleNode("nbx_payment_amount").InnerText = Strings.Replace(Strings.FormatNumber(mnPaymentAmount, 2), ".", "");
-                //        wpXform.Instance.SelectSingleNode("nbx_currency_code").InnerText = Conversions.ToString(oDictOpt["currency"]);
+                //        wpXform.Instance.SelectSingleNode("nbx_currency_code").InnerText = Convert.ToString(oDictOpt["currency"]);
                 //        wpXform.Instance.SelectSingleNode("nbx_merchant_reference").InnerText = mnCartId.ToString();
-                //        string cHash = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Strings.Replace(Strings.FormatNumber(mnPaymentAmount, 2), ".", ""), oDictOpt["currency"]), mnCartId.ToString()), oDictOpt["secretkey"]));
+                //        string cHash = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Strings.Replace(Strings.FormatNumber(mnPaymentAmount, 2), ".", ""), oDictOpt["currency"]), mnCartId.ToString()), oDictOpt["secretkey"]));
                 //        wpXform.Instance.SelectSingleNode("nbx_checksum").InnerText = Tools.Encryption.HashString(cHash, "SHA1", true);
-                //        wpXform.Instance.SelectSingleNode("nbx_language").InnerText = Conversions.ToString(oDictOpt["language"]);
-                //        wpXform.Instance.SelectSingleNode("nbx_payment_type").InnerText = Conversions.ToString(oDictOpt["paymentType"]);
+                //        wpXform.Instance.SelectSingleNode("nbx_language").InnerText = Convert.ToString(oDictOpt["language"]);
+                //        wpXform.Instance.SelectSingleNode("nbx_payment_type").InnerText = Convert.ToString(oDictOpt["paymentType"]);
                 //        wpXform.Instance.SelectSingleNode("nbx_success_url").InnerText = cCurrentDomain + "/ewcommon/tools/cartcallback.ashx?provider=NetBanx";
                 //        wpXform.Instance.SelectSingleNode("nbx_failure_url").InnerText = cCurrentDomain + "/ewcommon/tools/cartcallback.ashx?provider=NetBanx";
                 //        wpXform.Instance.SelectSingleNode("nbx_success_redirect_url").InnerText = cCurrentURL + "?cartCmd=SubmitPaymentDetails&nbx=success";
@@ -3595,10 +3595,10 @@ namespace Protean
                 //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_success_show_content", false, "", "hidden");
                 //        wpXform.addInput(ref wpXform.moXformElmt, "nbx_failure_show_content", false, "", "hidden");
 
-                //        string submitUrl = Conversions.ToString(Operators.ConcatenateObject("https://pay.netbanx.com/", oDictOpt["accountId"]));
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["mode"], Strings.LCase("test"), false)))
+                //        string submitUrl = Convert.ToString(Operators.ConcatenateObject("https://pay.netbanx.com/", oDictOpt["accountId"]));
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["mode"], Strings.LCase("test"), false)))
                 //        {
-                //            submitUrl = Conversions.ToString(Operators.ConcatenateObject("https://pay.test.netbanx.com/", oDictOpt["accountId"]));
+                //            submitUrl = Convert.ToString(Operators.ConcatenateObject("https://pay.test.netbanx.com/", oDictOpt["accountId"]));
                 //        }
                 //        // Sort out the submission
                 //        wpXform.submission("submitpayform", submitUrl, "POST");
@@ -3712,7 +3712,7 @@ namespace Protean
                             oMsg.msGnuPassphrase = cGnuPassphrase;
                             string sResponse;
                             Cms.dbHelper argodbHelper = null;
-                            sResponse = Conversions.ToString(oMsg.emailer(oRoot, mcCartEmailTextXslt, "SecureEmail", "secure@eonic.co.uk", mcCartEmailAddress, "Secure Payment Details", odbHelper: ref argodbHelper));
+                            sResponse = Convert.ToString(oMsg.emailer(oRoot, mcCartEmailTextXslt, "SecureEmail", "secure@eonic.co.uk", mcCartEmailAddress, "Secure Payment Details", odbHelper: ref argodbHelper));
                             oMsg = (Protean.Messaging)null;
 
                             DataSet oDs;
@@ -3972,7 +3972,7 @@ namespace Protean
 
                 //                string sResponse;
                 //                Cms.dbHelper argodbHelper = null;
-                //                sResponse = Conversions.ToString(oMsg.emailer(oRoot, mcCartEmailTextXslt, "SecureEmail", "secure@eonic.co.uk", mcCartEmailAddress, "Secure Payment Details", odbHelper: ref argodbHelper));
+                //                sResponse = Convert.ToString(oMsg.emailer(oRoot, mcCartEmailTextXslt, "SecureEmail", "secure@eonic.co.uk", mcCartEmailAddress, "Secure Payment Details", odbHelper: ref argodbHelper));
                 //                oMsg = (Protean.Messaging)null;
 
                 //                DataSet oDs;
@@ -4509,9 +4509,9 @@ namespace Protean
                 //        // override the currency
                 //        if (oDictOpt.ContainsKey("currency"))
                 //        {
-                //            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["currency"], "", false)))
+                //            if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["currency"], "", false)))
                 //            {
-                //                mcCurrency = Conversions.ToString(oDictOpt["currency"]);
+                //                mcCurrency = Convert.ToString(oDictOpt["currency"]);
                 //            }
                 //        }
 
@@ -4520,15 +4520,15 @@ namespace Protean
 
                 //        var ppProfile = new Protean.PayPalAPI.CustomSecurityHeaderType();
                 //        ppProfile.Credentials = new Protean.PayPalAPI.UserIdPasswordType();
-                //        ppProfile.Credentials.Username = Conversions.ToString(oDictOpt["accountId"]);
-                //        ppProfile.Credentials.Password = Conversions.ToString(oDictOpt["accountPassword"]);
-                //        ppProfile.Credentials.Signature = Conversions.ToString(oDictOpt["accountSignature"]);
+                //        ppProfile.Credentials.Username = Convert.ToString(oDictOpt["accountId"]);
+                //        ppProfile.Credentials.Password = Convert.ToString(oDictOpt["accountPassword"]);
+                //        ppProfile.Credentials.Signature = Convert.ToString(oDictOpt["accountSignature"]);
 
                 //        var ppProfile2 = new Protean.PayPalAPI.CustomSecurityHeaderType();
                 //        ppProfile2.Credentials = new Protean.PayPalAPI.UserIdPasswordType();
-                //        ppProfile2.Credentials.Username = Conversions.ToString(oDictOpt["accountId"]);
-                //        ppProfile2.Credentials.Password = Conversions.ToString(oDictOpt["accountPassword"]);
-                //        ppProfile2.Credentials.Signature = Conversions.ToString(oDictOpt["accountSignature"]);
+                //        ppProfile2.Credentials.Username = Convert.ToString(oDictOpt["accountId"]);
+                //        ppProfile2.Credentials.Password = Convert.ToString(oDictOpt["accountPassword"]);
+                //        ppProfile2.Credentials.Signature = Convert.ToString(oDictOpt["accountSignature"]);
 
                 //        string endpointAddress = "https://api-aa-3t.paypal.com/2.0/";
                 //        if (nTransactionMode == TransactionMode.Test)
@@ -4595,7 +4595,7 @@ namespace Protean
                 //                    oDoExpChkDetails.Token = myWeb.moRequest["token"];
 
                 //                    oDoExpChkDetails.PayerID = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PayerInfo.PayerID;
-                //                    oDoExpChkDetails.PaymentAction = getPPPaymentActionFromCode(Conversions.ToString(oDictOpt["PaymentAction"]));
+                //                    oDoExpChkDetails.PaymentAction = getPPPaymentActionFromCode(Convert.ToString(oDictOpt["PaymentAction"]));
                 //                    oDoExpChkDetails.PaymentDetails = oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.PaymentDetails;
 
                 //                    var oDoExpChkResponse = new Protean.PayPalAPI.DoExpressCheckoutPaymentResponseType();
@@ -4639,7 +4639,7 @@ namespace Protean
                 //                                    err_msg = "Notes:" + oExpChkResponse.GetExpressCheckoutDetailsResponseDetails.Note;
 
 
-                //                                    savedPaymentId = savePayment((long)myWeb.mnUserId, "PayPalExpress", cPaymentRef, Conversions.ToString(oDictOpt["accountId"]), (XmlElement)ppXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
+                //                                    savedPaymentId = savePayment((long)myWeb.mnUserId, "PayPalExpress", cPaymentRef, Convert.ToString(oDictOpt["accountId"]), (XmlElement)ppXform.Instance.FirstChild, DateTime.Now, false, mnPaymentAmount);
                 //                                    break;
                 //                                }
 
@@ -4693,28 +4693,28 @@ namespace Protean
                 //                    oSetExpChkDetails.CancelURL = cCurrentURL + "&ppCmd=cancel"; // Return to pay selector 
                 //                                                                                 // oSetExpChkDetails.CallbackURL = cCurrentURL & "&ppCmd=callback" 'Return to pay selector 
 
-                //                    oSetExpChkDetails.ReqConfirmShipping = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["ReqConfirmShipping"]) == 0, "0", "1"));
-                //                    oSetExpChkDetails.NoShipping = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["NoShipping"]) == 0, "0", "1"));
+                //                    oSetExpChkDetails.ReqConfirmShipping = Convert.ToString(Interaction.IIf(Convert.ToInt16(oDictOpt["ReqConfirmShipping"]) == 0, "0", "1"));
+                //                    oSetExpChkDetails.NoShipping = Convert.ToString(Interaction.IIf(Convert.ToInt16(oDictOpt["NoShipping"]) == 0, "0", "1"));
                 //                    if (Strings.LCase(moCartConfig["NoDeliveryAddress"]) == "on")
                 //                    {
                 //                        oSetExpChkDetails.NoShipping = "1";
                 //                    }
-                //                    oSetExpChkDetails.AllowNote = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["AllowNote"]) == 0, "0", "1"));
-                //                    oSetExpChkDetails.AddressOverride = Conversions.ToString(Interaction.IIf(Conversions.ToInteger(oDictOpt["AddressOverride"]) == 0, "0", "1"));
-                //                    oSetExpChkDetails.LocaleCode = Conversions.ToString(oDictOpt["LocaleCode"]);
-                //                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["PageStyle"], "", false)))
+                //                    oSetExpChkDetails.AllowNote = Convert.ToString(Interaction.IIf(Convert.ToInt16(oDictOpt["AllowNote"]) == 0, "0", "1"));
+                //                    oSetExpChkDetails.AddressOverride = Convert.ToString(Interaction.IIf(Convert.ToInt16(oDictOpt["AddressOverride"]) == 0, "0", "1"));
+                //                    oSetExpChkDetails.LocaleCode = Convert.ToString(oDictOpt["LocaleCode"]);
+                //                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["PageStyle"], "", false)))
                 //                    {
-                //                        oSetExpChkDetails.PageStyle = Conversions.ToString(oDictOpt["PageStyle"]);
+                //                        oSetExpChkDetails.PageStyle = Convert.ToString(oDictOpt["PageStyle"]);
                 //                    }
-                //                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["cpp-header-image"], "", false)))
+                //                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDictOpt["cpp-header-image"], "", false)))
                 //                    {
-                //                        oSetExpChkDetails.cppheaderimage = Conversions.ToString(oDictOpt["cpp-header-image"]);
+                //                        oSetExpChkDetails.cppheaderimage = Convert.ToString(oDictOpt["cpp-header-image"]);
                 //                    }
                 //                    // deprecated TMS 05/09/18
                 //                    // oSetExpChkDetails.cppheaderbordercolor = Replace(oDictOpt("cpp-header-border-color"), "#", "")
                 //                    // oSetExpChkDetails.cppheaderbackcolor = Replace(oDictOpt("cpp-header-back-color"), "#", "")
                 //                    // oSetExpChkDetails.cpppayflowcolor = Replace(oDictOpt("cpp-payflow-color"), "#", "")
-                //                    oSetExpChkDetails.PaymentAction = getPPPaymentActionFromCode(Conversions.ToString(oDictOpt["PaymentAction"]));
+                //                    oSetExpChkDetails.PaymentAction = getPPPaymentActionFromCode(Convert.ToString(oDictOpt["PaymentAction"]));
                 //                    string sType = "Billing Address";
                 //                    XmlElement oCartAdd = (XmlElement)oOrderElmt.SelectSingleNode("Contact[@type='" + sType + "']");
                 //                    oSetExpChkDetails.BuyerEmail = oCartAdd.SelectSingleNode("Email").InnerText;
@@ -4744,12 +4744,12 @@ namespace Protean
                 //                    oMaxAmount.Value = (mnPaymentAmount * 2d).ToString();
                 //                    oSetExpChkDetails.MaxAmount = oMaxAmount;
 
-                //                    decimal nShippingCost = Conversions.ToDecimal(oOrderElmt.GetAttribute("shippingCost"));
+                //                    decimal nShippingCost = Convert.ToDecimal(oOrderElmt.GetAttribute("shippingCost"));
                 //                    decimal nVatCost = Round(oOrderElmt.GetAttribute("vatAmt"), bForceRoundup: true);
 
-                //                    if (Conversions.ToBoolean(Operators.AndObject(Conversions.ToDouble(oOrderElmt.GetAttribute("vatRate")) > 0d, Operators.ConditionalCompareObjectEqual((oDictOpt["VATonShipping"]), "on", false))))
+                //                    if (Convert.ToBoolean(Operators.AndObject(Convert.ToDouble(oOrderElmt.GetAttribute("vatRate")) > 0d, Operators.ConditionalCompareObjectEqual((oDictOpt["VATonShipping"]), "on", false))))
                 //                    {
-                //                        decimal nShippingVat = Round((double)nShippingCost * (Conversions.ToDouble(oOrderElmt.GetAttribute("vatRate")) / 100d), bForceRoundup: true);
+                //                        decimal nShippingVat = Round((double)nShippingCost * (Convert.ToDouble(oOrderElmt.GetAttribute("vatRate")) / 100d), bForceRoundup: true);
                 //                        nVatCost = nVatCost - nShippingVat;
                 //                        nShippingCost = nShippingCost + nShippingVat;
                 //                    }
@@ -4772,8 +4772,8 @@ namespace Protean
 
                 //                    var oShippingOptions = new Protean.PayPalAPI.ShippingOptionType[1];
                 //                    var oShippingOption = new Protean.PayPalAPI.ShippingOptionType();
-                //                    oShippingOption.ShippingOptionIsDefault = Conversions.ToString(true);
-                //                    oShippingOption.ShippingOptionName = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(oOrderElmt.GetAttribute("shippingDesc")), "Shipping Charge", oOrderElmt.GetAttribute("shippingDesc")));
+                //                    oShippingOption.ShippingOptionIsDefault = Convert.ToString(true);
+                //                    oShippingOption.ShippingOptionName = Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(oOrderElmt.GetAttribute("shippingDesc")), "Shipping Charge", oOrderElmt.GetAttribute("shippingDesc")));
                 //                    oShippingOption.ShippingOptionAmount = oShippingTotal;
                 //                    oShippingOptions[0] = oShippingOption;
                 //                    oSetExpChkDetails.FlatRateShippingOptions = oShippingOptions;
@@ -4785,7 +4785,7 @@ namespace Protean
                 //                    var oDeliveryAddress = new Protean.PayPalAPI.AddressType();
                 //                    sType = "Delivery Address";
                 //                    oCartAdd = (XmlElement)oOrderElmt.SelectSingleNode("Contact[@type='" + sType + "']");
-                //                    oDeliveryAddress.Street1 = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Company").InnerText), oCartAdd.SelectSingleNode("Street").InnerText, oCartAdd.SelectSingleNode("Company").InnerText));
+                //                    oDeliveryAddress.Street1 = Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Company").InnerText), oCartAdd.SelectSingleNode("Street").InnerText, oCartAdd.SelectSingleNode("Company").InnerText));
                 //                    if (string.IsNullOrEmpty(oCartAdd.SelectSingleNode("Company").InnerText))
                 //                    {
                 //                        oDeliveryAddress.Street2 = oCartAdd.SelectSingleNode("Street").InnerText;
@@ -4819,7 +4819,7 @@ namespace Protean
                 //                        // weight
                 //                        var oItemWeight = new Protean.PayPalAPI.MeasureType();
                 //                        oItemWeight.unit = "kg";
-                //                        oItemWeight.Value = Conversions.ToDouble(oItemElmt.GetAttribute("weight"));
+                //                        oItemWeight.Value = Convert.ToDouble(oItemElmt.GetAttribute("weight"));
                 //                        oItem.ItemWeight = oItemWeight;
                 //                        oItem.Quantity = 1.ToString(); // oItemElmt.GetAttribute("quantity")
                 //                                                       // itemtax
@@ -4833,7 +4833,7 @@ namespace Protean
                 //                        // Dim nItemPlusTax As Double = FormatNumber(oItemElmt.GetAttribute("price"), 2) + (CDbl("0" & oItemElmt.GetAttribute("itemTax")) / oItemElmt.GetAttribute("quantity"))
                 //                        var oItemAmount = new Protean.PayPalAPI.BasicAmountType();
                 //                        oItemAmount.currencyID = getPPCurencyFromCode(mcCurrency);
-                //                        double linetotal = Conversions.ToDouble(oItemElmt.GetAttribute("itemTotal"));
+                //                        double linetotal = Convert.ToDouble(oItemElmt.GetAttribute("itemTotal"));
                 //                        // If oItemTax.Value > 0 Then
                 //                        // linetotal = linetotal - oItemTax.Value
                 //                        // End If
@@ -4871,7 +4871,7 @@ namespace Protean
                 //                        // Dim nItemPlusTax As Double = FormatNumber(oItemElmt.GetAttribute("price"), 2) + (CDbl("0" & oItemElmt.GetAttribute("itemTax")) / oItemElmt.GetAttribute("quantity"))
                 //                        var oItemAmount = new Protean.PayPalAPI.BasicAmountType();
                 //                        oItemAmount.currencyID = getPPCurencyFromCode(mcCurrency);
-                //                        oItemAmount.Value = (Conversions.ToDouble(Strings.FormatNumber(mnPaymentMaxAmount - mnPaymentAmount, 2)) * -1).ToString();
+                //                        oItemAmount.Value = (Convert.ToDouble(Strings.FormatNumber(mnPaymentMaxAmount - mnPaymentAmount, 2)) * -1).ToString();
                 //                        oDiscountItem.Amount = oItemAmount;
                 //                        oItemGroup[i] = oDiscountItem;
 
@@ -4958,7 +4958,7 @@ namespace Protean
 
                 //    var MyEnumVal = default(Protean.PayPalAPI.CountryCodeType);
 
-                //    MyEnumVal = (Protean.PayPalAPI.CountryCodeType)Conversions.ToInteger(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(CountryCode));
+                //    MyEnumVal = (Protean.PayPalAPI.CountryCodeType)Convert.ToInt16(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(CountryCode));
 
                 //    return MyEnumVal;
 
@@ -4969,7 +4969,7 @@ namespace Protean
 
                 //    var MyEnumVal = default(Protean.PayPalAPI.CurrencyCodeType);
 
-                //    MyEnumVal = (Protean.PayPalAPI.CurrencyCodeType)Conversions.ToInteger(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(CurrencyCode));
+                //    MyEnumVal = (Protean.PayPalAPI.CurrencyCodeType)Convert.ToInt16(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(CurrencyCode));
 
                 //    return MyEnumVal;
 
@@ -4980,7 +4980,7 @@ namespace Protean
 
                 //    var MyEnumVal = default(Protean.PayPalAPI.PaymentActionCodeType);
 
-                //    MyEnumVal = (Protean.PayPalAPI.PaymentActionCodeType)Conversions.ToInteger(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(PaymentActionCode));
+                //    MyEnumVal = (Protean.PayPalAPI.PaymentActionCodeType)Convert.ToInt16(System.ComponentModel.TypeDescriptor.GetConverter(MyEnumVal).ConvertFrom(PaymentActionCode));
 
                 //    return MyEnumVal;
 
@@ -5043,12 +5043,12 @@ namespace Protean
                 //            sOrder = sOrder + ", item_amount=" + oItem.SelectSingleNode("@price").InnerText + "x" + oItem.SelectSingleNode("@quantity").InnerText + ";";
                 //        }
                 //        // add the shipping
-                //        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@shippingCost").InnerText) > 0)
+                //        if (Convert.ToInt16("0" + oRoot.SelectSingleNode("@shippingCost").InnerText) > 0)
                 //        {
                 //            sOrder = sOrder + "prod=SHIPPING,item_amount=" + oRoot.SelectSingleNode("@shippingCost").InnerText + "x1;";
                 //        }
                 //        // add the tax
-                //        if (Conversions.ToInteger("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
+                //        if (Convert.ToInt16("0" + oRoot.SelectSingleNode("@vatAmt").InnerText) > 0)
                 //        {
                 //            sOrder = sOrder + "prod=TAX,item_amount=" + oRoot.SelectSingleNode("@vatAmt").InnerText + "x1;";
                 //        }
@@ -5208,7 +5208,7 @@ namespace Protean
                     cResult = Strings.Replace(cResult, " ", ""); // also strip out spaces
                     if (string.IsNullOrEmpty(cResult))
                         cResult = 0.ToString();
-                    return Conversions.ToLong(cResult);
+                    return Convert.ToInt64(cResult);
                 }
                 // 
                 // Need to move to payment.baseprovider.activities
@@ -5365,9 +5365,9 @@ namespace Protean
 
                         foreach (var item in myWeb.moRequest.Form)
                         {
-                            XmlNode newInput = oXform.addInput(ref oFrmGroup, Conversions.ToString(item), false, Conversions.ToString(item), "hidden");
+                            XmlNode newInput = oXform.addInput(ref oFrmGroup, Convert.ToString(item), false, Convert.ToString(item), "hidden");
                             XmlElement argoInputNode = (XmlElement)newInput;
-                            oXform.addValue(ref argoInputNode, myWeb.moRequest.Form[Conversions.ToString(item)]);
+                            oXform.addValue(ref argoInputNode, myWeb.moRequest.Form[Convert.ToString(item)]);
                             newInput = argoInputNode;
                         }
 
@@ -5606,7 +5606,7 @@ namespace Protean
                                         oXform.AddValidationError("The amount entered was not a number.");
                                         oXform.valid = false;
                                     }
-                                    else if (Conversions.ToDouble(oXform.Instance.SelectSingleNode("creditCard/amount").InnerText) < mnPaymentAmount | Conversions.ToDouble(oXform.Instance.SelectSingleNode("creditCard/amount").InnerText) > mnPaymentMaxAmount)
+                                    else if (Convert.ToDouble(oXform.Instance.SelectSingleNode("creditCard/amount").InnerText) < mnPaymentAmount | Convert.ToDouble(oXform.Instance.SelectSingleNode("creditCard/amount").InnerText) > mnPaymentMaxAmount)
                                     {
                                         oXform.addNote("creditCard/amount", Protean.xForm.noteTypes.Alert, "<span class=\"note-trans-dpamount\">The amount entered was not valid, please ensure that the amount is between <span class=\"dpmin\">" + mcCurrency + mnPaymentAmount + "</span> and <span class=\"dpmax\">" + mcCurrency + mnPaymentMaxAmount + "</span></span>");
                                         oXform.AddValidationError("The amount entered was not valid.");
@@ -5809,7 +5809,7 @@ namespace Protean
                 //                oXform.valid = false;
                 //                oXform.addNote("Ukash/VoucherValue", Protean.xForm.noteTypes.Alert, "Please enter the Ukash card value.  Please ensure that you do not enter any symbols, such as currency symbols.");
                 //            }
-                //            if (Conversions.ToDouble(this.goRequest["Ukash/VoucherValue"]) < mnPaymentAmount)
+                //            if (Convert.ToDouble(this.goRequest["Ukash/VoucherValue"]) < mnPaymentAmount)
                 //            {
                 //                oXform.valid = false;
                 //                oXform.addNote("Ukash/VoucherValue", Protean.xForm.noteTypes.Alert, "Your Ukash card value is lower than the transaction amount. To combine two Ukash cards go to www.ukash.com .");
@@ -5850,8 +5850,8 @@ namespace Protean
 
                 //        string cAcc = oSecpayCfg.SelectSingleNode("accountId/@value").InnerText;
                 //        string cPW = oSecpayCfg.SelectSingleNode("accountPassword/@value").InnerText;
-                //        string cTransId = Conversions.ToString(oRow["ncartOrderKey"]);
-                //        DateTime dExpiry = Conversions.ToDate(oRow["dExpireDate"]);
+                //        string cTransId = Convert.ToString(oRow["ncartOrderKey"]);
+                //        DateTime dExpiry = Convert.ToDateTime(oRow["dExpireDate"]);
                 //        string cExpiry = dExpiry.Month.ToString();
                 //        if (cExpiry.Length == 1)
                 //            cExpiry = "0" + cExpiry;
@@ -5888,10 +5888,10 @@ namespace Protean
                 //        }
                 //        Debug.WriteLine(oDictResp.Count);
                 //        var bIsValid = default(bool);
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictResp["valid"], "true", false)))
                 //            bIsValid = true;
 
-                //        string err_msg_log = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
+                //        string err_msg_log = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Payment Failed : ", oDictResp["message"]), " (Code::"), oDictResp["code"]), ")"));
                 //        string err_msg = "";
                 //        // Produce nice format error messages.
 
@@ -5985,7 +5985,7 @@ namespace Protean
 
                 //            default:
                 //                {
-                //                    err_msg = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]));
+                //                    err_msg = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("There was an unspecified error. Please call for assistance.(code::", oDictResp["code"]), " | "), oDictResp["message"]));
                 //                    break;
                 //                }
                 //        }
@@ -6020,12 +6020,12 @@ namespace Protean
                 //    var oRow = oDS.Tables["Payments"].Rows[0];
 
                 //    var oRepXML = new XmlDocument();
-                //    oRepXML.InnerXml = Conversions.ToString(oRow["cPayMthdDetailXml"]);
+                //    oRepXML.InnerXml = Convert.ToString(oRow["cPayMthdDetailXml"]);
                 //    XmlElement oRepElmt = (XmlElement)oRepXML.DocumentElement.SelectSingleNode("ProTx");
                 //    string cRelatedVPSTxId = oRepElmt.GetAttribute("VPSTxId"); // - Returned
                 //    string orderPrefix = "";
 
-                //    string cRelatedVendorTxCode = Conversions.ToString(oRow["nCartOrderKey"]); // - Original Cart
+                //    string cRelatedVendorTxCode = Convert.ToString(oRow["nCartOrderKey"]); // - Original Cart
                 //    string cRelatedSecurityKey = oRepElmt.GetAttribute("SecurityKey"); // - Returned
                 //    string cRelatedTxAuthNo = oRepElmt.GetAttribute("TxAuthNo"); // - Returned
 
@@ -6074,22 +6074,22 @@ namespace Protean
                 //            }
                 //        }
 
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["sendPrefix"], "true", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["sendPrefix"], "true", false)))
                 //        {
-                //            orderPrefix = Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(nTransactionMode == TransactionMode.Test, "D-", ""), moCartConfig["OrderNoPrefix"]));
+                //            orderPrefix = Convert.ToString(Operators.ConcatenateObject(Interaction.IIf(nTransactionMode == TransactionMode.Test, "D-", ""), moCartConfig["OrderNoPrefix"]));
                 //            cRelatedVendorTxCode = orderPrefix + cRelatedVendorTxCode;
                 //        }
 
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
                 //            bCv2 = true;
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
+                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
                 //        {
                 //            b3dSecure = true;
                 //            // Check the IP Addresses for a block
                 //            if (oDictOpt["secure3dIpBlock"] !=null)
                 //            {
                 //                var oRE = new Regex("(,|^)" + Strings.Replace(cIPAddress, ".", @"\.") + "(,|$)");
-                //                if (oRE.IsMatch(Conversions.ToString(oDictOpt["secure3dIpBlock"])))
+                //                if (oRE.IsMatch(Convert.ToString(oDictOpt["secure3dIpBlock"])))
                 //                    b3dSecure = false;
                 //            }
                 //        }
@@ -6144,10 +6144,10 @@ namespace Protean
 
                 //            cRequest = "VPSProtocol=" + sAPIVer + "&";
                 //            cRequest = cRequest + "TxType=REPEAT&"; // & sTXType & "&" ' 0=omited 1=full auth 2=pre-auth only
-                //            cRequest = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "Vendor=", oDictOpt["accountId"]), "&")); // 0=omited 1=full auth 2=pre-auth only
+                //            cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "Vendor=", oDictOpt["accountId"]), "&")); // 0=omited 1=full auth 2=pre-auth only
                 //            cRequest = cRequest + "VendorTXCode=" + this.goServer.UrlEncode(mnCartId.ToString()) + "&";
                 //            cRequest = cRequest + "Amount=" + this.goServer.UrlEncode(FullMoneyString(mnPaymentAmount.ToString())) + "&";
-                //            cRequest = cRequest + "Currency=" + this.goServer.UrlEncode(Conversions.ToString(oDictOpt["currency"])) + "&";
+                //            cRequest = cRequest + "Currency=" + this.goServer.UrlEncode(Convert.ToString(oDictOpt["currency"])) + "&";
                 //            cRequest = cRequest + "Description=" + Strings.Left(this.goServer.UrlEncode(mcPaymentOrderDescription), 100) + "&";
                 //            cRequest = cRequest + "RelatedVPSTxId=" + this.goServer.UrlEncode(cRelatedVPSTxId) + "&";
                 //            cRequest = cRequest + "RelatedVendorTxCode=" + this.goServer.UrlEncode(cRelatedVendorTxCode) + "&";
@@ -6193,7 +6193,7 @@ namespace Protean
                 //                // lets take the response and put it in a hash table
                 //                oResponseDict = UrlResponseToHashTable(cResponse, Constants.vbCrLf, "=");
 
-                //                nResult = Conversions.ToLong(oResponseDict["intStatus"]);
+                //                nResult = Convert.ToInt64(oResponseDict["intStatus"]);
 
                 //                switch (oResponseDict["Status"])
                 //                {
@@ -6203,7 +6203,7 @@ namespace Protean
                 //                    case "REGISTERED":
                 //                        {
                 //                            // Successful Authorisation
-                //                            err_msg = Conversions.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", oResponseDict["VPSTxId"]));
+                //                            err_msg = Convert.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", oResponseDict["VPSTxId"]));
                 //                            bIsValid = true;
                 //                            break;
                 //                        }
@@ -6234,7 +6234,7 @@ namespace Protean
                 //                        {
                 //                            // Failed / Error Authorisation
 
-                //                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
+                //                            cMessage = Convert.ToString(oResponseDict["StatusDetail"]);
 
                 //                            if (Strings.InStr(cMessage, "card number") > 0)
                 //                                err_msg = "The card number given is not valid.";
@@ -6261,7 +6261,7 @@ namespace Protean
                 //                    default:
                 //                        {
                 //                            // Response not recognised.
-                //                            cMessage = Conversions.ToString(oResponseDict["StatusDetail"]);
+                //                            cMessage = Convert.ToString(oResponseDict["StatusDetail"]);
 
                 //                            if (gbDebug)
                 //                            {
@@ -6301,9 +6301,9 @@ namespace Protean
 
                 //        oRepXML.DocumentElement.SetAttribute("AmountPaid", mnPaymentAmount.ToString());
                 //        XmlElement oProTXElmt = (XmlElement)oRepXML.DocumentElement.SelectSingleNode("ProTx");
-                //        oProTXElmt.SetAttribute("VPSTxId", Conversions.ToString(oResponseDict["VPSTxId"]));
-                //        oProTXElmt.SetAttribute("SecurityKey", Conversions.ToString(oResponseDict["SecurityKey"]));
-                //        oProTXElmt.SetAttribute("TxAuthNo", Conversions.ToString(oResponseDict["TxAuthNo"]));
+                //        oProTXElmt.SetAttribute("VPSTxId", Convert.ToString(oResponseDict["VPSTxId"]));
+                //        oProTXElmt.SetAttribute("SecurityKey", Convert.ToString(oResponseDict["SecurityKey"]));
+                //        oProTXElmt.SetAttribute("TxAuthNo", Convert.ToString(oResponseDict["TxAuthNo"]));
 
                 //        savedPaymentId = savePayment((long)myWeb.mnUserId, "ProTx", mnCartId.ToString(), "ProTX", oRepXML.DocumentElement, DateTime.Now, false, mnPaymentAmount);
                 //        if (bIsValid)
@@ -6377,12 +6377,12 @@ namespace Protean
 
                             foreach (DataRow oRow in oDS.Tables["PaymentMethods"].Rows)
                             {
-                                string cDisplay = Conversions.ToString(oRow["cPayMthdAcctName"]);
+                                string cDisplay = Convert.ToString(oRow["cPayMthdAcctName"]);
                                 var oElmt = oXForm.Instance.OwnerDocument.CreateElement("Details");
-                                oElmt.InnerXml = Strings.Replace(Strings.Replace(Conversions.ToString(oRow["cPayMthdDetailXml"]), "&gt;", ">"), "&lt;", "<");
+                                oElmt.InnerXml = Strings.Replace(Strings.Replace(Convert.ToString(oRow["cPayMthdDetailXml"]), "&gt;", ">"), "&lt;", "<");
                                 if (oElmt.FirstChild.Attributes["Display"] != null)
                                     cDisplay = oElmt.FirstChild.Attributes["Display"].Value;
-                                oXForm.addOption(ref oSelectElmt, cDisplay, Conversions.ToString(Operators.ConcatenateObject("Repeat_", oRow["nPayMthdKey"])));
+                                oXForm.addOption(ref oSelectElmt, cDisplay, Convert.ToString(Operators.ConcatenateObject("Repeat_", oRow["nPayMthdKey"])));
                             }
 
                             nCount = oDS.Tables["PaymentMethods"].Rows.Count;
@@ -6444,14 +6444,14 @@ namespace Protean
 
                             default:
                                 {
-                                    return Conversions.ToString(false);
+                                    return Convert.ToString(false);
                                 }
                         }
                     }
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref myWeb.msException, mcModuleName, "payRepeat", ex, "", "", gbDebug);
-                        return Conversions.ToString(false);
+                        return Convert.ToString(false);
                     }
                 }
 
@@ -6513,7 +6513,7 @@ namespace Protean
                         oXform.addSubmit(ref oGrpElmt, "Cancel", "Cancel", "Cancel", "");
                         oXform.addSubmit(ref oGrpElmt, "Proceed", "Proceed", "Proceed");
 
-                        oXform.Instance.InnerXml = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<RepeatPayments><Repeat_" + nPaymentId + ">" + nPaymentId + "</Repeat_" + nPaymentId + "><Payment>", oRow["cPayMthdAcctName"]), "</Payment></RepeatPayments><Password/>"));
+                        oXform.Instance.InnerXml = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<RepeatPayments><Repeat_" + nPaymentId + ">" + nPaymentId + "</Repeat_" + nPaymentId + "><Payment>", oRow["cPayMthdAcctName"]), "</Payment></RepeatPayments><Password/>"));
                         oXform.addValues();
 
                         if (oXform.isSubmitted())
@@ -6583,11 +6583,11 @@ namespace Protean
                             addNewTextNode("nAuditKey", ref argoNode, nAuditId);
                             oElmt = (XmlElement)argoNode;
                             XmlNode argoNode1 = oElmt;
-                            addNewTextNode("nStatus", ref argoNode1, Conversions.ToString(Interaction.IIf(bValid, 1, 0)));
+                            addNewTextNode("nStatus", ref argoNode1, Convert.ToString(Interaction.IIf(bValid, 1, 0)));
                             oElmt = (XmlElement)argoNode1;
                             oInstance.AppendChild(oElmt);
 
-                            myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Audit, oInstance, Conversions.ToLong(nAuditId));
+                            myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Audit, oInstance, Convert.ToInt64(nAuditId));
 
                         }
                     }
@@ -6663,7 +6663,7 @@ namespace Protean
                 //        oPclCfg = moPaymentCfg.SelectSingleNode("provider[@name='PremiumCredit']");
                 //        oDictOpt = xmlToHashTable(oPclCfg, "value");
 
-                //        bool bTestMode = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["OpperationMode"], "test", false)), true, false));
+                //        bool bTestMode = Convert.ToBoolean(Interaction.IIf(Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["OpperationMode"], "test", false)), true, false));
 
 
                 //        // override the currency
@@ -6700,7 +6700,7 @@ namespace Protean
                 //        oBusiness.SelectSingleNode("CustAddress5").InnerText = moBillingContact.SelectSingleNode("State").InnerText;
                 //        oBusiness.SelectSingleNode("CustPostCode").InnerText = moBillingContact.SelectSingleNode("PostalCode").InnerText;
                 //        oBusiness.SelectSingleNode("CustWorkTel").InnerText = moBillingContact.SelectSingleNode("Telephone").InnerText;
-                //        oBusiness.SelectSingleNode("CustHomeTel").InnerText = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(moBillingContact.SelectSingleNode("Fax").InnerText), moBillingContact.SelectSingleNode("Telephone").InnerText, moBillingContact.SelectSingleNode("Fax").InnerText));
+                //        oBusiness.SelectSingleNode("CustHomeTel").InnerText = Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(moBillingContact.SelectSingleNode("Fax").InnerText), moBillingContact.SelectSingleNode("Telephone").InnerText, moBillingContact.SelectSingleNode("Fax").InnerText));
 
                 //        if (bTestMode)
                 //        {
@@ -6718,7 +6718,7 @@ namespace Protean
                 //            var oPclTrans = new Protean.com.pclplstest.www.XMLTransferEngine(); // Object 'com.pclpls.www.XMLTransferEngine
                 //                                                                                // Lets go and get some quotes from PCL for payment options
 
-                //            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
+                //            bool bOverrideRate = Convert.ToBoolean(Interaction.IIf(Convert.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
                 //            // Dim oSchemeCodeInput As XmlElement = ccXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='SchemeCode']")
 
                 //            Protean.com.pclplstest.www.SchemeQuote oPclSchemeQuoteSelected = (Protean.com.pclplstest.www.SchemeQuote)null;
@@ -6726,11 +6726,11 @@ namespace Protean
 
                 //            Protean.com.pclplstest.www.Quotation oPclQuotation;
 
-                //            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(mnPaymentAmount * 100d), Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
+                //            oPclQuotation = oPclTrans.GetQuote(Convert.ToString(oDictOpt["UserName"]), Convert.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(mnPaymentAmount * 100d), Convert.ToString(oDictOpt["PPICode"]), Convert.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
 
                 //            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
                 //            {
-                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
+                //                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
                 //                {
                 //                    oPclSchemeQuoteSelected = oPclSchemeQuote;
                 //                }
@@ -6786,19 +6786,19 @@ namespace Protean
                 //                    oPclNewBusiness.CustTitle = oBusiness.SelectSingleNode("CustTitle").InnerText;
                 //                    oPclNewBusiness.CustWorkTel = oBusiness.SelectSingleNode("CustWorkTel").InnerText;
                 //                    oPclNewBusiness.DepositAmt = (int)Math.Round(oPclSchemeQuoteSelected.Instalment);
-                //                    oPclNewBusiness.EntryType = Conversions.ToChar(oBusiness.SelectSingleNode("EntryType").InnerText);
+                //                    oPclNewBusiness.EntryType = Convert.ToChar(oBusiness.SelectSingleNode("EntryType").InnerText);
                 //                    oPclNewBusiness.InstalmentAmt = (int)Math.Round(oPclSchemeQuoteSelected.Instalment);
                 //                    oPclNewBusiness.NumInstalments = oPclSchemeQuoteSelected.NumInstalments;
                 //                    oPclNewBusiness.PolicyClientReference = oBusiness.SelectSingleNode("PolicyClientReference").InnerText;
-                //                    oPclNewBusiness.PrefPaymentDate = Conversions.ToInteger(oBusiness.SelectSingleNode("PrefPaymentDate").InnerText);
-                //                    oPclNewBusiness.SchemeBranch = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
-                //                    oPclNewBusiness.SchemeBrokerNo = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
+                //                    oPclNewBusiness.PrefPaymentDate = Convert.ToInt16(oBusiness.SelectSingleNode("PrefPaymentDate").InnerText);
+                //                    oPclNewBusiness.SchemeBranch = Convert.ToString(oDictOpt["SchemeBrokerNo"]);
+                //                    oPclNewBusiness.SchemeBrokerNo = Convert.ToString(oDictOpt["SchemeBrokerNo"]);
                 //                    oPclNewBusiness.SchemeCode = oBusiness.SelectSingleNode("SchemeCode").InnerText;
-                //                    oPclNewBusiness.TransID = oPclTrans.GetNextTransactionID(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness);
+                //                    oPclNewBusiness.TransID = oPclTrans.GetNextTransactionID(Convert.ToString(oDictOpt["UserName"]), Convert.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness);
 
                 //                    Protean.com.pclplstest.www.TransactionResult oPclTransResult;
 
-                //                    oPclTransResult = oPclTrans.CreateNewBusiness(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), oPclNewBusiness);
+                //                    oPclTransResult = oPclTrans.CreateNewBusiness(Convert.ToString(oDictOpt["UserName"]), Convert.ToString(oDictOpt["Password"]), oPclNewBusiness);
 
                 //                    if (oPclTransResult.Success)
                 //                    {
@@ -6816,12 +6816,12 @@ namespace Protean
                 //                        ccXform.moXformElmt = (XmlElement)argoNode1;
 
                 //                        // Update Seller Notes:
-                //                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Successfull) ";
+                //                        sTransactionReport = Constants.vbLf + Convert.ToString(DateTime.Today) + " " + Convert.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Successfull) ";
                 //                    }
                 //                    else
                 //                    {
                 //                        // We'll sniff for error codes in an overloaded xslt
-                //                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Failed) " + Constants.vbLf + "comment: " + oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message;
+                //                        sTransactionReport = Constants.vbLf + Convert.ToString(DateTime.Today) + " " + Convert.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Failed) " + Constants.vbLf + "comment: " + oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message;
 
                 //                        ccXform.addNote("payDetails", Protean.xForm.noteTypes.Alert, oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message, true);
                 //                        ccXform.valid = false;
@@ -6842,7 +6842,7 @@ namespace Protean
                 //                                                                            // Lets go and get some quotes from PCL for payment options
 
 
-                //            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
+                //            bool bOverrideRate = Convert.ToBoolean(Interaction.IIf(Convert.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
                 //            // Dim oSchemeCodeInput As XmlElement = ccXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='SchemeCode']")
 
                 //            Protean.com.pclpls.www.SchemeQuote oPclSchemeQuoteSelected = (Protean.com.pclpls.www.SchemeQuote)null;
@@ -6850,11 +6850,11 @@ namespace Protean
 
                 //            Protean.com.pclpls.www.Quotation oPclQuotation;
 
-                //            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(mnPaymentAmount * 100d), Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
+                //            oPclQuotation = oPclTrans.GetQuote(Convert.ToString(oDictOpt["UserName"]), Convert.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(mnPaymentAmount * 100d), Convert.ToString(oDictOpt["PPICode"]), Convert.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
 
                 //            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
                 //            {
-                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
+                //                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
                 //                {
                 //                    oPclSchemeQuoteSelected = oPclSchemeQuote;
                 //                }
@@ -6910,19 +6910,19 @@ namespace Protean
                 //                    oPclNewBusiness.CustTitle = oBusiness.SelectSingleNode("CustTitle").InnerText;
                 //                    oPclNewBusiness.CustWorkTel = oBusiness.SelectSingleNode("CustWorkTel").InnerText;
                 //                    // oPclNewBusiness.DepositAmt = oPclSchemeQuoteSelected.Instalment
-                //                    oPclNewBusiness.EntryType = Conversions.ToChar(oBusiness.SelectSingleNode("EntryType").InnerText);
+                //                    oPclNewBusiness.EntryType = Convert.ToChar(oBusiness.SelectSingleNode("EntryType").InnerText);
                 //                    oPclNewBusiness.InstalmentAmt = (int)Math.Round(oPclSchemeQuoteSelected.Instalment);
                 //                    oPclNewBusiness.NumInstalments = oPclSchemeQuoteSelected.NumInstalments;
                 //                    oPclNewBusiness.PolicyClientReference = oBusiness.SelectSingleNode("PolicyClientReference").InnerText;
-                //                    oPclNewBusiness.PrefPaymentDate = Conversions.ToInteger(oBusiness.SelectSingleNode("PrefPaymentDate").InnerText);
-                //                    oPclNewBusiness.SchemeBranch = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
-                //                    oPclNewBusiness.SchemeBrokerNo = Conversions.ToString(oDictOpt["SchemeBrokerNo"]);
+                //                    oPclNewBusiness.PrefPaymentDate = Convert.ToInt16(oBusiness.SelectSingleNode("PrefPaymentDate").InnerText);
+                //                    oPclNewBusiness.SchemeBranch = Convert.ToString(oDictOpt["SchemeBrokerNo"]);
+                //                    oPclNewBusiness.SchemeBrokerNo = Convert.ToString(oDictOpt["SchemeBrokerNo"]);
                 //                    oPclNewBusiness.SchemeCode = oBusiness.SelectSingleNode("SchemeCode").InnerText;
-                //                    oPclNewBusiness.TransID = oPclTrans.GetNextTransactionID(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness);
+                //                    oPclNewBusiness.TransID = oPclTrans.GetNextTransactionID(Convert.ToString(oDictOpt["UserName"]), Convert.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness);
 
                 //                    Protean.com.pclpls.www.TransactionResult oPclTransResult;
 
-                //                    oPclTransResult = oPclTrans.CreateNewBusiness(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), oPclNewBusiness);
+                //                    oPclTransResult = oPclTrans.CreateNewBusiness(Convert.ToString(oDictOpt["UserName"]), Convert.ToString(oDictOpt["Password"]), oPclNewBusiness);
 
                 //                    if (oPclTransResult.Success)
                 //                    {
@@ -6940,12 +6940,12 @@ namespace Protean
                 //                        ccXform.moXformElmt = (XmlElement)argoNode2;
 
                 //                        // Update Seller Notes:
-                //                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Successfull) ";
+                //                        sTransactionReport = Constants.vbLf + Convert.ToString(DateTime.Today) + " " + Convert.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Successfull) ";
                 //                    }
                 //                    else
                 //                    {
                 //                        // We'll sniff for error codes in an overloaded xslt
-                //                        sTransactionReport = Constants.vbLf + Conversions.ToString(DateTime.Today) + " " + Conversions.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Failed) " + Constants.vbLf + "comment: " + oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message;
+                //                        sTransactionReport = Constants.vbLf + Convert.ToString(DateTime.Today) + " " + Convert.ToString(DateAndTime.TimeOfDay) + ": changed to: (PremiumCredit Payment Failed) " + Constants.vbLf + "comment: " + oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message;
                 //                        ccXform.addNote("payDetails", Protean.xForm.noteTypes.Alert, oPclTransResult.ErrorCode.ToString() + " " + oPclTransResult.Message, true);
                 //                        ccXform.valid = false;
                 //                    }
@@ -6992,7 +6992,7 @@ namespace Protean
                 //        oPclCfg = moPaymentCfg.SelectSingleNode("provider[@name='PremiumCredit']");
                 //        oDictOpt = xmlToHashTable(oPclCfg, "value");
 
-                //        bool bTestMode = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["OpperationMode"], "test", false)), true, false));
+                //        bool bTestMode = Convert.ToBoolean(Interaction.IIf(Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["OpperationMode"], "test", false)), true, false));
 
                 //        if (bTestMode)
                 //        {
@@ -7000,13 +7000,13 @@ namespace Protean
                 //            var oPclTrans = new Protean.com.pclplstest.www.XMLTransferEngine();
                 //            Protean.com.pclplstest.www.Quotation oPclQuotation;
 
-                //            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
+                //            bool bOverrideRate = Convert.ToBoolean(Interaction.IIf(Convert.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
 
-                //            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(nClientPremium * 100d), Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
+                //            oPclQuotation = oPclTrans.GetQuote(Convert.ToString(oDictOpt["UserName"]), Convert.ToString(oDictOpt["Password"]), (Protean.com.pclplstest.www.eTransactionType)Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)(nClientPremium * 100d), Convert.ToString(oDictOpt["PPICode"]), Convert.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
 
                 //            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
                 //            {
-                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
+                //                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
                 //                {
                 //                    var oQuoteXml = moPageXml.CreateElement("Quote");
                 //                    XmlNode argoNode = oQuoteXml;
@@ -7019,7 +7019,7 @@ namespace Protean
                 //                    Tools.Xml.addNewTextNode("BasicServiceChargePercentage", ref argoNode2, oPclSchemeQuote.BasicServiceChargePercentage.ToString());
                 //                    oQuoteXml = (XmlElement)argoNode2;
                 //                    XmlNode argoNode3 = oQuoteXml;
-                //                    addNewTextNode("CCAScheme", ref argoNode3, Conversions.ToString(oPclSchemeQuote.CCAScheme));
+                //                    addNewTextNode("CCAScheme", ref argoNode3, Convert.ToString(oPclSchemeQuote.CCAScheme));
                 //                    oQuoteXml = (XmlElement)argoNode3;
                 //                    XmlNode argoNode4 = oQuoteXml;
                 //                    Tools.Xml.addNewTextNode("DefaultPeriod", ref argoNode4, oPclSchemeQuote.DefaultPeriod.ToString());
@@ -7043,7 +7043,7 @@ namespace Protean
                 //                    Tools.Xml.addNewTextNode("InstalmentWithPPI", ref argoNode10, oPclSchemeQuote.InstalmentWithPPI.ToString());
                 //                    oQuoteXml = (XmlElement)argoNode10;
                 //                    XmlNode argoNode11 = oQuoteXml;
-                //                    addNewTextNode("InterestFree", ref argoNode11, Conversions.ToString(oPclSchemeQuote.InterestFree));
+                //                    addNewTextNode("InterestFree", ref argoNode11, Convert.ToString(oPclSchemeQuote.InterestFree));
                 //                    oQuoteXml = (XmlElement)argoNode11;
                 //                    XmlNode argoNode12 = oQuoteXml;
                 //                    Tools.Xml.addNewTextNode("MinimumServiceCharge", ref argoNode12, oPclSchemeQuote.MinimumServiceCharge.ToString());
@@ -7052,7 +7052,7 @@ namespace Protean
                 //                    Tools.Xml.addNewTextNode("NumInstalments", ref argoNode13, oPclSchemeQuote.NumInstalments.ToString());
                 //                    oQuoteXml = (XmlElement)argoNode13;
                 //                    XmlNode argoNode14 = oQuoteXml;
-                //                    addNewTextNode("OverrideRate", ref argoNode14, Conversions.ToString(oPclSchemeQuote.OverrideRate));
+                //                    addNewTextNode("OverrideRate", ref argoNode14, Convert.ToString(oPclSchemeQuote.OverrideRate));
                 //                    oQuoteXml = (XmlElement)argoNode14;
                 //                    XmlNode argoNode15 = oQuoteXml;
                 //                    Tools.Xml.addNewTextNode("PlasmaMessages", ref argoNode15, oPclSchemeQuote.PlasmaMessages);
@@ -7118,13 +7118,13 @@ namespace Protean
                 //            var oPclTrans = new Protean.com.pclpls.www.XMLTransferEngine();
                 //            Protean.com.pclpls.www.Quotation oPclQuotation;
 
-                //            bool bOverrideRate = Conversions.ToBoolean(Interaction.IIf(Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
+                //            bool bOverrideRate = Convert.ToBoolean(Interaction.IIf(Convert.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "true", false), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "True", false)), Operators.ConditionalCompareObjectEqual(oDictOpt["OverrideRate"], "on", false))), true, false));
 
-                //            oPclQuotation = oPclTrans.GetQuote(Conversions.ToString(oDictOpt["UserName"]), Conversions.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)nClientPremium, Conversions.ToString(oDictOpt["PPICode"]), Conversions.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
+                //            oPclQuotation = oPclTrans.GetQuote(Convert.ToString(oDictOpt["UserName"]), Convert.ToString(oDictOpt["Password"]), Protean.com.pclpls.www.eTransactionType.NewBusiness, (decimal)nClientPremium, Convert.ToString(oDictOpt["PPICode"]), Convert.ToDecimal(oDictOpt["ChargePercentage"]), bOverrideRate);
 
                 //            foreach (var oPclSchemeQuote in oPclQuotation.SchemeQuotes)
                 //            {
-                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
+                //                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oPclSchemeQuote.SchemeCode, oDictOpt["SchemeCode"], false)))
                 //                {
                 //                    var oQuoteXml = moPageXml.CreateElement("Quote");
                 //                    XmlNode argoNode30 = oQuoteXml;
@@ -7137,7 +7137,7 @@ namespace Protean
                 //                    Tools.Xml.addNewTextNode("BasicServiceChargePercentage", ref argoNode32, oPclSchemeQuote.BasicServiceChargePercentage.ToString());
                 //                    oQuoteXml = (XmlElement)argoNode32;
                 //                    XmlNode argoNode33 = oQuoteXml;
-                //                    addNewTextNode("CCAScheme", ref argoNode33, Conversions.ToString(oPclSchemeQuote.CCAScheme));
+                //                    addNewTextNode("CCAScheme", ref argoNode33, Convert.ToString(oPclSchemeQuote.CCAScheme));
                 //                    oQuoteXml = (XmlElement)argoNode33;
                 //                    XmlNode argoNode34 = oQuoteXml;
                 //                    Tools.Xml.addNewTextNode("DefaultPeriod", ref argoNode34, oPclSchemeQuote.DefaultPeriod.ToString());
@@ -7161,7 +7161,7 @@ namespace Protean
                 //                    Tools.Xml.addNewTextNode("InstalmentWithPPI", ref argoNode40, oPclSchemeQuote.InstalmentWithPPI.ToString());
                 //                    oQuoteXml = (XmlElement)argoNode40;
                 //                    XmlNode argoNode41 = oQuoteXml;
-                //                    addNewTextNode("InterestFree", ref argoNode41, Conversions.ToString(oPclSchemeQuote.InterestFree));
+                //                    addNewTextNode("InterestFree", ref argoNode41, Convert.ToString(oPclSchemeQuote.InterestFree));
                 //                    oQuoteXml = (XmlElement)argoNode41;
                 //                    XmlNode argoNode42 = oQuoteXml;
                 //                    Tools.Xml.addNewTextNode("MinimumServiceCharge", ref argoNode42, oPclSchemeQuote.MinimumServiceCharge.ToString());
@@ -7170,7 +7170,7 @@ namespace Protean
                 //                    Tools.Xml.addNewTextNode("NumInstalments", ref argoNode43, oPclSchemeQuote.NumInstalments.ToString());
                 //                    oQuoteXml = (XmlElement)argoNode43;
                 //                    XmlNode argoNode44 = oQuoteXml;
-                //                    addNewTextNode("OverrideRate", ref argoNode44, Conversions.ToString(oPclSchemeQuote.OverrideRate));
+                //                    addNewTextNode("OverrideRate", ref argoNode44, Convert.ToString(oPclSchemeQuote.OverrideRate));
                 //                    oQuoteXml = (XmlElement)argoNode44;
                 //                    XmlNode argoNode45 = oQuoteXml;
                 //                    Tools.Xml.addNewTextNode("PlasmaMessages", ref argoNode45, oPclSchemeQuote.PlasmaMessages);

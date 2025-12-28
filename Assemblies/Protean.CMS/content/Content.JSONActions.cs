@@ -311,7 +311,7 @@ namespace Protean
                             using (var oDre = myWeb.moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                             {
                                 while (oDre.Read())
-                                    cTmp = Conversions.ToString(cTmp + Operators.ConcatenateObject(oDre[0], ","));
+                                    cTmp = Convert.ToString(cTmp + Operators.ConcatenateObject(oDre[0], ","));
                                 oDre.Close();
                             }
                             if (!string.IsNullOrEmpty(cTmp))
@@ -319,7 +319,7 @@ namespace Protean
                         }
 
                         XmlElement searchResultXML;
-                        searchResultXML = myWeb.moDbHelper.RelatedContentSearch(Conversions.ToInteger(nRoot), cContentType, bChilds, cExpression, Conversions.ToInteger(nParId), Conversions.ToInteger(Interaction.IIf(Conversions.ToBoolean(bIgnoreParID), 0, nParId)), cTmp.Split(','), bIncRelated);
+                        searchResultXML = myWeb.moDbHelper.RelatedContentSearch(Convert.ToInt16(nRoot), cContentType, bChilds, cExpression, Convert.ToInt16(nParId), Convert.ToInt16(Interaction.IIf(Convert.ToBoolean(bIgnoreParID), 0, nParId)), cTmp.Split(','), bIncRelated);
 
                         string jsonString = JsonConvert.SerializeXmlNode(searchResultXML, Newtonsoft.Json.Formatting.Indented);
                         return jsonString.Replace("\"@", "\"_");
@@ -384,16 +384,16 @@ namespace Protean
                                     break;
                                 }
                         }
-                        long nUserDirId = Conversions.ToLong("0" + jObj["userId"].ToString());
-                        long nPageId = Conversions.ToLong("0" + jObj["pageId"].ToString());
-                        long nArtId = Conversions.ToLong("0" + jObj["artId"].ToString());
+                        long nUserDirId = Convert.ToInt64("0" + jObj["userId"].ToString());
+                        long nPageId = Convert.ToInt64("0" + jObj["pageId"].ToString());
+                        long nArtId = Convert.ToInt64("0" + jObj["artId"].ToString());
 
                         if (myApi.mnUserId > 0)
                         {
                             myWeb.moDbHelper.logActivity(oActivityType, nUserDirId, nPageId, nArtId);
                         }
 
-                        return Conversions.ToString(true);
+                        return Convert.ToString(true);
                     }
 
                     catch (Exception ex)
@@ -458,7 +458,7 @@ namespace Protean
                                     {
                                         if (oRow["productId"] != null & !ReferenceEquals(oRow["productId"], DBNull.Value))
                                         {
-                                            oRow["url"] = myWeb.GetContentUrl(Conversions.ToLong(oRow["productId"]));
+                                            oRow["url"] = myWeb.GetContentUrl(Convert.ToInt64(oRow["productId"]));
                                         }
                                     }
                                 }
@@ -498,7 +498,7 @@ namespace Protean
                         string uploadedfiles = string.Empty;
                         string JsonResult = string.Empty;
 
-                        string encryptedContentId = Conversions.ToString(myApi.moSession["contentId"]);  // rename this to contentId
+                        string encryptedContentId = Convert.ToString(myApi.moSession["contentId"]);  // rename this to contentId
                         string UploadDirPath = string.Empty;
 
                         if (jObj != null)
@@ -554,7 +554,7 @@ namespace Protean
                     {
                         if (moCtx.Session["lastUploadedFilePath"] != null)
                         {
-                            return Conversions.ToString(moCtx.Session["lastUploadedFilePath"]);
+                            return Convert.ToString(moCtx.Session["lastUploadedFilePath"]);
                         }
                         else
                         {

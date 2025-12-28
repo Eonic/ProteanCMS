@@ -141,7 +141,7 @@ delegate (object sender, System.Security.Cryptography.X509Certificates.X509Certi
                     ClearApplicationCache(origServiceUrl);
                     ServicePointManager.ServerCertificateValidationCallback = null;
                 }
-                int cssSplit = Conversions.ToInteger(Interaction.IIf(string.IsNullOrEmpty(moConfig["cssSplit"]), 2000, moConfig["cssSplit"]));
+                int cssSplit = Convert.ToInt16(Interaction.IIf(string.IsNullOrEmpty(moConfig["cssSplit"]), 2000, moConfig["cssSplit"]));
                 ComputeCSS(fullCss, cssSplit);
             }
             catch (Exception ex)

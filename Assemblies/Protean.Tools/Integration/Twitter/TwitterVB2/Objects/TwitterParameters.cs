@@ -219,7 +219,7 @@ namespace Protean.Tools.Integration.Twitter.TwitterVB2.Objects
                             throw new ApplicationException("Value given for since was not a Date.");
                         }
 
-                        DateTime DateValue = Conversions.ToDate(Value);
+                        DateTime DateValue = Convert.ToDateTime(Value);
 
                         // RFC1123 date string
                         base.Add(Key, DateValue.ToString("r"));

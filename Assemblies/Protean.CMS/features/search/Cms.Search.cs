@@ -571,8 +571,8 @@ namespace Protean
 
                         bool _SearchExact = myWeb.moConfig["SearchExact"] == "on";
 
-                        resultsXML.SetAttribute("fuzzy", Conversions.ToString(Interaction.IIf(_includeFuzzySearch, "on", "off")));
-                        resultsXML.SetAttribute("prefixNameSearch", Conversions.ToString(Interaction.IIf(_includePrefixNameSearch, "true", "false")));
+                        resultsXML.SetAttribute("fuzzy", Convert.ToString(Interaction.IIf(_includeFuzzySearch, "on", "off")));
+                        resultsXML.SetAttribute("prefixNameSearch", Convert.ToString(Interaction.IIf(_includePrefixNameSearch, "true", "false")));
 
                         // Generate the live page filter
                         var livePages = LivePageLuceneFilter();
@@ -736,7 +736,7 @@ namespace Protean
 
                                     if (resultDoc.GetField("artid") != null)
                                     {
-                                        thisArtId = Conversions.ToInteger(resultDoc.GetField("artid").StringValue);
+                                        thisArtId = Convert.ToInt16(resultDoc.GetField("artid").StringValue);
 
                                         if (string.IsNullOrEmpty(thisArtIdList))
                                         {
@@ -803,7 +803,7 @@ namespace Protean
 
                                     if (resultDoc.GetField("artid") != null)
                                     {
-                                        thisArtId = Conversions.ToInteger(resultDoc.GetField("artid").StringValue);
+                                        thisArtId = Convert.ToInt16(resultDoc.GetField("artid").StringValue);
                                     }
 
                                     if (thisArtId == 0L | thisArtIdList.Contains(thisArtId.ToString()))
@@ -828,7 +828,7 @@ namespace Protean
                                                     }
                                                     else if (moConfig["LegacyRedirect"] == "on")
                                                     {
-                                                        url = Conversions.ToString(url + Operators.ConcatenateObject(Operators.ConcatenateObject(Interaction.IIf(url == "/", "", "/"), resultDoc.GetField("artid").StringValue), "-/"));
+                                                        url = Convert.ToString(url + Operators.ConcatenateObject(Operators.ConcatenateObject(Interaction.IIf(url == "/", "", "/"), resultDoc.GetField("artid").StringValue), "-/"));
 
                                                         string artName = "";
                                                         if (resultDoc.GetField("name") != null)
@@ -841,7 +841,7 @@ namespace Protean
                                                     }
                                                     else
                                                     {
-                                                        url = Conversions.ToString(url + Operators.ConcatenateObject(Operators.ConcatenateObject(Interaction.IIf(url == "/", "", "/"), "item"), resultDoc.GetField("artid").StringValue));
+                                                        url = Convert.ToString(url + Operators.ConcatenateObject(Operators.ConcatenateObject(Interaction.IIf(url == "/", "", "/"), "item"), resultDoc.GetField("artid").StringValue));
                                                     }
 
                                                 }
@@ -968,8 +968,8 @@ namespace Protean
                         _overrideQueryBuilder = myAPI.moRequest["overrideQueryBuilder"] == "true";
                         _includePrefixNameSearch = myAPI.moRequest["prefixNameSearch"] == "true";
 
-                        resultsXML.SetAttribute("fuzzy", Conversions.ToString(Interaction.IIf(_includeFuzzySearch, "on", "off")));
-                        resultsXML.SetAttribute("prefixNameSearch", Conversions.ToString(Interaction.IIf(_includePrefixNameSearch, "true", "false")));
+                        resultsXML.SetAttribute("fuzzy", Convert.ToString(Interaction.IIf(_includeFuzzySearch, "on", "off")));
+                        resultsXML.SetAttribute("prefixNameSearch", Convert.ToString(Interaction.IIf(_includePrefixNameSearch, "true", "false")));
                         // check whether logged in user is csuser and skip checking status
                         bool bShowHiddenForUser = false; // set for normal user default value
                         if (myWeb.moConfig["UserRoleAllowedHiddenProductSearch"] != null)
@@ -1117,7 +1117,7 @@ namespace Protean
                                 long thisArtId;
                                 if (resultDoc.GetField("artid") != null)
                                 {
-                                    thisArtId = Conversions.ToInteger(resultDoc.GetField("artid").StringValue);
+                                    thisArtId = Convert.ToInt16(resultDoc.GetField("artid").StringValue);
                                     if (string.IsNullOrEmpty(thisArtIdList))
                                     {
                                         thisArtIdList = thisArtId.ToString();
@@ -1161,7 +1161,7 @@ namespace Protean
                                 long thisArtId = 0L;
                                 if (resultDoc.GetField("artid") != null)
                                 {
-                                    thisArtId = Conversions.ToInteger(resultDoc.GetField("artid").StringValue);
+                                    thisArtId = Convert.ToInt16(resultDoc.GetField("artid").StringValue);
                                 }
                                 if (thisArtId == 0L | thisArtIdList.Contains(thisArtId.ToString()))
                                 {
@@ -1187,7 +1187,7 @@ namespace Protean
                                                 }
                                                 else if (moConfig["LegacyRedirect"] == "on")
                                                 {
-                                                    url = Conversions.ToString(url + Operators.ConcatenateObject(Operators.ConcatenateObject(Interaction.IIf(url == "/", "", "/"), resultDoc.GetField("artid").StringValue), "-/"));
+                                                    url = Convert.ToString(url + Operators.ConcatenateObject(Operators.ConcatenateObject(Interaction.IIf(url == "/", "", "/"), resultDoc.GetField("artid").StringValue), "-/"));
 
                                                     string artName = "";
                                                     if (resultDoc.GetField("name") != null)
@@ -1200,7 +1200,7 @@ namespace Protean
                                                 }
                                                 else
                                                 {
-                                                    url = Conversions.ToString(url + Operators.ConcatenateObject(Operators.ConcatenateObject(Interaction.IIf(url == "/", "", "/"), "item"), resultDoc.GetField("artid").StringValue));
+                                                    url = Convert.ToString(url + Operators.ConcatenateObject(Operators.ConcatenateObject(Interaction.IIf(url == "/", "", "/"), "item"), resultDoc.GetField("artid").StringValue));
                                                 }
                                             }
                                         }
@@ -1344,20 +1344,20 @@ namespace Protean
                             }
 
                             // Add the word
-                            sXpath = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(sXpath + "[contains(upper-case(.),''", SqlFmt(Strings.UCase(cSearchTerm))), "'')"));
+                            sXpath = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(sXpath + "[contains(upper-case(.),''", SqlFmt(Strings.UCase(cSearchTerm))), "'')"));
 
                             // Get the variants of the word
                             if (cSearchTerm.EndsWith("s"))
                             {
-                                sXpath = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(sXpath + " or contains(upper-case(.),''", SqlFmt(Strings.UCase(Strings.Left(cSearchTerm, Strings.Len(cSearchTerm) - 1)))), "'')"));
+                                sXpath = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(sXpath + " or contains(upper-case(.),''", SqlFmt(Strings.UCase(Strings.Left(cSearchTerm, Strings.Len(cSearchTerm) - 1)))), "'')"));
                             }
                             if (aSearchWords[i].EndsWith("ies"))
                             {
-                                sXpath = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(sXpath + " or contains(upper-case(.),''", SqlFmt(Strings.UCase(Strings.Left(cSearchTerm, Strings.Len(cSearchTerm) - 3) + "y"))), "'')"));
+                                sXpath = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(sXpath + " or contains(upper-case(.),''", SqlFmt(Strings.UCase(Strings.Left(cSearchTerm, Strings.Len(cSearchTerm) - 3) + "y"))), "'')"));
                             }
                             if (aSearchWords[i].EndsWith("y"))
                             {
-                                sXpath = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(sXpath + " or contains(upper-case(.),''", SqlFmt(Strings.UCase(Strings.Left(cSearchTerm, Strings.Len(cSearchTerm) - 1) + "ies"))), "'')"));
+                                sXpath = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(sXpath + " or contains(upper-case(.),''", SqlFmt(Strings.UCase(Strings.Left(cSearchTerm, Strings.Len(cSearchTerm) - 1) + "ies"))), "'')"));
                             }
 
                             sXpath = sXpath + "]";
@@ -1376,7 +1376,7 @@ namespace Protean
                         {
                             // GetPageContentFromSelect(" where typ.cContentTypeName='" & myWeb.moRequest("contentType") & "' and dbo.fxn_SearchXML(cContentXML,'" & sXpath & "') = 1")
                         }
-                        string cSQL = Conversions.ToString(Operators.ConcatenateObject("SET ARITHABORT ON SELECT nContentKey, cContentXmlBrief,  cContentXmlDetail, nContentPrimaryId, cContentName, cContentSchemaName " + " FROM tblContent WHERE" + "  (CAST(cContentXmlBrief as xml).exist('" + sXpath + "') = 1 or CAST(cContentXmlDetail as xml).exist('" + sXpath + "') = 1)", Interaction.IIf(string.IsNullOrEmpty(cContentType), "", Operators.ConcatenateObject(Operators.ConcatenateObject(" AND (cContentSchemaName = '", SqlFmt(cContentType)), "')"))));
+                        string cSQL = Convert.ToString(Operators.ConcatenateObject("SET ARITHABORT ON SELECT nContentKey, cContentXmlBrief,  cContentXmlDetail, nContentPrimaryId, cContentName, cContentSchemaName " + " FROM tblContent WHERE" + "  (CAST(cContentXmlBrief as xml).exist('" + sXpath + "') = 1 or CAST(cContentXmlDetail as xml).exist('" + sXpath + "') = 1)", Interaction.IIf(string.IsNullOrEmpty(cContentType), "", Operators.ConcatenateObject(Operators.ConcatenateObject(" AND (cContentSchemaName = '", SqlFmt(cContentType)), "')"))));
                         // Dim oDr As SqlDataReader
                         using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                         {
@@ -1388,7 +1388,7 @@ namespace Protean
 
 
 
-                                cResultIDsCSV = Conversions.ToString(cResultIDsCSV + Operators.ConcatenateObject(oDr["nContentKey"], ","));
+                                cResultIDsCSV = Convert.ToString(cResultIDsCSV + Operators.ConcatenateObject(oDr["nContentKey"], ","));
                             oDr.Close();
 
                             if (string.IsNullOrEmpty(cResultIDsCSV))
@@ -1506,39 +1506,39 @@ namespace Protean
 
                             cRegEx = cSearchTerm;
                             // Note :: in the SQL statement below, the inclusion of [^<] is a token gesture to make sure we don't match to tags that begin with a search term, e.g. <Content and </Content etc...
-                            cSearchWhereCONTENT = Conversions.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" (cContentXMLBrief LIKE '%[^<]", SqlFmt(cSearchTerm)), "%' AND cContentXMLBrief LIKE '%[^<][^/]"), SqlFmt(cSearchTerm)), "%') "));
+                            cSearchWhereCONTENT = Convert.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" (cContentXMLBrief LIKE '%[^<]", SqlFmt(cSearchTerm)), "%' AND cContentXMLBrief LIKE '%[^<][^/]"), SqlFmt(cSearchTerm)), "%') "));
                             cSearchWhereCONTENT += " or ";
-                            cSearchWhereCONTENT = Conversions.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" (cContentXMLDetail LIKE '%[^<]", SqlFmt(cSearchTerm)), "%' AND cContentXMLDetail LIKE '%[^<][^/]"), SqlFmt(cSearchTerm)), "%') "));
+                            cSearchWhereCONTENT = Convert.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" (cContentXMLDetail LIKE '%[^<]", SqlFmt(cSearchTerm)), "%' AND cContentXMLDetail LIKE '%[^<][^/]"), SqlFmt(cSearchTerm)), "%') "));
 
-                            cSearchWhereUSER = Conversions.ToString(cSearchWhereUSER + Operators.ConcatenateObject(Operators.ConcatenateObject(" (cDirXml LIKE '%[^<]", SqlFmt(cSearchTerm)), "%'  )"));
+                            cSearchWhereUSER = Convert.ToString(cSearchWhereUSER + Operators.ConcatenateObject(Operators.ConcatenateObject(" (cDirXml LIKE '%[^<]", SqlFmt(cSearchTerm)), "%'  )"));
 
                             if (cSearchTerm.ToLower().EndsWith("s"))
                             {
                                 cSearchVariant = Strings.Left(cSearchTerm, Strings.Len(cSearchTerm) - 1);
                                 cRegEx += "|" + cSearchVariant;
-                                cSearchWhereCONTENT = Conversions.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLBrief LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLBrief LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
-                                cSearchWhereCONTENT = Conversions.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLDetail LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLDetail LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
+                                cSearchWhereCONTENT = Convert.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLBrief LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLBrief LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
+                                cSearchWhereCONTENT = Convert.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLDetail LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLDetail LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
 
-                                cSearchWhereUSER = Conversions.ToString(cSearchWhereUSER + Operators.ConcatenateObject(Operators.ConcatenateObject(" OR  (cDirXml LIKE '%[^<]", SqlFmt(cSearchVariant)), "%'  )"));
+                                cSearchWhereUSER = Convert.ToString(cSearchWhereUSER + Operators.ConcatenateObject(Operators.ConcatenateObject(" OR  (cDirXml LIKE '%[^<]", SqlFmt(cSearchVariant)), "%'  )"));
                             }
                             if (aSearchWords[i].ToLower().EndsWith("ies"))
                             {
                                 cSearchVariant = Strings.Left(cSearchTerm, Strings.Len(cSearchTerm) - 3) + "y";
                                 cRegEx += "|" + cSearchVariant;
-                                cSearchWhereCONTENT = Conversions.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLBrief LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLBrief LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
-                                cSearchWhereCONTENT = Conversions.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLDetail LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLDetail LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
+                                cSearchWhereCONTENT = Convert.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLBrief LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLBrief LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
+                                cSearchWhereCONTENT = Convert.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLDetail LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLDetail LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
 
-                                cSearchWhereUSER = Conversions.ToString(cSearchWhereUSER + Operators.ConcatenateObject(Operators.ConcatenateObject(" OR  (cDirXml LIKE '%[^<]", SqlFmt(cSearchVariant)), "%'  )"));
+                                cSearchWhereUSER = Convert.ToString(cSearchWhereUSER + Operators.ConcatenateObject(Operators.ConcatenateObject(" OR  (cDirXml LIKE '%[^<]", SqlFmt(cSearchVariant)), "%'  )"));
                             }
                             if (aSearchWords[i].ToLower().EndsWith("y"))
                             {
                                 cSearchVariant = Strings.Left(cSearchTerm, Strings.Len(cSearchTerm) - 1) + "ies";
                                 cRegEx += "|" + cSearchVariant;
-                                cSearchWhereCONTENT = Conversions.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLBrief LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLBrief LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
-                                cSearchWhereCONTENT = Conversions.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLDetail LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLDetail LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
+                                cSearchWhereCONTENT = Convert.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLBrief LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLBrief LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
+                                cSearchWhereCONTENT = Convert.ToString(cSearchWhereCONTENT + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cContentXMLDetail LIKE '%[^<]", SqlFmt(cSearchVariant)), "%' AND cContentXMLDetail LIKE '%[^<][^/]"), SqlFmt(cSearchVariant)), "%') "));
 
 
-                                cSearchWhereUSER = Conversions.ToString(cSearchWhereUSER + Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cDirXml LIKE '%[^<]", SqlFmt(cSearchVariant)), "%'  )"));
+                                cSearchWhereUSER = Convert.ToString(cSearchWhereUSER + Operators.ConcatenateObject(Operators.ConcatenateObject(" OR (cDirXml LIKE '%[^<]", SqlFmt(cSearchVariant)), "%'  )"));
                             }
 
                             // Each word and its variants are put into a distinct array which is then added to a collection of search terms  
@@ -1580,7 +1580,7 @@ namespace Protean
 
                             // return invalid search
                             var oResXMLErr = moPageXml.CreateElement("Content");
-                            oResXMLErr.SetAttribute("searchType", Conversions.ToString(Interaction.IIf(bUserQuery, "USER", "REGEX")));
+                            oResXMLErr.SetAttribute("searchType", Convert.ToString(Interaction.IIf(bUserQuery, "USER", "REGEX")));
                             oResXMLErr.SetAttribute("SearchString", "Invalid Query");
                             oResXMLErr.SetAttribute("type", "SearchHeader");
                             oResXMLErr.SetAttribute("Hits", "0");
@@ -1593,7 +1593,7 @@ namespace Protean
 
                         // Get the SQL that will look for any of the search words or their variants
 
-                        cSql = Conversions.ToString(Operators.ConcatenateObject("SELECT nContentKey, cContentXmlBrief,  cContentXmlDetail, nContentPrimaryId, cContentName, cContentSchemaName " + " FROM tblContent " + " WHERE (" + cSearchWhereCONTENT + ")", Interaction.IIf(string.IsNullOrEmpty(cContentType), "", " AND (cContentSchemaName IN (" + cContentType + "))")));
+                        cSql = Convert.ToString(Operators.ConcatenateObject("SELECT nContentKey, cContentXmlBrief,  cContentXmlDetail, nContentPrimaryId, cContentName, cContentSchemaName " + " FROM tblContent " + " WHERE (" + cSearchWhereCONTENT + ")", Interaction.IIf(string.IsNullOrEmpty(cContentType), "", " AND (cContentSchemaName IN (" + cContentType + "))")));
 
 
                         string cResultIDsCSV = "";
@@ -1609,22 +1609,22 @@ namespace Protean
                                     ppppp += 1;
                                     // If moDbHelper.checkPagePermission(oDr("nContentPrimaryId")) = oDr("nContentPrimaryId") And ContentPagesLive(oDr("nContentKey")) Then
 
-                                    string cNewLineLessBrief = Conversions.ToString(oDr["cContentXmlBrief"]);
-                                    string cNewLineLessDetail = Conversions.ToString(oDr["cContentXmlDetail"]);
+                                    string cNewLineLessBrief = Convert.ToString(oDr["cContentXmlBrief"]);
+                                    string cNewLineLessDetail = Convert.ToString(oDr["cContentXmlDetail"]);
                                     if (!string.IsNullOrEmpty(cNewLineLessBrief))
-                                        cNewLineLessBrief = Strings.Replace(cNewLineLessBrief, Conversions.ToString('\n'), "");
+                                        cNewLineLessBrief = Strings.Replace(cNewLineLessBrief, Convert.ToString('\n'), "");
                                     if (!string.IsNullOrEmpty(cNewLineLessBrief))
-                                        cNewLineLessBrief = Strings.Replace(cNewLineLessBrief, Conversions.ToString('\r'), "");
+                                        cNewLineLessBrief = Strings.Replace(cNewLineLessBrief, Convert.ToString('\r'), "");
                                     if (!string.IsNullOrEmpty(cNewLineLessDetail))
-                                        cNewLineLessDetail = Strings.Replace(cNewLineLessDetail, Conversions.ToString('\n'), "");
+                                        cNewLineLessDetail = Strings.Replace(cNewLineLessDetail, Convert.ToString('\n'), "");
                                     if (!string.IsNullOrEmpty(cNewLineLessDetail))
-                                        cNewLineLessDetail = Strings.Replace(cNewLineLessDetail, Conversions.ToString('\r'), "");
+                                        cNewLineLessDetail = Strings.Replace(cNewLineLessDetail, Convert.ToString('\r'), "");
 
                                     if (reMasterCheck.IsMatch(cNewLineLessBrief) | reMasterCheck.IsMatch(cNewLineLessDetail))
                                     {
                                         // If (reMasterCheck.IsMatch(oDr("cContentXmlBrief")) Or reMasterCheck.IsMatch(oDr("cContentXmlDetail"))) Then
                                         // If reMasterCheck.IsMatch(oDr("cContentXmlDetail")) Then
-                                        cResultIDsCSV = Conversions.ToString(cResultIDsCSV + Operators.ConcatenateObject(oDr["nContentKey"], ","));
+                                        cResultIDsCSV = Convert.ToString(cResultIDsCSV + Operators.ConcatenateObject(oDr["nContentKey"], ","));
                                     }
 
                                 }
@@ -1687,10 +1687,10 @@ namespace Protean
                                 {
 
                                     var oContent = moContextNode.OwnerDocument.CreateElement("Content");
-                                    oContent.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
+                                    oContent.SetAttribute("id", Convert.ToString(oDr["nDirKey"]));
                                     oContent.SetAttribute("type", "User");
-                                    oContent.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
-                                    oContent.InnerXml = Conversions.ToString(oDr["cDirXml"]);
+                                    oContent.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
+                                    oContent.InnerXml = Convert.ToString(oDr["cDirXml"]);
                                     if (reMasterCheck.IsMatch(oContent.OuterXml))
                                     {
                                         nResultCount += 1;
@@ -1709,7 +1709,7 @@ namespace Protean
                         }
 
                         var oResXML = moPageXml.CreateElement("Content");
-                        oResXML.SetAttribute("searchType", Conversions.ToString(Interaction.IIf(bUserQuery, "USER", "REGEX")));
+                        oResXML.SetAttribute("searchType", Convert.ToString(Interaction.IIf(bUserQuery, "USER", "REGEX")));
                         oResXML.SetAttribute("SearchString", sSearch);
                         oResXML.SetAttribute("type", "SearchHeader");
                         oResXML.SetAttribute("Hits", nResultCount.ToString());
@@ -1823,7 +1823,7 @@ namespace Protean
                     {
                         // Dim oDr As SqlClient.SqlDataReader
 
-                        cSql = Conversions.ToString(Operators.ConcatenateObject("SELECT distinct  parentContent.nContentKey, Cast(parentContent.cContentXmlBrief as NVarchar(Max)) as cContentXmlBrief,  Cast(parentContent.cContentXmlDetail as NVarchar(Max)) as cContentXmlDetail, parentContent.nContentPrimaryId, parentContent.cContentName, parentContent.cContentSchemaName " + @" FROM tblContentRelation r  
+                        cSql = Convert.ToString(Operators.ConcatenateObject("SELECT distinct  parentContent.nContentKey, Cast(parentContent.cContentXmlBrief as NVarchar(Max)) as cContentXmlBrief,  Cast(parentContent.cContentXmlDetail as NVarchar(Max)) as cContentXmlDetail, parentContent.nContentPrimaryId, parentContent.cContentName, parentContent.cContentSchemaName " + @" FROM tblContentRelation r  
 inner join tblContent parentContent on (r.nContentParentId = parentContent.nContentKey) "
                               + "inner join tblContent childContent on (r.nContentChildId = childContent.nContentKey) " + " WHERE (" + cSearchWhereCONTENT + ")", Interaction.IIf(string.IsNullOrEmpty(cContentType), "", " AND (parentContent.cContentSchemaName IN (" + cContentType + "))")));
 
@@ -1840,10 +1840,10 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                                     // Debug.WriteLine("Search loop " & ppppp)
                                     // ppppp += 1
 
-                                    string cNewLineLessBrief = Conversions.ToString(oDr["cContentXmlBrief"]);
-                                    string cNewLineLessDetail = Conversions.ToString(oDr["cContentXmlDetail"]);
+                                    string cNewLineLessBrief = Convert.ToString(oDr["cContentXmlBrief"]);
+                                    string cNewLineLessDetail = Convert.ToString(oDr["cContentXmlDetail"]);
 
-                                    cResultIDsCSV = Conversions.ToString(cResultIDsCSV + Operators.ConcatenateObject(oDr["nContentKey"], ","));
+                                    cResultIDsCSV = Convert.ToString(cResultIDsCSV + Operators.ConcatenateObject(oDr["nContentKey"], ","));
 
                                 }
                                 oDr.Close();
@@ -1905,10 +1905,10 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                                 {
 
                                     var oContent = moContextNode.OwnerDocument.CreateElement("Content");
-                                    oContent.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
+                                    oContent.SetAttribute("id", Convert.ToString(oDr["nDirKey"]));
                                     oContent.SetAttribute("type", "User");
-                                    oContent.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
-                                    oContent.InnerXml = Conversions.ToString(oDr["cDirXml"]);
+                                    oContent.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
+                                    oContent.InnerXml = Convert.ToString(oDr["cDirXml"]);
                                     if (reMasterCheck.IsMatch(oContent.OuterXml))
                                     {
                                         nResultCount += 1;
@@ -1927,7 +1927,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                         }
 
                         var oResXML = moPageXml.CreateElement("Content");
-                        oResXML.SetAttribute("searchType", Conversions.ToString(Interaction.IIf(bUserQuery, "USER", "REGEX")));
+                        oResXML.SetAttribute("searchType", Convert.ToString(Interaction.IIf(bUserQuery, "USER", "REGEX")));
                         oResXML.SetAttribute("SearchString", sSearch);
                         oResXML.SetAttribute("type", "SearchHeader");
                         oResXML.SetAttribute("Hits", nResultCount.ToString());
@@ -1984,7 +1984,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     if (Information.IsNumeric(cValue))
                     {
 
-                        if (Conversions.ToDouble(cValue) != 0d)
+                        if (Convert.ToDouble(cValue) != 0d)
                         {
 
                             // Valid value - now check the unit
@@ -1992,22 +1992,22 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                             {
                                 case "Day":
                                     {
-                                        cRangeDate_End = DateTime.Today.AddDays(Conversions.ToDouble(cValue));
+                                        cRangeDate_End = DateTime.Today.AddDays(Convert.ToDouble(cValue));
                                         break;
                                     }
                                 case "Week":
                                     {
-                                        cRangeDate_End = DateTime.Today.AddDays(Conversions.ToDouble(cValue) * 7d);
+                                        cRangeDate_End = DateTime.Today.AddDays(Convert.ToDouble(cValue) * 7d);
                                         break;
                                     }
                                 case "Month":
                                     {
-                                        cRangeDate_End = DateTime.Today.AddMonths(Conversions.ToInteger(cValue));
+                                        cRangeDate_End = DateTime.Today.AddMonths(Convert.ToInt16(cValue));
                                         break;
                                     }
                                 case "Year":
                                     {
-                                        cRangeDate_End = DateTime.Today.AddYears(Conversions.ToInteger(cValue));
+                                        cRangeDate_End = DateTime.Today.AddYears(Convert.ToInt16(cValue));
                                         break;
                                     }
 
@@ -2042,11 +2042,11 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                             if (cStartDate.ToLower() == "now")
                                 dStart = DateTime.Today;
                             else
-                                dStart = Conversions.ToDate(cStartDate);
+                                dStart = Convert.ToDateTime(cStartDate);
                             if (cEndDate.ToLower() == "now")
                                 dEnd = DateTime.Today;
                             else
-                                dEnd = Conversions.ToDate(cEndDate);
+                                dEnd = Convert.ToDateTime(cEndDate);
                         }
                     }
 
@@ -2079,7 +2079,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                         }
 
                         // Start search
-                        dEnd = Conversions.ToDate(Strings.Format(dEnd, "dd-MMM-yyyy") + " 23:59:59");
+                        dEnd = Convert.ToDateTime(Strings.Format(dEnd, "dd-MMM-yyyy") + " 23:59:59");
                         cSqlDateRange = " sa." + cSqlColumn + " >=  " + Tools.Database.SqlDate(dStart);
                         cSqlDateRange += " AND sa." + cSqlColumn + " <=  " + Tools.Database.SqlDate(dEnd, true);
 
@@ -2090,13 +2090,13 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
 
 
                         // Ensure we get Distinct values
-                        cSql = Conversions.ToString(Operators.ConcatenateObject("SELECT DISTINCT sc.nContentKey" + " FROM tblContent sc INNER JOIN tblAudit sa ON sc.nAuditId = sa.nAuditKey" + " WHERE (" + cSqlDateRange + ")", Interaction.IIf(string.IsNullOrEmpty(cContentTypes), "", " AND (sc.cContentSchemaName IN (" + cContentTypes + "))")));
+                        cSql = Convert.ToString(Operators.ConcatenateObject("SELECT DISTINCT sc.nContentKey" + " FROM tblContent sc INNER JOIN tblAudit sa ON sc.nAuditId = sa.nAuditKey" + " WHERE (" + cSqlDateRange + ")", Interaction.IIf(string.IsNullOrEmpty(cContentTypes), "", " AND (sc.cContentSchemaName IN (" + cContentTypes + "))")));
 
 
                         using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(cSql))  // Done by nita on 6/7/22
                         {
                             while (oDr.Read())
-                                cResultIDsCSV = Conversions.ToString(cResultIDsCSV + Operators.ConcatenateObject(oDr["nContentKey"], ","));
+                                cResultIDsCSV = Convert.ToString(cResultIDsCSV + Operators.ConcatenateObject(oDr["nContentKey"], ","));
                             oDr.Close();
                         }
 
@@ -2115,8 +2115,8 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     oResXML.SetAttribute("searchDateUnitTotal", cValue);
                     oResXML.SetAttribute("searchStartDate", cStartDate);
                     oResXML.SetAttribute("searchEndDate", cEndDate);
-                    oResXML.SetAttribute("searchedRangeStart", Conversions.ToString(Interaction.IIf(dStart == DateTime.MinValue, "Could not evaluate", XmlDate(dStart))));
-                    oResXML.SetAttribute("searchedRangeEnd", Conversions.ToString(Interaction.IIf(dEnd == DateTime.MinValue, "Could not evaluate", XmlDate(dEnd))));
+                    oResXML.SetAttribute("searchedRangeStart", Convert.ToString(Interaction.IIf(dStart == DateTime.MinValue, "Could not evaluate", XmlDate(dStart))));
+                    oResXML.SetAttribute("searchedRangeEnd", Convert.ToString(Interaction.IIf(dEnd == DateTime.MinValue, "Could not evaluate", XmlDate(dEnd))));
                     oResXML.SetAttribute("type", "SearchHeader");
                     oResXML.SetAttribute("Hits", nResultCount.ToString());
                     oResXML.SetAttribute("Time", DateTime.Now.Subtract(dtStart).TotalMilliseconds.ToString());
@@ -2208,12 +2208,12 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                     foreach (char character in searchString)
                     {
 
-                        if (Conversions.ToString(character) == " " & whiteSpaceAtBeginning)
+                        if (Convert.ToString(character) == " " & whiteSpaceAtBeginning)
                         {
                         }
                         // Ignore whitespace at the start of the search substring
 
-                        else if (Conversions.ToString(character) == "\"")
+                        else if (Convert.ToString(character) == "\"")
                         {
 
                             // If a quotemark, then add it and work out whether to add it as a term
@@ -2239,7 +2239,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                             }
                         }
 
-                        else if (Conversions.ToString(character) == " " & !foundOpeningQuoteMark)
+                        else if (Convert.ToString(character) == " " & !foundOpeningQuoteMark)
                         {
 
                             // For whitespace in normal circumstances, add the term

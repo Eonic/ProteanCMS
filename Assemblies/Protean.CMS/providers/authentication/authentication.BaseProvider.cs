@@ -306,7 +306,7 @@ namespace Protean.Providers
             //        else
             //        {
             //            DataRow oUserDetails = dsUsers.Tables[0].Rows[0];
-            //            userid = Conversions.ToLong(oUserDetails["nDirKey"]);                
+            //            userid = Convert.ToInt64(oUserDetails["nDirKey"]);                
             //        }
             //    }
             //    return userid;

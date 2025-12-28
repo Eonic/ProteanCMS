@@ -563,7 +563,7 @@ namespace Protean
                     // Set a 10 min timeout
                     if (!string.IsNullOrEmpty(oConfig["FeedTimeout"]))
                     {
-                        oRequest.Timeout = Conversions.ToInteger(oConfig["FeedTimeout"]);
+                        oRequest.Timeout = Convert.ToInt16(oConfig["FeedTimeout"]);
                     }
 
                     oDBH.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, 0, "getting url: " + cFeedURL);
@@ -730,11 +730,11 @@ namespace Protean
                         foreach (DataRow currentODR in oDS.Tables["Items"].Rows)
                         {
                             oDR = currentODR;
-                            Debug.WriteLine(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("'", oDR["cContentForiegnRef"]), "' = '"), cId), "' = ("), Interaction.IIf(Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["cContentForiegnRef"], cId, false)), "True", "False")), ")"));
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["cContentForiegnRef"], cId, false)))
+                            Debug.WriteLine(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("'", oDR["cContentForiegnRef"]), "' = '"), cId), "' = ("), Interaction.IIf(Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["cContentForiegnRef"], cId, false)), "True", "False")), ")"));
+                            if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["cContentForiegnRef"], cId, false)))
                             {
                                 oDR["InFeed"] = 1;
-                                nContentKey = Conversions.ToInteger(oDR["nContentKey"]);
+                                nContentKey = Convert.ToInt16(oDR["nContentKey"]);
                                 break;
                             }
                         }
@@ -794,7 +794,7 @@ namespace Protean
                         foreach (DataRow currentODR1 in oDS.Tables["Items"].Rows)
                         {
                             oDR = currentODR1;
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["InFeed"], 0, false)))
+                            if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["InFeed"], 0, false)))
                             {
                                 switch (nSave)
                                 {
@@ -809,7 +809,7 @@ namespace Protean
                                         {
                                             AddExternalMessage("Archiving Item", oDR["cContentForiegnRef"].ToString());
                                             _counters["archive"].Add();
-                                            ArchiveFeed(Conversions.ToInteger(oDR["nContentKey"]));
+                                            ArchiveFeed(Convert.ToInt16(oDR["nContentKey"]));
                                             break;
                                         }
                                 }

@@ -40,7 +40,7 @@ namespace Protean
                     try
                     {
                         XmlElement cartItem = (XmlElement)oCartItemProductDetailXml.ParentNode;
-                        short CartItemId = (short)Conversions.ToInteger(cartItem.GetAttribute("id"));
+                        short CartItemId = (short)Convert.ToInt16(cartItem.GetAttribute("id"));
 
                         if (oCartItemProductDetailXml.SelectSingleNode("IssueCodes") != null)
                         {
@@ -48,8 +48,8 @@ namespace Protean
                             {
                                 XmlElement codeElmt = (XmlElement)codeNode;
 
-                                short CodeSetId = (short)Conversions.ToInteger("0" + codeElmt.GetAttribute("codeBank"));
-                                short Quantity = (short)(Conversions.ToInteger(cartItem.GetAttribute("quantity")) + Conversions.ToInteger(codeElmt.GetAttribute("noOfCodes")));
+                                short CodeSetId = (short)Convert.ToInt16("0" + codeElmt.GetAttribute("codeBank"));
+                                short Quantity = (short)(Convert.ToInt16(cartItem.GetAttribute("quantity")) + Convert.ToInt16(codeElmt.GetAttribute("noOfCodes")));
                                 string SetName = cartItem.GetAttribute("name");
                                 AddCode(ref oCartItemProductDetailXml, CartItemId, CodeSetId, Quantity, SetName);
                             }
@@ -57,8 +57,8 @@ namespace Protean
                         else
                         {
 
-                            short CodeSetId = (short)Conversions.ToInteger("0" + oCartItemProductDetailXml.GetAttribute("codeBank"));
-                            short Quantity = (short)Conversions.ToInteger(cartItem.GetAttribute("quantity"));
+                            short CodeSetId = (short)Convert.ToInt16("0" + oCartItemProductDetailXml.GetAttribute("codeBank"));
+                            short Quantity = (short)Convert.ToInt16(cartItem.GetAttribute("quantity"));
                             AddCode(ref oCartItemProductDetailXml, CartItemId, CodeSetId, Quantity, "");
                         }
                         myWeb.moCart.SaveCartXML((XmlElement)cartItem.ParentNode);
@@ -67,7 +67,7 @@ namespace Protean
                     catch (Exception ex)
                     {
                         OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "IssueTickets", ex, ""));
-                        return Conversions.ToBoolean(ex.Message);
+                        return Convert.ToBoolean(ex.Message);
                     }
 
                     return default;
@@ -103,7 +103,7 @@ namespace Protean
                     catch (Exception ex)
                     {
                         OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddCode", ex, ""));
-                        // return Conversions.ToBoolean(ex.Message);
+                        // return Convert.ToBoolean(ex.Message);
                     }
 
                 }

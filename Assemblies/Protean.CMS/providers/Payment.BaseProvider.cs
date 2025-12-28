@@ -254,7 +254,7 @@ namespace Protean.Providers
                             oEwProv.mcPaymentType = oOrder.GetAttribute("payableType");
                         }
                         oEwProv.mnCartId = oCart.mnCartId;
-                        oEwProv.mcPaymentOrderDescription = "Ref:" + oCart.OrderNoPrefix + oCart.mnCartId + " An online purchase from: " + oCart.mcSiteURL + " on " + niceDate(DateTime.Now) + " " + DateAndTime.TimeValue(Conversions.ToString(DateTime.Now));
+                        oEwProv.mcPaymentOrderDescription = "Ref:" + oCart.OrderNoPrefix + oCart.mnCartId + " An online purchase from: " + oCart.mcSiteURL + " on " + niceDate(DateTime.Now) + " " + DateAndTime.TimeValue(Convert.ToString(DateTime.Now));
 
                         if (oOrder.SelectSingleNode("Contact[@type='Billing Address']/GivenName") != null)
                         {
@@ -267,7 +267,7 @@ namespace Protean.Providers
                         //object localgetNodeValueByType2() { XmlNode argoParent2 = oOrder; var ret = getNodeValueByType(ref argoParent2, "Contact[@type='Billing Address']/State"); oOrder = (XmlElement)argoParent2; return ret; }
                         //object localgetNodeValueByType3() { XmlNode argoParent3 = oOrder; var ret = getNodeValueByType(ref argoParent3, "Contact[@type='Billing Address']/Country"); oOrder = (XmlElement)argoParent3; return ret; }
 
-                        //cBillingAddress = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(localgetNodeValueByType(), Constants.vbLf), localgetNodeValueByType1()), Constants.vbLf), localgetNodeValueByType2()), Constants.vbLf), localgetNodeValueByType3()), Constants.vbLf));
+                        //cBillingAddress = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(localgetNodeValueByType(), Constants.vbLf), localgetNodeValueByType1()), Constants.vbLf), localgetNodeValueByType2()), Constants.vbLf), localgetNodeValueByType3()), Constants.vbLf));
 
                         //Build the billing address string
                         XmlNode xmloOrder = oOrder;
@@ -288,9 +288,9 @@ namespace Protean.Providers
                         var dFulfillment = DateTime.Now;
                         foreach (XmlNode oNode in oOrder.SelectNodes("Item/productDetail/FulfillmentDate[node()!='']"))
                         {
-                            if (Conversions.ToDate(oNode.InnerText) > dFulfillment)
+                            if (Convert.ToDateTime(oNode.InnerText) > dFulfillment)
                             {
-                                dFulfillment = Conversions.ToDate(oNode.InnerText);
+                                dFulfillment = Convert.ToDateTime(oNode.InnerText);
                             }
                         }
 
@@ -451,9 +451,9 @@ namespace Protean.Providers
 
                         foreach (var item in myWeb.moRequest.Form)
                         {
-                            XmlNode newInput = oXform.addInput(ref oFrmGroup, Conversions.ToString(item), false, Conversions.ToString(item), "hidden");
+                            XmlNode newInput = oXform.addInput(ref oFrmGroup, Convert.ToString(item), false, Convert.ToString(item), "hidden");
                             XmlElement newInputElmt = (XmlElement)newInput;
-                            oXform.addValue(ref newInputElmt, myWeb.moRequest.Form[Conversions.ToString(item)]);
+                            oXform.addValue(ref newInputElmt, myWeb.moRequest.Form[Convert.ToString(item)]);
 
                         }
 
@@ -578,7 +578,7 @@ namespace Protean.Providers
                             addNewTextNode("nAuditKey", ref argoNode, nAuditId);
                             oElmt = (XmlElement)argoNode;
                             XmlNode argoNode1 = oElmt;
-                            addNewTextNode("nStatus", ref argoNode1, Conversions.ToString(Interaction.IIf(bValid, 1, 0)));
+                            addNewTextNode("nStatus", ref argoNode1, Convert.ToString(Interaction.IIf(bValid, 1, 0)));
                             oElmt = (XmlElement)argoNode1;
                             oInstance.AppendChild(oElmt);
 

@@ -868,7 +868,7 @@ namespace Protean
                                 oSmtpn.Host = goConfig["MailServer"];
                             if (!string.IsNullOrEmpty(goConfig["MailServerPort"]))
                             {
-                                oSmtpn.Port = Conversions.ToInteger(goConfig["MailServerPort"]);
+                                oSmtpn.Port = Convert.ToInt16(goConfig["MailServerPort"]);
                             }
                             if (!string.IsNullOrEmpty(goConfig["MailServerUsername"]))
                             {
@@ -1012,7 +1012,7 @@ namespace Protean
 
                             int mnUserId = 0;
                             if (goSession != null)
-                                mnUserId = Conversions.ToInteger(goSession["mnUserId"]);
+                                mnUserId = Convert.ToInt16(goSession["mnUserId"]);
                             if (odbHelper is null)
                             {
                                 string cCon = "Data Source=" + goConfig["DatabaseServer"] + "; Initial Catalog=" + goConfig["DatabaseName"] + ";";
@@ -1159,7 +1159,7 @@ namespace Protean
         private static void SendCompletedCallback(object sender, System.ComponentModel.AsyncCompletedEventArgs e)
         {
             // Get the unique identifier for this asynchronous operation. 
-            string token = Conversions.ToString(e.UserState);
+            string token = Convert.ToString(e.UserState);
 
             if (e.Cancelled)
             {
@@ -1258,7 +1258,7 @@ namespace Protean
                 // Are these both needed?
                 if (recipientIdsSplit != null)
                 {
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(recipientIdsSplit.GetValue(0), "", false))) // Empty Check
+                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(recipientIdsSplit.GetValue(0), "", false))) // Empty Check
                     {
 
 
@@ -1269,7 +1269,7 @@ namespace Protean
                         int mnUserId = 0;
 
                         if (goSession != null)
-                            mnUserId = Conversions.ToInteger(goSession["mnUserId"]);
+                            mnUserId = Convert.ToInt16(goSession["mnUserId"]);
                         if (odbHelper is null)
                         {
                             string cCon = "Data Source=" + goConfig["DatabaseServer"] + "; Initial Catalog=" + goConfig["DatabaseName"] + ";";
@@ -1306,7 +1306,7 @@ namespace Protean
                                 {
                                     var oResultsDoc = new XmlDocument();
                                     var oResults = oResultsDoc.CreateElement("Results");
-                                    oResults.InnerXml = Conversions.ToString(oDr["cDirXml"]);
+                                    oResults.InnerXml = Convert.ToString(oDr["cDirXml"]);
 
                                     if (oResults != null)
                                     {
@@ -1558,7 +1558,7 @@ namespace Protean
             }
         }
 
-        public bool SendMailToList_Queued(int nPageId, string cEmailXSL, string cGroups, string cFromEmail, string cFromName, string cSubject)
+        public bool SendMailToList_Queued(long nPageId, string cEmailXSL, string cGroups, string cFromEmail, string cFromName, string cSubject)
         {
             // PerfMon.Log("Messaging", "SendMailToList_Queued")
 
@@ -1603,7 +1603,7 @@ namespace Protean
                             oEmail.Subject = cSubject;
                         }
                         // if we are not at the bcc limit then we add the addres
-                        if (i2 < Conversions.ToInteger(moMailConfig["BCCLimit"]))
+                        if (i2 < Convert.ToInt16(moMailConfig["BCCLimit"]))
                         {
                             if (Tools.Text.IsEmail(cRepientMail.Trim()))
                             {
@@ -1623,7 +1623,7 @@ namespace Protean
                         }
                     }
                     // try a send after in case we havent reached the last send
-                    if (i2 < Conversions.ToInteger(moMailConfig["BCCLimit"]))
+                    if (i2 < Convert.ToInt16(moMailConfig["BCCLimit"]))
                     {
                         cProcessInfo = "Sending queued mail (last)";
                         SendQueuedMail(oEmail, moMailConfig["PickupHost"], moMailConfig["PickupLocation"]);
@@ -1689,7 +1689,7 @@ namespace Protean
         }
 
 
-        public bool SendSingleMail_Direct(int nPageId, string cEmailXSL, string cRepientMail, string cFromEmail, string cFromName, string cSubject)
+        public bool SendSingleMail_Direct(long nPageId, string cEmailXSL, string cRepientMail, string cFromEmail, string cFromName, string cSubject)
         {
             // PerfMon.Log("Messaging", "SendSingleMail_Queued")
             try
@@ -1705,7 +1705,7 @@ namespace Protean
                     oSmtpn.Host = goConfig["MailServer"];
                     if (!string.IsNullOrEmpty(goConfig["MailServerPort"]))
                     {
-                        oSmtpn.Port = Conversions.ToInteger(goConfig["MailServerPort"]);
+                        oSmtpn.Port = Convert.ToInt16(goConfig["MailServerPort"]);
                     }
 
                     if (!string.IsNullOrEmpty(goConfig["MailServerUsername"]))
@@ -1751,7 +1751,7 @@ namespace Protean
 
                     oEmail.Body = sEmailBody;
                     oEmail.To.Add(new MailAddress(cRepientMail.Trim()));
-                    oEmail.Subject = Conversions.ToString(emailStructure["Subject"]);
+                    oEmail.Subject = Convert.ToString(emailStructure["Subject"]);
 
                     oSmtpn.Send(oEmail);
 
@@ -1797,7 +1797,7 @@ namespace Protean
 
 
         }
-        public Hashtable SetEmailBodyAndSubject(int nPageId, string cEmailXSL, string cRepientMail, string cFromEmail, string cFromName, string cSubject)
+        public Hashtable SetEmailBodyAndSubject(long nPageId, string cEmailXSL, string cRepientMail, string cFromEmail, string cFromName, string cSubject)
         {
             try
             {
@@ -1885,7 +1885,7 @@ namespace Protean
                     int nID = 0;
                     // get the user id
                     // we will need this for personalised to get the user xml
-                    nID = Conversions.ToInteger(oElmt.GetAttribute("ndirkey"));
+                    nID = Convert.ToInt16(oElmt.GetAttribute("ndirkey"));
                     // get the email address
 
                     XmlElement oEmailElmt = (XmlElement)oElmt.SelectSingleNode("descendant-or-self::user/email");
@@ -1972,7 +1972,7 @@ namespace Protean
             {
                 get
                 {
-                    return Conversions.ToInteger(Dictionary[key]);
+                    return Convert.ToInt16(Dictionary[key]);
                 }
                 set
                 {
@@ -2066,7 +2066,7 @@ namespace Protean
             // PerfMon.Log("POP3", "ReadMail")
             try
             {
-                int nNoEmails = Conversions.ToInteger(Connect(cServer, cUser, cPassword));
+                int nNoEmails = Convert.ToInt16(Connect(cServer, cUser, cPassword));
 
                 int i;
                 var oXML = new XMLEmail[nNoEmails];
@@ -2123,7 +2123,7 @@ namespace Protean
                 string[] tmpArray;
                 tmpArray = Strings.Split(RdStrm.ReadLine(), " ");
                 string numMess = tmpArray[1];
-                return Conversions.ToInteger(numMess).ToString();
+                return Convert.ToInt16(numMess).ToString();
             }
             catch (Exception ex)
             {
@@ -2487,11 +2487,11 @@ namespace Protean
             {
                 // "Barry Rushton" <barryr@eonic.co.uk>
                 string cName = "";
-                if (cTextAddress.Contains(Conversions.ToString('"')))
+                if (cTextAddress.Contains(Convert.ToString('"')))
                 {
-                    cName = Strings.Right(cTextAddress, cTextAddress.Length - Strings.InStr(cTextAddress, Conversions.ToString('"')));
+                    cName = Strings.Right(cTextAddress, cTextAddress.Length - Strings.InStr(cTextAddress, Convert.ToString('"')));
                     if (!string.IsNullOrEmpty(cName))
-                        cName = Strings.Left(cName, Strings.InStr(cName, Conversions.ToString('"')) - 1);
+                        cName = Strings.Left(cName, Strings.InStr(cName, Convert.ToString('"')) - 1);
                 }
                 string cAddress;
                 cAddress = Strings.Right(cTextAddress, cTextAddress.Length - Strings.InStr(cTextAddress, "<"));

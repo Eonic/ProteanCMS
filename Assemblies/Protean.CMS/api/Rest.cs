@@ -43,9 +43,9 @@ namespace Protean
                     Protean.Cms myWeb = new Cms();
                     ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                     IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, moConfig["MembershipProvider"]);
-                    mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref myWeb));
+                    mnUserId = Convert.ToInt16(oMembershipProv.Activities.GetUserId(ref myWeb));
 
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
+                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
                     {
                         mbAdminMode = true;
                         // moDbHelper.gbAdminMode = mbAdminMode
@@ -246,7 +246,7 @@ namespace Protean
 
                     // check the response whatever is coming like with code 400, 200, based on the output- return in Json
 
-                    myResponse = Conversions.ToString(calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args));
+                    myResponse = Convert.ToString(calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args));
 
                 }
 
@@ -308,7 +308,7 @@ namespace Protean
                 int seperatorIndex;
                 string username = string.Empty;
                 string password = string.Empty;
-                int nUserId = 0;
+                long nUserId = 0;
                 string sValidResponse = string.Empty;
 
                 try
@@ -341,7 +341,7 @@ namespace Protean
                                 sValidResponse = myWeb.moDbHelper.validateUser(username, password);
                                 if (Information.IsNumeric(sValidResponse))
                                 {
-                                    nUserId = (int)Conversions.ToLong(sValidResponse);
+                                    nUserId = (int)Convert.ToInt64(sValidResponse);
                                 }
                             }
                         }

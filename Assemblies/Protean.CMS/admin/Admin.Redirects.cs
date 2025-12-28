@@ -577,9 +577,9 @@ namespace Protean
                     string Result = "";
                     if (pageId > 0)
                     {
-                        Result = Conversions.ToString(moDbHelper.isParent(pageId));
+                        Result = Convert.ToString(moDbHelper.isParent(pageId));
                     }
-                    return Conversions.ToBoolean(Result);
+                    return Convert.ToBoolean(Result);
                 }
                 public string RedirectPage(ref string sRedirectType, ref string sOldUrl, ref string sNewUrl, ref string sPageUrl, bool bRedirectChildPage = false, string sType = "", int nPageId = 0)
                 {
@@ -665,13 +665,13 @@ namespace Protean
                             case "301Redirect":
                                 {
 
-                                    CreateRedirect(ref sRedirectType, ref sOldUrl, ref sNewUrl, "", nPageId, Conversions.ToString(bRedirectChildPage));
+                                    CreateRedirect(ref sRedirectType, ref sOldUrl, ref sNewUrl, "", nPageId, Convert.ToString(bRedirectChildPage));
                                     break;
                                 }
 
                             case "302Redirect":
                                 {
-                                    CreateRedirect(ref sRedirectType, ref sOldUrl, ref sNewUrl, "", nPageId, Conversions.ToString(bRedirectChildPage));
+                                    CreateRedirect(ref sRedirectType, ref sOldUrl, ref sNewUrl, "", nPageId, Convert.ToString(bRedirectChildPage));
                                     break;
                                 }
 

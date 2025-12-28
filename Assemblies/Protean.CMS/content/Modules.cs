@@ -100,7 +100,7 @@ namespace Protean
                         var DateSet = myWeb.moDbHelper.GetDataSet(sSql, "ArticleDates");
                         var dEarliestDate = PageDate;
                         // Latest Articles
-                        int nFirstPageCount = Conversions.ToInteger("0" + oContentNode.GetAttribute("firstPageCount"));
+                        int nFirstPageCount = Convert.ToInt16("0" + oContentNode.GetAttribute("firstPageCount"));
                         DateTime FirstPageLastDate = default;
                         long counter = nFirstPageCount;
 
@@ -108,14 +108,14 @@ namespace Protean
                         {
                             if (Information.IsDate(dr["publish"]))
                             {
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectLess(dr["publish"], dEarliestDate, false)))
+                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectLess(dr["publish"], dEarliestDate, false)))
                                 {
-                                    dEarliestDate = Conversions.ToDate(dr["publish"]);
+                                    dEarliestDate = Convert.ToDateTime(dr["publish"]);
                                 }
                                 counter = counter - 1L;
                                 if (counter == 0L)
                                 {
-                                    FirstPageLastDate = Conversions.ToDate(dr["publish"]);
+                                    FirstPageLastDate = Convert.ToDateTime(dr["publish"]);
                                 }
                             }
                         }
@@ -173,21 +173,21 @@ namespace Protean
 
                         // This Month
                         object firstDayMonth = new DateTime(PageDate.Year, PageDate.Month, 1);
-                        contentCount = this.getArticleCount(DateSet, Conversions.ToDate(firstDayMonth), PageDate);
+                        contentCount = this.getArticleCount(DateSet, Convert.ToDateTime(firstDayMonth), PageDate);
                         if (contentCount > 0)
                         {
                             thisDateQuery = "thismonth";
                             NewMenu.AddMenuItem("This Month", thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, contentCount: contentCount);
                             if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                             {
-                                startDate = Conversions.ToDate(firstDayMonth);
+                                startDate = Convert.ToDateTime(firstDayMonth);
                                 endDate = PageDate;
                                 dateQuery = thisDateQuery;
                             }
                         }
 
                         // Step through this years months
-                        int nPrevMonths = Conversions.ToInteger("0" + oContentNode.GetAttribute("previousMonthsListed"));
+                        int nPrevMonths = Convert.ToInt16("0" + oContentNode.GetAttribute("previousMonthsListed"));
                         if (nPrevMonths == 0)
                             nPrevMonths = 12;
                         int thisCount = 1;
@@ -196,15 +196,15 @@ namespace Protean
                         while (nThisMonth != 0 & thisCount <= nPrevMonths)
                         {
                             object firstDayloopMonth = new DateTime(PageDate.Year, (int)nThisMonth, 1);
-                            contentCount = this.getArticleCount(DateSet, Conversions.ToDate(firstDayloopMonth), dhLastDayInMonth(Conversions.ToDate(firstDayloopMonth)));
+                            contentCount = this.getArticleCount(DateSet, Convert.ToDateTime(firstDayloopMonth), dhLastDayInMonth(Convert.ToDateTime(firstDayloopMonth)));
                             if (contentCount > 0)
                             {
                                 thisDateQuery = nThisYear + "-" + nThisMonth;
                                 NewMenu.AddMenuItem(DateAndTime.MonthName(nThisMonth) + " " + nThisYear, thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, contentCount: contentCount);
                                 if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                                 {
-                                    startDate = Conversions.ToDate(firstDayloopMonth);
-                                    endDate = dhLastDayInMonth(Conversions.ToDate(firstDayloopMonth));
+                                    startDate = Convert.ToDateTime(firstDayloopMonth);
+                                    endDate = dhLastDayInMonth(Convert.ToDateTime(firstDayloopMonth));
                                     dateQuery = thisDateQuery;
                                 }
                             }
@@ -218,14 +218,14 @@ namespace Protean
                             var lastMonthDate = new DateTime(PageDate.Year, (int)nThisMonth, 1);
                             lastMonthDate = dhLastDayInMonth(lastMonthDate);
                             object firstDayYear = new DateTime(PageDate.Year, 1, 1);
-                            contentCount = this.getArticleCount(DateSet, Conversions.ToDate(firstDayYear), lastMonthDate);
+                            contentCount = this.getArticleCount(DateSet, Convert.ToDateTime(firstDayYear), lastMonthDate);
                             if (contentCount > 0)
                             {
                                 thisDateQuery = "restofyear";
                                 NewMenu.AddMenuItem("Rest of " + PageDate.Year, thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, contentCount: contentCount);
                                 if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                                 {
-                                    startDate = Conversions.ToDate(firstDayYear);
+                                    startDate = Convert.ToDateTime(firstDayYear);
                                     endDate = lastMonthDate;
                                     dateQuery = thisDateQuery;
                                 }
@@ -239,7 +239,7 @@ namespace Protean
                         {
                             object firstDayloopYear = new DateTime(nThisYear, 1, 1);
                             object lastDayloopYear = new DateTime(nThisYear, 12, 31);
-                            contentCount = this.getArticleCount(DateSet, Conversions.ToDate(firstDayloopYear), Conversions.ToDate(lastDayloopYear));
+                            contentCount = this.getArticleCount(DateSet, Convert.ToDateTime(firstDayloopYear), Convert.ToDateTime(lastDayloopYear));
                             if (contentCount > 0)
                             {
                                 thisDateQuery = nThisYear.ToString();
@@ -251,7 +251,7 @@ namespace Protean
                                 NewMenu.AddMenuItem(nThisYear.ToString(), thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, null ,null, contentCount, sClass);
                                 if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                                 {
-                                    startDate = Conversions.ToDate(firstDayloopYear);
+                                    startDate = Convert.ToDateTime(firstDayloopYear);
                                     endDate = (DateTime?)lastDayloopYear;
                                     dateQuery = thisDateQuery;
                                 }
@@ -341,7 +341,7 @@ namespace Protean
                     {
                         if (Information.IsDate(dr["publish"]))
                         {
-                            if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectGreaterEqual(dr["publish"], startDate, false), Operators.ConditionalCompareObjectLessEqual(dr["publish"], endDate, false))))
+                            if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectGreaterEqual(dr["publish"], startDate, false), Operators.ConditionalCompareObjectLessEqual(dr["publish"], endDate, false))))
                             {
                                 ReturnCount = ReturnCount + 1;
                             }
@@ -366,14 +366,14 @@ namespace Protean
                         {
                             cPageURL = myWeb.mcPagePath.TrimEnd('/');
                         }
-                        long nItemsPerPage = Conversions.ToLong(oContentNode.GetAttribute("stepCount"));
+                        long nItemsPerPage = Convert.ToInt64(oContentNode.GetAttribute("stepCount"));
                         long nCurrentPage = 1L;
-                        long itemCount = Conversions.ToLong(myWeb.moDbHelper.GetDataValue(@"select count(nContentKey) from tblContent c inner join tblContentLocation cl on c.nContentKey =  cl.nContentId
+                        long itemCount = Convert.ToInt64(myWeb.moDbHelper.GetDataValue(@"select count(nContentKey) from tblContent c inner join tblContentLocation cl on c.nContentKey =  cl.nContentId
                         where cl.nStructId = " + myWeb.mnPageId));
                         oContentNode.SetAttribute("itemCount", itemCount.ToString());
                         if (!string.IsNullOrEmpty(myWeb.moRequest["startPos" + oContentNode.GetAttribute("id")]))
                         {
-                            nCurrentPage = (long)Math.Round((double)Conversions.ToLong(myWeb.moRequest["startPos" + oContentNode.GetAttribute("id")]) / (double)nItemsPerPage + 1d);
+                            nCurrentPage = (long)Math.Round((double)Convert.ToInt64(myWeb.moRequest["startPos" + oContentNode.GetAttribute("id")]) / (double)nItemsPerPage + 1d);
                         }
                         // handle querystrings
                         if (myWeb.mcOriginalURL.Contains("?"))
@@ -421,7 +421,7 @@ namespace Protean
                         {
                             if (oContentNode.GetAttribute("display") == "related")
                             {
-                                int contentId = Conversions.ToInteger(oContentNode.GetAttribute("id"));
+                                int contentId = Convert.ToInt16(oContentNode.GetAttribute("id"));
                                 myWeb.mbAdminMode = true;
                                 myWeb.moDbHelper.addRelatedContent(ref oContentNode, contentId, true);
                                 myWeb.mbAdminMode = false;
@@ -525,7 +525,7 @@ namespace Protean
 
                                     if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
                                     {
-                                        assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
+                                        assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"])));
                                     }
                                     else
                                     {
@@ -538,7 +538,7 @@ namespace Protean
                                     else
                                     {
 
-                                        calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                                        calledType = assemblyInstance.GetType(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
                                     }
                                 }
 
@@ -628,7 +628,7 @@ namespace Protean
 
                                             if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
                                             {
-                                                assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
+                                                assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"])));
                                             }
                                             else
                                             {
@@ -641,7 +641,7 @@ namespace Protean
                                             else
                                             {
 
-                                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                                                calledType = assemblyInstance.GetType(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
                                             }
                                         }
 
@@ -908,20 +908,20 @@ namespace Protean
 
                                         if (ourProvider.Parameters["path"] != "" && ourProvider.Parameters["path"] != null)
                                         {
-                                            assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
+                                            assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"])));
                                         }
                                         else
                                         {
                                             assemblyInstance = Assembly.Load(ourProvider.Type);
                                         }
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.Parameters["rootClass"], "", false)))
+                                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.Parameters["rootClass"], "", false)))
                                         {
                                             calledType = assemblyInstance.GetType("Protean.Providers.Filters." + providerName, true);
                                         }
                                         else
                                         {
 
-                                            calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                                            calledType = assemblyInstance.GetType(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
                                         }
                                     }
 
@@ -932,7 +932,7 @@ namespace Protean
                                     var args = new object[1];
                                     args[0] = myWeb;
                                     string cAdditionalCondition = string.Empty;
-                                    cAdditionalCondition = Conversions.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
+                                    cAdditionalCondition = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
                                     if (!string.IsNullOrEmpty(cAdditionalCondition))
                                     {
                                         if (!string.IsNullOrEmpty(cWhereSQL))

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+//using Microsoft.VisualBasic;
 
 namespace Protean.Tools.IFilter
 {
@@ -238,7 +237,7 @@ namespace Protean.Tools.IFilter
                 var iflags = IFILTER_INIT.CANON_HYPHENS | IFILTER_INIT.CANON_PARAGRAPHS | IFILTER_INIT.CANON_SPACES | IFILTER_INIT.APPLY_CRAWL_ATTRIBUTES | IFILTER_INIT.APPLY_INDEX_ATTRIBUTES | IFILTER_INIT.APPLY_OTHER_ATTRIBUTES | IFILTER_INIT.HARD_LINE_BREAKS | IFILTER_INIT.SEARCH_LINKS | IFILTER_INIT.FILTER_OWNED_VALUE_OK;
                 if (filter.Init(iflags, 0U, null, ref i) != (int)IFilterReturnCodes.S_OK)
                 {
-                    throw new Exception("Problem initializing an IFilter for:" + Constants.vbLf + path + " " + Constants.vbLf + Constants.vbLf);
+                    throw new Exception($"Problem initializing an IFilter for:{Environment.NewLine}{path}{Environment.NewLine}{Environment.NewLine}");
                 }
 
                 while (filter.GetChunk(ps) == (int)IFilterReturnCodes.S_OK)
@@ -252,7 +251,7 @@ namespace Protean.Tools.IFilter
                             var sbBuffer = new StringBuilder((int)pcwcBuffer);
 
                             // ts changed directCast to Ctype when adding from C#
-                            scode = (IFilterReturnCodes)Conversions.ToUInteger(filter.GetText(ref pcwcBuffer, sbBuffer));
+                            scode = (IFilterReturnCodes)Convert.ToInt16(filter.GetText(ref pcwcBuffer, sbBuffer));
                             if (pcwcBuffer > 0L && sbBuffer.Length > 0)
                             {
                                 if (sbBuffer.Length < pcwcBuffer)

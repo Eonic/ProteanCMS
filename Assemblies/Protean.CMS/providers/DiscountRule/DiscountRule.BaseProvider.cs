@@ -423,7 +423,7 @@ namespace Protean.Providers
                         // Collect savings already set by ApplyDiscount
                         if (oItemElmt.HasAttribute("itemSaving") && Information.IsNumeric(oItemElmt.GetAttribute("itemSaving")))
                         {
-                            nLineTotalSaving = Conversions.ToDecimal(oItemElmt.GetAttribute("itemSaving"));
+                            nLineTotalSaving = Convert.ToDecimal(oItemElmt.GetAttribute("itemSaving"));
                         }
 
                         // Accumulate order-level saving
@@ -437,16 +437,16 @@ namespace Protean.Providers
 
                             // Collect deletion IDs for special categories
                             if (Information.IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")) &&
-                                Conversions.ToDouble(oDiscountItemTest.GetAttribute("nDiscountCat")) == 4d)
+                                Convert.ToDouble(oDiscountItemTest.GetAttribute("nDiscountCat")) == 4d)
                             {
                                 if (nDelIDs[0] == 0)
                                 {
-                                    nDelIDs[0] = Conversions.ToInteger(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                    nDelIDs[0] = Convert.ToInt16(oDiscountItemTest.GetAttribute("nDiscountKey"));
                                 }
                                 else
                                 {
                                     Array.Resize(ref nDelIDs, Information.UBound(nDelIDs) + 1 + 1);
-                                    nDelIDs[Information.UBound(nDelIDs)] = Conversions.ToInteger(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                    nDelIDs[Information.UBound(nDelIDs)] = Convert.ToInt16(oDiscountItemTest.GetAttribute("nDiscountKey"));
                                 }
                             }
                         }

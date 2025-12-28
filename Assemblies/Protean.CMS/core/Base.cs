@@ -64,9 +64,9 @@ namespace Protean
 
         public string mcPagePath;
         public string mcPageLayout;
-        public int mnPageId = 0;
-        public int mnArtId = 0;
-        public int mnUserId = 0;
+        public long mnPageId = 0;
+        public long mnArtId = 0;
+        public long mnUserId = 0;
 
         public bool mbAdminMode = false;
 

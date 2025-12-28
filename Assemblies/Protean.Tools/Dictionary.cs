@@ -1,4 +1,4 @@
-﻿using Microsoft.VisualBasic.CompilerServices; // Install-Package Microsoft.VisualBasic
+﻿
 using System;
 using System.Collections;
 namespace Protean.Tools
@@ -69,7 +69,7 @@ namespace Protean.Tools
                 {
 
                     if (!string.IsNullOrEmpty(csvList))
-                        csvList += Conversions.ToString(separator);
+                        csvList += Convert.ToString(separator);
                     switch (dimension)
                     {
                         case Dimension.Key:

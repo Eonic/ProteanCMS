@@ -119,7 +119,7 @@ namespace Protean
                                 // work out the date next due
                                 cInfo = "Check Date";
                                 if (!(oDR[3] is DBNull))
-                                    dNextDue = Conversions.ToDate(oDR[3]).AddMinutes(Conversions.ToDouble(oDR[2]));
+                                    dNextDue = Convert.ToDateTime(oDR[3]).AddMinutes(Convert.ToDouble(oDR[2]));
                                 // if its due or not been run then run it
                                 // add the alerts/users/groups to the lists
                                 cInfo = "Check Due";
@@ -128,7 +128,7 @@ namespace Protean
                                     // Add a new alert Item
                                     cInfo = "New Alert";
                                     // oNewAlert = New AlertItem(myWeb, oDR(0), oDR(1))
-                                    AlertItem oNewAlert = CreateAlertItem(Conversions.ToInteger(oDR[0]), Conversions.ToInteger(oDR[1]));
+                                    AlertItem oNewAlert = CreateAlertItem(Convert.ToInt16(oDR[0]), Convert.ToInt16(oDR[1]));
 
                                     // Log the alert
                                     oNewAlert.Log("Started");
@@ -143,17 +143,17 @@ namespace Protean
                                     // to get all the users underneath
                                     var oDSUsers = new DataSet();
                                     cInfo = "CheckGroup";
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual((oDR[4]), "group", false)))
+                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual((oDR[4]), "group", false)))
                                     {
                                         cInfo = "Is Group";
-                                        myWeb.moDbHelper.addTableToDataSet(ref oDSUsers, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("EXEC sp_AllDirUsers ", oDR[1]), ", "), Tools.Database.SqlDate(dTimeNow, true))), "Users");
+                                        myWeb.moDbHelper.addTableToDataSet(ref oDSUsers, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("EXEC sp_AllDirUsers ", oDR[1]), ", "), Tools.Database.SqlDate(dTimeNow, true))), "Users");
                                     }
                                     else
                                     {
                                         cInfo = "Is User";
                                         cSQL = "SELECT tblDirectory.nDirKey, tblDirectory.cDirSchema, tblDirectory.cDirForiegnRef, tblDirectory.cDirName, tblDirectory.cDirXml ";
                                         cSQL += " FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey";
-                                        cSQL = Conversions.ToString(cSQL + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE (tblDirectory.nDirKey = ", oDR[1]), ") AND (tblAudit.dPublishDate >= "), Tools.Database.SqlDate(dTimeNow, true)), " OR"));
+                                        cSQL = Convert.ToString(cSQL + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE (tblDirectory.nDirKey = ", oDR[1]), ") AND (tblAudit.dPublishDate >= "), Tools.Database.SqlDate(dTimeNow, true)), " OR"));
                                         cSQL += " tblAudit.dPublishDate IS NULL) AND (tblAudit.dExpireDate <= " + Tools.Database.SqlDate(dTimeNow, true) + " OR";
                                         cSQL += " tblAudit.dExpireDate IS NULL)";
                                         myWeb.moDbHelper.addTableToDataSet(ref oDSUsers, cSQL, "Users");
@@ -162,7 +162,7 @@ namespace Protean
                                     {
                                         // add this to the user list
                                         cInfo = "AddMember";
-                                        AddMember(Conversions.ToInteger(oUserRow["nDirKey"]), Conversions.ToString(oUserRow["cDirXml"]), Conversions.ToInteger(oDR[0]));
+                                        AddMember(Convert.ToInt16(oUserRow["nDirKey"]), Convert.ToString(oUserRow["cDirXml"]), Convert.ToInt16(oDR[0]));
                                     }
                                 }
                             }
@@ -233,7 +233,7 @@ namespace Protean
                                     {
                                         var oMailer = new Protean.Messaging(ref myWeb.msException);
                                         Cms.dbHelper odbhelper = null;
-                                        string cResponse = Conversions.ToString(oMailer.emailer(oAlertElmt, oAlertConfig["AlertXsl"], oAlertConfig["AlertFrom"], oAlertConfig["AlertFromEmail"], oMember.Email, cAlertTitles,ref odbhelper, cPickupHost: oAlertConfig["AlertPickupHost"], cPickupLocation: oAlertConfig["AlertPickupLocation"]));
+                                        string cResponse = Convert.ToString(oMailer.emailer(oAlertElmt, oAlertConfig["AlertXsl"], oAlertConfig["AlertFrom"], oAlertConfig["AlertFromEmail"], oMember.Email, cAlertTitles,ref odbhelper, cPickupHost: oAlertConfig["AlertPickupHost"], cPickupLocation: oAlertConfig["AlertPickupLocation"]));
                                         myWeb.msException = ""; // Clear the sodding error
                                         if (bReportDeep)
                                         {
@@ -576,7 +576,7 @@ namespace Protean
                                 // Alert Item has been logged, therefore update the record
 
                                 cSql = "UPDATE tblActivityLog ";
-                                cSql = Conversions.ToString(cSql + Operators.ConcatenateObject(Operators.ConcatenateObject("SET cActivityDetail = '", SqlFmt(Strings.Left(cStatus, 800))), "' "));
+                                cSql = Convert.ToString(cSql + Operators.ConcatenateObject(Operators.ConcatenateObject("SET cActivityDetail = '", SqlFmt(Strings.Left(cStatus, 800))), "' "));
                                 cSql += "WHERE nActivityKey = " + AlertLogKey;
                                 myWeb.moDbHelper.ExeProcessSql(cSql);
                             }
@@ -591,12 +591,12 @@ namespace Protean
                                 cSql += nAlertKey + ",";
                                 cSql += Tools.Database.SqlDate(DateTime.Now, true) + ",";
                                 cSql += ((int)Cms.dbHelper.ActivityType.Alert).ToString() + ",";
-                                cSql = Conversions.ToString(cSql + Operators.ConcatenateObject(Operators.ConcatenateObject("'", SqlFmt(Strings.Left(cStatus, 800))), "',"));
+                                cSql = Convert.ToString(cSql + Operators.ConcatenateObject(Operators.ConcatenateObject("'", SqlFmt(Strings.Left(cStatus, 800))), "',"));
                                 cSql += "'')";
 
                                 // Changed this from ExeProcessSqlOrIgnore to ExeProcessSql as for user alerts
                                 // this step is essential, and should raise an error if it fails.
-                                AlertLogKey = Conversions.ToInteger(myWeb.moDbHelper.GetIdInsertSql(cSql));
+                                AlertLogKey = Convert.ToInt16(myWeb.moDbHelper.GetIdInsertSql(cSql));
                             }
                         }
 
@@ -616,30 +616,30 @@ namespace Protean
 
                             foreach (DataRow oRow in oDS.Tables["tblAlerts"].Rows)
                             {
-                                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cAlertTitle"], ""), "", false)))
-                                    cAlertTitle = Conversions.ToString(oRow["cAlertTitle"]);
-                                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["nPageId"], 0), 0, false)))
-                                    nPageId = Conversions.ToInteger(oRow["nPageId"]);
-                                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["nFrequency"], 0), 0, false)))
-                                    nFrequency = Conversions.ToInteger(oRow["nFrequency"]);
-                                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cXsltFile"], ""), "", false)))
-                                    cXsltFile = Conversions.ToString(oRow["cXsltFile"]);
+                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cAlertTitle"], ""), "", false)))
+                                    cAlertTitle = Convert.ToString(oRow["cAlertTitle"]);
+                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["nPageId"], 0), 0, false)))
+                                    nPageId = Convert.ToInt16(oRow["nPageId"]);
+                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["nFrequency"], 0), 0, false)))
+                                    nFrequency = Convert.ToInt16(oRow["nFrequency"]);
+                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cXsltFile"], ""), "", false)))
+                                    cXsltFile = Convert.ToString(oRow["cXsltFile"]);
 
-                                bUpdatedOnly = Conversions.ToBoolean(CellValue(oRow["bUpdatedOnly"], false));
-                                bItterateDown = Conversions.ToBoolean(CellValue(oRow["bItterateDown"], false));
-                                bRelatedContentUpdates = Conversions.ToBoolean(CellValue(oRow["bRelatedContentUpdates"], false));
-                                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cExtraXml"], ""), "", false)))
-                                    cAlertTitle = Conversions.ToString(oRow["cExtraXml"]);
+                                bUpdatedOnly = Convert.ToBoolean(CellValue(oRow["bUpdatedOnly"], false));
+                                bItterateDown = Convert.ToBoolean(CellValue(oRow["bItterateDown"], false));
+                                bRelatedContentUpdates = Convert.ToBoolean(CellValue(oRow["bRelatedContentUpdates"], false));
+                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cExtraXml"], ""), "", false)))
+                                    cAlertTitle = Convert.ToString(oRow["cExtraXml"]);
 
-                                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cContentType"], ""), "", false)))
+                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cContentType"], ""), "", false)))
                                 {
                                     if (!string.IsNullOrEmpty(cContentTypes))
                                         cContentTypes += ",";
-                                    cContentTypes = Conversions.ToString(cContentTypes + Operators.ConcatenateObject(Operators.ConcatenateObject("'", oRow["cContentType"]), "'"));
+                                    cContentTypes = Convert.ToString(cContentTypes + Operators.ConcatenateObject(Operators.ConcatenateObject("'", oRow["cContentType"]), "'"));
                                 }
-                                string cLastDone = Conversions.ToString(myWeb.moDbHelper.GetDataValue("SELECT TOP 1 dDateTime FROM tblActivityLog WHERE (nActivityType = " + ((int)Cms.dbHelper.ActivityType.Alert).ToString() + ") AND (nOtherId = " + nAlertKey + ") AND nActivityKey <> " + AlertLogKey + " ORDER BY dDateTime DESC", CommandType.Text, null, ""));
+                                string cLastDone = Convert.ToString(myWeb.moDbHelper.GetDataValue("SELECT TOP 1 dDateTime FROM tblActivityLog WHERE (nActivityType = " + ((int)Cms.dbHelper.ActivityType.Alert).ToString() + ") AND (nOtherId = " + nAlertKey + ") AND nActivityKey <> " + AlertLogKey + " ORDER BY dDateTime DESC", CommandType.Text, null, ""));
                                 if (Information.IsDate(cLastDone))
-                                    dLastDone = Conversions.ToDate(cLastDone);
+                                    dLastDone = Convert.ToDateTime(cLastDone);
                                 else
                                     dLastDone = DateTime.Now;
                                 // PopulateContent(nPageId, Nothing)
@@ -689,7 +689,7 @@ namespace Protean
                                     oCurrElmt = (XmlElement)oCurrElmt.SelectSingleNode("descendant-or-self::MenuItem[@id=" + nCurrentPageId + "]");
                                 }
                                 foreach (XmlElement oChild in oCurrElmt.SelectNodes("MenuItem"))
-                                    PopulateContent(Conversions.ToInteger(oChild.GetAttribute("id")), oChild);
+                                    PopulateContent(Convert.ToInt16(oChild.GetAttribute("id")), oChild);
                             }
                         }
                         catch (Exception ex)

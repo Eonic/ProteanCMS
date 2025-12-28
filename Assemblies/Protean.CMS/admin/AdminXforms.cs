@@ -137,7 +137,7 @@ namespace Protean
                 {
                     try
                     {
-                        if (Conversions.ToBoolean(myWeb.impersonationMode))
+                        if (Convert.ToBoolean(myWeb.impersonationMode))
                         {
                             moImp.UndoImpersonation();
                             moImp = null;
@@ -208,7 +208,7 @@ namespace Protean
                             base.validate();
                             if (base.valid)
                             {
-                                int nCId = Conversions.ToInteger(moDbHelper.setObjectInstance(ptnObjectType, base.Instance, (long)nObjectId));
+                                int nCId = Convert.ToInt16(moDbHelper.setObjectInstance(ptnObjectType, base.Instance, (long)nObjectId));
                                 myWeb.moSession["tempInstance"] = (object)null;
                             }
                         }
@@ -390,7 +390,7 @@ namespace Protean
                         myWeb = (Cms)argmyWeb;
 
                         oAdXfm.xFrmPasswordReminder();
-                        valid = Conversions.ToBoolean(oAdXfm.valid);
+                        valid = Convert.ToBoolean(oAdXfm.valid);
                         return (XmlElement)oAdXfm.moXformElmt;
                     }
 
@@ -413,7 +413,7 @@ namespace Protean
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmActivateAccount();
-                        valid = Conversions.ToBoolean(oAdXfm.valid);
+                        valid = Convert.ToBoolean(oAdXfm.valid);
                         return (XmlElement)oAdXfm.moXformElmt;
                     }
 
@@ -436,7 +436,7 @@ namespace Protean
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmResetAccount(userId);
-                        valid = Conversions.ToBoolean(oAdXfm.valid);
+                        valid = Convert.ToBoolean(oAdXfm.valid);
                         return (XmlElement)oAdXfm.moXformElmt;
                     }
 
@@ -460,7 +460,7 @@ namespace Protean
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmConfirmPassword(AccountHash);
-                        valid = Conversions.ToBoolean(oAdXfm.valid);
+                        valid = Convert.ToBoolean(oAdXfm.valid);
                         return (XmlElement)oAdXfm.moXformElmt;
                     }
 
@@ -485,7 +485,7 @@ namespace Protean
                         IMembershipAdminXforms oAdXfm = myWeb.moMemProv.AdminXforms;
 
                         oAdXfm.xFrmConfirmPassword(nUserId);
-                        valid = Conversions.ToBoolean(oAdXfm.valid);
+                        valid = Convert.ToBoolean(oAdXfm.valid);
                         return (XmlElement)oAdXfm.moXformElmt;
                     }
 
@@ -1097,7 +1097,7 @@ namespace Protean
                                     int PerPageCount = 50;
                                     if (goSession["totalCountTobeLoad"] != null)
                                     {
-                                        PerPageCount = Conversions.ToInteger(goSession["totalCountTobeLoad"]);
+                                        PerPageCount = Convert.ToInt16(goSession["totalCountTobeLoad"]);
                                     }
                                     var props = rewriteXml.SelectSingleNode(oCgfSectPath);
                                     int TotalCount = props.ChildNodes.Count;
@@ -1151,13 +1151,13 @@ namespace Protean
                                 {
                                     oElmt = currentOElmt;
                                     object newURL = oElmt.GetAttribute("value");
-                                    if (base.Instance.FirstChild.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("descendant-or-self::add[@key='", newURL), "']"))) != null)
+                                    if (base.Instance.FirstChild.SelectSingleNode(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("descendant-or-self::add[@key='", newURL), "']"))) != null)
                                     {
                                         base.valid = false;
                                         XmlElement argoContextNode = (XmlElement)moXformElmt.SelectSingleNode("group[1]");
                                         var alertGrp = base.addGroup(ref argoContextNode, "alert", oInsertBeforeNode: (XmlElement)moXformElmt.SelectSingleNode("group[1]/group[1]"));
                                         //XmlNode argoNode2 = (XmlNode)alertGrp;
-                                        base.addNote(ref alertGrp, Protean.xForm.noteTypes.Alert, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", newURL), "</strong> cannot match an old URL")));
+                                        base.addNote(ref alertGrp, Protean.xForm.noteTypes.Alert, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", newURL), "</strong> cannot match an old URL")));
                                         //alertGrp = (XmlElement)argoNode2;
                                     }
                                 }
@@ -1228,7 +1228,7 @@ namespace Protean
                                         object oldUrl = oElmt.GetAttribute("key");
 
                                         // If Not MyBase.Instance.FirstChild.SelectSingleNode("descendant-or-self::add[@key='" & newURL & "']") Is Nothing Then
-                                        var existingRedirects = rewriteXml.SelectNodes(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("rewriteMaps/rewriteMap[@name='" + ConfigType + "']/add[@key='", oldUrl), "']")));
+                                        var existingRedirects = rewriteXml.SelectNodes(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("rewriteMaps/rewriteMap[@name='" + ConfigType + "']/add[@key='", oldUrl), "']")));
                                         if (existingRedirects != null)
                                         {
 
@@ -1712,7 +1712,7 @@ namespace Protean
                             XmlElement argoBindParent = null;
                             base.addBind("nStructParId", "tblContentStructure/nStructParId", oBindParent: ref argoBindParent, "true()");
 
-                            base.addInput(ref oFrmElmt, "cStructName", true, "Page Name", Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(cName), "", "readonly")));
+                            base.addInput(ref oFrmElmt, "cStructName", true, "Page Name", Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(cName), "", "readonly")));
                             XmlElement argoBindParent1 = null;
                             base.addBind("cStructName", "tblContentStructure/cStructName", oBindParent: ref argoBindParent1, "true()");
 
@@ -1804,7 +1804,7 @@ namespace Protean
 
                                     // nRContentId = 0
                                     while (oDr.Read())
-                                        nRContentId = Conversions.ToInteger(oDr[0]);
+                                        nRContentId = Convert.ToInt16(oDr[0]);
                                 }
 
                                 if (nRContentId > 0)
@@ -1864,7 +1864,7 @@ namespace Protean
 
                         // disable the status if we are editing the home page
 
-                        if (pgid == Conversions.ToLong(myWeb.moConfig["RootPageId"]))
+                        if (pgid == Convert.ToInt64(myWeb.moConfig["RootPageId"]))
                         {
                             XmlElement oStatusElmt;
                             oStatusElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant-or-self::*[@bind='nStatus' or @ref='nStatus']");
@@ -1948,9 +1948,9 @@ namespace Protean
 
                                     // If the site wants to, by default, restrict new pages to a given group or directory item, then
                                     // read this in from the config and set the permission.
-                                    if (Information.IsNumeric(goConfig["DefaultPagePermissionGroupId"]) & Conversions.ToDouble(goConfig["DefaultPagePermissionGroupId"]) > 0d)
+                                    if (Information.IsNumeric(goConfig["DefaultPagePermissionGroupId"]) & Convert.ToDouble(goConfig["DefaultPagePermissionGroupId"]) > 0d)
                                     {
-                                        long nDefaultPagePermDirId = Conversions.ToLong(goConfig["DefaultPagePermissionGroupId"]);
+                                        long nDefaultPagePermDirId = Convert.ToInt64(goConfig["DefaultPagePermissionGroupId"]);
                                         moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, ((int)Cms.dbHelper.PermissionLevel.View).ToString());
                                     }
 
@@ -1991,17 +1991,17 @@ namespace Protean
 
                                             nRContentId = 0;
                                             while (oDr.Read())
-                                                nRContentId = Conversions.ToInteger(oDr[0]);
+                                                nRContentId = Convert.ToInt16(oDr[0]);
 
                                             if (nRContentId > 0)
                                             {
-                                                nRContentId = Conversions.ToInteger(moDbHelper.setObjectInstance(oObjType, (XmlElement)oInstance.FirstChild, (long)nRContentId));
+                                                nRContentId = Convert.ToInt16(moDbHelper.setObjectInstance(oObjType, (XmlElement)oInstance.FirstChild, (long)nRContentId));
                                                 moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, nRContentId, (int)pgid, "");
                                                 moDbHelper.setContentLocation(pgid, (long)nRContentId);
                                             }
                                             else
                                             {
-                                                nRContentId = Conversions.ToInteger(moDbHelper.setObjectInstance(oObjType, (XmlElement)oInstance.FirstChild));
+                                                nRContentId = Convert.ToInt16(moDbHelper.setObjectInstance(oObjType, (XmlElement)oInstance.FirstChild));
                                                 moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, nRContentId, (int)pgid, "");
                                                 moDbHelper.setContentLocation(pgid, (long)nRContentId);
                                             }
@@ -2205,12 +2205,12 @@ namespace Protean
                                 // add new
                                 var dPublishDate = DateTime.Parse("0001-01-01");
                                 if (!string.IsNullOrEmpty(base.goRequest["dPublishDate"]))
-                                    dPublishDate = Conversions.ToDate(base.goRequest["dPublishDate"]);
+                                    dPublishDate = Convert.ToDateTime(base.goRequest["dPublishDate"]);
                                 var dExpireDate = DateTime.Parse("0001-01-01");
                                 if (!string.IsNullOrEmpty(base.goRequest["dExpireDate"]))
-                                    dExpireDate = Conversions.ToDate(base.goRequest["dExpireDate"]);
+                                    dExpireDate = Convert.ToDateTime(base.goRequest["dExpireDate"]);
 
-                                nNewPgid = moDbHelper.insertStructure(Conversions.ToLong(base.goRequest["nStructParId"]), base.goRequest["nStructForeignRef"], base.goRequest["cStructName"], base.Instance.SelectSingleNode("tblContentStructure/cStructDescription").InnerXml, base.Instance.SelectSingleNode("tblContentStructure/cStructLayout").InnerXml, Conversions.ToLong(base.goRequest["nStatus"]), dPublishDate, dExpireDate, base.goRequest["cDescription"]);
+                                nNewPgid = moDbHelper.insertStructure(Convert.ToInt64(base.goRequest["nStructParId"]), base.goRequest["nStructForeignRef"], base.goRequest["cStructName"], base.Instance.SelectSingleNode("tblContentStructure/cStructDescription").InnerXml, base.Instance.SelectSingleNode("tblContentStructure/cStructLayout").InnerXml, Convert.ToInt64(base.goRequest["nStatus"]), dPublishDate, dExpireDate, base.goRequest["cDescription"]);
 
                                 moDbHelper.ReorderNode(Cms.dbHelper.objectTypes.ContentStructure, nNewPgid, "MoveBottom");
 
@@ -2223,7 +2223,7 @@ namespace Protean
                                 // Else
                                 // nCopyType = False
                                 // End If
-                                moDbHelper.copyPageContent(pgid, nNewPgid, Conversions.ToBoolean(goRequest["nCopyType"]), (Cms.dbHelper.CopyContentType)Conversions.ToInteger(goRequest["nCopyContent"]));
+                                moDbHelper.copyPageContent(pgid, nNewPgid, Convert.ToBoolean(goRequest["nCopyType"]), (Cms.dbHelper.CopyContentType)Convert.ToInt16(goRequest["nCopyContent"]));
                             }
 
                         }
@@ -2412,12 +2412,12 @@ namespace Protean
                                 // add new
                                 var dPublishDate = DateTime.Parse("0001-01-01");
                                 if (!string.IsNullOrEmpty(base.goRequest["dPublishDate"]))
-                                    dPublishDate = Conversions.ToDate(base.goRequest["dPublishDate"]);
+                                    dPublishDate = Convert.ToDateTime(base.goRequest["dPublishDate"]);
                                 var dExpireDate = DateTime.Parse("0001-01-01");
                                 if (!string.IsNullOrEmpty(base.goRequest["dExpireDate"]))
-                                    dExpireDate = Conversions.ToDate(base.goRequest["dExpireDate"]);
+                                    dExpireDate = Convert.ToDateTime(base.goRequest["dExpireDate"]);
 
-                                nNewPgid = moDbHelper.insertPageVersion(Conversions.ToLong(base.goRequest["nStructParId"]), base.goRequest["nStructForeignRef"], base.goRequest["cStructName"], base.Instance.SelectSingleNode("tblContentStructure/cStructDescription").InnerXml, base.Instance.SelectSingleNode("tblContentStructure/cStructLayout").InnerXml, Conversions.ToLong(base.goRequest["nStatus"]), dPublishDate, dExpireDate, base.goRequest["cDescription"], nVersionParId: Conversions.ToLong(base.goRequest["vParId"]), cVersionLang: base.goRequest["cVersionLang"], cVersionDescription: base.goRequest["cVersionDescription"], nVersionType: (Cms.dbHelper.PageVersionType)Conversions.ToInteger(base.goRequest["nVersionType"]));
+                                nNewPgid = moDbHelper.insertPageVersion(Convert.ToInt64(base.goRequest["nStructParId"]), base.goRequest["nStructForeignRef"], base.goRequest["cStructName"], base.Instance.SelectSingleNode("tblContentStructure/cStructDescription").InnerXml, base.Instance.SelectSingleNode("tblContentStructure/cStructLayout").InnerXml, Convert.ToInt64(base.goRequest["nStatus"]), dPublishDate, dExpireDate, base.goRequest["cDescription"], nVersionParId: Convert.ToInt64(base.goRequest["vParId"]), cVersionLang: base.goRequest["cVersionLang"], cVersionDescription: base.goRequest["cVersionDescription"], nVersionType: (Cms.dbHelper.PageVersionType)Convert.ToInt16(base.goRequest["nVersionType"]));
 
                                 moDbHelper.ReorderNode(Cms.dbHelper.objectTypes.ContentStructure, nNewPgid, "MoveBottom");
 
@@ -2430,7 +2430,7 @@ namespace Protean
                                 // Else
                                 // nCopyType = False
                                 // End If
-                                moDbHelper.copyPageContent(contentPageId, nNewPgid, Conversions.ToBoolean(0), (Cms.dbHelper.CopyContentType)Conversions.ToInteger(goRequest["nCopyContent"]));
+                                moDbHelper.copyPageContent(contentPageId, nNewPgid, Convert.ToBoolean(0), (Cms.dbHelper.CopyContentType)Convert.ToInt16(goRequest["nCopyContent"]));
                             }
 
                         }
@@ -3002,13 +3002,13 @@ namespace Protean
 
                                     object PathPrefix = @"ptn\";
 
-                                    EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"core\modules")), "manifest.xml");
-                                    var rootFolder = new DirectoryInfo(myWeb.goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
+                                    EnumberateManifest(ref ManifestDoc, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"core\modules")), "manifest.xml");
+                                    var rootFolder = new DirectoryInfo(myWeb.goServer.MapPath(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
                                     DirectoryInfo fld;
                                     foreach (var currentFld in rootFolder.GetDirectories())
                                     {
                                         fld = currentFld;
-                                        EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "manifest.xml");
+                                        EnumberateManifest(ref ManifestDoc, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "manifest.xml");
                                         // EnumberateManifest(ManifestDoc, "/" & gcProjectPath & "modules\" & fld.Name, "manifest.xml")
 
                                     }
@@ -3032,27 +3032,27 @@ namespace Protean
 
                                     if (myWeb.moConfig["Search"] == "on")
                                     {
-                                        EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\search")), "manifest.xml");
+                                        EnumberateManifest(ref ManifestDoc, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\search")), "manifest.xml");
                                     }
                                     if (myWeb.moConfig["Membership"] == "on")
                                     {
-                                        EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\membership")), "manifest.xml");
+                                        EnumberateManifest(ref ManifestDoc, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\membership")), "manifest.xml");
                                     }
                                     if (myWeb.moConfig["Cart"] == "on")
                                     {
-                                        EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\cart")), "manifest.xml");
+                                        EnumberateManifest(ref ManifestDoc, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\cart")), "manifest.xml");
                                     }
                                     if (myWeb.moConfig["Quote"] == "on")
                                     {
-                                        EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\quote")), "manifest.xml");
+                                        EnumberateManifest(ref ManifestDoc, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\quote")), "manifest.xml");
                                     }
                                     if (myWeb.moConfig["MailingList"] == "on")
                                     {
-                                        EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\mailer")), "manifest.xml");
+                                        EnumberateManifest(ref ManifestDoc, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\mailer")), "manifest.xml");
                                     }
                                     if (myWeb.moConfig["Subscriptions"] == "on")
                                     {
-                                        EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\subscriptions")), "manifest.xml");
+                                        EnumberateManifest(ref ManifestDoc, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\subscriptions")), "manifest.xml");
                                     }
 
                                     break;
@@ -3060,7 +3060,7 @@ namespace Protean
                             default:
                                 {
                                     object PathPrefix = @"ewcommon\";
-                                    EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "xsl/PageLayouts")), "LayoutManifest.xml");
+                                    EnumberateManifest(ref ManifestDoc, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "xsl/PageLayouts")), "LayoutManifest.xml");
                                     if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
                                     {
                                         EnumberateManifest(ref ManifestDoc, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "layoutManifest.xml");
@@ -3125,7 +3125,7 @@ namespace Protean
                                     foreach (var currentFld in rootFolder.GetDirectories())
                                     {
                                         fld = currentFld;
-                                        EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "manifest.xml");
+                                        EnumberateManifest(ref ManifestDoc, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "manifest.xml");
 
                                     }
                                     if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
@@ -3149,7 +3149,7 @@ namespace Protean
                             default:
                                 {
                                     object PathPrefix = @"ewcommon\";
-                                    EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "xsl/PageLayouts")), "LayoutManifest.xml");
+                                    EnumberateManifest(ref ManifestDoc, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "xsl/PageLayouts")), "LayoutManifest.xml");
                                     if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
                                     {
                                         EnumberateManifest(ref ManifestDoc, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "layoutManifest.xml");
@@ -3207,7 +3207,7 @@ namespace Protean
                                     }
                                     else
                                     {
-                                        oContentType.SetAttribute("formPath", Conversions.ToString(Operators.ConcatenateObject(filepath.Replace("/ptn", "") + "/", formPath)));
+                                        oContentType.SetAttribute("formPath", Convert.ToString(Operators.ConcatenateObject(filepath.Replace("/ptn", "") + "/", formPath)));
                                     }                                        
                                 }
                                 foreach (XmlElement currentOModuleType in ManifestDoc.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module"))
@@ -3217,7 +3217,7 @@ namespace Protean
                                     // If formPath.contains("/") Then
                                     // formPath = formPath.Split("/")(1)
                                     // End If
-                                    oModuleType.SetAttribute("formPath", Conversions.ToString(Operators.ConcatenateObject(filepath.Replace(@"\", "/") + "/", formPath)));
+                                    oModuleType.SetAttribute("formPath", Convert.ToString(Operators.ConcatenateObject(filepath.Replace(@"\", "/") + "/", formPath)));
                                 }
                             }
 
@@ -3236,7 +3236,7 @@ namespace Protean
                                     // If formPath.contains("/") Then
                                     // formPath = formPath.Split("/")(1)
                                     // End If
-                                    oContentType.SetAttribute("formPath", Conversions.ToString(Operators.ConcatenateObject(filepath.Replace("/ptn", "") + "/", formPath)));
+                                    oContentType.SetAttribute("formPath", Convert.ToString(Operators.ConcatenateObject(filepath.Replace("/ptn", "") + "/", formPath)));
 
                                     string contentTypeGroupName = oContentType.SelectSingleNode("parent::ContentTypeGroup/@name").InnerText;
                                     XmlElement contentTypeGroup = (XmlElement)ManifestDoc.SelectSingleNode("/PageLayouts/ContentTypes/ContentTypeGroup[@name='" + contentTypeGroupName + "']");
@@ -3248,13 +3248,13 @@ namespace Protean
                                     else
                                     {
                                         object ContentTypeName = oContentType.GetAttribute("name");
-                                        if (contentTypeGroup.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("ContentType[@name='", ContentTypeName), "']"))) is null)
+                                        if (contentTypeGroup.SelectSingleNode(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("ContentType[@name='", ContentTypeName), "']"))) is null)
                                         {
                                             contentTypeGroup.AppendChild(contentTypeGroup.OwnerDocument.ImportNode(oContentType, true));
                                         }
                                         else
                                         {
-                                            contentTypeGroup.ReplaceChild(contentTypeGroup.OwnerDocument.ImportNode(oContentType, true), contentTypeGroup.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("ContentType[@name='", ContentTypeName), "']"))));
+                                            contentTypeGroup.ReplaceChild(contentTypeGroup.OwnerDocument.ImportNode(oContentType, true), contentTypeGroup.SelectSingleNode(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("ContentType[@name='", ContentTypeName), "']"))));
                                         }
                                     }
                                 }
@@ -3267,7 +3267,7 @@ namespace Protean
                                     // If formPath.contains("/") Then
                                     // formPath = formPath.Split("/")(1)
                                     // End If
-                                    oModuleType.SetAttribute("formPath", Conversions.ToString(Operators.ConcatenateObject(filepath + "/", formPath)));
+                                    oModuleType.SetAttribute("formPath", Convert.ToString(Operators.ConcatenateObject(filepath + "/", formPath)));
                                     string moduleGroupName = oModuleType.SelectSingleNode("parent::ModuleGroup/@name").InnerText;
                                     XmlElement moduleGroup = (XmlElement)ManifestDoc.SelectSingleNode("/PageLayouts/ModuleTypes/ModuleGroup[@name='" + moduleGroupName + "']");
                                     if (moduleGroup is null)
@@ -3278,13 +3278,13 @@ namespace Protean
                                     else
                                     {
                                         object ModuleTypeName = oModuleType.GetAttribute("name");
-                                        if (moduleGroup.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", ModuleTypeName), "']"))) is null)
+                                        if (moduleGroup.SelectSingleNode(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", ModuleTypeName), "']"))) is null)
                                         {
                                             moduleGroup.AppendChild(moduleGroup.OwnerDocument.ImportNode(oModuleType.CloneNode(true), true));
                                         }
                                         else
                                         {
-                                            moduleGroup.ReplaceChild(moduleGroup.OwnerDocument.ImportNode(oModuleType, true), moduleGroup.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", ModuleTypeName), "']"))));
+                                            moduleGroup.ReplaceChild(moduleGroup.OwnerDocument.ImportNode(oModuleType, true), moduleGroup.SelectSingleNode(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", ModuleTypeName), "']"))));
 
                                         }
                                     }
@@ -3306,13 +3306,13 @@ namespace Protean
                                     }
                                     if (filterTypes != null)
                                     {
-                                        if (filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", FilterTypeName), "']"))) is null)
+                                        if (filterTypes.SelectSingleNode(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Module[@name='", FilterTypeName), "']"))) is null)
                                         {
                                             filterTypes.AppendChild(filterTypes.OwnerDocument.ImportNode(oModuleType.CloneNode(true), true));
                                         }
                                         else
                                         {
-                                            filterTypes.ReplaceChild(filterTypes.OwnerDocument.ImportNode(oModuleType, true), filterTypes.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Filter[@name='", FilterTypeName), "']"))));
+                                            filterTypes.ReplaceChild(filterTypes.OwnerDocument.ImportNode(oModuleType, true), filterTypes.SelectSingleNode(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Filter[@name='", FilterTypeName), "']"))));
                                         }
                                     }
                                 }
@@ -3340,13 +3340,13 @@ namespace Protean
                         if (goConfig["cssFramework"] == "bs5")
                         {
                             PathPrefix = @"ptn\";
-                            EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"core\modules")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
-                            var rootFolder = new DirectoryInfo(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
+                            EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"core\modules")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
+                            var rootFolder = new DirectoryInfo(goServer.MapPath(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
                             DirectoryInfo fld;
                             foreach (var currentFld in rootFolder.GetDirectories())
                             {
                                 fld = currentFld;
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
 
                             }
                             if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
@@ -3369,27 +3369,27 @@ namespace Protean
 
                             if (myWeb.moConfig["Search"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\search")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\search")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
                             if (myWeb.moConfig["Membership"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\membership")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\membership")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
                             if (myWeb.moConfig["Cart"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\cart")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\cart")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
                             if (myWeb.moConfig["Quote"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\quote")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\quote")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
                             if (myWeb.moConfig["MailingList"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\mailer")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\mailer")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
                             if (myWeb.moConfig["Subscriptions"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\subscriptions")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\subscriptions")), "ContentTypes/ContentTypeGroup", "ContentType", false, "manifest.xml");
                             }
                         }
                         else
@@ -3440,13 +3440,13 @@ namespace Protean
                         if (goConfig["cssFramework"] == "bs5")
                         {
                             PathPrefix = @"ptn\";
-                            EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"core\modules")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
-                            var rootFolder = new DirectoryInfo(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
+                            EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"core\modules")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
+                            var rootFolder = new DirectoryInfo(goServer.MapPath(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "modules"))));
                             DirectoryInfo fld;
                             foreach (var currentFld in rootFolder.GetDirectories())
                             {
                                 fld = currentFld;
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "ModuleTypes/ModuleGroup", "Module", true, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "ModuleTypes/ModuleGroup", "Module", true, "manifest.xml");
                             }
                             if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
                             {
@@ -3469,32 +3469,32 @@ namespace Protean
 
                             if (myWeb.moConfig["Search"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\search")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\search")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
                             if (myWeb.moConfig["Membership"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\membership")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\membership")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
                             if (myWeb.moConfig["Cart"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\cart")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\cart")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
                             if (myWeb.moConfig["Quote"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\quote")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\quote")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
                             if (myWeb.moConfig["MailingList"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\mailer")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\mailer")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
                             if (myWeb.moConfig["Subscriptions"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\subscriptions")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"features\subscriptions")), "ModuleTypes/ModuleGroup", "Module", false, "manifest.xml");
                             }
                         }
                         else
                         {
-                            EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "PageLayouts")), "ModuleTypes/ModuleGroup", "Module", false);
+                            EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "PageLayouts")), "ModuleTypes/ModuleGroup", "Module", false);
 
                             if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
                             {
@@ -3503,27 +3503,27 @@ namespace Protean
                             EnumberateManifestOptions(ref oSelElmt, "/xsl", "ModuleTypes/ModuleGroup", "Module", true);
                             if (myWeb.moConfig["Search"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Search")), "ModuleTypes/ModuleGroup", "Module", false);
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Search")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
                             if (myWeb.moConfig["Membership"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Membership")), "ModuleTypes/ModuleGroup", "Module", false);
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Membership")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
                             if (myWeb.moConfig["Cart"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Cart")), "ModuleTypes/ModuleGroup", "Module", false);
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Cart")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
                             if (myWeb.moConfig["Quote"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Quote")), "ModuleTypes/ModuleGroup", "Module", false);
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Quote")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
                             if (myWeb.moConfig["MailingList"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Mailer")), "ModuleTypes/ModuleGroup", "Module", false);
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Mailer")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
                             if (myWeb.moConfig["Subscriptions"] == "on")
                             {
-                                EnumberateManifestOptions(ref oSelElmt, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Subscriptions")), "ModuleTypes/ModuleGroup", "Module", false);
+                                EnumberateManifestOptions(ref oSelElmt, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "Subscriptions")), "ModuleTypes/ModuleGroup", "Module", false);
                             }
                         }
                     }
@@ -3731,7 +3731,7 @@ namespace Protean
                                 {
                                     var prodCatElmt = oTempInstance.OwnerDocument.CreateElement("ProductGroups");
                                     string sSQL = "execute sp_GetProductGroups " + id;
-                                    string Ids = Conversions.ToString(moDbHelper.GetDataValue(sSQL));
+                                    string Ids = Convert.ToString(moDbHelper.GetDataValue(sSQL));
                                     Ids.TrimEnd(',');
                                     prodCatElmt.SetAttribute("ids", Ids);
                                     oTempInstance.AppendChild(prodCatElmt);
@@ -3913,7 +3913,7 @@ namespace Protean
 
 
                             var argoNode = base.Instance.SelectSingleNode("tblContent");
-                            Xml.addNewTextNode("bCascade", ref argoNode, Strings.LCase(Conversions.ToString(moDbHelper.isCascade(id))), true, false);
+                            Xml.addNewTextNode("bCascade", ref argoNode, Strings.LCase(Convert.ToString(moDbHelper.isCascade(id))), true, false);
                             if (pgid == 0L)
                             {
                                 // lets go get a parId to set the pgid so we can update the cascade position
@@ -4081,7 +4081,7 @@ namespace Protean
 
                                         // TS 28-11-2017 we only want to update the cascade information if the content is on this page.
                                         // If not on this page i.e. being edited via search results or related content on a page we should ignore this.
-                                        if (Conversions.ToDouble(moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" + id + " and nStructId = " + pgid)) > 0d)
+                                        if (Convert.ToDouble(moDbHelper.ExeProcessSqlScalar("select count(nContentLocationKey) from tblContentLocation where nContentId=" + id + " and nStructId = " + pgid)) > 0d)
                                         {
                                             moDbHelper.setContentLocation(pgid, id, bCascade: bCascade, cPosition: "");
                                         }
@@ -4095,9 +4095,9 @@ namespace Protean
 
                                     editResult = Cms.dbHelper.ActivityType.ContentEdited;
 
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(updatedVersionId, id, false)))
+                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(updatedVersionId, id, false)))
                                     {
-                                        nReturnId = Conversions.ToInteger(updatedVersionId);
+                                        nReturnId = Convert.ToInt16(updatedVersionId);
                                     }
                                     else
                                     {
@@ -4108,16 +4108,16 @@ namespace Protean
                                 else
                                 {
                                     long nContentId;
-                                    nContentId = Conversions.ToLong(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance));
+                                    nContentId = Convert.ToInt64(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance));
                                     moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, (int)nContentId, (int)pgid, "");
 
 
                                     // If we have an action here we need to relate the item
-                                    if (Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Add", false), Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Find", false)), Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Edit", false))))
+                                    if (Convert.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Add", false), Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Find", false)), Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Edit", false))))
                                     {
-                                        bool b2Way = Conversions.ToBoolean(Interaction.IIf(moRequest["RelType"] == "2way" | moRequest["direction"] == "2Way", true, false));
+                                        bool b2Way = Convert.ToBoolean(Interaction.IIf(moRequest["RelType"] == "2way" | moRequest["direction"] == "2Way", true, false));
                                         string sRelType = moRequest["relationType"];
-                                        moDbHelper.insertContentRelation(Conversions.ToInteger(goSession["mcRelParent"]), nContentId.ToString(), b2Way, sRelType);
+                                        moDbHelper.insertContentRelation(Convert.ToInt16(goSession["mcRelParent"]), nContentId.ToString(), b2Way, sRelType);
                                     }
                                     // TS - Change 26/04/2016 We do not want added to the page if it is related.
 
@@ -4135,11 +4135,11 @@ namespace Protean
                                     nReturnId = (int)nContentId;
                                     foreach (var item in moRequest.Form)
                                     {
-                                        if (Conversions.ToString(item).StartsWith("Relate_"))
+                                        if (Convert.ToString(item).StartsWith("Relate_"))
                                         {
-                                            string[] arr = Conversions.ToString(item).Split('_');
+                                            string[] arr = Convert.ToString(item).Split('_');
                                             var relateElmt = moPageXML.CreateElement("Relation");
-                                            relateElmt.SetAttribute("relatedContentId", moRequest.Form[Conversions.ToString(item)]);
+                                            relateElmt.SetAttribute("relatedContentId", moRequest.Form[Convert.ToString(item)]);
                                             relateElmt.SetAttribute("type", arr[1]);
                                             relateElmt.SetAttribute("direction", arr[2]);
                                             base.Instance.AppendChild(relateElmt);
@@ -4153,7 +4153,7 @@ namespace Protean
 
 
                                 // Check for related content redirection
-                                string mcRelRedirectString = Conversions.ToString(goSession["mcRelRedirectString"]);
+                                string mcRelRedirectString = Convert.ToString(goSession["mcRelRedirectString"]);
                                 if (base.valid && !string.IsNullOrEmpty(mcRelRedirectString))
                                 {
 
@@ -4185,7 +4185,7 @@ namespace Protean
                                         // Suppress last page being reset anywhere else
                                         myWeb.mbSuppressLastPageOverrides = true;
                                         myWeb.moSession.Remove("lastPage");
-                                        myWeb.msRedirectOnEnd = Conversions.ToString(goSession["mnContentRelationParent"]);
+                                        myWeb.msRedirectOnEnd = Convert.ToString(goSession["mnContentRelationParent"]);
                                     }
 
                                 }
@@ -4195,7 +4195,7 @@ namespace Protean
                                 goSession["mcRelAction"] = (object)null;
                                 goSession["mcRelParent"] = (object)null;
 
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(goSession["EwCmd"], "", false)))
+                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(goSession["EwCmd"], "", false)))
                                 {
                                     goSession["EwCmd"] = "Normal";
                                 }
@@ -4356,12 +4356,12 @@ namespace Protean
                         {
                             // This should really be taken over using  xForms Triggers
                             base.updateInstanceFromRequest();
-                            if (Conversions.ToBoolean(Operators.OrObject(goSession["mcRelRedirectString"] != null, !Operators.ConditionalCompareObjectEqual(goSession["mcRelRedirectString"], "", false))))
+                            if (Convert.ToBoolean(Operators.OrObject(goSession["mcRelRedirectString"] != null, !Operators.ConditionalCompareObjectEqual(goSession["mcRelRedirectString"], "", false))))
                             {
                                 base.validate();
                                 if (base.valid)
                                 {
-                                    myWeb.msRedirectOnEnd = Conversions.ToString(goSession["mcRelRedirectString"]);
+                                    myWeb.msRedirectOnEnd = Convert.ToString(goSession["mcRelRedirectString"]);
                                     base.valid = false;
                                 }
                             }
@@ -4421,7 +4421,7 @@ namespace Protean
                         if (oTmpNode != null)
                         {
                             if (Information.IsNumeric(oTmpNode.InnerText))
-                                nParId = Conversions.ToInteger(oTmpNode.InnerText);
+                                nParId = Convert.ToInt16(oTmpNode.InnerText);
                             var bCascade = default(bool);
                             foreach (var myItem in goRequest.Form.Keys)
                             {
@@ -4432,7 +4432,7 @@ namespace Protean
                                 // we need to check and save
                                 // If nParId = 0 Then
 
-                                if (Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(myItem.ToString().StartsWith("Relate"), myItem.ToString().StartsWith("ewSubmitClone_Relate")), myItem.ToString().StartsWith("Filter"))))
+                                if (Convert.ToBoolean(Operators.OrObject(Operators.OrObject(myItem.ToString().StartsWith("Relate"), myItem.ToString().StartsWith("ewSubmitClone_Relate")), myItem.ToString().StartsWith("Filter"))))
                                 {
                                     base.updateInstanceFromRequest();
                                     base.validate();
@@ -4450,11 +4450,11 @@ namespace Protean
                                         }
                                         else
                                         {
-                                            nParId = Conversions.ToInteger(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance));
+                                            nParId = Convert.ToInt16(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance));
                                             moDbHelper.setContentLocation((long)pgid, (long)nParId, true, bCascade);
-                                            if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Add", false), Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Find", false))))
+                                            if (Convert.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Add", false), Operators.ConditionalCompareObjectEqual(goSession["mcRelAction"], "Find", false))))
                                             {
-                                                moDbHelper.insertContentRelation(Conversions.ToInteger(goSession["mcRelParent"]), nParId.ToString());
+                                                moDbHelper.insertContentRelation(Convert.ToInt16(goSession["mcRelParent"]), nParId.ToString());
                                             }
                                         }
                                     }
@@ -4464,7 +4464,7 @@ namespace Protean
                                         return false;
 
                                     // remove ewSubmitClone because it gets added by js disablebutton
-                                    string[] relateCmdArr = Strings.Split(Strings.Replace(Conversions.ToString(myItem), "ewSubmitClone_", ""), "_");
+                                    string[] relateCmdArr = Strings.Split(Strings.Replace(Convert.ToString(myItem), "ewSubmitClone_", ""), "_");
 
                                     // ###############################-REORDER-########################
                                     goSession["mnContentRelationParent"] = (object)null;
@@ -4474,50 +4474,50 @@ namespace Protean
                                     goSession["mcRelType"] = (object)null;
 
 
-                                    string pgidQueryString = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(goRequest.QueryString["pgid"]), "", "&pgid=" + goRequest.QueryString["pgid"]));
+                                    string pgidQueryString = Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(goRequest.QueryString["pgid"]), "", "&pgid=" + goRequest.QueryString["pgid"]));
 
-                                    if (Conversions.ToBoolean(myItem.ToString().Contains("RelateUp")))
+                                    if (Convert.ToBoolean(myItem.ToString().Contains("RelateUp")))
                                     {
-                                        nRelId = Conversions.ToInteger(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
                                         myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveUp", true);
                                         bResult = true;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateDown")))
+                                    else if (Convert.ToBoolean(myItem.ToString().Contains("RelateDown")))
                                     {
-                                        nRelId = Conversions.ToInteger(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
                                         myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveDown", true);
                                         bResult = true;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateTop")))
+                                    else if (Convert.ToBoolean(myItem.ToString().Contains("RelateTop")))
                                     {
-                                        nRelId = Conversions.ToInteger(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
                                         myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveTop", true);
                                         bResult = true;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateBottom")))
+                                    else if (Convert.ToBoolean(myItem.ToString().Contains("RelateBottom")))
                                     {
-                                        nRelId = Conversions.ToInteger(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
                                         myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveBottom", true);
                                         bResult = true;
                                     }
                                     // ###############################-ACTIONS-########################
-                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateEdit")))
+                                    else if (Convert.ToBoolean(myItem.ToString().Contains("RelateEdit")))
                                     {
-                                        nRelId = Conversions.ToInteger(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
                                         goSession["mnContentRelationParent"] = Operators.ConcatenateObject("/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId, Interaction.IIf(string.IsNullOrEmpty(goRequest.QueryString["pgid"]), "", "&pgid=" + goRequest.QueryString["pgid"]));
                                         goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nRelId;
                                         bResult = true;
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateRemove")))
+                                    else if (Convert.ToBoolean(myItem.ToString().Contains("RelateRemove")))
                                     {
-                                        nRelId = Conversions.ToInteger(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
                                         myWeb.moDbHelper.RemoveContentRelation((long)nParId, (long)nRelId);
                                         bResult = true;
 
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateAdd")))
+                                    else if (Convert.ToBoolean(myItem.ToString().Contains("RelateAdd")))
                                     {
 
                                         goSession["mnContentRelationParent"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
@@ -4536,16 +4536,16 @@ namespace Protean
                                         bResult = true;
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("FilterEdit")))
+                                    else if (Convert.ToBoolean(myItem.ToString().Contains("FilterEdit")))
                                     {
                                         string cContentType = relateCmdArr[1];
-                                        nRelId = Conversions.ToInteger(relateCmdArr[2]);
+                                        nRelId = Convert.ToInt16(relateCmdArr[2]);
                                         goSession["mnContentRelationParent"] = Operators.ConcatenateObject("/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId, Interaction.IIf(string.IsNullOrEmpty(goRequest.QueryString["pgid"]), "", "&pgid=" + goRequest.QueryString["pgid"]));
                                         goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&type=" + cContentType + "&id=" + nRelId + "&filter=true";
                                         bResult = true;
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("FilterAdd")))
+                                    else if (Convert.ToBoolean(myItem.ToString().Contains("FilterAdd")))
                                     {
 
                                         goSession["mnContentRelationParent"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString + "&filter=true";
@@ -4564,14 +4564,14 @@ namespace Protean
                                         bResult = true;
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("FilterRemove")))
+                                    else if (Convert.ToBoolean(myItem.ToString().Contains("FilterRemove")))
                                     {
-                                        nRelId = Conversions.ToInteger(relateCmdArr[2]);
+                                        nRelId = Convert.ToInt16(relateCmdArr[2]);
                                         myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, (long)nRelId);
                                         bResult = true;
                                         break;
                                     }
-                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateFind")))
+                                    else if (Convert.ToBoolean(myItem.ToString().Contains("RelateFind")))
                                     {
                                         goSession["mnContentRelationParent"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
                                         string cContentType = relateCmdArr[1];
@@ -4589,7 +4589,7 @@ namespace Protean
                                         break;
                                     }
                                     // New condition for sku parent change functionality
-                                    else if (Conversions.ToBoolean(myItem.ToString().Contains("RelateParentChange")))
+                                    else if (Convert.ToBoolean(myItem.ToString().Contains("RelateParentChange")))
                                     {
                                         goSession["mnContentRelationParent"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId + pgidQueryString;
                                         string cContentType = relateCmdArr[1];
@@ -4628,7 +4628,7 @@ namespace Protean
                     }
                 }
 
-                public void AddPageSpecs(ref int nPgId, ref XmlElement Instance)
+                public void AddPageSpecs(ref long nPgId, ref XmlElement Instance)
                 {
 
                     if (Instance.SelectSingleNode("descendant-or-self::Specs") != null)
@@ -4777,13 +4777,13 @@ namespace Protean
                         //oFrmElmt = (XmlElement)argoNode;
                         for (int i = 0, loopTo = Information.UBound(artid); i <= loopTo; i++)
                         {
-                            sContentName = moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(artid[i]));
-                            sContentSchemaName = moDbHelper.getContentType(Conversions.ToInteger(artid[i]));
+                            sContentName = moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Convert.ToInt64(artid[i]));
+                            sContentSchemaName = moDbHelper.getContentType(Convert.ToInt16(artid[i]));
                             bulkContentName = encodeAllHTML(sContentName);
                             //XmlNode argoNode1 = oFrmElmt;
                             base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, bulkContentName, false, "item-deleted");
                             // oFrmElmt = (XmlElement)argoNode1;
-                            oFrmElmt.LastChild.InnerXml = moDbHelper.getContentBrief(Conversions.ToInteger(artid[i]));
+                            oFrmElmt.LastChild.InnerXml = moDbHelper.getContentBrief(Convert.ToInt16(artid[i]));
                             if (sContentSchemaName == "xFormQuiz")
                             {
                                 //XmlNode argoNode2 = oFrmElmt;
@@ -4807,9 +4807,9 @@ namespace Protean
                                 // remove the relevent content information
                                 for (int i = 0, loopTo1 = Information.UBound(artid); i <= loopTo1; i++)
                                 {
-                                    sContentName = moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(artid[i]));
-                                    sContentSchemaName = moDbHelper.getContentType(Conversions.ToInteger(artid[i]));
-                                    moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(artid[i]));
+                                    sContentName = moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Convert.ToInt64(artid[i]));
+                                    sContentSchemaName = moDbHelper.getContentType(Convert.ToInt16(artid[i]));
+                                    moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, Convert.ToInt64(artid[i]));
                                 }
                             }
 
@@ -4965,7 +4965,7 @@ namespace Protean
                         {
                             string contentFound = "<p>This file is used in these content Items</p><ul>";
                             while (oDr.Read())
-                                contentFound = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(contentFound + "<li><a href=\"?artid=", oDr["nContentKey"]), "\" target=\"_new\">"), oDr["cContentSchemaName"]), " - "), oDr["cContentName"]), "</a></li>"));
+                                contentFound = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(contentFound + "<li><a href=\"?artid=", oDr["nContentKey"]), "\" target=\"_new\">"), oDr["cContentSchemaName"]), " - "), oDr["cContentName"]), "</a></li>"));
                             //XmlNode argoNode1 = oFrmElmt;
                             base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, contentFound + "</ul>");
                             //oFrmElmt = (XmlElement)argoNode1;
@@ -5019,7 +5019,7 @@ namespace Protean
                                         ICDNProvider oCDNProvider = oCdnProv.Get(ref myWeb);
                                         if (oCDNProvider != null)
                                         {
-                                            result = Conversions.ToString(oCDNProvider.AdminXforms.PurgeImageCacheAsync(myString, ref myWeb));
+                                            result = Convert.ToString(oCDNProvider.AdminXforms.PurgeImageCacheAsync(myString, ref myWeb));
                                         }
 
                                         //DeleteFileFromCache(myString);
@@ -5151,8 +5151,8 @@ namespace Protean
                                 string artIds = "";
                                 while (oDr.Read())
                                 {
-                                    contentFound = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(contentFound + "<li><a href=\"?artid=", oDr["nContentKey"]), "\" target=\"_new\">"), oDr["cContentSchemaName"]), " - "), oDr["cContentName"]), "</a></li>"));
-                                    artIds = Conversions.ToString(Operators.ConcatenateObject(oDr["nContentKey"], ","));
+                                    contentFound = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(contentFound + "<li><a href=\"?artid=", oDr["nContentKey"]), "\" target=\"_new\">"), oDr["cContentSchemaName"]), " - "), oDr["cContentName"]), "</a></li>"));
+                                    artIds = Convert.ToString(Operators.ConcatenateObject(oDr["nContentKey"], ","));
                                 }
                                 //XmlNode argoNode1 = oFrmElmt;
                                 base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Hint, contentFound + "</ul>");
@@ -5803,7 +5803,7 @@ namespace Protean
 
                         oAdXfm.xFrmEditDirectoryItem(ref InstanceAppend, id, cDirectorySchemaName, parId, cXformName, FormXML);
 
-                        valid = Conversions.ToBoolean(oAdXfm.valid);
+                        valid = Convert.ToBoolean(oAdXfm.valid);
                         moXformElmt = (XmlElement)oAdXfm.moXformElmt;
                         updateInstance((XmlElement)oAdXfm.Instance);
                         return moXformElmt;
@@ -5844,10 +5844,10 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    oElmt.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cDirXml"], "", false)))
+                                    oElmt.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
+                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cDirXml"], "", false)))
                                     {
-                                        oElmt.InnerXml = Conversions.ToString(oDr["cDirXml"]);
+                                        oElmt.InnerXml = Convert.ToString(oDr["cDirXml"]);
                                     }
                                     else
                                     {
@@ -5863,9 +5863,9 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    oElmt2 = moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
-                                    oElmt2.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
-                                    oElmt2.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
+                                    oElmt2 = moPageXML.CreateElement(Convert.ToString(oDr["cDirSchema"]));
+                                    oElmt2.SetAttribute("id", Convert.ToString(oDr["nDirKey"]));
+                                    oElmt2.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
                                     oElmt2.SetAttribute("relType", "child");
                                     base.Instance.AppendChild(oElmt2);
                                 }
@@ -5878,9 +5878,9 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    oElmt3 = moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
-                                    oElmt3.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
-                                    oElmt3.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
+                                    oElmt3 = moPageXML.CreateElement(Convert.ToString(oDr["cDirSchema"]));
+                                    oElmt3.SetAttribute("id", Convert.ToString(oDr["nDirKey"]));
+                                    oElmt3.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
                                     oElmt3.SetAttribute("relType", "parent");
                                     base.Instance.AppendChild(oElmt3);
                                 }
@@ -5924,11 +5924,11 @@ namespace Protean
                                     {
                                         if (!(previousId == 0L))
                                         {
-                                            moDbHelper.maintainDirectoryRelation(Conversions.ToLong(moRequest["GroupCopyTo"]), previousId, false, bIfExistsDontUpdate: true, isLast: false);
+                                            moDbHelper.maintainDirectoryRelation(Convert.ToInt64(moRequest["GroupCopyTo"]), previousId, false, bIfExistsDontUpdate: true, isLast: false);
                                         }
-                                        previousId = Conversions.ToLong(oDr[1]);
+                                        previousId = Convert.ToInt64(oDr[1]);
                                     }
-                                    moDbHelper.maintainDirectoryRelation(Conversions.ToLong(moRequest["GroupCopyTo"]), previousId, false, bIfExistsDontUpdate: true, isLast: true);
+                                    moDbHelper.maintainDirectoryRelation(Convert.ToInt64(moRequest["GroupCopyTo"]), previousId, false, bIfExistsDontUpdate: true, isLast: true);
 
                                 }
                             }
@@ -6178,10 +6178,10 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    oElmt.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cDirXml"], "", false)))
+                                    oElmt.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
+                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cDirXml"], "", false)))
                                     {
-                                        oElmt.InnerXml = Conversions.ToString(oDr["cDirXml"]);
+                                        oElmt.InnerXml = Convert.ToString(oDr["cDirXml"]);
                                     }
                                     else
                                     {
@@ -6197,9 +6197,9 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    oElmt2 = moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
-                                    oElmt2.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
-                                    oElmt2.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
+                                    oElmt2 = moPageXML.CreateElement(Convert.ToString(oDr["cDirSchema"]));
+                                    oElmt2.SetAttribute("id", Convert.ToString(oDr["nDirKey"]));
+                                    oElmt2.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
                                     oElmt2.SetAttribute("relType", "child");
                                     base.Instance.AppendChild(oElmt2);
                                 }
@@ -6212,9 +6212,9 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    oElmt3 = moPageXML.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
-                                    oElmt3.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
-                                    oElmt3.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
+                                    oElmt3 = moPageXML.CreateElement(Convert.ToString(oDr["cDirSchema"]));
+                                    oElmt3.SetAttribute("id", Convert.ToString(oDr["nDirKey"]));
+                                    oElmt3.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
                                     oElmt3.SetAttribute("relType", "parent");
                                     base.Instance.AppendChild(oElmt3);
                                 }
@@ -6394,7 +6394,7 @@ namespace Protean
                                                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                                         {
                                                             while (oDr.Read())
-                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
+                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Convert.ToInt64(oDr[0]));
                                                             oDr.Close();
                                                         }
 
@@ -6449,7 +6449,7 @@ namespace Protean
                                                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                                         {
                                                             while (oDr.Read())
-                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
+                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Convert.ToInt64(oDr[0]));
                                                         }
 
                                                         // Delete Department Directory Relations, Department Permissions and Department
@@ -6480,8 +6480,8 @@ namespace Protean
                                                         {
                                                             while (oDr.Read())
                                                             {
-                                                                moDbHelper.saveDirectoryRelations(Conversions.ToLong(oDr[1]), goRequest["Groups"]);
-                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
+                                                                moDbHelper.saveDirectoryRelations(Convert.ToInt64(oDr[1]), goRequest["Groups"]);
+                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Convert.ToInt64(oDr[0]));
                                                             }
                                                         }
 
@@ -6496,7 +6496,7 @@ namespace Protean
                                                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                                         {
                                                             while (oDr.Read())
-                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
+                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Convert.ToInt64(oDr[0]));
                                                         }
 
                                                         moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Directory, dirId);
@@ -6525,8 +6525,8 @@ namespace Protean
                                                         {
                                                             while (oDr.Read())
                                                             {
-                                                                moDbHelper.saveDirectoryRelations(Conversions.ToLong(oDr[1]), goRequest["Roles"]);
-                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
+                                                                moDbHelper.saveDirectoryRelations(Convert.ToInt64(oDr[1]), goRequest["Roles"]);
+                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Convert.ToInt64(oDr[0]));
                                                             }
                                                         }
 
@@ -6541,7 +6541,7 @@ namespace Protean
                                                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                                         {
                                                             while (oDr.Read())
-                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
+                                                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.DirectoryRelation, Convert.ToInt64(oDr[0]));
                                                         }
 
                                                         moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Directory, dirId);
@@ -6607,7 +6607,7 @@ namespace Protean
                             using (var oDR = moDbHelper.getDataReaderDisposable("SELECT tblCartShippingMethods.* FROM tblCartShippingMethods WHERE nShipOptKey = " + id))  // Done by nita on 6/7/22
                             {
                                 while (oDR.Read())
-                                    oElmt.SetAttribute("name", Conversions.ToString(oDR["cShipOptName"]));
+                                    oElmt.SetAttribute("name", Convert.ToString(oDR["cShipOptName"]));
                             }
                         }
 
@@ -6680,7 +6680,7 @@ namespace Protean
                             using (var oDr = moDbHelper.getDataReaderDisposable("SELECT tblCartCarrier.* FROM tblCartCarrier WHERE nCarrierKey = " + id))  // Done by nita on 6/7/22
                             {
                                 while (oDr.Read())
-                                    oElmt.SetAttribute("name", Conversions.ToString(oDr["cCarrierName"]));
+                                    oElmt.SetAttribute("name", Convert.ToString(oDr["cCarrierName"]));
                             }
                         }
 
@@ -6753,7 +6753,7 @@ namespace Protean
                             using (var oDr = moDbHelper.getDataReaderDisposable("SELECT cLocationNameFull FROM tblCartShippingLocations WHERE nLocationKey = " + id))  // Done by nita on 6/7/22
                             {
                                 while (oDr.Read())
-                                    oElmt.SetAttribute("name", Conversions.ToString(oDr[0]));
+                                    oElmt.SetAttribute("name", Convert.ToString(oDr[0]));
                             }
                         }
 
@@ -6868,7 +6868,7 @@ namespace Protean
                             case "AllowSelected":
                                 {
                                     foreach (string cSchema in aDirectorySchemas)
-                                        moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), goRequest[cSchema], Cms.dbHelper.PermissionLevel.View);
+                                        moDbHelper.savePermissions(Convert.ToInt64(goRequest["pgid"]), goRequest[cSchema], Cms.dbHelper.PermissionLevel.View);
                                     break;
                                 }
 
@@ -6876,19 +6876,19 @@ namespace Protean
                             case "DenySelected":
                                 {
                                     foreach (string cSchema in aDirectorySchemas)
-                                        moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), goRequest[cSchema], Cms.dbHelper.PermissionLevel.Denied);
+                                        moDbHelper.savePermissions(Convert.ToInt64(goRequest["pgid"]), goRequest[cSchema], Cms.dbHelper.PermissionLevel.Denied);
                                     break;
                                 }
 
                             case "RemoveSelected":
                                 {
-                                    moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), goRequest["Items"], Cms.dbHelper.PermissionLevel.Open);
+                                    moDbHelper.savePermissions(Convert.ToInt64(goRequest["pgid"]), goRequest["Items"], Cms.dbHelper.PermissionLevel.Open);
                                     break;
                                 }
 
                             case "RemoveAll":
                                 {
-                                    moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), "", Cms.dbHelper.PermissionLevel.Open);
+                                    moDbHelper.savePermissions(Convert.ToInt64(goRequest["pgid"]), "", Cms.dbHelper.PermissionLevel.Open);
                                     break;
                                 }
 
@@ -6898,8 +6898,8 @@ namespace Protean
                         // Populate the left hand selects, grouped by Directory schema.
                         foreach (string cSchema in aDirectorySchemas)
                         {
-                            oElmt2 = base.addSelect(ref oFrmGrp1, cSchema, false, cSchema, Conversions.ToString(Interaction.IIf(cSchema == "User", "scroll_30", "scroll_10")), Protean.xForm.ApperanceTypes.Minimal);
-                            sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d " + "left outer join tblDirectoryPermission p on p.nDirId = d.nDirKey and p.nStructId = " + id + " " + "where d.cDirSchema='", SqlFmt(cSchema)), "' and p.nPermKey is null order by d.cDirName"));
+                            oElmt2 = base.addSelect(ref oFrmGrp1, cSchema, false, cSchema, Convert.ToString(Interaction.IIf(cSchema == "User", "scroll_30", "scroll_10")), Protean.xForm.ApperanceTypes.Minimal);
+                            sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d " + "left outer join tblDirectoryPermission p on p.nDirId = d.nDirKey and p.nStructId = " + id + " " + "where d.cDirSchema='", SqlFmt(cSchema)), "' and p.nPermKey is null order by d.cDirName"));
                             using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                             {                           
                                 base.addOptionsFromSqlDataReader(oElmt2, oDr, "name", "value");
@@ -7033,7 +7033,7 @@ namespace Protean
                                     foreach (string cSchema in aDirectorySchemas)
                                     {
                                         if ((cSchema != "User" | bRightsByUser) & !string.IsNullOrEmpty("" + goRequest[cSchema]))
-                                            moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), goRequest[cSchema], (Cms.dbHelper.PermissionLevel)Conversions.ToInteger(goRequest["Level"]));
+                                            moDbHelper.savePermissions(Convert.ToInt64(goRequest["pgid"]), goRequest[cSchema], (Cms.dbHelper.PermissionLevel)Convert.ToInt16(goRequest["Level"]));
                                     }
 
                                     break;
@@ -7044,7 +7044,7 @@ namespace Protean
                                     foreach (string cSchema in aDirectorySchemas)
                                     {
                                         if ((cSchema != "User" | bRightsByUser) & !string.IsNullOrEmpty("" + goRequest["Items" + cSchema]))
-                                            moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), goRequest["Items" + cSchema], Cms.dbHelper.PermissionLevel.Open);
+                                            moDbHelper.savePermissions(Convert.ToInt64(goRequest["pgid"]), goRequest["Items" + cSchema], Cms.dbHelper.PermissionLevel.Open);
                                     }
 
                                     break;
@@ -7052,7 +7052,7 @@ namespace Protean
 
                             case "RemoveAll":
                                 {
-                                    moDbHelper.savePermissions(Conversions.ToLong(goRequest["pgid"]), "", Cms.dbHelper.PermissionLevel.Open);
+                                    moDbHelper.savePermissions(Convert.ToInt64(goRequest["pgid"]), "", Cms.dbHelper.PermissionLevel.Open);
                                     break;
                                 }
 
@@ -7065,8 +7065,8 @@ namespace Protean
                             // Run this for all schemas except users, unless bRightsByUser is True
                             if (cSchema != "User" | bRightsByUser)
                             {
-                                oElmt = base.addSelect(ref oFrmGrp1, cSchema, false, cSchema, Conversions.ToString(Interaction.IIf(cSchema == "User", "scroll_30", "scroll_10")), Protean.xForm.ApperanceTypes.Minimal);
-                                sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d " + "left outer join tblDirectoryPermission p on p.nDirId = d.nDirKey and p.nStructId = " + id + " " + "where d.cDirSchema='", SqlFmt(cSchema)), "' and p.nPermKey is null order by d.cDirName"));
+                                oElmt = base.addSelect(ref oFrmGrp1, cSchema, false, cSchema, Convert.ToString(Interaction.IIf(cSchema == "User", "scroll_30", "scroll_10")), Protean.xForm.ApperanceTypes.Minimal);
+                                sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name from tblDirectory d " + "left outer join tblDirectoryPermission p on p.nDirId = d.nDirKey and p.nStructId = " + id + " " + "where d.cDirSchema='", SqlFmt(cSchema)), "' and p.nPermKey is null order by d.cDirName"));
                                 using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                                 {                      
                                     base.addOptionsFromSqlDataReader( oElmt, oDr, "name", "value");
@@ -7088,8 +7088,8 @@ namespace Protean
                             if (cSchema != "User" | bRightsByUser)
                             {
 
-                                oElmt4 = base.addSelect(ref oFrmGrp3, "Items" + cSchema, false, "Allowed " + cSchema, Conversions.ToString(Interaction.IIf(cSchema == "User", "scroll_30", "scroll_10")), Protean.xForm.ApperanceTypes.Minimal);
-                                sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT p.nDirId as value, '['+ str(p.nAccessLevel) + '] ' + d.cDirName as name from tblDirectoryPermission p " + "inner join tblDirectory d on d.nDirKey = p.nDirId " + "where p.nStructId=" + id + " and d.cDirSchema = '", SqlFmt(cSchema)), "' "), "order by d.cDirSchema"));
+                                oElmt4 = base.addSelect(ref oFrmGrp3, "Items" + cSchema, false, "Allowed " + cSchema, Convert.ToString(Interaction.IIf(cSchema == "User", "scroll_30", "scroll_10")), Protean.xForm.ApperanceTypes.Minimal);
+                                sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT p.nDirId as value, '['+ str(p.nAccessLevel) + '] ' + d.cDirName as name from tblDirectoryPermission p " + "inner join tblDirectory d on d.nDirKey = p.nDirId " + "where p.nStructId=" + id + " and d.cDirSchema = '", SqlFmt(cSchema)), "' "), "order by d.cDirSchema"));
                                 using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                                 {                                 
                                     base.addOptionsFromSqlDataReader(oElmt4, oDr, "name", "value");
@@ -7101,7 +7101,7 @@ namespace Protean
 
                         // Permissions Alert - to give a user an idea that permissions exists on this page, we'll highlight
                         // this on the rights page in an alert
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel IN (0,2) AND nStructId=" + id, CommandType.Text, null, (object)0), 0, false)))
+                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectGreater(moDbHelper.GetDataValue("SELECT COUNT(*) As pCount FROM tblDirectoryPermission WHERE nAccessLevel IN (0,2) AND nStructId=" + id, CommandType.Text, null, (object)0), 0, false)))
                         {
 
                             // XmlNode argoNode2 = oFrmElmt;
@@ -7163,14 +7163,14 @@ namespace Protean
 
                             case "AddSelected":
                                 {
-                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(goRequest["id"]), goRequest["Departments"]);
-                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(goRequest["id"]), goRequest["Groups"]);
+                                    moDbHelper.saveDirectoryRelations(Convert.ToInt64(goRequest["id"]), goRequest["Departments"]);
+                                    moDbHelper.saveDirectoryRelations(Convert.ToInt64(goRequest["id"]), goRequest["Groups"]);
                                     break;
                                 }
 
                             case "RemoveSelected":
                                 {
-                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(goRequest["id"]), goRequest["Items"], true);
+                                    moDbHelper.saveDirectoryRelations(Convert.ToInt64(goRequest["id"]), goRequest["Items"], true);
                                     break;
                                 }
                             case "Finish":
@@ -7318,12 +7318,12 @@ namespace Protean
                                 {
                                     var loopTo1 = Information.UBound(aChildTypes);
                                     for (i = 0; i <= loopTo1; i++)
-                                        moDbHelper.saveDirectoryRelations(Conversions.ToLong(goRequest["id"]), goRequest[aChildTypes[i] + "s"], false, Cms.dbHelper.RelationType.Child);
+                                        moDbHelper.saveDirectoryRelations(Convert.ToInt64(goRequest["id"]), goRequest[aChildTypes[i] + "s"], false, Cms.dbHelper.RelationType.Child);
                                     break;
                                 }
                             case "RemoveSelected":
                                 {
-                                    moDbHelper.saveDirectoryRelations(Conversions.ToLong(goRequest["id"]), goRequest["Items"], true, Cms.dbHelper.RelationType.Child);
+                                    moDbHelper.saveDirectoryRelations(Convert.ToInt64(goRequest["id"]), goRequest["Items"], true, Cms.dbHelper.RelationType.Child);
                                     break;
                                 }
                         }
@@ -7354,7 +7354,7 @@ namespace Protean
                             {
                                 if (Information.IsNumeric(DirParId) && Information.IsNumeric(DirId))
                                 {
-                                    sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name, d.cDirXml as detail " + "FROM tblDirectory d " + "     INNER JOIN tblAudit a on nAuditId = a.nAuditKey " + "     INNER JOIN tblDirectoryRelation dr on d.nDirKey = dr.nDirChildId " + "     LEFT JOIN tblDirectoryRelation dr2 on dr2.nDirChildId = d.nDirKey and dr2.nDirParentId =  ", SqlFmt(DirId.ToString())), " "), "WHERE d.cDirSchema = "), Database.SqlString(Strings.Trim(aChildTypes[i]))), "  "), "     AND dr.nDirParentId =  "), SqlFmt(DirParId.ToString())), " "), "     AND dr2.nRelKey is null "), "     AND (a.nStatus =1 or a.nStatus = -1) "), "ORDER BY d.cDirName "));
+                                    sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name, d.cDirXml as detail " + "FROM tblDirectory d " + "     INNER JOIN tblAudit a on nAuditId = a.nAuditKey " + "     INNER JOIN tblDirectoryRelation dr on d.nDirKey = dr.nDirChildId " + "     LEFT JOIN tblDirectoryRelation dr2 on dr2.nDirChildId = d.nDirKey and dr2.nDirParentId =  ", SqlFmt(DirId.ToString())), " "), "WHERE d.cDirSchema = "), Database.SqlString(Strings.Trim(aChildTypes[i]))), "  "), "     AND dr.nDirParentId =  "), SqlFmt(DirParId.ToString())), " "), "     AND dr2.nRelKey is null "), "     AND (a.nStatus =1 or a.nStatus = -1) "), "ORDER BY d.cDirName "));
 
 
 
@@ -7367,7 +7367,7 @@ namespace Protean
                             }
                             else if (Information.IsNumeric(DirId))
                             {
-                                sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name, d.cDirXml as detail " + "FROM tblDirectory d " + "     INNER JOIN tblAudit a on nAuditId = a.nAuditKey " + "     LEFT JOIN tblDirectoryRelation dr2 on dr2.nDirChildId = d.nDirKey and dr2.nDirParentId =  ", SqlFmt(DirId.ToString())), " "), "WHERE d.cDirSchema = "), Database.SqlString(Strings.Trim(aChildTypes[i]))), "  "), "     AND dr2.nRelKey is null "), "     AND (a.nStatus =1 or a.nStatus = -1) "), "ORDER BY d.cDirName "));
+                                sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name, d.cDirXml as detail " + "FROM tblDirectory d " + "     INNER JOIN tblAudit a on nAuditId = a.nAuditKey " + "     LEFT JOIN tblDirectoryRelation dr2 on dr2.nDirChildId = d.nDirKey and dr2.nDirParentId =  ", SqlFmt(DirId.ToString())), " "), "WHERE d.cDirSchema = "), Database.SqlString(Strings.Trim(aChildTypes[i]))), "  "), "     AND dr2.nRelKey is null "), "     AND (a.nStatus =1 or a.nStatus = -1) "), "ORDER BY d.cDirName "));
 
 
 
@@ -7815,7 +7815,7 @@ namespace Protean
                             formPath = "/providers/payment/";
                             filename = Operators.ConcatenateObject(Operators.ConcatenateObject(formPath, cProviderType), "/config.xml");
                         }
-                        if (!base.load(Conversions.ToString(filename), myWeb.maCommonFolders))
+                        if (!base.load(Convert.ToString(filename), myWeb.maCommonFolders))
                         {
                         }
                         // show xform load error message
@@ -7977,7 +7977,7 @@ namespace Protean
                         base.submission("Update" + cSchemaName, "", "post", "form_check(this)");
 
                         base.Instance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartOrder, nOrderId);
-                        nStatus = Conversions.ToLong(base.Instance.SelectSingleNode("tblCartOrder/nCartStatus").InnerText);
+                        nStatus = Convert.ToInt64(base.Instance.SelectSingleNode("tblCartOrder/nCartStatus").InnerText);
 
                         // Add a note for shipped status goRequest("nStatus")
                         string shippedStatus = "Shipped";
@@ -8001,7 +8001,7 @@ namespace Protean
 
                         // update the status if we have submitted it allready
                         if (!string.IsNullOrEmpty(goRequest["nStatus"]))
-                            nStatus = Conversions.ToInteger(goRequest["nStatus"]);
+                            nStatus = Convert.ToInt16(goRequest["nStatus"]);
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Update" + cSchemaName, "", "");
                         oGrp1Elmt = base.addGroup(ref oFrmElmt, "Status", "", cSchemaName + " Status");
                         oSelElmt = base.addSelect1(ref oGrp1Elmt, "nStatus", true, "Status", "", Protean.xForm.ApperanceTypes.Full);
@@ -8174,7 +8174,7 @@ namespace Protean
                         tempElement.InnerXml = cSellerNotesHtml + "</ul>";
 
                         string argsClass = "";
-                        int argnRows = Conversions.ToInteger("2");
+                        int argnRows = Convert.ToInt16("2");
                         int argnCols = 0;
                         base.addTextArea(ref oGrp2Elmt, "cNotesAmend", false, "Add comment to notes (not sent to customer)", ref argsClass, ref argnRows, nCols: ref argnCols);
 
@@ -8274,7 +8274,7 @@ namespace Protean
                             string updateNotes = goRequest["cNotesAmend"];
                             // If Not String.IsNullOrEmpty(updateNotes) Then updateNotes = ControlChars.CrLf & Now.ToString() & ":" & updateNotes
 
-                            string notes = base.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText + "/n" + Conversions.ToString(DateTime.Now) + ": changed to: (" + goRequest["nStatus"] + ") " + sStatusDesc + " - " + updateNotes;
+                            string notes = base.Instance.SelectSingleNode("tblCartOrder/cSellerNotes").InnerText + "/n" + Convert.ToString(DateTime.Now) + ": changed to: (" + goRequest["nStatus"] + ") " + sStatusDesc + " - " + updateNotes;
                             string AdminUserName = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText;
                             notes += " - By user: " + AdminUserName;
 
@@ -8293,14 +8293,14 @@ namespace Protean
                             {
                                 moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, base.Instance);
 
-                                if (Conversions.ToDouble(goRequest["nStatus"]) == 9d)
+                                if (Convert.ToDouble(goRequest["nStatus"]) == 9d)
                                 {
 
                                     // Get the carrier name from the ID
                                     if (moDbHelper.checkDBObjectExists("tblCartCarrier") & moDbHelper.checkDBObjectExists("tblCartOrderDelivery"))
                                     {
                                         string CarrierName;
-                                        CarrierName = Conversions.ToString(moDbHelper.GetDataValue("select cCarrierName from tblCartCarrier where nCarrierKey = " + myWeb.moRequest["nCarrierId"]));
+                                        CarrierName = Convert.ToString(moDbHelper.GetDataValue("select cCarrierName from tblCartCarrier where nCarrierKey = " + myWeb.moRequest["nCarrierId"]));
                                         Instance.SelectSingleNode("tblCartOrderDelivery/cCarrierName").InnerText = CarrierName;
                                         moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartDelivery, base.Instance);
                                     }
@@ -8324,14 +8324,14 @@ namespace Protean
                                             delElmt.InnerXml = base.Instance.SelectSingleNode("tblCartOrderDelivery").InnerXml;
                                             cartElement.AppendChild(delElmt);
 
-                                            long carrierId = Conversions.ToInteger(delElmt.SelectSingleNode("nCarrierId").InnerText);
+                                            long carrierId = Convert.ToInt16(delElmt.SelectSingleNode("nCarrierId").InnerText);
                                             var carrierElmt = cartXml.CreateElement("Carrier");
                                             carrierElmt.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartCarrier, carrierId).Replace("{@code}", delElmt.SelectSingleNode("cCarrierRef").InnerText);
                                             cartElement.AppendChild(carrierElmt);
                                         }
-                                        string CustomerEmailShippedTemplatePath = Conversions.ToString(Interaction.IIf(!string.IsNullOrEmpty(moCartConfig["CustomerEmailShippedTemplatePath"]), moCartConfig["CustomerEmailShippedTemplatePath"], "/xsl/Cart/mailOrderCustomerDelivery.xsl"));
+                                        string CustomerEmailShippedTemplatePath = Convert.ToString(Interaction.IIf(!string.IsNullOrEmpty(moCartConfig["CustomerEmailShippedTemplatePath"]), moCartConfig["CustomerEmailShippedTemplatePath"], "/xsl/Cart/mailOrderCustomerDelivery.xsl"));
                                         Cms.dbHelper argodbHelper = null;
-                                        cProcessInfo = Conversions.ToString(oMsg.emailer(cartElement, CustomerEmailShippedTemplatePath, moCartConfig["MerchantName"], moCartConfig["MerchantEmail"], cartElement.SelectSingleNode("//Contact[@type='Billing Address']/Email").InnerText, "Order Shipped", bccRecipient: moCartConfig["MerchantEmailShippedBcc"], odbHelper: ref argodbHelper));
+                                        cProcessInfo = Convert.ToString(oMsg.emailer(cartElement, CustomerEmailShippedTemplatePath, moCartConfig["MerchantName"], moCartConfig["MerchantEmail"], cartElement.SelectSingleNode("//Contact[@type='Billing Address']/Email").InnerText, "Order Shipped", bccRecipient: moCartConfig["MerchantEmailShippedBcc"], odbHelper: ref argodbHelper));
 
                                         oMsg = (Protean.Messaging)null;
                                     }
@@ -8380,7 +8380,7 @@ namespace Protean
                                 var xnInstance = xdoc.SelectSingleNode("/Order/PaymentDetails/*[1]");
                                 if (xnInstance != null)
                                 {
-                                    amount = Conversions.ToDouble("0" + xnInstance.Attributes["AmountPaid"].InnerText);
+                                    amount = Convert.ToDouble("0" + xnInstance.Attributes["AmountPaid"].InnerText);
                                 }
                             }
 
@@ -8424,7 +8424,7 @@ namespace Protean
                                     //var oPayProv = new Protean.Providers.Payment.BaseProvider(ref this.myWeb, providerName);
                                     Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
                                     IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, providerName);
-                                    IsRefund = Conversions.ToString(oPaymentProv.Activities.RefundPayment(providerPaymentReference, refundAmount));
+                                    IsRefund = Convert.ToString(oPaymentProv.Activities.RefundPayment(providerPaymentReference, refundAmount));
                                     if (IsRefund.StartsWith("Error"))
                                     {
                                         // XmlNode argoNode = oFrmElmt;
@@ -8479,7 +8479,7 @@ namespace Protean
                     string cProcessInfo = "";
                     try
                     {
-                        string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(nParentID)));
+                        string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Convert.ToInt64(nParentID)));
 
                         base.NewFrm("FindRelatedContent");
                         base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
@@ -8567,21 +8567,21 @@ namespace Protean
                                     if (oParElmt != null)
                                         nParId = oParElmt.InnerText;
                                 }
-                                int nRoot = Conversions.ToInteger(base.Instance.SelectSingleNode("cSection").InnerText);
-                                bool bChilds = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nSearchChildren").InnerText == "1", true, false));
+                                int nRoot = Convert.ToInt16(base.Instance.SelectSingleNode("cSection").InnerText);
+                                bool bChilds = Convert.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nSearchChildren").InnerText == "1", true, false));
                                 string cExpression = base.Instance.SelectSingleNode("cSearch").InnerText;
-                                bool bIncRelated = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nIncludeRelated").InnerText == "1", true, false));
+                                bool bIncRelated = Convert.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nIncludeRelated").InnerText == "1", true, false));
 
                                 string sSQL = "Select " + cSelectField + " From " + cTableName + " WHERE " + cFilterField + " = " + nParId;
                                 using (var oDre = moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                                 {
                                     string cTmp = "";
                                     while (oDre.Read())
-                                        cTmp = Conversions.ToString(cTmp + Operators.ConcatenateObject(oDre[0], ","));
+                                        cTmp = Convert.ToString(cTmp + Operators.ConcatenateObject(oDre[0], ","));
 
                                     if (!string.IsNullOrEmpty(cTmp))
                                         cTmp = Strings.Left(cTmp, Strings.Len(cTmp) - 1);
-                                    oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, Conversions.ToInteger(nParId), Conversions.ToInteger(Interaction.IIf(bIgnoreParID, 0, nParId)), cTmp.Split(','), bIncRelated));
+                                    oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, Convert.ToInt16(nParId), Convert.ToInt16(Interaction.IIf(bIgnoreParID, 0, nParId)), cTmp.Split(','), bIncRelated));
 
                                 }
                             }
@@ -8620,7 +8620,7 @@ namespace Protean
                     string cProcessInfo = "";
                     try
                     {
-                        string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(nParentID)));
+                        string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Convert.ToInt64(nParentID)));
 
                         base.NewFrm("FindRelatedContent");
                         base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
@@ -8707,21 +8707,21 @@ namespace Protean
                                     if (oParElmt != null)
                                         nParId = oParElmt.InnerText;
                                 }
-                                int nRoot = Conversions.ToInteger(base.Instance.SelectSingleNode("cSection").InnerText);
-                                bool bChilds = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nSearchChildren").InnerText == "1", true, false));
+                                int nRoot = Convert.ToInt16(base.Instance.SelectSingleNode("cSection").InnerText);
+                                bool bChilds = Convert.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nSearchChildren").InnerText == "1", true, false));
                                 string cExpression = base.Instance.SelectSingleNode("cSearch").InnerText;
-                                bool bIncRelated = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nIncludeRelated").InnerText == "1", true, false));
+                                bool bIncRelated = Convert.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nIncludeRelated").InnerText == "1", true, false));
 
                                 string sSQL = "Select " + cSelectField + " From " + cTableName + " WHERE " + cFilterField + " = " + nParId;
                                 using (var oDre = moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                                 {
                                     string cTmp = "";
                                     while (oDre.Read())
-                                        cTmp = Conversions.ToString(cTmp + Operators.ConcatenateObject(oDre[0], ","));
+                                        cTmp = Convert.ToString(cTmp + Operators.ConcatenateObject(oDre[0], ","));
 
                                     if (!string.IsNullOrEmpty(cTmp))
                                         cTmp = Strings.Left(cTmp, Strings.Len(cTmp) - 1);
-                                    oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, Conversions.ToInteger(nParId), Conversions.ToInteger(Interaction.IIf(bIgnoreParID, 0, nParId)), cTmp.Split(','), bIncRelated));
+                                    oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, Convert.ToInt16(nParId), Convert.ToInt16(Interaction.IIf(bIgnoreParID, 0, nParId)), cTmp.Split(','), bIncRelated));
 
                                 }
                             }
@@ -8759,7 +8759,7 @@ namespace Protean
                         base.submission("EditProductGroup", "", "post", "form_check(this)");
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "ProductGroup");
-                        base.addNote("pgheader", Protean.xForm.noteTypes.Help, Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(nGroupId > 0, "Edit ", "Add "), "Product Group")));
+                        base.addNote("pgheader", Protean.xForm.noteTypes.Help, Convert.ToString(Operators.ConcatenateObject(Interaction.IIf(nGroupId > 0, "Edit ", "Add "), "Product Group")));
                         oGrp1Elmt = base.addGroup(ref oFrmElmt, "Details", "1col", "Details");
 
                         // Definitions
@@ -8815,7 +8815,7 @@ namespace Protean
                             base.validate();
                             if (base.valid)
                             {
-                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartProductCategories, base.Instance, Conversions.ToLong(Interaction.IIf(nGroupId > 0, nGroupId, -1)));
+                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartProductCategories, base.Instance, Convert.ToInt64(Interaction.IIf(nGroupId > 0, nGroupId, -1)));
                             }
                         }
                         base.addValues();
@@ -8843,7 +8843,7 @@ namespace Protean
                         if (nDiscountId > 0)
                         {
                             sSQL = "Select nDiscountCat From tblCartDiscountRules WHERE nDiscountKey = " + nDiscountId;
-                            nDiscountType = Conversions.ToInteger(moDbHelper.ExeProcessSqlScalar(sSQL));
+                            nDiscountType = Convert.ToInt16(moDbHelper.ExeProcessSqlScalar(sSQL));
                         }
 
                         if (nDiscountType > 0)
@@ -8885,7 +8885,7 @@ namespace Protean
                             base.validate();
                             if (base.valid)
                             {
-                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartDiscountRules, base.Instance, Conversions.ToLong(Interaction.IIf(nDiscountId > 0, nDiscountId, -1)));
+                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartDiscountRules, base.Instance, Convert.ToInt64(Interaction.IIf(nDiscountId > 0, nDiscountId, -1)));
                             }
                         }
                         base.addValues();
@@ -9045,7 +9045,7 @@ namespace Protean
 
                         oElmt2 = base.addSelect(ref oFrmGrp1, "Groups", false, "User Groups", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
                         // Dim nxxx As Integer = moDbhelper.exeProcessSQLScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " & id & ") AND (nDirId = 0)")
-                        if (!(Conversions.ToDouble(moDbHelper.ExeProcessSqlScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " + id + ") AND (nDirId = 0)")) > 0d))
+                        if (!(Convert.ToDouble(moDbHelper.ExeProcessSqlScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " + id + ") AND (nDirId = 0)")) > 0d))
                         {
                             base.addOption(ref oElmt2, "<<All Users>>", 0.ToString());
                         }
@@ -9179,7 +9179,7 @@ namespace Protean
 
                         oElmt2 = base.addSelect(ref oFrmGrp1, "Groups", false, "User Groups", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
                         // Dim nxxx As Integer = moDbhelper.exeProcessSQLScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " & id & ") AND (nDirId = 0)")
-                        if (!(Conversions.ToDouble(moDbHelper.ExeProcessSqlScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " + id + ") AND (nDirId = 0)")) > 0d))
+                        if (!(Convert.ToDouble(moDbHelper.ExeProcessSqlScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " + id + ") AND (nDirId = 0)")) > 0d))
                         {
                             base.addOption(ref oElmt2, "<<All Users>>", 0.ToString());
                         }
@@ -9317,7 +9317,7 @@ namespace Protean
 
                         oElmt2 = base.addSelect(ref oFrmGrp1, "Groups", false, "Shipping Groups", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
                         // Dim nxxx As Integer = moDbhelper.exeProcessSQLScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " & id & ") AND (nDirId = 0)")
-                        if (!(Conversions.ToDouble(moDbHelper.ExeProcessSqlScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " + id + ") AND (nDirId = 0)")) > 0d))
+                        if (!(Convert.ToDouble(moDbHelper.ExeProcessSqlScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " + id + ") AND (nDirId = 0)")) > 0d))
                         {
                             base.addOption(ref oElmt2, "<<All Users>>", 0.ToString());
                         }
@@ -9376,7 +9376,7 @@ namespace Protean
                         return null;
                     }
                 }
-                public XmlElement xFrmEditDirectoryContact(long id = 0L, int nUID = 0, string xFormPath = "/xforms/directory/UserContact.xml")
+                public XmlElement xFrmEditDirectoryContact(long id = 0L, long nUID = 0, string xFormPath = "/xforms/directory/UserContact.xml")
                 {
                     string cProcessInfo = "";
                     try
@@ -9420,7 +9420,7 @@ namespace Protean
                             base.validate();
                             if (base.valid)
                             {
-                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, base.Instance, Conversions.ToLong(Interaction.IIf(id > 0L, id, -1)));
+                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, base.Instance, Convert.ToInt64(Interaction.IIf(id > 0L, id, -1)));
                                 try
                                 {
                                     var argoNode = base.moXformElmt.SelectSingleNode("group/group(1)");
@@ -9478,7 +9478,7 @@ namespace Protean
                             base.validate();
                             if (base.valid)
                             {
-                                bool bResult = Conversions.ToBoolean(Interaction.IIf(Conversions.ToDouble(base.Instance.SelectSingleNode("nRelType").InnerText) == 1d, true, false));
+                                bool bResult = Convert.ToBoolean(Interaction.IIf(Convert.ToDouble(base.Instance.SelectSingleNode("nRelType").InnerText) == 1d, true, false));
                                 bResult = moDbHelper.updateLocationsDetail((long)nContentId, nPageId, bResult);
                                 valid = true;
                                 if (!bResult)
@@ -9703,7 +9703,7 @@ namespace Protean
                         using (var oDre = moDbHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                         {
                             while (oDre.Read())
-                                base.addOption(ref oSelElmt, Conversions.ToString(oDre[0]), Conversions.ToString(oDre[0]));
+                                base.addOption(ref oSelElmt, Convert.ToString(oDre[0]), Convert.ToString(oDre[0]));
                         }
                         XmlElement argoBindParent1 = null;
                         base.addBind("OptIn", "OptIn", oBindParent: ref argoBindParent1);
@@ -9827,7 +9827,7 @@ namespace Protean
                             XmlElement oMainFrequency = (XmlElement)base.Instance.SelectSingleNode("tblActions/nFrequency");
                             if (oMainFrequency != null)
                             {
-                                if (!(Conversions.ToInteger(oMainFrequency.InnerText) >= Conversions.ToInteger(oSchedulerConfig["MinimumInterval"])))
+                                if (!(Convert.ToInt16(oMainFrequency.InnerText) >= Convert.ToInt16(oSchedulerConfig["MinimumInterval"])))
                                 {
                                     base.valid = false;
                                 }
@@ -10013,7 +10013,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    id = Conversions.ToInteger(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance));
+                                    id = Convert.ToInt16(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance));
                                 }
 
                                 if (!(id == 0) & !(nPageId == 0))
@@ -10074,7 +10074,7 @@ namespace Protean
                         //int i = 1;
                         // bool bDone = false;
                         /// string cItems = "";
-                        long initialSubContentId = Conversions.ToLong("0" + base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
+                        long initialSubContentId = Convert.ToInt64("0" + base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
 
 
 
@@ -10082,7 +10082,7 @@ namespace Protean
                         {
                             base.updateInstanceFromRequest();
 
-                            long ContentId = Conversions.ToLong("0" + base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
+                            long ContentId = Convert.ToInt64("0" + base.Instance.SelectSingleNode("tblSubscription/nSubContentId").InnerText);
                             var ContentXml = myWeb.moPageXml.CreateElement("Content");
                             ContentXml.InnerXml = moDbHelper.getContentBrief((int)ContentId);
 
@@ -10111,7 +10111,7 @@ namespace Protean
 
                                 // Calculate Renewal Date
                                 var oSub = new Cms.Cart.Subscriptions();
-                                var dSubEndDate = oSub.SubscriptionEndDate(Conversions.ToDate(base.Instance.SelectSingleNode("tblSubscription/dStartDate").InnerText), (XmlElement)ContentXml.SelectSingleNode("Content"));
+                                var dSubEndDate = oSub.SubscriptionEndDate(Convert.ToDateTime(base.Instance.SelectSingleNode("tblSubscription/dStartDate").InnerText), (XmlElement)ContentXml.SelectSingleNode("Content"));
                                 base.Instance.SelectSingleNode("tblSubscription/dExpireDate").InnerText = XmlDate((object)dSubEndDate);
                             }
 
@@ -10127,15 +10127,15 @@ namespace Protean
 
                             if (base.valid)
                             {
-                                int nCId = Conversions.ToInteger(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Subscription, base.Instance, (long)nSubId));
+                                int nCId = Convert.ToInt16(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Subscription, base.Instance, (long)nSubId));
                                 if (base.Instance.SelectSingleNode("tblSubscription/cRenewalStatus").InnerText != "Cancelled")
                                 {
                                     if (nSubId > 0)
                                     {
                                         foreach (XmlElement oElmt in base.Instance.SelectNodes("tblSubscription/cSubXml/Content/UserGroups/Group[@id!='']"))
                                         {
-                                            int nGrpID = Conversions.ToInteger(oElmt.Attributes["id"].Value);
-                                            myWeb.moDbHelper.saveDirectoryRelations((long)Conversions.ToInteger(base.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText), nGrpID.ToString());
+                                            int nGrpID = Convert.ToInt16(oElmt.Attributes["id"].Value);
+                                            myWeb.moDbHelper.saveDirectoryRelations((long)Convert.ToInt16(base.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText), nGrpID.ToString());
                                         }
                                     }
                                 }
@@ -10181,7 +10181,7 @@ namespace Protean
                         XmlElement oFrmElmt;
 
                         XmlElement InstanceElmt = base.Instance;
-                        oSub.GetSubscriptionDetail(ref InstanceElmt, Conversions.ToInteger(nSubscriptionId));
+                        oSub.GetSubscriptionDetail(ref InstanceElmt, Convert.ToInt16(nSubscriptionId));
 
 
 
@@ -10203,11 +10203,11 @@ namespace Protean
                                     break;
                                 }
                         }
-                        long SubId = Conversions.ToLong(SubXml.GetAttribute("id"));
+                        long SubId = Convert.ToInt64(SubXml.GetAttribute("id"));
 
-                        var dNewStart = DateAndTime.DateAdd(DateInterval.Day, 1d, Conversions.ToDate(SubXml.GetAttribute("expireDate")));
-                        var dNewEnd = DateAndTime.DateAdd(renewInterval, Conversions.ToInteger(SubXml.GetAttribute("period")), Conversions.ToDate(SubXml.GetAttribute("expireDate")));
-                        double RenewalCost = Conversions.ToDouble(SubXml.GetAttribute("value"));
+                        var dNewStart = DateAndTime.DateAdd(DateInterval.Day, 1d, Convert.ToDateTime(SubXml.GetAttribute("expireDate")));
+                        var dNewEnd = DateAndTime.DateAdd(renewInterval, Convert.ToInt16(SubXml.GetAttribute("period")), Convert.ToDateTime(SubXml.GetAttribute("expireDate")));
+                        double RenewalCost = Convert.ToDouble(SubXml.GetAttribute("value"));
                         SubXml.SetAttribute("newStart", XmlDate(dNewStart));
                         SubXml.SetAttribute("newExpire", XmlDate(dNewEnd));
 
@@ -10248,7 +10248,7 @@ namespace Protean
                                 if (myWeb.moRequest["skipPayment"] == "yes")
                                     skipPayment = true;
 
-                                RenewResponse = oSub.RenewSubscription(Conversions.ToLong(nSubscriptionId), bEmailClient, skipPayment);
+                                RenewResponse = oSub.RenewSubscription(Convert.ToInt64(nSubscriptionId), bEmailClient, skipPayment);
                                 if (RenewResponse == "Success")
                                 {
                                     base.valid = true;
@@ -10290,7 +10290,7 @@ namespace Protean
                         XmlElement oFrmElmt;
 
                         var argoParentElmt = base.Instance;
-                        oSub.GetSubscriptionDetail(ref argoParentElmt, Conversions.ToInteger(nSubscriptionId));
+                        oSub.GetSubscriptionDetail(ref argoParentElmt, Convert.ToInt16(nSubscriptionId));
                         base.Instance = argoParentElmt;
                         object SubXml = base.Instance.FirstChild;
 
@@ -10322,7 +10322,7 @@ namespace Protean
                                 if (myWeb.moRequest["emailClient"] == "yes")
                                     bEmailClient = true;
                                 string RenewResponse;
-                                RenewResponse = oSub.RefreshSubscriptionOrder((XmlElement)base.Instance.FirstChild, bEmailClient, Conversions.ToLong(nOrderId));
+                                RenewResponse = oSub.RefreshSubscriptionOrder((XmlElement)base.Instance.FirstChild, bEmailClient, Convert.ToInt64(nOrderId));
                                 if (RenewResponse == "Success")
                                 {
                                     base.valid = true;
@@ -10347,7 +10347,7 @@ namespace Protean
                     }
                 }
 
-                public XmlElement xFrmConfirmCancelSubscription(string nUserId, string nSubscriptionId, int nCurrentUser, bool bAdminMode)
+                public XmlElement xFrmConfirmCancelSubscription(string nUserId, string nSubscriptionId, long nCurrentUser, bool bAdminMode)
                 {
 
                     try
@@ -10391,7 +10391,7 @@ namespace Protean
                                 if (moRequest["emailClient"] != "yes")
                                     bEmailClient = false;
                                 var oSub = new Cms.Cart.Subscriptions(ref myWeb);
-                                oSub.CancelSubscription(Conversions.ToInteger(nSubscriptionId), myWeb.moRequest["cStatedReason"], bEmailClient);
+                                oSub.CancelSubscription(Convert.ToInt16(nSubscriptionId), myWeb.moRequest["cStatedReason"], bEmailClient);
                                 base.valid = true;
                                 return base.moXformElmt;
                             }
@@ -10441,7 +10441,7 @@ namespace Protean
                             else if (base.getSubmitted() == "Expire")
                             {
                                 var oSub = new Cms.Cart.Subscriptions(ref myWeb);
-                                oSub.ExpireSubscription(Conversions.ToInteger(nSubscriptionId), myWeb.moRequest["cStatedReason"]);
+                                oSub.ExpireSubscription(Convert.ToInt16(nSubscriptionId), myWeb.moRequest["cStatedReason"]);
                                 base.valid = true;
                                 return base.moXformElmt;
                             }
@@ -10722,7 +10722,7 @@ namespace Protean
 
                         if (base.isSubmitted() | moRequest["cSearched"] == "1")
                         {
-                            oDetailElement.AppendChild(xFrmLocateContent(Conversions.ToInteger(nNewLocationPage), Conversions.ToInteger(nFromPage), bIncludeChildren, cContentType, cSearchTerm));
+                            oDetailElement.AppendChild(xFrmLocateContent(Convert.ToInt16(nNewLocationPage), Convert.ToInt16(nFromPage), bIncludeChildren, cContentType, cSearchTerm));
                         }
 
                         return base.moXformElmt;
@@ -10761,7 +10761,7 @@ namespace Protean
                             int i = 0;
                             var loopTo = oItems.Length - 1;
                             for (i = 0; i <= loopTo; i++)
-                                myWeb.moDbHelper.setContentLocation((long)nNewLocationPage, Conversions.ToLong(oItems[i]), false, false, false);
+                                myWeb.moDbHelper.setContentLocation((long)nNewLocationPage, Convert.ToInt64(oItems[i]), false, false, false);
                             base.valid = true;
                         }
                         else
@@ -11405,7 +11405,7 @@ namespace Protean
                         object formPath = "/xforms/directory/";
                         if (myWeb.bs5)
                             formPath = "/admin/xforms/directory/";
-                        base.load(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(formPath, cFormName), ".xml")), myWeb.maCommonFolders);
+                        base.load(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(formPath, cFormName), ".xml")), myWeb.maCommonFolders);
 
                         base.Instance.SelectSingleNode("tblCodes/nCodeType").InnerText = ((int)Cms.dbHelper.CodeType.Membership).ToString();
 
@@ -11444,17 +11444,17 @@ namespace Protean
                                 // Generate the Codes
                                 oInstanceRoot = (XmlElement)base.Instance.SelectSingleNode("tblCodes");
 
-                                int nNoCodes = Conversions.ToInteger(oInstanceRoot.SelectSingleNode("nNumberOfCodes").InnerText);
+                                int nNoCodes = Convert.ToInt16(oInstanceRoot.SelectSingleNode("nNumberOfCodes").InnerText);
 
                                 var oCodes = new string[nNoCodes];
 
                                 object localgetNodeValueByType6() { XmlNode argoParent = oInstanceRoot; var ret = getNodeValueByType(ref argoParent, "bRND", vDefaultValue: "0"); oInstanceRoot = (XmlElement)argoParent; return ret; }
 
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(localgetNodeValueByType6(), "0", false)))
+                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(localgetNodeValueByType6(), "0", false)))
                                 {
 
                                     // Generate non-random codes
-                                    oCodes = CodeGen(oInstanceRoot.SelectSingleNode("cPreceedingText").InnerText, Conversions.ToInteger(oInstanceRoot.SelectSingleNode("nStartNumber").InnerText), nNoCodes, Conversions.ToBoolean(oInstanceRoot.SelectSingleNode("bKeepProceedingZeros").InnerText), Conversions.ToBoolean(oInstanceRoot.SelectSingleNode("bMD5Results").InnerText));
+                                    oCodes = CodeGen(oInstanceRoot.SelectSingleNode("cPreceedingText").InnerText, Convert.ToInt16(oInstanceRoot.SelectSingleNode("nStartNumber").InnerText), nNoCodes, Convert.ToBoolean(oInstanceRoot.SelectSingleNode("bKeepProceedingZeros").InnerText), Convert.ToBoolean(oInstanceRoot.SelectSingleNode("bMD5Results").InnerText));
                                 }
                                 else
                                 {
@@ -11470,7 +11470,7 @@ namespace Protean
                                     // Option: Unambiguous Letters
                                     object localgetNodeValueByType() { XmlNode argoParent1 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent1, "bRNDVague", vDefaultValue: "0"); oInstanceRoot = (XmlElement)argoParent1; return ret; }
 
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(localgetNodeValueByType(), "1", false)))
+                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(localgetNodeValueByType(), "1", false)))
                                         options = options | TextOptions.UnambiguousCharacters;
 
                                     // Option: Character Sets
@@ -11492,7 +11492,7 @@ namespace Protean
 
                                         object localgetNodeValueByType3() { XmlNode argoParent4 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent4, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent4; return ret; }
 
-                                        string cC = RandomPassword(Conversions.ToInteger(localgetNodeValueByType3()), options: options, oRandomObject: random);
+                                        string cC = RandomPassword(Convert.ToInt16(localgetNodeValueByType3()), options: options, oRandomObject: random);
 
                                         // Check for duplicates
                                         while (!(Array.LastIndexOf(oCodes, cC) == -1 | string.IsNullOrEmpty(cC)))
@@ -11501,7 +11501,7 @@ namespace Protean
 
                                             object localgetNodeValueByType5() { XmlNode argoParent6 = oInstanceRoot; var ret = getNodeValueByType(ref argoParent6, "nRNDLength", vDefaultValue: "8"); oInstanceRoot = (XmlElement)argoParent6; return ret; }
 
-                                            cC = RandomPassword(Conversions.ToInteger(localgetNodeValueByType5()), options: options);
+                                            cC = RandomPassword(Convert.ToInt16(localgetNodeValueByType5()), options: options);
                                         }
 
                                         oCodes[i] = cC;
@@ -11523,7 +11523,7 @@ namespace Protean
                                         else
                                         {
                                             base.Instance.SelectSingleNode("tblCodes/cCode").InnerText = oCodes[i];
-                                            int nSubId = Conversions.ToInteger(myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, base.Instance));
+                                            int nSubId = Convert.ToInt16(myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, base.Instance));
                                             nAdded += 1;
                                         }
                                     }
@@ -11618,7 +11618,7 @@ namespace Protean
                                             newInstance.SelectSingleNode("tblCodes/cCode").InnerText = oCodes[i];
                                             newInstance.SelectSingleNode("tblCodes/nCodeParentId").InnerText = oInstanceRoot.GetAttribute("groupId");
 
-                                            int nSubId = Conversions.ToInteger(myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, newInstance));
+                                            int nSubId = Convert.ToInt16(myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, newInstance));
                                             nAdded += 1;
                                         }
                                     }
@@ -11670,7 +11670,7 @@ namespace Protean
                             base.validate();
                             if (base.valid)
                             {
-                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, base.Instance, Conversions.ToLong(Interaction.IIf(nCodeId > 0, nCodeId, -1)));
+                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, base.Instance, Convert.ToInt64(Interaction.IIf(nCodeId > 0, nCodeId, -1)));
                             }
                         }
                         base.addValues();
@@ -12029,7 +12029,7 @@ namespace Protean
                         base.submission("EditLookup", "", "post", "form_check(this)");
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Lookup");
-                        base.addNote("pgheader", Protean.xForm.noteTypes.Help, Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(nLookupId > 0, "Edit ", "Add "), "Lookup")));
+                        base.addNote("pgheader", Protean.xForm.noteTypes.Help, Convert.ToString(Operators.ConcatenateObject(Interaction.IIf(nLookupId > 0, "Edit ", "Add "), "Lookup")));
                         oGrp1Elmt = base.addGroup(ref oFrmElmt, "Lookup", "1col", "Details");
 
                         // Definitions
@@ -12080,7 +12080,7 @@ namespace Protean
                             base.validate();
                             if (base.valid)
                             {
-                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Lookup, base.Instance, Conversions.ToLong(Interaction.IIf(nLookupId > 0, nLookupId, -1)));
+                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Lookup, base.Instance, Convert.ToInt64(Interaction.IIf(nLookupId > 0, nLookupId, -1)));
                             }
                         }
                         base.addValues();
@@ -12158,7 +12158,7 @@ namespace Protean
                         base.submission("EditIndexes", "", "post", "form_check(this)");
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "indexkey");
-                        base.addNote("pgheader", Protean.xForm.noteTypes.Help, Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(indexId > 0, "Edit ", "Add "), "indexkey")));
+                        base.addNote("pgheader", Protean.xForm.noteTypes.Help, Convert.ToString(Operators.ConcatenateObject(Interaction.IIf(indexId > 0, "Edit ", "Add "), "indexkey")));
                         oGrp1Elmt = base.addGroup(ref oFrmElmt, "indexkey", "1col", "Details");
 
                         // Definitions
@@ -12224,7 +12224,7 @@ namespace Protean
                             base.validate();
                             if (base.valid)
                             {
-                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.indexkey, base.Instance, Conversions.ToLong(Interaction.IIf(indexId > 0, indexId, -1)));
+                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.indexkey, base.Instance, Convert.ToInt64(Interaction.IIf(indexId > 0, indexId, -1)));
                             }
                         }
                         base.addValues();
@@ -12271,7 +12271,7 @@ namespace Protean
                         {
                             addOption(ref SelectElmt, oTmpt.GetAttribute("mode") + " - " + oTmpt.GetAttribute("match"), i.ToString());
 
-                            if (Conversions.ToInteger(myWeb.moRequest["Template"]) == (int)i)
+                            if (Convert.ToInt16(myWeb.moRequest["Template"]) == (int)i)
                             {
 
                                 addInput(ref oFrmElmt, "tplt-mode", true, "Mode");
@@ -12297,7 +12297,7 @@ namespace Protean
                         var xmlElmt = base.addSelect1(ref oFrmElmt, "contentType", true, "contentType", ((int)Protean.xForm.ApperanceTypes.Minimal).ToString());
                         addOption(ref xmlElmt, "xml", "xml");
 
-                        if (Conversions.ToInteger(myWeb.moRequest["Template"]) > 0)
+                        if (Convert.ToInt16(myWeb.moRequest["Template"]) > 0)
                         {
                             base.addSubmit(ref oFrmElmt, "EditTemplate", "Save Template", "SaveTemplate");
                         }
@@ -12494,7 +12494,7 @@ namespace Protean
                                     // If not add the option to the select.
                                     foreach (XmlElement menuItem in menuItems)
                                     {
-                                        menuId = Conversions.ToLong(menuItem.GetAttribute("id"));
+                                        menuId = Convert.ToInt64(menuItem.GetAttribute("id"));
 
                                         // Check if we've added it already
                                         if (!_locationsScope.ContainsKey(menuId))
@@ -12704,7 +12704,7 @@ namespace Protean
                                 // Determine its Root Id
                                 string argpropertyName = "root";
                                 string rootId = getPropertyFromClass(ref argpropertyName);
-                                _rootId = Conversions.ToLong(Interaction.IIf(!string.IsNullOrEmpty(rootId) & Information.IsNumeric(rootId), Conversions.ToLong(rootId), 0));
+                                _rootId = Convert.ToInt64(Interaction.IIf(!string.IsNullOrEmpty(rootId) & Information.IsNumeric(rootId), Convert.ToInt64(rootId), 0));
 
                                 // Determine the root mode
                                 string argpropertyName1 = "rootMode";
@@ -12820,13 +12820,13 @@ namespace Protean
                             if (newGroupId.Contains(","))
                             {
                                 foreach (var i in Strings.Split(newGroupId, ","))
-                                    sNewGroupNames = sNewGroupNames + myWeb.moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Directory, Conversions.ToLong(i.ToString())) + ", ";
+                                    sNewGroupNames = sNewGroupNames + myWeb.moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Directory, Convert.ToInt64(i.ToString())) + ", ";
                                 sNewGroupNames.TrimEnd();
                                 sNewGroupNames.TrimEnd(',');
                             }
                             else
                             {
-                                sNewGroupNames = myWeb.moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Directory, Conversions.ToLong(newGroupId));
+                                sNewGroupNames = myWeb.moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Directory, Convert.ToInt64(newGroupId));
                             }
 
                             base.bProcessRepeats = true;
@@ -12878,7 +12878,7 @@ namespace Protean
                                 if (newGroupId.Contains(","))
                                 {
                                     foreach (var i in Strings.Split(newGroupId, ","))
-                                        moDbHelper.saveDirectoryRelations((long)nUserId, Conversions.ToLong(i).ToString(), false);
+                                        moDbHelper.saveDirectoryRelations((long)nUserId, Convert.ToInt64(i).ToString(), false);
                                 }
                                 else
                                 {
@@ -12928,7 +12928,7 @@ namespace Protean
                     try
                     {
                         myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                        base.NewFrm(Conversions.ToString(FormTitle));
+                        base.NewFrm(Convert.ToString(FormTitle));
                         base.bProcessRepeats = false;
 
                         // We load the xform from a file, it may be in local or in common folders.
@@ -13022,7 +13022,7 @@ namespace Protean
                     try
                     {
 
-                        base.NewFrm(Conversions.ToString(FormTitle));
+                        base.NewFrm(Convert.ToString(FormTitle));
                         base.bProcessRepeats = false;
 
                         // We load the xform from a file, it may be in local or in common folders.
@@ -13196,8 +13196,8 @@ namespace Protean
                                 NameValueCollection moCartConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
 
 
-                                DateTime SettlementDate = Conversions.ToDate(oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText);
-                                SettlementDate = DateAndTime.DateAdd(DateInterval.Day, (int)Math.Round(Conversions.ToDouble(moCartConfig["SettlementDays"]) * -1), SettlementDate);
+                                DateTime SettlementDate = Convert.ToDateTime(oCartListElmt.SelectSingleNode("Item[1]/productDetail/StartDate").InnerText);
+                                SettlementDate = DateAndTime.DateAdd(DateInterval.Day, (int)Math.Round(Convert.ToDouble(moCartConfig["SettlementDays"]) * -1), SettlementDate);
 
                                 msgHtml = msgHtml.Replace("{Name}", oCartListElmt.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText);
                                 msgHtml = msgHtml.Replace("{SettlementId}", oCartListElmt.GetAttribute("settlementID"));

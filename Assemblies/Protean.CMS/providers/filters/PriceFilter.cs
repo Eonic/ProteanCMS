@@ -161,10 +161,10 @@ namespace Protean.Providers
                                 cnt = cnt + 1;
                                 if (cnt == 1)
                                 {
-                                    nMinPriceProduct = Conversions.ToInteger(oDr["MinProductPrice"]);
+                                    nMinPriceProduct = Convert.ToInt16(oDr["MinProductPrice"]);
 
                                 }
-                                nMaxPRiceProduct = Conversions.ToInteger(oDr["MaxProductPrice"]);
+                                nMaxPRiceProduct = Convert.ToInt16(oDr["MaxProductPrice"]);
                                 sProductCount = Convert.ToString(oDr["ContentCount"]);
                                 cProductCountList = cProductCountList + cnt.ToString() + ":" + sProductCount + ",";
                             }

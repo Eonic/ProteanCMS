@@ -79,7 +79,7 @@ namespace Protean
                 foreach (DataRow oDR in oDS.Tables["Users"].Rows)
                 {
                     var oElmt = oUserXML.CreateElement("UserDetails");
-                    oElmt.InnerXml = Strings.Replace(Strings.Replace(Conversions.ToString(oDR["cDirXML"]), "&gt;", ">"), "&lt;", "<");
+                    oElmt.InnerXml = Strings.Replace(Strings.Replace(Convert.ToString(oDR["cDirXML"]), "&gt;", ">"), "&lt;", "<");
                     string cEmail = "";
                     XmlElement oEmailElmt = (XmlElement)oElmt.SelectSingleNode("User/Email");
                     if (oEmailElmt != null)
@@ -96,7 +96,7 @@ namespace Protean
                         if (!string.IsNullOrEmpty(cName))
                             cName += " " + oLNameElmt.InnerText;
                     }
-                    AddRecipient(nRequestID, Conversions.ToInteger(oDR["nDirKey"]), cEmail, cName);
+                    AddRecipient(nRequestID, Convert.ToInt16(oDR["nDirKey"]), cEmail, cName);
                 }
                 FinishRequest(nRequestID);
             }
@@ -122,7 +122,7 @@ namespace Protean
                 cSQL += "'" + moConfig["BaseUrl"] + "',";
                 cSQL += "" + moConfig["MailServer"] + ",";
                 cSQL += "0,";
-                cSQL = Conversions.ToString(cSQL + Operators.ConcatenateObject(Interaction.IIf(bSkipQue, 1, 0), ")"));
+                cSQL = Convert.ToString(cSQL + Operators.ConcatenateObject(Interaction.IIf(bSkipQue, 1, 0), ")"));
                 return Convert.ToInt32(oDBT_Remote.GetIdInsertSql(cSQL));
             }
             catch (Exception ex)
@@ -312,10 +312,10 @@ namespace Protean
             cString = Strings.Replace(cString, "‡", "&Dagger;"); // &#8225;
             cString = Strings.Replace(cString, "‰", "&permil;"); // &#8240;
             cString = Strings.Replace(cString, "€", "&euro;"); // &#8364;
-            cString = Strings.Replace(cString, Conversions.ToString('\r'), "");
-            cString = Strings.Replace(cString, Conversions.ToString('\t'), "");
-            cString = Strings.Replace(cString, Conversions.ToString(Strings.Chr(160)), " ");
-            cString = Strings.Replace(cString, Conversions.ToString('\n'), "");
+            cString = Strings.Replace(cString, Convert.ToString('\r'), "");
+            cString = Strings.Replace(cString, Convert.ToString('\t'), "");
+            cString = Strings.Replace(cString, Convert.ToString(Strings.Chr(160)), " ");
+            cString = Strings.Replace(cString, Convert.ToString('\n'), "");
             cString = Strings.Replace(cString, Constants.vbNewLine, "");
             cString = Strings.Replace(cString, Constants.vbTab, "");
             // Dim i As Integer = 1

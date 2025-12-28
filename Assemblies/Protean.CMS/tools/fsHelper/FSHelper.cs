@@ -344,7 +344,7 @@ namespace Protean
                 object rootPath = @"\";
                 if (!string.IsNullOrEmpty(pathPrefix))
                     rootPath = pathPrefix;
-                nodeElem.SetAttribute("path", Conversions.ToString(rootPath));
+                nodeElem.SetAttribute("path", Convert.ToString(rootPath));
 
                 nodeElem.SetAttribute("startLevel", (pathPrefix.Split('\\').Length - 1).ToString());
                 // PerfMon.Log("fsHelper", "getDirectoryTreeXml-AddElementsStart")
@@ -1084,7 +1084,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                return Conversions.ToBoolean(ex.Message);
+                return Convert.ToBoolean(ex.Message);
             }
         }
 
@@ -1255,7 +1255,7 @@ namespace Protean
                             nFileCount = nFileCount + 1L;
                         }
 
-                        long FilesProcessedCount = Conversions.ToLong(Operators.SubtractObject(nFileCount, FileCountBefore));
+                        long FilesProcessedCount = Convert.ToInt64(Operators.SubtractObject(nFileCount, FileCountBefore));
                         string LogText = "Last Optimised:" + DateTime.Now.ToLongDateString() + " Savings:" + newSavings + " FileCount:" + FilesProcessedCount + Constants.vbCrLf;
                         if (LogFile.Exists)
                         {
@@ -1383,7 +1383,7 @@ namespace Protean
             for (int i = 0, loopTo = context.Request.Files.Count - 1; i <= loopTo; i++)
             {
                 System.Web.HttpPostedFile file = context.Request.Files[i];
-                string cfileName = CleanfileName(Conversions.ToString(file.FileName));
+                string cfileName = CleanfileName(Convert.ToString(file.FileName));
                 string scleanFileName = cfileName;
                 string isExists = "true";
                 string NewFileName = CleanFileExists(cfileName, context);
@@ -1403,7 +1403,7 @@ namespace Protean
                     isExists = "false";
                 }
 
-                if (Conversions.ToBoolean(isExists) && string.IsNullOrEmpty(isOverwrite))
+                if (Convert.ToBoolean(isExists) && string.IsNullOrEmpty(isOverwrite))
                 {
                     context.Session["ExistsFileName"] = cfileName + "," + scleanFileName + "," + isExists;
                 }
@@ -1426,7 +1426,7 @@ namespace Protean
                     }
                     else
                     {
-                        UploadPartialFile(Conversions.ToString(headers["X-File-Name"]), context, (List<FilesStatus>)statuses);
+                        UploadPartialFile(Convert.ToString(headers["X-File-Name"]), context, (List<FilesStatus>)statuses);
                     }
 
                     WriteJsonIframeSafe(context, (List<FilesStatus>)statuses);
@@ -1444,7 +1444,7 @@ namespace Protean
             Stream inputStream = context.Request.Files[0].InputStream;
             string fullName = mcStartFolder + Path.GetFileName(fileName);
 
-            using (FileStream fs = new FileStream(Conversions.ToString(fullName), FileMode.Append, FileAccess.Write))
+            using (FileStream fs = new FileStream(Convert.ToString(fullName), FileMode.Append, FileAccess.Write))
             {
                 byte[] buffer = new byte[1024];
 
@@ -1457,7 +1457,7 @@ namespace Protean
                 fs.Flush();
                 fs.Close();
             }
-            statuses.Add(new FilesStatus(new FileInfo(Conversions.ToString(fullName))));
+            statuses.Add(new FilesStatus(new FileInfo(Convert.ToString(fullName))));
         }
 
         public string CleanfileName(string cFilename)
@@ -1552,7 +1552,7 @@ namespace Protean
                 {
                     if (!mcStartFolder.EndsWith(@"\"))
                         mcStartFolder = mcStartFolder + @"\";
-                    string cfileName = CleanfileName(Conversions.ToString(file.FileName));
+                    string cfileName = CleanfileName(Convert.ToString(file.FileName));
                     context.Session["ExistsFileName"] = cfileName;
                     file.SaveAs(mcStartFolder + cfileName);
 
@@ -1560,11 +1560,11 @@ namespace Protean
                     {
                         var eImg = new Tools.Image(mcStartFolder + cfileName);
                         System.Collections.Specialized.NameValueCollection moWebCfg = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-                        eImg.UploadProcessing(Conversions.ToString(moWebCfg["WatermarkText"]), Conversions.ToString(Operators.ConcatenateObject(mcRoot, moWebCfg["WatermarkImage"])));
+                        eImg.UploadProcessing(Convert.ToString(moWebCfg["WatermarkText"]), Convert.ToString(Operators.ConcatenateObject(mcRoot, moWebCfg["WatermarkImage"])));
                     }
 
-                    string fullName = Path.GetFileName(Conversions.ToString(file.FileName)).Replace("'", "");
-                    statuses.Add(new FilesStatus(fullName.Replace(" ", "-"), Conversions.ToInteger(file.ContentLength)));
+                    string fullName = Path.GetFileName(Convert.ToString(file.FileName)).Replace("'", "");
+                    statuses.Add(new FilesStatus(fullName.Replace(" ", "-"), Convert.ToInt16(file.ContentLength)));
                     context.Server.MapPath("/");
                     // We will add one node in ReviewFeedback.xml form and use it instead of config key = context.Request.Form("reviewimagepath")
                     if (!string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]))
@@ -1982,7 +1982,7 @@ namespace Protean
             if (folder.Exists)
             {
                 // Filter out the files by type and return the full name
-                var fileInfoList = new List<FileInfo>(folder.GetFiles("*.*", (SearchOption)Conversions.ToInteger(Interaction.IIf(includeSubfolders, SearchOption.AllDirectories, SearchOption.TopDirectoryOnly))));
+                var fileInfoList = new List<FileInfo>(folder.GetFiles("*.*", (SearchOption)Convert.ToInt16(Interaction.IIf(includeSubfolders, SearchOption.AllDirectories, SearchOption.TopDirectoryOnly))));
                 fileInfoList = fileInfoList.FindAll(new PredicateWrapper<FileInfo, LibraryType>(libraryType, FileInfoTypeFilter));
                 fileList = fileInfoList.ConvertAll(new Converter<FileInfo, string>(FullNameFromFileInfo));
             }

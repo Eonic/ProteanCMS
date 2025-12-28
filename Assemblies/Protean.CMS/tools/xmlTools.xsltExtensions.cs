@@ -2,9 +2,9 @@
 using BundleTransformer.Core.Bundles;
 using BundleTransformer.Core.Orderers;
 using BundleTransformer.Core.Transformers;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+// Microsoft.VisualBasic removed - use native C# alternatives
 using Newtonsoft.Json.Linq;
+using Protean.Tools;
 using SkiaSharp;
 using System;
 using System.Collections;
@@ -155,24 +155,11 @@ namespace Protean
 
             public int stringcompare(string stringX, string stringY)
             {
-
-                stringX = Strings.UCase(stringX);
-                stringY = Strings.UCase(stringY);
-
-                if ((stringX ?? "") == (stringY ?? ""))
-                {
-                    return 0;
-                }
-                else if (Operators.CompareString(stringX, stringY, false) < 0)
-                {
-                    return -1;
-                }
-                else if (Operators.CompareString(stringX, stringY, false) > 0)
-                {
-                    return 1;
-                }
-
-                return default;
+                // Case-insensitive compare
+                int cmp = string.Compare(stringX, stringY, StringComparison.OrdinalIgnoreCase);
+                if (cmp < 0) return -1;
+                if (cmp > 0) return 1;
+                return 0;
 
             }
 
@@ -335,21 +322,19 @@ namespace Protean
                 try
                 {
 
-                    Text = Conversions.ToString(oContextNode.OuterXml);
+                    Text = Convert.ToString(oContextNode.OuterXml);
 
                     string orig = Text;
                     if (!string.IsNullOrEmpty(Text))
                     {
                         Text = Text.Replace("xmlns=\"http://www.w3.org/1999/xhtml\"", "");
                         Text = Text.Replace(@"\", @"\\");
-                        Text = Text.Replace("&#13;", @"\r");
-                        Text = Text.Replace("&#10;", @"\n");
-                        Text = Text.Replace("#9;", @"\t");
-                        Text = Text.Replace("'", @"\'");
-                        Text = Text.Replace("’", @"\'");
-                        Text = Text.Replace(Constants.vbCrLf, "");
-                        Text = Text.Replace(Constants.vbLf, "");
-                        Text = Text.Replace(Constants.vbCr, "");
+                        Text = Text.Replace("&#13;", "\r");
+                        Text = Text.Replace("&#10;", "\n");
+                        Text = Text.Replace("#9;", "\t");
+                        Text = Text.Replace("'", "\\'");
+                        Text = Text.Replace("’", "\\'");
+                        Text = Text.Replace("\r\n", "").Replace("\n", "").Replace("\r", "");
                     }
                     if ((orig ?? "") != (Text ?? ""))
                     {
@@ -504,17 +489,26 @@ namespace Protean
             {
                 try
                 {
-                    if (Information.IsDate(dateString))
+                    if (Tools.Text.IsDate(dateString))
                     {
                         switch (IntervalType ?? "")
                         {
+                            case "h":
+                            case "H":
+                            case "Hour":
+                            case "hour":
+                            case "HOUR":
+                                {
+                                    dateString = Convert.ToString(Convert.ToDateTime(dateString).AddHours(Interval));
+                                    break;
+                                }
                             case "d":
                             case "D":
                             case "Day":
                             case "day":
                             case "DAY":
                                 {
-                                    dateString = Conversions.ToString(Conversions.ToDate(dateString).AddDays(Interval));
+                                    dateString = Convert.ToString(Convert.ToDateTime(dateString).AddDays(Interval));
                                     break;
                                 }
                             case "m":
@@ -523,7 +517,7 @@ namespace Protean
                             case "month":
                             case "MONTH":
                                 {
-                                    dateString = Conversions.ToString(Conversions.ToDate(dateString).AddMonths((int)Interval));
+                                    dateString = Convert.ToString(Convert.ToDateTime(dateString).AddMonths((int)Interval));
                                     break;
                                 }
                             case "y":
@@ -532,7 +526,7 @@ namespace Protean
                             case "year":
                             case "YEAR":
                                 {
-                                    dateString = Conversions.ToString(Conversions.ToDate(dateString).AddYears((int)Interval));
+                                    dateString = Convert.ToString(Convert.ToDateTime(dateString).AddYears((int)Interval));
                                     break;
                                 }
                         }
@@ -550,9 +544,9 @@ namespace Protean
             {
                 try
                 {
-                    if (Information.IsDate(dateString))
+                    if (Tools.Text.IsDate(dateString))
                     {
-                        dateString = Conversions.ToDate(dateString).ToString(dateFormat);
+                        dateString = Convert.ToDateTime(dateString).ToString(dateFormat);
                     }
                     return dateString;
                 }
@@ -566,7 +560,7 @@ namespace Protean
             {
                 try
                 {
-                    if (Information.IsDate(dateString))
+                    if (Tools.Text.IsDate(dateString))
                     {
                         CultureInfo culture;
                         // Try to work out the culture.
@@ -592,7 +586,7 @@ namespace Protean
                             }
                         }
 
-                        dateString = Conversions.ToDate(dateString).ToString(dateFormat, culture.DateTimeFormat);
+                        dateString = Convert.ToDateTime(dateString).ToString(dateFormat, culture.DateTimeFormat);
                     }
                     return dateString;
                 }
@@ -607,13 +601,7 @@ namespace Protean
                 string nDiff = "";
                 try
                 {
-                    string[] ValidDatePart = new[] { "d", "y", "h", "n", "m", "q", "s", "w", "ww", "yyyy" };
-                    if (Information.IsDate(date1String) && Information.IsDate(date2String) && Array.IndexOf(ValidDatePart, datePart) > ValidDatePart.GetLowerBound(0) - 1)
-
-                    {
-
-                        nDiff = DateAndTime.DateDiff(datePart, Conversions.ToDate(date1String), Conversions.ToDate(date2String)).ToString();
-                    }
+                    nDiff = Tools.Text.DateDiff(datePart, date1String, date2String).ToString();
                     return nDiff;
                 }
                 catch (Exception)
@@ -630,10 +618,10 @@ namespace Protean
 
                 try
                 {
-                    dteWorking = Conversions.ToDate(sInput);
+                    dteWorking = Convert.ToDateTime(sInput);
                     if (dteWorking.IsDaylightSavingTime() == true)
                     {
-                        dateadd(((int)DateInterval.Hour).ToString(), 1L, Conversions.ToString(dteWorking));
+                        dateadd("H", 1L, Convert.ToString(dteWorking));
                         sReturn = formatDateISO8601(dteWorking) + "+01:00";
                     }
                     else
@@ -757,12 +745,12 @@ namespace Protean
                     {
                         case "Day":
                             {
-                                nEndPrice = (int)Math.Round(dFinish.Subtract(DateTime.Now).TotalDays) * Conversions.ToDouble(nPrice);
+                                nEndPrice = (int)Math.Round(dFinish.Subtract(DateTime.Now).TotalDays) * Convert.ToDouble(nPrice);
                                 break;
                             }
                         case "Week":
                             {
-                                nEndPrice = (double)RoundUp(dFinish.Subtract(DateTime.Now).TotalDays / 7d, 0, 0) * Conversions.ToDouble(nPrice);
+                                nEndPrice = (double)RoundUp(dFinish.Subtract(DateTime.Now).TotalDays / 7d, 0, 0) * Convert.ToDouble(nPrice);
                                 break;
                             }
                         case "Month":
@@ -776,7 +764,7 @@ namespace Protean
                                     dCurrent = dCurrent.AddMonths(1);
                                     nMonths += 1;
                                 }
-                                nEndPrice = nMonths * Conversions.ToDouble(nPrice);
+                                nEndPrice = nMonths * Convert.ToDouble(nPrice);
                                 break;
                             }
                         case "Year":
@@ -789,7 +777,7 @@ namespace Protean
                                     dCurrent = dCurrent.AddYears(1);
                                     nYears += 1;
                                 }
-                                nEndPrice = nYears * Conversions.ToDouble(nPrice);
+                                nEndPrice = nYears * Convert.ToDouble(nPrice);
                                 break;
                             }
 
@@ -811,7 +799,7 @@ namespace Protean
             {
                 try
                 {
-                    string cTheString = Strings.Replace(Strings.Replace(cHTMLString, "&gt;", ">"), "&lt;", "<");
+                    string cTheString = cHTMLString.Replace("&gt;", ">").Replace("&lt;", "<");
                     cTheString = convertEntitiesToCodes(cTheString);
                     cTheString = stdTools.tidyXhtmlFrag(cTheString, true);
                     return cTheString;
@@ -830,8 +818,6 @@ namespace Protean
                 string cHtmlOut;
                 try
                 {
-
-
                     if (oHtmlNode is null | string.IsNullOrEmpty(oHtmlNode.Current.InnerXml.Trim()))
                     {
                         cHtml = "";
@@ -841,16 +827,14 @@ namespace Protean
                     {
                         cHtml = oHtmlNode.Current.InnerXml;
 
-                        cHtml = Strings.Replace(cHtml, "&amp;", "&");
-
-
+                        cHtml = cHtml.Replace( "&amp;", "&");
 
                         cHtml = convertEntitiesToCodes(cHtml);
                         cHtml = convertStringToEntityCodes(cHtml);
 
-                        cHtml = Strings.Replace(Strings.Replace(cHtml, "&gt;", ">"), "&lt;", "<");
+                        cHtml = cHtml.Replace("&gt;", ">").Replace("&lt;", "<");
                         cHtml = cHtml.Replace("&amp;#", "&#");
-                        cHtml = "<div>" + cHtml + "</div>";
+                        cHtml = $"<div>{cHtml}</div>";
                         if (cHtml.Contains("<?xml"))
                         {
                             cHtml = CompiledRegex.XmlDeclaration.Replace(cHtml, "");
@@ -859,8 +843,8 @@ namespace Protean
 
                         cHtmlOut = stdTools.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
 
-                        cHtmlOut = Strings.Replace(cHtmlOut, "&#x0;", "");
-                        cHtmlOut = Strings.Replace(cHtmlOut, " &#0;", "");
+                        cHtmlOut = cHtmlOut.Replace("&#x0;", "");
+                        cHtmlOut = cHtmlOut.Replace(" &#0;", "");
 
                         if (string.IsNullOrEmpty(cHtmlOut) | string.IsNullOrEmpty(cHtmlOut))
                         {
@@ -917,22 +901,22 @@ namespace Protean
                 {
                     oContextNode.MoveNext();
 
-                    cHtml = Conversions.ToString(oContextNode.Current.InnerXml);
+                    cHtml = Convert.ToString(oContextNode.Current.InnerXml);
                     cHtml = convertStringToEntityCodes(cHtml);
                     cHtml = convertEntitiesToCodesFast(cHtml);
-                    cHtml = Strings.Replace(Strings.Replace(cHtml, "&gt;", ">"), "&lt;", "<");
+                    cHtml = cHtml.Replace( "&gt;", ">").Replace("&lt;", "<");
                     cHtml = "<div>" + cHtml + "</div>";
 
 
 
                     cHtmlOut = stdTools.tidyXhtmlFrag(cHtml, true, true, RemoveTags);
 
-                    cHtmlOut = Strings.Replace(cHtmlOut, "&#x0;", "");
-                    cHtmlOut = Strings.Replace(cHtmlOut, " &#0;", "");
+                    cHtmlOut = cHtmlOut.Replace("&#x0;", "");
+                    cHtmlOut = cHtmlOut.Replace(" &#0;", "");
 
                     cHtmlOut = convertEntitiesToCodesFast(cHtmlOut);
 
-                    if (string.IsNullOrEmpty(cHtmlOut) | string.IsNullOrEmpty(cHtmlOut) | (cHtmlOut ?? "") == Constants.vbCrLf)
+                    if (string.IsNullOrEmpty(cHtmlOut) | string.IsNullOrEmpty(cHtmlOut) | (cHtmlOut ?? "") == Environment.NewLine)
                     {
                         return "";
                     }
@@ -977,9 +961,9 @@ namespace Protean
             {
                 try
                 {
-                    if (Strings.LCase(SectionName) == "payment")
+                    if (SectionName?.ToLowerInvariant() == "payment")
                         return "";
-                    if (Strings.LCase(ValueName).Contains("password"))
+                    if (ValueName != null && ValueName.ToLowerInvariant().Contains("password"))
                         return "";
                     System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)GetObject("EonicConfig_" + SectionName);
 
@@ -998,16 +982,8 @@ namespace Protean
                     }
                     else
                     {
-                        string returnVal;
-                        returnVal = Conversions.ToString(Interaction.IIf(oConfig[ValueName] is null, "", oConfig[ValueName]));
-                        if (returnVal is null)
-                        {
-                            return "";
-                        }
-                        else
-                        {
-                            return returnVal;
-                        }
+                        string returnVal = Convert.ToString(oConfig[ValueName] ?? "");
+                        return returnVal ?? "";
                     }
                 }
                 catch (Exception)
@@ -1092,13 +1068,14 @@ namespace Protean
                         string cSql;
                         // Dim oDr As SqlClient.SqlDataReader
 
-                        cSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT  l.nStructId As LocationID " + "FROM	dbo.tblContentStructure s INNER JOIN dbo.tblAudit a ON s.nauditid = a.nauditKey INNER JOIN dbo.tblContentLocation l ON s.nStructKey = l.nStructId " + "WHERE	nContentId = ", Interaction.IIf(Information.IsNumeric(nContentId), nContentId, -1)), " "));
+                       cSql = $"SELECT l.nStructId As LocationID FROM dbo.tblContentStructure s INNER JOIN dbo.tblAudit a ON s.nauditid = a.nauditKey INNER JOIN dbo.tblContentLocation l ON s.nStructKey = l.nStructId WHERE nContentId = {nContentId}";
+
 
 
 
                         if (bIncludePrimary)
                             cSql += " AND (l.bPrimary = 0) ";
-                        if (Information.IsNumeric(nExcludeLocation))
+                        if (nExcludeLocation > 0)
                             cSql += " And (l.nStructId <> " + nExcludeLocation + ") ";
                         if (!bShowHiddenPages)
                             cSql += " And (a.dExpireDate Is NULL Or a.dExpireDate >= GETDATE()) And (a.dPublishDate Is NULL Or a.dPublishDate <= GETDATE()) And (a.nStatus <> 0) ";
@@ -1287,7 +1264,7 @@ namespace Protean
                 try
                 {
                     oContextNode.MoveNext();
-                    return Conversions.ToString(oContextNode.Current.InnerXml);
+                    return Convert.ToString(oContextNode.Current.InnerXml);
                 }
                 catch (Exception)
                 {
@@ -1614,7 +1591,7 @@ namespace Protean
                     System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                     if (!string.IsNullOrEmpty(moConfig["JpegQuality"]))
                     {
-                        nCompression = Conversions.ToInteger(moConfig["JpegQuality"]);
+                        nCompression = Convert.ToInt16(moConfig["JpegQuality"]);
                     }
 
                     // PerfMon.Log("xmlTools", "ResizeImage - Start")
@@ -1650,7 +1627,7 @@ namespace Protean
                     string directoryPath = cVirtualPath.Substring(0, cVirtualPath.LastIndexOf("/") + 1);
                     string cVirtualPath2 = directoryPath + sPrefix + filename;
 
-                    cVirtualPath2 = Strings.Replace(cVirtualPath2, "//", "/");
+                    cVirtualPath2 = cVirtualPath2.Replace( "//", "/");
 
                     switch (filetype ?? "")
                     {
@@ -1659,13 +1636,13 @@ namespace Protean
                         case "docx":
                         case "gif":
                             {
-                                newFilepath = Strings.Replace(cVirtualPath2, "." + filetype, sSuffix + ".png");
+                                newFilepath = cVirtualPath2.Replace( "." + filetype, sSuffix + ".png");
                                 break;
                             }
 
                         default:
                             {
-                                newFilepath = Strings.Replace(cVirtualPath2, "." + filetype, sSuffix + "." + filetype);
+                                newFilepath = cVirtualPath2.Replace( "." + filetype, sSuffix + "." + filetype);
                                 break;
                             }
                     }
@@ -1798,7 +1775,7 @@ namespace Protean
                         string directoryPath = cVirtualPath.Substring(0, cVirtualPath.LastIndexOf("/") + 1);
 
 
-                        string webpFileName = Strings.Replace(cVirtualPath, "." + filetype, ".webp");
+                        string webpFileName = cVirtualPath.Replace( "." + filetype, ".webp");
                         string newFilepath = string.Empty;
                         if (myWeb.mbAdminMode | forceCheck)
                         {
@@ -1893,7 +1870,7 @@ namespace Protean
                     string directoryPath = cVirtualPath.Substring(0, cVirtualPath.LastIndexOf("/") + 1);
                     string cVirtualPath2 = directoryPath + sPrefix + filename;
 
-                    cVirtualPath2 = Strings.Replace(cVirtualPath2, "//", "/");
+                    cVirtualPath2 = cVirtualPath2.Replace( "//", "/");
 
 
                     switch (filetype ?? "")
@@ -1903,20 +1880,20 @@ namespace Protean
                         case "docx":
                         case "gif":
                             {
-                                newFilepath = Strings.Replace(cVirtualPath2, "." + filetype, sSuffix + ".png");
+                                newFilepath = cVirtualPath2.Replace( "." + filetype, sSuffix + ".png");
                                 break;
                             }
 
                         default:
                             {
-                                newFilepath = Strings.Replace(cVirtualPath2, "." + filetype, sSuffix + "." + filetype);
+                                newFilepath = cVirtualPath2.Replace( "." + filetype, sSuffix + "." + filetype);
                                 break;
                             }
                     }
 
                     if (!myWeb.mbAdminMode & forceCheck == false)
                     {
-                        return Strings.Replace(newFilepath, " ", "%20");
+                        return newFilepath.Replace( " ", "%20");
                     }
 
                     else if (VirtualFileExists(cVirtualPath) > 0)
@@ -1974,12 +1951,12 @@ namespace Protean
 
 
                             // PerfMon.Log("xmlTools", "ResizeImage - End")
-                            return Strings.Replace(newFilepath, " ", "%20");
+                            return newFilepath.Replace(" ", "%20");
                         }
                         else
                         {
                             // PerfMon.Log("xmlTools", "ResizeImage - End")
-                            return Strings.Replace(newFilepath, " ", "%20");
+                            return newFilepath.Replace(" ", "%20");
                         }
                     }
 
@@ -2129,7 +2106,7 @@ namespace Protean
             {
                 try
                 {
-                    if (Conversions.ToLong("0" + nContentId) > 0L)
+                    if (Convert.ToInt64("0" + nContentId) > 0L)
                     {
                         return myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, Convert.ToInt64(nContentId)).ToString();
                     }
@@ -2149,7 +2126,7 @@ namespace Protean
             {
                 try
                 {
-                    if (Conversions.ToLong("0" + nPageId) > 0L)
+                    if (Convert.ToInt64("0" + nPageId) > 0L)
                     {
                         return myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.ContentStructure, Convert.ToInt64(nPageId)).ToString();
                     }
@@ -2176,10 +2153,9 @@ namespace Protean
                 {
 
                     cPositions = GetContentLocations((int)nContentId, true);
-                    aPositions = Strings.Split(cPositions, ",");
-                    var loopTo = Information.UBound(aPositions);
-                    for (i = 0; i <= loopTo; i++)
-                        myWeb.moDbHelper.updatePagePosition(Conversions.ToLong(aPositions[i]), nContentId, cPosition);
+                    aPositions = cPositions.Split(',');
+                    for (i = 0; i <= aPositions.Length - 1; i++)
+                        myWeb.moDbHelper.updatePagePosition(Convert.ToInt64(aPositions[i]), nContentId, cPosition);
 
                     return cPosition;
                 }
@@ -2242,11 +2218,11 @@ namespace Protean
                 {
 
 
-                    string[] QueryArr = Strings.Split(Query, ".");
+                    string[] QueryArr = Query.Split('.');
                     Query1 = QueryArr[0];
-                    if (Information.UBound(QueryArr) > 0)
+                    if (QueryArr.Length > 0)
                         Query2 = QueryArr[1];
-                    if (Information.UBound(QueryArr) > 1)
+                    if (QueryArr.Length > 1)
                         Query3 = QueryArr[2];
                     var oXfrms = new Cms.xForm(ref myWeb.msException);
                     oXfrms.moPageXML = myWeb.moPageXml;
@@ -2470,7 +2446,7 @@ namespace Protean
 
                                     foreach (var fi in files)
                                     {
-                                        string cExt = Strings.LCase(fi.Extension);
+                                        string cExt = fi.Extension.ToLower();
                                         string tidypath = "/" + Query2.Trim(@"/\".ToCharArray()) + "/" + fi.Name;
 
                                         oXfrms.addOption(ref SelectElmt, fi.Name.Replace(fi.Extension, ""), tidypath);
@@ -2647,9 +2623,13 @@ namespace Protean
 
                     if (ourProvider != null)
                     {
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["path"], "", false)))
+
+                        var pathObj = ourProvider.Parameters["path"];
+                        var path = pathObj?.ToString();
+
+                        if (!string.IsNullOrEmpty(path))
                         {
-                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
+                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(path));
                         }
                         else
                         {
@@ -2834,7 +2814,7 @@ namespace Protean
                 string sReturnString;
                 try
                 {
-                    object AppVariableName = Strings.LCase("js" + TargetPath.Replace("~", ""));
+                    object AppVariableName = "js" + TargetPath.Replace("~", "").ToLowerInvariant();
 
                     bool bReset = false;
                     if (myWeb is null | gbDebug)
@@ -2864,7 +2844,7 @@ namespace Protean
                         if (bAppVarExists == false)
                         {
                             // check if the file exists.
-                            if (Conversions.ToBoolean(VirtualFileExists("/" + myWeb.moConfig["ProjectPath"] + "js" + TargetPath.Replace("~", "") + "/script.js")))
+                            if (Convert.ToBoolean(VirtualFileExists("/" + myWeb.moConfig["ProjectPath"] + "js" + TargetPath.Replace("~", "") + "/script.js")))
                             {
                                 // regenerate the application variable from the files in the folder
                                 // we do not want to recreate all js everytime the application pool is reset anymore.
@@ -2887,7 +2867,7 @@ namespace Protean
                           
                             CommaSeparatedFilenames = CommaSeparatedFilenames.TrimEnd(',');
 
-                            string[] bundleFilePaths = Strings.Split(CommaSeparatedFilenames, ",");
+                            string[] bundleFilePaths = CommaSeparatedFilenames.Split(',');
                             // we build the file
                             var nullBuilder = new NullBuilder();
                             var scriptTransformer = new ScriptTransformer();
@@ -2978,7 +2958,7 @@ namespace Protean
                             {
                                 // file has been saved successfully.
                                 scriptFile = "/" + myWeb.moConfig["ProjectPath"] + "js" + scriptFile;
-                                if (Conversions.ToBoolean(VirtualFileExists(scriptFile)))
+                                if (Convert.ToBoolean(VirtualFileExists(scriptFile)))
                                 {
                                     myWeb.goApp.Set(AppVariableName.ToString(), scriptFile);
                                 }
@@ -3026,7 +3006,7 @@ namespace Protean
 
             public object BundleCSS(string CommaSeparatedFilenames, string TargetPath)
             {
-                if (Strings.Split(CommaSeparatedFilenames, ",").Count() > 1)
+                if (CommaSeparatedFilenames.Split(',').Count() > 1)
                 {
                     throw new NotSupportedException("BundleCSS: this function does not currently support multiple less files");
                 }
@@ -3041,7 +3021,7 @@ namespace Protean
                         cProjectPath = myWeb.moConfig["ProjectPath"];
                     }
                 }
-                string AppVariableName = Strings.LCase("css" + TargetPath.Replace("~", ""));
+                string AppVariableName = "css" + TargetPath.Replace("~", "").ToLowerInvariant();
                 do
                 {
                     try
@@ -3079,7 +3059,7 @@ namespace Protean
                             if (bAppVarExists == false)
                             {
                                 // check if the file exists.
-                                if (Conversions.ToBoolean(VirtualFileExists("/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css")))
+                                if (Convert.ToBoolean(VirtualFileExists("/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css")))
                                 {
                                     // regenerate the application variable from the files in the folder
                                     // we do not want to recreate all css everytime the application pool is reset anymore.
@@ -3124,7 +3104,7 @@ namespace Protean
                                 }
 
                                 // set the services urls list and call the handler request
-                                var oCssWebClient = new CssWebClient(myWeb.moCtx, ref myWeb.msException) { ServiceUrlsList = Strings.Split(CommaSeparatedFilenames, ",").ToList() };
+                                var oCssWebClient = new CssWebClient(myWeb.moCtx, ref myWeb.msException) { ServiceUrlsList = CommaSeparatedFilenames.Split(',').ToList() };
                                 oCssWebClient.SendCssHttpHandlerRequest();
 
                                 string scriptFile = "";
@@ -3143,7 +3123,7 @@ namespace Protean
                                 string maxAttempt = 5.ToString();
                                 try
                                 {
-                                    var loopTo = Conversions.ToInteger(maxAttempt);
+                                    var loopTo = Convert.ToInt16(maxAttempt);
                                     for (cnt = 1; cnt <= loopTo; cnt++)
                                     {
                                         string strStylecss = "style.css";
@@ -3156,7 +3136,7 @@ namespace Protean
                                 }
                                 catch (Exception)
                                 {
-                                    if (cnt < Conversions.ToDouble(maxAttempt))
+                                    if (cnt < Convert.ToDouble(maxAttempt))
                                     {
                                         System.Threading.Thread.Sleep(500 * cnt);
                                     }
@@ -3213,7 +3193,7 @@ namespace Protean
                                 if (sReturnString.StartsWith("/" + cProjectPath + "css"))
                                 {
                                     // check the file exists before we set the application variable...
-                                    if (Conversions.ToBoolean(VirtualFileExists("/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css")))
+                                    if (Convert.ToBoolean(VirtualFileExists("/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css")))
                                     {
                                         myWeb.goApp.Set(AppVariableName, sReturnString);
                                     }

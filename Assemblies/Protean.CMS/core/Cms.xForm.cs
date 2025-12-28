@@ -79,7 +79,7 @@ namespace Protean
                             case "reValidateUser":
                                 {
                                     cReturn = myWeb.moDbHelper.validateUser(this.mnUserId, sValue);
-                                    if (Tools.Text.IsNumeric(cReturn))
+                                    if (Tools.Number.IsNumeric(cReturn))
                                         cReturn = "";
                                     break;
                                 }

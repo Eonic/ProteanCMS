@@ -23,7 +23,6 @@ using System.Collections;
 using System.IO;
 using System.Xml;
 using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Tools;
 using Protean.Tools.Integration.Twitter;
 using static Protean.Tools.Database;
@@ -311,7 +310,7 @@ namespace Protean
 
                 if (objDate != null && Information.IsDate(objDate))
                 {
-                    _lastRun = Conversions.ToDate(objDate);
+                    _lastRun = Convert.ToDateTime(objDate);
                     _hasBeenRunBefore = true;
                 }
                 else
@@ -523,7 +522,7 @@ namespace Protean
                 }
                 else
                 {
-                    return csvList.Split(Conversions.ToChar(separator));
+                    return csvList.Split(Convert.ToChar(separator));
                 }
             }
             catch (Exception)
@@ -675,7 +674,7 @@ namespace Protean
                     foreach (XmlElement childPage in _structureNode.SelectNodes("//MenuItem[@id=" + pageId + "]/MenuItem"))
 
 
-                        PopulateContent(contentTypeSqlList, Conversions.ToLong(childPage.GetAttribute("id")));
+                        PopulateContent(contentTypeSqlList, Convert.ToInt64(childPage.GetAttribute("id")));
 
                 }
             }
@@ -726,7 +725,7 @@ namespace Protean
             {
                 XmlElement pageContentsNode = null;
                 XmlElement DocElmt = (XmlElement)_myWeb.moPageXml.DocumentElement;
-                if (Conversions.ToBoolean(Xml.NodeState(ref DocElmt, "Contents", "", "", XmlNodeState.IsEmpty, pageContentsNode, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false)))
+                if (Convert.ToBoolean(Xml.NodeState(ref DocElmt, "Contents", "", "", XmlNodeState.IsEmpty, pageContentsNode, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false)))
                 {
                     pageContentsNode.InnerXml = "";
                 }
@@ -778,7 +777,7 @@ namespace Protean
                         _structureNode = _myWeb.GetStructureXML();
 
                     // Go and get the content
-                    PopulateContent(contentTypeSqlList, Conversions.ToLong(Interaction.IIf(HasSourcePage, SourcePage, 0)));
+                    PopulateContent(contentTypeSqlList, Convert.ToInt64(Interaction.IIf(HasSourcePage, SourcePage, 0)));
 
                     // Clean up duplicates
                     RemoveDuplicateContent();

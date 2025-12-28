@@ -8,7 +8,6 @@
 // $Copyright:   Copyright (c) 2002 - 2026 Eonic Digital Group Ltd.
 // ***********************************************************************
 
-
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Authentication;
@@ -181,7 +180,7 @@ namespace Protean
                     goSession = moCtx.Session;
                     goServer = moCtx.Server;
 
-                    ResetConnection("Data Source=" + cDbServer + "; " + "Initial Catalog=" + cDbName + "; " + GetDBAuth());
+                    ResetConnection($"Data Source={cDbServer}; Initial Catalog={cDbName}; {GetDBAuth()}");
 
                     InitializeConnectionPooling();
 
@@ -1045,12 +1044,12 @@ namespace Protean
                         case (objectTypes)3:
                         case (objectTypes)4:
                             {
-                                sSql = "select " + getNameFname(objectType) + " from " + getTable(objectType) + " where " + getKey((int)objectType) + " = " + nKey;
+                                sSql = $"select {getNameFname(objectType)} from {getTable(objectType)} where {getKey((int)objectType)} = {nKey}";
                                 using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
 
                                     while (oDr.Read())
-                                        sResult = Conversions.ToString(oDr[0]);
+                                        sResult = Convert.ToString(oDr[0]);
                                 }
 
                                 break;
@@ -1172,7 +1171,7 @@ namespace Protean
                 {
                     if (string.IsNullOrEmpty(dbObjectName))
                     {
-                        appcheckName = Conversions.ToString(myWeb.goApp["getdb-" + dbObjectName]);
+                        appcheckName = Convert.ToString(myWeb.goApp["getdb-" + dbObjectName]);
                         if (string.IsNullOrEmpty(appcheckName))
                         {
 
@@ -1279,13 +1278,13 @@ namespace Protean
                         case (objectTypes)3:
                             {
 
-                                sSql = "select " + getKey((int)objectType) + " from " + getTable(objectType) + " where " + getNameFname(objectType) + " LIKE '" + cName + "'";
+                                sSql = $"select {getKey((int)objectType)} from {getTable(objectType)} where {getNameFname(objectType)} LIKE '{cName}'";
                                 using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
                                     if (oDr.HasRows)
                                     {
                                         while (oDr.Read())
-                                            sResult = Conversions.ToString(oDr[0]);
+                                            sResult = Convert.ToString(oDr[0]);
                                     }
                                 }
 
@@ -1317,25 +1316,25 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "select nAuditId from " + getTable(objecttype) + " where " + getKey((int)objecttype) + " = " + nId;
+                    sSql = $"select nAuditId from {getTable(objecttype)} where {getKey((int)objecttype)} = {nId}";
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
 
                         while (oDr.Read())
-                            nAuditId = Conversions.ToLong(oDr[0]);
+                            nAuditId = Convert.ToInt64(oDr[0]);
 
                     }
                     // we could test the current status to see if the change is a valid one. I.E. live can only be hidden not moved back to approval or InProgress, but the workflow should ensure this doesn't happen.
-                    sSql = "select nStatus from tblAudit WHERE nAuditKey =" + nAuditId;
+                    sSql = $"select nStatus from tblAudit WHERE nAuditKey ={nAuditId}";
                     sResult = ExeProcessSqlScalar(sSql);
 
-                    return Conversions.ToLong(sResult);
+                    return Convert.ToInt64(sResult);
                 }
 
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "getObjectStatus", ex, cProcessInfo));
-                    return Conversions.ToLong("");
+                    return Convert.ToInt64("");
                 }
 
             }
@@ -1352,14 +1351,14 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "select nAuditId from " + getTable(objecttype) + " where " + getKey((int)objecttype) + " = " + nId;
+                    sSql = $"select nAuditId from {getTable(objecttype)} where {getKey((int)objecttype)} = {nId}";
                     // we want to touch the parent table just incase we have any triggers asscoiated with it
                     // change get DateReader to getdataset and update.
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
 
                         while (oDr.Read())
-                            nAuditId = Conversions.ToLong(oDr[0]);
+                            nAuditId = Convert.ToInt64(oDr[0]);
 
                     }
                     // we could test the current status to see if the change is a valid one. I.E. live can only be hidden not moved back to approval or InProgress, but the workflow should ensure this doesn't happen.
@@ -1405,11 +1404,11 @@ namespace Protean
                     {
 
                         while (oDr.Read())
-                            nAuditId = Conversions.ToLong(oDr[0]);
+                            nAuditId = Convert.ToInt64(oDr[0]);
 
                     }
                     sSql = $"select nStatus from tblAudit WHERE nAuditKey = {nAuditId}";
-                    sResult = Conversions.ToInteger(myWeb.moDbHelper.ExeProcessSqlScalar(sSql));
+                    sResult = Convert.ToInt16(myWeb.moDbHelper.ExeProcessSqlScalar(sSql));
 
                     return sResult.ToString();
                 }
@@ -1488,7 +1487,7 @@ namespace Protean
             }
 
 
-            internal int getPageAndArticleIdFromPath(ref long nPageId, ref long nArtId, string sFullPath, bool bSetGlobalPageVariable = true, bool bCheckPermissions = true)
+            internal int getPageAndArticleIdFromPath(ref long nPageId,ref long nArtId, string sFullPath, bool bSetGlobalPageVariable = true, bool bCheckPermissions = true)
             {
 
                 PerfMonLog("dbHelper", "getPageIdFromPath");
@@ -1511,30 +1510,31 @@ namespace Protean
                     // Nore : if this is turned on, you will have to update any pages that have hyphens in their names
                     if (myWeb.moConfig["PageURLFormat"] == "hyphens")
                     {
-                        sPath = Strings.Replace(sPath, "-", " ");
+                        sPath = sPath.Replace("-", " ");
                     }
 
                     sProcessInfo = "remove first and final /";
-                    if (Strings.Right(sPath, 1) == "/")
+                    if (sPath.Length > 0 && sPath[sPath.Length - 1] == '/')
                     {
-                        sPath = Strings.Left(sPath, Strings.Len(sPath) - 1);
+                        sPath = sPath.Substring(0, sPath.Length - 1);
                     }
-                    if (Strings.InStr(1, sPath, "/") == 1)
+                    if (sPath.Length > 0 && sPath[0] == '/')
                     {
-                        sPath = Strings.Right(sPath, Strings.Len(sPath) - 1);
+                        sPath = sPath.Substring(1);
                     }
 
                     sProcessInfo = "Strip the QueryString";
-                    if (Strings.InStr(1, sPath, "?") > 0)
-                        sPath = Strings.Left(sPath, Strings.InStr(1, sPath, "?") - 1);
+                    int queryIndex = sPath.IndexOf('?');
+                    if (queryIndex > 0)
+                        sPath = sPath.Substring(0, queryIndex);
 
                     sProcessInfo = "split to path array";
-                    aPath = Strings.Split(sPath, "/");
-                    if (Information.UBound(aPath) > 0)
+                    aPath = sPath.Split('/');
+                    if (aPath.Length > 0)
                     {
                         // get the last in line
-                        sPath = aPath[Information.UBound(aPath)];
-                        ItemIdPath = aPath[Information.UBound(aPath) - 1];
+                        sPath = aPath[aPath.Length - 1];
+                        ItemIdPath = aPath.Length > 1 ? aPath[aPath.Length - 2] : "";
                         if (ItemIdPath.EndsWith("-"))
                         {
                             nArtId = Convert.ToInt64(ItemIdPath.Replace("-", ""));
@@ -1598,8 +1598,8 @@ namespace Protean
 
                                         while (oDr.Read())
                                         {
-                                            contentType = Conversions.ToString(oDr[0]);
-                                            contentName = Conversions.ToString(oDr[1]);
+                                            contentType = Convert.ToString(oDr[0]);
+                                            contentName = Convert.ToString(oDr[1]);
                                         }
                                     }
 
@@ -1616,7 +1616,7 @@ namespace Protean
                                                 ItemIdPath = nArtId + "-/";
                                             }
 
-                                            redirectUrl += "/" + thisPrefix + "/" + ItemIdPath + Protean.Tools.Text.CleanName(contentName).Replace(" ", "-").Trim('-');
+                                            redirectUrl += $"/{thisPrefix}/{ItemIdPath}{Protean.Tools.Text.CleanName(contentName).Replace(" ", "-").Trim('-')}";
                                             if (myWeb.moConfig["DetailPathTrailingSlash"] == "on")
                                             {
                                                 redirectUrl = redirectUrl + "/";
@@ -1627,7 +1627,7 @@ namespace Protean
                                     string originalPath = myWeb.mcOriginalURL.Split('?')[0].TrimEnd(charsToTrim);
                                     if ((originalPath.ToLower() ?? "") != (redirectUrl.ToLower() ?? ""))
                                     {
-                                        myWeb.mbRedirectPerm = Conversions.ToString(true);
+                                        myWeb.mbRedirectPerm = Convert.ToString(true);
                                         myWeb.msRedirectOnEnd = redirectUrl;
                                     }
 
@@ -1663,7 +1663,7 @@ namespace Protean
                                         {
                                             if (ods.Tables["Content"].Rows.Count == 1)
                                             {
-                                                nArtId = Conversions.ToLong(ods.Tables["Content"].Rows[Conversions.ToInteger("0")]["nContentKey"]);
+                                                nArtId = Convert.ToInt64(ods.Tables["Content"].Rows[Convert.ToInt16("0")]["nContentKey"]);
                                             }
                                             else
                                             {
@@ -1675,14 +1675,14 @@ namespace Protean
                                         if (myWeb.moConfig["addPathArtId"] == "on" && nArtId > 0)
                                         {
                                             ItemIdPath = nArtId + "-/";
-                                            string redirectUrl = "/" + thisPrefix + "/" + ItemIdPath + Protean.Tools.Text.CleanName(sPath).Replace(" ", "-").Trim('-');
+                                            string redirectUrl = $"/{thisPrefix}/{ItemIdPath}{Protean.Tools.Text.CleanName(sPath).Replace(" ", "-").Trim('-')}";
                                             
 
                                             if (myWeb.moConfig["DetailPathTrailingSlash"] == "on")
                                             {
                                                 redirectUrl = redirectUrl + "/";
                                             }
-                                            myWeb.mbRedirectPerm = Conversions.ToString(true);
+                                            myWeb.mbRedirectPerm = Convert.ToString(true);
                                             myWeb.msRedirectOnEnd = redirectUrl;
                                         }
                                     }
@@ -1701,8 +1701,8 @@ namespace Protean
                                         if (bCheckPermissions)
                                         {
                                             // Check the permissions for the page - this will either return 0, the page id or a system page.
-                                            long checkPermissionPageId = checkPagePermission(Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]));
-                                            if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
+                                            long checkPermissionPageId = checkPagePermission(Convert.ToInt64(ods.Tables["Pages"].Rows[0]["nStructId"]));
+                                            if (Convert.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(ods.Tables["Pages"].Rows[Convert.ToInt16("0")]["nStructId"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
 
                                             {
                                                 nPageId = checkPermissionPageId;
@@ -1710,9 +1710,9 @@ namespace Protean
                                         }
                                         else
                                         {
-                                            nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
+                                            nPageId = Convert.ToInt64(ods.Tables["Pages"].Rows[0]["nStructId"]);
                                         }
-                                        //nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
+                                        //nPageId = Convert.ToInt64(ods.Tables["Pages"].Rows[0]["nStructId"]);
                                     }
                                     else
                                     {
@@ -1725,8 +1725,8 @@ namespace Protean
                                             if (ods.Tables["Pages"].Rows.Count > 0)
                                             {
                                                 // Check the permissions for the page - this will either return 0, the page id or a system page.
-                                                long checkPermissionPageId = checkPagePermission(Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]));
-                                                if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructId"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
+                                                long checkPermissionPageId = checkPagePermission(Convert.ToInt64(ods.Tables["Pages"].Rows[0]["nStructId"]));
+                                                if (Convert.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(ods.Tables["Pages"].Rows[Convert.ToInt16("0")]["nStructId"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
 
                                                 {
                                                     nPageId = checkPermissionPageId;
@@ -1738,7 +1738,7 @@ namespace Protean
                                         }
                                         else
                                         {
-                                            nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[0]["nStructId"]);
+                                            nPageId = Convert.ToInt64(ods.Tables["Pages"].Rows[0]["nStructId"]);
                                         }
                                     }
 
@@ -1750,7 +1750,7 @@ namespace Protean
                                             ItemIdPath = nArtId + "-/";
                                         }
 
-                                        redirectUrl += "/" + thisPrefix + "/" + ItemIdPath + sPath.ToString().Replace(" ", "-").Trim('-') + "/";
+                                        redirectUrl += $"/{thisPrefix}/{ItemIdPath}{sPath.ToString().Replace(" ", "-").Trim('-')}/";
 
                                         char[] charsToTrim = { '/' };
                                         myWeb.mcOriginalURL = myWeb.mcOriginalURL.TrimEnd(charsToTrim);
@@ -1772,7 +1772,7 @@ namespace Protean
 
                     /// if (nArtId == default)
                     ///  {
-                    sSql = $"select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '{SqlFmt(sPath)}' or cStructName like '{SqlFmt(Strings.Replace(sPath, " ", ""))}' or cStructName like '{SqlFmt(Strings.Replace(sPath, " ", "-"))}')";
+                    sSql = $"select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '{SqlFmt(sPath)}' or cStructName like '{SqlFmt(sPath.Replace(" ", ""))}' or cStructName like '{SqlFmt(sPath.Replace(" ", "-"))}')";
 
                     ods = GetDataSet(sSql, "Pages");
 
@@ -1780,7 +1780,7 @@ namespace Protean
                     {
                         if (ods.Tables["Pages"].Rows.Count == 1)
                         {
-                            nPageId = Conversions.ToLong(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructKey"]);
+                            nPageId = Convert.ToInt64(ods.Tables["Pages"].Rows[Convert.ToInt16("0")]["nStructKey"]);
                         }
                         // if there is just one page validate it
                         else if (ods.Tables["Pages"].Rows.Count == 0)
@@ -1794,27 +1794,27 @@ namespace Protean
                             foreach (DataRow oRow in ods.Tables["Pages"].Rows)
                             {
                                 // Debug.WriteLine(oRow.Item("nStructKey"))
-                                if (!(Conversions.ToInteger(Operators.ConcatenateObject("0", oRow["nVersionParId"])) == 0))
+                                if (!(Convert.ToInt16(Operators.ConcatenateObject("0", oRow["nVersionParId"])) == 0))
                                 {
                                     // we have a language verion we need to behave differently to confirm id
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.mcPageLanguage, oRow["cVersionLang"], false)))
+                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.mcPageLanguage, oRow["cVersionLang"], false)))
                                     {
-                                        nPageId = Conversions.ToLong(oRow["nStructKey"]);
+                                        nPageId = Convert.ToInt64(oRow["nStructKey"]);
                                         break;
                                     }
                                 }
                                 else
                                 {
-                                    int argnStep = Information.UBound(aPath) - 1;
-                                    if (recurseUpPathArray(Conversions.ToInteger(oRow["nStructParId"]), ref aPath, ref argnStep) == true)
+                                    int argnStep = aPath.Length - 1;
+                                    if (recurseUpPathArray(Convert.ToInt16(oRow["nStructParId"]), ref aPath, ref argnStep) == true)
                                     {
                                         if (bCheckPermissions)
                                         {
 
                                             // Check the permissions for the page - this will either return 0, the page id or a system page.
-                                            long checkPermissionPageId = checkPagePermission(Conversions.ToLong(oRow["nStructKey"]));
+                                            long checkPermissionPageId = checkPagePermission(Convert.ToInt64(oRow["nStructKey"]));
 
-                                            if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(oRow["nStructKey"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
+                                            if (Convert.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(oRow["nStructKey"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
 
                                             {
                                                 nPageId = checkPermissionPageId;
@@ -1823,7 +1823,7 @@ namespace Protean
                                         }
                                         else
                                         {
-                                            nPageId = Conversions.ToLong(oRow["nStructKey"]);
+                                            nPageId = Convert.ToInt64(oRow["nStructKey"]);
                                             break;
                                         }
                                     }
@@ -1852,7 +1852,7 @@ namespace Protean
                         // If bSetGlobalPageVariable Then gnPageId = nPageId
 
                         // myWeb.PerfMon.Log("dbHelper", "getPageAndArticleIdFromPath-end")
-
+                                                                       
                         return (int)nPageId;
                     }
                 }
@@ -1891,46 +1891,47 @@ namespace Protean
                     // Nore : if this is turned on, you will have to update any pages that have hyphens in their names
                     if (myWeb.moConfig["PageURLFormat"] == "hyphens")
                     {
-                        sPath = Strings.Replace(sPath, "-", " ");
+                        sPath = sPath.Replace("-", " ");
                     }
 
                     sProcessInfo = "remove first and final /";
 
-                    if (Strings.Right(sPath, 1) == "/")
+                    if (sPath.Length > 0 && sPath[sPath.Length - 1] == '/')
                     {
-                        sPath = Strings.Left(sPath, Strings.Len(sPath) - 1);
+                        sPath = sPath.Substring(0, sPath.Length - 1);
                     }
-                    if (Strings.InStr(1, sPath, "/") == 1)
+                    if (sPath.Length > 0 && sPath[0] == '/')
                     {
-                        sPath = Strings.Right(sPath, Strings.Len(sPath) - 1);
+                        sPath = sPath.Substring(1);
                     }
 
                     sProcessInfo = "Strip the QueryString";
 
-                    if (Strings.InStr(1, sPath, "?") > 0)
-                        sPath = Strings.Left(sPath, Strings.InStr(1, sPath, "?") - 1);
+                    int queryIndex = sPath.IndexOf('?');
+                    if (queryIndex > 0)
+                        sPath = sPath.Substring(0, queryIndex);
 
-                    aPath = Strings.Split(sPath, "/");
+                    aPath = sPath.Split('/');
 
-                    if (Information.UBound(aPath) > 0)
+                    if (aPath.Length > 1)
                     {
 
                         // get the last in line
-                        sPath = aPath[Information.UBound(aPath)];
+                        sPath = aPath[aPath.Length - 1];
                     }
                     else
                     {
                         sPath = sPath;
                     }
 
-                    sSql = $"select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '{SqlFmt(sPath)}' or cStructName like '{SqlFmt(Strings.Replace(sPath, " ", ""))}' or cStructName like '{SqlFmt(Strings.Replace(sPath, " ", "-"))}')";
+                    sSql = $"select nStructKey, nStructParId, nVersionParId, cVersionLang from tblContentStructure where (cStructName like '{SqlFmt(sPath)}' or cStructName like '{SqlFmt(sPath.Replace(" ", ""))}' or cStructName like '{SqlFmt(sPath.Replace(" ", "-"))}')";
 
                     ods = GetDataSet(sSql, "Pages");
 
 
                     if (!(ods == null) && ods.Tables["Pages"].Rows.Count == 1)
                     {
-                        nPageId = Conversions.ToInteger(ods.Tables["Pages"].Rows[Conversions.ToInteger("0")]["nStructKey"]);
+                        nPageId = Convert.ToInt16(ods.Tables["Pages"].Rows[Convert.ToInt16("0")]["nStructKey"]);
                     }
                     // if there is just one page validate it
                     else if (ods.Tables["Pages"].Rows.Count == 0)
@@ -1944,27 +1945,27 @@ namespace Protean
                         foreach (DataRow oRow in ods.Tables["Pages"].Rows)
                         {
                             // Debug.WriteLine(oRow.Item("nStructKey"))
-                            if (!(Conversions.ToInteger(Operators.ConcatenateObject("0", oRow["nVersionParId"])) == 0))
+                            if (!(Convert.ToInt16(Operators.ConcatenateObject("0", oRow["nVersionParId"])) == 0))
                             {
                                 // we have a language verion we need to behave differently to confirm id
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.mcPageLanguage, oRow["cVersionLang"], false)))
+                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.mcPageLanguage, oRow["cVersionLang"], false)))
                                 {
-                                    nPageId = Conversions.ToInteger(oRow["nStructKey"]);
+                                    nPageId = Convert.ToInt16(oRow["nStructKey"]);
                                     break;
                                 }
                             }
                             else
                             {
                                 int argnStep = Information.UBound(aPath) - 1;
-                                if (recurseUpPathArray(Conversions.ToInteger(oRow["nStructParId"]), ref aPath, ref argnStep) == true)
+                                if (recurseUpPathArray(Convert.ToInt16(oRow["nStructParId"]), ref aPath, ref argnStep) == true)
                                 {
                                     if (bCheckPermissions)
                                     {
 
                                         // Check the permissions for the page - this will either return 0, the page id or a system page.
-                                        long checkPermissionPageId = checkPagePermission(Conversions.ToLong(oRow["nStructKey"]));
+                                        long checkPermissionPageId = checkPagePermission(Convert.ToInt64(oRow["nStructKey"]));
 
-                                        if (Conversions.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(oRow["nStructKey"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
+                                        if (Convert.ToBoolean(Operators.AndObject(checkPermissionPageId != 0L, Operators.OrObject(Operators.ConditionalCompareObjectEqual(oRow["nStructKey"], checkPermissionPageId, false), IsSystemPage(checkPermissionPageId)))))
 
                                         {
                                             nPageId = (int)checkPermissionPageId;
@@ -1973,7 +1974,7 @@ namespace Protean
                                     }
                                     else
                                     {
-                                        nPageId = Conversions.ToInteger(oRow["nStructKey"]);
+                                        nPageId = Convert.ToInt16(oRow["nStructKey"]);
                                         break;
                                     }
                                 }
@@ -2150,13 +2151,13 @@ namespace Protean
                     if (Cms.gbClone)
                     {
                         // If the page is cloned then we need to look at the page that it's cloned from
-                        long nClonePageId = Conversions.ToLong(GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId, CommandType.Text, null, 0));
+                        long nClonePageId = Convert.ToInt64(GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId, CommandType.Text, null, 0));
                         if (nClonePageId > 0L)
                             nPageId = nClonePageId;
                     }
 
                     cSql = "select cStructLayout from  tblContentStructure where nStructKey = " + nPageId;
-                    cLayout = Conversions.ToString(GetDataValue(cSql, CommandType.Text, null, "default"));
+                    cLayout = Convert.ToString(GetDataValue(cSql, CommandType.Text, null, "default"));
                 }
 
                 catch (Exception ex)
@@ -2183,7 +2184,7 @@ namespace Protean
                     if (Cms.gbClone)
                     {
                         // If the page is cloned then we need to look at the page that it's cloned from
-                        long nClonePageId = Conversions.ToLong(GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId));
+                        long nClonePageId = Convert.ToInt64(GetDataValue("select nCloneStructId from tblContentStructure where nStructKey = " + nPageId));
                         if (nClonePageId > 0L)
                             nPageId = nClonePageId;
                     }
@@ -2242,7 +2243,7 @@ namespace Protean
                             else
                             {
                                 oDr.Read();
-                                long nParId = Conversions.ToLong(oDr["nStructParId"]);
+                                long nParId = Convert.ToInt64(oDr["nStructParId"]);
                                 int argnStep = nStep - 1;
                                 recurseUpPathArrayRet = recurseUpPathArray((int)nParId, ref aPath, ref argnStep);
                             }
@@ -2303,10 +2304,10 @@ namespace Protean
                         }
                         object oPerm;
 
-                        oPerm = GetDataValue("SELECT dbo.fxn_checkPermission (" + nPageId + ", " + nAuthUserId + "," + nAuthGroup + ") AS perm");
+                        oPerm = GetDataValue($"SELECT dbo.fxn_checkPermission ({nPageId}, {nAuthUserId},{nAuthGroup}) AS perm");
                         if (!(ReferenceEquals(oPerm, DBNull.Value) | oPerm is null))
                         {
-                            if (Strings.InStr(Conversions.ToString(oPerm), "DENIED") > 0)
+                            if (Strings.InStr(Convert.ToString(oPerm), "DENIED") > 0)
                             {
                                 if (mnUserId > 0L)
                                 {
@@ -2319,7 +2320,7 @@ namespace Protean
                                 }
                             }
 
-                            if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oPerm, "VIEW by Authenticated Users", false), mnUserId == 0L)))
+                            if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oPerm, "VIEW by Authenticated Users", false), mnUserId == 0L)))
                             {
                                 myWeb.moSession["LogonRedirect"] = myWeb.mcPagePath;
                                 nPageId = myWeb.gnPageLoginRequiredId;
@@ -2389,7 +2390,7 @@ namespace Protean
                     }
                     // Check if we are Domain Super Admin
                     // RJP 7 Nov 2012. Amended to use Lower Case to prevent against case sensitive entries in Protean.Cms.Config, previously used the string "md5"
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["ewAuth"], Tools.Encryption.HashString(myWeb.moSession.SessionID + goConfig["AdminPassword"], Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true), false)))
+                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["ewAuth"], Tools.Encryption.HashString(myWeb.moSession.SessionID + goConfig["AdminPassword"], Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true), false)))
                     {
                         return PermissionLevel.Full;
                     }
@@ -2411,7 +2412,7 @@ namespace Protean
                         }
                         string sPerm;
                         string sSql = $"SELECT dbo.fxn_checkPermission({nPageId}, {nAuthUserId}, {Cms.gnAuthUsers}) AS perm";
-                        sPerm = Conversions.ToString(GetDataValue(sSql));
+                        sPerm = Convert.ToString(GetDataValue(sSql));
                         if (!(ReferenceEquals(sPerm, DBNull.Value) | sPerm is null))
                         {
                             if (sPerm.Contains("ADDUPDATEOWNPUBLISH"))
@@ -2490,7 +2491,7 @@ namespace Protean
 
                     foreach (XmlElement oElmt2 in oElmt.SelectNodes("Location"))
                     {
-                        if (oElmt2.GetAttribute("primary") == "true" & Conversions.ToDouble(oElmt2.GetAttribute("pgid")) == nPageId)
+                        if (oElmt2.GetAttribute("primary") == "true" & Convert.ToDouble(oElmt2.GetAttribute("pgid")) == nPageId)
                         {
                             oPerm = getPagePermissionLevel(nPageId);
                         }
@@ -2499,7 +2500,7 @@ namespace Protean
                     // if the content is orphan then get permission from homepage
                     if (oElmt.SelectNodes("Location").Count == 0)
                     {
-                        oPerm = getPagePermissionLevel(Conversions.ToLong(myWeb.moConfig["RootPageId"]));
+                        oPerm = getPagePermissionLevel(Convert.ToInt64(myWeb.moConfig["RootPageId"]));
                     }
 
                     return oPerm;
@@ -2543,42 +2544,42 @@ namespace Protean
                                 using (var oDataReader = getDataReaderDisposable(cSQL))
                                 {
                                     while (oDataReader.Read())
-                                        DeleteObject(objectTypes.CartShippingLocation, Conversions.ToLong(oDataReader[0]));
+                                        DeleteObject(objectTypes.CartShippingLocation, Convert.ToInt64(oDataReader[0]));
                                 }
                                 cSQL = $"SELECT nAuditId FROM tblCartShippingLocations WHERE nLocationKey = {nId}";
-                                DeleteObject(objectTypes.Audit, Conversions.ToLong(ExeProcessSqlScalar(cSQL)));
+                                DeleteObject(objectTypes.Audit, Convert.ToInt64(ExeProcessSqlScalar(cSQL)));
                                 break;
                             }
                         case objectTypes.CartDiscountDirRelations:
                             {
                                 sSql = $"Select nAuditId From tblCartDiscountDirRelations Where nDiscountDirRelationKey = {nId}";
-                                DeleteObject(objectTypes.Audit, Conversions.ToLong(ExeProcessSqlScalar(sSql)));
+                                DeleteObject(objectTypes.Audit, Convert.ToInt64(ExeProcessSqlScalar(sSql)));
                                 break;
                             }
 
                         case objectTypes.CartDiscountProdCatRelations:
                             {
                                 sSql = $"Select nAuditId From tblCartDiscountProdCatRelations Where nDiscountProdCatRelationKey = {nId}";
-                                DeleteObject(objectTypes.Audit, Conversions.ToLong(ExeProcessSqlScalar(sSql)));
+                                DeleteObject(objectTypes.Audit, Convert.ToInt64(ExeProcessSqlScalar(sSql)));
                                 break;
                             }
 
                         case objectTypes.CartDiscountRules:
                             {
                                 sSql = $"Select nAuditId From tblCartDiscountRules Where nDiscountKey = {nId}";
-                                DeleteObject(objectTypes.Audit, Conversions.ToLong(ExeProcessSqlScalar(sSql)));
+                                DeleteObject(objectTypes.Audit, Convert.ToInt64(ExeProcessSqlScalar(sSql)));
                                 sSql = $"Select nDiscountDirRelationKey FROM tblCartDiscountDirRelations WHERE nDiscountId = {nId}";
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.CartDiscountDirRelations, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.CartDiscountDirRelations, Convert.ToInt64(oDr[0]));
                                 }
 
                                 sSql = $"Select nDiscountProdCatRelationKey FROM tblCartDiscountProdCatRelations WHERE nDiscountId = {nId}";
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.CartDiscountProdCatRelations, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.CartDiscountProdCatRelations, Convert.ToInt64(oDr[0]));
                                 }
 
                                 break;
@@ -2590,15 +2591,15 @@ namespace Protean
                                 {
                                     while (oDr.Read())
                                     {
-                                        DeleteObject(objectTypes.CartCatProductRelations, Conversions.ToLong(oDr.GetValue(0)));
-                                        DeleteObject(objectTypes.Audit, Conversions.ToLong(oDr.GetValue(1)));
+                                        DeleteObject(objectTypes.CartCatProductRelations, Convert.ToInt64(oDr.GetValue(0)));
+                                        DeleteObject(objectTypes.Audit, Convert.ToInt64(oDr.GetValue(1)));
                                     }
                                 }
                                 sSql = $"Select nDiscountProdCatRelationKey FROM tblCartDiscountProdCatRelations WHERE nProductCatId = {nId}";
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.CartDiscountProdCatRelations, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.CartDiscountProdCatRelations, Convert.ToInt64(oDr[0]));
                                 }
 
                                 break;
@@ -2609,7 +2610,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.Audit, Conversions.ToLong(oDr.GetValue(0)));
+                                        DeleteObject(objectTypes.Audit, Convert.ToInt64(oDr.GetValue(0)));
                                 }
 
                                 break;
@@ -2622,7 +2623,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.ActivityLog, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.ActivityLog, Convert.ToInt64(oDr[0]));
                                 }
 
                                 // get any locations and delete
@@ -2630,7 +2631,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.ContentLocation, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.ContentLocation, Convert.ToInt64(oDr[0]));
                                 }
 
                                 // get any child results and delete
@@ -2643,11 +2644,11 @@ namespace Protean
                                 // oDr = Nothing
 
                                 // delete any content relations
-                                sSql = "select nContentRelationKey from tblContentRelation where nContentParentId = " + nId + " or nContentChildId = " + nId;
+                                sSql = $"select nContentRelationKey from tblContentRelation where nContentParentId = {nId} or nContentChildId = {nId}";
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.ContentRelation, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.ContentRelation, Convert.ToInt64(oDr[0]));
                                 }
 
                                 break;
@@ -2661,7 +2662,7 @@ namespace Protean
                                     while (oDr.Read())
                                     {
                                         sSql = $"Select nContentRelationKey From tblContentRelation WHERE nContentParentId = {oDr[2]} AND nContentChildId = {oDr[1]}";
-                                        DeleteObject(objectTypes.Audit, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.Audit, Convert.ToInt64(oDr[0]));
                                     }
                                 }
                                 ExeProcessSql($"Delete From tblContentRelation where nContentRelationKey = {nId}");
@@ -2670,7 +2671,7 @@ namespace Protean
                                     var nOther = default(int);
                                     while (oDr.Read())
                                     {
-                                        nOther = Conversions.ToInteger(oDr[0]);
+                                        nOther = Convert.ToInt16(oDr[0]);
                                         break;
                                     }
                                     if (nOther > 0)
@@ -2687,7 +2688,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.ActivityLog, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.ActivityLog, Convert.ToInt64(oDr[0]));
                                 }
 
                                 // delete any child pages
@@ -2696,7 +2697,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.ContentStructure, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.ContentStructure, Convert.ToInt64(oDr[0]));
                                 }
 
                                 // do we want to delete any content that is not also located elsewhere???? 
@@ -2711,7 +2712,7 @@ namespace Protean
                                         // Else
                                         // bHaltDelete = True ' there is more than one location for this content don't delete it.
                                         // End If
-                                        DeleteObject(objectTypes.ContentLocation, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.ContentLocation, Convert.ToInt64(oDr[0]));
                                 }
 
                                 clearStructureCacheAll();
@@ -2725,7 +2726,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.QuestionaireResultDetail, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.QuestionaireResultDetail, Convert.ToInt64(oDr[0]));
                                 }
 
                                 break;
@@ -2739,7 +2740,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.ActivityLog, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.ActivityLog, Convert.ToInt64(oDr[0]));
                                 }
 
                                 // Delete Permissions
@@ -2747,7 +2748,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.Permission, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.Permission, Convert.ToInt64(oDr[0]));
                                 }
 
                                 // Delete ExamResults for users
@@ -2764,7 +2765,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.Directory, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.Directory, Convert.ToInt64(oDr[0]));
                                 }
 
                                 // Delete Relationships
@@ -2772,7 +2773,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
+                                        DeleteObject(objectTypes.DirectoryRelation, Convert.ToInt64(oDr[0]));
                                 }
 
                                 break;
@@ -2792,9 +2793,9 @@ namespace Protean
                                 {
                                     while (oDr.Read())
                                     {
-                                        nParentId = Conversions.ToLong(oDr["nDirKey"]);
-                                        nChildId = Conversions.ToLong(oDr["nDirChildId"]);
-                                        cDirSchema = Conversions.ToString(oDr["cDirSchema"]);
+                                        nParentId = Convert.ToInt64(oDr["nDirKey"]);
+                                        nChildId = Convert.ToInt64(oDr["nDirChildId"]);
+                                        cDirSchema = Convert.ToString(oDr["cDirSchema"]);
                                     }
                                 }
                                 if (cDirSchema == "Company")
@@ -2810,7 +2811,7 @@ namespace Protean
                                     {
                                         // delete links between the target object and the children of the parent object.
                                         while (oDr.Read())
-                                            DeleteObject(objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
+                                            DeleteObject(objectTypes.DirectoryRelation, Convert.ToInt64(oDr[0]));
                                     }
 
                                 }
@@ -2826,7 +2827,7 @@ namespace Protean
                                     var nCrtItmAdtId = default(int);
                                     while (oDr.Read())
                                         // DeleteObject(objectTypes.Audit, oDr.GetValue(0))
-                                        nCrtItmAdtId = Conversions.ToInteger(oDr.GetValue(0));
+                                        nCrtItmAdtId = Convert.ToInt16(oDr.GetValue(0));
                                     DeleteObject(objectTypes.Audit, nCrtItmAdtId);
                                 }
                                 // options
@@ -2834,7 +2835,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.CartItem, Conversions.ToLong(oDr.GetValue(0)));
+                                        DeleteObject(objectTypes.CartItem, Convert.ToInt64(oDr.GetValue(0)));
                                 }
                                 ExeProcessSql($"Delete from tblCartItem where nCartItemKey = {nId}");
                                 break;
@@ -2848,14 +2849,14 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.CartItem, Conversions.ToLong(oDr.GetValue(0)));
+                                        DeleteObject(objectTypes.CartItem, Convert.ToInt64(oDr.GetValue(0)));
                                 }
                                 // contacts
                                 sSql = $"Select nContactKey from tblCartContact WHERE nContactCartID = {nId}";
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.CartContact, Conversions.ToLong(oDr.GetValue(0)));
+                                        DeleteObject(objectTypes.CartContact, Convert.ToInt64(oDr.GetValue(0)));
 
                                 }
                                 sSql = $"Select nAuditId from tblCartOrder WHERE nCartOrderKey = {nId}";
@@ -2864,7 +2865,7 @@ namespace Protean
                                     var nCrtOrdAdtId = default(int);
                                     while (oDr.Read())
                                         // DeleteObject(objectTypes.Audit, oDr.GetValue(0))
-                                        nCrtOrdAdtId = Conversions.ToInteger(oDr.GetValue(0));
+                                        nCrtOrdAdtId = Convert.ToInt16(oDr.GetValue(0));
                                     ExeProcessSql($"Delete from tblCartOrder where nCartOrderKey = {nId}");
                                     DeleteObject(objectTypes.Audit, nCrtOrdAdtId);
                                 }
@@ -2881,7 +2882,7 @@ namespace Protean
                                     {
                                         if (!(oDr.GetValue(0) is DBNull))
                                         {
-                                            DeleteObject(objectTypes.Audit, Conversions.ToLong(oDr.GetValue(0)));
+                                            DeleteObject(objectTypes.Audit, Convert.ToInt64(oDr.GetValue(0)));
                                         }
                                     }
                                     ExeProcessSql("Delete from tblCartContact where nContactKey = " + nId);
@@ -2898,8 +2899,8 @@ namespace Protean
                                 {
                                     while (oDr.Read())
                                     {
-                                        oXML.InnerXml = Strings.Replace(Strings.Replace(Conversions.ToString(oDr[0]), "&gt;", ">"), "&lt;", "<");
-                                        nSubUserId = Conversions.ToInteger(oDr[1]);
+                                        oXML.InnerXml = Strings.Replace(Strings.Replace(Convert.ToString(oDr[0]), "&gt;", ">"), "&lt;", "<");
+                                        nSubUserId = Convert.ToInt16(oDr[1]);
                                     }
                                 }
                                 XmlElement oElmt = (XmlElement)oXML.DocumentElement.SelectSingleNode("descendant-or-self::UserGroups");
@@ -2923,7 +2924,7 @@ namespace Protean
                                         using (var oDr = getDataReaderDisposable(sSql))
                                         {
                                             while (oDr.Read())
-                                                DeleteObject(objectTypes.DirectoryRelation, Conversions.ToLong(oDr.GetValue(0)));
+                                                DeleteObject(objectTypes.DirectoryRelation, Convert.ToInt64(oDr.GetValue(0)));
                                         }
 
                                     }
@@ -2933,7 +2934,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.Audit, Conversions.ToLong(oDr.GetValue(0)));
+                                        DeleteObject(objectTypes.Audit, Convert.ToInt64(oDr.GetValue(0)));
                                     ExeProcessSql($"Delete from tblSubscription where nSubKey = {nId}");
                                 }
 
@@ -2945,7 +2946,7 @@ namespace Protean
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
-                                        DeleteObject(objectTypes.CartShippingRelations, Conversions.ToLong(oDr.GetValue(0)));
+                                        DeleteObject(objectTypes.CartShippingRelations, Convert.ToInt64(oDr.GetValue(0)));
                                     ExeProcessSql($"DELETE FROM tblCartShippingMethods WHERE nShipOptKey = {nId}");
                                 }
 
@@ -2975,7 +2976,7 @@ namespace Protean
                                 {
                                     if (Information.IsNumeric(oDr[0]))
                                     {
-                                        nAuditId = Conversions.ToLong(oDr[0]);
+                                        nAuditId = Convert.ToInt64(oDr[0]);
                                     }
 
                                 }
@@ -3053,24 +3054,24 @@ namespace Protean
                     {
 
                         // Delete the locations for this content
-                        deletedRecords = ExeProcessSql("DELETE tblAudit FROM tblAudit INNER JOIN tblContentLocation ON nAuditId = nAuditKey AND nContentId IN (" + contentIDCSVList + ")");
+                        deletedRecords = ExeProcessSql($"DELETE tblAudit FROM tblAudit INNER JOIN tblContentLocation ON nAuditId = nAuditKey AND nContentId IN ({contentIDCSVList})");
                         if (deletedRecords > 0)
                         {
-                            ExeProcessSql("DELETE FROM tblContentLocation WHERE nContentId IN (" + contentIDCSVList + ")");
+                            ExeProcessSql($"DELETE FROM tblContentLocation WHERE nContentId IN ({contentIDCSVList})");
                         }
 
                         // Delete the relatnios for this content
-                        deletedRecords = ExeProcessSql("DELETE tblAudit FROM tblAudit INNER JOIN tblContentRelation ON nAuditId = nAuditKey AND (nContentChildId IN (" + contentIDCSVList + ") OR nContentParentId IN (" + contentIDCSVList + "))");
+                        deletedRecords = ExeProcessSql($"DELETE tblAudit FROM tblAudit INNER JOIN tblContentRelation ON nAuditId = nAuditKey AND (nContentChildId IN ({contentIDCSVList}) OR nContentParentId IN ({contentIDCSVList}))");
                         if (deletedRecords > 0)
                         {
-                            ExeProcessSql("DELETE  FROM tblContentRelation WHERE nContentChildId IN (" + contentIDCSVList + ") OR nContentParentId IN (" + contentIDCSVList + ")");
+                            ExeProcessSql($"DELETE  FROM tblContentRelation WHERE nContentChildId IN ({contentIDCSVList}) OR nContentParentId IN ({contentIDCSVList})");
                         }
 
                         // Delete the actual content
-                        deletedRecords = ExeProcessSql("DELETE tblAudit FROM tblAudit INNER JOIN tblContent ON nAuditId = nAuditKey AND nContentKey IN (" + contentIDCSVList + ")");
+                        deletedRecords = ExeProcessSql($"DELETE tblAudit FROM tblAudit INNER JOIN tblContent ON nAuditId = nAuditKey AND nContentKey IN ({contentIDCSVList})");
                         if (deletedRecords > 0)
                         {
-                            ExeProcessSql("DELETE  FROM tblContent WHERE nContentKey IN (" + contentIDCSVList + ")");
+                            ExeProcessSql($"DELETE  FROM tblContent WHERE nContentKey IN ({contentIDCSVList})");
                         }
 
                     }
@@ -3114,9 +3115,9 @@ namespace Protean
                         }
 
                         while (oDr.Read())
-                            DeleteObject(objectType, Conversions.ToLong(oDr[0]), bReporting);
+                            DeleteObject(objectType, Convert.ToInt64(oDr[0]), bReporting);
                         while (oDr.Read())
-                            DeleteObject(objectType, Conversions.ToLong(oDr[0]), bReporting);
+                            DeleteObject(objectType, Convert.ToInt64(oDr[0]), bReporting);
                     }
                 }
 
@@ -3293,7 +3294,7 @@ namespace Protean
                 try
                 {
                     string query = "SELECT " + getKey((int)objectType) + " FROM " + getTable(objectType) + " o INNER JOIN dbo.tblAudit a ON o.nauditId = a.nauditKey " + "WHERE " + myWeb.GetStandardFilterSQLForContent(false);
-                    return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(GetDataValue(query), 0, false));
+                    return Convert.ToBoolean(Operators.ConditionalCompareObjectGreater(GetDataValue(query), 0, false));
                 }
                 catch (Exception)
                 {
@@ -3307,7 +3308,7 @@ namespace Protean
                 try
                 {
                     string query = "select * from tblcontentstructure P inner join tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey =" + objectKey;
-                    return Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(GetDataValue(query), 0, false));
+                    return Convert.ToBoolean(Operators.ConditionalCompareObjectGreater(GetDataValue(query), 0, false));
                 }
                 catch (Exception)
                 {
@@ -3325,7 +3326,7 @@ namespace Protean
                 {
                     sSql = $"select count(*) from tblContentLocation where nContentId={ContentId} and bCascade = 1";
 
-                    nCount = Conversions.ToLong(GetDataValue(sSql));
+                    nCount = Convert.ToInt64(GetDataValue(sSql));
 
                     if (nCount > 0L)
                     {
@@ -3408,7 +3409,7 @@ namespace Protean
                         {
                             if (Information.IsNumeric(oElmt.InnerText))
                             {
-                                nKey = Conversions.ToLong(oElmt.InnerText);
+                                nKey = Convert.ToInt64(oElmt.InnerText);
                             }
                         }
                     }
@@ -3468,7 +3469,7 @@ namespace Protean
                                             XmlElement oAuditElmt = (XmlElement)oInstance.SelectSingleNode("descendant-or-self::nAuditId");
                                             if (Information.IsNumeric(oAuditElmt.InnerText))
                                             {
-                                                nAuditId = Conversions.ToLong(oAuditElmt.InnerText);
+                                                nAuditId = Convert.ToInt64(oAuditElmt.InnerText);
                                             }
                                             if (nAuditId == 0L)
                                             {
@@ -3594,7 +3595,7 @@ namespace Protean
                                     }
 
                                     // we are using getAuditId to create a new audit record.
-                                    nAuditId = Conversions.ToLong(setObjectInstance(objectTypes.Audit, oInstance));
+                                    nAuditId = Convert.ToInt64(setObjectInstance(objectTypes.Audit, oInstance));
                                     XmlNode argoNode3 = oTableNode;
                                     addNewTextNode("nAuditId", ref argoNode3, nAuditId.ToString(), true, true);
                                     oTableNode = (XmlElement)argoNode3;
@@ -3632,7 +3633,7 @@ namespace Protean
                                 {
 
                                     // we are using getAuditId to create a new audit record.
-                                    nAuditId = Conversions.ToLong(setObjectInstance(objectTypes.Audit, oInstance));
+                                    nAuditId = Convert.ToInt64(setObjectInstance(objectTypes.Audit, oInstance));
                                     XmlNode argoNode4 = oTableNode;
                                     addNewTextNode("nAuditId", ref argoNode4, nAuditId.ToString(), true, true);
                                     oTableNode = (XmlElement)argoNode4;
@@ -3762,14 +3763,14 @@ namespace Protean
                         XmlElement oElmt = (XmlElement)oInstance.SelectSingleNode("descendant-or-self::nAuditId");
                         if (Information.IsNumeric(oElmt.InnerText))
                         {
-                            nAuditId = Conversions.ToLong(oElmt.InnerText);
+                            nAuditId = Convert.ToInt64(oElmt.InnerText);
                         }
                     }
 
                     // If not set then try getting the value from the DB
                     if (!(nAuditId > 0L))
                     {
-                        nAuditId = Conversions.ToLong(GetDataValue("SELECT nAuditId FROM " + getTable(objectType) + " WHERE " + getKey((int)objectType) + "=" + nKey));
+                        nAuditId = Convert.ToInt64(GetDataValue("SELECT nAuditId FROM " + getTable(objectType) + " WHERE " + getKey((int)objectType) + "=" + nKey));
                     }
                     XmlElement oTableNode = (XmlElement)oInstance.FirstChild;
 
@@ -3811,7 +3812,7 @@ namespace Protean
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "tidyAuditId", ex, cProcessInfo));
-                    return Conversions.ToLong("");
+                    return Convert.ToInt64("");
                 }
 
             }
@@ -3835,21 +3836,21 @@ namespace Protean
                     // first we look at the status of the content being sumitted.
 
                     XmlNode argoParent = oInstance;
-                    nStatus = (Status)Conversions.ToInteger(getNodeValueByType(ref argoParent, "//nStatus", XmlDataType.TypeNumber, 1));
+                    nStatus = (Status)Convert.ToInt16(getNodeValueByType(ref argoParent, "//nStatus", XmlDataType.TypeNumber, 1));
                     oInstance = (XmlElement)argoParent;
                     XmlNode argoParent1 = oInstance;
-                    nCurrentVersionNumber = Conversions.ToLong(getNodeValueByType(ref argoParent1, "//nVersion", XmlDataType.TypeNumber, 0));
+                    nCurrentVersionNumber = Convert.ToInt64(getNodeValueByType(ref argoParent1, "//nVersion", XmlDataType.TypeNumber, 0));
                     oInstance = (XmlElement)argoParent1;
 
                     // Get the maximum version number
                     if (nKey > 0L)
                     {
-                        cSql = "SELECT MAX(nVersion) As MaxV " + "FROM ( " + "       SELECT nVersion FROM dbo.tblContent WHERE nContentKey = " + nKey + "       UNION " + "       SELECT nVersion FROM dbo.tblContentVersions WHERE nContentPrimaryId = " + nKey + ") VersionList";
+                        cSql = $"SELECT MAX(nVersion) As MaxV FROM ( SELECT nVersion FROM dbo.tblContent WHERE nContentKey = {nKey} UNION SELECT nVersion FROM dbo.tblContentVersions WHERE nContentPrimaryId = {nKey}) VersionList";
 
 
 
 
-                        nNewVersionNumber = Conversions.ToLong(Operators.AddObject(GetDataValue(cSql), 1));
+                        nNewVersionNumber = Convert.ToInt64(Operators.AddObject(GetDataValue(cSql), 1));
                     }
 
                     oInstance.SelectSingleNode("//nVersion").InnerText = nNewVersionNumber.ToString();
@@ -3906,7 +3907,7 @@ namespace Protean
                                             if (cPreviousStatus == "3" | cPreviousStatus == "4")
                                             {
                                                 // Update everything with a status of Pending to be DraftSuperceded
-                                                ExeProcessSql("UPDATE tblAudit SET nStatus = " + ((int)Status.Superceded).ToString() + " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " + nKey + " AND (a.nStatus = " + ((int)Status.Pending).ToString() + " or a.nStatus = " + ((int)Status.InProgress).ToString() + ")");
+                                                ExeProcessSql($"UPDATE tblAudit SET nStatus = {(int)Status.Superceded} FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = {nKey} AND (a.nStatus = {(int)Status.Pending} or a.nStatus = {(int)Status.InProgress})");
                                             }
                                         }
 
@@ -3945,7 +3946,7 @@ namespace Protean
 
                                         // Assess the status
                                         XmlNode argoParent2 = oOrigInstance;
-                                        Status nLiveStatus = (Status)Conversions.ToInteger(getNodeValueByType(ref argoParent2, "//nStatus", XmlDataType.TypeNumber));
+                                        Status nLiveStatus = (Status)Convert.ToInt16(getNodeValueByType(ref argoParent2, "//nStatus", XmlDataType.TypeNumber));
                                         oOrigInstance = (XmlElement)argoParent2;
                                         switch (nLiveStatus)
                                         {
@@ -3971,7 +3972,7 @@ namespace Protean
                                         }
 
                                         // Update everything with a status of Pending to be DraftSuperceded
-                                        ExeProcessSql("UPDATE tblAudit SET nStatus = " + ((int)Status.DraftSuperceded).ToString() + " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " + cParentId + " AND (a.nStatus = " + ((int)Status.Pending).ToString() + " or a.nStatus = " + ((int)Status.InProgress).ToString() + ")");
+                                        ExeProcessSql($"UPDATE tblAudit SET nStatus = {(int)Status.DraftSuperceded} FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = {cParentId} AND (a.nStatus = {(int)Status.Pending} or a.nStatus = {(int)Status.InProgress})");
                                     }
 
                                     else
@@ -4055,7 +4056,7 @@ namespace Protean
                     prepareContentVersionInstance(ref oInstance, nContentPrimaryId, nStatus);
 
                     // Save the intance
-                    nVersionId = Conversions.ToLong(setObjectInstance(objectTypes.ContentVersion, oInstance, 0L));
+                    nVersionId = Convert.ToInt64(setObjectInstance(objectTypes.ContentVersion, oInstance, 0L));
 
                     return nVersionId;
                 }
@@ -4077,9 +4078,9 @@ namespace Protean
                 {
                     // grab some values from the live version
                     oTempInstance.InnerXml = getObjectInstance(objectTypes.Content, nContentPrimaryId);
-                    long nAuditId = Conversions.ToLong(oTempInstance.SelectSingleNode("tblContent/nAuditKey").InnerText);
-                    long nVersion = Conversions.ToLong(oTempInstance.SelectSingleNode("tblContent/nVersion").InnerText);
-                    long nStatus = Conversions.ToLong(oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText);
+                    long nAuditId = Convert.ToInt64(oTempInstance.SelectSingleNode("tblContent/nAuditKey").InnerText);
+                    long nVersion = Convert.ToInt64(oTempInstance.SelectSingleNode("tblContent/nVersion").InnerText);
+                    long nStatus = Convert.ToInt64(oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText);
                     string sInsertDate = oTempInstance.SelectSingleNode("tblContent/dInsertDate").InnerText;
                     string sInsertUser = oTempInstance.SelectSingleNode("tblContent/nInsertDirId").InnerText;
 
@@ -4123,14 +4124,14 @@ namespace Protean
                     oTempInstance.SelectSingleNode("tblContent/nStatus").InnerText = ((int)nStatus).ToString();
 
                     // Save the intance
-                    nVersionId = Conversions.ToLong(setObjectInstance(objectTypes.Content, oTempInstance, 0L));
+                    nVersionId = Convert.ToInt64(setObjectInstance(objectTypes.Content, oTempInstance, 0L));
 
                     // Superceed previous versions
                     //string cPreviousStatus = "";
                     // If NodeState(oTempInstance, "currentStatus", , , , , , cPreviousStatus) = XmlNodeState.HasContents Then
                     // If cPreviousStatus = "3" Or cPreviousStatus = "4" Then
                     // Update everything with a status of Pending to be DraftSuperceded
-                    ExeProcessSql("UPDATE tblAudit SET nStatus = " + ((int)Status.Superceded).ToString() + " FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = " + nContentPrimaryId + " AND (a.nStatus = " + ((int)Status.Pending).ToString() + " or a.nStatus = " + ((int)Status.InProgress).ToString() + ")");
+                    ExeProcessSql($"UPDATE tblAudit SET nStatus = {(int)Status.Superceded} FROM tblAudit a INNER JOIN tblContentVersions c ON c.nAuditId = a.nAuditKey AND c.nContentPrimaryId = {nContentPrimaryId} AND (a.nStatus = {(int)Status.Pending} or a.nStatus = {(int)Status.InProgress})");
                     // End If
                     // End If
 
@@ -4165,7 +4166,7 @@ namespace Protean
                     // Add the filter
                     if (bGetContentSinceLastLogged)
                     {
-                        dLastRun = Conversions.ToString(GetDataValue($"SELECT TOP 1 dDateTime FROM dbo.tblActivityLog WHERE nActivityType={(int)ActivityType.PendingNotificationSent} ORDER BY 1 DESC"));
+                        dLastRun = Convert.ToString(GetDataValue($"SELECT TOP 1 dDateTime FROM dbo.tblActivityLog WHERE nActivityType={(int)ActivityType.PendingNotificationSent} ORDER BY 1 DESC"));
                         if (!string.IsNullOrEmpty(dLastRun) && Information.IsDate(dLastRun))
                             cFilterSql = $" WHERE Last_Updated > {SqlDate(dLastRun, true)}";
                     }
@@ -4348,7 +4349,7 @@ namespace Protean
                         foreach (XmlNode oNode in oXml.DocumentElement.SelectNodes("group"))
                         {
                             oElmt = (XmlElement)oNode;
-                            if (Conversions.ToInteger("0" + oElmt.GetAttribute("isMember")) > 0)
+                            if (Convert.ToInt16("0" + oElmt.GetAttribute("isMember")) > 0)
                             {
                                 oElmt.SetAttribute("isMember", "true");
                             }
@@ -4385,7 +4386,7 @@ namespace Protean
                     string cTableFRef = getFRef(objectType);
 
                     nId = getObjectByRef(cTableName, cTableKey, cTableFRef, objectType, cForeignRef, cSchemaType).ToString();
-                    return Conversions.ToLong(nId);
+                    return Convert.ToInt64(nId);
                 }
 
                 catch (Exception ex)
@@ -4455,9 +4456,9 @@ namespace Protean
                         if (oDr is null)
                             return 0L;
                         while (oDr.Read())
-                            nId = Conversions.ToString(oDr[0]);
+                            nId = Convert.ToString(oDr[0]);
 
-                        return Conversions.ToLong(nId);
+                        return Convert.ToInt64(nId);
                     }
                 }
 
@@ -4511,7 +4512,7 @@ namespace Protean
                         {
                             if (!string.IsNullOrEmpty(nIds))
                                 nIds += ",";
-                            nIds = Conversions.ToString(nIds + oDr[0]);
+                            nIds = Convert.ToString(nIds + oDr[0]);
                         }
 
                         return Strings.Split(nIds, ",");
@@ -4592,9 +4593,9 @@ namespace Protean
                     // ", " & sqlDate(dExpireDate) & _
                     // "," & sqlDateTime(dInsertDate, dInsertDate.Hour.ToString & ":" & dInsertDate.Minute.ToString & ":" & dInsertDate.Second.ToString) & ", " & _
                     // nUserId & "," & sqlDate(dUpdateDate) & ", " & nUserId & "," & nStatus & ", '" & cDescription & "')"
-                    sSql = "insert into tblAudit (dPublishDate, dExpireDate, dInsertDate, nInsertDirId, dUpdateDate, nUpdateDirId, nStatus, cDescription)" + " Values (" + SqlDate(dPublishDate) + ", " + SqlDate(dExpireDate) + "," + SqlDate(dInsertDate, true) + ", " + nUserId + "," + SqlDate(dUpdateDate, true) + ", " + nUserId + "," + nStatus + ", '" + cDescription + "')";
+                    sSql = $"insert into tblAudit (dPublishDate, dExpireDate, dInsertDate, nInsertDirId, dUpdateDate, nUpdateDirId, nStatus, cDescription) Values ({SqlDate(dPublishDate)}, {SqlDate(dExpireDate)},{SqlDate(dInsertDate, true)}, {nUserId},{SqlDate(dUpdateDate, true)}, {nUserId},{nStatus}, '{cDescription}')";
                     // Protean.Tools.Database.SqlDate
-                    nId = Conversions.ToInteger(GetIdInsertSql(sSql));
+                    nId = Convert.ToInt16(GetIdInsertSql(sSql));
 
                     return nId;
                 }
@@ -4645,7 +4646,7 @@ namespace Protean
                             XmlElement relations = (XmlElement)getRelationsByContentId(contentId, ref nContentNodeXmlElt, contentRelationType: RelationType.Child);
                             foreach (XmlElement relation in relations.SelectNodes("//Relation"))
                             {
-                                foundLocation = checkContentLocationsInCurrentMenu(Conversions.ToLong(relation.GetAttribute("relatedContentId")));
+                                foundLocation = checkContentLocationsInCurrentMenu(Convert.ToInt64(relation.GetAttribute("relatedContentId")));
                                 if (foundLocation)
                                     break;
                             }
@@ -4685,14 +4686,14 @@ namespace Protean
 
                     // Set the relationship direction filter
                     if ((contentRelationType & RelationType.Parent) != 0)
-                        sqlFilter += "nContentParentId = " + contentId;
+                        sqlFilter += $"nContentParentId = {contentId}";
                     if ((contentRelationType & RelationType.Parent & RelationType.Child) != 0)
                         sqlFilter += " OR ";
                     if ((contentRelationType & RelationType.Child) != 0)
-                        sqlFilter += "nContentChildId = " + contentId;
+                        sqlFilter += $"nContentChildId = {contentId}";
 
                     // Creat the full statement - this gets rid of duplicates and indicates how many relationships exist in each example
-                    sqlQuery = "SELECT relatedContentId, " + "SUM(CASE WHEN relatedContentRelation='child' THEN 1 ELSE 0 END) AS childRelation, " + "SUM(CASE WHEN relatedContentRelation='parent' THEN 1 ELSE 0 END) As parentRelation	 " + "FROM ( " + "SELECT	CASE WHEN nContentChildId = " + contentId + " THEN nContentParentId ELSE nContentChildId END AS relatedContentId, " + "CASE WHEN nContentChildId = " + contentId + " THEN 'parent' ELSE 'child' END As relatedContentRelation " + "FROM tblContentRelation  " + "WHERE " + sqlFilter + ") r " + "GROUP BY relatedContentId ";
+                    sqlQuery = $"SELECT relatedContentId, SUM(CASE WHEN relatedContentRelation='child' THEN 1 ELSE 0 END) AS childRelation, SUM(CASE WHEN relatedContentRelation='parent' THEN 1 ELSE 0 END) As parentRelation FROM ( SELECT CASE WHEN nContentChildId = {contentId} THEN nContentParentId ELSE nContentChildId END AS relatedContentId, CASE WHEN nContentChildId = {contentId} THEN 'parent' ELSE 'child' END As relatedContentRelation FROM tblContentRelation WHERE {sqlFilter}) r GROUP BY relatedContentId ";
 
 
 
@@ -4799,7 +4800,7 @@ namespace Protean
                 try
                 {
 
-                    sSql = "UPDATE tblContentLocation SET cPosition = '" + SqlFmt(sPosition) + "' WHERE (nStructId = " + nPageId + ") AND (nContentId = " + nContentId + ")";
+                    sSql = $"UPDATE tblContentLocation SET cPosition = '{SqlFmt(sPosition)}' WHERE (nStructId = {nPageId}) AND (nContentId = {nContentId})";
                     ExeProcessSql(sSql);
 
                     // sSql = "UPDATE tblContent SET cContentName = '" & SqlFmt(sPosition) & "' WHERE (nContentKey = " & nContentId & ")"
@@ -4860,7 +4861,7 @@ namespace Protean
                         nLoc = Strings.Split(sLocations, ",", Compare: CompareMethod.Binary);
                         var loopTo = (long)(nLoc.Length - 1);
                         for (i = 0L; i <= loopTo; i++)
-                            nLocations.Add(Conversions.ToInteger(nLoc[(int)i]), nLoc[(int)i]);
+                            nLocations.Add(Convert.ToInt16(nLoc[(int)i]), nLoc[(int)i]);
                     }
 
                     foreach (DataRow oRow in oDs.Tables[0].Rows)
@@ -4871,15 +4872,15 @@ namespace Protean
                             nLocations.Remove(oRow["nStructId"]);
                         }
                         // deleting removed ones
-                        else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow["bPrimary"], false, false)))
+                        else if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow["bPrimary"], false, false)))
                         {
-                            DeleteObject(objectTypes.ContentLocation, Conversions.ToLong(oRow["nContentLocationKey"]));
+                            DeleteObject(objectTypes.ContentLocation, Convert.ToInt64(oRow["nContentLocationKey"]));
                         }
                     }
 
                     foreach (DictionaryEntry keypair in nLocations)
                         // adding new ones
-                        setContentLocation(Conversions.ToLong(keypair.Value), nContentId, false, false, false, sPosition, false);
+                        setContentLocation(Convert.ToInt64(keypair.Value), nContentId, false, false, false, sPosition, false);
                 }
 
                 catch (Exception ex)
@@ -4899,7 +4900,7 @@ namespace Protean
                     // first we need to  check wif we are removing the only primary id
                     if (!bPrimary)
                     {
-                        cSQL = "SELECT nContentLocationKey FROM tblContentLocation WHERE (NOT nStructId = " + nLocation + ") AND (nContentId = " + nContentId + ") AND  (bPrimary = 1)";
+                        cSQL = $"SELECT nContentLocationKey FROM tblContentLocation WHERE (NOT nStructId = {nLocation}) AND (nContentId = {nContentId}) AND  (bPrimary = 1)";
                         cProcessInfo = cSQL;
                         bool bResult = false;
                         using (var oDRE = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
@@ -4911,7 +4912,7 @@ namespace Protean
                                 return false;
                         }
                     }
-                    cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblContentLocation SET bPrimary = ", Interaction.IIf(bPrimary, 1, 0)), " WHERE (nStructId = "), nLocation), ") AND (nContentId = "), nContentId), ")"));
+                    cSQL = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblContentLocation SET bPrimary = ", Interaction.IIf(bPrimary, 1, 0)), " WHERE (nStructId = "), nLocation), ") AND (nContentId = "), nContentId), ")"));
                     cProcessInfo = cSQL;
                     ExeProcessSqlScalar(cSQL);
                     return true;
@@ -4941,24 +4942,24 @@ namespace Protean
                     // First, set the general delete statement
                     if (bSetPrimary)
                     {
-                        sSql = "delete from tblContentLocation where nContentId = " + nContentId;
+                        sSql = $"delete from tblContentLocation where nContentId = {nContentId}";
                     }
                     else
                     {
-                        sSql = "delete from tblContentLocation where nContentId = " + nContentId + " and bPrimary = 0";
+                        sSql = $"delete from tblContentLocation where nContentId = {nContentId} and bPrimary = 0";
 
                     }
 
                     // Only delete locations within a scope (e.g. if only dealing with a partial list of locations)
                     if (!string.IsNullOrEmpty(cInscopeLocations))
                     {
-                        sSql += " and nStructId IN (" + cInscopeLocations + ")";
+                        sSql += $" and nStructId IN ({cInscopeLocations})";
                     }
 
                     // Preserve any existing and required locations
                     if (!string.IsNullOrEmpty(sLocations))
                     {
-                        sSql += " and NOT(nStructId IN (" + sLocations + "))";
+                        sSql += $" and NOT(nStructId IN ({sLocations}))";
                     }
 
                     // Delete the locations
@@ -4974,11 +4975,11 @@ namespace Protean
                             if (i == 0L & bSetPrimary)
                             {
                                 // First location will be the primary
-                                setContentLocation(Conversions.ToLong(nLoc[(int)i]), nContentId, true, false);
+                                setContentLocation(Convert.ToInt64(nLoc[(int)i]), nContentId, true, false);
                             }
                             else
                             {
-                                setContentLocation(Conversions.ToLong(nLoc[(int)i]), nContentId, false, false);
+                                setContentLocation(Convert.ToInt64(nLoc[(int)i]), nContentId, false, false);
                             }
                         }
                     }
@@ -5004,7 +5005,7 @@ namespace Protean
                     sSql = "select nShpRelKey from tblCartShippingRelations where nShpOptId = " + nOptId;
                     oDs = GetDataSet(sSql, "tblCartShippingRelations");
                     foreach (DataRow oRow in oDs.Tables[0].Rows)
-                        DeleteObject(objectTypes.CartShippingRelations, Conversions.ToLong(oRow["nShpRelKey"]));
+                        DeleteObject(objectTypes.CartShippingRelations, Convert.ToInt64(oRow["nShpRelKey"]));
 
                     oDs = null;
 
@@ -5014,7 +5015,7 @@ namespace Protean
                         nLoc = Strings.Split(sLocations, ",", Compare: CompareMethod.Binary);
                         var loopTo = (long)(nLoc.Length - 1);
                         for (i = 0L; i <= loopTo; i++)
-                            insertShippingLocation(nOptId, Conversions.ToLong(nLoc[(int)i]), false);
+                            insertShippingLocation(nOptId, Convert.ToInt64(nLoc[(int)i]), false);
                     }
                 }
                 catch (Exception ex)
@@ -5041,17 +5042,17 @@ namespace Protean
                         if (oDr.Read())
                         {
                             oQuizXml = moPageXml.CreateElement("container");
-                            oQuizXml.InnerXml = Conversions.ToString(oDr["cQResultsXml"]);
+                            oQuizXml.InnerXml = Convert.ToString(oDr["cQResultsXml"]);
                             oQuizXml = oQuizXml.SelectSingleNode("instance");
                             // lets add the contentId of the xFormQuiz to the results set.
                             oElmt = (XmlElement)oQuizXml.SelectSingleNode("descendant-or-self::results");
-                            oElmt.SetAttribute("contentId", Conversions.ToString(oDr["nContentId"]));
+                            oElmt.SetAttribute("contentId", Convert.ToString(oDr["nContentId"]));
                             // Add the time taken
                             oElmt = (XmlElement)oQuizXml.SelectSingleNode("//status/timeTaken");
                             if (oDr["nQResultsTimeTaken"] is DBNull)
                                 nTimeTaken = 0L;
                             else
-                                nTimeTaken = Conversions.ToLong(oDr["nQResultsTimeTaken"]);
+                                nTimeTaken = Convert.ToInt64(oDr["nQResultsTimeTaken"]);
                             if (oElmt is null)
                             {
                                 var argoNode = oQuizXml.SelectSingleNode("//status");
@@ -5098,7 +5099,7 @@ namespace Protean
                 try
                 {
 
-                    return Conversions.ToLong(setObjectInstance(objectTypes.ContentStructure, oInstance));
+                    return Convert.ToInt64(setObjectInstance(objectTypes.ContentStructure, oInstance));
                 }
 
                 catch (Exception ex)
@@ -5118,12 +5119,12 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "Insert Into tblContentStructure (nStructParId, cStructForiegnRef, cStructName,  cStructDescription, cStructLayout, nAuditId, nStructOrder)" + "values (" + nStructParId + ",'" + SqlFmt(cStructForiegnRef) + "'" + ",'" + SqlFmt(cStructName) + "'" + ",'" + SqlFmt(cStructDescription) + "'" + ",'" + SqlFmt(cStructLayout) + "'" + "," + getAuditId((int)nStatus, cDescription: cDescription, dPublishDate: dPublishDate, dExpireDate: dExpireDate) + "," + nOrder + ")";
+                    sSql = $"Insert Into tblContentStructure (nStructParId, cStructForiegnRef, cStructName,  cStructDescription, cStructLayout, nAuditId, nStructOrder) values ({nStructParId},'{SqlFmt(cStructForiegnRef)}','{SqlFmt(cStructName)}','{SqlFmt(cStructDescription)}','{SqlFmt(cStructLayout)}',{getAuditId((int)nStatus, cDescription: cDescription, dPublishDate: dPublishDate, dExpireDate: dExpireDate)},{nOrder})";
 
 
                     nId = GetIdInsertSql(sSql);
                     clearStructureCacheAll();
-                    return Conversions.ToLong(nId);
+                    return Convert.ToInt64(nId);
                 }
 
                 catch (Exception ex)
@@ -5148,7 +5149,7 @@ namespace Protean
                         values ({nStructParId}, '{SqlFmt(cStructForiegnRef)}', '{SqlFmt(cStructName)}', '{SqlFmt(cStructDescription)}', '{SqlFmt(cStructLayout)}', {auditId}, {nOrder}, {nVersionParId}, '{cVersionLang}', '{cVersionDescription}', {(int)nVersionType})";
 
                     nId = GetIdInsertSql(sSql);
-                    return Conversions.ToLong(nId);
+                    return Convert.ToInt64(nId);
                 }
 
                 catch (Exception ex)
@@ -5171,7 +5172,7 @@ namespace Protean
                     sSql = $"UPDATE tblCartShippingLocations SET nLocationParId = {nNewLocParId} WHERE nLocationKey = {nLocKey}";
 
                     nId = ExeProcessSql(sSql).ToString();
-                    return Conversions.ToLong(nId);
+                    return Convert.ToInt64(nId);
                 }
 
                 catch (Exception ex)
@@ -5198,7 +5199,7 @@ namespace Protean
 
                     nId = ExeProcessSql(sSql).ToString();
                     clearStructureCacheAll();
-                    return Conversions.ToLong(nId);
+                    return Convert.ToInt64(nId);
                 }
 
                 catch (Exception ex)
@@ -5220,7 +5221,7 @@ namespace Protean
                 {
 
                     // Don't move if destination doesn't exist.
-                    int destination = Conversions.ToInteger(GetDataValue($"SELECT TOP 1 nStructKey FROM tblContentStructure WHERE nStructKey = {nNewStructParId}"));
+                    int destination = Convert.ToInt16(GetDataValue($"SELECT TOP 1 nStructKey FROM tblContentStructure WHERE nStructKey = {nNewStructParId}"));
 
                     if (destination > 0)
                     {
@@ -5243,18 +5244,18 @@ namespace Protean
                         {
                             if (currentLocation.Read())
                             {
-                                primary = Conversions.ToBoolean(currentLocation[0]);
-                                cascade = Conversions.ToBoolean(currentLocation[1]);
+                                primary = Convert.ToBoolean(currentLocation[0]);
+                                cascade = Convert.ToBoolean(currentLocation[1]);
                                 // position = currentLocation(2)
                                 // TS By DEFAULT we move to column1 because it is always on every page.
                             }
                         }
 
                         // Work out if the destination is primary
-                        int destinationPrimary = Conversions.ToInteger(GetDataValue($"SELECT TOP 1 bPrimary from tblContentLocation where nStructId = {nNewStructParId} and nContentId = {nContentKey} AND bPrimary=1"));
+                        int destinationPrimary = Convert.ToInt16(GetDataValue($"SELECT TOP 1 bPrimary from tblContentLocation where nStructId = {nNewStructParId} and nContentId = {nContentKey} AND bPrimary=1"));
 
                         // Work out if the destination is the only primary
-                        int areThereOtherPrimaries = Conversions.ToInteger(GetDataValue($"SELECT TOP 1 bPrimary from tblContentLocation where nStructId <> {nNewStructParId} and nContentId = {nContentKey} AND bPrimary=1"));
+                        int areThereOtherPrimaries = Convert.ToInt16(GetDataValue($"SELECT TOP 1 bPrimary from tblContentLocation where nStructId <> {nNewStructParId} and nContentId = {nContentKey} AND bPrimary=1"));
 
                         // If destination is the only primary then we are about to delete it so make the current location (being moved) primary
                         if (destinationPrimary > 0 & areThereOtherPrimaries == 0)
@@ -5279,7 +5280,7 @@ namespace Protean
 
                     }
 
-                    return Conversions.ToLong(nId);
+                    return Convert.ToInt64(nId);
                 }
 
                 catch (Exception ex)
@@ -5354,7 +5355,7 @@ namespace Protean
                                     foreach (DataRow currentORow in oDs.Tables[getTable(objectType)].Rows)
                                     {
                                         oRow = currentORow;
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nKey, false)))
+                                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nKey, false)))
                                         {
                                             oRow[getOrderFname(objectType)] = 1;
                                         }
@@ -5372,7 +5373,7 @@ namespace Protean
                                     foreach (DataRow currentORow1 in oDs.Tables[getTable(objectType)].Rows)
                                     {
                                         oRow = currentORow1;
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nKey, false)))
+                                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nKey, false)))
                                         {
                                             oRow[getOrderFname(objectType)] = RecCount;
                                         }
@@ -5390,7 +5391,7 @@ namespace Protean
                                     foreach (DataRow currentORow2 in oDs.Tables[getTable(objectType)].Rows)
                                     {
                                         oRow = currentORow2;
-                                        if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nKey, false), i != 1)))
+                                        if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nKey, false), i != 1)))
                                         {
                                             // swap with previous
                                             oDs.Tables[getTable(objectType)].Rows[i - 2][getOrderFname(objectType)] = i;
@@ -5410,7 +5411,7 @@ namespace Protean
                                     foreach (DataRow currentORow3 in oDs.Tables[getTable(objectType)].Rows)
                                     {
                                         oRow = currentORow3;
-                                        if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nKey, false), i != RecCount)))
+                                        if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nKey, false), i != RecCount)))
                                         {
                                             // swap with next
                                             oDs.Tables[getTable(objectType)].Rows[i][getOrderFname(objectType)] = i;
@@ -5499,16 +5500,16 @@ namespace Protean
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
                         while (oDr.Read())
-                            cSchemaName = Conversions.ToString(oDr["cContentSchemaName"]);
+                            cSchemaName = Convert.ToString(oDr["cContentSchemaName"]);
                     }
 
                     // If config flag is ON then add status join in queries
                     // Get all locations of similar objects on the same page.
-                    sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" + nPgId + " and C.cContentSchemaName = '" + cSchemaName + "' order by nDisplayOrder";
+                    sSql = $"Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId ={nPgId} and C.cContentSchemaName = '{cSchemaName}' order by nDisplayOrder";
 
                     if (nGroupId != 0)
                     {
-                        sSql = " Select *,a.nStatus From tblContent c " + " INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId  inner join tblAudit as a on c.nAuditId= a.nAuditKey " + " WHERE(tblCartCatProductRelations.nCatId = " + nGroupId + ") " + " And c.cContentSchemaName = '" + cSchemaName + "'" + " order by tblCartCatProductRelations.nDisplayOrder  ";
+                        sSql = $" Select *,a.nStatus From tblContent c  INNER Join tblCartCatProductRelations On c.nContentKey = tblCartCatProductRelations.nContentId  inner join tblAudit as a on c.nAuditId= a.nAuditKey  WHERE(tblCartCatProductRelations.nCatId = {nGroupId})  And c.cContentSchemaName = '{cSchemaName}' order by tblCartCatProductRelations.nDisplayOrder  ";
                     }
 
 
@@ -5518,17 +5519,17 @@ namespace Protean
                         {
                             if (cPosition.EndsWith("-"))
                             {
-                                sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" + nPgId + " and CL.cPosition like'" + cPosition + "%' and C.cContentSchemaName = '" + cSchemaName + "' order by nDisplayOrder";
+                                sSql = $"Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId ={nPgId} and CL.cPosition like'{cPosition}%' and C.cContentSchemaName = '{cSchemaName}' order by nDisplayOrder";
                             }
                             else
                             {
-                                sSql = "Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId =" + nPgId + " and CL.cPosition ='" + cPosition + "' and C.cContentSchemaName = '" + cSchemaName + "' order by nDisplayOrder";
+                                sSql = $"Select CL.*, a.nStatus from tblContentLocation as CL inner join tblContent as C on C.nContentKey = CL.nContentId inner join tblAudit as a on C.nAuditId= a.nAuditKey where CL.nStructId ={nPgId} and CL.cPosition ='{cPosition}' and C.cContentSchemaName = '{cSchemaName}' order by nDisplayOrder";
                             }
                         }
 
                         if (bIsRelatedContent)
                         {
-                            sSql = "Select tblContentRelation.*, a.nStatus FROM tblContentRelation INNER JOIN" + " tblContent On tblContentRelation.nContentChildId = tblContent.nContentKey INNER JOIN" + " tblContent tblContent_1 On tblContent.cContentSchemaName = tblContent_1.cContentSchemaName inner join tblAudit as a on tblContent_1.nAuditId= a.nAuditKey" + " WHERE (tblContentRelation.nContentParentId = " + nPgId + ") And (tblContent_1.nContentKey = " + nContentId + ")" + " ORDER BY tblContentRelation.nDisplayOrder";
+                            sSql = $"Select tblContentRelation.*, a.nStatus FROM tblContentRelation INNER JOIN tblContent On tblContentRelation.nContentChildId = tblContent.nContentKey INNER JOIN tblContent tblContent_1 On tblContent.cContentSchemaName = tblContent_1.cContentSchemaName inner join tblAudit as a on tblContent_1.nAuditId= a.nAuditKey WHERE (tblContentRelation.nContentParentId = {nPgId}) And (tblContent_1.nContentKey = {nContentId}) ORDER BY tblContentRelation.nDisplayOrder";
                         }
                     }
                     oDs = getDataSetForUpdate(sSql, getTable(objectType), "results");
@@ -5536,7 +5537,7 @@ namespace Protean
                     // Code added for active and inactive products swap accordingly.
                     // If config key is on then add status sorting and old code running as it is.
 
-                    bool bExcludeHiddenOnOrdering = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(goConfig["ExcludeHiddenOnOrdering"]) == "on", true, false));
+                    bool bExcludeHiddenOnOrdering = Convert.ToBoolean(Interaction.IIf(Strings.LCase(goConfig["ExcludeHiddenOnOrdering"]) == "on", true, false));
 
                     if (bExcludeHiddenOnOrdering)
                     {
@@ -5560,7 +5561,7 @@ namespace Protean
                                 foreach (DataRow currentORow in oDs.Tables[getTable(objectType)].Rows)
                                 {
                                     oRow = currentORow;
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nContentId, false)))
+                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nContentId, false)))
                                     {
                                         oRow[getOrderFname(objectType)] = 1;
                                     }
@@ -5570,7 +5571,7 @@ namespace Protean
                                         i = i + 1;
                                     }
                                     // non-ideal alternative for updating the entire dataset
-                                    sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
+                                    sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
                                     ExeProcessSql(sSql);
                                 }
 
@@ -5581,7 +5582,7 @@ namespace Protean
                                 foreach (DataRow currentORow1 in oDs.Tables[getTable(objectType)].Rows)
                                 {
                                     oRow = currentORow1;
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nContentId, false)))
+                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nContentId, false)))
                                     {
                                         oRow[getOrderFname(objectType)] = RecCount;
                                     }
@@ -5591,7 +5592,7 @@ namespace Protean
                                         i = i + 1;
                                     }
                                     // non-ideal alternative for updating the entire dataset
-                                    sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
+                                    sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
                                     ExeProcessSql(sSql);
                                 }
 
@@ -5602,21 +5603,21 @@ namespace Protean
                                 foreach (DataRow currentORow2 in oDs.Tables[getTable(objectType)].Rows)
                                 {
                                     oRow = currentORow2;
-                                    if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nContentId, false), i != 1)))
+                                    if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nContentId, false), i != 1)))
                                     {
                                         // swap with previous
                                         oDs.Tables[getTable(objectType)].Rows[i - 2][getOrderFname(objectType)] = i;
-                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oDs.Tables[getTable(objectType)].Rows[i - 2][getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oDs.Tables[getTable(objectType)].Rows[i - 2][getKey((int)objectType)]));
+                                        sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oDs.Tables[getTable(objectType)].Rows[i - 2][getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oDs.Tables[getTable(objectType)].Rows[i - 2][getKey((int)objectType)]));
                                         ExeProcessSql(sSql);
 
                                         oRow[getOrderFname(objectType)] = i - 1;
-                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
+                                        sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
                                         ExeProcessSql(sSql);
                                     }
                                     else
                                     {
                                         oRow[getOrderFname(objectType)] = i;
-                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
+                                        sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
                                         ExeProcessSql(sSql);
                                     }
                                     i = i + 1;
@@ -5629,7 +5630,7 @@ namespace Protean
                                 foreach (DataRow currentORow3 in oDs.Tables[getTable(objectType)].Rows)
                                 {
                                     oRow = currentORow3;
-                                    if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nContentId, false), i != RecCount)))
+                                    if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oRow[sKeyField], nContentId, false), i != RecCount)))
                                     {
                                         // swap with next
                                         oDs.Tables[getTable(objectType)].Rows[i][getOrderFname(objectType)] = i;
@@ -5643,7 +5644,7 @@ namespace Protean
                                     }
 
                                     // non-ideal alternative for updating the entire dataset
-                                    sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
+                                    sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("update " + getTable(objectType) + " Set nDisplayOrder = ", oRow[getOrderFname(objectType)]), " where "), getKey((int)objectType)), " = "), oRow[getKey((int)objectType)]));
                                     ExeProcessSql(sSql);
 
                                     i = i + 1;
@@ -5704,11 +5705,11 @@ namespace Protean
                             int nContentId = 0;
                             bool bNewItem = false;
                             // Debug.WriteLine(oDr("bPrimary"))
-                            if (Conversions.ToBoolean(Operators.AndObject(mode == CopyContentType.Copy, Operators.ConditionalCompareObjectEqual(oDr["bPrimary"], true, false))))
+                            if (Convert.ToBoolean(Operators.AndObject(mode == CopyContentType.Copy, Operators.ConditionalCompareObjectEqual(oDr["bPrimary"], true, false))))
                             {
                                 bNewItem = true;
-                                nContentId = (int)createContentCopy(Conversions.ToLong(oDr["nContentId"]), null, false);
-                                positionReMap[0, (int)copyCount] = Conversions.ToLong(oDr["nContentId"]);
+                                nContentId = (int)createContentCopy(Convert.ToInt64(oDr["nContentId"]), null, false);
+                                positionReMap[0, (int)copyCount] = Convert.ToInt64(oDr["nContentId"]);
                                 positionReMap[1, (int)copyCount] = nContentId;
                                 copyCount = copyCount + 1L;
                                 var oldPositionReMap = positionReMap;
@@ -5717,11 +5718,11 @@ namespace Protean
                                     for (var i = 0; i <= oldPositionReMap.Length / oldPositionReMap.GetLength(1) - 1; ++i)
                                         Array.Copy(oldPositionReMap, i * oldPositionReMap.GetLength(1), positionReMap, i * positionReMap.GetLength(1), Math.Min(oldPositionReMap.GetLength(1), positionReMap.GetLength(1)));
                             }
-                            else if (Conversions.ToBoolean(Operators.AndObject(mode == CopyContentType.CopyForce, Operators.ConditionalCompareObjectEqual(oDr["bPrimary"], true, false))))
+                            else if (Convert.ToBoolean(Operators.AndObject(mode == CopyContentType.CopyForce, Operators.ConditionalCompareObjectEqual(oDr["bPrimary"], true, false))))
                             {
                                 bNewItem = true;
-                                nContentId = (int)createContentCopy(Conversions.ToLong(oDr["nContentId"]), null, true);
-                                positionReMap[0, (int)copyCount] = Conversions.ToLong(oDr["nContentId"]);
+                                nContentId = (int)createContentCopy(Convert.ToInt64(oDr["nContentId"]), null, true);
+                                positionReMap[0, (int)copyCount] = Convert.ToInt64(oDr["nContentId"]);
                                 positionReMap[1, (int)copyCount] = nContentId;
                                 copyCount = copyCount + 1L;
                                 var oldPositionReMap1 = positionReMap;
@@ -5733,17 +5734,17 @@ namespace Protean
                             else if (mode == CopyContentType.Locate)
                             {
                                 // just get the id
-                                nContentId = Conversions.ToInteger(oDr["nContentId"]); // just need to do a locations
+                                nContentId = Convert.ToInt16(oDr["nContentId"]); // just need to do a locations
                             }
                             else
                             {
                                 // locate with  new primaries
-                                nContentId = Conversions.ToInteger(oDr["nContentId"]);
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDr["bPrimary"], true, false)))
+                                nContentId = Convert.ToInt16(oDr["nContentId"]);
+                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDr["bPrimary"], true, false)))
                                     bNewItem = true;
                             }
                             // now set a location
-                            setContentLocation(nTargetPageId, nContentId, bNewItem, Conversions.ToBoolean(Interaction.IIf(oDr["bCascade"] is DBNull, false, oDr["bCascade"])), false, Conversions.ToString(Interaction.IIf(oDr["cPosition"] is DBNull, "", oDr["cPosition"])), true);
+                            setContentLocation(nTargetPageId, nContentId, bNewItem, Convert.ToBoolean(Interaction.IIf(oDr["bCascade"] is DBNull, false, oDr["bCascade"])), false, Convert.ToString(Interaction.IIf(oDr["cPosition"] is DBNull, "", oDr["cPosition"])), true);
                             // using a different one since this isnt working for some reason
 
                             // setContentLocation2(nTargetPageId, nContentId, bNewItem, False)
@@ -5771,14 +5772,14 @@ namespace Protean
                         var oMenuXml = new XmlDocument();
                         oMenuXml.InnerXml = oDS.GetXml();
                         // now select the menu item we need
-                        oMenuItem = (XmlElement)oMenuXml.SelectSingleNode("descendant-or-self::MenuItem[@nStructKey=" + nSourcePageId + "]");
+                        oMenuItem = (XmlElement)oMenuXml.SelectSingleNode($"descendant-or-self::MenuItem[@nStructKey={nSourcePageId}]");
                         oMenuXml = null;
                         // we need to go through its children and create items
                     }
                     foreach (XmlElement oMenuChild in oMenuItem.ChildNodes)
                     {
 
-                        int nMenuId = Conversions.ToInteger(oMenuChild.GetAttribute("nStructKey")); // new source page id
+                        int nMenuId = Convert.ToInt16(oMenuChild.GetAttribute("nStructKey")); // new source page id
                         int nNewMenuID; // new target page
 
                         var oMenuItemXML = new XmlDocument(); // the xml of the item
@@ -5795,7 +5796,7 @@ namespace Protean
                         oMenuElmt = (XmlElement)oMenuItemXML.DocumentElement.FirstChild.SelectSingleNode("nStructParId");
                         oMenuElmt.InnerText = nTargetPageId.ToString();
                         // get the new id
-                        nNewMenuID = Conversions.ToInteger(setObjectInstance(objectTypes.ContentStructure, oMenuItemXML.DocumentElement));
+                        nNewMenuID = Convert.ToInt16(setObjectInstance(objectTypes.ContentStructure, oMenuItemXML.DocumentElement));
                         // call the function again
                         copyPageContent(nMenuId, nNewMenuID, bCopyDescendants, mode, oMenuChild);
                     }
@@ -5835,7 +5836,7 @@ namespace Protean
                         oContentElmt.InnerText = "";
                     }
                     // save it as a new piece of content and get the id
-                    nContentId = Conversions.ToLong(setObjectInstance(objectTypes.Content, oInstanceXML.DocumentElement));
+                    nContentId = Convert.ToInt64(setObjectInstance(objectTypes.Content, oInstanceXML.DocumentElement));
                     // get any child items related to the origional parent that are
                     // 'not orphan (have no page) or
                     // are related to other items.
@@ -5851,22 +5852,22 @@ namespace Protean
                     {
                         if (ForceCopy)
                         {
-                            if (!copied.Contains(Conversions.ToLong(oDr2["nContentChildId"])))
+                            if (!copied.Contains(Convert.ToInt64(oDr2["nContentChildId"])))
                             {
-                                string newRelatedContentId = createContentCopy(Conversions.ToLong(oDr2["nContentChildId"]), copied).ToString();
-                                insertContentRelation((int)nContentId, newRelatedContentId, Conversions.ToBoolean(oDr2["twoWay"]), Conversions.ToString(oDr2["cRelationType"]), true);
+                                string newRelatedContentId = createContentCopy(Convert.ToInt64(oDr2["nContentChildId"]), copied).ToString();
+                                insertContentRelation((int)nContentId, newRelatedContentId, Convert.ToBoolean(oDr2["twoWay"]), Convert.ToString(oDr2["cRelationType"]), true);
                             }
                         }
-                        else if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oDr2["nLocations"], 0, false), Operators.ConditionalCompareObjectEqual(oDr2["nRelations"], 1, false))))
+                        else if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oDr2["nLocations"], 0, false), Operators.ConditionalCompareObjectEqual(oDr2["nRelations"], 1, false))))
                         {
                             // we copy and releate because it is orphan and only related to our item
-                            string newRelatedContentId = createContentCopy(Conversions.ToLong(oDr2["nContentChildId"]), copied).ToString();
-                            insertContentRelation((int)nContentId, newRelatedContentId, Conversions.ToBoolean(oDr2["twoWay"]), Conversions.ToString(oDr2["cRelationType"]), true);
+                            string newRelatedContentId = createContentCopy(Convert.ToInt64(oDr2["nContentChildId"]), copied).ToString();
+                            insertContentRelation((int)nContentId, newRelatedContentId, Convert.ToBoolean(oDr2["twoWay"]), Convert.ToString(oDr2["cRelationType"]), true);
                         }
                         else
                         {
                             // we simply relate because it is either a page or has multiple relations
-                            insertContentRelation((int)nContentId, Conversions.ToString(oDr2["nContentChildId"]), Conversions.ToBoolean(oDr2["twoWay"]), Conversions.ToString(oDr2["cRelationType"]), true);
+                            insertContentRelation((int)nContentId, Convert.ToString(oDr2["nContentChildId"]), Convert.ToBoolean(oDr2["twoWay"]), Convert.ToString(oDr2["cRelationType"]), true);
                         }
                     }
                     oContentElmt = null;
@@ -5892,11 +5893,11 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "Insert Into tblContent (nContentPrimaryId, nVersion, cContentForiegnRef, cContentName,  cContentSchemaName, cContentXmlBrief, cContentXmlDetail, nAuditId)" + "values (" + nParentID + "," + "1" + ",'" + SqlFmt(cContentForiegnRef) + "'" + ",'" + SqlFmt(cContentName) + "'" + ",'" + SqlFmt(cSchemaName) + "'" + ",'" + SqlFmt(cContentXmlBrief) + "'" + ",'" + SqlFmt(cContentXmlDetail) + "'" + "," + getAuditId(nContentStatus, dPublishDate: dPublishDate, dExpireDate: dExpireDate) + ")";
+                    sSql = $"Insert Into tblContent (nContentPrimaryId, nVersion, cContentForiegnRef, cContentName,  cContentSchemaName, cContentXmlBrief, cContentXmlDetail, nAuditId) values ({nParentID},1,'{SqlFmt(cContentForiegnRef)}','{SqlFmt(cContentName)}','{SqlFmt(cSchemaName)}','{SqlFmt(cContentXmlBrief)}','{SqlFmt(cContentXmlDetail)}',{getAuditId(nContentStatus, dPublishDate: dPublishDate, dExpireDate: dExpireDate)})";
 
                     nId = GetIdInsertSql(sSql);
 
-                    return Conversions.ToLong(nId);
+                    return Convert.ToInt64(nId);
                 }
                 catch (Exception ex)
                 {
@@ -5986,7 +5987,7 @@ namespace Protean
                     }
 
                     updateDataset(ref oDs, "ContentLocation", false);
-                    nId = Conversions.ToInteger(ExeProcessSqlScalar(sSql)).ToString();
+                    nId = Convert.ToInt16(ExeProcessSqlScalar(sSql)).ToString();
 
                     if (bReorderLocations)
                     {
@@ -5998,7 +5999,7 @@ namespace Protean
                             }
                         }
                     }
-                    return Conversions.ToInteger(nId);
+                    return Convert.ToInt16(nId);
                 }
                 catch (Exception ex)
                 {
@@ -6026,7 +6027,7 @@ namespace Protean
                     nId = ExeProcessSqlScalar(sSql);
 
 
-                    if (Conversions.ToDouble(nId) == 0d)
+                    if (Convert.ToDouble(nId) == 0d)
                     {
                         int primaryVal = bPrimary ? 1 : 0;
                         int cascadeVal = bCascade ? 1 : 0;
@@ -6040,7 +6041,7 @@ namespace Protean
                     }
 
                     nId = ExeProcessSqlScalar(sSql);
-                    return Conversions.ToInteger(nId);
+                    return Convert.ToInt16(nId);
                 }
                 catch (Exception ex)
                 {
@@ -6062,7 +6063,7 @@ namespace Protean
                     {
                         object oldId = positionReMap[0, row];
                         object newId = positionReMap[1, row];
-                        sSql = Conversions.ToString(Operators.ConcatenateObject("select cPosition from tblContentLocation where nStructId = " + pageId + " and  nContentId=", newId));
+                        sSql = $"select cPosition from tblContentLocation where nStructId = {pageId} and  nContentId={newId}";
                         string cPosition = ExeProcessSqlScalar(sSql);
                         if (cPosition != null)
                         {
@@ -6073,7 +6074,7 @@ namespace Protean
                                     cPosition = cPosition.Replace("-" + positionReMap[0, row2].ToString(), "-" + positionReMap[1, row2].ToString());
                                 }
                             }
-                            sSql = Conversions.ToString(Operators.ConcatenateObject("update tblContentLocation set cPosition = '" + cPosition + "' where nStructId = " + pageId + " and  nContentId=", newId));
+                            sSql = $"update tblContentLocation set cPosition = '{cPosition}' where nStructId = {pageId} and  nContentId={newId}";
                             ExeProcessSql(sSql);
                         }
                     }
@@ -6095,7 +6096,7 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = "Insert Into tblCartShippingRelations(nShpOptId, nShpLocId, nAuditId)" + "values (" + nOptId + "," + nLocId + "," + getAuditId() + ")";
+                    sSql = $"Insert Into tblCartShippingRelations(nShpOptId, nShpLocId, nAuditId) values ({nOptId},{nLocId},{getAuditId()})";
 
                     nId = ExeProcessSql(sSql).ToString();
                 }
@@ -6124,10 +6125,10 @@ namespace Protean
                     {
 
                         while (oDr.Read())
-                            nId = Conversions.ToString(oDr[0]);
+                            nId = Convert.ToString(oDr[0]);
 
 
-                        return Conversions.ToLong(nId);
+                        return Convert.ToInt64(nId);
                     }
                 }
                 catch (Exception ex)
@@ -6151,7 +6152,7 @@ namespace Protean
                 {
                     sSql = $"select cStructForiegnRef from tblContentStructure where nStructKey = {nPageId}";
 
-                    nId = Conversions.ToString(GetDataValue(sSql));
+                    nId = Convert.ToString(GetDataValue(sSql));
 
                     return nId;
                 }
@@ -6181,9 +6182,9 @@ namespace Protean
                     {
 
                         while (oDr.Read())
-                            nId = Conversions.ToString(oDr[0]);
+                            nId = Convert.ToString(oDr[0]);
 
-                        return Conversions.ToLong(nId);
+                        return Convert.ToInt64(nId);
                     }
                 }
                 catch (Exception ex)
@@ -6209,8 +6210,8 @@ namespace Protean
 
                     // Get the parameters SortDirection
                     string cSchema = oContent.GetAttribute("contentType");
-                    long nPageId = Conversions.ToLong("0" + oContent.GetAttribute("grabberRoot"));
-                    long nTop = Conversions.ToLong("0" + oContent.GetAttribute("grabberItems"));
+                    long nPageId = Convert.ToInt64("0" + oContent.GetAttribute("grabberRoot"));
+                    long nTop = Convert.ToInt64("0" + oContent.GetAttribute("grabberItems"));
                     string cSort = oContent.GetAttribute("sortBy");
                     string cSortDirection = oContent.GetAttribute("order");
                     string cIncludeChildPages = oContent.GetAttribute("grabberItterate");
@@ -6228,9 +6229,9 @@ namespace Protean
                             {
                                 // Get the page from the structure and enumerate its children
                                 string cPageIds = "" + nPageId.ToString();
-                                foreach (XmlElement oPage in myWeb.moPageXml.SelectNodes("/Page/Menu//MenuItem[@id=" + nPageId.ToString() + "]//MenuItem"))
+                                foreach (XmlElement oPage in myWeb.moPageXml.SelectNodes($"/Page/Menu//MenuItem[@id={nPageId}]//MenuItem"))
                                     cPageIds += "," + oPage.GetAttribute("id");
-                                cWhereSql += " AND CL.nStructId IN (" + cPageIds + ") ";
+                                cWhereSql += $" AND CL.nStructId IN ({cPageIds}) ";
                             }
                             else
                             {
@@ -6293,7 +6294,7 @@ namespace Protean
                             foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
                             {
                                 XmlElement xmloContentElmt = oContentElmt;
-                                addRelatedContent(ref xmloContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                                addRelatedContent(ref xmloContentElmt, Convert.ToInt16(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
                             }
 
                         }
@@ -6322,7 +6323,7 @@ namespace Protean
 
                     // Get the parameters SortDirection
                     string cSchema = oContent.GetAttribute("contentType");
-                    long nGroupId = Conversions.ToLong("0" + oContent.GetAttribute("groupid"));
+                    long nGroupId = Convert.ToInt64("0" + oContent.GetAttribute("groupid"));
                     string cSort = oContent.GetAttribute("sortBy");
                     string cSortDirection = oContent.GetAttribute("order");
                     string cAdditionalJoin = string.Empty;
@@ -6330,11 +6331,11 @@ namespace Protean
 
                     if (!string.IsNullOrEmpty(cSchema))
                     {
-                        string cWhereSql = " (tblCartCatProductRelations.nCatId =" + nGroupId + ")";
+                        string cWhereSql = $" (tblCartCatProductRelations.nCatId ={nGroupId})";
                         // Dim cWhereSql As String = " nContentKey IN (Select nContentId from tblCartCatProductRelations where nCatId=" & nGroupId & ")"
                         if (nGroupId != 0L)
                         {
-                            cAdditionalJoin = "INNER Join tblCartCatProductRelations  On c.nContentKey = tblCartCatProductRelations.nContentId and tblCartCatProductRelations.nCatId=" + nGroupId.ToString();
+                            cAdditionalJoin = $"INNER Join tblCartCatProductRelations  On c.nContentKey = tblCartCatProductRelations.nContentId and tblCartCatProductRelations.nCatId={nGroupId}";
                         }
 
                         cOrderBy = "tblCartCatProductRelations.nDisplayOrder";
@@ -6347,7 +6348,7 @@ namespace Protean
                         foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
                         {
                             XmlElement xmloContentElmt = oContentElmt;
-                            addRelatedContent(ref xmloContentElmt, Conversions.ToInteger(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                            addRelatedContent(ref xmloContentElmt, Convert.ToInt16(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
                         }
                     }
                 }
@@ -6372,22 +6373,22 @@ namespace Protean
 
                     // Get the parameters SortDirection
                     XmlNode argoParent = oGrabber;
-                    string cSchema = Conversions.ToString(getNodeValueByType(ref argoParent, "Type"));
+                    string cSchema = Convert.ToString(getNodeValueByType(ref argoParent, "Type"));
                     oGrabber = (XmlElement)argoParent;
                     XmlNode argoParent1 = oGrabber;
-                    long nPageId = Conversions.ToLong(getNodeValueByType(ref argoParent1, "Page", XmlDataType.TypeNumber));
+                    long nPageId = Convert.ToInt64(getNodeValueByType(ref argoParent1, "Page", XmlDataType.TypeNumber));
                     oGrabber = (XmlElement)argoParent1;
                     XmlNode argoParent2 = oGrabber;
-                    long nTop = Conversions.ToLong(getNodeValueByType(ref argoParent2, "NumberOfItems", XmlDataType.TypeNumber));
+                    long nTop = Convert.ToInt64(getNodeValueByType(ref argoParent2, "NumberOfItems", XmlDataType.TypeNumber));
                     oGrabber = (XmlElement)argoParent2;
                     XmlNode argoParent3 = oGrabber;
-                    string cSort = Conversions.ToString(getNodeValueByType(ref argoParent3, "Sort"));
+                    string cSort = Convert.ToString(getNodeValueByType(ref argoParent3, "Sort"));
                     oGrabber = (XmlElement)argoParent3;
                     XmlNode argoParent4 = oGrabber;
-                    string cSortDirection = Conversions.ToString(getNodeValueByType(ref argoParent4, "SortDirection"));
+                    string cSortDirection = Convert.ToString(getNodeValueByType(ref argoParent4, "SortDirection"));
                     oGrabber = (XmlElement)argoParent4;
                     XmlNode argoParent5 = oGrabber;
-                    string cIncludeChildPages = Conversions.ToString(getNodeValueByType(ref argoParent5, "IncludeChildPages"));
+                    string cIncludeChildPages = Convert.ToString(getNodeValueByType(ref argoParent5, "IncludeChildPages"));
                     oGrabber = (XmlElement)argoParent5;
                     string joinSQL = null;
 
@@ -6404,9 +6405,9 @@ namespace Protean
                             {
                                 // Get the page from the structure and enumerate its children
                                 string cPageIds = "(" + nPageId.ToString() + ")";
-                                foreach (XmlElement oPage in myWeb.moPageXml.SelectNodes("/Page/Menu//MenuItem[@id=" + nPageId.ToString() + "]//MenuItem"))
+                                foreach (XmlElement oPage in myWeb.moPageXml.SelectNodes($"/Page/Menu//MenuItem[@id={nPageId}]//MenuItem"))
                                     cPageIds += ", (" + oPage.GetAttribute("id") + ")";
-                                joinSQL = " Join(values " + cPageIds + ") V(pageRef) on V.pageRef = CL.nStructId ";
+                                joinSQL = $" Join(values {cPageIds}) V(pageRef) on V.pageRef = CL.nStructId ";
                             }
                             else
                             {
@@ -6488,9 +6489,9 @@ namespace Protean
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
                         while (oDr.Read())
-                            nId = Conversions.ToString(oDr[0]);
+                            nId = Convert.ToString(oDr[0]);
 
-                        return Conversions.ToLong(nId);
+                        return Convert.ToInt64(nId);
                     }
                 }
                 catch (Exception ex)
@@ -6519,7 +6520,7 @@ namespace Protean
                     {
 
                         while (oDr.Read())
-                            cContent = Conversions.ToString(oDr[0]);
+                            cContent = Convert.ToString(oDr[0]);
 
                         return cContent;
                     }
@@ -6544,7 +6545,7 @@ namespace Protean
                     if (string.IsNullOrEmpty(URLXpath))
                         URLXpath = "/Content/Path";
 
-                    oXml.InnerXml = Conversions.ToString(oRow["cContentXmlBrief"]);
+                    oXml.InnerXml = Convert.ToString(oRow["cContentXmlBrief"]);
                     oPathElmt = (XmlElement)oXml.SelectSingleNode(URLXpath);
                     if (oPathElmt != null)
                     {
@@ -6553,7 +6554,7 @@ namespace Protean
                     if (oPathElmt is null | string.IsNullOrEmpty(sPath))
                     {
                         cProcessInfo = "No 'Path' in Brief";
-                        oXml.InnerXml = Conversions.ToString(oRow["cContentXmlDetail"]);
+                        oXml.InnerXml = Convert.ToString(oRow["cContentXmlDetail"]);
                         oPathElmt = (XmlElement)oXml.SelectSingleNode(URLXpath);
                         if (oPathElmt is null)
                         {
@@ -6603,7 +6604,7 @@ namespace Protean
                     {
 
                         while (oDr.Read())
-                            sContentSchemaName = Conversions.ToString(oDr[0]);
+                            sContentSchemaName = Convert.ToString(oDr[0]);
 
                         return sContentSchemaName;
                     }
@@ -6660,7 +6661,7 @@ namespace Protean
                         withBlock.Columns["updater"].ColumnMapping = MappingType.Attribute;
                     }
 
-                    sSqlVersions = "" + "select c.nContentVersionKey as id,  c.nContentPrimaryId as primaryId,  c.nVersion as version,  cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, a.nStatus as status, a.dInsertDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], dins.cDirName as owner, dins.cDirXml as ownerDetail, dupd.cDirName as updater, dupd.cDirXml as updaterDetail " + "from tblContentVersions c inner join tblAudit a on c.nAuditId = a.nAuditKey inner join tblDirectory dins on dins.nDirKey = a.nInsertDirId inner join tblDirectory dupd on dupd.nDirKey = a.nUpdateDirId where nContentPrimaryId = " + nContentId + " ORDER BY c.nVersion DESC";
+                    sSqlVersions = $"select c.nContentVersionKey as id,  c.nContentPrimaryId as primaryId,  c.nVersion as version,  cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, a.nStatus as status, a.dInsertDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], dins.cDirName as owner, dins.cDirXml as ownerDetail, dupd.cDirName as updater, dupd.cDirXml as updaterDetail from tblContentVersions c inner join tblAudit a on c.nAuditId = a.nAuditKey inner join tblDirectory dins on dins.nDirKey = a.nInsertDirId inner join tblDirectory dupd on dupd.nDirKey = a.nUpdateDirId where nContentPrimaryId = {nContentId} ORDER BY c.nVersion DESC";
 
                     oDs2 = GetDataSet(sSqlVersions, "Version", "ContentVersions");
                     {
@@ -6716,7 +6717,7 @@ namespace Protean
                     {
                         ParPageId = PageId;
                     }
-                    else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ParPageId, 0, false)))
+                    else if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(ParPageId, 0, false)))
                     {
                         ParPageId = PageId;
                     }
@@ -6846,7 +6847,7 @@ namespace Protean
                     if (nId < 1L)
                     {
                         sSql = "Insert Into tblDirectory (cDirSchema, cDirForiegnRef, cDirName, cDirPassword, cDirXml, cDirEmail, nAuditId)" + " values (" + "'" + SqlFmt(cDirSchema) + "'" + ",'" + SqlFmt(cDirForiegnRef) + "'" + ",'" + SqlFmt(cDirName) + "'" + ",'" + SqlFmt(cDirPassword) + "'" + ",'" + SqlFmt(cDirXml) + "'" + ",'" + SqlFmt(cEmail) + "'" + "," + getAuditId(nStatus) + ")";
-                        nId = Conversions.ToLong(GetIdInsertSql(sSql));
+                        nId = Convert.ToInt64(GetIdInsertSql(sSql));
                     }
                     else if (bOverwrite)
                     {
@@ -6913,7 +6914,7 @@ namespace Protean
                                                 // this should update the update date and user
                                                 oXml.LoadXml("<instance><tblAudit/></instance>");
                                             }
-                                            setObjectInstance(objectTypes.Audit, oXml.DocumentElement, Conversions.ToLong(oDr["nAuditId"]));
+                                            setObjectInstance(objectTypes.Audit, oXml.DocumentElement, Convert.ToInt64(oDr["nAuditId"]));
                                             oXml = null;
                                         }
                                     }
@@ -6922,7 +6923,7 @@ namespace Protean
                                 {
                                     while (oDr.Read())
                                     {
-                                        DeleteObject(objectTypes.DirectoryRelation, Conversions.ToLong(oDr["nRelKey"]));
+                                        DeleteObject(objectTypes.DirectoryRelation, Convert.ToInt64(oDr["nRelKey"]));
                                         bHasChanged = true;
                                     }
                                 }
@@ -6935,11 +6936,11 @@ namespace Protean
                                 // Dim nAuditId As String = ""
                                 if (Information.IsDate(dExpireDate))
                                 {
-                                    sSql = "insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( " + nParId + ", " + nChildId + ", " + getAuditId(dExpireDate: dExpireDate) + ")";
+                                    sSql = $"insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( {nParId}, {nChildId}, {getAuditId(dExpireDate: dExpireDate)})";
                                 }
                                 else
                                 {
-                                    sSql = "insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( " + nParId + ", " + nChildId + ", " + getAuditId() + ")";
+                                    sSql = $"insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( {nParId}, {nChildId}, {getAuditId()})";
                                 }
                                 ExeProcessSql(sSql);
                                 bHasChanged = true;
@@ -6998,7 +6999,7 @@ namespace Protean
                 {
 
                     // Does relationship exist?
-                    sSql = "select * from tblDirectoryPermission where nDirId = " + nDirId + " and nStructId  = " + nPageId;
+                    sSql = $"select * from tblDirectoryPermission where nDirId = {nDirId} and nStructId  = {nPageId}";
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
                         if (oDr.HasRows)
@@ -7008,9 +7009,9 @@ namespace Protean
                             {
                                 // update audit
                                 // the permission level has changed... update it
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(nLevel, oDr["nAccessLevel"], false)))
+                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(nLevel, oDr["nAccessLevel"], false)))
                                 {
-                                    sSql = Conversions.ToString(Operators.ConcatenateObject("update tblDirectoryPermission set nAccessLevel = " + nLevel + " where nPermKey=", oDr["nPermKey"]));
+                                    sSql = $"update tblDirectoryPermission set nAccessLevel = {nLevel} where nPermKey={oDr["nPermKey"]}";
                                     ExeProcessSql(sSql);
                                 }
                             }
@@ -7020,7 +7021,7 @@ namespace Protean
                         {
                             // if not create it
 
-                            sSql = "insert into tblDirectoryPermission(nDirId, nStructId,nAccessLevel, nAuditId) values( " + nDirId + ", " + nPageId + "," + nLevel + " ," + getAuditId() + ")";
+                            sSql = $"insert into tblDirectoryPermission(nDirId, nStructId,nAccessLevel, nAuditId) values( {nDirId}, {nPageId},{nLevel} ,{getAuditId()})";
                             ExeProcessSql(sSql);
                         }
 
@@ -7053,7 +7054,7 @@ namespace Protean
                 try
                 {
 
-                    if (Conversions.ToBoolean(Operators.OrObject(goSession["oDirList"] is null, Operators.ConditionalCompareObjectNotEqual(goSession["cDirListType"], cSchemaName, false))))
+                    if (Convert.ToBoolean(Operators.OrObject(goSession["oDirList"] is null, Operators.ConditionalCompareObjectNotEqual(goSession["cDirListType"], cSchemaName, false))))
                     {
                         switch (cSchemaName ?? "")
                         {
@@ -7195,8 +7196,8 @@ namespace Protean
                             while (oDr.Read())
                             {
                                 oElmt.SetAttribute("parId", nParId.ToString());
-                                oElmt.SetAttribute("parType", Conversions.ToString(oDr["cDirSchema"]));
-                                oElmt.SetAttribute("parName", Conversions.ToString(oDr["cDirName"]));
+                                oElmt.SetAttribute("parType", Convert.ToString(oDr["cDirSchema"]));
+                                oElmt.SetAttribute("parName", Convert.ToString(oDr["cDirName"]));
                             }
                         }
                     }
@@ -7276,16 +7277,16 @@ namespace Protean
                         {
                             while (oDr.Read())
                             {
-                                root = moPageXml.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
+                                root = moPageXml.CreateElement(Convert.ToString(oDr["cDirSchema"]));
                                 root.SetAttribute("id", nUserId.ToString());
-                                root.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
-                                root.SetAttribute("fRef", Conversions.ToString(oDr["cDirForiegnRef"]));
+                                root.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
+                                root.SetAttribute("fRef", Convert.ToString(oDr["cDirForiegnRef"]));
 
-                                root.SetAttribute("status", Conversions.ToString(oDr["nStatus"]));
+                                root.SetAttribute("status", Convert.ToString(oDr["nStatus"]));
                                 // root.SetAttribute("permission", getPermissionLevel(nPermLevel))
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cDirXml"], "", false)))
+                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cDirXml"], "", false)))
                                 {
-                                    root.InnerXml = Conversions.ToString(oDr["cDirXml"]);
+                                    root.InnerXml = Convert.ToString(oDr["cDirXml"]);
                                     foreach (XmlAttribute attr in root.FirstChild.Attributes)
                                         root.SetAttribute(attr.Name, attr.Value);
                                     root.InnerXml = root.SelectSingleNode("*").InnerXml;
@@ -7321,15 +7322,15 @@ namespace Protean
                         {
                             while (oDr.Read())
                             {
-                                oElmt = moPageXml.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
-                                oElmt.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
-                                oElmt.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
-                                oElmt.SetAttribute("fRef", Conversions.ToString(oDr["cDirForiegnRef"]));
+                                oElmt = moPageXml.CreateElement(Convert.ToString(oDr["cDirSchema"]));
+                                oElmt.SetAttribute("id", Convert.ToString(oDr["nDirKey"]));
+                                oElmt.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
+                                oElmt.SetAttribute("fRef", Convert.ToString(oDr["cDirForiegnRef"]));
                                 if (!(oDr["Member"] is DBNull))
                                 {
                                     oElmt.SetAttribute("isMember", "yes");
                                 }
-                                oElmt.InnerXml = Conversions.ToString(oDr["cDirXml"]);
+                                oElmt.InnerXml = Convert.ToString(oDr["cDirXml"]);
                                 foreach (XmlAttribute attr in oElmt.FirstChild.Attributes)
                                     oElmt.SetAttribute(attr.Name, attr.Value);
                                 oElmt.InnerXml = oElmt.FirstChild.InnerXml;
@@ -7363,7 +7364,7 @@ namespace Protean
                         {
                             root.AppendChild(GetUserContactsXml((int)nUserId));
                             foreach (XmlElement oCompany in root.SelectNodes("Company[@id!='']"))
-                                oCompany.AppendChild(GetUserContactsXml(Conversions.ToInteger(oCompany.GetAttribute("id"))));
+                                oCompany.AppendChild(GetUserContactsXml(Convert.ToInt16(oCompany.GetAttribute("id"))));
                         }
 
                         if (goConfig["Subscriptions"] == "on" & myWeb != null)
@@ -7439,13 +7440,13 @@ namespace Protean
                             var oIElmt = moPageXml.CreateElement(oDC.ColumnName);
                             if (!(oDRow[oDC.ColumnName] is DBNull))
                             {
-                                string cStrContent = Conversions.ToString(oDRow[oDC.ColumnName]);
+                                string cStrContent = Convert.ToString(oDRow[oDC.ColumnName]);
                                 cStrContent = encodeAllHTML(cStrContent);
                                 if (cStrContent != null & !string.IsNullOrEmpty(cStrContent))
                                 {
                                     if (oDC.ColumnName == "cContactXml")
                                     {
-                                        oIElmt.InnerXml = Conversions.ToString(oDRow[oDC.ColumnName]);
+                                        oIElmt.InnerXml = Convert.ToString(oDRow[oDC.ColumnName]);
                                     }
                                     else
                                     {
@@ -7476,7 +7477,7 @@ namespace Protean
                 {
                     sSql = "select d.nDirKey as id " + "FROM tblDirectory d " + "INNER JOIN tblDirectoryRelation dept2company " + "ON d.nDirKey = dept2company.nDirParentId " + "WHERE dept2company.nDirChildId=" + nChildId;
 
-                    return Conversions.ToLong(GetDataValue(sSql));
+                    return Convert.ToInt64(GetDataValue(sSql));
                 }
 
                 catch (Exception ex)
@@ -7521,10 +7522,10 @@ namespace Protean
                                 while (oDr.Read())
                                 {
                                     oElmt.SetAttribute("childId", nChildId.ToString());
-                                    oElmt.SetAttribute("childType", Conversions.ToString(oDr["cDirSchema"]));
-                                    cChildSchema = Conversions.ToString(oDr["cDirSchema"]);
-                                    oElmt.SetAttribute("childName", Conversions.ToString(oDr["cDirName"]));
-                                    cDirXml = Conversions.ToString(oDr["cDirXml"]);
+                                    oElmt.SetAttribute("childType", Convert.ToString(oDr["cDirSchema"]));
+                                    cChildSchema = Convert.ToString(oDr["cDirSchema"]);
+                                    oElmt.SetAttribute("childName", Convert.ToString(oDr["cDirName"]));
+                                    cDirXml = Convert.ToString(oDr["cDirXml"]);
 
                                 }
                             }
@@ -7576,7 +7577,7 @@ namespace Protean
                         // get only the departments which are in the users companies
                         // this is not required if the parent is not a user
 
-                        sSql = "select d.nDirKey as id, d.cDirName as name, d.cDirXml as details, a.nStatus as status, dr.nDirChildId as related " + "FROM (((tblDirectory d " + "inner join tblAudit a on nAuditId = a.nAuditKey " + "INNER JOIN tblDirectoryRelation dept2company " + "ON d.nDirKey = dept2company.nDirChildId) " + "INNER JOIN tblDirectory company " + "ON company.nDirKey = dept2company.nDirParentId) " + "INNER JOIN tblDirectoryRelation user2company " + "ON company.nDirKey = user2company.nDirParentId) " + "INNER JOIN tblDirectory users " + "ON users.nDirKey = user2company.nDirChildId " + " left outer join tblDirectoryRelation dr on d.nDirKey = dr.nDirParentId and dr.nDirChildId = " + nChildId + "WHERE d.cDirSchema = 'Department' AND company.cDirSchema = 'Company' AND users.cDirSchema = 'User' " + "AND users.nDirKey=" + nChildId + " order by d.cDirName";
+                        sSql = $"select d.nDirKey as id, d.cDirName as name, d.cDirXml as details, a.nStatus as status, dr.nDirChildId as related FROM (((tblDirectory d inner join tblAudit a on nAuditId = a.nAuditKey INNER JOIN tblDirectoryRelation dept2company ON d.nDirKey = dept2company.nDirChildId) INNER JOIN tblDirectory company ON company.nDirKey = dept2company.nDirParentId) INNER JOIN tblDirectoryRelation user2company ON company.nDirKey = user2company.nDirParentId) INNER JOIN tblDirectory users ON users.nDirKey = user2company.nDirChildId  left outer join tblDirectoryRelation dr on d.nDirKey = dr.nDirParentId and dr.nDirChildId = {nChildId}WHERE d.cDirSchema = 'Department' AND company.cDirSchema = 'Company' AND users.cDirSchema = 'User' AND users.nDirKey={nChildId} order by d.cDirName";
                     }
                     else
                     {
@@ -7588,7 +7589,7 @@ namespace Protean
                         }
                         if (goRequest["relateAs"] == "children")
                         {
-                            sSql = "select d.nDirKey as id, " + sSqlCompanyCol + " d.cDirName as name, d.cDirXml as details, a.nStatus as status, dr.nDirChildId as related" + " from tblDirectory d" + " inner join tblAudit a on nAuditId = a.nAuditKey " + " left outer join tblDirectoryRelation dr on nDirKey = dr.nDirChildId and dr.nDirParentId = " + nChildId + " where cDirSchema = '" + cSchemaName + "' " + " and a.nStatus <> 0 order by " + sSqlCompanyOrder + " d.cDirName";
+                            sSql = $"select d.nDirKey as id, {sSqlCompanyCol} d.cDirName as name, d.cDirXml as details, a.nStatus as status, dr.nDirChildId as related from tblDirectory d inner join tblAudit a on nAuditId = a.nAuditKey  left outer join tblDirectoryRelation dr on nDirKey = dr.nDirChildId and dr.nDirParentId = {nChildId} where cDirSchema = '{cSchemaName}'  and a.nStatus <> 0 order by {sSqlCompanyOrder} d.cDirName";
 
 
 
@@ -7597,7 +7598,7 @@ namespace Protean
 
                         else
                         {
-                            sSql = "select d.nDirKey as id, d.cDirName as name, d.cDirXml as details, a.nStatus as status, dr.nDirChildId as related from tblDirectory d" + " inner join tblAudit a on nAuditId = a.nAuditKey " + " left outer join tblDirectoryRelation dr on nDirKey = dr.nDirParentId and dr.nDirChildId = " + nChildId + " where cDirSchema = '" + cSchemaName + "' " + " and a.nStatus <> 0 order by d.cDirName";
+                            sSql = $"select d.nDirKey as id, d.cDirName as name, d.cDirXml as details, a.nStatus as status, dr.nDirChildId as related from tblDirectory d inner join tblAudit a on nAuditId = a.nAuditKey  left outer join tblDirectoryRelation dr on nDirKey = dr.nDirParentId and dr.nDirChildId = {nChildId} where cDirSchema = '{cSchemaName}'  and a.nStatus <> 0 order by d.cDirName";
 
                         }
 
@@ -7677,7 +7678,7 @@ namespace Protean
                 {
                     if (nChildId == 0L)
                     {
-                        nChildId = Conversions.ToLong(myWeb.moRequest["childId"]);
+                        nChildId = Convert.ToInt64(myWeb.moRequest["childId"]);
                     }
 
 
@@ -7700,7 +7701,7 @@ namespace Protean
                         {
                             if (Information.IsNumeric(aParId[(int)i]))
                             {
-                                nParId = Conversions.ToLong(aParId[(int)i]);
+                                nParId = Convert.ToInt64(aParId[(int)i]);
                                 if (myWeb.moRequest["relateAs"] == "children" | relateAs == RelationType.Child)
                                 {
                                     // OK we are reversing the way this works and relating as children rather than parents.
@@ -7777,9 +7778,9 @@ namespace Protean
                         while (oDr.Read())
                         {
                             // first we remove
-                            DeleteObject(objectTypes.DirectoryRelation, Conversions.ToLong(oDr["nRelKey"]));
+                            DeleteObject(objectTypes.DirectoryRelation, Convert.ToInt64(oDr["nRelKey"]));
                             // then we insert new
-                            saveDirectoryRelations(Conversions.ToLong(oDr["nDirChildId"]), nTargetDirId.ToString(), false, bIfExistsDontUpdate: true);
+                            saveDirectoryRelations(Convert.ToInt64(oDr["nDirChildId"]), nTargetDirId.ToString(), false, bIfExistsDontUpdate: true);
                         }
                     }
 
@@ -7812,7 +7813,7 @@ namespace Protean
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
                         while (oDr.Read())
-                            DeleteObject(objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
+                            DeleteObject(objectTypes.DirectoryRelation, Convert.ToInt64(oDr[0]));
                     }
                 }
                 catch (Exception ex)
@@ -7835,28 +7836,28 @@ namespace Protean
                 try
                 {
 
-                    nParId = Conversions.ToLong(goRequest["parId"]);
+                    nParId = Convert.ToInt64(goRequest["parId"]);
 
                     foreach (var item in goRequest.Form)
                     {
-                        if (Strings.InStr(Conversions.ToString(item), "page_") > 0)
+                        if (Strings.InStr(Convert.ToString(item), "page_") > 0)
                         {
-                            nPageId = Conversions.ToLong(Strings.Replace(Conversions.ToString(item), "page_", "")).ToString();
-                            switch (goRequest[Conversions.ToString(item)] ?? "")
+                            nPageId = Convert.ToInt64(Strings.Replace(Convert.ToString(item), "page_", "")).ToString();
+                            switch (goRequest[Convert.ToString(item)] ?? "")
                             {
                                 case "permit":
                                     {
-                                        savePermissions(Conversions.ToLong(nPageId), goRequest["parId"], PermissionLevel.View);
+                                        savePermissions(Convert.ToInt64(nPageId), goRequest["parId"], PermissionLevel.View);
                                         break;
                                     }
                                 case "deny":
                                     {
-                                        savePermissions(Conversions.ToLong(nPageId), goRequest["parId"], PermissionLevel.Denied);
+                                        savePermissions(Convert.ToInt64(nPageId), goRequest["parId"], PermissionLevel.Denied);
                                         break;
                                     }
                                 case "remove":
                                     {
-                                        savePermissions(Conversions.ToLong(nPageId), goRequest["parId"], PermissionLevel.Open);
+                                        savePermissions(Convert.ToInt64(nPageId), goRequest["parId"], PermissionLevel.Open);
                                         break;
                                     }
                             }
@@ -7895,18 +7896,18 @@ namespace Protean
                         {
                             if (!string.IsNullOrEmpty(aDirId[(int)i]))
                             {
-                                nDirId = Conversions.ToLong(aDirId[(int)i]);
+                                nDirId = Convert.ToInt64(aDirId[(int)i]);
                                 if (nLevel != PermissionLevel.Open)
                                 {
                                     maintainPermission(nPageId, nDirId, ((int)nLevel).ToString());
                                 }
                                 else
                                 {
-                                    sSql = "select * from tblDirectoryPermission where nStructId = " + nPageId + " and nDirId=" + nDirId;
+                                    sSql = $"select * from tblDirectoryPermission where nStructId = {nPageId} and nDirId={nDirId}";
                                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                     {
                                         while (oDr.Read())
-                                            DeleteObject(objectTypes.Permission, Conversions.ToLong(oDr["nPermKey"]));
+                                            DeleteObject(objectTypes.Permission, Convert.ToInt64(oDr["nPermKey"]));
                                     }
                                 }
 
@@ -7924,7 +7925,7 @@ namespace Protean
                                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                     {
                                         while (oDr.Read())
-                                            DeleteObject(objectTypes.Permission, Conversions.ToLong(oDr["nPermKey"]));
+                                            DeleteObject(objectTypes.Permission, Convert.ToInt64(oDr["nPermKey"]));
                                     }
 
                                     break;
@@ -8045,7 +8046,7 @@ namespace Protean
                         // Automatically clear up historical caches
                         if (bAuth)
                         {
-                            ExeProcessSqlScalar(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("DELETE FROM dbo.tblXmlCache WHERE cCacheSessionId = '", Interaction.IIf(bAuth, SqlFmt(goSession.SessionID), "")), "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12")));
+                            ExeProcessSqlScalar(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("DELETE FROM dbo.tblXmlCache WHERE cCacheSessionId = '", Interaction.IIf(bAuth, SqlFmt(goSession.SessionID), "")), "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12")));
                         }
                         else
                         {
@@ -8054,7 +8055,7 @@ namespace Protean
 
                         // OPTION 2 - Insert using parameter Also slow
                         string nUpdateCount;
-                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("INSERT INTO dbo.tblXmlCache (cCacheSessionID,nCacheDirId,cCacheStructure,cCacheType) " + "VALUES (" + "'", Interaction.IIf(bAuth, SqlFmt(goSession.SessionID), "")), "',"), SqlFmt(nUserId.ToString())), ","), " @XmlValue,"), "'"), cCacheType), "'"), ")"));
+                        sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("INSERT INTO dbo.tblXmlCache (cCacheSessionID,nCacheDirId,cCacheStructure,cCacheType) " + "VALUES (" + "'", Interaction.IIf(bAuth, SqlFmt(goSession.SessionID), "")), "',"), SqlFmt(nUserId.ToString())), ","), " @XmlValue,"), "'"), cCacheType), "'"), ")"));
 
 
 
@@ -8198,7 +8199,7 @@ namespace Protean
                             //need to check authentication with google or microsoft user not found in proteanCMS
                             if(oAuthProviders != null && myWeb.moRequest["SAMLResponse"] != null)
                             {
-                                return sReturn = "<span class=\"msg-1037\">The user <span class=\"UserName\">" + cUsername + "</span> is not authorised to access this site. Please see the site administrator.</span>";
+                                return sReturn = $"<span class=\"msg-1037\">The user <span class=\"UserName\">{cUsername}</span> is not authorised to access this site. Please see the site administrator.</span>";
                             }
                         }
                         // Return sReturn
@@ -8210,8 +8211,8 @@ namespace Protean
                         else
                         {
                             oUserDetails = dsUsers.Tables[0].Rows[0];
-                            cPasswordDatabase = Conversions.ToString(oUserDetails["cDirPassword"]);
-                            nUserId = Conversions.ToLong(oUserDetails["nDirKey"]);
+                            cPasswordDatabase = Convert.ToString(oUserDetails["cDirPassword"]);
+                            nUserId = Convert.ToInt64(oUserDetails["nDirKey"]);
 
                             // here we are checking SAML login is from google or microsoft, if not return error message.
                             if (oAuthProviders != null)
@@ -8301,19 +8302,19 @@ namespace Protean
 
                                     case 1:
                                         {
-                                            sReturn = Conversions.ToString(oUserDetails["nDirKey"]);
+                                            sReturn = Convert.ToString(oUserDetails["nDirKey"]);
 
                                             // Check user dates
                                             if (Information.IsDate(oUserDetails["dExpireDate"]))
                                             {
-                                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectLess(oUserDetails["dExpireDate"], DateTime.Now, false)))
+                                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectLess(oUserDetails["dExpireDate"], DateTime.Now, false)))
                                                 {
                                                     sReturn = "<span class=\"msg-1016\">User account has expired</span>";
                                                 }
                                             }
                                             if (Information.IsDate(oUserDetails["dPublishDate"]))
                                             {
-                                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreaterEqual(oUserDetails["dPublishDate"], DateTime.Now, false)))
+                                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectGreaterEqual(oUserDetails["dPublishDate"], DateTime.Now, false)))
                                                 {
                                                     sReturn = "<span class=\"msg-1012\">User account is not active</span>";
                                                 }
@@ -8357,13 +8358,13 @@ namespace Protean
                                 string retryMsg = "";
                                 if (moPolicy != null)
                                 {
-                                    int nRetrys = Conversions.ToInteger("0" + moPolicy.FirstChild.SelectSingleNode("retrys").InnerText);
+                                    int nRetrys = Convert.ToInt16("0" + moPolicy.FirstChild.SelectSingleNode("retrys").InnerText);
                                     if (nRetrys > 0)
                                     {
                                         myWeb.moDbHelper.logActivity(ActivityType.LogonInvalidPassword, nUserId, 0L, 0L, cPasswordForm, cForiegnRef: "");
 
                                         string sSql2 = "select count(nActivityKey) from tblActivityLog where nActivityType=" + Convert.ToString((int)dbHelper.ActivityType.LogonInvalidPassword) + " and nUserDirId = " + nUserId;
-                                        int earlierTries = Conversions.ToInteger(ExeProcessSqlScalar(sSql2));
+                                        int earlierTries = Convert.ToInt16(ExeProcessSqlScalar(sSql2));
                                         if (earlierTries >= nRetrys)
                                         {
 
@@ -8377,7 +8378,7 @@ namespace Protean
                                         else
                                         {
                                             int trysLeft = nRetrys - earlierTries;
-                                            retryMsg = "<br/><span class=\"msg-1031\">You have <span class=\"retryCount\">" + trysLeft + "</span> attempts before you account is blocked</span>";
+                                            retryMsg = $"<br/><span class=\"msg-1031\">You have <span class=\"retryCount\">{trysLeft}</span> attempts before you account is blocked</span>";
                                             sReturn = "<span class=\"msg-1014\">The Password is not valid</span>" + retryMsg;
                                         }
                                     }
@@ -8419,7 +8420,7 @@ namespace Protean
                             // Find the latest activity for this user within a timeout period - if it isn't logoff then flag up an error
                             string lastSeenActivityQuery = "" + "SELECT TOP 1 nACtivityType FROM tblActivityLog l " + "WHERE nUserDirId = " + sReturn.ToString() + " " + "AND DATEDIFF(s,l.dDateTime,GETDATE()) < " + Cms.gnSingleLoginSessionTimeout.ToString() + " " + "ORDER BY dDateTime DESC ";
 
-                            int lastSeenActivity = Conversions.ToInteger(GetDataValue(lastSeenActivityQuery, CommandType.Text, null, ActivityType.Logoff));
+                            int lastSeenActivity = Convert.ToInt16(GetDataValue(lastSeenActivityQuery, CommandType.Text, null, ActivityType.Logoff));
                             if (lastSeenActivity != (int)ActivityType.Logoff)
                             {
                                 sReturn = "<span class=\"msg-9017\">This username is currently logged on.  Please wait for them to log off or try another username.</span>";
@@ -8520,7 +8521,7 @@ namespace Protean
 
 
 
-                        nReturnId = Conversions.ToInteger(GetDataValue(cSql, CommandType.Text, Tools.Dictionary.getSimpleHashTable("email:" + SqlFmt(cEmail)), -1));
+                        nReturnId = Convert.ToInt16(GetDataValue(cSql, CommandType.Text, Tools.Dictionary.getSimpleHashTable("email:" + SqlFmt(cEmail)), -1));
                     }
 
                     return nReturnId;
@@ -8580,7 +8581,7 @@ namespace Protean
                         FROM tblDirectory 
                         RIGHT OUTER JOIN tblDirectoryRelation ON tblDirectory.nDirKey = tblDirectoryRelation.nDirParentId
                         WHERE tblDirectory.cDirSchema = '{nParentType}' AND tblDirectoryRelation.nDirChildId = {nChildId}";
-                    cReturn = Conversions.ToInteger(ExeProcessSqlScalar(cSQL));
+                    cReturn = Convert.ToInt16(ExeProcessSqlScalar(cSQL));
                     if (Information.IsNumeric(cReturn))
                         return cReturn;
                     else
@@ -8661,11 +8662,11 @@ namespace Protean
                             while (oDr.Read())
                             {
                                 var oXmlDetails = new XmlDocument();
-                                oXmlDetails.LoadXml(GetUserXML(Conversions.ToLong(oDr["nDirKey"]), false).OuterXml);
+                                oXmlDetails.LoadXml(GetUserXML(Convert.ToInt64(oDr["nDirKey"]), false).OuterXml);
 
                                 // lets add the saved password to the xml
                                 var oElmtPwd = oXmlDetails.CreateElement("Password");
-                                oElmtPwd.InnerText = Conversions.ToString(oDr["cDirPassword"]);
+                                oElmtPwd.InnerText = Convert.ToString(oDr["cDirPassword"]);
                                 oXmlDetails.SelectSingleNode("User").AppendChild(oElmtPwd);
                                 // now lets send the email
                                 var oMsg = new Protean.Messaging(ref myWeb.msException);
@@ -8685,7 +8686,7 @@ namespace Protean
                                     filePath = fsHelper.checkCommonFilePath(filePath);
 
                                     dbHelper argodbHelper = null;
-                                    sReturn = Conversions.ToString(oMsg.emailer(oXmlDetails.DocumentElement, goConfig["ProjectPath"] + filePath, sSenderName, sSenderEmail, cEmail, "Password Reminder", odbHelper: ref argodbHelper, "Your reset link has been emailed to you"));
+                                    sReturn = Convert.ToString(oMsg.emailer(oXmlDetails.DocumentElement, goConfig["ProjectPath"] + filePath, sSenderName, sSenderEmail, cEmail, "Password Reminder", odbHelper: ref argodbHelper, "Your reset link has been emailed to you"));
 
                                     //bValid = true;
                                 }
@@ -8831,7 +8832,7 @@ namespace Protean
                 try
                 {
                     // get group memberships
-                    sSql = "SELECT d.* FROM tblDirectory d " + "inner join tblDirectoryRelation r on r.nDirParentId = d.nDirKey " + "where r.nDirChildId = " + userId + " and d.cDirSchema='" + cSchemaName + "'";
+                    sSql = $"SELECT d.* FROM tblDirectory d inner join tblDirectoryRelation r on r.nDirParentId = d.nDirKey where r.nDirChildId = {userId} and d.cDirSchema='{cSchemaName}'";
 
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
@@ -8839,7 +8840,7 @@ namespace Protean
                         {
                             while (oDr.Read())
                             {
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDr["cDirName"], cRoleName, false)))
+                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDr["cDirName"], cRoleName, false)))
                                 {
                                     bValid = true;
                                 }
@@ -8885,10 +8886,10 @@ namespace Protean
                         {
                             while (oDr.Read())
                             {
-                                root.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cDirXml"], "", false)))
+                                root.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
+                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cDirXml"], "", false)))
                                 {
-                                    root.InnerXml = Conversions.ToString(oDr["cDirXml"]);
+                                    root.InnerXml = Convert.ToString(oDr["cDirXml"]);
                                     root.InnerXml = root.SelectSingleNode("*").InnerXml;
                                 }
                             }
@@ -8903,15 +8904,15 @@ namespace Protean
                             cJoinType = "INNER";
                         }
 
-                        sSql = "SELECT	d.*," + " r.nRelKey As Member" + " FROM	tblDirectory d" + " " + cJoinType + " JOIN tblDirectoryRelation r" + " ON r.nDirParentid = d.nDirKey " + " AND r.nDirChildId = " + nUserId + " WHERE   d.cDirSchema <> 'User'" + " ORDER BY d.cDirName";
+                        sSql = $"SELECT d.*, r.nRelKey As Member FROM tblDirectory d {cJoinType} JOIN tblDirectoryRelation r ON r.nDirParentid = d.nDirKey  AND r.nDirChildId = {nUserId} WHERE   d.cDirSchema <> 'User' ORDER BY d.cDirName";
 
                         using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                         {
                             while (oDr.Read())
                             {
-                                oElmt = moPageXml.CreateElement(Conversions.ToString(oDr["cDirSchema"]));
-                                oElmt.SetAttribute("id", Conversions.ToString(oDr["nDirKey"]));
-                                oElmt.SetAttribute("name", Conversions.ToString(oDr["cDirName"]));
+                                oElmt = moPageXml.CreateElement(Convert.ToString(oDr["cDirSchema"]));
+                                oElmt.SetAttribute("id", Convert.ToString(oDr["nDirKey"]));
+                                oElmt.SetAttribute("name", Convert.ToString(oDr["cDirName"]));
                                 if (!(oDr["Member"] is DBNull))
                                 {
                                     oElmt.SetAttribute("isMember", "yes");
@@ -9014,7 +9015,7 @@ namespace Protean
                         }
                     }
                     valuesList.Add(SqlString(activityDetail));
-                    valuesList.Add(SqlString(Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(sessionId), "Service_" + DateTime.Now.ToString(), sessionId))));
+                    valuesList.Add(SqlString(Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(sessionId), "Service_" + DateTime.Now.ToString(), sessionId))));
                     if (otherId > 0L)
                         valuesList.Add(otherId.ToString());
                     if (Cms.gbIPLogging && myWeb != null)
@@ -9037,7 +9038,7 @@ namespace Protean
 
                     sSql += ") values (" + string.Join(",", valuesList.ToArray()) + ")";
 
-                    return Conversions.ToLong(GetIdInsertSql(sSql));
+                    return Convert.ToInt64(GetIdInsertSql(sSql));
                 }
 
 
@@ -9058,7 +9059,7 @@ namespace Protean
 
                     string sSql;
 
-                    sSql = "Update tblActivityLog set cActivityDetail = '" + cActivityDetail + "', dDateTime = " + sqlDateTime(DateTime.Now) + " where nActivityKey = " + activityID;
+                    sSql = $"Update tblActivityLog set cActivityDetail = '{cActivityDetail}', dDateTime = {sqlDateTime(DateTime.Now)} where nActivityKey = {activityID}";
 
                     ExeProcessSql(sSql);
                 }
@@ -9071,7 +9072,7 @@ namespace Protean
 
 
 
-            public int CommitLogToDB(ActivityType nEventType, int nUserId, string cSessionId, DateTime dDateTime, int nPrimaryId = 0, int nSecondaryId = 0, string cDetail = "", bool bOverrideLoggingChecks = false)
+            public int CommitLogToDB(ActivityType nEventType, long nUserId, string cSessionId, DateTime dDateTime, long nPrimaryId = 0, long nSecondaryId = 0, string cDetail = "", bool bOverrideLoggingChecks = false)
             {
 
                 if (myWeb != null & !bOverrideLoggingChecks)
@@ -9098,7 +9099,7 @@ namespace Protean
                     // TS 04/12/11 however have assumed an overload sets negative values too so have reversed the logic.
                     if (goSession != null & !bOverrideLoggingChecks)
                     {
-                        if (Conversions.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "0", false), Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "false", false)), Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "off", false))))
+                        if (Convert.ToBoolean(Operators.OrObject(Operators.OrObject(Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "0", false), Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "false", false)), Operators.ConditionalCompareObjectEqual(goSession["LogAll"], "off", false))))
                         {
                             // not logging everything if no user and logall not turned on
                             return default;
@@ -9125,7 +9126,7 @@ namespace Protean
                         cSQL += ",'" + SqlFmt(Strings.Left(myWeb.moRequest.ServerVariables["REMOTE_ADDR"], 15)) + "'";
                     cSQL += ")";
 
-                    return Conversions.ToInteger(GetIdInsertSql(cSQL));
+                    return Convert.ToInt16(GetIdInsertSql(cSQL));
                 }
 
                 catch (Exception ex)
@@ -9143,7 +9144,7 @@ namespace Protean
                 try
                 {
                     oMigration = GetDataValue("SELECT cLkpValue from tblLookup where cLkpKey = 'MigrationDone'");
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oMigration, "1", false)))
+                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oMigration, "1", false)))
                     {
                         return false;
                     }
@@ -9170,7 +9171,7 @@ namespace Protean
 
                     string strSQL = "Select nDirKey FROM tblDirectory WHERE cDirForiegnRef = '" + SqlFmt(ForiegnRef) + "'";
                     int iID;
-                    iID = Conversions.ToInteger(ExeProcessSqlScalar(strSQL));
+                    iID = Convert.ToInt16(ExeProcessSqlScalar(strSQL));
                     return iID;
                 }
                 catch (Exception ex)
@@ -9206,12 +9207,12 @@ namespace Protean
                     DataSet oDs;
                     bool result = false;
                     // check for page-subpage relation
-                    string strSQL = "select * from tblcontentstructure P inner join  tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey= '" + pageId + "'";
+                    string strSQL = $"select * from tblcontentstructure P inner join  tblcontentstructure C on p.nStructKey = C.nStructParId where p.nStructKey= '{pageId}'";
                     oDs = GetDataSet(strSQL, "page", "Page");
                     if (oDs.Tables[0].Rows.Count == 0)
                     {
                         // check for page-product relation
-                        strSQL = "select * from tblcontentstructure P inner join  tblContentLocation C on p.nStructKey = C.nStructId where p.nStructKey= '" + pageId + "'";
+                        strSQL = $"select * from tblcontentstructure P inner join  tblContentLocation C on p.nStructKey = C.nStructId where p.nStructKey= '{pageId}'";
                         oDs = GetDataSet(strSQL, "page", "Page");
                     }
                     if (oDs.Tables[0].Rows.Count > 0)
@@ -9245,11 +9246,11 @@ namespace Protean
                     oRoot.SetAttribute("name", cSchemaName + "s - " + ProcessId.GetType().ToString());
                     if ((int)ProcessId == 0)
                     {
-                        sSql = "SELECT nCartOrderKey as id, nCartStatus as status, c.cContactName as name, c.cContactEmail as email, a.dUpdateDate from tblCartOrder inner join tblAudit a on nAuditId = a.nAuditKey left outer join tblCartContact c on (nCartOrderKey = c.nContactCartId and cContactType = 'Billing Address') where (cCartSchemaName= '" + cSchemaName + "') order by nCartOrderKey desc";
+                        sSql = $"SELECT nCartOrderKey as id, nCartStatus as status, c.cContactName as name, c.cContactEmail as email, a.dUpdateDate from tblCartOrder inner join tblAudit a on nAuditId = a.nAuditKey left outer join tblCartContact c on (nCartOrderKey = c.nContactCartId and cContactType = 'Billing Address') where (cCartSchemaName= '{cSchemaName}') order by nCartOrderKey desc";
                     }
                     else
                     {
-                        sSql = "SELECT nCartOrderKey as id, nCartStatus as status, c.cContactName as name, c.cContactEmail as email, a.dUpdateDate from tblCartOrder inner join tblAudit a on nAuditId = a.nAuditKey left outer join tblCartContact c on (nCartOrderKey = c.nContactCartId and cContactType = 'Billing Address') where nCartStatus = " + ((int)ProcessId).ToString() + " and (cCartSchemaName= '" + cSchemaName + "') order by nCartOrderKey desc";
+                        sSql = $"SELECT nCartOrderKey as id, nCartStatus as status, c.cContactName as name, c.cContactEmail as email, a.dUpdateDate from tblCartOrder inner join tblAudit a on nAuditId = a.nAuditKey left outer join tblCartContact c on (nCartOrderKey = c.nContactCartId and cContactType = 'Billing Address') where nCartStatus = {(int)ProcessId} and (cCartSchemaName= '{cSchemaName}') order by nCartOrderKey desc";
                     }
 
 
@@ -9314,7 +9315,7 @@ namespace Protean
                     string cCurrency = oCartConfig["CurrencySymbol"];
 
                     oCartElmt = moPageXml.CreateElement("Cart");
-                    oCartElmt.SetAttribute("type", Strings.LCase(cCartSchema)); // "order")
+                    oCartElmt.SetAttribute("type", (cCartSchema ?? "").ToLower()); // "order")
                     oCartElmt.SetAttribute("currency", cCurrency);
 
                     oOrderElmt = moPageXml.CreateElement(cCartSchema);
@@ -9347,18 +9348,18 @@ namespace Protean
 
 
                             // @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-                            if (Conversions.ToInteger(Operators.ConcatenateObject("0", oRow["nParentId"])) == 0)
+                            if (Convert.ToInt16(Operators.ConcatenateObject("0", oRow["nParentId"])) == 0)
                             {
                                 decimal nOpPrices = 0m;
                                 foreach (var oOpRow in oRow.GetChildRows("Rel1"))
                                     // need an option check price bit here
 
 
-                                    nOpPrices = Conversions.ToDecimal(nOpPrices + Convert.ToInt32(oOpRow["price"]));
+                                    nOpPrices = Convert.ToDecimal(nOpPrices + Convert.ToInt32(oOpRow["price"]));
 
-                                weight = Conversions.ToDouble(Operators.AddObject(weight, Operators.MultiplyObject(oRow["weight"], oRow["quantity"])));
-                                quant = Conversions.ToInteger(Operators.AddObject(quant, oRow["quantity"]));
-                                total = Conversions.ToDouble(Operators.AddObject(total, Operators.MultiplyObject(oRow["quantity"], Operators.SubtractObject(Operators.AddObject(oRow["price"], nOpPrices), Conversions.ToInteger(Operators.ConcatenateObject("0", oRow["discount"]))))));
+                                weight = Convert.ToDouble(Operators.AddObject(weight, Operators.MultiplyObject(oRow["weight"], oRow["quantity"])));
+                                quant = Convert.ToInt16(Operators.AddObject(quant, oRow["quantity"]));
+                                total = Convert.ToDouble(Operators.AddObject(total, Operators.MultiplyObject(oRow["quantity"], Operators.SubtractObject(Operators.AddObject(oRow["price"], nOpPrices), Convert.ToInt16(Operators.ConcatenateObject("0", oRow["discount"]))))));
                             }
 
                         }
@@ -9418,22 +9419,22 @@ namespace Protean
                         foreach (DataRow currentORow1 in oDs.Tables["Order"].Rows)
                         {
                             oRow = currentORow1;
-                            oOrderElmt.SetAttribute("ref", Conversions.ToString(Operators.ConcatenateObject(cOrderNoPrefix, oRow["nCartOrderKey"])));
-                            oOrderElmt.SetAttribute("date", Conversions.ToString(oRow["dUpdateDate"]));
-                            oOrderElmt.SetAttribute("status", Conversions.ToString(oRow["nCartStatus"]));
+                            oOrderElmt.SetAttribute("ref", Convert.ToString(Operators.ConcatenateObject(cOrderNoPrefix, oRow["nCartOrderKey"])));
+                            oOrderElmt.SetAttribute("date", Convert.ToString(oRow["dUpdateDate"]));
+                            oOrderElmt.SetAttribute("status", Convert.ToString(oRow["nCartStatus"]));
 
-                            shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShippingCost"]));
-                            oOrderElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRow["nShippingMethodId"], "")));
+                            shipCost = Convert.ToDouble(Operators.ConcatenateObject("0", oRow["nShippingCost"]));
+                            oOrderElmt.SetAttribute("shippingType", Convert.ToString(Operators.ConcatenateObject(oRow["nShippingMethodId"], "")));
                             oOrderElmt.SetAttribute("shippingCost", shipCost + "");
 
-                            if (Conversions.ToDouble(nTaxRate) > 0d)
+                            if (Convert.ToDouble(nTaxRate) > 0d)
                             {
 
-                                vatAmt = (total + shipCost) * (Conversions.ToDouble(nTaxRate) / 100d);
+                                vatAmt = (total + shipCost) * (Convert.ToDouble(nTaxRate) / 100d);
 
                                 oOrderElmt.SetAttribute("totalNet", Strings.FormatNumber(total + shipCost, 2, TriState.True, TriState.False, TriState.False));
                                 oOrderElmt.SetAttribute("vatRate", nTaxRate);
-                                oOrderElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRow["nShippingMethodId"], "")));
+                                oOrderElmt.SetAttribute("shippingType", Convert.ToString(Operators.ConcatenateObject(oRow["nShippingMethodId"], "")));
                                 oOrderElmt.SetAttribute("shippingCost", Strings.FormatNumber(shipCost, 2, TriState.True, TriState.False, TriState.False));
                                 oOrderElmt.SetAttribute("vatAmt", Strings.FormatNumber(vatAmt, 2, TriState.True, TriState.False, TriState.False));
                                 oOrderElmt.SetAttribute("total", Strings.FormatNumber(total + shipCost + vatAmt, 2, TriState.True, TriState.False, TriState.False));
@@ -9442,7 +9443,7 @@ namespace Protean
                             {
                                 oOrderElmt.SetAttribute("totalNet", Strings.FormatNumber(total + shipCost, 2, TriState.True, TriState.False, TriState.False));
                                 oOrderElmt.SetAttribute("vatRate", 0.0d.ToString());
-                                oOrderElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRow["nShippingMethodId"], "")));
+                                oOrderElmt.SetAttribute("shippingType", Convert.ToString(Operators.ConcatenateObject(oRow["nShippingMethodId"], "")));
                                 oOrderElmt.SetAttribute("shippingCost", Strings.FormatNumber(shipCost, 2, TriState.True, TriState.False, TriState.False));
                                 oOrderElmt.SetAttribute("vatAmt", 0.0d.ToString());
                                 oOrderElmt.SetAttribute("total", Strings.FormatNumber(total + shipCost, 2, TriState.True, TriState.False, TriState.False));
@@ -9453,13 +9454,13 @@ namespace Protean
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("ClientNotes");
-                                oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
+                                oElmt.InnerXml = Convert.ToString(oRow["cClientNotes"]);
                                 oOrderElmt.AppendChild(oElmt.FirstChild);
                             }
-                            if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(Operators.ConcatenateObject(oRow["cSellerNotes"], ""), "", false)))
+                            if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(Operators.ConcatenateObject(oRow["cSellerNotes"], ""), "", false)))
                             {
                                 oElmt = moPageXml.CreateElement("SellerNotes");
-                                oElmt.InnerText = Conversions.ToString(oRow["cSellerNotes"]);
+                                oElmt.InnerText = Convert.ToString(oRow["cSellerNotes"]);
                                 oOrderElmt.AppendChild(oElmt);
                             }
                         }
@@ -9488,7 +9489,7 @@ namespace Protean
 
                 string cProcessInfo = "";
                 string cExtraWhere = "";
-                long UserId = Conversions.ToLong(Operators.ConcatenateObject("0", goSession["nEwUserId"]));
+                long UserId = Convert.ToInt64(Operators.ConcatenateObject("0", goSession["nEwUserId"]));
                 try
                 {
 
@@ -9525,16 +9526,16 @@ namespace Protean
                             }
                     }
 
-                    sSql = "SELECT tblCartOrder.nCartOrderKey, tblCartOrder.cCartXml FROM tblCartOrder INNER JOIN tblAudit ON tblCartOrder.nAuditId = tblAudit.nAuditKey WHERE tblCartOrder.nCartUserDirId = " + UserId + " AND " + cExtraWhere;
+                    sSql = $"SELECT tblCartOrder.nCartOrderKey, tblCartOrder.cCartXml FROM tblCartOrder INNER JOIN tblAudit ON tblCartOrder.nAuditId = tblAudit.nAuditKey WHERE tblCartOrder.nCartUserDirId = {UserId} AND {cExtraWhere}";
                     oDs = GetDataSet(sSql, cOrderType, "OrderList");
                     foreach (DataRow oDr in oDs.Tables[0].Rows)
                     {
                         oElmt = moPageXml.CreateElement(cOrderType);
-                        oElmt.InnerXml = Conversions.ToString(Operators.ConcatenateObject(oDr["cCartXml"], ""));
+                        oElmt.InnerXml = Convert.ToString(Operators.ConcatenateObject(oDr["cCartXml"], ""));
                         oElmtOrder = (XmlElement)oElmt.FirstChild;
                         if (oElmtOrder != null)
                         {
-                            oElmtOrder.SetAttribute("id", Conversions.ToString(oDr["nCartOrderKey"]));
+                            oElmtOrder.SetAttribute("id", Convert.ToString(oDr["nCartOrderKey"]));
                             oContentsXML.AppendChild(oElmt.FirstChild);
                         }
                     }
@@ -9556,7 +9557,7 @@ namespace Protean
 
                 string cProcessInfo = "";
                 string cExtraWhere = string.Empty;
-                long UserId = Conversions.ToLong(Operators.ConcatenateObject("0", goSession["nEwUserId"]));
+                long UserId = Convert.ToInt64(Operators.ConcatenateObject("0", goSession["nEwUserId"]));
                 XmlDocument oXml = new XmlDocument();
                 try
                 {
@@ -9568,7 +9569,7 @@ namespace Protean
                     oRoot = moPageXml.CreateElement("Content");
                     oRoot.SetAttribute("template", "default");
 
-                    sSql = "SELECT nCodeKey as id, cCode as code, dIssuedDate as issueDate, dUseDate as usedDate, xUsageData as UsageData FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey WHERE tblCodes.nIssuedDirId = " + UserId + "";
+                    sSql = $"SELECT nCodeKey as id, cCode as code, dIssuedDate as issueDate, dUseDate as usedDate, xUsageData as UsageData FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey WHERE tblCodes.nIssuedDirId = {UserId}";
                     oDs = GetDataSet(sSql, "Voucher", "VoucherList");
 
 
@@ -9665,7 +9666,7 @@ namespace Protean
                     {
                         string[] oImagePath = cRelatedLibraryImage.Split(',');
                         // If skipfirst attribute
-                        if (Conversions.ToBoolean(cSkipAttribute) == true)
+                        if (Convert.ToBoolean(cSkipAttribute) == true)
                         {
                             oImagePath = oImagePath.Skip(1).ToArray();
                         }
@@ -9727,7 +9728,7 @@ namespace Protean
                             imgElement.SetAttribute("src", cImage.Trim());
                             imgElementDetail.SetAttribute("src", cImage.Trim());
                             long nContentId;
-                            nContentId = Conversions.ToLong(setObjectInstance(objectTypes.Content, oLibraryImageInstance));
+                            nContentId = Convert.ToInt64(setObjectInstance(objectTypes.Content, oLibraryImageInstance));
                             // If we have an action here we need to relate the item
                             insertContentRelation(savedId, nContentId.ToString(), false);
                         }
@@ -9762,7 +9763,7 @@ namespace Protean
                     if (string.IsNullOrEmpty(cTable))
                         cTable = getTable(objectTypes.ContentLocation);
 
-                    string cSQL = "DELETE FROM " + cTable + " WHERE nContentId = " + nContentId;
+                    string cSQL = $"DELETE FROM {cTable} WHERE nContentId = {nContentId}";
                     i = ExeProcessSql(cSQL);
                     return i;
                 }
@@ -9794,7 +9795,7 @@ namespace Protean
             public int setContentLocationByRef(string cStructFRef, int nContentId, int bPrimary, int bCascade)
             {
 
-                PerfMonLog("DBHelper", "setContentLocationByRef", "ref=" + cStructFRef + " nContentId=" + nContentId);
+                PerfMonLog("DBHelper", "setContentLocationByRef", $"ref={cStructFRef} nContentId={nContentId}");
                 string cProcessInfo = "";
                 // Dim oDr As SqlDataReader
                 try
@@ -9802,16 +9803,16 @@ namespace Protean
                     string nID = ""; // myWeb.moDbHelper.getKeyByNameAndSchema(Cms.dbHelper.objectTypes.ContentStructure, "", cStructName)
 
                     // oDr = getDataReader("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")
-                    using (var oDr = getDataReaderDisposable("select nStructKey from tblContentStructure where cStructForiegnRef like '" + SqlFmt(cStructFRef) + "'"))  // Done by nita on 6/7/22
+                    using (var oDr = getDataReaderDisposable($"select nStructKey from tblContentStructure where cStructForiegnRef like '{SqlFmt(cStructFRef)}'"))  // Done by nita on 6/7/22
                     {
                         int lastloc = 0;
 
                         while (oDr.Read())
                         {
-                            nID = Conversions.ToString(oDr["nStructKey"]);
+                            nID = Convert.ToString(oDr["nStructKey"]);
                             if (string.IsNullOrEmpty(nID))
                                 nID = 0.ToString();
-                            lastloc = setContentLocation(Conversions.ToLong(nID), nContentId, Conversions.ToBoolean(Interaction.IIf(bPrimary == 1, true, false)), Conversions.ToBoolean(bCascade), false);
+                            lastloc = setContentLocation(Convert.ToInt64(nID), nContentId, Convert.ToBoolean(Interaction.IIf(bPrimary == 1, true, false)), Convert.ToBoolean(bCascade), false);
                         }
                         return lastloc;
                     }
@@ -9834,7 +9835,7 @@ namespace Protean
             public int setContentLocationByRef(string cStructFRef, int nContentId, int bPrimary, int bCascade, string cPosition, long nDisplayOrder = 0L)
             {
 
-                PerfMonLog("DBHelper", "setContentLocationByRef", "ref=" + cStructFRef + " nContentId=" + nContentId);
+                PerfMonLog("DBHelper", "setContentLocationByRef", $"ref={cStructFRef} nContentId={nContentId}");
                 string cProcessInfo = "";
                 // Dim oDr As SqlDataReader
                 try
@@ -9843,17 +9844,17 @@ namespace Protean
                                      // nID = getObjectByRef(Cms.dbHelper.objectTypes.ContentStructure, cStructFRef)
                                      // A site may have multiple pasges with the same Fref
                                      // oDr = getDataReader("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")
-                    using (var oDr = getDataReaderDisposable("select nStructKey from tblContentStructure where cStructForiegnRef like '" + SqlFmt(cStructFRef) + "'"))  // Done by nita on 6/7/22
+                    using (var oDr = getDataReaderDisposable($"select nStructKey from tblContentStructure where cStructForiegnRef like '{SqlFmt(cStructFRef)}'"))  // Done by nita on 6/7/22
                     {
                         int lastloc = 0;
                         if (oDr != null)
                         {
                             while (oDr.Read())
                             {
-                                nID = Conversions.ToString(oDr["nStructKey"]);
+                                nID = Convert.ToString(oDr["nStructKey"]);
                                 if (string.IsNullOrEmpty(nID))
                                     nID = 0.ToString();
-                                lastloc = setContentLocation(Conversions.ToLong(nID), nContentId, Conversions.ToBoolean(Interaction.IIf(bPrimary == 1, true, false)), Conversions.ToBoolean(bCascade), false, cPosition, false, nDisplayOrder);
+                                lastloc = setContentLocation(Convert.ToInt64(nID), nContentId, Convert.ToBoolean(Interaction.IIf(bPrimary == 1, true, false)), Convert.ToBoolean(bCascade), false, cPosition, false, nDisplayOrder);
                             }
                         }
                         return lastloc;
@@ -9879,7 +9880,7 @@ namespace Protean
                 try
                 {
 
-                    int nRefId = Conversions.ToInteger(GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" + SqlFmt(cContentFRef) + "')"));
+                    int nRefId = Convert.ToInt16(GetDataValue("SELECT nContentKey, cContentForiegnRef FROM tblContent WHERE (cContentForiegnRef = '" + SqlFmt(cContentFRef) + "')"));
 
                     if (!(nRefId == 0))
                     {
@@ -9956,13 +9957,13 @@ namespace Protean
                         cParKey = oShipLoc.SelectSingleNode("nLocationParId").InnerText;
 
                         // Get the new parentkey
-                        oElmt = (XmlElement)oXml.SelectSingleNode("//tblCartShippingLocations[nLocationKey=" + cParKey + "]");
+                        oElmt = (XmlElement)oXml.SelectSingleNode($"//tblCartShippingLocations[nLocationKey={cParKey}]");
                         if (oElmt != null)
                         {
                             oElmt = (XmlElement)oElmt.SelectSingleNode("newKey");
                             if (oElmt != null)
                             {
-                                cSql = "UPDATE tblCartShippingLocations SET nLocationParId=" + oElmt.InnerText + " WHERE nLocationKey=" + cKey;
+                                cSql = $"UPDATE tblCartShippingLocations SET nLocationParId={oElmt.InnerText} WHERE nLocationKey={cKey}";
                                 ExeProcessSql(cSql);
                             }
                         }
@@ -10020,7 +10021,7 @@ namespace Protean
                     oCopy.SelectSingleNode("tblCartShippingLocations/cLocationNameFull").InnerText = Strings.Replace(oCopy.SelectSingleNode("tblCartShippingLocations/cLocationNameFull").InnerText, "&amp;", "and");
                     oCopy.SelectSingleNode("tblCartShippingLocations/cLocationNameShort").InnerText = Strings.Replace(oCopy.SelectSingleNode("tblCartShippingLocations/cLocationNameShort").InnerText, "&amp;", "and");
                     oCopy.SelectSingleNode("tblCartShippingLocations/nLocationParId").InnerText = nParId.ToString();
-                    int nId = Conversions.ToInteger(setObjectInstance(objectTypes.CartShippingLocation, oCopy));
+                    int nId = Convert.ToInt16(setObjectInstance(objectTypes.CartShippingLocation, oCopy));
 
                     if (nId > 0)
                     {
@@ -10259,7 +10260,7 @@ namespace Protean
                     int nMaxDepth = 1;
                     if (!string.IsNullOrEmpty(cShowRelatedBriefDepth) && Information.IsNumeric(cShowRelatedBriefDepth))
                     {
-                        nMaxDepth = Conversions.ToInteger(cShowRelatedBriefDepth);
+                        nMaxDepth = Convert.ToInt16(cShowRelatedBriefDepth);
                     }
                     DateTime ExpireDate = dExpireDate ?? DateTime.Now;
                     DateTime UpdateDate = dUpdateDate ?? DateTime.Now;
@@ -10302,17 +10303,17 @@ namespace Protean
                         //oNode = argoContent;
 
                         sNodeName = oElmt2.GetAttribute("name");
-                        int nNodeId = Conversions.ToInteger(oElmt2.GetAttribute("id"));
+                        int nNodeId = Convert.ToInt16(oElmt2.GetAttribute("id"));
                         string cNodeType = oElmt2.GetAttribute("type");
                         string cRelationType = oElmt2.GetAttribute("rtype");
                         string cPosition = oElmt2.GetAttribute("position");
                         string cRelationQuery = "";
                         if (!string.IsNullOrEmpty(cRelationType))
                         {
-                            cRelationQuery = " and @rType='" + cRelationType + "'";
+                            cRelationQuery = $" and @rType='{cRelationType}'";
                         }
                         // ensure this items is not allready in this location....
-                        if (oContent.SelectSingleNode("*[@id='" + nNodeId + "'" + cRelationQuery + "]") is null)
+                        if (oContent.SelectSingleNode($"*[@id='{nNodeId}'{cRelationQuery}]") is null)
                         {
 
                             // Allow related content to be added to the specified types always (Module is default)
@@ -10321,7 +10322,7 @@ namespace Protean
                                 cShowSpecificContentTypes += "," + oElmt2.GetAttribute("showRelated");
                             }
 
-                            aNodeTypes = Strings.Split(Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(cShowRelatedBriefContentTypes), "module", cShowRelatedBriefContentTypes.ToString().ToLower())), ",");
+                            aNodeTypes = Strings.Split(Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(cShowRelatedBriefContentTypes), "module", cShowRelatedBriefContentTypes.ToString().ToLower())), ",");
 
                             if (bAllowRecursion & !(myWeb.ibIndexMode & !myWeb.ibIndexRelatedContent) & (cNodeType == "Module" || Array.IndexOf(aNodeTypes, cNodeType.ToLower()) >= aNodeTypes.GetLowerBound(0) || oContent.SelectNodes("ancestor::ContentDetail").Count != 0) || !string.IsNullOrEmpty(cShowSpecificContentTypes))
 
@@ -10338,7 +10339,7 @@ namespace Protean
                                 // Depth limitation is acheived by reading the number of items in the List
 
                                 string cAvoidRecursionList = oContent.GetAttribute("avoidRecursionList");
-                                int nDepth = Conversions.ToInteger(Interaction.IIf(string.IsNullOrEmpty(cAvoidRecursionList), 0, cAvoidRecursionList.Split(',').GetLength(0)));
+                                int nDepth = Convert.ToInt16(Interaction.IIf(string.IsNullOrEmpty(cAvoidRecursionList), 0, cAvoidRecursionList.Split(',').GetLength(0)));
 
                                 if (nDepth < nMaxDepth)
                                 {
@@ -10358,10 +10359,10 @@ namespace Protean
 
                             // Content[@name='" & sNodeName & "']"
                             // If Not (oContent.SelectSingleNode("Content[@name='" & sNodeName & "' and @type='" & cNodeType & "' and @id='" & nNodeId & "']") Is Nothing) And Not bIgnoreDuplicates Then
-                            if (oContent.SelectSingleNode("Content[@name=" + GenerateConcatForXPath(sNodeName) + " and @position='" + cPosition + "']") != null & !bIgnoreDuplicates & !string.IsNullOrEmpty(sNodeName))
+                            if (oContent.SelectSingleNode($"Content[@name={GenerateConcatForXPath(sNodeName)} and @position='{cPosition}']") != null & !bIgnoreDuplicates & !string.IsNullOrEmpty(sNodeName))
                             {
                                 // replace node.
-                                oElmt3 = (XmlElement)oContent.SelectSingleNode("Content[@name=" + GenerateConcatForXPath(sNodeName) + " and @position='" + cPosition + "']");
+                                oElmt3 = (XmlElement)oContent.SelectSingleNode($"Content[@name={GenerateConcatForXPath(sNodeName)} and @position='{cPosition}']");
                                 // we will only replace more "sytem" items
                                 // If _
                                 // LCase(oElmt3.GetAttribute("type")) = "plaintext" Or _
@@ -10369,29 +10370,33 @@ namespace Protean
                                 // LCase(oElmt3.GetAttribute("type")) = "image" Or _
                                 // LCase(oElmt3.GetAttribute("type")) = "flashmovie" Then
 
-                                if (Conversions.ToLong("0" + oElmt3.GetAttribute("parId")) > 0L)
+                                if (Convert.ToInt64("0" + oElmt3.GetAttribute("parId")) > 0L)
                                 {
                                     sProcessInfo = oElmt2.OuterXml;
                                     long primaryParId;
 
                                     // fix for comma separated parId's
-                                    if (Strings.InStr(oElmt2.GetAttribute("parId"), ",") > 0)
+                                    string parId2 = oElmt2.GetAttribute("parId");
+                                    int commaIndex2 = parId2.IndexOf(',');
+                                    if (commaIndex2 > 0)
                                     {
-                                        primaryParId = Conversions.ToLong(Strings.Left(oElmt2.GetAttribute("parId"), Strings.InStr(oElmt2.GetAttribute("parId"), ",") - 1));
+                                        primaryParId = Convert.ToInt64(parId2.Substring(0, commaIndex2));
                                     }
                                     else
                                     {
-                                        primaryParId = Conversions.ToLong("0" + oElmt2.GetAttribute("parId"));
+                                        primaryParId = Convert.ToInt64("0" + parId2);
                                     }
 
                                     long primaryParId3;
-                                    if (Strings.InStr(oElmt3.GetAttribute("parId"), ",") > 0)
+                                    string parId3 = oElmt3.GetAttribute("parId");
+                                    int commaIndex3 = parId3.IndexOf(',');
+                                    if (commaIndex3 > 0)
                                     {
-                                        primaryParId3 = Conversions.ToLong(Strings.Left(oElmt3.GetAttribute("parId"), Strings.InStr(oElmt3.GetAttribute("parId"), ",") - 1));
+                                        primaryParId3 = Convert.ToInt64(parId3.Substring(0, commaIndex3));
                                     }
                                     else
                                     {
-                                        primaryParId3 = Conversions.ToLong("0" + oElmt3.GetAttribute("parId"));
+                                        primaryParId3 = Convert.ToInt64("0" + parId3);
                                     }
 
                                     if (CheckIfAncestorPage(oElmt3.OwnerDocument, primaryParId, primaryParId3))
@@ -10424,10 +10429,10 @@ namespace Protean
 
                     }
 
-                    PerfMonLog("DBHelper", "AddDataSetToContent " + n + " items of content - End");
+                    PerfMonLog("DBHelper", $"AddDataSetToContent {n} items of content - End");
 
                     // Trevors Bulk Content Relations Experiment
-                    if (Strings.LCase(goConfig["FinalAddBulk"]) != "on")
+                    if ((goConfig["FinalAddBulk"] ?? "").ToLower() != "on")
                     {
                         addBulkRelatedContent(ref oContent, ref dUpdateDate, nMaxDepth);
                     }
@@ -10602,17 +10607,17 @@ namespace Protean
                     // make sure the page expiredate is fed back on the contents expiry
                     if (dExpireDate != default & !string.IsNullOrEmpty(oElmt.GetAttribute("expire")))
                     {
-                        if (dExpireDate > Conversions.ToDate(oElmt.GetAttribute("expire")))
+                        if (dExpireDate > Convert.ToDateTime(oElmt.GetAttribute("expire")))
                         {
-                            dExpireDate = Conversions.ToDate(oElmt.GetAttribute("expire"));
+                            dExpireDate = Convert.ToDateTime(oElmt.GetAttribute("expire"));
                         }
                     }
 
                     if (dUpdateDate != default & !string.IsNullOrEmpty(oElmt.GetAttribute("update")))
                     {
-                        if (dUpdateDate < Conversions.ToDate(oElmt.GetAttribute("update")))
+                        if (dUpdateDate < Convert.ToDateTime(oElmt.GetAttribute("update")))
                         {
-                            dUpdateDate = Conversions.ToDate(oElmt.GetAttribute("update"));
+                            dUpdateDate = Convert.ToDateTime(oElmt.GetAttribute("update"));
                         }
                     }
 
@@ -10632,7 +10637,7 @@ namespace Protean
                         // try removing the declaration
                         try
                         {
-                            oElmt.InnerXml = Strings.Replace(sContentText, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
+                            oElmt.InnerXml = sContentText.Replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
                         }
                         catch
                         {
@@ -10673,7 +10678,7 @@ namespace Protean
 
             }
 
-            public void addRelatedContent(ref XmlElement oContentElmt, int nParentId, bool bAdminMode, string specificTypes = "")
+            public void addRelatedContent(ref XmlElement oContentElmt, long nParentId, bool bAdminMode, string specificTypes = "")
             {
                 // TS - This is no longer used replaced by addBulkRelatedContent
 
@@ -10703,7 +10708,7 @@ namespace Protean
                     string cRelatedContentList = oContentElmt.GetAttribute("avoidRecursionList");
 
                     // Add the id if it is not null or zero
-                    if (!string.IsNullOrEmpty(oContentElmt.GetAttribute("id")) && Information.IsNumeric(oContentElmt.GetAttribute("id")) && Conversions.ToLong(oContentElmt.GetAttribute("id")) > 0L)
+                    if (!string.IsNullOrEmpty(oContentElmt.GetAttribute("id")) && Information.IsNumeric(oContentElmt.GetAttribute("id")) && Convert.ToInt64(oContentElmt.GetAttribute("id")) > 0L)
 
                     {
                         if (!string.IsNullOrEmpty(cRelatedContentList))
@@ -10715,21 +10720,20 @@ namespace Protean
                     if (!string.IsNullOrEmpty(cRelatedContentList))
                     {
                         oContentElmt.SetAttribute("avoidRecursionList", cRelatedContentList);
-                        sFilterSql += " and NOT(c.nContentKey IN (" + cRelatedContentList + "))";
+                        sFilterSql += $" and NOT(c.nContentKey IN ({cRelatedContentList}))";
                     }
 
                     if (!string.IsNullOrEmpty(specificTypes))
                     {
-                        string[] aSpecificTypes = Strings.Split(specificTypes, ",");
+                        string[] aSpecificTypes = specificTypes.Split(',');
                         int i;
-                        var loopTo = Information.UBound(aSpecificTypes);
-                        for (i = 0; i <= loopTo; i++)
+                        for (i = 0; i < aSpecificTypes.Length; i++)
                         {
                             if (i > 0)
                                 sSepcificTypeSQL += ",";
                             sSepcificTypeSQL = "'" + aSpecificTypes[i] + "'";
                         }
-                        sFilterSql += " and c.cContentSchemaName IN (" + sSepcificTypeSQL + ")";
+                        sFilterSql += $" and c.cContentSchemaName IN ({sSepcificTypeSQL})";
                     }
 
                     // Build the filter SQL
@@ -10740,11 +10744,11 @@ namespace Protean
 
                     if (checkTableColumnExists("tblContentRelation", "cRelationType"))
                     {
-                        sSql = "select c.nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cRelationType as rtype, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.nInsertDirId as owner, x.nDisplayOrder as displayorder, dbo.fxn_getContentParents(c.nContentKey) as parId " + " FROM tblContent c INNER JOIN" + " tblAudit a ON c.nAuditId = a.nAuditKey INNER JOIN" + " tblContentRelation x ON c.nContentKey = x.nContentChildId" + " WHERE (x.nContentParentId = " + nParentId + ")";
+                        sSql = $"select c.nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cRelationType as rtype, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.nInsertDirId as owner, x.nDisplayOrder as displayorder, dbo.fxn_getContentParents(c.nContentKey) as parId  FROM tblContent c INNER JOIN tblAudit a ON c.nAuditId = a.nAuditKey INNER JOIN tblContentRelation x ON c.nContentKey = x.nContentChildId WHERE (x.nContentParentId = {nParentId})";
                     }
                     else
                     {
-                        sSql = "select c.nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.nInsertDirId as owner, x.nDisplayOrder as displayorder, dbo.fxn_getContentParents(c.nContentKey) as parId " + " FROM tblContent c INNER JOIN" + " tblAudit a ON c.nAuditId = a.nAuditKey INNER JOIN" + " tblContentRelation x ON c.nContentKey = x.nContentChildId" + " WHERE (x.nContentParentId = " + nParentId + ")";
+                        sSql = $"select c.nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.nInsertDirId as owner, x.nDisplayOrder as displayorder, dbo.fxn_getContentParents(c.nContentKey) as parId  FROM tblContent c INNER JOIN tblAudit a ON c.nAuditId = a.nAuditKey INNER JOIN tblContentRelation x ON c.nContentKey = x.nContentChildId WHERE (x.nContentParentId = {nParentId})";
                     }
 
 
@@ -10764,14 +10768,14 @@ namespace Protean
                         {
                             // Calculate the maxdepth for contentDetial
                             string cShowRelatedBriefDepth = goConfig["ShowRelatedDetailedDepth"] + "";
-                            if (Conversions.ToInteger("0" + oContentElmt.GetAttribute("relatedDepth")) > 0)
+                            if (Convert.ToInt16("0" + oContentElmt.GetAttribute("relatedDepth")) > 0)
                             {
                                 cShowRelatedBriefDepth = oContentElmt.GetAttribute("relatedDepth");
                             }
                             int nMaxDepth = 1;
                             if (!string.IsNullOrEmpty(cShowRelatedBriefDepth) && Information.IsNumeric(cShowRelatedBriefDepth))
                             {
-                                nMaxDepth = Conversions.ToInteger(cShowRelatedBriefDepth);
+                                nMaxDepth = Convert.ToInt16(cShowRelatedBriefDepth);
                             }
                             DateTime? argdExpireDate = DateTime.Parse("0001-01-01");
                             DateTime? argdUpdateDate = DateTime.Parse("0001-01-01");
@@ -10853,9 +10857,9 @@ namespace Protean
 
                         // First we get a list of the relations for the content that is in scope
                         // Note: we ensure that the child node is not a Module (as some two way relationships may historically exist)
-                        string relationTypeColumn = Conversions.ToString(Interaction.IIf(checkTableColumnExists("tblContentRelation", "cRelationType"), ",cRelationType AS rtype ", ""));
+                        string relationTypeColumn = Convert.ToString(Interaction.IIf(checkTableColumnExists("tblContentRelation", "cRelationType"), ",cRelationType AS rtype ", ""));
 
-                        sSql = "SELECT r.nContentParentId as parId, r.nContentChildId as id, r.nDisplayOrder as displayorder " + relationTypeColumn + ", parentContent.cContentSchemaName as parType, childContent.cContentSchemaName as childType " + " FROM tblContentRelation r " + " inner join tblContent parentContent on (r.nContentParentId = parentContent.nContentKey)" + " inner join tblContent childContent on (r.nContentChildId = childContent.nContentKey)" + " where childContent.cContentSchemaName <> 'Module' AND r.nContentParentId IN (";
+                        sSql = $"SELECT r.nContentParentId as parId, r.nContentChildId as id, r.nDisplayOrder as displayorder {relationTypeColumn}, parentContent.cContentSchemaName as parType, childContent.cContentSchemaName as childType  FROM tblContentRelation r  inner join tblContent parentContent on (r.nContentParentId = parentContent.nContentKey) inner join tblContent childContent on (r.nContentChildId = childContent.nContentKey) where childContent.cContentSchemaName <> 'Module' AND r.nContentParentId IN (";
                         string cRelatedIds = "";
                         foreach (XmlElement oElmt in oContentParent.SelectNodes("Content[@processForRelatedContent='true']" + sContentLevelxPath))
                         {
@@ -10926,12 +10930,12 @@ namespace Protean
                                     filteredTypes[index] = string.Format("@childType='{0}'", filteredTypes[index]);
                                 typeFilter = string.Join(" or ", filteredTypes);
 
-                                filterXPath = "@parId=" + contentTypeFilterKey;
+                                filterXPath = $"@parId={contentTypeFilterKey}";
                                 if (!string.IsNullOrEmpty(typeFilter))
-                                    filterXPath += " and not(" + typeFilter + ")";
+                                    filterXPath += $" and not({typeFilter})";
 
                                 // Go and get the nodes to remove
-                                foreach (XmlElement removableChild in oRelationsXml.SelectNodes("NewDataSet/Relation[" + filterXPath + "]"))
+                                foreach (XmlElement removableChild in oRelationsXml.SelectNodes($"NewDataSet/Relation[{filterXPath}]"))
                                     removableChild.ParentNode.RemoveChild(removableChild);
 
                             }
@@ -11018,7 +11022,7 @@ namespace Protean
                                     // myWeb.PerfMon.Log("DBHelper", "addrelation[" & relation.GetAttribute("id") & "]count[" & j & "]added[" & k & "]")
 
                                 }
-                                PerfMonLog("DBHelper", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("addBulkRelatedContent - end place contents (", nRelationCount), " relations)")));
+                                PerfMonLog("DBHelper", Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("addBulkRelatedContent - end place contents (", nRelationCount), " relations)")));
                             }
                         }
                         sContentLevelxPath += "/Content";
@@ -11048,18 +11052,18 @@ namespace Protean
                 {
                     foreach (var oFrmItem in goRequest.Form)
                     {
-                        string cOName = Conversions.ToString(oFrmItem);
+                        string cOName = Convert.ToString(oFrmItem);
                         string cOValue = goRequest.Form.Get(cOName);
                         string rType = myWeb.moRequest["relationType"];
                         if (cOName.Contains("list"))
                         {
                             if (string.IsNullOrEmpty(rType))
                             {
-                                insertContentRelation(Conversions.ToInteger(goRequest.Form.Get("id")), cOValue, Conversions.ToBoolean(Interaction.IIf(myWeb.moRequest["RelType"] == "1way", false, true)));
+                                insertContentRelation(Convert.ToInt16(goRequest.Form.Get("id")), cOValue, Convert.ToBoolean(Interaction.IIf(myWeb.moRequest["RelType"] == "1way", false, true)));
                             }
                             else
                             {
-                                insertContentRelation(Conversions.ToInteger(goRequest.Form.Get("id")), cOValue, Conversions.ToBoolean(Interaction.IIf(myWeb.moRequest["RelType"] == "1way", false, true)), rType);
+                                insertContentRelation(Convert.ToInt16(goRequest.Form.Get("id")), cOValue, Convert.ToBoolean(Interaction.IIf(myWeb.moRequest["RelType"] == "1way", false, true)), rType);
                             }
                         }
                         // If cOName.Contains("reciprocate_") Then
@@ -11084,14 +11088,14 @@ namespace Protean
                 string sProcessInfo = "";
                 if (newParentID == 0L)
                 {
-                    newParentID = Conversions.ToLong(goRequest.Form["updateParent"]);
+                    newParentID = Convert.ToInt64(goRequest.Form["updateParent"]);
                 }
                 try
                 {
                     // single update staetment
                     string cSQl;
-                    cSQl = "update tblContentRelation set nContentParentId= " + newParentID + " where nContentParentId= " + oldParentID + " and nContentChildId =" + childid + "";
-                    int nID = Conversions.ToInteger(ExeProcessSqlScalar(cSQl));
+                    cSQl = $"update tblContentRelation set nContentParentId= {newParentID} where nContentParentId= {oldParentID} and nContentChildId ={childid}";
+                    int nID = Convert.ToInt16(ExeProcessSqlScalar(cSQl));
                 }
 
                 catch (Exception ex)
@@ -11108,25 +11112,24 @@ namespace Protean
                 PerfMonLog("DBHelper", "insertContentRelation");
                 try
                 {
-                    string[] nChilds = Strings.Split(nChildIDs, ",");
+                    string[] nChilds = nChildIDs.Split(',');
                     string nIDs = "";
                     int nIx;
-                    var loopTo = Information.UBound(nChilds);
-                    for (nIx = 0; nIx <= loopTo; nIx++)
+                    for (nIx = 0; nIx < nChilds.Length; nIx++)
                     {
 
 
                         string cSQl;
                         if (!string.IsNullOrEmpty(rType))
                         {
-                            cSQl = "Select nContentRelationKey from tblContentRelation where nContentParentId = " + nParentID + " and nContentChildId = " + nChilds[nIx] + "and cRelationType = '" + rType + "'";
+                            cSQl = $"Select nContentRelationKey from tblContentRelation where nContentParentId = {nParentID} and nContentChildId = {nChilds[nIx]}and cRelationType = '{rType}'";
                         }
                         else
                         {
-                            cSQl = "Select nContentRelationKey from tblContentRelation where nContentParentId = " + nParentID + " and nContentChildId = " + nChilds[nIx];
+                            cSQl = $"Select nContentRelationKey from tblContentRelation where nContentParentId = {nParentID} and nContentChildId = {nChilds[nIx]}";
                         }
 
-                        int nID = Conversions.ToInteger(ExeProcessSqlScalar(cSQl));
+                        int nID = Convert.ToInt16(ExeProcessSqlScalar(cSQl));
                         if (nID > 0)
                         {
                             nIDs += nID + ",";
@@ -11137,18 +11140,18 @@ namespace Protean
                             var oDs = new DataSet();
                             oDs = GetDataSet("SELECT * FROM tblContentRelation", "Content");
 
-                            cSQl = "SELECT Count(tblContentRelation.nContentRelationKey) FROM tblContent INNER JOIN tblContent tblContent_1 ON tblContent.cContentSchemaName = tblContent_1.cContentSchemaName INNER JOIN tblContentRelation ON tblContent_1.nContentKey = tblContentRelation.nContentChildId" + " WHERE (tblContent.nContentKey = " + nChilds[nIx] + ") AND (tblContentRelation.nContentParentId = " + nParentID + ")";
+                            cSQl = $"SELECT Count(tblContentRelation.nContentRelationKey) FROM tblContent INNER JOIN tblContent tblContent_1 ON tblContent.cContentSchemaName = tblContent_1.cContentSchemaName INNER JOIN tblContentRelation ON tblContent_1.nContentKey = tblContentRelation.nContentChildId WHERE (tblContent.nContentKey = {nChilds[nIx]}) AND (tblContentRelation.nContentParentId = {nParentID})";
 
-                            int nCount = (int)Math.Round(Conversions.ToDouble(ExeProcessSqlScalar(cSQl)) + 1d);
+                            int nCount = (int)Math.Round(Convert.ToDouble(ExeProcessSqlScalar(cSQl)) + 1d);
 
                             if (oDs.Tables["Content"].Columns.Contains("cRelationType"))
                             {
-                                cSQl = "INSERT INTO tblContentRelation (nContentParentId, nContentChildId, nDisplayOrder, nAuditId, cRelationType) VALUES (" + nParentID + "," + nChilds[nIx] + "," + nCount + "," + getAuditId(cDescription: "ContentRelation") + "," + "'" + SqlFmt(rType) + "'" + ")";
+                                cSQl = $"INSERT INTO tblContentRelation (nContentParentId, nContentChildId, nDisplayOrder, nAuditId, cRelationType) VALUES ({nParentID},{nChilds[nIx]},{nCount},{getAuditId(cDescription: "ContentRelation")},'{SqlFmt(rType)}')";
                             }
                             else
                             {
                                 // getAuditId(nContentStatus, , , dPublishDate, dExpireDate) 
-                                cSQl = "INSERT INTO tblContentRelation (nContentParentId, nContentChildId, nDisplayOrder, nAuditId) VALUES (" + nParentID + "," + nChilds[nIx] + "," + nCount + "," + getAuditId(cDescription: "ContentRelation") + ")";
+                                cSQl = $"INSERT INTO tblContentRelation (nContentParentId, nContentChildId, nDisplayOrder, nAuditId) VALUES ({nParentID},{nChilds[nIx]},{nCount},{getAuditId(cDescription: "ContentRelation")})";
                             }
 
                             // AG Note: Not sure what this is (BR wrote this)
@@ -11170,15 +11173,15 @@ namespace Protean
                         {
                             if (!string.IsNullOrEmpty(rType))
                             {
-                                insertContentRelation(Conversions.ToInteger(nChilds[nIx]), nParentID.ToString(), false, rType);
+                                insertContentRelation(Convert.ToInt16(nChilds[nIx]), nParentID.ToString(), false, rType);
                             }
                             else
                             {
-                                insertContentRelation(Conversions.ToInteger(nChilds[nIx]), nParentID.ToString(), false);
+                                insertContentRelation(Convert.ToInt16(nChilds[nIx]), nParentID.ToString(), false);
                             }
                         }
                     }
-                    return Strings.Left(nIDs, nIDs.Length - 1);
+                    return nIDs.Length > 0 ? nIDs.Substring(0, nIDs.Length - 1) : "";
                 }
                 catch (Exception ex)
                 {
@@ -11195,8 +11198,8 @@ namespace Protean
                 try
                 {
 
-                    string cSQL = "Select nContentRelationKey from tblContentRelation where nContentParentID = " + nRelatedParentId + " AND nContentChildId = " + nContentId;
-                    DeleteObject(objectTypes.ContentRelation, Conversions.ToLong(ExeProcessSqlScalar(cSQL)));
+                    string cSQL = $"Select nContentRelationKey from tblContentRelation where nContentParentID = {nRelatedParentId} AND nContentChildId = {nContentId}";
+                    DeleteObject(objectTypes.ContentRelation, Convert.ToInt64(ExeProcessSqlScalar(cSQL)));
                 }
 
                 catch (Exception ex)
@@ -11214,13 +11217,13 @@ namespace Protean
                 {
 
                     string cSQL;
-                    if (Strings.LCase(direction) == "child")
+                    if ((direction ?? "").ToLower() == "child")
                     {
-                        cSQL = "Select nContentRelationKey from tblContentRelation where nContentChildId = " + nRelatedParentId + " AND cRelationType = '" + cRelationType + "'";
+                        cSQL = $"Select nContentRelationKey from tblContentRelation where nContentChildId = {nRelatedParentId} AND cRelationType = '{cRelationType}'";
                     }
                     else
                     {
-                        cSQL = "Select nContentRelationKey from tblContentRelation where nContentParentId = " + nRelatedParentId + " AND cRelationType = '" + cRelationType + "'";
+                        cSQL = $"Select nContentRelationKey from tblContentRelation where nContentParentId = {nRelatedParentId} AND cRelationType = '{cRelationType}'";
                     }
 
                     using (var oRead = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
@@ -11243,8 +11246,8 @@ namespace Protean
                 try
                 {
 
-                    string cSQL = "Select nContentLocationKey from tblContentLocation where nStructId = " + nPageId + " AND nContentId = " + nContentId;
-                    DeleteObject(objectTypes.ContentLocation, Conversions.ToLong(ExeProcessSqlScalar(cSQL)));
+                    string cSQL = $"Select nContentLocationKey from tblContentLocation where nStructId = {nPageId} AND nContentId = {nContentId}";
+                    DeleteObject(objectTypes.ContentLocation, Convert.ToInt64(ExeProcessSqlScalar(cSQL)));
                 }
 
                 catch (Exception ex)
@@ -11262,12 +11265,12 @@ namespace Protean
                 {
                     string sSearch = cSearchExpression;
                     // remove reserved words
-                    sSearch = Strings.Replace(" " + sSearch + " ", " the ", "");
-                    sSearch = Strings.Replace(" " + sSearch + " ", " and ", "");
-                    sSearch = Strings.Replace(" " + sSearch + " ", " if ", "");
-                    sSearch = Strings.Replace(" " + sSearch + " ", " then ", "");
-                    sSearch = Strings.Replace(" " + sSearch + " ", " or ", "");
-                    sSearch = Strings.Trim(sSearch);
+                    sSearch = (" " + sSearch + " ").Replace(" the ", "");
+                    sSearch = (" " + sSearch + " ").Replace(" and ", "");
+                    sSearch = (" " + sSearch + " ").Replace(" if ", "");
+                    sSearch = (" " + sSearch + " ").Replace(" then ", "");
+                    sSearch = (" " + sSearch + " ").Replace(" or ", "");
+                    sSearch = sSearch.Trim();
 
 
                     string cSQL = "";
@@ -11281,17 +11284,16 @@ namespace Protean
                     string[] aSchema = cSchemaName.Split(',');
                     int i;
                     string sWhere = "";
-                    var loopTo = Information.UBound(aSchema);
-                    for (i = 0; i <= loopTo; i++)
-                        sWhere = sWhere + "cContentSchemaName = '" + Strings.Trim(aSchema[i]) + "' or ";
+                    for (i = 0; i < aSchema.Length; i++)
+                        sWhere = sWhere + "cContentSchemaName = '" + aSchema[i].Trim() + "' or ";
                     // lets whip of the last and
-                    sWhere = Strings.Left(sWhere, Strings.Len(sWhere) - 3);
+                    sWhere = sWhere.Length >= 3 ? sWhere.Substring(0, sWhere.Length - 3) : sWhere;
 
 
                     if (nRootNode == 0)
                     {
                         // All
-                        cSQL = "SELECT nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content,  " + "	a.dPublishDate AS publishDate " + " FROM tblContent c " + "	INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId " + " WHERE " + sWhere + " ORDER BY cContentName";
+                        cSQL = $"SELECT nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.dPublishDate AS publishDate FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId WHERE {sWhere} ORDER BY cContentName";
 
 
 
@@ -11300,7 +11302,7 @@ namespace Protean
                     else if (nRootNode == -1)
                     {
                         // Orphans only
-                        cSQL = "SELECT c.nContentKey as id, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, c.cContentXmlBrief as content, " + "	a.dPublishDate AS publishDate " + " FROM tblContent c" + "	INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId " + " LEFT OUTER JOIN tblContentLocation cl ON c.nContentKey = cl.nContentId WHERE ( " + sWhere + " ) AND (cl.nContentLocationKey IS NULL) ORDER BY c.cContentName";
+                        cSQL = $"SELECT c.nContentKey as id, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, c.cContentXmlBrief as content, a.dPublishDate AS publishDate FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId LEFT OUTER JOIN tblContentLocation cl ON c.nContentKey = cl.nContentId WHERE ( {sWhere} ) AND (cl.nContentLocationKey IS NULL) ORDER BY c.cContentName";
 
 
 
@@ -11324,7 +11326,7 @@ namespace Protean
                         oStructure.InnerXml = oDs.GetXml().ToString().Replace("&lt;", "<").Replace("&gt;", ">");
 
                         // Find the root node
-                        XmlElement oRootNode = (XmlElement)oStructure.SelectSingleNode("//Structure[@nStructKey='" + nRootNode + "']");
+                        XmlElement oRootNode = (XmlElement)oStructure.SelectSingleNode($"//Structure[@nStructKey='{nRootNode}']");
 
                         // Get a list of the page ids - we're going to use this to filter content
                         string cLocations = nRootNode.ToString();
@@ -11345,18 +11347,18 @@ namespace Protean
                         //Modified query according to criteria for review
                         if (cSchemaName == "Review")
                         {
-                            cSubquerySQL = "SELECT DISTINCT c.nContentKey AS id " + "FROM tblContent c " + " " + "Inner join tblContentRelation cr  On c.nContentKey= cr.nContentChildId INNER JOIN tblAudit cra ON cra.nAuditKey= cr.nAuditId and cra.nStatus=1 " + "	INNER JOIN tblContentLocation l " + "		ON l.nContentId = cr.nContentParentId INNER JOIN tblAudit cla ON cla.nAuditKey= l.nAuditId and cla.nStatus=1 " + "WHERE (" + sWhere + ") " + "	AND NOT(c.nContentKey IN (0," + nIgnoreID + ")) " + "	AND l.nStructId IN (" + cLocations + ") ";
+                            cSubquerySQL = $"SELECT DISTINCT c.nContentKey AS id FROM tblContent c Inner join tblContentRelation cr On c.nContentKey= cr.nContentChildId INNER JOIN tblAudit cra ON cra.nAuditKey= cr.nAuditId and cra.nStatus=1 INNER JOIN tblContentLocation l ON l.nContentId = cr.nContentParentId INNER JOIN tblAudit cla ON cla.nAuditKey= l.nAuditId and cla.nStatus=1 WHERE ({sWhere}) AND NOT(c.nContentKey IN (0,{nIgnoreID})) AND l.nStructId IN ({cLocations}) ";
 
                         }
                         else
                         {
-                            cSubquerySQL = "SELECT DISTINCT c.nContentKey AS id " + "FROM tblContent c " + "	INNER JOIN tblContentLocation l " + "		ON c.nContentKey = l.nContentId " + "WHERE (" + sWhere + ") " + "	AND NOT(c.nContentKey IN (0," + nIgnoreID + ")) " + "	AND l.nStructId IN (" + cLocations + ") ";
+                            cSubquerySQL = $"SELECT DISTINCT c.nContentKey AS id FROM tblContent c INNER JOIN tblContentLocation l ON c.nContentKey = l.nContentId WHERE ({sWhere}) AND NOT(c.nContentKey IN (0,{nIgnoreID})) AND l.nStructId IN ({cLocations}) ";
 
                         }
 
 
                         // No get more information
-                        cSQL = "SELECT " + "	c.nContentKey AS id,  " + "	c.cContentForiegnRef AS ref,  " + "	c.cContentName AS name,  " + "	c.cContentSchemaName AS type,  " + "	c.cContentXmlBrief AS content,  " + "	a.dPublishDate AS publishDate " + "FROM tblContent c " + "	INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId " + "	INNER JOIN (" + cSubquerySQL + ") distinctlist " + "		ON c.nContentKey = distinctlist.id " + "ORDER BY c.cContentName";
+                        cSQL = $"SELECT c.nContentKey AS id, c.cContentForiegnRef AS ref, c.cContentName AS name, c.cContentSchemaName AS type, c.cContentXmlBrief AS content, a.dPublishDate AS publishDate FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId INNER JOIN ({cSubquerySQL}) distinctlist ON c.nContentKey = distinctlist.id ORDER BY c.cContentName";
 
 
 
@@ -11394,7 +11396,7 @@ namespace Protean
 
                     }
 
-                    string[] SearchArr = Strings.Split(cSearchExpression, " ");
+                    string[] SearchArr = cSearchExpression.Split(' ');
 
                     // bool bFound = false;
 
@@ -11421,7 +11423,7 @@ namespace Protean
 
                     if (bIncRelated)
                     {
-                        cSQL = "SELECT c.nContentKey AS id, distinctlist.parId, c.cContentForiegnRef AS ref, c.cContentName AS name,  	c.cContentSchemaName AS type,  " + "c.cContentXmlBrief AS content, a.dPublishDate AS publishDate FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId " + "INNER JOIN (SELECT DISTINCT c.nContentKey AS id , rel.nContentParentId AS parId FROM tblContent c INNER JOIN tblContentRelation rel ON c.nContentKey = rel.nContentChildId " + "WHERE (cContentSchemaName = 'Product' or cContentSchemaName = 'SKU' ) 	AND rel.nContentParentId IN (" + idList + ")) distinctlist ON c.nContentKey = distinctlist.id ORDER BY c.cContentName";
+                        cSQL = $"SELECT c.nContentKey AS id, distinctlist.parId, c.cContentForiegnRef AS ref, c.cContentName AS name, c.cContentSchemaName AS type, c.cContentXmlBrief AS content, a.dPublishDate AS publishDate FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId INNER JOIN (SELECT DISTINCT c.nContentKey AS id , rel.nContentParentId AS parId FROM tblContent c INNER JOIN tblContentRelation rel ON c.nContentKey = rel.nContentChildId WHERE (cContentSchemaName = 'Product' or cContentSchemaName = 'SKU' ) AND rel.nContentParentId IN ({idList})) distinctlist ON c.nContentKey = distinctlist.id ORDER BY c.cContentName";
 
                         oDs = GetDataSet(cSQL, "Content", "SearchRelated");
                         oDs.EnforceConstraints = false;
@@ -11442,7 +11444,7 @@ namespace Protean
                             XmlElement xmloRelNode = oRelNode;
                             xmloRelNode = SimpleTidyContentNode(ref xmloRelNode, dExpireDate: ref argdExpireDate1, dUpdateDate: ref argdUpdateDate1);
                             string ParId = xmloRelNode.GetAttribute("parId");
-                            XmlElement ParNode = (XmlElement)oResults.SelectSingleNode("Content[@id='" + ParId + "']");
+                            XmlElement ParNode = (XmlElement)oResults.SelectSingleNode($"Content[@id='{ParId}']");
                             ParNode.AppendChild(xmloRelNode);
                         }
 
@@ -11475,10 +11477,10 @@ namespace Protean
                                             string cSqlResults = "";
 
                                             while (oDre.Read())
-                                                cSqlResults = Conversions.ToString(cSqlResults + Operators.ConcatenateObject(oDre[0], ","));
+                                                cSqlResults = Convert.ToString(cSqlResults + Operators.ConcatenateObject(oDre[0], ","));
                                             oDre.Close();
                                             if (!string.IsNullOrEmpty(cSqlResults))
-                                                cSqlResults = Strings.Left(cSqlResults, Strings.Len(cSqlResults) - 1);
+                                                cSqlResults = cSqlResults.Length > 0 ? cSqlResults.Substring(0, cSqlResults.Length - 1) : cSqlResults;
 
                                             if (!string.IsNullOrEmpty(cSqlResults))
                                             {
@@ -11516,15 +11518,15 @@ namespace Protean
                 {
                     foreach (var oFrmItem in goRequest.Form)
                     {
-                        string cOName = Conversions.ToString(oFrmItem);
+                        string cOName = Convert.ToString(oFrmItem);
                         string cOValue = goRequest.Form.Get(cOName);
                         if (cOName.Contains("list"))
                         {
-                            insertGroupProductRelation(Conversions.ToInteger(goRequest.QueryString["GroupId"]), cOValue);
+                            insertGroupProductRelation(Convert.ToInt16(goRequest.QueryString["GroupId"]), cOValue);
                         }
                         if (cOName.Contains("unrelate"))
                         {
-                            deleteGroupProductRelation(Conversions.ToInteger(goRequest.QueryString["GroupId"]), cOValue);
+                            deleteGroupProductRelation(Convert.ToInt16(goRequest.QueryString["GroupId"]), cOValue);
                         }
                     }
                 }
@@ -11541,26 +11543,25 @@ namespace Protean
                 PerfMonLog("DBHelper", "insertProductGroupRelation");
                 try
                 {
-                    string[] oContentArr = Strings.Split(nContent, ",");
+                    string[] oContentArr = nContent.Split(',');
                     int cCount;
                     var strReturn = new System.Text.StringBuilder();
 
 
-                    var loopTo = Information.UBound(oContentArr);
-                    for (cCount = 0; cCount <= loopTo; cCount++)
+                    for (cCount = 0; cCount < oContentArr.Length; cCount++)
                     {
 
                         int nCatProductRelKey;
 
-                        string cSQl = "Select nCatProductRelKey from tblCartCatProductRelations where nCatId = " + nGroupId + " and nContentId = " + oContentArr[cCount];
-                        nCatProductRelKey = Conversions.ToInteger(ExeProcessSqlScalar(cSQl));
+                        string cSQl = $"Select nCatProductRelKey from tblCartCatProductRelations where nCatId = {nGroupId} and nContentId = {oContentArr[cCount]}";
+                        nCatProductRelKey = Convert.ToInt16(ExeProcessSqlScalar(cSQl));
 
                         // if there's no existing relation, make a new one
                         if (nCatProductRelKey == 0)
                         {
-                            cSQl = "INSERT INTO tblCartCatProductRelations (nContentId, nCatId, nAuditId) VALUES (" + oContentArr[cCount] + "," + nGroupId + "," + getAuditId(cDescription: "ContentRelation") + ")";
+                            cSQl = $"INSERT INTO tblCartCatProductRelations (nContentId, nCatId, nAuditId) VALUES ({oContentArr[cCount]},{nGroupId},{getAuditId(cDescription: "ContentRelation")})";
 
-                            nCatProductRelKey = Conversions.ToInteger(GetIdInsertSql(cSQl));
+                            nCatProductRelKey = Convert.ToInt16(GetIdInsertSql(cSQl));
                         }
 
                         strReturn.Append(nCatProductRelKey);
@@ -11593,19 +11594,20 @@ namespace Protean
                 PerfMonLog("DBHelper", "insertProductGroupRelation");
                 try
                 {
-                    string[] oContentArr = Strings.Split(nContent, ",");
+                    string[] oContentArr = nContent.Split(',');
                     int cCount;
                     var strReturn = new System.Text.StringBuilder();
 
 
-                    var loopTo = Information.UBound(oContentArr);
-                    for (cCount = 0; cCount <= loopTo; cCount++)
+
+
+                    for (cCount = 0; cCount < oContentArr.Length; cCount++)
                     {
 
                         int nCatProductRelKey;
 
-                        string cSQl = "Select nCatProductRelKey from tblCartCatProductRelations where nCatId = " + nGroupId + " and nContentId = " + oContentArr[cCount];
-                        nCatProductRelKey = Conversions.ToInteger(ExeProcessSqlScalar(cSQl));
+                        string cSQl = $"Select nCatProductRelKey from tblCartCatProductRelations where nCatId = {nGroupId} and nContentId = {oContentArr[cCount]}";
+                        nCatProductRelKey = Convert.ToInt16(ExeProcessSqlScalar(cSQl));
 
                         if (nCatProductRelKey != 0)
                         {
@@ -11634,27 +11636,26 @@ namespace Protean
                 string cProcessInfo = "insertProductGroupRelation";
                 try
                 {
-                    string[] oGroupArr = Strings.Split(sGroupIds.Trim(','), ",");
+                    string[] oGroupArr = sGroupIds.Trim(',').Split(',');
                     int cCount;
                     var strReturn = new System.Text.StringBuilder();
 
                     if (!string.IsNullOrEmpty(sGroupIds))
                     {
-                        var loopTo = Information.UBound(oGroupArr);
-                        for (cCount = 0; cCount <= loopTo; cCount++)
+                        for (cCount = 0; cCount < oGroupArr.Length; cCount++)
                         {
 
                             int nCatProductRelKey;
                             int savedId;
 
-                            string cSQl = "Select nCatProductRelKey from tblCartCatProductRelations where nContentId = " + nProductId + " and nCatId = " + oGroupArr[cCount];
-                            nCatProductRelKey = Conversions.ToInteger(ExeProcessSqlScalar(cSQl));
+                            string cSQl = $"Select nCatProductRelKey from tblCartCatProductRelations where nContentId = {nProductId} and nCatId = {oGroupArr[cCount]}";
+                            nCatProductRelKey = Convert.ToInt16(ExeProcessSqlScalar(cSQl));
 
                             // if there's no existing relation, make a new one
                             if (nCatProductRelKey == 0)
                             {
-                                cSQl = "INSERT INTO tblCartCatProductRelations (nContentId, nCatId, nAuditId) VALUES (" + nProductId + "," + oGroupArr[cCount] + "," + getAuditId(cDescription: "ContentRelation") + ")";
-                                savedId = Conversions.ToInteger(GetIdInsertSql(cSQl));
+                                cSQl = $"INSERT INTO tblCartCatProductRelations (nContentId, nCatId, nAuditId) VALUES ({nProductId},{oGroupArr[cCount]},{getAuditId(cDescription: "ContentRelation")})";
+                                savedId = Convert.ToInt16(GetIdInsertSql(cSQl));
                             }
                             else
                             {
@@ -11671,13 +11672,13 @@ namespace Protean
                         s = s.TrimEnd(',');
 
                         // delete any new ones
-                        string delSql = "Select nCatProductRelKey from tblCartCatProductRelations where nContentId = " + nProductId + " and nCatProductRelKey not in (" + s + ")";
+                        string delSql = $"Select nCatProductRelKey from tblCartCatProductRelations where nContentId = {nProductId} and nCatProductRelKey not in ({s})";
                         using (var oDr = getDataReaderDisposable(delSql))  // Done by nita on 6/7/22
                         {
                             if (oDr != null)
                             {
                                 while (oDr.Read())
-                                    DeleteObject(objectTypes.CartCatProductRelations, Conversions.ToLong(oDr[0]));
+                                    DeleteObject(objectTypes.CartCatProductRelations, Convert.ToInt64(oDr[0]));
                             }
                             else
                             {
@@ -11694,7 +11695,7 @@ namespace Protean
                         using (var oDr = getDataReaderDisposable(delSql))  // Done by nita on 6/7/22
                         {
                             while (oDr.Read())
-                                DeleteObject(objectTypes.CartCatProductRelations, Conversions.ToLong(oDr[0]));
+                                DeleteObject(objectTypes.CartCatProductRelations, Convert.ToInt64(oDr[0]));
                         }
                         return "";
                     }
@@ -11725,7 +11726,7 @@ namespace Protean
                     int nI;
                     int nDirId;
                     string cNewIds = "";
-                    int nPermLevel = Conversions.ToInteger("1");
+                    int nPermLevel = Convert.ToInt16("1");
                     bool bDeny = false;
                     if (checkTableColumnExists("tblCartDiscountDirRelations", "nPermLevel"))
                     {
@@ -11749,14 +11750,14 @@ namespace Protean
                     var loopTo = Information.UBound(cGroups);
                     for (nI = 0; nI <= loopTo; nI++)
                     {
-                        nDirId = Conversions.ToInteger(cGroups[nI]);
+                        nDirId = Convert.ToInt16(cGroups[nI]);
                         if (bInsert)
                         {
 
 
                             // if exists then  return the id
-                            string cSQL = "Select nDiscountDirRelationKey From tblCartDiscountDirRelations Where nDiscountId = " + nDiscountId + " And nDirId = " + nDirId;
-                            int nId = Conversions.ToInteger(ExeProcessSqlScalar(cSQL));
+                            string cSQL = $"Select nDiscountDirRelationKey From tblCartDiscountDirRelations Where nDiscountId = {nDiscountId} And nDirId = {nDirId}";
+                            int nId = Convert.ToInt16(ExeProcessSqlScalar(cSQL));
                             if (nId > 0)
                                 return nId.ToString();
 
@@ -11764,26 +11765,26 @@ namespace Protean
                             if (nDirId > 0)
                             {
                                 // remove any "all" record
-                                cSQL = "Select nDiscountDirRelationKey From tblCartDiscountDirRelations Where nDiscountId = " + nDiscountId + " And nDirId = 0 And nPermLevel = " + nPermLevel;
-                                DeleteObject(objectTypes.CartDiscountDirRelations, Conversions.ToLong(ExeProcessSqlScalar(cSQL)));
+                                cSQL = $"Select nDiscountDirRelationKey From tblCartDiscountDirRelations Where nDiscountId = {nDiscountId} And nDirId = 0 And nPermLevel = {nPermLevel}";
+                                DeleteObject(objectTypes.CartDiscountDirRelations, Convert.ToInt64(ExeProcessSqlScalar(cSQL)));
                             }
                             else
                             {
                                 // remove any specific record
-                                cSQL = "Select nDiscountDirRelationKey From tblCartDiscountDirRelations Where nDiscountId = " + nDiscountId + " And nDirId > 0 And nPermLevel = " + nPermLevel;
+                                cSQL = $"Select nDiscountDirRelationKey From tblCartDiscountDirRelations Where nDiscountId = {nDiscountId} And nDirId > 0 And nPermLevel = {nPermLevel}";
                                 using (var oDre = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                                 {
                                     while (oDre.Read())
-                                        DeleteObject(objectTypes.CartDiscountDirRelations, Conversions.ToLong(oDre[0]));
+                                        DeleteObject(objectTypes.CartDiscountDirRelations, Convert.ToInt64(oDre[0]));
                                 }
                             }
                             if (bDeny)
                             {
-                                cSQL = "INSERT INTO tblCartDiscountDirRelations (nDiscountId, nDirId, nAuditId, nPermLevel) Values(" + nDiscountId + "," + nDirId + "," + getAuditId(1, cDescription: "DiscountDirRelation") + ", " + nPermLevel + ")";
+                                cSQL = $"INSERT INTO tblCartDiscountDirRelations (nDiscountId, nDirId, nAuditId, nPermLevel) Values({nDiscountId},{nDirId},{getAuditId(1, cDescription: "DiscountDirRelation")}, {nPermLevel})";
                             }
                             else
                             {
-                                cSQL = "INSERT INTO tblCartDiscountDirRelations (nDiscountId, nDirId, nAuditId) Values(" + nDiscountId + "," + nDirId + "," + getAuditId(1, cDescription: "DiscountDirRelation") + ")";
+                                cSQL = $"INSERT INTO tblCartDiscountDirRelations (nDiscountId, nDirId, nAuditId) Values({nDiscountId},{nDirId},{getAuditId(1, cDescription: "DiscountDirRelation")})";
                             }
 
                             cNewIds += GetIdInsertSql(cSQL) + ",";
@@ -11816,7 +11817,7 @@ namespace Protean
                     int nDirId;
                     string cNewIds = "";
                     bool bDeny = false;
-                    int nPermLevel = Conversions.ToInteger("1");
+                    int nPermLevel = Convert.ToInt16("1");
                     if (checkTableColumnExists("tblCartShippingPermission", "nPermLevel"))
                     {
                         bDeny = true;
@@ -11839,12 +11840,12 @@ namespace Protean
                     var loopTo = Information.UBound(cGroups);
                     for (nI = 0; nI <= loopTo; nI++)
                     {
-                        nDirId = Conversions.ToInteger(cGroups[nI]);
+                        nDirId = Convert.ToInt16(cGroups[nI]);
                         if (bInsert)
                         {
                             // if exists then  return the id
-                            string cSQL = "Select nCartShippingPermissionKey From tblCartShippingPermission Where nShippingMethodId = " + nShippingMethodId + " And nDirId = " + nDirId;
-                            int nId = Conversions.ToInteger(ExeProcessSqlScalar(cSQL));
+                            string cSQL = $"Select nCartShippingPermissionKey From tblCartShippingPermission Where nShippingMethodId = {nShippingMethodId} And nDirId = {nDirId}";
+                            int nId = Convert.ToInt16(ExeProcessSqlScalar(cSQL));
                             if (nId > 0)
                                 return nId.ToString();
 
@@ -11852,27 +11853,27 @@ namespace Protean
                             if (nDirId > 0)
                             {
                                 // remove any "all" record
-                                cSQL = "Select nCartShippingPermissionKey From tblCartShippingPermission Where nShippingMethodId = " + nShippingMethodId + " And nDirId = 0";
-                                DeleteObject(objectTypes.CartShippingPermission, Conversions.ToLong(ExeProcessSqlScalar(cSQL)));
+                                cSQL = $"Select nCartShippingPermissionKey From tblCartShippingPermission Where nShippingMethodId = {nShippingMethodId} And nDirId = 0";
+                                DeleteObject(objectTypes.CartShippingPermission, Convert.ToInt64(ExeProcessSqlScalar(cSQL)));
                             }
                             else
                             {
                                 // remove any specific record
-                                cSQL = "Select nCartShippingPermissionKey From tblCartShippingPermission Where nShippingMethodId = " + nShippingMethodId + " And nDirId > 0";
+                                cSQL = $"Select nCartShippingPermissionKey From tblCartShippingPermission Where nShippingMethodId = {nShippingMethodId} And nDirId > 0";
                                 using (var oDre = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                                 {
                                     while (oDre.Read())
-                                        DeleteObject(objectTypes.CartShippingPermission, Conversions.ToLong(oDre[0]));
+                                        DeleteObject(objectTypes.CartShippingPermission, Convert.ToInt64(oDre[0]));
                                 }
                             }
                             if (bDeny)
                             {
-                                cSQL = "INSERT INTO tblCartShippingPermission (nShippingMethodId, nDirId, nPermLevel, nAuditId) Values(" + nShippingMethodId + "," + nDirId + "," + nPermLevel + "," + getAuditId(1, cDescription: "CartShippingPermission") + ")";
+                                cSQL = $"INSERT INTO tblCartShippingPermission (nShippingMethodId, nDirId, nPermLevel, nAuditId) Values({nShippingMethodId},{nDirId},{nPermLevel},{getAuditId(1, cDescription: "CartShippingPermission")})";
                             }
 
                             else
                             {
-                                cSQL = "INSERT INTO tblCartShippingPermission (nShippingMethodId, nDirId, nAuditId) Values(" + nShippingMethodId + "," + nDirId + "," + getAuditId(1, cDescription: "CartShippingPermission") + ")";
+                                cSQL = $"INSERT INTO tblCartShippingPermission (nShippingMethodId, nDirId, nAuditId) Values({nShippingMethodId},{nDirId},{getAuditId(1, cDescription: "CartShippingPermission")})";
                             }
 
                             cNewIds += GetIdInsertSql(cSQL) + ",";
@@ -11923,48 +11924,48 @@ namespace Protean
                     var loopTo = Information.UBound(cGroups);
                     for (nI = 0; nI <= loopTo; nI++)
                     {
-                        nCatKeys = Conversions.ToInteger(cGroups[nI]).ToString();
+                        nCatKeys = Convert.ToInt16(cGroups[nI]).ToString();
                         if (bInsert)
                         {
                             // if exists then  return the id
-                            string cSQL = "Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = " + nShippingMethodId + " And nCatId = " + nCatKeys;
-                            int nId = Conversions.ToInteger(ExeProcessSqlScalar(cSQL));
+                            string cSQL = $"Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = {nShippingMethodId} And nCatId = {nCatKeys}";
+                            int nId = Convert.ToInt16(ExeProcessSqlScalar(cSQL));
                             if (nId > 0)
                                 return nId.ToString();
 
                             // Logic to rmove relations if an "all" entry exists, or other way round
-                            if (Conversions.ToDouble(nCatKeys) > 0d)
+                            if (Convert.ToDouble(nCatKeys) > 0d)
                             {
                                 // remove any "all" record
-                                cSQL = "Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = " + nShippingMethodId + " And nCatId = 0";
-                                DeleteObject(objectTypes.nShipProdCatRelKey, Conversions.ToLong(ExeProcessSqlScalar(cSQL)));
+                                cSQL = $"Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = {nShippingMethodId} And nCatId = 0";
+                                DeleteObject(objectTypes.nShipProdCatRelKey, Convert.ToInt64(ExeProcessSqlScalar(cSQL)));
                             }
                             else
                             {
                                 // remove any specific record
-                                cSQL = "Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = " + nShippingMethodId + " And nCatId > 0";
+                                cSQL = $"Select nShipProdCatRelKey From tblCartShippingProductCategoryRelations Where nShipOptId = {nShippingMethodId} And nCatId > 0";
                                 using (var oDre = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                                 {
                                     while (oDre.Read())
-                                        DeleteObject(objectTypes.nShipProdCatRelKey, Conversions.ToLong(oDre[0]));
+                                        DeleteObject(objectTypes.nShipProdCatRelKey, Convert.ToInt64(oDre[0]));
                                 }
                             }
                             if (bDeny)
                             {
-                                cSQL = "INSERT INTO tblCartShippingProductCategoryRelations (nShipOptId, nCatId, nRuleType, nAuditId) Values(" + nShippingMethodId + "," + nCatKeys + "," + ((int)nRuleType).ToString() + "," + getAuditId(1, cDescription: "CartShippingProductCategoryRelations") + ")";
+                                cSQL = $"INSERT INTO tblCartShippingProductCategoryRelations (nShipOptId, nCatId, nRuleType, nAuditId) Values({nShippingMethodId},{nCatKeys},{(int)nRuleType},{getAuditId(1, cDescription: "CartShippingProductCategoryRelations")})";
                             }
 
 
                             else
                             {
-                                cSQL = "INSERT INTO tblCartShippingProductCategoryRelations (nShipOptId, nCatId, nRuleType, nAuditId) Values(" + nShippingMethodId + "," + nCatKeys + "," + ((int)nRuleType).ToString() + "," + getAuditId(1, cDescription: "CartShippingProductCategoryRelations") + ")";
+                                cSQL = $"INSERT INTO tblCartShippingProductCategoryRelations (nShipOptId, nCatId, nRuleType, nAuditId) Values({nShippingMethodId},{nCatKeys},{(int)nRuleType},{getAuditId(1, cDescription: "CartShippingProductCategoryRelations")})";
                             }
 
                             cNewIds += GetIdInsertSql(cSQL) + ",";
                         }
                         else
                         {
-                            cNewIds += DeleteObject(objectTypes.nShipProdCatRelKey, Conversions.ToLong(nCatKeys)) + ",";
+                            cNewIds += DeleteObject(objectTypes.nShipProdCatRelKey, Convert.ToInt64(nCatKeys)) + ",";
                         }
                     }
                     return Strings.Left(cNewIds, cNewIds.Length - 1);
@@ -11988,12 +11989,12 @@ namespace Protean
                     var loopTo = Information.UBound(cGroups);
                     for (nI = 0; nI <= loopTo; nI++)
                     {
-                        nProdGroupId = Conversions.ToInteger(cGroups[nI]);
+                        nProdGroupId = Convert.ToInt16(cGroups[nI]);
                         if (bInsert)
                         {
                             // if exists then  return the id
-                            string cSQL = "Select nDiscountProdCatRelationKey From tblCartDiscountProdCatRelations Where nDiscountId = " + nDiscountId + " And nProductCatId = " + nProdGroupId;
-                            int nId = Conversions.ToInteger(ExeProcessSqlScalar(cSQL));
+                            string cSQL = $"Select nDiscountProdCatRelationKey From tblCartDiscountProdCatRelations Where nDiscountId = {nDiscountId} And nProductCatId = {nProdGroupId}";
+                            int nId = Convert.ToInt16(ExeProcessSqlScalar(cSQL));
                             if (nId > 0)
                                 return nId.ToString();
 
@@ -12001,21 +12002,21 @@ namespace Protean
                             if (nProdGroupId > 0)
                             {
                                 // remove any "all" record
-                                cSQL = "Select nDiscountProdCatRelationKey From tblCartDiscountProdCatRelations Where nDiscountId = " + nDiscountId + " And nProductCatId = 0";
-                                DeleteObject(objectTypes.CartDiscountProdCatRelations, Conversions.ToLong(ExeProcessSqlScalar(cSQL)));
+                                cSQL = $"Select nDiscountProdCatRelationKey From tblCartDiscountProdCatRelations Where nDiscountId = {nDiscountId} And nProductCatId = 0";
+                                DeleteObject(objectTypes.CartDiscountProdCatRelations, Convert.ToInt64(ExeProcessSqlScalar(cSQL)));
                             }
                             else
                             {
                                 // remove any specific record
-                                cSQL = "Select nDiscountProdCatRelationKey From tblCartDiscountProdCatRelations Where nDiscountId = " + nDiscountId + " And nProductCatId > 0";
+                                cSQL = $"Select nDiscountProdCatRelationKey From tblCartDiscountProdCatRelations Where nDiscountId = {nDiscountId} And nProductCatId > 0";
                                 using (var oDre = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                                 {
                                     while (oDre.Read())
-                                        DeleteObject(objectTypes.CartDiscountProdCatRelations, Conversions.ToLong(oDre[0]));
+                                        DeleteObject(objectTypes.CartDiscountProdCatRelations, Convert.ToInt64(oDre[0]));
                                 }
                             }
 
-                            cSQL = "INSERT INTO tblCartDiscountProdCatRelations (nDiscountId, nProductCatId, nAuditId) Values(" + nDiscountId + "," + nProdGroupId + "," + getAuditId(1, cDescription: "DiscountProdGroupRelation") + ")";
+                            cSQL = $"INSERT INTO tblCartDiscountProdCatRelations (nDiscountId, nProductCatId, nAuditId) Values({nDiscountId},{nProdGroupId},{getAuditId(1, cDescription: "DiscountProdGroupRelation")})";
                             cNewIds += GetIdInsertSql(cSQL) + ",";
                         }
                         else
@@ -12051,10 +12052,10 @@ namespace Protean
                             {
                                 if (Information.IsNumeric(oDRe[0]))
                                 {
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDRe[0], 0, false)))
+                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDRe[0], 0, false)))
                                         bPublish = true;
                                 }
-                                else if (Conversions.ToDate(oDRe[0]) <= DateTime.Now)
+                                else if (Convert.ToDateTime(oDRe[0]) <= DateTime.Now)
                                     bPublish = true;
                             }
                             else
@@ -12066,10 +12067,10 @@ namespace Protean
                             {
                                 if (Information.IsNumeric(oDRe[1]))
                                 {
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDRe[1], 0, false)))
+                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDRe[1], 0, false)))
                                         bExpire = true;
                                 }
-                                else if (Conversions.ToDate(oDRe[1]) <= DateTime.Now)
+                                else if (Convert.ToDateTime(oDRe[1]) <= DateTime.Now)
                                     bExpire = true;
                             }
                             else
@@ -12079,7 +12080,7 @@ namespace Protean
                             // Status
                             if (!oDRe.IsDBNull(2))
                             {
-                                if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDRe[2], 0, false)))
+                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDRe[2], 0, false)))
                                     bStatus = true;
                             }
                             else
@@ -12114,10 +12115,10 @@ namespace Protean
                 {
                     if (string.IsNullOrEmpty(cEmailAddress))
                         return false;
-                    string cSQL = "Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
+                    string cSQL = $"Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '{cEmailAddress}')";
                     if (!((ExeProcessSqlScalar(cSQL) ?? "") == (cEmailAddress ?? "")))
                     {
-                        cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress) VALUES ('" + cEmailAddress + "')";
+                        cSQL = $"INSERT INTO tblOptOutAddresses (EmailAddress) VALUES ('{cEmailAddress}')";
                         ExeProcessSql(cSQL);
                         return true;
                     }
@@ -12141,13 +12142,13 @@ namespace Protean
                 {
                     if (string.IsNullOrEmpty(cEmailAddress))
                         return false;
-                    string cSQL = "Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "')";
-                    string cSQLStatusCheck = "Select top 1 nStatus FROM tblOptOutAddresses WHERE (EmailAddress = '" + cEmailAddress + "') order by dOptOut desc";
+                    string cSQL = $"Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '{cEmailAddress}')";
+                    string cSQLStatusCheck = $"Select top 1 nStatus FROM tblOptOutAddresses WHERE (EmailAddress = '{cEmailAddress}') order by dOptOut desc";
                     bool bstatus = Convert.ToBoolean(ExeProcessSqlScalar(cSQLStatusCheck));
 
                     if (cStatus == "true")
                     {
-                        cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,nCartContactId,optout_reason,nStatus,dOptOut) VALUES ('" + cEmailAddress + "','" + nContactKey + "','Cart Opt Out','" + cStatus + "'," + SqlDate(DateTime.Now, true) + ")";
+                        cSQL = $"INSERT INTO tblOptOutAddresses (EmailAddress,nCartContactId,optout_reason,nStatus,dOptOut) VALUES ('{cEmailAddress}','{nContactKey}','Cart Opt Out','{cStatus}',{SqlDate(DateTime.Now, true)})";
                         ExeProcessSql(cSQL);
                     }
                     else
@@ -12156,7 +12157,7 @@ namespace Protean
                         {
                             if (bstatus)
                             {
-                                cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,nCartContactId,optout_reason,nStatus,dOptOut) VALUES ('" + cEmailAddress + "','" + nContactKey + "','Cart Opt In','" + cStatus + "'," + SqlDate(DateTime.Now, true) + ")";
+                                cSQL = $"INSERT INTO tblOptOutAddresses (EmailAddress,nCartContactId,optout_reason,nStatus,dOptOut) VALUES ('{cEmailAddress}','{nContactKey}','Cart Opt In','{cStatus}',{SqlDate(DateTime.Now, true)})";
                                 ExeProcessSql(cSQL);
 
                             }
@@ -12201,9 +12202,9 @@ namespace Protean
                 {
                     if (string.IsNullOrEmpty(cEmailAddressesCSV))
                         return;
-                    cEmailAddressesCSV = "'" + cEmailAddressesCSV + "'";
+                    cEmailAddressesCSV = $"'{cEmailAddressesCSV}'";
                     cEmailAddressesCSV = Strings.Replace(cEmailAddressesCSV, ",", "','");
-                    string cSQL = "DELETE FROM tblOptOutAddresses  WHERE (EmailAddress IN (" + cEmailAddressesCSV + "))";
+                    string cSQL = $"DELETE FROM tblOptOutAddresses  WHERE (EmailAddress IN ({cEmailAddressesCSV}))";
 
                     ExeProcessSql(cSQL);
                 }
@@ -12255,7 +12256,7 @@ namespace Protean
                     string cWhere = "";
                     if (otherId > 0L)
                     {
-                        cWhere = " and nOtherId = " + otherId + " ";
+                        cWhere = $" and nOtherId = {otherId} ";
                     }
 
 
@@ -12294,11 +12295,11 @@ namespace Protean
                         bool bReturn;
                         if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nStatus"))
                         {
-                            cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE nStatus=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
+                            cSQL = $"SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE nStatus=1 and EmailAddress = '{nCheckAddress}' order by 1 desc";
                         }
                         else
                         {
-                            cSQL = "SELECT EmailAddress FROM tblOptOutAddresses WHERE EmailAddress = '" + nCheckAddress + "'";
+                            cSQL = $"SELECT EmailAddress FROM tblOptOutAddresses WHERE EmailAddress = '{nCheckAddress}'";
                         }
 
                         using (var oDRe = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
@@ -12358,13 +12359,13 @@ namespace Protean
 
                     // check if page exists on menu if return false
                     XmlElement oParentElmt;
-                    oParentElmt = (XmlElement)oPage.SelectSingleNode("descendant-or-self::MenuItem[@id='" + nCheckPageId + "']");
+                    oParentElmt = (XmlElement)oPage.SelectSingleNode($"descendant-or-self::MenuItem[@id='{nCheckPageId}']");
                     if (oParentElmt is null)
                         return false;
 
                     // check if parent is ancestor of child then return true
                     XmlElement oChildElmt;
-                    oChildElmt = (XmlElement)oParentElmt.SelectSingleNode("descendant-or-self::MenuItem[@id='" + nChildPageId + "']");
+                    oChildElmt = (XmlElement)oParentElmt.SelectSingleNode($"descendant-or-self::MenuItem[@id='{nChildPageId}']");
                     if (oChildElmt is null)
                         return false;
                     else
@@ -12416,13 +12417,13 @@ namespace Protean
                     foreach (DataRow currentODr in oDs.Tables["Tables"].Rows)
                     {
                         oDr = currentODr;
-                        if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDr["name"], "tblAudit", false)))
+                        if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDr["name"], "tblAudit", false)))
                         {
-                            cSQL = Conversions.ToString(Operators.ConcatenateObject("Select nAuditId from ", oDr["name"]));
+                            cSQL = Convert.ToString(Operators.ConcatenateObject("Select nAuditId from ", oDr["name"]));
                             try
                             {
-                                addTableToDataSet(ref oDs, cSQL, Conversions.ToString(oDr["name"]));
-                                oDs.Relations.Add(Conversions.ToString(Operators.ConcatenateObject("Audit", oDr["name"])), oDs.Tables["Audit"].Columns["nAuditKey"], (DataColumn)oDs.Tables[Convert.ToInt32(oDr["name"])].Columns["nAuditId"], false);
+                                addTableToDataSet(ref oDs, cSQL, Convert.ToString(oDr["name"]));
+                                oDs.Relations.Add(Convert.ToString(Operators.ConcatenateObject("Audit", oDr["name"])), oDs.Tables["Audit"].Columns["nAuditKey"], (DataColumn)oDs.Tables[Convert.ToInt32(oDr["name"])].Columns["nAuditId"], false);
                                 oDs.Relations[Convert.ToInt32(Operators.ConcatenateObject("Audit", oDr["name"]))].Nested = true;
                             }
                             catch (Exception)
@@ -12456,17 +12457,17 @@ namespace Protean
 
                     if (nNoDel > 0)
                         updateDataset(ref oDs, "Audit", false);
-                    string sResponse = "Audit table cleaned, " + nNoDel + " records removed.</br>";
+                    string sResponse = $"Audit table cleaned, {nNoDel} records removed.</br>";
 
                     // Clean Orphan RelatedContent.
                     cSQL = "Delete tblContentRelation  from tblContentRelation r left join tblContent c on r.nContentChildId = c.nContentKey where c.nContentKey is null";
-                    sResponse += "Deleted Orphaned Child Content Relations - " + ExeProcessSql(cSQL) + "</br>";
+                    sResponse += $"Deleted Orphaned Child Content Relations - {ExeProcessSql(cSQL)}</br>";
 
                     cSQL = "Delete tblContentRelation  from tblContentRelation r left join tblContent c on r.nContentParentId = c.nContentKey where c.nContentKey is null";
-                    sResponse += "Deleted Orphaned Parent Content Relations - " + ExeProcessSql(cSQL) + "</br>";
+                    sResponse += $"Deleted Orphaned Parent Content Relations - {ExeProcessSql(cSQL)}</br>";
 
                     cSQL = "Delete tblContentLocation  from tblContentLocation l left join tblContent c on l.nContentId = c.nContentKey where c.nContentKey is null";
-                    sResponse += "Deleted Orphaned Content Locations - " + ExeProcessSql(cSQL) + "</br>";
+                    sResponse += $"Deleted Orphaned Content Locations - {ExeProcessSql(cSQL)}</br>";
 
 
                     return sResponse;
@@ -12495,7 +12496,7 @@ namespace Protean
                     oDs = getDataSetForUpdate(cSQL1, "tblcontentLocation");
                     foreach (DataRow oDr1 in oDs.Tables["tblContentLocation"].Rows)
                     {
-                        nContentId = Conversions.ToInteger(oDr1["nContentId"]);
+                        nContentId = Convert.ToInt16(oDr1["nContentId"]);
                         oDV = new DataView(oDs.Tables["tblContentLocation"]);
                         oDV.RowFilter = "nContentId = " + nContentId;
                         oDV.Sort = "bPrimary DESC, nContentLocationKey";
@@ -12552,9 +12553,9 @@ namespace Protean
                     if (nRootNode > 1)
                     {
                         cSQL += "INNER JOIN tblContentLocation ON tblContent.nContentKey = tblContentLocation.nContentId";
-                        if (Conversions.ToBoolean(bChildren))
+                        if (Convert.ToBoolean(bChildren))
                         {
-                            oPages = oMenuElmt.SelectNodes("descendant-or-self::MenuItem[@id='" + nRootNode + "']/descendant-or-self::MenuItem");
+                            oPages = oMenuElmt.SelectNodes($"descendant-or-self::MenuItem[@id='{nRootNode}']/descendant-or-self::MenuItem");
                             cWhere += " tblContentLocation.nStructId IN(";
                             int nPages = oPages.Count;
                             foreach (XmlElement oElmt in oPages)
@@ -12570,7 +12571,7 @@ namespace Protean
                         }
                         else
                         {
-                            cWhere += " tblContentLocation.nStructId=" + nRootNode;
+                            cWhere += $" tblContentLocation.nStructId={nRootNode}";
                         }
                     }
 
@@ -12578,11 +12579,11 @@ namespace Protean
                     if (!string.IsNullOrEmpty(cWhere))
                         cWhere += " AND ";
                     if (!string.IsNullOrEmpty(cSchemaName))
-                        cWhere += " (tblContent.cContentSchemaName = '" + cSchemaName + "')";
+                        cWhere += $" (tblContent.cContentSchemaName = '{cSchemaName}')";
                     if (!string.IsNullOrEmpty(cWhere))
                         cWhere += " AND ";
                     // now the search expression
-                    cWhere += " ((cast(tblContent.cContentXmlBrief as varchar(max)) LIKE '%" + sSearch + "%') OR (cast(tblContent.cContentXmlDetail as varchar(max))LIKE '%" + sSearch + "%'))";
+                    cWhere += $" ((cast(tblContent.cContentXmlBrief as varchar(max)) LIKE '%{sSearch}%') OR (cast(tblContent.cContentXmlDetail as varchar(max))LIKE '%{sSearch}%'))";
                     if (!string.IsNullOrEmpty(cWhere))
                         cWhere = " WHERE " + cWhere;
 
@@ -12615,18 +12616,18 @@ namespace Protean
                 {
                     if (checkTableColumnExists("tblEmailActivityLog", "cSubject"))
                     {
-                        sSql = "Insert Into tblEmailActivityLog (nUserDirId, dDateTime,  cEmailRecipient, cEmailSender, cActivityDetail, cActivityXml, cSubject) " + "values (" + nUserDirId + ", " + SqlDate(DateTime.Now, true) + ", " + "'" + SqlFmt(Strings.Left(cEmailRecipient, 255)) + "', " + "'" + SqlFmt(Strings.Left(cEmailSender, 255)) + "', " + "'" + SqlFmt(cActivityFullDetail) + "', " + " '" + SqlFmt(cActivityXml) + "', " + " '" + SqlFmt(cSubject) + "')";
+                        sSql = $"Insert Into tblEmailActivityLog (nUserDirId, dDateTime, cEmailRecipient, cEmailSender, cActivityDetail, cActivityXml, cSubject) values ({nUserDirId}, {SqlDate(DateTime.Now, true)}, '{SqlFmt(Strings.Left(cEmailRecipient, 255))}', '{SqlFmt(Strings.Left(cEmailSender, 255))}', '{SqlFmt(cActivityFullDetail)}', '{SqlFmt(cActivityXml)}', '{SqlFmt(cSubject)}')";
                     }
                     else if (checkTableColumnExists("tblEmailActivityLog", "cActivityXml"))
                     {
-                        sSql = "Insert Into tblEmailActivityLog (nUserDirId, dDateTime,  cEmailRecipient, cEmailSender, cActivityDetail, cActivityXml) " + "values (" + nUserDirId + ", " + SqlDate(DateTime.Now, true) + ", " + "'" + SqlFmt(Strings.Left(cEmailRecipient, 255)) + "', " + "'" + SqlFmt(Strings.Left(cEmailSender, 255)) + "', " + "'" + SqlFmt(cActivityFullDetail) + "', " + " '" + SqlFmt(cActivityXml) + "')";
+                        sSql = $"Insert Into tblEmailActivityLog (nUserDirId, dDateTime, cEmailRecipient, cEmailSender, cActivityDetail, cActivityXml) values ({nUserDirId}, {SqlDate(DateTime.Now, true)}, '{SqlFmt(Strings.Left(cEmailRecipient, 255))}', '{SqlFmt(Strings.Left(cEmailSender, 255))}', '{SqlFmt(cActivityFullDetail)}', '{SqlFmt(cActivityXml)}')";
                     }
                     else
                     {
-                        sSql = "Insert Into tblEmailActivityLog (nUserDirId, dDateTime,  cEmailRecipient, cEmailSender, cActivityDetail) " + "values (" + nUserDirId + ", " + SqlDate(DateTime.Now, true) + ", " + "'" + SqlFmt(Strings.Left(cEmailRecipient, 255)) + "', " + "'" + SqlFmt(Strings.Left(cEmailSender, 255)) + "', " + "'" + SqlFmt(cActivityFullDetail) + "')";
+                        sSql = $"Insert Into tblEmailActivityLog (nUserDirId, dDateTime, cEmailRecipient, cEmailSender, cActivityDetail) values ({nUserDirId}, {SqlDate(DateTime.Now, true)}, '{SqlFmt(Strings.Left(cEmailRecipient, 255))}', '{SqlFmt(Strings.Left(cEmailSender, 255))}', '{SqlFmt(cActivityFullDetail)}')";
                     }
 
-                    return Conversions.ToLong(GetIdInsertSql(sSql));
+                    return Convert.ToInt64(GetIdInsertSql(sSql));
                 }
 
                 catch (Exception ex)
@@ -12670,7 +12671,7 @@ namespace Protean
                     using (var oDr = getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                     {
                         while (oDr.Read())
-                            DeleteObject(objectTypes.DirectoryRelation, Conversions.ToLong(oDr[0]));
+                            DeleteObject(objectTypes.DirectoryRelation, Convert.ToInt64(oDr[0]));
                         oDr.Close();
                     }
                 }
@@ -12688,10 +12689,10 @@ namespace Protean
                 try
                 {
                     string cCurDate = SqlDate(DateTime.Now, true);
-                    cSql = " SELECT tblCodes.nCodeKey" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " WHERE (tblCodes.cCode = '" + cCode + "')" + " AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)";
+                    cSql = $" SELECT tblCodes.nCodeKey FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey WHERE (tblCodes.cCode = '{cCode}') AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0) AND (tblAudit.dPublishDate <= {cCurDate} OR tblAudit.dPublishDate IS NULL) AND (tblAudit.dExpireDate >= {cCurDate} OR tblAudit.dExpireDate IS NULL) AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)";
                     if (!string.IsNullOrEmpty(cCodeSet))
                     {
-                        cSql += " AND nCodeParentId IN (" + cCodeSet + ")";
+                        cSql += $" AND nCodeParentId IN ({cCodeSet})";
                     }
                     if (Convert.ToInt32(GetDataValue(cSql)) > 0)
                     {
@@ -12718,14 +12719,14 @@ namespace Protean
                 try
                 {
                     string cCurDate = SqlDate(DateTime.Now, true);
-                    cSql = " SELECT top 1 tblCodes.cCode" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " INNER JOIN tblCodes partlb ON tblCodes.nCodeParentId = partlb.nCodeKey" + " WHERE (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)";
-                    cSql += " AND partlb.cCodeName like '" + cCodeSet + "'";
+                    cSql = $" SELECT top 1 tblCodes.cCode FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey INNER JOIN tblCodes partlb ON tblCodes.nCodeParentId = partlb.nCodeKey WHERE (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0) AND (tblAudit.dPublishDate <= {cCurDate} OR tblAudit.dPublishDate IS NULL) AND (tblAudit.dExpireDate >= {cCurDate} OR tblAudit.dExpireDate IS NULL) AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)";
+                    cSql += $" AND partlb.cCodeName like '{cCodeSet}'";
 
-                    returnCode = Conversions.ToString(base.GetDataValue(cSql));
+                    returnCode = Convert.ToString(base.GetDataValue(cSql));
 
                     if (!string.IsNullOrEmpty(returnCode))
                     {
-                        UseCode(returnCode, Conversions.ToInteger(nUseId));
+                        UseCode(returnCode, Convert.ToInt16(nUseId));
                         return returnCode;
                     }
                     else
@@ -12736,11 +12737,11 @@ namespace Protean
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "CheckCode", ex, ""));
-                    return Conversions.ToString(false);
+                    return Convert.ToString(false);
                 }
             }
 
-            public string IssueCode(int nCodeSet, int nUseId, bool UseNow = true, XmlElement CodeXml = null)
+            public string IssueCode(int nCodeSet, long nUserId, bool UseNow = true, XmlElement CodeXml = null)
             {
 
                 string cSql = "";
@@ -12749,21 +12750,21 @@ namespace Protean
                 try
                 {
                     string cCurDate = SqlDate(DateTime.Now, true);
-                    cSql = " SELECT top 1 tblCodes.cCode" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " INNER JOIN tblCodes partlb ON tblCodes.nCodeParentId = partlb.nCodeKey" + " WHERE (tblCodes.nUseId IS NULL AND tblCodes.nIssuedDirId is NULL)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)";
-                    cSql += " AND partlb.nCodeKey = '" + nCodeSet + "'";
+                    cSql = $" SELECT top 1 tblCodes.cCode FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey INNER JOIN tblCodes partlb ON tblCodes.nCodeParentId = partlb.nCodeKey WHERE (tblCodes.nUseId IS NULL AND tblCodes.nIssuedDirId is NULL) AND (tblAudit.dPublishDate <= {cCurDate} OR tblAudit.dPublishDate IS NULL) AND (tblAudit.dExpireDate >= {cCurDate} OR tblAudit.dExpireDate IS NULL) AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)";
+                    cSql += $" AND partlb.nCodeKey = '{nCodeSet}'";
 
-                    returnCode = Conversions.ToString(base.GetDataValue(cSql));
+                    returnCode = Convert.ToString(base.GetDataValue(cSql));
                     if (UseNow == false)
                     {
                         // If myWeb.mnUserId > 0 Then
-                        int nKey = Conversions.ToInteger(base.GetDataValue(" SELECT tblCodes.nCodeKey" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " WHERE (tblCodes.cCode = '" + returnCode + "')" + " AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", CommandType.Text, null, 0));
+                        int nKey = Convert.ToInt16(base.GetDataValue($" SELECT tblCodes.nCodeKey FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey WHERE (tblCodes.cCode = '{returnCode}') AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0) AND (tblAudit.dPublishDate <= {cCurDate} OR tblAudit.dPublishDate IS NULL) AND (tblAudit.dExpireDate >= {cCurDate} OR tblAudit.dExpireDate IS NULL) AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", CommandType.Text, null, 0));
 
                         // fix so that the cartitemkey is linked with tblCodes.nUseId
-                        base.ExeProcessSql("UPDATE tblCodes SET nUseID = " + nUseId + ", nIssuedDirId = " + myWeb.mnUserId + ", dIssuedDate = " + cCurDate + " WHERE nCodeKey = " + nKey);
+                        base.ExeProcessSql($"UPDATE tblCodes SET nUseID = {nUserId}, nIssuedDirId = {myWeb.mnUserId}, dIssuedDate = {cCurDate} WHERE nCodeKey = {nKey}");
 
                         if (CodeXml != null)
                         {
-                            ExeProcessSql("UPDATE tblCodes SET xUsageData = '" + SqlFmt(CodeXml.OuterXml) + "' WHERE nCodeKey = " + nKey);
+                            ExeProcessSql($"UPDATE tblCodes SET xUsageData = '{SqlFmt(CodeXml.OuterXml)}' WHERE nCodeKey = {nKey}");
                         }
 
                         return returnCode;
@@ -12773,7 +12774,7 @@ namespace Protean
                     // If
                     else if (!string.IsNullOrEmpty(returnCode))
                     {
-                        UseCode(returnCode, nUseId);
+                        UseCode(returnCode, nUserId);
                         return returnCode;
                     }
                     else
@@ -12788,21 +12789,21 @@ namespace Protean
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "CheckCode", ex, ""));
-                    return Conversions.ToString(false);
+                    return Convert.ToString(false);
                 }
             }
 
-            public bool UseCode(string cCode, int nUseID)
+            public bool UseCode(string cCode, long nUserID)
             {
                 try
                 {
                     // recheck the code
                     string cCurDate = SqlDate(DateTime.Now, true);
-                    int nKey = Conversions.ToInteger(base.GetDataValue(" SELECT tblCodes.nCodeKey" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " WHERE (tblCodes.cCode = '" + cCode + "')" + " AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", CommandType.Text, null, (object)0));
+                    int nKey = Convert.ToInt16(base.GetDataValue($" SELECT tblCodes.nCodeKey FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey WHERE (tblCodes.cCode = '{cCode}') AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0) AND (tblAudit.dPublishDate <= {cCurDate} OR tblAudit.dPublishDate IS NULL) AND (tblAudit.dExpireDate >= {cCurDate} OR tblAudit.dExpireDate IS NULL) AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", CommandType.Text, null, (object)0));
                     if (nKey > 0)
                     {
 
-                        ExeProcessSql("UPDATE tblCodes SET nUseID = " + nUseID + ", dUseDate = " + cCurDate + " WHERE nCodeKey = " + nKey);
+                        ExeProcessSql($"UPDATE tblCodes SET nUseID = {nUserID}, dUseDate = {cCurDate} WHERE nCodeKey = {nKey}");
                         return true;
                     }
                     else
@@ -12817,18 +12818,18 @@ namespace Protean
                 }
             }
 
-            public bool UseCode(int nCodeId, int nUseID, long nOrderId)
+            public bool UseCode(int nCodeId, long nUserID, long nOrderId)
             {
                 try
                 {
                     // recheck the code
                     string cCurDate = SqlDate(DateTime.Now, true);
-                    int nKey = Conversions.ToInteger(base.GetDataValue(" SELECT tblCodes.nCodeKey" + " FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey" + " WHERE (tblCodes.nCodeKey = " + nCodeId + ")" + " AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0)" + " AND (tblAudit.dPublishDate <= " + cCurDate + " OR tblAudit.dPublishDate IS NULL)" + " AND (tblAudit.dExpireDate >= " + cCurDate + " OR tblAudit.dExpireDate IS NULL)" + " AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", CommandType.Text, null, (object)0));
+                    int nKey = Convert.ToInt16(base.GetDataValue($" SELECT tblCodes.nCodeKey FROM tblCodes INNER JOIN tblAudit ON tblCodes.nAuditId = tblAudit.nAuditKey WHERE (tblCodes.nCodeKey = {nCodeId}) AND (tblCodes.nUseId IS NULL OR tblCodes.nUseId = 0) AND (tblAudit.dPublishDate <= {cCurDate} OR tblAudit.dPublishDate IS NULL) AND (tblAudit.dExpireDate >= {cCurDate} OR tblAudit.dExpireDate IS NULL) AND (tblAudit.nStatus = 1 OR tblAudit.nStatus = - 1 OR tblAudit.nStatus IS NULL)", CommandType.Text, null, (object)0));
                     if (nKey > 0)
                     {
                         // MyBase.ExeProcessSql("UPDATE tblCodes SET nUseID = " & nUseID & ", nOrderId = " & nOrderId & ", dUseDate = " & cCurDate & " WHERE nCodeKey = " & nKey)
                         // fix where the nOrderId was there previously but the field is not part of the tblCodes table
-                        ExeProcessSql("UPDATE tblCodes SET nUseID = " + nUseID + ", dUseDate = " + cCurDate + " WHERE nCodeKey = " + nKey);
+                        ExeProcessSql($"UPDATE tblCodes SET nUseID = {nUserID}, dUseDate = {cCurDate} WHERE nCodeKey = {nKey}");
                         return true;
                     }
                     else
@@ -12848,11 +12849,11 @@ namespace Protean
                 {
                     // recheck the code
                     string cCurDate = SqlDate(DateTime.Now, true);
-                    int nKey = Conversions.ToInteger(GetDataValue(" SELECT tblCodes.nCodeKey FROM tblCodes WHERE (tblCodes.cCode = '" + cCode + "')"));
+                    int nKey = Convert.ToInt16(GetDataValue($" SELECT tblCodes.nCodeKey FROM tblCodes WHERE (tblCodes.cCode = '{cCode}')"));
                     if (nKey > 0)
                     {
 
-                        ExeProcessSql("UPDATE tblCodes SET dUseDate = " + cCurDate + " WHERE nCodeKey = " + nKey);
+                        ExeProcessSql($"UPDATE tblCodes SET dUseDate = {cCurDate} WHERE nCodeKey = {nKey}");
                         return true;
                     }
                     else
@@ -12888,7 +12889,7 @@ namespace Protean
                 if (Frm is DBNull)
                     return strNull;
                 else
-                    return Conversions.ToString(Interaction.IIf(useMarks, "'" + Strings.Replace(Conversions.ToString(Frm), "'", "''") + "'", Conversions.ToString(Frm)));
+                    return Convert.ToString(Interaction.IIf(useMarks, "'" + Strings.Replace(Convert.ToString(Frm), "'", "''") + "'", Convert.ToString(Frm)));
             }
             public object DBN2int(object Frm, bool NullText = false)
             {
@@ -12896,7 +12897,7 @@ namespace Protean
                 if (Frm is DBNull)
                     return Interaction.IIf(NullText, "Null", 0);
                 else
-                    return Conversions.ToInteger(Frm);
+                    return Convert.ToInt16(Frm);
             }
             public object DBN2dte(object Frm, bool NullText = false)
             {
@@ -12904,7 +12905,7 @@ namespace Protean
                 if (Frm is DBNull)
                     return Interaction.IIf(NullText, "Null", DateTime.Parse("0001-01-01"));
                 else
-                    return Conversions.ToDate(Frm);
+                    return Convert.ToDateTime(Frm);
             }
 
 
@@ -13027,9 +13028,9 @@ namespace Protean
                     // Identify the keyValue and build the initial SQL Statement.
                     if (string.IsNullOrEmpty(whereStmt))
                     {
-                        if (instanceElmt.SelectSingleNode("*/" + keyField) != null)
+                        if (instanceElmt.SelectSingleNode($"*/{keyField}") != null)
                         {
-                            keyValue = instanceElmt.SelectSingleNode("*/" + keyField).InnerText;
+                            keyValue = instanceElmt.SelectSingleNode($"*/{keyField}").InnerText;
                             if (string.IsNullOrEmpty(keyValue))
                                 keyValue = "-1";
                         }
@@ -13037,14 +13038,14 @@ namespace Protean
                         {
                             keyValue = "-1";
                         }
-                        sSql = "select * from " + targetTable + " where " + keyField + " = " + keyValue;
+                        sSql = $"select * from {targetTable} where {keyField} = {keyValue}";
                     }
                     else
                     {
-                        sSql = "select * from " + targetTable + " where " + whereStmt;
+                        sSql = $"select * from {targetTable} where {whereStmt}";
                     }
 
-                    cProcessInfo = "error running SQL: " + sSql;
+                    cProcessInfo = $"error running SQL: {sSql}";
 
                     oDataAdpt = new SqlDataAdapter(sSql, oConn);
 
@@ -13066,7 +13067,7 @@ namespace Protean
                                 // 14/05/19 ts remed out as recent change was preventing updates.
                                 if (!(column.AllowDBNull & instanceElmt.SelectSingleNode("*/" + column.ToString()) is null))
                                 {
-                                    oRow[column] = convertDtXMLtoSQL(column.DataType, instanceElmt.SelectSingleNode("*/" + column.ToString()), Conversions.ToBoolean(Interaction.IIf(Strings.InStr(column.ToString(), "Xml") > 0, true, false)));
+                                    oRow[column] = convertDtXMLtoSQL(column.DataType, instanceElmt.SelectSingleNode("*/" + column.ToString()), Convert.ToBoolean(Interaction.IIf(Strings.InStr(column.ToString(), "Xml") > 0, true, false)));
                                 }
                             }
                         }
@@ -13106,7 +13107,7 @@ namespace Protean
                         // cProcessInfo = targetTable & " Get ID: nUpdateCount : " & oDs.GetXml
                         nUpdateCount = oDataAdpt.Update(oDs, targetTable);
                         // cProcessInfo = targetTable & " Get ID: ExecuteScalar"
-                        keyValue = Conversions.ToString(getid.ExecuteScalar());
+                        keyValue = Convert.ToString(getid.ExecuteScalar());
                         cProcessInfo = targetTable + " ID Retrieved: " + keyValue;
                     }
 
@@ -13116,7 +13117,7 @@ namespace Protean
                     }
 
                     PerfMonLog("dbTools", "saveInstance-End", cProcessInfo);
-                    return Conversions.ToLong(keyValue);
+                    return Convert.ToInt64(keyValue);
                 }
 
                 catch (Exception ex)
@@ -13323,7 +13324,7 @@ namespace Protean
                         {
                             case "Boolean":
                                 {
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(value, true, false)))
+                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(value, true, false)))
                                     {
                                         return "true";
                                     }
@@ -13349,7 +13350,7 @@ namespace Protean
                                 {
                                     if (Information.IsNumeric(value))
                                     {
-                                        return Conversions.ToString(value);
+                                        return Convert.ToString(value);
                                     }
                                     else
                                     {
@@ -13363,7 +13364,7 @@ namespace Protean
 
                             default:
                                 {
-                                    return Conversions.ToString(value);
+                                    return Convert.ToString(value);
                                 }
                         }
                     }
@@ -13457,7 +13458,7 @@ namespace Protean
                 }
             }
 
-            public int getClonePageID(int nPageId)
+            public int getClonePageID(long nPageId)
             {
 
                 PerfMonLog("DBHelper", "getClonePageID");
@@ -13467,7 +13468,7 @@ namespace Protean
                 {
                     cProcessInfo = "Page ID: " + nPageId;
 
-                    return Conversions.ToInteger(GetDataValue("SELECT nCloneStructId FROM tblContentStructure WHERE nStructKey = " + nPageId, CommandType.Text, null, (object)0));
+                    return Convert.ToInt16(GetDataValue("SELECT nCloneStructId FROM tblContentStructure WHERE nStructKey = " + nPageId, CommandType.Text, null, (object)0));
                 }
 
                 catch (Exception ex)
@@ -13498,7 +13499,7 @@ namespace Protean
                         // Assumes that there will only be one parent id.
                         cSql = "SELECT	TOP 1 nStructId " + "FROM tblContentLocation " + "WHERE	(nContentId = " + SqlFmt(nParentContentId.ToString()) + ") AND (bPrimary = 1) ";
 
-                        nPageId = Conversions.ToLong(GetDataValue(cSql));
+                        nPageId = Convert.ToInt64(GetDataValue(cSql));
 
                         // If the page retrieved is null (0) then this is orphan content
                         // Let's see if there's any other parents to this content
@@ -13508,7 +13509,7 @@ namespace Protean
 
                             cSql = "SELECT TOP 1 nContentParentId " + "FROM dbo.tblContentRelation " + "WHERE nContentChildId = " + SqlFmt(nParentContentId.ToString());
 
-                            nParentContentId = Conversions.ToInteger(GetDataValue(cSql));
+                            nParentContentId = Convert.ToInt16(GetDataValue(cSql));
 
                             // If there is a parent related to the content then try to see if that's got a location
                             if (nParentContentId > 0)
@@ -13610,7 +13611,7 @@ namespace Protean
                         cRes = ExeProcessSqlScalar(cSQL);
                         if (Information.IsNumeric(cRes))
                         {
-                            if (Conversions.ToInteger(cRes) > 0)
+                            if (Convert.ToInt16(cRes) > 0)
                             {
                                 dExpire = DateTime.Now;
                             }
@@ -13676,13 +13677,13 @@ namespace Protean
                         XmlNode argoNode5 = oElmt;
                         addNewTextNode("nAuditId", ref argoNode5, nAudit.ToString());
                         oElmt = (XmlElement)argoNode5;
-                        nPaymentId = Conversions.ToInteger(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
+                        nPaymentId = Convert.ToInt16(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
                     }
                     else
                     {
-                        nPaymentId = Conversions.ToInteger(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
+                        nPaymentId = Convert.ToInt16(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
                         cSQL = "Select nAuditId from tblCartPaymentMethod where nPayMthdKey = " + nPaymentId;
-                        int nAuditId = Conversions.ToInteger(ExeProcessSqlScalar(cSQL));
+                        int nAuditId = Convert.ToInt16(ExeProcessSqlScalar(cSQL));
                         oInstance.RemoveAll();
                         oElmt = oXml.CreateElement("tblAudit");
                         XmlNode argoNode6 = oElmt;
@@ -13704,7 +13705,7 @@ namespace Protean
                         addNewTextNode("nStatus", ref argoNode11, 1.ToString());
                         oElmt = (XmlElement)argoNode11;
                         oInstance.AppendChild(oElmt);
-                        nPaymentId = Conversions.ToInteger(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
+                        nPaymentId = Convert.ToInt16(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
                     }
 
                     CartPaymentMethod(CartId, nPaymentId);
@@ -13966,7 +13967,7 @@ namespace Protean
                             if (param.GetAttribute("type") == "datetime")
                             {
                                 // paramValue = Replace(SqlDate(paramValue, True), "'", "")'
-                                @params.Add(paramName, Conversions.ToDate(Strings.Replace(SqlDate(paramValue, false), "'", "")));
+                                @params.Add(paramName, Convert.ToDateTime(Strings.Replace(SqlDate(paramValue, false), "'", "")));
                             }
                             else
                             {
@@ -14075,7 +14076,7 @@ namespace Protean
                             case "log":
                                 {
                                     // This is a sequential number based on the download activity log for this report.
-                                    int logCount = Conversions.ToInteger(GetDataValue("SELECT COUNT(*) FROM dbo.tblActivityLog WHERE cActivityDetail=" + SqlString(logDetail) + " AND nActivityType = " + ((int)ActivityType.ReportDownloaded).ToString()));
+                                    int logCount = Convert.ToInt16(GetDataValue("SELECT COUNT(*) FROM dbo.tblActivityLog WHERE cActivityDetail=" + SqlString(logDetail) + " AND nActivityType = " + ((int)ActivityType.ReportDownloaded).ToString()));
                                     logCount += 1;
                                     filename.Add(logCount.ToString("00000"));
                                     break;
@@ -14138,7 +14139,7 @@ namespace Protean
                         else
                         {
                             var oApp = myWeb.goApp;
-                            colState = Conversions.ToString(oApp[tableName + "-" + columnName]);
+                            colState = Convert.ToString(oApp[tableName + "-" + columnName]);
                             switch (colState ?? "")
                             {
                                 case "0":
@@ -14224,7 +14225,7 @@ namespace Protean
                             sSQL = sSQL + " and nContentKey != " + itemId;
                         }
 
-                        long recordCount = Conversions.ToLong(ExeProcessSqlScalar(sSQL));
+                        long recordCount = Convert.ToInt64(ExeProcessSqlScalar(sSQL));
                         if (recordCount == 0L)
                             bUnique = true;
                     }
@@ -14251,20 +14252,20 @@ namespace Protean
                 {
                     if (checkTableColumnExists("tblContent", "cBlockedSchemaType"))
                     {
-                        string sSQL = "select cBlockedSchemaType, nContentKey from tblContent c inner join tblContentLocation cl on c.nContentKey = cl.nContentId where nStructId = " + nPageId + " and cBlockedSchemaType IS NOT NULL";
+                        string sSQL = $"select cBlockedSchemaType, nContentKey from tblContent c inner join tblContentLocation cl on c.nContentKey = cl.nContentId where nStructId = {nPageId} and cBlockedSchemaType IS NOT NULL";
                         var oDs = GetDataSet(sSQL, "ContentBlock", "Block");
                         foreach (DataRow oRow in oDs.Tables["ContentBlock"].Rows)
                         {
                             if (!(oRow["cBlockedSchemaType"] is DBNull))
                             {
 
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oRow["cBlockedSchemaType"], "", false)))
+                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oRow["cBlockedSchemaType"], "", false)))
                                 {
                                     if (!string.IsNullOrEmpty(returnValue))
                                     {
                                         returnValue = returnValue + ",";
                                     }
-                                    returnValue = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(returnValue, oRow["cBlockedSchemaType"]), "|"), oRow["nContentKey"]));
+                                    returnValue = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(returnValue, oRow["cBlockedSchemaType"]), "|"), oRow["nContentKey"]));
                                 }
                             }
                         }
@@ -14306,7 +14307,7 @@ namespace Protean
                 // Dim oDr As SqlDataReader
                 try
                 {
-                    sSql = "select Count(nPayMthdKey) from tblCartPaymentMethod where cPayMthdProviderRef= '" + cPayMthdProviderRef + "'";
+                    sSql = $"select Count(nPayMthdKey) from tblCartPaymentMethod where cPayMthdProviderRef= '{cPayMthdProviderRef}'";
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
                         if (oDr.Read())
@@ -14357,13 +14358,13 @@ namespace Protean
 
                     }
 
-                    return Conversions.ToInteger(nId);
+                    return Convert.ToInt16(nId);
                 }
 
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddContact", ex, cProcessInfo));
-                    return Conversions.ToInteger(false);
+                    return Convert.ToInt16(false);
                 }
             }
 
@@ -14419,7 +14420,7 @@ namespace Protean
 
                 try
                 {
-                    sSql = "select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '" + sCountry + "' or cLocationNameShort Like '" + sCountry + "'";
+                    sSql = $"select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '{sCountry}' or cLocationNameShort Like '{sCountry}'";
                     using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
 
@@ -14450,7 +14451,7 @@ namespace Protean
                 string strReturn = "";
                 try
                 {
-                    sSql = "select cLocationNameShort  from tblCartShippingLocations where cLocationISOnum Like '" + sCountryCode + "' or cLocationISOa2 Like '" + sCountryCode + "' or cLocationISOa3 Like '" + sCountryCode + "'";
+                    sSql = $"select cLocationNameShort  from tblCartShippingLocations where cLocationISOnum Like '{sCountryCode}' or cLocationISOa2 Like '{sCountryCode}' or cLocationISOa3 Like '{sCountryCode}'";
                     using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql)) //code added by sonali 13/7/22
                     {
                         if (oDr.HasRows)
@@ -14483,13 +14484,13 @@ namespace Protean
                 try
                 {
 
-                    sSql = "select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '" + sCountry + "' or cLocationNameShort Like '" + sCountry + "'";
+                    sSql = $"select cLocationISOa2 from tblCartShippingLocations where cLocationNameFull Like '{sCountry}' or cLocationNameShort Like '{sCountry}'";
                     using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
                         if (oDr.HasRows)
                         {
                             while (oDr.Read())
-                                strReturn = Conversions.ToString(oDr["cLocationISOa2"]);
+                                strReturn = Convert.ToString(oDr["cLocationISOa2"]);
                         }
                         else
                         {
@@ -14516,13 +14517,13 @@ namespace Protean
                 try
                 {
 
-                    sSql = "select cLocationISOa3 from tblCartShippingLocations where cLocationNameFull Like '" + sCountry + "' or cLocationNameShort Like '" + sCountry + "'";
+                    sSql = $"select cLocationISOa3 from tblCartShippingLocations where cLocationNameFull Like '{sCountry}' or cLocationNameShort Like '{sCountry}'";
                     using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                     {
                         if (oDr.HasRows)
                         {
                             while (oDr.Read())
-                                strReturn = Conversions.ToString(oDr["cLocationISOa3"]);
+                                strReturn = Convert.ToString(oDr["cLocationISOa3"]);
                         }
                         else
                         {

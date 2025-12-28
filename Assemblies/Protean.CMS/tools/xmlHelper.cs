@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+﻿
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -69,7 +68,7 @@ namespace Protean
                         {
                             goApp["XsltCompileVersion"] = "0";
                         }
-                        string sCompileVersion = Conversions.ToString(Operators.ConcatenateObject("v", goApp["XsltCompileVersion"]));
+                        string sCompileVersion = $"vg{goApp["XsltCompileVersion"]}";
                         msXslFile = value.Replace("/", @"\");
                         ClassName = msXslFile.Substring(msXslFile.LastIndexOf(@"\") + 1);
                         ClassName = ClassName.Replace(".", "_") + sCompileVersion;
@@ -80,7 +79,7 @@ namespace Protean
                             AssemblyPath = goServer.MapPath(compiledFolder) + ClassName + ".dll";
                             Type CalledType;
 
-                            if (Conversions.ToBoolean(goApp[ClassName]))
+                            if (Convert.ToBoolean(goApp[ClassName]))
                             {
                                 foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
                                 {
@@ -115,7 +114,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    Information.Err().Raise(8000, msXslFile, compileResponse);
+                                    throw new InvalidOperationException(compileResponse);
                                     assemblyInstance = null;
                                 }
                             }
@@ -333,7 +332,7 @@ namespace Protean
                     if (recompile)
                     {
 
-                        goApp["XsltCompileVersion"] = (Conversions.ToInteger(goApp["XsltCompileVersion"]) + 1).ToString();
+                        goApp["XsltCompileVersion"] = (Convert.ToInt16(goApp["XsltCompileVersion"]) + 1).ToString();
 
                     }
 
@@ -394,9 +393,9 @@ namespace Protean
                         if (res.IsCompleted == false)
                         {
                             d.EndInvoke((System.Runtime.Remoting.Messaging.AsyncResult)res);
-                            d = null;
-                            Information.Err().Raise(1010, "TranformXSL", "The XSL took longer than " + mnTimeoutSec / 1000d + " seconds to process");
+                            d = null; 
                             bError = true;
+                            throw new InvalidOperationException($"The XSL took longer than { mnTimeoutSec / 1000d }seconds to process");
                         }
                     }
                     d.EndInvoke((System.Runtime.Remoting.Messaging.AsyncResult)res);
@@ -422,9 +421,9 @@ namespace Protean
                         if (res.IsCompleted == false)
                         {
                             d.EndInvoke(ref oWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
-                            d = null;
-                            Information.Err().Raise(1010, "TranformXSL", "The XSL took longer than " + mnTimeoutSec / 1000d + " seconds to process");
+                            d = null; 
                             bError = true;
+                            throw new InvalidOperationException($"The XSL took longer than {mnTimeoutSec / 1000d} seconds to process");
                         }
                     }
                     d.EndInvoke(ref oWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
@@ -452,8 +451,8 @@ namespace Protean
                         {
                             d.EndInvoke(ref xWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
                             d = null;
-                            Information.Err().Raise(1010, "TranformXSL", "The XSL took longer than " + mnTimeoutSec / 1000d + " seconds to process");
                             bError = true;
+                            throw new InvalidOperationException($"The XSL took longer than { mnTimeoutSec / 1000d } seconds to process");
                         }
                     }
                     d.EndInvoke(ref xWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
@@ -484,7 +483,7 @@ namespace Protean
 
                             d.EndInvoke(ref oWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
                             d = null;
-                            Information.Err().Raise(1010, "TranformXSL", "The XSL took longer than " + mnTimeoutSec / 1000d + " seconds to process");
+                            throw new InvalidOperationException($"The XSL took longer than { mnTimeoutSec / 1000d } seconds to process");
                         }
                     }
                     d.EndInvoke(ref oWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
@@ -677,9 +676,9 @@ namespace Protean
                 for (int i = 0, loopTo = textIn.Length - 1; i <= loopTo; i++)
                 {
                     current = textIn[i];
-                    currenti = Strings.AscW(current);
+                    currenti = (char)current;
 
-                    if (currenti == Conversions.ToInteger("&H9") || currenti == Conversions.ToInteger("&HA") || currenti == Conversions.ToInteger("&HD") || currenti >= Conversions.ToInteger("&H20") && currenti <= Conversions.ToInteger("&HD7FF") || currenti >= Conversions.ToInteger("&HE000") && currenti <= Conversions.ToInteger("&HFFFD") || currenti >= Conversions.ToInteger("&H10000") && currenti <= Conversions.ToInteger("&H10FFFF"))
+                    if (currenti == Convert.ToInt16("&H9") || currenti == Convert.ToInt16("&HA") || currenti == Convert.ToInt16("&HD") || currenti >= Convert.ToInt16("&H20") && currenti <= Convert.ToInt16("&HD7FF") || currenti >= Convert.ToInt16("&HE000") && currenti <= Convert.ToInt16("&HFFFD") || currenti >= Convert.ToInt16("&H10000") && currenti <= Convert.ToInt16("&H10FFFF"))
                     {
                         textOut.Append(current);
                     }

@@ -8,10 +8,9 @@
 // 
 // 
 // ================================================================================================
-using DocumentFormat.OpenXml.VariantTypes;
+
 using System;
 using System.Collections;
-using System.Web;
 using static Protean.Tools.Text;
 
 namespace Protean.Tools
