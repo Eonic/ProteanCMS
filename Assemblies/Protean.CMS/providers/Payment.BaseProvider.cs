@@ -22,6 +22,7 @@ using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using System.Dynamic;
 using Protean.Providers.Membership;
+using Protean.Providers.Payment;
 
 namespace Protean.Providers
 {
@@ -57,6 +58,10 @@ namespace Protean.Providers
             string ProcessNewPayment(string orderId, decimal amount, string cardNumber, string cV2, string expiryDate, String startDate, String cardHolderName, string address1, string address2, string town, string postCode, string cCounty = "", string cCountry = "", string validGroup = "");
 
             XmlElement GetWalletPaymentDetails(XmlElement opElmt);
+
+            object ProcessGooglePayPayment(ref Cms myWeb, ref Protean.Cms.Cart oCart, ref XmlElement oOrder, string googlePayToken);
+            object ValidateApplePayMerchant(string validationURL);
+            object ProcessApplePayPayment(XmlDocument orderXml, string applePayToken);
         }
         public class ReturnProvider
         {
@@ -621,6 +626,23 @@ namespace Protean.Providers
                 {
                     //throw new NotImplementedException();
                     return null;
+                }
+
+               
+                public object ProcessGooglePayPayment(ref Cms myWeb, ref Cart oCart, ref XmlElement oOrder, string googlePayToken)
+                {
+                    throw null;
+                }
+
+                public object ProcessApplePayPayment(XmlDocument orderXml, string applePayToken)
+                {
+                    throw new NotImplementedException();
+                }
+
+                
+                public object ValidateApplePayMerchant(string validationURL)
+                {
+                    throw new NotImplementedException();
                 }
             }
         }

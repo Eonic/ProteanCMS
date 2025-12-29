@@ -2321,7 +2321,8 @@ namespace Protean
                                 oCart = (Cms.Cart)null;
                                 break;
                             }
-                        case "ListUserContent": {
+                        case "ListUserContent":
+                            {
                                 sAdminLayout = "UserContent";
                                 oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(Convert.ToInt64(myWeb.moRequest["dirId"]), true));
                                 oPageDetail.AppendChild(myWeb.moDbHelper.GetUserContentXml((int)Convert.ToInt16("0" + myWeb.moRequest["dirId"]), oPageDetail));
@@ -3027,6 +3028,23 @@ namespace Protean
                                 break;
                             }
 
+                        case "AuthRedirectURL":
+                            {
+                                if (!string.IsNullOrEmpty(myWeb.moConfig["AuthRedirectURL"]))
+                                {
+                                    string redirectUrl = myWeb.moConfig["AuthRedirectURL"];
+                                    string AdminUserName = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText;
+                                    if (!string.IsNullOrEmpty(redirectUrl) && !string.IsNullOrEmpty(AdminUserName))
+                                    {
+                                        string encryptedUrl = Encryption.RC4.Encrypt(redirectUrl, myWeb.moConfig["SharedKey"]);
+                                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
+                                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
+                                        oMembershipProv.AdminXforms.GenerateAuthenticatedRedirect(AdminUserName, encryptedUrl);
+                                    }
+                                }
+                                break;
+                            }
+
                         case "RelateSearch":
                             {
                                 if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "saveRelated"))
@@ -3386,9 +3404,9 @@ namespace Protean
                         case "DownSubscription":
                         case "ListSubscribers":
                         case "ManageUserSubscription":
-                        case "EmailAlertSubscription":                            
+                        case "EmailAlertSubscription":
                         case "UpcomingRenewals":
-                        case "ExpiredRolling":                            
+                        case "ExpiredRolling":
                         case "ExpiredSubscriptions":
                         case "CancelledSubscriptions":
                         case "RenewalAlerts":
@@ -3424,12 +3442,18 @@ namespace Protean
                             }
                         case "SEOReport":
                             {
-                               // bLoadStructure = true;
-                                SEOReport(ref oPageDetail, ref sAdminLayout);                                
+                                // bLoadStructure = true;
+                                SEOReport(ref oPageDetail, ref sAdminLayout);
                                 //myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
                                 break;
                             }
-
+                        case "404ProductReport":
+                            {
+                                // bLoadStructure = true;
+                                HeiddenProductWithoutRedirect(ref oPageDetail, ref sAdminLayout);
+                                //myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
+                                break;
+                            }
 
                     }
 
@@ -4930,10 +4954,11 @@ namespace Protean
 
                                     bool forceRefresh = false;
                                     // TS removed as we do not want to refresh the cart XML as it destroys discount info and order ref etc.
-                                    if (myWeb.moRequest["refresh"] == "true") {
+                                    if (myWeb.moRequest["refresh"] == "true")
+                                    {
                                         forceRefresh = true;
-                                    }                                     
-                                 
+                                    }
+
                                     oCart.ListOrders(myWeb.moRequest["id"], true, 0, ref oPageDetail, forceRefresh, nUserId: 0L);
 
                                     // :TODO Behaviour to manage resending recipts.
@@ -4968,10 +4993,11 @@ namespace Protean
                                     {
                                         myWeb.mcOutputFileName = "DeliveryNote-various.pdf";
                                     }
-                                    else { 
+                                    else
+                                    {
                                         myWeb.mcOutputFileName = "DeliveryNote-" + orderId + ".pdf";
                                     }
-                                    
+
                                     string DeliveryNoteXslPath = @"\xsl\docs\deliverynote.xsl";
                                     if (myWeb.bs5)
                                     {
@@ -4981,7 +5007,7 @@ namespace Protean
                                     myWeb.mcEwSiteXsl = ofs.checkCommonFilePath(moConfig["ProjectPath"] + DeliveryNoteXslPath);
 
                                     oCart.ListOrders(orderId, true, 0, ref oPageDetail, bForceRefresh: false, nUserId: 0L);
-                                    
+
                                     myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)myWeb.mnUserId, 0L, 0L, 0L, "Print Delivery 2" + orderId, false);
 
                                     break;
@@ -5905,17 +5931,17 @@ from tblContentIndexDef";
                     else if (status == "singleUse")
                     {
                         cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where a.nStatus=0 and dr.cDiscountCode like '%VOUCHER' order by a.dPublishDate desc";
-                    }                   
+                    }
                     else
                     {
-                        if(search != null)
+                        if (search != null)
                         {
-                            cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)   and a.nStatus=1 and dr.cDiscountCode like '%"+search+"%' order by a.dPublishDate desc";
+                            cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)   and a.nStatus=1 and dr.cDiscountCode like '%" + search + "%' order by a.dPublishDate desc";
                         }
                         else
                         {
                             cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)   and a.nStatus=1 and dr.cDiscountCode not like '%VOUCHER'  AND (dr.nUseLimit IS NULL OR dr.nUseLimit = 0 OR dr.nUseCount IS NULL OR dr.nUseCount < dr.nUseLimit ) order by a.dPublishDate desc";
-                        }                            
+                        }
                     }
 
 
@@ -6607,11 +6633,12 @@ from tblContentIndexDef";
                             string recipientFullName = AlertData.SelectSingleNode("Subscription/User/FirstName").InnerText + " " + AlertData.SelectSingleNode("Subscription/User/LastName").InnerText;
                             string RecipientEmail = AlertData.SelectSingleNode("Subscription/User/Email").InnerText;
 
-                           // AlertData.SetAttribute("subjectId", nSubscriptionId.ToString());
+                            // AlertData.SetAttribute("subjectId", nSubscriptionId.ToString());
 
                             oPageDetail.AppendChild(oADX.xFrmAlertEmail(AlertType, (XmlElement)AlertData.FirstChild, AlertXformPath, Subject, SenderName, SenderEmail, recipientFullName, RecipientEmail, CcName, CcEmail, BccName, BccEmail, EmailContentXsltPath, false));
                             sAdminLayout = "AdminXForm";
-                            if (oADX.valid) {
+                            if (oADX.valid)
+                            {
                                 cCmd = "ManageUserSubscription";
                                 // oSub.CancelSubscription(myWeb.moRequest("subId"))
                                 goto SP;
@@ -6926,10 +6953,11 @@ from tblContentIndexDef";
                                         bListCodesets = true;
                                     break;
                                 }
-                                    case "DeleteCodeGroup": {
+                            case "DeleteCodeGroup":
+                                {
 
-                                            break;
-                                        }
+                                    break;
+                                }
 
                         }
 
@@ -7150,8 +7178,8 @@ from tblContentIndexDef";
                 string sProcessInfo = "";
 
                 try
-                {                   
-                    oPageDetail.AppendChild(moAdXfm.GetAllMenuMetaDetails());                   
+                {
+                    oPageDetail.AppendChild(moAdXfm.GetAllMenuMetaDetails());
                 }
 
                 catch (Exception ex)
@@ -7159,6 +7187,39 @@ from tblContentIndexDef";
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "SEOReport", ex, "", sProcessInfo, gbDebug);
                 }
             }
+            private void HeiddenProductWithoutRedirect(ref XmlElement oPageDetail, ref string sAdminLayout)
+            {
+                string sProcessInfo = "";
+
+                try
+                {
+                    // Read QueryString params
+                    string sPage = myWeb.moRequest["Page"];
+                    string sPageSize = myWeb.moRequest["PageSize"];
+
+                    int page = 1;
+                    int pageSize = 100;
+
+                    int.TryParse(sPage, out page);
+                    int.TryParse(sPageSize, out pageSize);
+
+                    if (page <= 0) page = 1;
+                    if (pageSize <= 0) pageSize = 100;
+
+                    var doc = oPageDetail.OwnerDocument;
+                    var oElmt = doc.CreateElement("HiddenProducts");
+                    XmlNode imported = doc.ImportNode(moAdXfm.GetAllHiddenProducts(page, pageSize), true);
+                    oElmt.AppendChild(imported);
+                    oPageDetail.AppendChild(oElmt);
+
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "HeiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
+                }
+            }
+
+
 
             #region IDisposable Implementation
 
@@ -7234,6 +7295,7 @@ from tblContentIndexDef";
                 }
             }
 
+
             // Finalizer
             ~Admin()
             {
@@ -7262,7 +7324,7 @@ from tblContentIndexDef";
                     throw new ObjectDisposedException(GetType().Name);
                 }
             }
-
+        }
             #endregion
 
         }
@@ -7270,4 +7332,3 @@ from tblContentIndexDef";
 
 
     }
-}

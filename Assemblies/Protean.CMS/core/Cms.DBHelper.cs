@@ -14738,7 +14738,24 @@ namespace Protean
                     return null;
                 }
             }
-            
+
+            public System.Data.DataTable GetAllHiddenProducts()
+            {
+                PerfMonLog("dbTools", "GetContacts");
+                string sSql;
+                DataSet oDs;
+                try
+                {
+                    sSql = "EXEC spGetHiddenProductUrls";
+                    oDs = GetDataSet(sSql, "Content");
+                    return oDs.Tables[0];
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""));
+                    return null;
+                }
+            }
         }
 
 
