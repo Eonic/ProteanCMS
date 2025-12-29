@@ -140,7 +140,7 @@ namespace Protean
                     {
                         mnCartId = 0;
                     }
-                    else if (!Information.IsNumeric(myWeb.moSession["QuoteId"]) | Convert.ToInt32(myWeb.moSession["QuoteId"]) <= 0)
+                    else if (!Tools.Number.IsNumeric(myWeb.moSession["QuoteId"]) | Convert.ToInt32(myWeb.moSession["QuoteId"]) <= 0)
                     {
                         mnCartId = 0;
                     }
@@ -163,7 +163,7 @@ namespace Protean
                         mcSessionId = myWeb.moSession.SessionID;
                     }
 
-                    if (Information.IsNumeric(myWeb.moRequest.QueryString["cartErr"]))
+                    if (Tools.Number.IsNumeric(myWeb.moRequest.QueryString["cartErr"]))
                         mnProcessError = Convert.ToInt16(myWeb.moRequest.QueryString["cartErr"]);
                     mcCartCmd = null;
                     if (myWeb.moRequest.QueryString["quoteCmd"] != "")
@@ -745,7 +745,7 @@ namespace Protean
                                         if (oRegXform.valid)
                                         {
                                             string sReturn = base.moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
-                                            if (Information.IsNumeric(sReturn))
+                                            if (Tools.Number.IsNumeric(sReturn))
                                             {
                                                 myWeb.mnUserId = Convert.ToInt32(sReturn);
                                                 XmlElement oUserElmt = base.moDBHelper.GetUserXML(myWeb.mnUserId);
@@ -946,7 +946,7 @@ namespace Protean
                                         if (oRegXform.valid)
                                         {
                                             string sReturn = base.moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
-                                            if (Information.IsNumeric(sReturn))
+                                            if (Tools.Number.IsNumeric(sReturn))
                                             {
                                                 myWeb.mnUserId = Convert.ToInt32(sReturn);
                                             }
@@ -1219,7 +1219,7 @@ namespace Protean
                                     cFields += "nContactCartID,";
                                     cValues += nParentID + ",";
                                 }
-                                else if (Information.IsNumeric(oDR[odc.ColumnName]))
+                                else if (Tools.Number.IsNumeric(oDR[odc.ColumnName]))
                                 {
                                     cFields += odc.ColumnName + ",";
                                     cValues = Convert.ToString(cValues + Operators.ConcatenateObject(oDR[odc.ColumnName], ","));

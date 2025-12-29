@@ -85,17 +85,17 @@ namespace Protean.Providers
                         decimal nDiscountValue = Convert.ToDecimal(oCurDiscount.GetAttribute("nDiscountValue"));
                         bool bDiscountIsPercent = Convert.ToBoolean(oCurDiscount.GetAttribute("bDiscountIsPercent"));
 
-                        int nMinItems = Information.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinQuantity"))
+                        int nMinItems = Tools.Number.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinQuantity"))
                             ? Convert.ToInt16(oCurDiscount.GetAttribute("nDiscountMinQuantity"))
                             : 1;
 
-                        decimal nDiscountMinPrice = Information.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinPrice"))
+                        decimal nDiscountMinPrice = Tools.Number.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinPrice"))
                             ? Convert.ToDecimal(oCurDiscount.GetAttribute("nDiscountMinPrice"))
                             : 0m;
 
                         decimal nDiscountMaxPrice = decimal.MaxValue;
                         var maxNode = oCurDiscount.SelectSingleNode("nDiscountMaxPrice");
-                        if (maxNode != null && Information.IsNumeric(maxNode.InnerText) && Convert.ToDecimal(maxNode.InnerText) > 0)
+                        if (maxNode != null && Tools.Number.IsNumeric(maxNode.InnerText) && Convert.ToDecimal(maxNode.InnerText) > 0)
                         {
                             nDiscountMaxPrice = Convert.ToDecimal(maxNode.InnerText);
                         }

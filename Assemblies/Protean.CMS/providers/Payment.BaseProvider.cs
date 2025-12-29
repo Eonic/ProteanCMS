@@ -361,7 +361,7 @@ namespace Protean.Providers
                                         string cNew = "";
                                         int i = 1;
                                         int nStart = Strings.InStr(mcPaymentMethod, "Repeat_") + 6;
-                                        while (!(!Information.IsNumeric(cNew) & !string.IsNullOrEmpty(cNew) | nStart + (i - 1) >= mcPaymentMethod.Length))
+                                        while (!(!Tools.Number.IsNumeric(cNew) & !string.IsNullOrEmpty(cNew) | nStart + (i - 1) >= mcPaymentMethod.Length))
                                         {
                                             cOld = cNew;
                                             cNew = mcPaymentMethod.Substring(nStart, i);
@@ -568,7 +568,7 @@ namespace Protean.Providers
                         // get the audit id 
                         string cSQL = "SELECT tblAudit.nAuditKey FROM tblCartOrder INNER JOIN tblCartPaymentMethod ON tblCartOrder.nPayMthdId = tblCartPaymentMethod.nPayMthdKey INNER JOIN tblAudit ON tblCartPaymentMethod.nAuditId = tblAudit.nAuditKey WHERE tblCartOrder.nCartOrderKey = " + nCartId;
                         string nAuditId = myWeb.moDbHelper.ExeProcessSqlScalar(cSQL);
-                        if (Information.IsNumeric(nAuditId))
+                        if (Tools.Number.IsNumeric(nAuditId))
                         {
 
                             var oXml = new XmlDocument();

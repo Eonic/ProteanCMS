@@ -2974,7 +2974,7 @@ namespace Protean
                             {
                                 while (oDr.Read())
                                 {
-                                    if (Information.IsNumeric(oDr[0]))
+                                    if (Tools.Number.IsNumeric(oDr[0]))
                                     {
                                         nAuditId = Convert.ToInt64(oDr[0]);
                                     }
@@ -3407,7 +3407,7 @@ namespace Protean
                         oElmt = (XmlElement)oInstance.SelectSingleNode("*/" + getKey((int)ObjectType));
                         if (oElmt != null)
                         {
-                            if (Information.IsNumeric(oElmt.InnerText))
+                            if (Tools.Number.IsNumeric(oElmt.InnerText))
                             {
                                 nKey = Convert.ToInt64(oElmt.InnerText);
                             }
@@ -3467,7 +3467,7 @@ namespace Protean
                                         if (NodeState(ref oInstance, "descendant-or-self::nAuditId") == XmlNodeState.HasContents)
                                         {
                                             XmlElement oAuditElmt = (XmlElement)oInstance.SelectSingleNode("descendant-or-self::nAuditId");
-                                            if (Information.IsNumeric(oAuditElmt.InnerText))
+                                            if (Tools.Number.IsNumeric(oAuditElmt.InnerText))
                                             {
                                                 nAuditId = Convert.ToInt64(oAuditElmt.InnerText);
                                             }
@@ -3761,7 +3761,7 @@ namespace Protean
                     if (NodeState(ref oInstance, "descendant-or-self::nAuditId") == XmlNodeState.HasContents)
                     {
                         XmlElement oElmt = (XmlElement)oInstance.SelectSingleNode("descendant-or-self::nAuditId");
-                        if (Information.IsNumeric(oElmt.InnerText))
+                        if (Tools.Number.IsNumeric(oElmt.InnerText))
                         {
                             nAuditId = Convert.ToInt64(oElmt.InnerText);
                         }
@@ -7699,7 +7699,7 @@ namespace Protean
                         var loopTo = (long)Information.UBound(aParId);
                         for (i = 0L; i <= loopTo; i++)
                         {
-                            if (Information.IsNumeric(aParId[(int)i]))
+                            if (Tools.Number.IsNumeric(aParId[(int)i]))
                             {
                                 nParId = Convert.ToInt64(aParId[(int)i]);
                                 if (myWeb.moRequest["relateAs"] == "children" | relateAs == RelationType.Child)
@@ -8401,7 +8401,7 @@ namespace Protean
                         // If we get to here and have passed all the validation than sReturn will have been set to a userId and therefore numeric.
 
                         // check AD Login
-                        if (!Information.IsNumeric(sReturn) & !string.IsNullOrEmpty(cUsername))
+                        if (!Tools.Number.IsNumeric(sReturn) & !string.IsNullOrEmpty(cUsername))
                         {
                             oImp = new Tools.Security.Impersonate();
                             if (oImp.ImpersonateValidUser(cUsername, goConfig["AdminDomain"], ADPassword, true, goConfig["AdminGroup"]))
@@ -8414,7 +8414,7 @@ namespace Protean
                         }
 
                         // check Single User Login
-                        if (Cms.gbSingleLoginSessionPerUser && Information.IsNumeric(sReturn) && !string.IsNullOrEmpty(cUsername))
+                        if (Cms.gbSingleLoginSessionPerUser && Tools.Number.IsNumeric(sReturn) && !string.IsNullOrEmpty(cUsername))
                         {
 
                             // Find the latest activity for this user within a timeout period - if it isn't logoff then flag up an error
@@ -8428,7 +8428,7 @@ namespace Protean
 
                         }
 
-                        if (Information.IsNumeric(sReturn))
+                        if (Tools.Number.IsNumeric(sReturn))
                         {
                             // delete failed logon attempts record
                             string sSql2 = "delete from tblActivityLog where nActivityType = " + Convert.ToString((int)dbHelper.ActivityType.LogonInvalidPassword) + " and nUserDirId=" + sReturn;
@@ -8582,7 +8582,7 @@ namespace Protean
                         RIGHT OUTER JOIN tblDirectoryRelation ON tblDirectory.nDirKey = tblDirectoryRelation.nDirParentId
                         WHERE tblDirectory.cDirSchema = '{nParentType}' AND tblDirectoryRelation.nDirChildId = {nChildId}";
                     cReturn = Convert.ToInt16(ExeProcessSqlScalar(cSQL));
-                    if (Information.IsNumeric(cReturn))
+                    if (Tools.Number.IsNumeric(cReturn))
                         return cReturn;
                     else
                         return 0;
@@ -10258,7 +10258,7 @@ namespace Protean
                     // Calculate the maxdepth - it can be overrided by ShowRelatedBriefDepth
                     string cShowRelatedBriefDepth = goConfig["ShowRelatedBriefDepth"] + "";
                     int nMaxDepth = 1;
-                    if (!string.IsNullOrEmpty(cShowRelatedBriefDepth) && Information.IsNumeric(cShowRelatedBriefDepth))
+                    if (!string.IsNullOrEmpty(cShowRelatedBriefDepth) && Tools.Number.IsNumeric(cShowRelatedBriefDepth))
                     {
                         nMaxDepth = Convert.ToInt16(cShowRelatedBriefDepth);
                     }
@@ -10708,7 +10708,7 @@ namespace Protean
                     string cRelatedContentList = oContentElmt.GetAttribute("avoidRecursionList");
 
                     // Add the id if it is not null or zero
-                    if (!string.IsNullOrEmpty(oContentElmt.GetAttribute("id")) && Information.IsNumeric(oContentElmt.GetAttribute("id")) && Convert.ToInt64(oContentElmt.GetAttribute("id")) > 0L)
+                    if (!string.IsNullOrEmpty(oContentElmt.GetAttribute("id")) && Tools.Number.IsNumeric(oContentElmt.GetAttribute("id")) && Convert.ToInt64(oContentElmt.GetAttribute("id")) > 0L)
 
                     {
                         if (!string.IsNullOrEmpty(cRelatedContentList))
@@ -10773,7 +10773,7 @@ namespace Protean
                                 cShowRelatedBriefDepth = oContentElmt.GetAttribute("relatedDepth");
                             }
                             int nMaxDepth = 1;
-                            if (!string.IsNullOrEmpty(cShowRelatedBriefDepth) && Information.IsNumeric(cShowRelatedBriefDepth))
+                            if (!string.IsNullOrEmpty(cShowRelatedBriefDepth) && Tools.Number.IsNumeric(cShowRelatedBriefDepth))
                             {
                                 nMaxDepth = Convert.ToInt16(cShowRelatedBriefDepth);
                             }
@@ -12050,7 +12050,7 @@ namespace Protean
                             // Publish
                             if (!oDRe.IsDBNull(0))
                             {
-                                if (Information.IsNumeric(oDRe[0]))
+                                if (Tools.Number.IsNumeric(oDRe[0]))
                                 {
                                     if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDRe[0], 0, false)))
                                         bPublish = true;
@@ -12065,7 +12065,7 @@ namespace Protean
                             // Expire
                             if (!oDRe.IsDBNull(1))
                             {
-                                if (Information.IsNumeric(oDRe[1]))
+                                if (Tools.Number.IsNumeric(oDRe[1]))
                                 {
                                     if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDRe[1], 0, false)))
                                         bExpire = true;
@@ -13259,7 +13259,7 @@ namespace Protean
                         case "Int16":
                         case "Decimal":
                             {
-                                if (Information.IsNumeric(value.InnerText))
+                                if (Tools.Number.IsNumeric(value.InnerText))
                                 {
                                     return Convert.ToDouble(value.InnerText);
                                 }
@@ -13348,7 +13348,7 @@ namespace Protean
                             case "Int32":
                             case "Int16":
                                 {
-                                    if (Information.IsNumeric(value))
+                                    if (Tools.Number.IsNumeric(value))
                                     {
                                         return Convert.ToString(value);
                                     }
@@ -13609,7 +13609,7 @@ namespace Protean
                     {
                         cSQL = "SELECT tblCartPaymentMethod.nPayMthdKey FROM tblCartPaymentMethod INNER JOIN tblAudit ON tblCartPaymentMethod.nAuditId = tblAudit.nAuditKey" + " WHERE (tblAudit.dExpireDate = " + SqlDate(dExpire) + ") and (tblCartPaymentMethod.cPayMthdAcctName = '" + cMethodName + "') and (cPayMthdProviderName = '" + cProviderName + "') and (tblCartPaymentMethod.nPayMthdUserId = " + nUserId + ")";
                         cRes = ExeProcessSqlScalar(cSQL);
-                        if (Information.IsNumeric(cRes))
+                        if (Tools.Number.IsNumeric(cRes))
                         {
                             if (Convert.ToInt16(cRes) > 0)
                             {

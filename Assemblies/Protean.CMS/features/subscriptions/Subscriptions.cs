@@ -1123,7 +1123,7 @@ namespace Protean
                             repeatFrequency = 1;
                             if (oelmt.SelectSingleNode("productDetail/PaymentFrequency") != null)
                             {
-                                if (Information.IsNumeric(oelmt.SelectSingleNode("productDetail/PaymentFrequency").InnerText))
+                                if (Tools.Number.IsNumeric(oelmt.SelectSingleNode("productDetail/PaymentFrequency").InnerText))
                                 {
                                     repeatFrequency = Convert.ToInt16(oelmt.SelectSingleNode("productDetail/PaymentFrequency").InnerText);
                                 }
@@ -1185,7 +1185,7 @@ namespace Protean
                             // first lets see if it is the only one in that group
                             foreach (DataRow oDR in oDS.Tables["Subs"].Rows)
                             {
-                                if (Information.IsNumeric(oDR["nCatId"]))
+                                if (Tools.Number.IsNumeric(oDR["nCatId"]))
                                 {
                                 // It has a category so we go through the actual table and remove others of a lower value
                                 RedoCheck:
@@ -1296,7 +1296,7 @@ namespace Protean
                             int nPaymentFrequency = 1;
                             if (oCurSubElmt.SelectSingleNode("Content/PaymentFrequency") != null)
                             {
-                                if (Information.IsNumeric(oCurSubElmt.SelectSingleNode("Content/PaymentFrequency").InnerText))
+                                if (Tools.Number.IsNumeric(oCurSubElmt.SelectSingleNode("Content/PaymentFrequency").InnerText))
                                 {
                                     nPaymentFrequency = Convert.ToInt16(oCurSubElmt.SelectSingleNode("Content/PaymentFrequency").InnerText);
                                 }
@@ -1626,7 +1626,7 @@ namespace Protean
                     {
                         int cDuration = 0;
                         string cDurationUnit;
-                        if (Information.IsNumeric(oSubDetailElmt.SelectSingleNode("Duration/Length").InnerText))
+                        if (Tools.Number.IsNumeric(oSubDetailElmt.SelectSingleNode("Duration/Length").InnerText))
                         {
                             cDuration = Convert.ToInt16(oSubDetailElmt.SelectSingleNode("Duration/Length").InnerText);
                         }

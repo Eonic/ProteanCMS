@@ -814,7 +814,7 @@ namespace Protean.Providers
                                     string cVersionKey = myWeb.moRequest["verId"]+ "";
                                     bClearEditContext = false;
                                     bLoadStructure = true;
-                                    if (!Information.IsNumeric(cVersionKey))
+                                    if (!Tools.Number.IsNumeric(cVersionKey))
                                         cVersionKey = "0";
                                     int nContentId;
                                     nContentId = 0;
@@ -832,7 +832,7 @@ namespace Protean.Providers
                                         mcEwCmd = myWeb.moSession["ewCmd"].ToString();
 
                                         // if we have a parent releationship lets add it
-                                        if (myWeb.moRequest["contentParId"] != "" && Information.IsNumeric(myWeb.moRequest["contentParId"]))
+                                        if (myWeb.moRequest["contentParId"] != "" && Tools.Number.IsNumeric(myWeb.moRequest["contentParId"]))
                                         {
                                             myWeb.moDbHelper.insertContentRelation(Convert.ToInt32(myWeb.moRequest["contentParId"]), nContentId.ToString());
                                         }

@@ -111,9 +111,9 @@ namespace Protean.Providers
                             }
 
                             // Minimum quantities or price for discount
-                            int minQuantity = Information.IsNumeric(oDiscount.GetAttribute("nDiscountMinQuantity"))
+                            int minQuantity = Tools.Number.IsNumeric(oDiscount.GetAttribute("nDiscountMinQuantity"))
                                               ? Convert.ToInt32(oDiscount.GetAttribute("nDiscountMinQuantity")) : 0;
-                            decimal minPrice = Information.IsNumeric(oDiscount.GetAttribute("nDiscountMinPrice"))
+                            decimal minPrice = Tools.Number.IsNumeric(oDiscount.GetAttribute("nDiscountMinPrice"))
                                                ? Convert.ToDecimal(oDiscount.GetAttribute("nDiscountMinPrice")) : 0;
 
                             if ((minQuantity > 0 && totalQuantity >= minQuantity) || (minPrice > 0 && totalValue >= minPrice))

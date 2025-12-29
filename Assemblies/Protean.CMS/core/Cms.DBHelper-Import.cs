@@ -99,7 +99,7 @@ namespace Protean
                         if (FeedCheck.EndsWith(" Processed"))
                         {
                             string sProcessesQty = Strings.Mid(FeedCheck, FeedCheck.IndexOf("Objects, ") + 10, FeedCheck.IndexOf(" Processed") - FeedCheck.IndexOf("Objects, ") - 9);
-                            if (Information.IsNumeric(sProcessesQty))
+                            if (Tools.Number.IsNumeric(sProcessesQty))
                             {
                                 startNo = Convert.ToInt64(sProcessesQty);
                                 logActivity(ActivityType.Custom1, mnUserId, 0L, 0L, "Previous Feed Restarted:" + startNo);
@@ -176,7 +176,7 @@ namespace Protean
                             XmlElement resetNode = (XmlElement)ObjectsXml.SelectSingleNode("ResetLocations");
                             if (resetNode != null)
                             {
-                                if (Information.IsNumeric(resetNode.GetAttribute("enabled")))
+                                if (Tools.Number.IsNumeric(resetNode.GetAttribute("enabled")))
                                 {
                                     nResetLocationIfHere = Convert.ToInt64(resetNode.GetAttribute("enabled"));
                                 }
@@ -465,7 +465,7 @@ namespace Protean
 
                                             foreach (var relContId in oRelation.GetAttribute("relatedContentId").Split(','))
                                             {
-                                                if (Information.IsNumeric(relContId))
+                                                if (Tools.Number.IsNumeric(relContId))
                                                 {
                                                     if (Strings.LCase(oRelation.GetAttribute("direction")) == "child")
                                                     {

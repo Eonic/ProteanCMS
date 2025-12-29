@@ -886,7 +886,7 @@ namespace Protean
                         if (mnClonePageId > 0)
                             mbIsClonePage = true;
                         cCloneContext = moRequest["context"];
-                        if (Information.IsNumeric(cCloneContext) && Convert.ToInt32(cCloneContext) > 0)
+                        if (Tools.Number.IsNumeric(cCloneContext) && Convert.ToInt32(cCloneContext) > 0)
                         {
                             mnCloneContextPageId = Convert.ToInt32(cCloneContext);
                         }
@@ -1662,7 +1662,7 @@ namespace Protean
                                 }
 
                                 long nCacheTimeout = 24L;
-                                if (Information.IsNumeric(moConfig["PageCacheTimeout"]))
+                                if (Tools.Number.IsNumeric(moConfig["PageCacheTimeout"]))
                                 {
                                     nCacheTimeout = Convert.ToInt64(moConfig["PageCacheTimeout"]);
                                 }
@@ -2473,7 +2473,7 @@ namespace Protean
 
                             string cShowRelatedBriefDepth = moConfig["ShowRelatedBriefDepth"] + "";
                             int nMaxDepth = 1;
-                            if (!string.IsNullOrEmpty(cShowRelatedBriefDepth) && Information.IsNumeric(cShowRelatedBriefDepth))
+                            if (!string.IsNullOrEmpty(cShowRelatedBriefDepth) && Tools.Number.IsNumeric(cShowRelatedBriefDepth))
                             {
                                 nMaxDepth = Convert.ToInt16(cShowRelatedBriefDepth);
                             }
@@ -3217,7 +3217,7 @@ namespace Protean
                                     string nPrice = xmlNodePrice.InnerText;
                                     if (string.IsNullOrEmpty(nWeight))
                                         nWeight = "0";
-                                    if (Information.IsNumeric(nWeight) & Information.IsNumeric(nPrice))
+                                    if (Tools.Number.IsNumeric(nWeight) & Tools.Number.IsNumeric(nPrice))
                                     {
                                         oEc.AddShippingCosts(ref oElmt, Convert.ToDouble(nPrice).ToString(), Convert.ToDouble(nWeight).ToString());
                                     }
@@ -3417,7 +3417,7 @@ namespace Protean
                 }
                 long nPageId = 0L; // CLng("0" & moRequest("pgid"))
                 string NodeId = moRequest["pgid"];
-                if (Information.IsNumeric(NodeId))
+                if (Tools.Number.IsNumeric(NodeId))
                 {
                     nPageId = Convert.ToInt64("0" + moRequest["pgid"]);
                 }
@@ -3671,7 +3671,7 @@ namespace Protean
                             }
 
                             // Check for a context node
-                            if (!string.IsNullOrEmpty(moRequest["context"]) && Information.IsNumeric(moRequest["context"]) && Convert.ToInt64(moRequest["context"]) > 0L)
+                            if (!string.IsNullOrEmpty(moRequest["context"]) && Tools.Number.IsNumeric(moRequest["context"]) && Convert.ToInt64(moRequest["context"]) > 0L)
                             {
                                 nContextId = Convert.ToInt64(moRequest["context"]);
                             }
@@ -4682,7 +4682,7 @@ namespace Protean
                     // Directory integrations take a directory ID
                     string requestedDirectoryId = moRequest["dirId"];
                     long directoryId = (long)mnUserId;
-                    if (!string.IsNullOrEmpty(requestedDirectoryId) && Information.IsNumeric(requestedDirectoryId) && Convert.ToInt16(requestedDirectoryId) > 0)
+                    if (!string.IsNullOrEmpty(requestedDirectoryId) && Tools.Number.IsNumeric(requestedDirectoryId) && Convert.ToInt16(requestedDirectoryId) > 0)
 
                     {
                         directoryId = Convert.ToInt64(requestedDirectoryId);
@@ -5954,7 +5954,7 @@ namespace Protean
                     // 3 - Is the first config item a number
                     // 4 - Does the path in the config NOT match the start of the current page (check URI and Path) - in other words - don't run this check if we're actually on the site in question!
                     // 5 - Is the user a member of the directory item ID listed in the config.
-                    if (!!string.IsNullOrEmpty(moRequest["token"]) && cSiteConfig.Length == 3 && Information.IsNumeric(cSiteConfig[0]) && !(moRequest.Url.AbsoluteUri.StartsWith(cSiteConfig[1].ToString(), StringComparison.CurrentCultureIgnoreCase) || moRequest.Url.AbsolutePath.StartsWith(cSiteConfig[1].ToString(), StringComparison.CurrentCultureIgnoreCase)) && moPageXml.DocumentElement.SelectSingleNode("/Page/User/*[@id='" + cSiteConfig[0] + "']") != null)
+                    if (!!string.IsNullOrEmpty(moRequest["token"]) && cSiteConfig.Length == 3 && Tools.Number.IsNumeric(cSiteConfig[0]) && !(moRequest.Url.AbsoluteUri.StartsWith(cSiteConfig[1].ToString(), StringComparison.CurrentCultureIgnoreCase) || moRequest.Url.AbsolutePath.StartsWith(cSiteConfig[1].ToString(), StringComparison.CurrentCultureIgnoreCase)) && moPageXml.DocumentElement.SelectSingleNode("/Page/User/*[@id='" + cSiteConfig[0] + "']") != null)
 
 
 
@@ -6172,7 +6172,7 @@ namespace Protean
                         // Is artid being passed through
 
                         // Check if an article redirect has been called
-                        if (moRequest["redirect"] != null && !string.IsNullOrEmpty(moRequest["artid"]) && Information.IsNumeric(moRequest["artid"]))
+                        if (moRequest["redirect"] != null && !string.IsNullOrEmpty(moRequest["artid"]) && Tools.Number.IsNumeric(moRequest["artid"]))
 
                         {
 
@@ -7736,7 +7736,7 @@ namespace Protean
                         if (gbClone)
                         {
                             cCloneParent = oMenuItem.GetAttribute("cloneparent");
-                            if (Information.IsNumeric(cCloneParent) && Convert.ToInt16(cCloneParent) > 0)
+                            if (Tools.Number.IsNumeric(cCloneParent) && Convert.ToInt16(cCloneParent) > 0)
                             {
                                 sUrl = Convert.ToString(sUrl + Interaction.IIf(sUrl.Contains("?"), "&", "?"));
                                 sUrl += "context=" + cCloneParent;
@@ -8352,14 +8352,14 @@ namespace Protean
                         int nRows = 500;
 
                         // Set the paging variables, if provided.
-                        if (moRequest["startPos"] != null && Information.IsNumeric(moRequest["startPos"]))
+                        if (moRequest["startPos"] != null && Tools.Number.IsNumeric(moRequest["startPos"]))
                             nStart = Convert.ToInt16(moRequest["startPos"]);
-                        if (moRequest["rows"] != null && Information.IsNumeric(moRequest["rows"]))
+                        if (moRequest["rows"] != null && Tools.Number.IsNumeric(moRequest["rows"]))
                             nRows = Convert.ToInt16(moRequest["rows"]);
                         // In admin mode want active and hidden products separatly
                         if (mbAdminMode)
                         {
-                            if (moRequest["status"] != null && Information.IsNumeric(moRequest["status"]))
+                            if (moRequest["status"] != null && Tools.Number.IsNumeric(moRequest["status"]))
                             {
                                 int nstatus = Convert.ToInt16(moRequest["status"]);
                                 if (nstatus == 0)
@@ -8598,7 +8598,7 @@ namespace Protean
                     sFilterSql = sFilterSql + " and c.cContentSchemaName NOT IN ('" + gcBlockContentTypeRemovedIds.Replace(",", "','") + "') ";
                 }
                 string cContentLimit = "";
-                if (!string.IsNullOrEmpty(moConfig["ContentLimit"]) & Information.IsNumeric(moConfig["ContentLimit"]))
+                if (!string.IsNullOrEmpty(moConfig["ContentLimit"]) & Tools.Number.IsNumeric(moConfig["ContentLimit"]))
                 {
                     cContentLimit = " TOP " + moConfig["ContentLimit"] + " ";
                 }
@@ -8735,7 +8735,7 @@ namespace Protean
                                         PrimaryPageId = Convert.ToInt64(ParentPages[0]);
                                     }
                                 }
-                                else if (Information.IsNumeric(oRow2["parId"]))
+                                else if (Tools.Number.IsNumeric(oRow2["parId"]))
                                 {
                                     PrimaryPageId = Convert.ToInt64(oRow2["parId"]);
                                 }
@@ -8755,7 +8755,7 @@ namespace Protean
                                     PrimaryPageId = Convert.ToInt64(ParentPages[0]);
                                 }
                             }
-                            else if (Information.IsNumeric(oRow["parId"]))
+                            else if (Tools.Number.IsNumeric(oRow["parId"]))
                             {
                                 PrimaryPageId = Convert.ToInt64(oRow["parId"]);
                             }
@@ -8842,7 +8842,7 @@ namespace Protean
                     {
 
                         // Add the id if it is not null or zero
-                        if (!string.IsNullOrEmpty(oContent.GetAttribute("id")) && Information.IsNumeric(oContent.GetAttribute("id")) && Convert.ToInt64(oContent.GetAttribute("id")) > 0L)
+                        if (!string.IsNullOrEmpty(oContent.GetAttribute("id")) && Tools.Number.IsNumeric(oContent.GetAttribute("id")) && Convert.ToInt64(oContent.GetAttribute("id")) > 0L)
 
                         {
                             if (!string.IsNullOrEmpty(cCheckContentList))
@@ -9215,7 +9215,7 @@ namespace Protean
                     if (oTypeCriteria[i].Contains("Top_"))
                     {
                         cTop = Strings.Split(oTypeCriteria[i], "_")[1];
-                        if (!Information.IsNumeric(cTop))
+                        if (!Tools.Number.IsNumeric(cTop))
                             cTop = "";
                     }
                     else if (oTypeCriteria[i].Contains("ASC_"))
@@ -9261,16 +9261,16 @@ namespace Protean
                 int nMax = 0;
                 string cDoneIds = ",";
                 string ochkStr = "";
-                if (Information.IsNumeric(cTop))
+                if (Tools.Number.IsNumeric(cTop))
                     nMax = Convert.ToInt16(cTop);
                 foreach (DataRow oDR in oDS.Tables["Content1"].Rows)
                 {
                     if (oDS.Tables["Content"].Rows.Count < nMax | nMax == 0)
                     {
-                        if (Convert.ToBoolean(Operators.AndObject(Information.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
+                        if (Convert.ToBoolean(Operators.AndObject(Tools.Number.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
                         {
                             ochkStr = moDbHelper.checkPagePermission(Convert.ToInt64(oDR["parId"])).ToString();
-                            if (Information.IsNumeric(ochkStr))
+                            if (Tools.Number.IsNumeric(ochkStr))
                             {
                                 if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(Convert.ToInt16(ochkStr), oDR["parId"], false), !cDoneIds.Contains(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(",", oDR["id"]), ","))))))
                                 {
@@ -9324,7 +9324,7 @@ namespace Protean
                     if (oTypeCriteria[i].Contains("Top_"))
                     {
                         cTop = Strings.Split(oTypeCriteria[i], "_")[1];
-                        if (!Information.IsNumeric(cTop))
+                        if (!Tools.Number.IsNumeric(cTop))
                             cTop = "";
                     }
                     else if (oTypeCriteria[i].Contains("ASC_"))
@@ -9390,16 +9390,16 @@ namespace Protean
                     int nMax = 0;
                     string cDoneIds = ",";
                     string ochkStr = "";
-                    if (Information.IsNumeric(cTop))
+                    if (Tools.Number.IsNumeric(cTop))
                         nMax = Convert.ToInt16(cTop);
                     foreach (DataRow oDR in oDS.Tables["Content1"].Rows)
                     {
                         if (oDS.Tables["Content"].Rows.Count < nMax | nMax == 0)
                         {
-                            if (Convert.ToBoolean(Operators.AndObject(Information.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
+                            if (Convert.ToBoolean(Operators.AndObject(Tools.Number.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
                             {
                                 ochkStr = moDbHelper.checkPagePermission(Convert.ToInt64(oDR["parId"])).ToString();
-                                if (Information.IsNumeric(ochkStr))
+                                if (Tools.Number.IsNumeric(ochkStr))
                                 {
                                     if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(Convert.ToInt16(ochkStr), oDR["parId"], false), !cDoneIds.Contains(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(",", oDR["id"]), ","))))))
                                     {
@@ -10087,8 +10087,8 @@ namespace Protean
                 if (Regex.IsMatch(moRequest["docId"] + "", "^[0-9,]*$") & moRequest["docId"] != null)
                 {
 
-                    string[] aDocId = Strings.Split(moRequest["docId"], ",");
-                    if (Information.UBound(aDocId) != 0)
+                    string[] aDocId = moRequest["docId"].Split(',');
+                    if (aDocId.Length != 0)
                     {
 
 
@@ -10101,7 +10101,7 @@ namespace Protean
 
                         foreach (string docId in aDocId)
                         {
-                            if (Information.IsNumeric(docId) && !string.IsNullOrEmpty(docId))
+                            if (Tools.Number.IsNumeric(docId) && !string.IsNullOrEmpty(docId))
                             {
                                 sSql += Tools.Database.SqlString(docId) + ",";
                             }
@@ -10208,7 +10208,7 @@ namespace Protean
 
                     else
                     {
-                        if (!Information.IsNumeric(aDocId[0]))
+                        if (!Tools.Number.IsNumeric(aDocId[0]))
                             throw new Exception("Incorrect Document Id Format");
                         nDocId = Convert.ToInt64(aDocId[0]);
                         sSql = "select * from tblContent where nContentKey = " + aDocId[0];

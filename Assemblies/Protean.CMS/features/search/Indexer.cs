@@ -336,7 +336,7 @@ namespace Protean
                                     cRules = oElmtRules.GetAttribute("content");
                                 if (!(Strings.InStr(cRules, "NOINDEX") > 0) & oElmtURL != null)
                                 {
-                                    if (!oElmtURL.GetAttribute("url").StartsWith("http") | Information.IsNumeric(oElmtURL.GetAttribute("url")))
+                                    if (!oElmtURL.GetAttribute("url").StartsWith("http") | Tools.Number.IsNumeric(oElmtURL.GetAttribute("url")))
                                     {
 
                                         string thisUrl = oElmtURL.GetAttribute("url");

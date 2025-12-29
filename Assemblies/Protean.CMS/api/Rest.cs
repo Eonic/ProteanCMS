@@ -339,7 +339,7 @@ namespace Protean
                                 username = usernamePassword.Substring(0, seperatorIndex);
                                 password = usernamePassword.Substring(seperatorIndex + 1);
                                 sValidResponse = myWeb.moDbHelper.validateUser(username, password);
-                                if (Information.IsNumeric(sValidResponse))
+                                if (Tools.Number.IsNumeric(sValidResponse))
                                 {
                                     nUserId = (int)Convert.ToInt64(sValidResponse);
                                 }

@@ -421,7 +421,7 @@ namespace Protean.Providers
                         decimal nLineTotalSaving = 0m;
 
                         // Collect savings already set by ApplyDiscount
-                        if (oItemElmt.HasAttribute("itemSaving") && Information.IsNumeric(oItemElmt.GetAttribute("itemSaving")))
+                        if (oItemElmt.HasAttribute("itemSaving") && Tools.Number.IsNumeric(oItemElmt.GetAttribute("itemSaving")))
                         {
                             nLineTotalSaving = Convert.ToDecimal(oItemElmt.GetAttribute("itemSaving"));
                         }
@@ -436,7 +436,7 @@ namespace Protean.Providers
                             oItemElmt.AppendChild(clone);
 
                             // Collect deletion IDs for special categories
-                            if (Information.IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")) &&
+                            if (Tools.Number.IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")) &&
                                 Convert.ToDouble(oDiscountItemTest.GetAttribute("nDiscountCat")) == 4d)
                             {
                                 if (nDelIDs[0] == 0)
@@ -555,7 +555,7 @@ namespace Protean.Providers
             {
                 try
                 {
-                    if (!Information.IsNumeric(nNumber))
+                    if (!Tools.Number.IsNumeric(nNumber))
                         return 0m;
 
                     decimal value = Convert.ToDecimal(nNumber);

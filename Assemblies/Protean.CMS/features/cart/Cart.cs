@@ -728,7 +728,7 @@ namespace Protean
                         {
                             mnCartId = 0;
                         }
-                        else if (Convert.ToBoolean(Operators.OrObject(!Information.IsNumeric(myWeb.moSession["CartId"]), Operators.ConditionalCompareObjectLessEqual(myWeb.moSession["CartId"], 0, false))))
+                        else if (Convert.ToBoolean(Operators.OrObject(!Tools.Number.IsNumeric(myWeb.moSession["CartId"]), Operators.ConditionalCompareObjectLessEqual(myWeb.moSession["CartId"], 0, false))))
                         {
                             mnCartId = 0;
                         }
@@ -753,7 +753,7 @@ namespace Protean
                         // session id is assigned
                         // add logic if same seession id is present or not in db if we have then generate diff session id
 
-                        if (Information.IsNumeric(myWeb.moRequest.QueryString["cartErr"]))
+                        if (Tools.Number.IsNumeric(myWeb.moRequest.QueryString["cartErr"]))
                             mnProcessError = (short)Convert.ToInt16(myWeb.moRequest.QueryString["cartErr"]);
 
                         if (mbBlockCartCmd == false)
@@ -1028,14 +1028,14 @@ namespace Protean
                             sSql = "SELECT nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + mnCartId;
                             string cRes = moDBHelper.ExeProcessSqlScalar(sSql);
 
-                            if (Information.IsNumeric(cRes) && Convert.ToDouble(cRes) > 0d)
+                            if (Tools.Number.IsNumeric(cRes) && Convert.ToDouble(cRes) > 0d)
                             {
                                 myWeb.mnUserId = Convert.ToInt16(cRes);
                                 mnEwUserId = myWeb.mnUserId;
                                 myWeb.moSession["nUserId"] = cRes;
 
                                 string cRequestPage = myWeb.moRequest["pgid"];
-                                if (Information.IsNumeric(cRequestPage) && Convert.ToDouble(cRequestPage) > 0d)
+                                if (Tools.Number.IsNumeric(cRequestPage) && Convert.ToDouble(cRequestPage) > 0d)
                                 {
                                     myWeb.mnPageId = Convert.ToInt16(myWeb.moRequest["pgid"]);
                                 }
@@ -1430,7 +1430,7 @@ namespace Protean
                                 {
                                     if (Strings.InStr(Convert.ToString(oItem1), "qty_") == 1) // check for getting productID and quantity (since there will only be one of these per item submitted)
                                     {
-                                        if (Information.IsNumeric(myWeb.moRequest.Form.Get(oItem1)))
+                                        if (Tools.Number.IsNumeric(myWeb.moRequest.Form.Get(oItem1)))
                                         {
                                             nQuantity = Convert.ToInt64(myWeb.moRequest.Form.Get(oItem1));
                                         }
@@ -1685,7 +1685,7 @@ namespace Protean
                                         if (oRegXform.valid)
                                         {
                                             string sReturn = moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
-                                            if (Information.IsNumeric(sReturn))
+                                            if (Tools.Number.IsNumeric(sReturn))
                                             {
                                                 myWeb.mnUserId = (int)Convert.ToInt64(sReturn);
                                                 var oUserElmt = moDBHelper.GetUserXML((long)myWeb.mnUserId);
@@ -3597,12 +3597,12 @@ namespace Protean
 
                                         else if (Strings.Right(mcDepositAmount, 1) == "%")
                                         {
-                                            if (Information.IsNumeric(Strings.Left(mcDepositAmount, Strings.Len(mcDepositAmount) - 1)))
+                                            if (Tools.Number.IsNumeric(Strings.Left(mcDepositAmount, Strings.Len(mcDepositAmount) - 1)))
                                             {
                                                 nPayable = nTotalAmount * Convert.ToDouble(Strings.Left(mcDepositAmount, Strings.Len(mcDepositAmount) - 1)) / 100d;
                                             }
                                         }
-                                        else if (Information.IsNumeric(mcDepositAmount))
+                                        else if (Tools.Number.IsNumeric(mcDepositAmount))
                                             nPayable = Convert.ToDouble(mcDepositAmount);
 
                                         if (nPayable > nTotalAmount)
@@ -3619,7 +3619,7 @@ namespace Protean
                                     }
                                 }
                                 // A deposit has been paid - should I check if it's the same as the total amount?
-                                else if (Information.IsNumeric(oRow["nAmountReceived"]))
+                                else if (Tools.Number.IsNumeric(oRow["nAmountReceived"]))
                                 {
                                     nPayable = nTotalAmount - Convert.ToDouble(oRow["nAmountReceived"]);
                                     oCartElmt.SetAttribute("payableAmount", Strings.FormatNumber(nPayable, 2, TriState.True, TriState.False, TriState.False));
@@ -3640,7 +3640,7 @@ namespace Protean
                                 }
 
                                 // Set the payableType 
-                                if (!Information.IsNumeric(oRow["nAmountReceived"]) && nStatusId != 10L)
+                                if (!Tools.Number.IsNumeric(oRow["nAmountReceived"]) && nStatusId != 10L)
                                 {
                                     oCartElmt.SetAttribute("payableType", "deposit");
                                 }
@@ -3650,7 +3650,7 @@ namespace Protean
                                 }
 
                                 // TS added for additional orders not sure if this will break elsewhere.
-                                if (!Information.IsNumeric(oRow["nAmountReceived"]) && nStatusId == 10L)
+                                if (!Tools.Number.IsNumeric(oRow["nAmountReceived"]) && nStatusId == 10L)
                                 {
                                     oCartElmt.SetAttribute("payableType", "deposit");
                                 }
@@ -4045,7 +4045,7 @@ namespace Protean
 
                     double nPrice = 0.0d;
 
-                    if (Information.IsNumeric(oThePrice.InnerText))
+                    if (Tools.Number.IsNumeric(oThePrice.InnerText))
                     {
                         nPrice = Convert.ToDouble(oThePrice.InnerText);
                     }
@@ -4175,10 +4175,10 @@ namespace Protean
                         }
                         if (oThePrice != null)
                         {
-                            if (Information.IsNumeric(oThePrice.InnerText))
+                            if (Tools.Number.IsNumeric(oThePrice.InnerText))
                             {
                                 // this selects the cheapest price for this user assuming not free
-                                if (Information.IsNumeric(oPNode.InnerText))
+                                if (Tools.Number.IsNumeric(oPNode.InnerText))
                                 {
                                     // if OverrideCheapestPrice is "on" - we will ensure that when sales price is greater than rrp - highest(sales) price is considered.
                                     if (!(moCartConfig["OverrideCheapestPrice"] == null) & moCartConfig["OverrideCheapestPrice"] == "on")
@@ -4266,7 +4266,7 @@ namespace Protean
                         // End If
                         if (oThePrice != null)
                         {
-                            if (Information.IsNumeric(oThePrice.InnerText))
+                            if (Tools.Number.IsNumeric(oThePrice.InnerText))
                             {
                                 if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText))
                                 {
@@ -4283,7 +4283,7 @@ namespace Protean
                         else
                         {
                             oThePrice = oPNode;
-                            if (Information.IsNumeric(oThePrice.InnerText))
+                            if (Tools.Number.IsNumeric(oThePrice.InnerText))
                             {
                                 nPrice = Convert.ToDouble(oThePrice.InnerText);
                             }
@@ -4320,7 +4320,7 @@ namespace Protean
                     // Set the error node
                     oError = (XmlElement)oCartElmt.SelectSingleNode("error");
 
-                    if (Information.IsNumeric(cItemQuantity))
+                    if (Tools.Number.IsNumeric(cItemQuantity))
                     {
 
                         // Check minimum value
@@ -4435,7 +4435,7 @@ namespace Protean
                             oStock = oProd.SelectSingleNode("//Stock");
                             if (oStock != null)
                             {
-                                if (Information.IsNumeric(oStock.InnerText))
+                                if (Tools.Number.IsNumeric(oStock.InnerText))
                                 {
                                     StockLevel = Convert.ToInt64(oStock.InnerText);
                                 }
@@ -4447,7 +4447,7 @@ namespace Protean
                             foreach (XmlNode currentOStock in oProd.SelectNodes("//Stock/Location"))
                             {
                                 oStock = currentOStock;
-                                if (Information.IsNumeric(oStock.InnerText))
+                                if (Tools.Number.IsNumeric(oStock.InnerText))
                                 {
                                     if (StockLevel == default)
                                         StockLevel = 0L;
@@ -4514,7 +4514,7 @@ namespace Protean
                                 if (oStock != null)
                                 {
                                     // Ignore non-numeric nodes
-                                    if (Information.IsNumeric(oStock.InnerText))
+                                    if (Tools.Number.IsNumeric(oStock.InnerText))
                                     {
                                         nStockLevel = Convert.ToInt16(oStock.InnerText) - Convert.ToInt16(oItem.GetAttribute("quantity"));
                                         // Remember to delete the XmlCache
@@ -4543,7 +4543,7 @@ namespace Protean
                                 if (oStock != null)
                                 {
                                     // Ignore non-numeric nodes
-                                    if (Information.IsNumeric(oStock.InnerText))
+                                    if (Tools.Number.IsNumeric(oStock.InnerText))
                                     {
                                         oStock.InnerText = nStockLevel.ToString();
                                         oRow["cContentXmlBrief"] = oProd.InnerXml;
@@ -5408,7 +5408,7 @@ namespace Protean
 
 
                                 // check for collection options
-                                if (Information.IsNumeric(myWeb.moRequest["cIsDelivery"]))
+                                if (Tools.Number.IsNumeric(myWeb.moRequest["cIsDelivery"]))
                                 {
                                     // Save the delivery method allready
                                     string cSqlUpdate = "";
@@ -7687,7 +7687,7 @@ namespace Protean
 
                                 arrLoc[0] = Convert.ToString(Operators.ConcatenateObject(oDr["nLocationParId"], ""));
 
-                                if (oDr["nLocationTaxRate"] is DBNull | !Information.IsNumeric(oDr["nLocationTaxRate"]))
+                                if (oDr["nLocationTaxRate"] is DBNull | !Tools.Number.IsNumeric(oDr["nLocationTaxRate"]))
                                 {
                                     arrLoc[2] = 0.ToString();
                                 }
@@ -8149,7 +8149,7 @@ namespace Protean
                                     if (oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" + mcCurrency + "']") != null)
                                     {
                                         string strDiscount1 = oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" + mcCurrency + "']").InnerText;
-                                        addNewTextNode("nDiscountValue", ref oElmt, Convert.ToString(Interaction.IIf(Information.IsNumeric(strDiscount1), strDiscount1, 0)));
+                                        addNewTextNode("nDiscountValue", ref oElmt, Convert.ToString(Interaction.IIf(Tools.Number.IsNumeric(strDiscount1), strDiscount1, 0)));
                                     }
 
                                     if (oProdXml.SelectSingleNode("/Content/ShippingWeight") != null)
@@ -8210,7 +8210,7 @@ namespace Protean
                                         strPrice1 = myWeb.moRequest["price_" + nProductId];
                                     }
                                 }
-                                addNewTextNode("nPrice", ref oElmt, Convert.ToString(Interaction.IIf(Information.IsNumeric(strPrice1), strPrice1, 0)));
+                                addNewTextNode("nPrice", ref oElmt, Convert.ToString(Interaction.IIf(Tools.Number.IsNumeric(strPrice1), strPrice1, 0)));
                                 addNewTextNode("nShpCat", ref oElmt, (-1).ToString());
                                 addNewTextNode("nTaxRate", ref oElmt, nTaxRate.ToString());
                                 addNewTextNode("nQuantity", ref oElmt, nQuantity.ToString());
@@ -8219,7 +8219,7 @@ namespace Protean
                                 if (bDepositOnly)
                                 {
                                     XmlNode argoNode18 = oElmt;
-                                    addNewTextNode("nDepositAmount", ref argoNode18, Convert.ToString(Interaction.IIf(Information.IsNumeric(oPrice.GetAttribute("deposit")), oPrice.GetAttribute("deposit"), 0)));
+                                    addNewTextNode("nDepositAmount", ref argoNode18, Convert.ToString(Interaction.IIf(Tools.Number.IsNumeric(oPrice.GetAttribute("deposit")), oPrice.GetAttribute("deposit"), 0)));
                                     oElmt = (XmlElement)argoNode18;
                                 }
 
@@ -8267,7 +8267,7 @@ namespace Protean
                                                 cOptName = cStockCode;
                                                 bTextOption = true;
                                             }
-                                            else if (Information.IsNumeric(oProdOptions[i][0]) & Information.IsNumeric(opt2ndval))
+                                            else if (Tools.Number.IsNumeric(oProdOptions[i][0]) & Tools.Number.IsNumeric(opt2ndval))
                                             {
                                                 // add the stock code from the option
                                                 if (oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/StockCode") != null)
@@ -8321,7 +8321,7 @@ namespace Protean
                                                 string strPrice2 = 0.ToString();
                                                 if (oPriceElmt != null)
                                                     strPrice2 = oPriceElmt.InnerText;
-                                                addNewTextNode("nPrice", ref oElmt, Convert.ToString(Interaction.IIf(Information.IsNumeric(strPrice2), strPrice2, 0)));
+                                                addNewTextNode("nPrice", ref oElmt, Convert.ToString(Interaction.IIf(Tools.Number.IsNumeric(strPrice2), strPrice2, 0)));
                                             }
                                             addNewTextNode("nShpCat", ref oElmt, (-1).ToString());
                                             addNewTextNode("nTaxRate", ref oElmt, 0.ToString());
@@ -8442,7 +8442,7 @@ namespace Protean
                                 if (Strings.InStr(Convert.ToString(oItem1), "qty_deposit_") == 1)
                                 {
                                     cProductKey = Strings.Replace(Convert.ToString(oItem1), "qty_deposit_", "");
-                                    if (Information.IsNumeric(cProductKey))
+                                    if (Tools.Number.IsNumeric(cProductKey))
                                     {
                                         nProductKey = Convert.ToInt64(cProductKey);
                                     }
@@ -8457,7 +8457,7 @@ namespace Protean
                                 else
                                 {
                                     cProductKey = Strings.Replace(Convert.ToString(oItem1), "qty_", "");
-                                    if (Information.IsNumeric(cProductKey))
+                                    if (Tools.Number.IsNumeric(cProductKey))
                                     {
                                         nProductKey = Convert.ToInt64(cProductKey);
                                     }
@@ -8471,7 +8471,7 @@ namespace Protean
 
                                 cProcessInfo = Convert.ToString(Operators.ConcatenateObject(oItem1.ToString() + " = ", myWeb.moRequest.Form.Get(oItem1)));
 
-                                if (Information.IsNumeric(myWeb.moRequest.Form.Get(oItem1)))
+                                if (Tools.Number.IsNumeric(myWeb.moRequest.Form.Get(oItem1)))
                                 {
                                     nQuantity = Convert.ToInt64(myWeb.moRequest.Form.Get(oItem1));
                                 }
@@ -8534,7 +8534,7 @@ namespace Protean
                                           // Add Item
                                         if (!string.IsNullOrEmpty(myWeb.moRequest.Form.Get("donationAmount")))
                                         {
-                                            if (Information.IsNumeric(myWeb.moRequest.Form.Get("donationAmount")))
+                                            if (Tools.Number.IsNumeric(myWeb.moRequest.Form.Get("donationAmount")))
                                             {
                                                 string CartItemName = "Donation";
                                                 string CartItemXml = "";
@@ -8603,7 +8603,7 @@ namespace Protean
                     DataSet oDs;
                     string cProcessInfo = "";
                     var itemCount = default(long);
-                    if (Information.IsNumeric(myWeb.moRequest["id"]))
+                    if (Tools.Number.IsNumeric(myWeb.moRequest["id"]))
                         nItemId = Convert.ToInt64(myWeb.moRequest["id"]);
                     try
                     {
@@ -8985,7 +8985,7 @@ namespace Protean
                             {
                                 nItemCount = nItemCount + 1;
                                 // First check if the quantity is numeric (if not ignore it)
-                                if (Information.IsNumeric(myWeb.moRequest[Convert.ToString(Operators.ConcatenateObject("itemId-", oRow["nCartItemKey"]))]))
+                                if (Tools.Number.IsNumeric(myWeb.moRequest[Convert.ToString(Operators.ConcatenateObject("itemId-", oRow["nCartItemKey"]))]))
                                 {
                                     // It's numeric - let's see if it's positive (i.e. update it, if not delete it)
                                     if (Convert.ToInt16(myWeb.moRequest[Convert.ToString(Operators.ConcatenateObject("itemId-", oRow["nCartItemKey"]))]) > 0)
@@ -9433,7 +9433,7 @@ namespace Protean
                     // First check if the user is in a tax exclusion group
                     XmlNodeState localNodeState() { var argoNode = myWeb.moPageXml.DocumentElement; var ret = Tools.Xml.NodeState(ref argoNode, "/Page/User/*[@id='" + cVatExclusionGroup + "']"); return ret; }
 
-                    if (Information.IsNumeric(cVatExclusionGroup) && Convert.ToInt16(cVatExclusionGroup) > 0 && Convert.ToBoolean(localNodeState()))
+                    if (Tools.Number.IsNumeric(cVatExclusionGroup) && Convert.ToInt16(cVatExclusionGroup) > 0 && Convert.ToBoolean(localNodeState()))
 
                     {
                         cProcessInfo = "User is in Tax Rate exclusion group";
@@ -9828,7 +9828,7 @@ namespace Protean
                                 if (cVAs is null | string.IsNullOrEmpty(cVAs))
                                     cVAs = myWeb.moRequest.Form["Custom_VARating"];
                                 int nTotalVA = 0;
-                                if (Information.IsNumeric(cVAs))
+                                if (Tools.Number.IsNumeric(cVAs))
                                 {
                                     nTotalVA = (int)Math.Round(Convert.ToDecimal(oTmpElements.GetAttribute("qty")) * Convert.ToDecimal(cVAs));
                                     if (nTotalVA > 0)
@@ -9845,7 +9845,7 @@ namespace Protean
                                 if (cVAs is null | string.IsNullOrEmpty(cVAs))
                                     cVAs = myWeb.moRequest.Form["Custom_VARating"];
                                 int nTotalVA = 0;
-                                if (Information.IsNumeric(cVAs))
+                                if (Tools.Number.IsNumeric(cVAs))
                                 {
                                     nTotalVA = (int)Math.Round(Convert.ToDecimal(oTmpElements.GetAttribute("qty")) * Convert.ToDecimal(cVAs));
                                     if (nTotalVA > 0)
@@ -9869,7 +9869,7 @@ namespace Protean
                     if (cVAsN is null | string.IsNullOrEmpty(cVAsN))
                         cVAsN = myWeb.moRequest.Form["Custom_VARating"];
                     int nTotalVAN = 0;
-                    if (Information.IsNumeric(cVAsN))
+                    if (Tools.Number.IsNumeric(cVAsN))
                     {
                         nTotalVAN = (int)Math.Round(nQuantity * Convert.ToDecimal(cVAsN));
                         if (nTotalVAN > 0)
@@ -9917,9 +9917,9 @@ namespace Protean
                 {
 
                     // Set the paging variables, if provided.
-                    if (myWeb.moRequest["startPos"] != null && Information.IsNumeric(myWeb.moRequest["startPos"]))
+                    if (myWeb.moRequest["startPos"] != null && Tools.Number.IsNumeric(myWeb.moRequest["startPos"]))
                         nStart = Convert.ToInt16(myWeb.moRequest["startPos"]);
-                    if (myWeb.moRequest["rows"] != null && Information.IsNumeric(myWeb.moRequest["rows"]))
+                    if (myWeb.moRequest["rows"] != null && Tools.Number.IsNumeric(myWeb.moRequest["rows"]))
                         nRows = Convert.ToInt16(myWeb.moRequest["rows"]);
 
                     if (nStart < 0)
@@ -10534,7 +10534,7 @@ namespace Protean
 
                         mnShippingRootId = -1;
 
-                        if (Information.IsNumeric(oCurrency.GetAttribute("ShippingRootId")))
+                        if (Tools.Number.IsNumeric(oCurrency.GetAttribute("ShippingRootId")))
                         {
                             mnShippingRootId = Convert.ToInt16(oCurrency.GetAttribute("ShippingRootId"));
                         }

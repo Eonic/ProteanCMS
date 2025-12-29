@@ -571,7 +571,7 @@ namespace Protean
                         try
                         {
                             // Test if this has been logged
-                            if (Information.IsNumeric(AlertLogKey) && AlertLogKey > 0)
+                            if (Tools.Number.IsNumeric(AlertLogKey) && AlertLogKey > 0)
                             {
                                 // Alert Item has been logged, therefore update the record
 

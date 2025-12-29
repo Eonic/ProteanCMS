@@ -66,7 +66,7 @@ namespace Protean
                     string cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cLink + "' WHERE nDirKey = " + AccountID;
                     cLink = Tools.Text.AscString(cLink);
                     Debug.WriteLine(cLink);
-                    if (Information.IsNumeric((object)myWeb.moDbHelper.ExeProcessSql(cSQL)))
+                    if (Tools.Number.IsNumeric((object)myWeb.moDbHelper.ExeProcessSql(cSQL)))
                     {
                         return cLink;
                     }

@@ -581,7 +581,7 @@ namespace Protean
 
 
                 //                int maxRepeats;
-                //                if (!string.IsNullOrEmpty(scheduleMaxRepeats) && Information.IsNumeric(scheduleMaxRepeats) && Convert.ToInt16(scheduleMaxRepeats) > 0)
+                //                if (!string.IsNullOrEmpty(scheduleMaxRepeats) && Tools.Number.IsNumeric(scheduleMaxRepeats) && Convert.ToInt16(scheduleMaxRepeats) > 0)
 
                 //                {
                 //                    maxRepeats = Convert.ToInt16(scheduleMaxRepeats);
@@ -666,7 +666,7 @@ namespace Protean
 
                 //            if (Convert.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual((oDictOpt["transactionType"]), "defer", false), Operators.ConditionalCompareObjectEqual((oDictOpt["transactionType"]), "deferred", false))))
                 //            {
-                //                if (Information.IsNumeric(oDictOpt["ccDeferDays"]) & Information.IsNumeric(oDictOpt["dcDeferDays"]))
+                //                if (Tools.Number.IsNumeric(oDictOpt["ccDeferDays"]) & Tools.Number.IsNumeric(oDictOpt["dcDeferDays"]))
                 //                {
                 //                    sOpts = Convert.ToString(sOpts + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(",deferred=reuse:", oDictOpt["ccDeferDays"]), ":"), oDictOpt["dcDeferDays"]));
                 //                }
@@ -751,7 +751,7 @@ namespace Protean
                 //                {
 
                 //                    string cPos = Strings.InStr(aResponse[i], "=").ToString();
-                //                    if (Information.IsNumeric(cPos))
+                //                    if (Tools.Number.IsNumeric(cPos))
                 //                    {
                 //                        nPos = Convert.ToInt16(cPos);
                 //                        oDictResp.Add(Strings.Left(aResponse[i], nPos - 1), Strings.Right(aResponse[i], Strings.Len(aResponse[i]) - nPos));
@@ -5600,7 +5600,7 @@ namespace Protean
                                 // If we're in deposit mode, check if the values submitted are valid
                                 if (mcPaymentType == "deposit" & moCartConfig["AdjustDeposit"] == "on")
                                 {
-                                    if (!Information.IsNumeric(oXform.Instance.SelectSingleNode("creditCard/amount").InnerText))
+                                    if (!Tools.Number.IsNumeric(oXform.Instance.SelectSingleNode("creditCard/amount").InnerText))
                                     {
                                         oXform.addNote("creditCard/amount", Protean.xForm.noteTypes.Alert, "<span class=\"note-trans-dpnan\">The amount entered was not a number.  Please ensure that you do not enter any symbols, such as currency symbols.</span>");
                                         oXform.AddValidationError("The amount entered was not a number.");
@@ -5699,7 +5699,7 @@ namespace Protean
 
                             if (bCV2)
                             {
-                                if (!Information.IsNumeric(oXform.Instance.SelectSingleNode("creditCard/CV2").InnerText) & Strings.Len(oXform.Instance.SelectSingleNode("creditCard/CV2").InnerText) != 3)
+                                if (!Tools.Number.IsNumeric(oXform.Instance.SelectSingleNode("creditCard/CV2").InnerText) & Strings.Len(oXform.Instance.SelectSingleNode("creditCard/CV2").InnerText) != 3)
                                 {
                                     oXform.addNote("creditCard/CV2", Protean.xForm.noteTypes.Alert, "Please provide the last 3 digits on the signature strip.");
                                     oXform.AddValidationError("Please provide the last 3 digits on the signature strip.");
@@ -5804,7 +5804,7 @@ namespace Protean
                 //                oXform.valid = false;
                 //                oXform.addNote("Ukash/VoucherNumber", Protean.xForm.noteTypes.Alert, "Please enter the Ukash card number.  Please ensure that you do not enter any symbols, such as currency symbols.");
                 //            }
-                //            if (!Information.IsNumeric(this.goRequest["Ukash/VoucherValue"]))
+                //            if (!Tools.Number.IsNumeric(this.goRequest["Ukash/VoucherValue"]))
                 //            {
                 //                oXform.valid = false;
                 //                oXform.addNote("Ukash/VoucherValue", Protean.xForm.noteTypes.Alert, "Please enter the Ukash card value.  Please ensure that you do not enter any symbols, such as currency symbols.");
@@ -6573,7 +6573,7 @@ namespace Protean
                         // get the audit id 
                         string cSQL = "SELECT tblAudit.nAuditKey FROM tblCartOrder INNER JOIN tblCartPaymentMethod ON tblCartOrder.nPayMthdId = tblCartPaymentMethod.nPayMthdKey INNER JOIN tblAudit ON tblCartPaymentMethod.nAuditId = tblAudit.nAuditKey WHERE tblCartOrder.nCartOrderKey = " + nCartId;
                         string nAuditId = myWeb.moDbHelper.ExeProcessSqlScalar(cSQL);
-                        if (Information.IsNumeric(nAuditId))
+                        if (Tools.Number.IsNumeric(nAuditId))
                         {
 
                             var oXml = new XmlDocument();

@@ -1116,9 +1116,9 @@ namespace Protean
                                                     int nRows = 500;
 
                                                     // Set the paging variables, if provided.
-                                                    if (myWeb.moRequest["startPos"] != null && Information.IsNumeric(myWeb.moRequest["startPos"]))
+                                                    if (myWeb.moRequest["startPos"] != null && Tools.Number.IsNumeric(myWeb.moRequest["startPos"]))
                                                         nStart = Convert.ToInt16(myWeb.moRequest["startPos"]);
-                                                    if (myWeb.moRequest["rows"] != null && Information.IsNumeric(myWeb.moRequest["rows"]))
+                                                    if (myWeb.moRequest["rows"] != null && Tools.Number.IsNumeric(myWeb.moRequest["rows"]))
                                                         nRows = Convert.ToInt16(myWeb.moRequest["rows"]);
 
                                                     var argoPageElmt = moPageXML.DocumentElement;
@@ -1292,7 +1292,7 @@ namespace Protean
                                     myWeb.ClearPageCache();
 
                                     // if we have a parent releationship lets add it but not if we have a relation type becuase that happens in the xform.
-                                    if (!string.IsNullOrEmpty(myWeb.moRequest["contentParId"]) && Information.IsNumeric(myWeb.moRequest["contentParId"]))
+                                    if (!string.IsNullOrEmpty(myWeb.moRequest["contentParId"]) && Tools.Number.IsNumeric(myWeb.moRequest["contentParId"]))
                                     {
                                         bool b2Way = Convert.ToBoolean(Interaction.IIf(myWeb.moRequest["RelType"] == "2way" | myWeb.moRequest["direction"] == "2Way", (object)true, (object)false));
                                         string sRelType = myWeb.moRequest["relationType"];
@@ -1331,12 +1331,12 @@ namespace Protean
                                 bClearEditContext = false;
                                 bLoadStructure = true;
 
-                                if (Information.IsNumeric(myWeb.moRequest["pgid"]))
+                                if (Tools.Number.IsNumeric(myWeb.moRequest["pgid"]))
                                 {
                                     myWeb.gcLang = myWeb.moDbHelper.getPageLang(Convert.ToInt64(myWeb.moRequest["pgid"]));
                                 }
 
-                                if (!Information.IsNumeric(cVersionKey))
+                                if (!Tools.Number.IsNumeric(cVersionKey))
                                     cVersionKey = "0";
                                 nContentId = 0L;
                                 string zcReturnSchema = "";
@@ -1369,7 +1369,7 @@ namespace Protean
                                     }
 
                                     // if we have a parent releationship lets add it
-                                    if (!string.IsNullOrEmpty(myWeb.moRequest["contentParId"]) && Information.IsNumeric(myWeb.moRequest["contentParId"]))
+                                    if (!string.IsNullOrEmpty(myWeb.moRequest["contentParId"]) && Tools.Number.IsNumeric(myWeb.moRequest["contentParId"]))
                                     {
                                         myWeb.moDbHelper.insertContentRelation(Convert.ToInt16(myWeb.moRequest["contentParId"]), nContentId.ToString());
                                     }
@@ -2292,7 +2292,7 @@ namespace Protean
                             }
                         case "ListUsers":
                             {
-                                if (Information.IsNumeric(myWeb.moRequest["parid"]))
+                                if (Tools.Number.IsNumeric(myWeb.moRequest["parid"]))
                                 {
                                     myWeb.moSession["UserParId"] = myWeb.moRequest["parid"];
                                 }
@@ -3161,7 +3161,7 @@ namespace Protean
                             }
                         case "ProductGroups":
                             {
-                                ProductGroupsProcess(ref oPageDetail, ref sAdminLayout, Convert.ToInt16(Interaction.IIf(Information.IsNumeric(myWeb.moRequest.QueryString["GrpID"]), myWeb.moRequest.QueryString["GrpID"], (object)0)));
+                                ProductGroupsProcess(ref oPageDetail, ref sAdminLayout, Convert.ToInt16(Interaction.IIf(Tools.Number.IsNumeric(myWeb.moRequest.QueryString["GrpID"]), myWeb.moRequest.QueryString["GrpID"], (object)0)));
                                 break;
                             }
                         case "AddProductGroups":
@@ -3169,7 +3169,7 @@ namespace Protean
                             {
                                 bLoadStructure = true;
                                 sAdminLayout = "AdminXForm";
-                                oPageDetail.AppendChild(moAdXfm.xFrmProductGroup(Convert.ToInt16(Interaction.IIf(Information.IsNumeric(myWeb.moRequest.QueryString["GroupId"]), myWeb.moRequest.QueryString["GroupId"], (object)0))));
+                                oPageDetail.AppendChild(moAdXfm.xFrmProductGroup(Convert.ToInt16(Interaction.IIf(Tools.Number.IsNumeric(myWeb.moRequest.QueryString["GroupId"]), myWeb.moRequest.QueryString["GroupId"], (object)0))));
                                 if (moAdXfm.valid)
                                 {
                                     mcEwCmd = "ProductGroups";
@@ -3219,15 +3219,15 @@ namespace Protean
                         case "DiscountRules":
                         case "EditDiscountRules":
                             {
-                                if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "addNewDiscountRule") & Information.IsNumeric(myWeb.moRequest.Form["newDiscountType"]) | stdTools.ButtonSubmitted(ref myWeb.moRequest, "ewSubmit") | mcEwCmd == "EditDiscountRules")
+                                if (stdTools.ButtonSubmitted(ref myWeb.moRequest, "addNewDiscountRule") & Tools.Number.IsNumeric(myWeb.moRequest.Form["newDiscountType"]) | stdTools.ButtonSubmitted(ref myWeb.moRequest, "ewSubmit") | mcEwCmd == "EditDiscountRules")
 
                                 {
                                     bLoadStructure = true;
                                     sAdminLayout = "AdminXForm";
-                                    long nDiscountType = Convert.ToInt64(Interaction.IIf(Information.IsNumeric(myWeb.moRequest.Form["newDiscountType"]), myWeb.moRequest.Form["newDiscountType"], (object)0));
-                                    nDiscountType = Convert.ToInt64(Interaction.IIf(Information.IsNumeric(myWeb.moRequest.Form["nDiscountCat"]), myWeb.moRequest.Form["nDiscountCat"], (object)nDiscountType));
+                                    long nDiscountType = Convert.ToInt64(Interaction.IIf(Tools.Number.IsNumeric(myWeb.moRequest.Form["newDiscountType"]), myWeb.moRequest.Form["newDiscountType"], (object)0));
+                                    nDiscountType = Convert.ToInt64(Interaction.IIf(Tools.Number.IsNumeric(myWeb.moRequest.Form["nDiscountCat"]), myWeb.moRequest.Form["nDiscountCat"], (object)nDiscountType));
 
-                                    oPageDetail.AppendChild(moAdXfm.xFrmDiscountRule(Convert.ToInt16(Interaction.IIf(Information.IsNumeric(myWeb.moRequest.QueryString["DiscId"]), myWeb.moRequest.QueryString["DiscId"], (object)0)), (int)nDiscountType));
+                                    oPageDetail.AppendChild(moAdXfm.xFrmDiscountRule(Convert.ToInt16(Interaction.IIf(Tools.Number.IsNumeric(myWeb.moRequest.QueryString["DiscId"]), myWeb.moRequest.QueryString["DiscId"], (object)0)), (int)nDiscountType));
 
                                     if (moAdXfm.valid)
                                     {
@@ -3847,7 +3847,7 @@ namespace Protean
                 try
                 {
 
-                    if (myWeb.moRequest["artid"] != null && Information.IsNumeric(myWeb.moRequest["artid"] + ""))
+                    if (myWeb.moRequest["artid"] != null && Tools.Number.IsNumeric(myWeb.moRequest["artid"] + ""))
                     {
                         contentId = Convert.ToInt64(myWeb.moRequest["artid"] + "");
                     }
@@ -6510,7 +6510,7 @@ from tblContentIndexDef";
                             if (oADX.valid)
                             {
                                 var mySub = new Cms.Cart.Subscriptions(ref myWeb);
-                                mySub.SubscriptionToGroup((int)nSubId, Convert.ToInt16(Interaction.IIf(Information.IsNumeric(myWeb.moRequest["grp"]), myWeb.moRequest["grp"], (object)0)));
+                                mySub.SubscriptionToGroup((int)nSubId, Convert.ToInt16(Interaction.IIf(Tools.Number.IsNumeric(myWeb.moRequest["grp"]), myWeb.moRequest["grp"], (object)0)));
                                 cCmd = "Subscriptions";
                                 goto SP;
                             }
@@ -6531,7 +6531,7 @@ from tblContentIndexDef";
                             if (oADX.valid)
                             {
                                 var mySub = new Cms.Cart.Subscriptions(ref myWeb);
-                                mySub.SubscriptionToGroup((int)nSubId, Convert.ToInt16(Interaction.IIf(Information.IsNumeric(myWeb.moRequest["grp"]), myWeb.moRequest["grp"], (object)0)));
+                                mySub.SubscriptionToGroup((int)nSubId, Convert.ToInt16(Interaction.IIf(Tools.Number.IsNumeric(myWeb.moRequest["grp"]), myWeb.moRequest["grp"], (object)0)));
                                 cCmd = "Subscriptions";
                                 goto SP;
                             }
@@ -6648,7 +6648,7 @@ from tblContentIndexDef";
                         {
 
                             sAdminLayout = "Subscriptions";
-                            if (Information.IsNumeric(myWeb.moRequest["grp"]))
+                            if (Tools.Number.IsNumeric(myWeb.moRequest["grp"]))
                             {
                                 oSub.SubscriptionToGroup(Convert.ToInt16(myWeb.moRequest["id"]), Convert.ToInt16(myWeb.moRequest["grp"]));
                                 cCmd = "Subscriptions";
@@ -6851,7 +6851,7 @@ from tblContentIndexDef";
 
 
                     // We are either dealing with a form or not - if not just return the codesets
-                    if (Information.IsNumeric(myWeb.moRequest["id"]) | !string.IsNullOrEmpty(myWeb.moRequest["subCmd"]))
+                    if (Tools.Number.IsNumeric(myWeb.moRequest["id"]) | !string.IsNullOrEmpty(myWeb.moRequest["subCmd"]))
                     {
 
                         cProcessInfo = "Process form";

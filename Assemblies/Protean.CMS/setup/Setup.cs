@@ -2485,7 +2485,7 @@ namespace Protean
                     {
                         cSQLP2 += "Null,";
                     }
-                    else if (!Information.IsNumeric(oOrdElmt.GetAttribute("nPaymentMethod")))
+                    else if (!Tools.Number.IsNumeric(oOrdElmt.GetAttribute("nPaymentMethod")))
                     {
                         cSQLP2 += "Null,";
                     }

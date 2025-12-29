@@ -107,7 +107,7 @@ namespace Protean
                     }
 
                     string cSessionRequest = Convert.ToString(moSession["SessionRequest"]);
-                    if (Information.IsNumeric(cSessionRequest))
+                    if (Tools.Number.IsNumeric(cSessionRequest))
                     {
                         moSession["SessionRequest"] = Convert.ToInt16(cSessionRequest) + 1;
                         dLast = DateTime.Now;

@@ -300,7 +300,7 @@ namespace Protean.Providers
 
                                                     oPriceBreakElmt = oTmpLoop;
                                             }
-                                            else if (Information.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinPrice")) & Information.IsNumeric(oPriceElmt.GetAttribute("Total")))
+                                            else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinPrice")) & Tools.Number.IsNumeric(oPriceElmt.GetAttribute("Total")))
                                             {
                                                 if (Convert.ToDecimal(oTmpLoop.GetAttribute("nDiscountMinPrice")) <= Convert.ToDecimal(oPriceElmt.GetAttribute("Total")))
                                                 {
@@ -314,7 +314,7 @@ namespace Protean.Providers
 
                                                     oQuantityBreakElmt = oTmpLoop;
                                             }
-                                            else if (Information.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinQuantity")) & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), false) <= 0)
+                                            else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinQuantity")) & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), false) <= 0)
                                                 oQuantityBreakElmt = oTmpLoop;
                                         }
 

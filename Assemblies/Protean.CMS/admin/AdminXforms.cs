@@ -1948,7 +1948,7 @@ namespace Protean
 
                                     // If the site wants to, by default, restrict new pages to a given group or directory item, then
                                     // read this in from the config and set the permission.
-                                    if (Information.IsNumeric(goConfig["DefaultPagePermissionGroupId"]) & Convert.ToDouble(goConfig["DefaultPagePermissionGroupId"]) > 0d)
+                                    if (Tools.Number.IsNumeric(goConfig["DefaultPagePermissionGroupId"]) & Convert.ToDouble(goConfig["DefaultPagePermissionGroupId"]) > 0d)
                                     {
                                         long nDefaultPagePermDirId = Convert.ToInt64(goConfig["DefaultPagePermissionGroupId"]);
                                         moDbHelper.maintainPermission(pgid, nDefaultPagePermDirId, ((int)Cms.dbHelper.PermissionLevel.View).ToString());
@@ -4420,7 +4420,7 @@ namespace Protean
                         XmlElement oTmpNode = (XmlElement)moXformElmt.SelectSingleNode("model/instance/tblContent/nContentKey");
                         if (oTmpNode != null)
                         {
-                            if (Information.IsNumeric(oTmpNode.InnerText))
+                            if (Tools.Number.IsNumeric(oTmpNode.InnerText))
                                 nParId = Convert.ToInt16(oTmpNode.InnerText);
                             var bCascade = default(bool);
                             foreach (var myItem in goRequest.Form.Keys)
@@ -5338,7 +5338,7 @@ namespace Protean
                                 oFs.initialiseVariables(nType);
                                 sValidResponse = oFs.CreateFolder(HtmlDecode(FolderName), cPath);
 
-                                if (Information.IsNumeric(sValidResponse))
+                                if (Tools.Number.IsNumeric(sValidResponse))
                                 {
                                     valid = true;
                                     cPath += @"\" + FolderName.Replace(" ", "-");
@@ -5583,7 +5583,7 @@ namespace Protean
                             if (base.valid)
                             {
 
-                                if (Information.IsNumeric(sValidResponse))
+                                if (Tools.Number.IsNumeric(sValidResponse))
                                 {
                                     valid = true;
                                 }
@@ -5737,7 +5737,7 @@ namespace Protean
                             if (base.valid)
                             {
 
-                                if (Information.IsNumeric(sValidResponse))
+                                if (Tools.Number.IsNumeric(sValidResponse))
                                 {
                                     valid = true;
                                 }
@@ -7352,7 +7352,7 @@ namespace Protean
 
                             if (DirParId != 0L)
                             {
-                                if (Information.IsNumeric(DirParId) && Information.IsNumeric(DirId))
+                                if (Tools.Number.IsNumeric(DirParId) && Tools.Number.IsNumeric(DirId))
                                 {
                                     sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name, d.cDirXml as detail " + "FROM tblDirectory d " + "     INNER JOIN tblAudit a on nAuditId = a.nAuditKey " + "     INNER JOIN tblDirectoryRelation dr on d.nDirKey = dr.nDirChildId " + "     LEFT JOIN tblDirectoryRelation dr2 on dr2.nDirChildId = d.nDirKey and dr2.nDirParentId =  ", SqlFmt(DirId.ToString())), " "), "WHERE d.cDirSchema = "), Database.SqlString(Strings.Trim(aChildTypes[i]))), "  "), "     AND dr.nDirParentId =  "), SqlFmt(DirParId.ToString())), " "), "     AND dr2.nRelKey is null "), "     AND (a.nStatus =1 or a.nStatus = -1) "), "ORDER BY d.cDirName "));
 
@@ -7365,7 +7365,7 @@ namespace Protean
 
                                 }
                             }
-                            else if (Information.IsNumeric(DirId))
+                            else if (Tools.Number.IsNumeric(DirId))
                             {
                                 sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT d.nDirKey as value, d.cDirName as name, d.cDirXml as detail " + "FROM tblDirectory d " + "     INNER JOIN tblAudit a on nAuditId = a.nAuditKey " + "     LEFT JOIN tblDirectoryRelation dr2 on dr2.nDirChildId = d.nDirKey and dr2.nDirParentId =  ", SqlFmt(DirId.ToString())), " "), "WHERE d.cDirSchema = "), Database.SqlString(Strings.Trim(aChildTypes[i]))), "  "), "     AND dr2.nRelKey is null "), "     AND (a.nStatus =1 or a.nStatus = -1) "), "ORDER BY d.cDirName "));
 
@@ -8561,7 +8561,7 @@ namespace Protean
                             if (base.valid)
                             {
                                 // Dim nPar As Integer = goRequest.QueryString("GroupId")
-                                if (!Information.IsNumeric(nParId))
+                                if (!Tools.Number.IsNumeric(nParId))
                                 {
                                     XmlElement oParElmt = (XmlElement)base.Instance.SelectSingleNode(nParId);
                                     if (oParElmt != null)
@@ -8701,7 +8701,7 @@ namespace Protean
                             if (base.valid)
                             {
                                 // Dim nPar As Integer = goRequest.QueryString("GroupId")
-                                if (!Information.IsNumeric(nParId))
+                                if (!Tools.Number.IsNumeric(nParId))
                                 {
                                     XmlElement oParElmt = (XmlElement)base.Instance.SelectSingleNode(nParId);
                                     if (oParElmt != null)
@@ -10352,9 +10352,9 @@ namespace Protean
 
                     try
                     {
-                        if (!Information.IsNumeric(nUserId))
+                        if (!Tools.Number.IsNumeric(nUserId))
                             nUserId = 0.ToString();
-                        if (!Information.IsNumeric(nSubscriptionId))
+                        if (!Tools.Number.IsNumeric(nSubscriptionId))
                             nSubscriptionId = 0.ToString();
                         base.NewFrm("CancelSubscription");
                         base.submission("CancelSubscription", "", "post");
@@ -10410,9 +10410,9 @@ namespace Protean
 
                     try
                     {
-                        if (!Information.IsNumeric(nUserId))
+                        if (!Tools.Number.IsNumeric(nUserId))
                             nUserId = 0.ToString();
-                        if (!Information.IsNumeric(nSubscriptionId))
+                        if (!Tools.Number.IsNumeric(nSubscriptionId))
                             nSubscriptionId = 0.ToString();
                         base.NewFrm("CancelSubscription");
                         base.submission("CancelSubscription", "", "post");
@@ -12704,7 +12704,7 @@ namespace Protean
                                 // Determine its Root Id
                                 string argpropertyName = "root";
                                 string rootId = getPropertyFromClass(ref argpropertyName);
-                                _rootId = Convert.ToInt64(Interaction.IIf(!string.IsNullOrEmpty(rootId) & Information.IsNumeric(rootId), Convert.ToInt64(rootId), 0));
+                                _rootId = Convert.ToInt64(Interaction.IIf(!string.IsNullOrEmpty(rootId) & Tools.Number.IsNumeric(rootId), Convert.ToInt64(rootId), 0));
 
                                 // Determine the root mode
                                 string argpropertyName1 = "rootMode";

@@ -463,7 +463,7 @@ namespace Protean.Providers
                                                 sValidResponse = moDbHelper.ExeProcessSql(sSql).ToString();
 
                                                 sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name); // Password as a Provider name here
-                                                if (Information.IsNumeric(sValidResponse))
+                                                if (Tools.Number.IsNumeric(sValidResponse))
                                                 {
                                                     myWeb.mnUserId = Convert.ToInt32(sValidResponse);
                                                     moDbHelper.mnUserId = Convert.ToInt64(sValidResponse);
@@ -521,7 +521,7 @@ namespace Protean.Providers
 
                                     sValidResponse = moDbHelper.validateUser(username, password);
 
-                                    if (Information.IsNumeric(sValidResponse))
+                                    if (Tools.Number.IsNumeric(sValidResponse))
                                     {
                                         myWeb.mnUserId = Convert.ToInt32(sValidResponse);
                                         moDbHelper.mnUserId = Convert.ToInt64(sValidResponse);
@@ -1806,7 +1806,7 @@ namespace Protean.Providers
                             // Process the List
                             foreach (string cDirId in cCodeCSVList.Split(','))
                             {
-                                if (Information.IsNumeric(cDirId))
+                                if (Tools.Number.IsNumeric(cDirId))
                                     moDbHelper.maintainDirectoryRelation(Convert.ToInt64(cDirId), nUserId, false, default, default);
                             }
 
@@ -2023,7 +2023,7 @@ namespace Protean.Providers
                             string rememberMeMode = moConfig["RememberMeMode"];
                             if (moRequest.Cookies["RememberMeUserId"] != null & rememberMeMode != "KeepCookieAfterLogoff" & !string.IsNullOrEmpty(rememberMeMode))
                             {
-                                if (Information.IsNumeric(moRequest.Cookies["RememberMeUserId"].Value))
+                                if (Tools.Number.IsNumeric(moRequest.Cookies["RememberMeUserId"].Value))
                                 {
                                     // AG - MAJOR SECURITY FUBAR!!! Commenting out for now.
                                     // mnUserId = moRequest.Cookies("RememberMeUserId").Value
@@ -2065,7 +2065,7 @@ namespace Protean.Providers
                         else if (Convert.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(moSession["nUserId"], null, false), Operators.ConditionalCompareObjectEqual(moSession["nUserId"], 0, false))))
                         {
                             // this will get set on close
-                            if (Information.IsNumeric(moSession["PreviewUser"]))
+                            if (Tools.Number.IsNumeric(moSession["PreviewUser"]))
                             {
                                 mnUserId = Convert.ToInt16(moSession["PreviewUser"]);
                                 myWeb.mbPreview = true;
@@ -2097,14 +2097,14 @@ namespace Protean.Providers
                         {
 
                             // feature to turn on preview mode with supplied user ID if token provided then this is happening in alternativeauthentication
-                            if (myWeb.moRequest["ewCmd"] == "PreviewOn" & Information.IsNumeric(myWeb.moRequest["PreviewUser"]))
+                            if (myWeb.moRequest["ewCmd"] == "PreviewOn" & Tools.Number.IsNumeric(myWeb.moRequest["PreviewUser"]))
                             {
                                 myWeb.moSession["PreviewUser"] = myWeb.moRequest["PreviewUser"];
                             }
 
 
                             // lets finally set the user Id from the session
-                            if (Information.IsNumeric(moSession["PreviewUser"]))
+                            if (Tools.Number.IsNumeric(moSession["PreviewUser"]))
                             {
                                 if (myWeb.moRequest["ewCmd"] == "Normal" | myWeb.moRequest["ewCmd"] == "ExitPreview" | myWeb.moRequest["ewCmd"] == "EditContent" | myWeb.moRequest["ewCmd"] == "PublishContent")
                                 {
@@ -3136,7 +3136,7 @@ namespace Protean.Providers
                                     }
                                 }
 
-                                else if (Information.IsNumeric(cDecrypted) && Convert.ToInt16(cDecrypted) > 0)
+                                else if (Tools.Number.IsNumeric(cDecrypted) && Convert.ToInt16(cDecrypted) > 0)
                                 {
 
                                     // Authentication is by way of user ID

@@ -807,7 +807,7 @@ namespace Protean
                             foreach (XmlElement groupNode in contentNode.SelectNodes("descendant-or-self::UserGroups/Group"))
                             {
                                 string groupId = groupNode.GetAttribute("id");
-                                if (Information.IsNumeric(groupId))
+                                if (Tools.Number.IsNumeric(groupId))
                                 {
                                     // Dim cUserEmail As String = myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, myWeb.mnUserId)
                                     // Dim cGroupName As String = myWeb.moDbHelper.getNameByKey(dbHelper.objectTypes.Directory, CLng(groupId))

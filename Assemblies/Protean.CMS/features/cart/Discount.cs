@@ -734,7 +734,7 @@ namespace Protean
                                     nLineTotalSaving += Convert.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
                                     nTotalSaved += Convert.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
                                 }
-                                else if (Information.IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")))
+                                else if (Tools.Number.IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")))
                                 {
                                     if (Convert.ToDouble(oDiscountItemTest.GetAttribute("nDiscountCat")) == 4d)
                                     {
@@ -1212,7 +1212,7 @@ namespace Protean
 
                                         oPriceBreakElmt = oTmpLoop;
                                 }
-                                else if (Information.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinPrice")) & Information.IsNumeric(oPriceElmt.GetAttribute("Total")))
+                                else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinPrice")) & Tools.Number.IsNumeric(oPriceElmt.GetAttribute("Total")))
                                 {
                                     if (Convert.ToDecimal(oTmpLoop.GetAttribute("nDiscountMinPrice")) <= Convert.ToDecimal(oPriceElmt.GetAttribute("Total")))
                                     {
@@ -1226,7 +1226,7 @@ namespace Protean
 
                                         oQuantityBreakElmt = oTmpLoop;
                                 }
-                                else if (Information.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinQuantity")) & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), false) <= 0)
+                                else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinQuantity")) & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), false) <= 0)
                                     oQuantityBreakElmt = oTmpLoop;
                             }
 
@@ -1531,13 +1531,13 @@ namespace Protean
                             nDiscountValue = Convert.ToDecimal(oCurDiscount.GetAttribute("nDiscountValue"));
                             bDiscountIsPercent = Convert.ToBoolean(oCurDiscount.GetAttribute("bDiscountIsPercent"));
                             // Set nMinItems
-                            if (Information.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinQuantity")))
+                            if (Tools.Number.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinQuantity")))
                                 nMinItems = Convert.ToInt16(oCurDiscount.GetAttribute("nDiscountMinQuantity"));
                             // Set nDiscountMinPrice
-                            if (Information.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinPrice")))
+                            if (Tools.Number.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinPrice")))
                                 nDiscountMinPrice = Convert.ToDecimal(oCurDiscount.GetAttribute("nDiscountMinPrice"));
                             // Set nDiscountMaxPrice
-                            if (Information.IsNumeric(oCurDiscount.SelectSingleNode("nDiscountMaxPrice").InnerText))
+                            if (Tools.Number.IsNumeric(oCurDiscount.SelectSingleNode("nDiscountMaxPrice").InnerText))
                                 nDiscountMaxPrice = Convert.ToDecimal(oCurDiscount.SelectSingleNode("nDiscountMaxPrice").InnerText);
 
                             var aPriceArray = new double[oDiscXml.SelectNodes("Discounts/Item[Discount/@nDiscountKey=" + oIDs[nI] + "]").Count];
@@ -1753,10 +1753,10 @@ namespace Protean
 
 
                                 int nDQ = 0;
-                                if (Information.IsNumeric(oDiscount.GetAttribute("nDiscountMinQuantity")))
+                                if (Tools.Number.IsNumeric(oDiscount.GetAttribute("nDiscountMinQuantity")))
                                     nDQ = Convert.ToInt16(oDiscount.GetAttribute("nDiscountMinQuantity"));
                                 int nDT = 0;
-                                if (Information.IsNumeric(oDiscount.GetAttribute("nDiscountMinPrice")))
+                                if (Tools.Number.IsNumeric(oDiscount.GetAttribute("nDiscountMinPrice")))
                                     nDT = Convert.ToInt16(oDiscount.GetAttribute("nDiscountMinPrice"));
                                 if (nTotalItems >= nDQ & nDQ > 0 | nTotalItemsValue >= nDT & nDT > 0)
                                 {
@@ -2346,7 +2346,7 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(cContentId))
                                 {
-                                    if (Information.IsNumeric(cContentId))
+                                    if (Tools.Number.IsNumeric(cContentId))
                                     {
                                         long nContentId = Convert.ToInt64(cContentId);
                                         // For Each oContentElmt In oRootElmt.SelectNodes("descendant-or-self::Content[@id=" & nContentId & "]")
@@ -2458,7 +2458,7 @@ namespace Protean
                     try
                     {
                         int nDiscountID = 0;
-                        if (Information.IsNumeric(myWeb.moRequest.QueryString["DiscountID"]))
+                        if (Tools.Number.IsNumeric(myWeb.moRequest.QueryString["DiscountID"]))
                             nDiscountID = Convert.ToInt16(myWeb.moRequest.QueryString["DiscountID"]);
                         string sSQL;
                         DataSet oDS;
@@ -2643,7 +2643,7 @@ namespace Protean
                                     // Get the minimum price on offer
                                     foreach (XmlNode oPrice in oPrices)
                                     {
-                                        if (Information.IsNumeric(oPrice.InnerText))
+                                        if (Tools.Number.IsNumeric(oPrice.InnerText))
                                         {
                                             if (Convert.ToDouble(oPrice.InnerText) < nPrice & Convert.ToDouble(oPrice.InnerText) > 0d | nPrice == 0d)
                                                 nPrice = Convert.ToDouble(oPrice.InnerText);
@@ -2655,7 +2655,7 @@ namespace Protean
                         // Not logged on - ensure that the default price is returned, if applicable.
                         else if (oDefaultPrice != null)
                         {
-                            if (Information.IsNumeric(oDefaultPrice.InnerText))
+                            if (Tools.Number.IsNumeric(oDefaultPrice.InnerText))
                                 nPrice = Convert.ToDouble(oDefaultPrice.InnerText);
                         }
                         if (nPrice == 0d)
@@ -2670,7 +2670,7 @@ namespace Protean
                                 if ((oPriceElmt.GetAttribute("currency") ?? "") == (cCur ?? ""))
                                 {
                                     string cPrice = oPriceElmt.InnerText;
-                                    if (Information.IsNumeric(cPrice))
+                                    if (Tools.Number.IsNumeric(cPrice))
                                         nPrice = Convert.ToDouble(cPrice);
                                     break;
                                 }
@@ -2725,7 +2725,7 @@ namespace Protean
                         {
                             if (oThePrice != null)
                             {
-                                if (Information.IsNumeric(oThePrice.InnerText))
+                                if (Tools.Number.IsNumeric(oThePrice.InnerText))
                                 {
                                     if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText))
                                     {
@@ -2742,7 +2742,7 @@ namespace Protean
                             else
                             {
                                 oThePrice = oPNode;
-                                if (Information.IsNumeric(oThePrice.InnerText))
+                                if (Tools.Number.IsNumeric(oThePrice.InnerText))
                                 {
                                     nPrice = Convert.ToDouble(oThePrice.InnerText);
                                 }
@@ -2800,7 +2800,7 @@ namespace Protean
                                     // Check it allows strings to be used here
                                     if (!oPNode.InnerText.Equals(""))
                                     {
-                                        if (Information.IsNumeric(oPNode.InnerText))
+                                        if (Tools.Number.IsNumeric(oPNode.InnerText))
                                         {
                                             oPNode.InnerText = Round(Convert.ToDouble(oPNode.InnerText) - Convert.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString();
                                             oDiscountElmt.SetAttribute("saving", Round(Convert.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString());
@@ -2815,7 +2815,7 @@ namespace Protean
                                 {
                                     if (!oPNode.InnerText.Equals(""))
                                     {
-                                        if (Information.IsNumeric(oPNode.InnerText))
+                                        if (Tools.Number.IsNumeric(oPNode.InnerText))
                                         {
                                             oPNode.InnerText = Round(Convert.ToDouble(oPNode.InnerText) - Convert.ToDouble(oPNode.InnerText) / 100d * Convert.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString();
                                             oDiscountElmt.SetAttribute("saving", Round(Convert.ToDouble(oPNode.InnerText) / 100d * Convert.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString());

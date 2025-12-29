@@ -1981,7 +1981,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                 {
 
                     // Test for a value
-                    if (Information.IsNumeric(cValue))
+                    if (Tools.Number.IsNumeric(cValue))
                     {
 
                         if (Convert.ToDouble(cValue) != 0d)
@@ -2538,7 +2538,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                                                     int minNumber;
                                                     int maxNumber;
 
-                                                    if (!string.IsNullOrEmpty(fieldMin) && Information.IsNumeric(fieldMin))
+                                                    if (!string.IsNullOrEmpty(fieldMin) && Tools.Number.IsNumeric(fieldMin))
                                                     {
                                                         minNumber = Convert.ToInt16(fieldMin);
                                                     }
@@ -2547,7 +2547,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                                                         minNumber = int.MinValue;
                                                     }
 
-                                                    if (!string.IsNullOrEmpty(fieldMax) && Information.IsNumeric(fieldMax))
+                                                    if (!string.IsNullOrEmpty(fieldMax) && Tools.Number.IsNumeric(fieldMax))
                                                     {
                                                         maxNumber = Convert.ToInt16(fieldMax);
                                                     }
@@ -2565,7 +2565,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                                                     float minNumber;
                                                     float maxNumber;
 
-                                                    if (!string.IsNullOrEmpty(fieldMin) && Information.IsNumeric(fieldMin))
+                                                    if (!string.IsNullOrEmpty(fieldMin) && Tools.Number.IsNumeric(fieldMin))
                                                     {
                                                         minNumber = Convert.ToSingle(fieldMin);
                                                     }
@@ -2574,7 +2574,7 @@ inner join tblContent parentContent on (r.nContentParentId = parentContent.nCont
                                                         minNumber = float.MinValue;
                                                     }
 
-                                                    if (!string.IsNullOrEmpty(fieldMax) && Information.IsNumeric(fieldMax))
+                                                    if (!string.IsNullOrEmpty(fieldMax) && Tools.Number.IsNumeric(fieldMax))
                                                     {
                                                         maxNumber = Convert.ToSingle(fieldMax);
                                                     }
