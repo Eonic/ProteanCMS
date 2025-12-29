@@ -22,7 +22,7 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Xml;
-using Microsoft.VisualBasic;
+//using Microsoft.VisualBasic;
 using Protean.Tools;
 using Protean.Tools.Integration.Twitter;
 using static Protean.Tools.Database;
@@ -308,7 +308,7 @@ namespace Protean
 
                 object objDate = _myWeb.moDbHelper.GetDataValue(sqlQuery, default, default, default);
 
-                if (objDate != null && Information.IsDate(objDate))
+                if (objDate != null && Tools.Text.IsDate(objDate))
                 {
                     _lastRun = Convert.ToDateTime(objDate);
                     _hasBeenRunBefore = true;
@@ -334,7 +334,7 @@ namespace Protean
         {
             get
             {
-                return Information.IsNumeric(SourcePage) && SourcePage > 0L;
+                return Tools.Number.IsNumeric(SourcePage) && SourcePage > 0L;
             }
         }
 
@@ -545,14 +545,14 @@ namespace Protean
             try
             {
                 // Test if this has been logged
-                if (Information.IsNumeric(ActivityKey) && ActivityKey > 0)
+                if (Tools.Number.IsNumeric(ActivityKey) && ActivityKey > 0)
                 {
                     // Alert Item has been logged, therefore update the record
 
                     sqlQuery = "UPDATE tblActivityLog ";
                     sqlQuery += "SET nActivityType = " + activityType + " ";
                     if (!string.IsNullOrEmpty(logDetail))
-                        sqlQuery += "   ,cActivityDetail = '" + SqlFmt(Strings.Left(logDetail, 800)) + "' ";
+                        sqlQuery += "   ,cActivityDetail = '" + SqlFmt(logDetail.Substring(0, 800)) + "' ";
                     sqlQuery += "WHERE nActivityKey = " + ActivityKey;
                     _myWeb.moDbHelper.ExeProcessSql(sqlQuery);
                 }
@@ -567,7 +567,7 @@ namespace Protean
                     sqlQuery += "0,";
                     sqlQuery += SqlDate(DateTime.Now, true) + ",";
                     sqlQuery += activityType + ",";
-                    sqlQuery += "'" + SqlFmt(Strings.Left(logDetail, 800)) + "',";
+                    sqlQuery += "'" + SqlFmt(logDetail.Substring(0, 800)) + "',";
                     sqlQuery += "'')";
 
                     _activityLog = Convert.ToInt32(_myWeb.moDbHelper.GetIdInsertSql(sqlQuery));
@@ -664,7 +664,7 @@ namespace Protean
 
 
                 // Add the contents to content node
-                ContentsNode.InnerXml += Strings.Trim(contents.InnerXml);
+                ContentsNode.InnerXml += contents.InnerXml.Trim();
 
 
                 // Address ChildItems
@@ -777,7 +777,7 @@ namespace Protean
                         _structureNode = _myWeb.GetStructureXML();
 
                     // Go and get the content
-                    PopulateContent(contentTypeSqlList, Convert.ToInt64(Interaction.IIf(HasSourcePage, SourcePage, 0)));
+                    PopulateContent(contentTypeSqlList, Convert.ToInt64(HasSourcePage ? SourcePage : 0));
 
                     // Clean up duplicates
                     RemoveDuplicateContent();
@@ -835,7 +835,7 @@ namespace Protean
                             _hasFailures = true;
                         }
 
-                        _diagnostics += distributorInstance.Diagnostics + Constants.vbCrLf;
+                        _diagnostics += distributorInstance.Diagnostics + $"\r\n";
 
                     }
 
@@ -844,12 +844,12 @@ namespace Protean
                     if (_hasFailures & _totalCompleted > 0)
                     {
                         Log(Cms.dbHelper.ActivityType.SyndicationPartialSuccess, _diagnostics);
-                        _diagnostics = "Partial Completion (Failure detail):" + Constants.vbCrLf + _diagnostics;
+                        _diagnostics = $"Partial Completion (Failure detail):\r\n{_diagnostics}" ;
                     }
                     else if (_hasFailures)
                     {
                         Log(Cms.dbHelper.ActivityType.SyndicationFailed, _diagnostics);
-                        _diagnostics = "Syndication Failed (Detail):" + Constants.vbCrLf + _diagnostics;
+                        _diagnostics = $"Syndication Failed (Detail):\r\n{_diagnostics}";
                     }
                     else
                     {
@@ -932,7 +932,7 @@ namespace Protean
 
             private void _OnError(object sender, Tools.Errors.ErrorEventArgs e)
             {
-                _diagnostics += Constants.vbCrLf + "Error:" + e.ToString();
+                _diagnostics += $"\r\nError:{e.ToString()}" ;
                 OnError?.Invoke(sender, e);
             }
             #endregion

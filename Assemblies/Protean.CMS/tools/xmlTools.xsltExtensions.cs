@@ -2,7 +2,6 @@
 using BundleTransformer.Core.Bundles;
 using BundleTransformer.Core.Orderers;
 using BundleTransformer.Core.Transformers;
-// Microsoft.VisualBasic removed - use native C# alternatives
 using Newtonsoft.Json.Linq;
 using Protean.Tools;
 using SkiaSharp;

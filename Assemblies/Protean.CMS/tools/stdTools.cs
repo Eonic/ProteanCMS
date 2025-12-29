@@ -188,11 +188,11 @@ namespace Protean
                                     {
                                         oSmtp.Credentials = new System.Net.NetworkCredential(oConfig["MailServerUsername"], oConfig["MailServerPassword"]);
                                     }
-                                    if (Strings.LCase(oConfig["MailServerSSL"]) == "on")
+                                    if (oConfig["MailServerSSL"].ToLower() == "on")
                                     {
                                         oSmtp.EnableSsl = true;
                                     }
-                                    if (Strings.LCase(oConfig["MailServerSSL"]) == "off")
+                                    if (oConfig["MailServerSSL"].ToLower() == "off")
                                     {
                                         oSmtp.EnableSsl = false;
                                     }
@@ -292,7 +292,7 @@ namespace Protean
                                         oXml.PreserveWhitespace = false;
                                         if (oXml.DocumentElement != null)
                                         {
-                                            oExceptionXml.SelectSingleNode("/Page/Contents").InnerXml = Strings.Replace(Strings.Replace(oXml.DocumentElement.InnerXml, "&gt;", ">"), "&lt;", "<");
+                                            oExceptionXml.SelectSingleNode("/Page/Contents").InnerXml = oXml.DocumentElement.InnerXml.Replace("&gt;", ">").Replace("&lt;", "<");
                                         }
                                     }
 
@@ -312,7 +312,7 @@ namespace Protean
 
                         sProcessInfo = "Loading XSLT";
 
-                        if (Strings.LCase(xsltTemplatePath).StartsWith(@"c:\") | Strings.LCase(xsltTemplatePath).StartsWith(@"d:\"))
+                        if (xsltTemplatePath.ToLower().StartsWith(@"c:\") | xsltTemplatePath.ToLower().StartsWith(@"d:\"))
                         {
                             styleFile = xsltTemplatePath;
                         }
@@ -467,11 +467,11 @@ namespace Protean
                                 {
                                     oSmtp.Credentials = new System.Net.NetworkCredential(oConfig["MailServerUsername"], oConfig["MailServerPassword"]);
                                 }
-                                if (Strings.LCase(oConfig["MailServerSSL"]) == "on")
+                                if (oConfig["MailServerSSL"].ToLower() == "on")
                                 {
                                     oSmtp.EnableSsl = true;
                                 }
-                                if (Strings.LCase(oConfig["MailServerSSL"]) == "off")
+                                if (oConfig["MailServerSSL"].ToLower() == "off")
                                 {
                                     oSmtp.EnableSsl = false;
                                 }
@@ -513,7 +513,7 @@ namespace Protean
             string thisError;
             string LogName = "ProteanCMS";
             string cSource = "ProteanCMS Site";
-            string cMessage = "Site: unknown" + Constants.vbNewLine + Constants.vbNewLine;
+            string cMessage = "Site: unknown\r\n\r\n";
             try
             {
                 EventLog oEventLog = null;
@@ -532,7 +532,7 @@ namespace Protean
                 if (System.Web.HttpContext.Current != null)
                 {
                     cSource = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"];
-                    cMessage = "Site: " + System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"] + Constants.vbNewLine + Constants.vbNewLine;
+                    cMessage = "Site: " + System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"] + "\r\n";
                 }
 
                 if (oEventLog is null)
@@ -543,24 +543,24 @@ namespace Protean
                 // The Current Error
                 if (oCurrentException != null)
                 {
-                    cMessage += Constants.vbNewLine + "Current Error: " + Constants.vbNewLine;
-                    cMessage += "Info:" + cCurrentInfo + Constants.vbNewLine;
-                    cMessage += "Exception Type:" + oCurrentException.GetType().ToString() + Constants.vbNewLine;
-                    cMessage += "Message:" + oCurrentException.Message + Constants.vbNewLine;
-                    cMessage += "Source:" + oCurrentException.Source + Constants.vbNewLine;
-                    cMessage += "Stack:" + oCurrentException.StackTrace + Constants.vbNewLine;
-                    cMessage += "Full Exception:" + oCurrentException.ToString() + Constants.vbNewLine;
+                    cMessage += "\r\n Current Error:\r\n ";
+                    cMessage += $"Info:{cCurrentInfo}\r\n ";
+                    cMessage += $"Exception Type:{oCurrentException.GetType().ToString() }\r\n";
+                    cMessage += $"Message:{oCurrentException.Message}\r\n";
+                    cMessage += $"Source:{oCurrentException.Source}\r\n";
+                    cMessage += $"Stack:{oCurrentException.StackTrace}\r\n";
+                    cMessage += $"Full Exception:{oCurrentException.ToString()}\r\n" ;
                 }
                 // We might be coming from an error handling procedure so lets get the orignal error that sent us there too
                 if (oOriginalError != null)
                 {
-                    cMessage += Constants.vbNewLine + "Original Error: " + Constants.vbNewLine;
-                    cMessage += "Info:" + cOriginalInfo + Constants.vbNewLine;
-                    cMessage += "Exception Type:" + oOriginalError.GetType().ToString() + Constants.vbNewLine;
-                    cMessage += "Message:" + oOriginalError.Message + Constants.vbNewLine;
-                    cMessage += "Source:" + oOriginalError.Source + Constants.vbNewLine;
-                    cMessage += "Stack:" + oOriginalError.StackTrace + Constants.vbNewLine;
-                    cMessage += "Full Exception:" + oOriginalError.ToString() + Constants.vbNewLine;
+                    cMessage += "\r\nOriginal Error: \r\n" ;
+                    cMessage += $"Info:{cOriginalInfo}\r\n" ;
+                    cMessage += $"Exception Type:{oOriginalError.GetType().ToString()}\r\n";
+                    cMessage += $"Message:{oOriginalError.Message}\r\n";
+                    cMessage += $"Source:{oOriginalError.Source}\r\n";
+                    cMessage += $"Stack:{oOriginalError.StackTrace}\r\n";
+                    cMessage += $"Full Exception:{oOriginalError.ToString()}\r\n";
                 }
 
                 if (!EventLog.SourceExists(cSource))
@@ -610,7 +610,7 @@ namespace Protean
 
             // Report Information
             addExceptionHeader(ref cReport, "Report Info");
-            addExceptionLine(ref cReport, "Date + Time", Strings.FormatDateTime(DateTime.Now, DateFormat.GeneralDate));
+            addExceptionLine(ref cReport, "Date + Time", DateTime.Now.ToString("dd MMMM yyyy"));
             addExceptionLine(ref cReport, "Webserver:", Environment.MachineName);
             addExceptionLine(ref cReport, "SiteName:", System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName());
 
@@ -718,9 +718,9 @@ namespace Protean
         public static void addExceptionLine(ref string cReport, string cHeader, string cValue)
         {
 
-            cValue = Strings.Replace(cValue, "<", "&lt;");
-            cValue = Strings.Replace(cValue, ">", "&gt;");
-            cValue = Strings.Replace(cValue, Convert.ToString('\n'), "<br/>");
+            cValue = cValue.Replace("<", "&lt;");
+            cValue = cValue.Replace(">", "&gt;");
+            cValue = cValue.Replace(Convert.ToString('\n'), "<br/>");
             cReport = cReport + "<tr><th valign=\"top\" align=\"left\">" + cHeader + "</th><td valign=\"top\">" + cValue + "</td></tr>";
 
         }
@@ -730,7 +730,7 @@ namespace Protean
         {
             object SqlFmtRet = default;
             // 'PerfMon.Log("stdTools", "SqlFmt")
-            SqlFmtRet = Strings.Replace(sText, "'", "''");
+            SqlFmtRet = sText.Replace( "'", "''");
             return SqlFmtRet;
 
         }
@@ -756,7 +756,7 @@ namespace Protean
             // 'PerfMon
             string sdate;
 
-            if (Information.IsDate(dDate))
+            if (Tools.Text.IsDate(dDate))
             {
                 sdate = Convert.ToString(Convert.ToDateTime(dDate));
                 niceDateRet = System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetDayOfMonth(Convert.ToDateTime(sdate)) + " " + DateAndTime.MonthName(System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetMonth(Convert.ToDateTime(sdate)), true) + " " + System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetYear(Convert.ToDateTime(sdate));
@@ -827,7 +827,7 @@ namespace Protean
 
         public static string sqlDateTime(object dDate, object stime)
         {
-            return Database.SqlDate((Strings.Format(dDate, "dd MMMM yyyy") + " ", stime), true);
+            return Database.SqlDate((Convert.ToDateTime(dDate).ToString("dd MMMM yyyy") + " ", stime), true);
         }
 
 
@@ -912,13 +912,13 @@ namespace Protean
             try
             {
 
-                string[] aResponse = Strings.Split(sResponse, sFieldSeperator);
+                string[] aResponse = sResponse.Split(Convert.ToChar(sFieldSeperator));
                 string cKey;
                 string cValue;
                 int nPos;
                 var oResponseDict = new Hashtable();
                 int i;
-                var loopTo = Information.UBound(aResponse);
+                var loopTo = aResponse.Length;
                 for (i = 0; i <= loopTo; i++)
                 {
 
@@ -1158,12 +1158,12 @@ namespace Protean
                 {
                     double adjustment = Math.Pow(10d, nDecimalPlaces);
                     // RetVal = Math.Floor(nNumber, adjustment)/adjustment;
-                    RetVal = Math.Round((decimal)nNumber, nDecimalPlaces, MidpointRounding.ToEven);
+                    RetVal = Math.Round((Decimal)nNumber, nDecimalPlaces, MidpointRounding.ToEven);
                 }
                 // RetVal = Math.Round(nNumber, nDecimalPlaces, MidpointRounding.ToEven)
                 else
                 {
-                    RetVal = Convert.ToDecimal(Strings.FormatNumber(nNumber, nDecimalPlaces));
+                    RetVal = Math.Round((Decimal)nNumber, nDecimalPlaces);
                 }
                 return RetVal;
             }
@@ -1179,18 +1179,21 @@ namespace Protean
             try
             {
                 // get the dross over with
-                if (!Information.IsNumeric(nNumber))
+                if (!Tools.Number.IsNumeric(nNumber))
                     return 0m;
                 // no decimal places to deal with
-                if (!nNumber.ToString().Contains("."))
+                var numberString = Convert.ToString(nNumber);
+                if (!numberString.Contains("."))
                     return Convert.ToDecimal(nNumber);
                 // has correct number of decimal places
-                if (Strings.Split(nNumber.ToString(), ".")[1].Length <= nDecimalPlaces)
+                var parts = numberString.Split('.');
+                var fractional = parts.Length > 1 ? parts[1] : string.Empty;
+                if (fractional.Length <= nDecimalPlaces)
                     return Convert.ToDecimal(nNumber);
 
                 // now the fun
-                int nWholeNo = Convert.ToInt32(Strings.Split(nNumber.ToString(), ".")[0]); // the whole number before decimal point
-                int nTotalLength = Strings.Split(nNumber.ToString(), ".")[1].Length; // the total number of decimal places
+                int nWholeNo = Convert.ToInt32(parts[0]); // the whole number before decimal point
+                int nTotalLength = fractional.Length; // the total number of decimal places
 
                 int nI; // a counter
 
@@ -1200,20 +1203,27 @@ namespace Protean
                 var loopTo = nTotalLength - nDecimalPlaces;
                 for (nI = 0; nI <= loopTo; nI++)
                 {
-                    int nCurrent; // the number we are working on
-                    nCurrent = Convert.ToInt32(Strings.Right(Strings.Left(Strings.Split(nNumber.ToString(), ".")[1], nTotalLength - nI), 1));
+                    // compute index of the digit equivalent to:
+                    // Strings.Right(Strings.Left(fractional, nTotalLength - nI), 1)
+                    int takeLen = nTotalLength - nI;
+                    int idx = takeLen - 1; // zero-based index of the digit we need
+                    char digitChar = (idx >= 0 && idx < fractional.Length) ? fractional[idx] : '0';
+                    int nCurrent = (int)char.GetNumericValue(digitChar);
+                    if (nCurrent < 0) nCurrent = 0; // be defensive
                     nCurrent += nCarry; // add the carry
                     if (nCurrent >= nSplitNo)
                         nCarry = 1;
                     else
-                        nCarry = 0; // make a new carry dependant on whaere we are
+                        nCarry = 0; // make a new carry dependant on where we are
                 }
-                int nDecimal = Convert.ToInt32(Strings.Left(Strings.Split(nNumber.ToString(), ".")[1], nDecimalPlaces)); // the decimal value
+
+                int nDecimal = Convert.ToInt32(fractional.Substring(0, nDecimalPlaces)); // the decimal value
                 nDecimal += nCarry; // add last carry
                 if (nDecimal.ToString().Length > nDecimalPlaces) // if we have now gone over the number of decimal places then need to sort it
                 {
                     nCarry = 1;
-                    nDecimal = Convert.ToInt32(Strings.Right(nDecimal.ToString(), nDecimalPlaces));
+                    var nDecimalStr = nDecimal.ToString();
+                    nDecimal = Convert.ToInt32(nDecimalStr.Substring(nDecimalStr.Length - nDecimalPlaces));
                 }
                 else
                 {
@@ -1238,6 +1248,7 @@ namespace Protean
             {
                 if (!bKeepSpaces)
                     cInitialString = cInitialString.Replace(" ", "");
+
                 int i;
                 var loopTo = cInitialString.Length - (nNoCharsToLeave + 1);
                 for (i = 0; i <= loopTo; i++)
@@ -1251,7 +1262,21 @@ namespace Protean
                         cNewString += " ";
                     }
                 }
-                cNewString += Strings.Right(cInitialString, nNoCharsToLeave);
+
+                // Append the rightmost nNoCharsToLeave characters (safe for short strings)
+                if (nNoCharsToLeave <= 0)
+                {
+                    // nothing to append
+                }
+                else if (nNoCharsToLeave >= cInitialString.Length)
+                {
+                    cNewString += cInitialString;
+                }
+                else
+                {
+                    cNewString += cInitialString.Substring(cInitialString.Length - nNoCharsToLeave);
+                }
+
                 return cNewString;
             }
             catch (Exception)
@@ -1268,7 +1293,7 @@ namespace Protean
 
             long nRequest;
 
-            if (Information.IsNumeric(oRequestItem))
+            if (Tools.Number.IsNumeric(oRequestItem))
             {
                 if (Convert.ToBoolean(bAllowNegatives))
                 {
@@ -1458,7 +1483,7 @@ namespace Protean
                 shtml = Regex.Replace(shtml, "<\\?xml.*\\?>", "", RegexOptions.IgnoreCase);
 
                 //temp fix for dirty VMH data
-                shtml = Strings.Replace(shtml, ":=", "=");
+                shtml = shtml.Replace( ":=", "=");
 
 
                 oTdyManaged = TidyManaged.Document.FromString(shtml);
