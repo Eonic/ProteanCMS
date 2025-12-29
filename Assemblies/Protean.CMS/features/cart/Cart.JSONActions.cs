@@ -6,6 +6,7 @@ using Protean.Providers.Payment;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.Tools.Xml;
@@ -1348,7 +1349,8 @@ namespace Protean
                 {
                     try
                     {
-                        string googlePayToken = jObj["token"]?.ToString();
+                        // string googlePayToken = jObj["token"]?.ToString();
+                        string googlePayToken = HttpUtility.UrlDecode(myWeb.moRequest["googlePayToken"]);
                         if (string.IsNullOrEmpty(googlePayToken))
                             throw new Exception("Google Pay token is missing");
 
