@@ -6189,7 +6189,7 @@ from tblContentIndexDef";
                 string cUrl = moConfig["BaseUrl"];
 
                 // DBHelper for the Scheduler database
-                var dbt = new Cms.dbHelper(ref myWeb);
+                var dbt = new Cms.dbHelper(myWeb);
 
                 try
                 {

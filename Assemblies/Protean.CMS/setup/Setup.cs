@@ -3150,7 +3150,7 @@ namespace Protean
 
                             // Now lets create the database
                             Cms myWebArg = new Cms(moCtx);
-                            Cms.dbHelper oDbt = new Cms.dbHelper(ref myWebArg);
+                            Cms.dbHelper oDbt = new Cms.dbHelper(myWebArg);
                             string sDbName = this.Instance.SelectSingleNode("web/add[@key='DatabaseName']/@value").InnerText;
                             string cDbServer = this.Instance.SelectSingleNode("web/add[@key='DatabaseServer']/@value").InnerText;
                             string cDbUsername = this.Instance.SelectSingleNode("web/add[@key='DatabaseUsername']/@value").InnerText;

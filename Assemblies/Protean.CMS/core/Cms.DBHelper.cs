@@ -94,7 +94,7 @@ namespace Protean
             #region Initialisation
 
 
-            public dbHelper(ref Cms aWeb) : base()
+            public dbHelper( Cms aWeb) : base()
             {
                 try
                 {

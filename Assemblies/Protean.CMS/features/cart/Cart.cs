@@ -2146,8 +2146,11 @@ namespace Protean
                                 }
                                 else
                                 {
-
-                                    CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
+                                    if (Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
+                                    {
+                                        CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
+                                    }
+                                  
 
                                     if (mbQuitOnShowInvoice)
                                     {
@@ -12158,7 +12161,7 @@ namespace Protean
                 string result = "";
                 try
                 {
-                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper(ref myWeb);
+                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper( myWeb);
                     Protean.Cms.modal.Contact contact = new Cms.modal.Contact();
                     if (!string.IsNullOrEmpty(cEmailAddress))
                     {
