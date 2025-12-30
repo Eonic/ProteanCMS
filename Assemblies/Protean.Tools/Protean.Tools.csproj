@@ -76,7 +76,7 @@
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="2.0.0" />
     <PackageReference Include="Microsoft.Identity.Client" Version="4.78.0" />
     <PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.4" />
-    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+    <!--<PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />-->
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Select.HtmlToPdf" Version="25.2.0" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />

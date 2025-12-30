@@ -33,7 +33,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using Microsoft.VisualBasic.CompilerServices; // Install-Package Microsoft.VisualBasic
+//using Microsoft.VisualBasic.CompilerServices; // Install-Package Microsoft.VisualBasic
 
 
 namespace Protean.Tools.Integration.Twitter.TwitterVB2.Objects

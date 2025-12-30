@@ -4,7 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Xml;
-using Microsoft.VisualBasic.CompilerServices; // Install-Package Microsoft.VisualBasic
+//using Microsoft.VisualBasic.CompilerServices; // Install-Package Microsoft.VisualBasic
 
 namespace Protean.Tools.Integration.Twitter.TwitterVB2
 {
