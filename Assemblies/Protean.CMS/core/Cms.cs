@@ -349,7 +349,7 @@ namespace Protean
         {
 
             var argaWeb = this;
-            return new Cms.dbHelper(ref argaWeb);
+            return new Cms.dbHelper(argaWeb);
 
         }
 

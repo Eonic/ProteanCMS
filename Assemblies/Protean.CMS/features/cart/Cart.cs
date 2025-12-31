@@ -2032,9 +2032,9 @@ namespace Protean
                             {
                                 GetCart(ref oElmt);
 
-                                if(Convert.ToString(oElmt.Attributes["statusId"].Value) =="6")
+                                if (Convert.ToString(oElmt.Attributes["statusId"].Value) == cartProcess.Complete.ToString())
                                 {
-                                    mnProcessId = 6;
+                                    mnProcessId = (short)cartProcess.Complete; ;
                                     mcCartCmd = "ShowInvoice";
                                     goto processFlow;
                                 }
@@ -2146,8 +2146,12 @@ namespace Protean
                                 }
                                 else
                                 {
-
-                                    CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
+                                    GetCart(ref oElmt);
+                                    if (oElmt!=null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
+                                    {
+                                        CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
+                                    }
+                                  
 
                                     if (mbQuitOnShowInvoice)
                                     {
@@ -12158,7 +12162,7 @@ namespace Protean
                 string result = "";
                 try
                 {
-                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper(ref myWeb);
+                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper( myWeb);
                     Protean.Cms.modal.Contact contact = new Cms.modal.Contact();
                     if (!string.IsNullOrEmpty(cEmailAddress))
                     {

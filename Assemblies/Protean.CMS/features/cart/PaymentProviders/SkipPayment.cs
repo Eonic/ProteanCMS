@@ -269,6 +269,11 @@ namespace Protean.Providers
                     throw new NotImplementedException();
                 }
 
+                public bool CheckReceiptIdExists(string cReceiptId)
+                {
+                    throw new NotImplementedException();
+                }
+
                 public string UpdateOrderWithPaymentResponse(string AuthNumber, string validGroup = "")
                 {
                     throw new NotImplementedException();
