@@ -1362,7 +1362,7 @@ namespace Protean
                         // Get payment provider(Pay360)
                         Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
 
-                        IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, myWeb.moRequest["PaymentMethod"]);
+                        IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, myWeb.moRequest["paymentProvider"]);
 
                         // Call your modified GetPaymentFormLocal with extra token
                         var response = oPaymentProv.Activities.ProcessGooglePayPayment(ref myWeb, ref myCart, ref oOrder, googlePayToken);

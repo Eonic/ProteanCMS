@@ -631,7 +631,7 @@ namespace Protean.Providers
                
                 public object ProcessGooglePayPayment(ref Cms myWeb, ref Cart oCart, ref XmlElement oOrder, string googlePayToken)
                 {
-                    throw null;
+                    throw new NotImplementedException();
                 }
 
                 public object ProcessApplePayPayment(XmlDocument orderXml, string applePayToken)
