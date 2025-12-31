@@ -2032,9 +2032,9 @@ namespace Protean
                             {
                                 GetCart(ref oElmt);
 
-                                if(Convert.ToString(oElmt.Attributes["statusId"].Value) =="6")
+                                if (Convert.ToString(oElmt.Attributes["statusId"].Value) == cartProcess.Complete.ToString())
                                 {
-                                    mnProcessId = 6;
+                                    mnProcessId = (short)cartProcess.Complete; ;
                                     mcCartCmd = "ShowInvoice";
                                     goto processFlow;
                                 }
@@ -2146,7 +2146,8 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    if (Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
+                                    GetCart(ref oElmt);
+                                    if (oElmt!=null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
                                     {
                                         CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
                                     }
