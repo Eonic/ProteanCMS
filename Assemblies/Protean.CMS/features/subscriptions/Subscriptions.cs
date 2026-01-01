@@ -1,11 +1,12 @@
 ﻿using Microsoft.ClearScript.Windows;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+//using Microsoft.VisualBasic;
+//using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Payment;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlTypes;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Web.Configuration;
@@ -21,7 +22,12 @@ namespace Protean
     {
         public partial class Cart
         {
-
+            public enum RenewInterval
+            {
+                Day,
+                Week,
+                Year
+            }
             public partial class Subscriptions
             {
 
@@ -92,7 +98,7 @@ namespace Protean
                             oDS.Tables["Subscriptions"].Columns["cContentXmlDetail"].ColumnMapping = MappingType.SimpleContent;
                         }
                         var oXML = new XmlDocument();
-                        oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&lt;", "<"), "&gt;", ">");
+                        oXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&lt;", "<").Replace("&gt;", ">");
                         foreach (XmlElement oElmt in oXML.DocumentElement.SelectNodes("*"))
                             oParentElmt.AppendChild(oParentElmt.OwnerDocument.ImportNode(oElmt, true));
                     }
@@ -141,7 +147,7 @@ namespace Protean
                         var oDS = myWeb.moDbHelper.GetDataSet(sSql, "Subscribers");
                         var oXML = new XmlDocument();
 
-                        oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&lt;", "<"), "&gt;", ">");
+                        oXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&lt;", "<").Replace("&gt;", ">");
                         string sContent;
 
                         foreach (XmlElement oElmt in oXML.SelectNodes("descendant-or-self::cDirXml | descendant-or-self::cSubXml"))
@@ -169,7 +175,7 @@ namespace Protean
                     {
                         var StartRangeDate = default(DateTime);
                         var ExpireRange = default(DateTime);
-                        switch (Strings.LCase(renewRangePeriod) ?? "")
+                        switch ((renewRangePeriod ?? string.Empty).ToLower())
                         {
                             case "month":
                                 {
@@ -199,7 +205,7 @@ namespace Protean
 
                             if ((action ?? "") == (sNextElementAction ?? ""))
                             {
-                                switch (Strings.LCase(NextElmt.GetAttribute("period")) ?? "")
+                                switch ((NextElmt.GetAttribute("period") ?? string.Empty).ToLower())
                                 {
                                     case "month":
                                         {
@@ -241,7 +247,7 @@ namespace Protean
                         var oDS = myWeb.moDbHelper.GetDataSet(sSql, "Subscribers");
                         var oXML = new XmlDocument();
 
-                        oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&lt;", "<"), "&gt;", ">");
+                        oXML.InnerXml = oDS.GetXml().Replace("&lt;", "<").Replace("&gt;", ">");
                         string sContent;
 
                         foreach (XmlElement oElmt in oXML.SelectNodes("descendant-or-self::cDirXml | descendant-or-self::cSubXml | descendant-or-self::cPayMthdDetailXml"))
@@ -268,7 +274,7 @@ namespace Protean
                     {
                         DateTime StartRangeDate;
                         var ExpireRange = default(DateTime);
-                        switch (Strings.LCase(renewRangePeriod) ?? "")
+                        switch ((renewRangePeriod ?? string.Empty).ToLower())
                         {
                             case "month":
                                 {
@@ -298,7 +304,7 @@ namespace Protean
 
                             if ((action ?? "") == (sNextElementAction ?? ""))
                             {
-                                switch (Strings.LCase(NextElmt.GetAttribute("period")) ?? "")
+                                switch ((NextElmt.GetAttribute("period") ?? string.Empty).ToLowerInvariant())
                                 {
                                     case "month":
                                         {
@@ -339,7 +345,7 @@ namespace Protean
                         var oDS = myWeb.moDbHelper.GetDataSet(sSql, "Subscribers");
                         var oXML = new XmlDocument();
 
-                        oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&lt;", "<"), "&gt;", ">");
+                        oXML.InnerXml = oDS.GetXml().Replace("&lt;", "<").Replace("&gt;", ">");
                         string sContent;
 
                         foreach (XmlElement oElmt in oXML.SelectNodes("descendant-or-self::cDirXml | descendant-or-self::cSubXml | descendant-or-self::cPayMthdDetailXml"))
@@ -374,7 +380,7 @@ namespace Protean
                         var oDS = myWeb.moDbHelper.GetDataSet(sSql, "Subscribers");
                         var oXML = new XmlDocument();
 
-                        oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&lt;", "<"), "&gt;", ">");
+                        oXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&lt;", "<").Replace("&gt;", ">");
                         string sContent;
 
                         foreach (XmlElement oElmt in oXML.SelectNodes("descendant-or-self::cDirXml | descendant-or-self::cSubXml | descendant-or-self::cPayMthdDetailXml"))
@@ -401,7 +407,7 @@ namespace Protean
                     {
 
                         string ExpireRange = "";
-                        switch (Strings.LCase(renewRangePeriod) ?? "")
+                        switch ((renewRangePeriod ?? string.Empty).ToLowerInvariant())
                         {
                             case "month":
                                 {
@@ -454,7 +460,7 @@ namespace Protean
                         var oDS = myWeb.moDbHelper.GetDataSet(sSql, "Subscribers");
                         var oXML = new XmlDocument();
 
-                        oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&lt;", "<"), "&gt;", ">");
+                        oXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&lt;", "<").Replace("&gt;", ">");
                         string sContent;
 
                         foreach (XmlElement oElmt in oXML.SelectNodes("descendant-or-self::cDirXml | descendant-or-self::cSubXml | descendant-or-self::cPayMthdDetailXml"))
@@ -481,7 +487,7 @@ namespace Protean
                     {
 
                         string ExpireRange = "";
-                        switch (Strings.LCase(renewRangePeriod) ?? "")
+                        switch ((renewRangePeriod ?? string.Empty).ToLower())
                         {
                             case "month":
                                 {
@@ -534,7 +540,7 @@ namespace Protean
                         var oDS = myWeb.moDbHelper.GetDataSet(sSql, "Subscribers");
                         var oXML = new XmlDocument();
 
-                        oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&lt;", "<"), "&gt;", ">");
+                        oXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&lt;", "<").Replace("&gt;", ">");
                         string sContent;
 
                         foreach (XmlElement oElmt in oXML.SelectNodes("descendant-or-self::cDirXml | descendant-or-self::cSubXml | descendant-or-self::cPayMthdDetailXml"))
@@ -568,7 +574,7 @@ namespace Protean
                         var oDS = myWeb.moDbHelper.GetDataSet(sSql, "Subscribers");
                         var oXML = new XmlDocument();
 
-                        oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&lt;", "<"), "&gt;", ">");
+                        oXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&lt;", "<").Replace("&gt;", ">");
                         string sContent;
 
                         foreach (XmlElement oElmt in oXML.SelectNodes("descendant-or-self::cDirXml | descendant-or-self::cSubXml | descendant-or-self::cPayMthdDetailXml"))
@@ -620,7 +626,7 @@ namespace Protean
                             oElmt.SetAttribute("publishDate", XmlDate(oDr["dPublishDate"]));
                             oElmt.SetAttribute("expireDate", XmlDate(oDr["dExpireDate"]));
                             oElmt.SetAttribute("period", oDr["period"].ToString());
-                            oElmt.SetAttribute("periodUnit", Strings.Trim(oDr["periodUnit"].ToString()));
+                            oElmt.SetAttribute("periodUnit", oDr["periodUnit"]?.ToString().Trim());
                             oElmt.SetAttribute("value", oDr["value"].ToString());
                             oElmt.SetAttribute("renewalStatus", oDr["renewalStatus"].ToString());
                             oElmt.SetAttribute("providerId", oDr["providerId"].ToString());
@@ -1105,7 +1111,7 @@ namespace Protean
                         {
                             if (oelmt.SelectSingleNode("productDetail/StartDate") != null)
                             {
-                                if (Information.IsDate(oelmt.SelectSingleNode("productDetail/StartDate").InnerText))
+                                if (DateTime.TryParse(oelmt.SelectSingleNode("productDetail/StartDate")?.InnerText, out _))
                                 {
                                     startDate = XmlDate(oelmt.SelectSingleNode("productDetail/StartDate").InnerText);
                                 }
@@ -1136,9 +1142,10 @@ namespace Protean
                             delayStart = SubPrices.GetAttribute("delayStart");
                             vatAmt = (double)Round(repeatPrice * (VatRate / 100d), bForceRoundup: mbRoundup);
                         }
-                        repeatPrice = Convert.ToDouble(Strings.FormatNumber(repeatPrice + vatAmt, (int)TriState.True, TriState.False, TriState.False));
+                        repeatPrice = Math.Round(repeatPrice + vatAmt, 1, MidpointRounding.AwayFromZero);
                         oCartXml.SetAttribute("repeatPrice", repeatPrice.ToString());
-                        oCartXml.SetAttribute("repeatVAT", Strings.FormatNumber(vatAmt, 2, TriState.True, TriState.False, TriState.False));
+                        vatAmt = Math.Round(vatAmt, 2, MidpointRounding.AwayFromZero);
+                        oCartXml.SetAttribute("repeatVAT", vatAmt.ToString("F2", CultureInfo.InvariantCulture));
                         oCartXml.SetAttribute("repeatInterval", repeatInterval);
                         oCartXml.SetAttribute("repeatFrequency", repeatFrequency.ToString());
                         oCartXml.SetAttribute("interval", interval);
@@ -1196,15 +1203,17 @@ namespace Protean
                                         oDR2 = currentODR2;
                                         if (!(oDR2.RowState == DataRowState.Deleted))
                                         {
-
-                                            if (Convert.ToBoolean(Operators.AndObject(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oDR2["nCatId"], oDR["nCatId"], false), !Operators.ConditionalCompareObjectEqual(oDR2["nContentKey"], oDR["nContentKey"], false)), Operators.ConditionalCompareObjectLess(oDR2["nCartItemKey"], oDR["nCartItemKey"], false))))
+                                            if (oDR2["nCatId"] != DBNull.Value && oDR["nCatId"] != DBNull.Value && oDR2["nContentKey"] != DBNull.Value && oDR["nContentKey"] != DBNull.Value && oDR2["nCartItemKey"] != DBNull.Value && oDR["nCartItemKey"] != DBNull.Value)
                                             {
-                                                // oDR2("nDisplayOrder") < oDR("nDisplayOrder") Then
+                                                if ((int)oDR2["nCatId"] == (int)oDR["nCatId"] && (int)oDR2["nContentKey"] != (int)oDR["nContentKey"] && (int)oDR2["nCartItemKey"] < (int)oDR["nCartItemKey"])
+                                                {
+                                                    // oDR2("nDisplayOrder") < oDR("nDisplayOrder") Then
 
-                                                myCart.RemoveItem(Convert.ToInt64(oDR2["nCartItemKey"]));
-                                                oDR2.Delete();
-                                                goto RedoCheck;
-                                            }
+                                                    myCart.RemoveItem(Convert.ToInt64(oDR2["nCartItemKey"]));
+                                                    oDR2.Delete();
+                                                    goto RedoCheck;
+                                                }
+                                            }                                            
                                         }
                                     }
                                 }
@@ -1215,7 +1224,8 @@ namespace Protean
                                 oDR2 = currentODR21;
                                 if (!(oDR2.RowState == DataRowState.Deleted))
                                 {
-                                    cSQL = Convert.ToString(Operators.ConcatenateObject("UPDATE tblCartItem SET nQuantity = 1 WHERE nCartItemKey = ", oDR2["nCartItemKey"]));
+                                    //cSQL = Convert.ToString(Operators.ConcatenateObject("UPDATE tblCartItem SET nQuantity = 1 WHERE nCartItemKey = ", oDR2["nCartItemKey"]));
+                                    cSQL = "UPDATE tblCartItem SET nQuantity = 1 WHERE nCartItemKey = " + oDR2["nCartItemKey"];
                                     myWeb.moDbHelper.ExeProcessSql(cSQL);
                                 }
                             }
@@ -1267,7 +1277,7 @@ namespace Protean
                         oDS.Tables["Content"].Columns["cContentXmlDetail"].ColumnMapping = MappingType.SimpleContent;
                         var oXML = new XmlDocument();
 
-                        oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
+                        oXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&gt;", ">").Replace("&lt;", "<");
                         XmlElement oCurSubElmt = (XmlElement)oXML.DocumentElement.FirstChild;
                         string cGroup = "";
                         if (oCurSubElmt != null)
@@ -1326,12 +1336,14 @@ namespace Protean
                             // oDS.Tables("Content").Columns("cContentXmlBrief").ColumnMapping = MappingType.Hidden
                             // oDS.Tables("Content").Columns("cContentXmlDetail").ColumnMapping = MappingType.SimpleContent
                             oDS.Tables["Content"].Columns["cSubXML"].ColumnMapping = MappingType.SimpleContent;
-                            oExXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
+                            oExXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&gt;", ">").Replace("&lt;", "<");
                             XmlElement oNewElmt = (XmlElement)oXML.DocumentElement.FirstChild;
                             XmlElement oOldElmt = (XmlElement)oExXML.DocumentElement.FirstChild;
                             double nCurPrice = myCart.getProductPricesByXml(oNewElmt.InnerXml, "", 1);
                             nTotalPrice = SubscriptionPrice(nCurPrice, oNewElmt.SelectSingleNode("Content/PaymentUnit").InnerText, Convert.ToInt16(oNewElmt.SelectSingleNode("Content/Duration/Length").InnerText), oNewElmt.SelectSingleNode("Content/Duration/Unit").InnerText, Convert.ToDateTime(oOldElmt.GetAttribute("dExpireDate")));
-                            if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDS.Tables["Content"].Rows[0]["nSubContentId"], nSubscriptionID, false)))
+                            var subContentIdObj = oDS.Tables["Content"].Rows[0]["nSubContentId"];
+                            int subContentId = subContentIdObj != DBNull.Value ? Convert.ToInt32(subContentIdObj) : 0;
+                            if (subContentId != nSubscriptionID)
                             {
                                 nTotalPrice = (double)(nTotalPrice - UpgradeCredit(myCart.getProductPricesByXml(oOldElmt.InnerXml, "", 1), oOldElmt.SelectSingleNode("Content/PaymentUnit").InnerText, DateTime.Now, Convert.ToDateTime(oOldElmt.GetAttribute("dExpireDate"))));
                             }
@@ -1370,7 +1382,7 @@ namespace Protean
                         oDS.Tables["Content"].Columns["cContentXmlDetail"].ColumnMapping = MappingType.SimpleContent;
                         var oXML = new XmlDocument();
 
-                        oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
+                        oXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&gt;", ">").Replace("&lt;", "<");
                         XmlElement oCurSubElmt = (XmlElement)oXML.DocumentElement.FirstChild;
                         string cGroup = "";
                         if (oCurSubElmt != null)
@@ -1411,12 +1423,14 @@ namespace Protean
                                 oDC.ColumnMapping = MappingType.Attribute;
                             }
                             oDS.Tables["Content"].Columns["cSubXML"].ColumnMapping = MappingType.SimpleContent;
-                            oExXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
+                            oExXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&gt;", ">").Replace("&lt;", "<");
                             XmlElement oNewElmt = (XmlElement)oXML.DocumentElement.FirstChild;
                             XmlElement oOldElmt = (XmlElement)oExXML.DocumentElement.FirstChild;
                             double nCurPrice = myCart.getProductPricesByXml(oNewElmt.InnerXml, "", 1);
                             nTotalPrice = SubscriptionPrice(nCurPrice, oNewElmt.SelectSingleNode("Content/PaymentUnit").InnerText, Convert.ToInt16(oNewElmt.SelectSingleNode("Content/Duration/Length").InnerText), oNewElmt.SelectSingleNode("Content/Duration/Unit").InnerText, Convert.ToDateTime(oOldElmt.GetAttribute("dExpireDate")));
-                            if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDS.Tables["Content"].Rows[0]["nSubContentId"], nSubscriptionId, false)))
+                            var subContentIdObj = oDS.Tables["Content"].Rows[0]["nSubContentId"];
+                            int subContentId = subContentIdObj != DBNull.Value ? Convert.ToInt32(subContentIdObj) : 0;
+                            if (subContentId != nSubscriptionId)
                             {
                                 nTotalPrice = (double)(nTotalPrice - UpgradeCredit(myCart.getProductPricesByXml(oOldElmt.InnerXml, "", 1), oOldElmt.SelectSingleNode("Content/PaymentUnit").InnerText, DateTime.Now, Convert.ToDateTime(oOldElmt.GetAttribute("dExpireDate"))));
                                 XmlElement PricesNode = (XmlElement)oSubscriptionXml.SelectSingleNode("Prices/Price[@type='sale']");
@@ -1608,7 +1622,7 @@ namespace Protean
                                 }
 
                         }
-                        nPrice = Convert.ToDouble(Strings.FormatNumber(nPrice * nUnitsCredit, 2));
+                        nPrice = Math.Round(nPrice * nUnitsCredit, 2, MidpointRounding.AwayFromZero);
                         return (int)Math.Round(nPrice);
                     }
 
@@ -1674,7 +1688,7 @@ namespace Protean
                     {
                         string cSQL = "SELECT tblAudit.dExpireDate FROM tblSubscription INNER JOIN tblAudit ON tblSubscription.nAuditId = tblAudit.nAuditKey where nSubKey = " + nId;
                         string sRenew = myWeb.moDbHelper.ExeProcessSqlScalar(cSQL);
-                        if (Information.IsDate(sRenew))
+                        if (DateTime.TryParse(sRenew, out _))
                         {
                             DateTime dRenew = Convert.ToDateTime(sRenew);
                             if (dRenew < DateTime.Now.Date)
@@ -1713,8 +1727,8 @@ namespace Protean
                                 SubscrptionSchemaTypes = oSubConfig["SubscrptionSchemaTypes"];
                             }
 
-                            foreach (var type in Strings.Split(SubscrptionSchemaTypes, ","))
-                                SubscrptionSchemaTypesTemp += "'" + Strings.Trim(type) + "',";
+                            foreach (var type in SubscrptionSchemaTypes.Split(','))
+                                SubscrptionSchemaTypesTemp += $"'{type.Trim()}',";
 
                             SubscrptionSchemaTypes = SubscrptionSchemaTypesTemp.TrimEnd(',');
 
@@ -1789,8 +1803,7 @@ namespace Protean
                                 if (oMenu.SelectSingleNode("//MenuItem[@id=" + myWeb.mnPageId + "]") is null)
                                 {
 
-                                    int nRootId = Convert.ToInt16("0" + Convert.ToString(Interaction.IIf(myWeb.moConfig["AuthenticatedRootPageId"] is null, Interaction.IIf(myWeb.moConfig["RootPageId"] is null, (object)1, myWeb.moConfig["RootPageId"]), myWeb.moConfig["AuthenticatedRootPageId"])));
-
+                                    int nRootId =  int.TryParse(myWeb.moConfig["AuthenticatedRootPageId"], out var id1) ? id1 : int.TryParse(myWeb.moConfig["RootPageId"], out var id2) ? id2 : 1;
                                     // Load in the last subscription
                                     if (string.IsNullOrEmpty(cLastSubXml))
                                     {
@@ -1892,7 +1905,7 @@ namespace Protean
                             oDS.Tables["Content"].Columns["cContentXmlDetail"].ColumnMapping = MappingType.SimpleContent;
                             var oXML = new XmlDocument();
 
-                            oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
+                            oXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&gt;", ">").Replace("&lt;", "<");
                             oCurSubElmt = (XmlElement)oXML.DocumentElement.FirstChild;
                         }
 
@@ -1918,7 +1931,7 @@ namespace Protean
                         if (!string.IsNullOrEmpty(oSubConfig["SubscriptionStartDateXpath"]))
                         {
                             string dateString = oCurSubElmt.SelectSingleNode(oSubConfig["SubscriptionStartDateXpath"]).InnerText;
-                            if (Information.IsDate(dateString))
+                            if (DateTime.TryParse(dateString, out _))
                             {
                                 SubStartDate = Convert.ToDateTime(oCurSubElmt.SelectSingleNode(oSubConfig["SubscriptionStartDateXpath"]).InnerText);
                             }
@@ -1932,7 +1945,7 @@ namespace Protean
 
                         oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Content");
 
-                        if (Strings.LCase(oSubConfig["AllowRenewals"]) == "off")
+                        if (string.Equals(oSubConfig["AllowRenewals"], "off", StringComparison.OrdinalIgnoreCase))
                         {
 
                             AddSubscription(nSubscriptionID, oCurSubElmt, SubStartDate, SubEndDate, nSubUserId, nPaymentMethodId, nCartId);
@@ -1959,7 +1972,7 @@ namespace Protean
                             oDS.Tables["Content"].Columns["cContentXmlBrief"].ColumnMapping = MappingType.Hidden;
                             oDS.Tables["Content"].Columns["cSubXml"].ColumnMapping = MappingType.Hidden;
                             oDS.Tables["Content"].Columns["cContentXmlDetail"].ColumnMapping = MappingType.SimpleContent;
-                            oExXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
+                            oExXML.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&gt;", ">").Replace("&lt;", "<");
                             XmlElement oNewElmt = (XmlElement)oExXML.DocumentElement.FirstChild;
                             if (oDS.Tables["Content"].Rows[0]["nContentKey"] is DBNull)
                             {
@@ -1968,7 +1981,7 @@ namespace Protean
 
                             // its a regrade
                             // cancel earlier subscription
-                            else if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(oDS.Tables["Content"].Rows[0]["nContentKey"], nSubscriptionID, false)))
+                            else if (oDS.Tables["Content"].Rows[0]["nContentKey"] != DBNull.Value && Convert.ToInt32(oDS.Tables["Content"].Rows[0]["nContentKey"]) != nSubscriptionID)
                             {
                                 foreach (DataRow oRows in oDS.Tables["Content"].Rows)
                                     CancelSubscription(Convert.ToInt16(oRows["nSubKey"]));
@@ -2024,7 +2037,7 @@ namespace Protean
                             oDS.Tables["Subscriptions"].Columns["cSubXML"].ColumnMapping = MappingType.SimpleContent;
                             var oSubElmt = oElmt.OwnerDocument.CreateElement("Subscriptions");
                             var oTmp = new XmlDocument();
-                            oTmp.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&lt;", "<"), "&gt;", ">");
+                            oTmp.InnerXml = (oDS.GetXml() ?? string.Empty).Replace("&lt;", "<").Replace("&gt;", ">");
                             oSubElmt.InnerXml = oTmp.DocumentElement.InnerXml;
                             oElmt.AppendChild(oSubElmt);
                         }
@@ -2266,7 +2279,8 @@ namespace Protean
                     try
                     {
                         // WRITE CODE TO CHECK WHEN LAST RUN
-                        string sSQL = "select TOP 1 cActivityDetail from tblActivityLog where nActivityType = 300 and  dDateTime > " + sqlDateTime(DateAndTime.DateAdd(DateInterval.Day, -1, DateTime.Now)) + " order by dDateTime DESC";
+                        //string sSQL = "select TOP 1 cActivityDetail from tblActivityLog where nActivityType = 300 and  dDateTime > " + sqlDateTime(DateAndTime.DateAdd(DateInterval.Day, -1, DateTime.Now)) + " order by dDateTime DESC";
+                        string sSQL = "select TOP 1 cActivityDetail from tblActivityLog " + "where nActivityType = 300 and dDateTime > " + sqlDateTime(DateTime.Now.AddDays(-1)) + " order by dDateTime DESC";
                         string FeedCheck = myWeb.moDbHelper.ExeProcessSqlScalar(sSQL);
                         if (!string.IsNullOrEmpty(FeedCheck))
                         {
@@ -2397,24 +2411,53 @@ namespace Protean
                     string cProcessInfo;
                     try
                     {
-                        var renewInterval = DateInterval.Day;
-                        switch (SubXml.GetAttribute("periodUnit") ?? "")
+                        RenewInterval renewInterval = RenewInterval.Day;
+                        switch ((SubXml.GetAttribute("periodUnit") ?? string.Empty).ToLowerInvariant())
                         {
-                            case "Week":
-                                {
-                                    renewInterval = DateInterval.WeekOfYear;
-                                    break;
-                                }
-                            case "Year":
-                                {
-                                    renewInterval = DateInterval.Year;
-                                    break;
-                                }
+                            case "week":
+                                renewInterval = RenewInterval.Week;
+                                break;
+
+                            case "year":
+                                renewInterval = RenewInterval.Year;
+                                break;
                         }
+
                         long SubId = Convert.ToInt64("0" + SubXml.GetAttribute("id"));
 
-                        var dNewStart = DateAndTime.DateAdd(DateInterval.Day, 1d, Convert.ToDateTime(SubXml.GetAttribute("expireDate")));
-                        var dNewEnd = DateAndTime.DateAdd(renewInterval, Convert.ToInt16(SubXml.GetAttribute("period")), Convert.ToDateTime(SubXml.GetAttribute("expireDate")));
+                        DateTime expireDate;
+                        if (!DateTime.TryParse(SubXml.GetAttribute("expireDate"), out expireDate))
+                        {
+                            throw new InvalidOperationException("Invalid expireDate");
+                        }
+
+                        int period;
+                        if (!int.TryParse(SubXml.GetAttribute("period"), out period))
+                        {
+                            period = 1;
+                        }
+
+                        DateTime dNewStart = expireDate.AddDays(1);
+
+                        DateTime dNewEnd;
+                        switch (renewInterval)
+                        {
+                            case RenewInterval.Day:
+                                dNewEnd = expireDate.AddDays(period);
+                                break;
+
+                            case RenewInterval.Week:
+                                dNewEnd = expireDate.AddDays(7 * period);
+                                break;
+
+                            case RenewInterval.Year:
+                                dNewEnd = expireDate.AddYears(period);
+                                break;
+
+                            default:
+                                dNewEnd = expireDate;
+                                break;
+                        }
 
                         double Amount = Convert.ToDouble(SubXml.GetAttribute("value"));
                         long OrderId = Convert.ToInt64(0 + SubXml.GetAttribute("orderId"));
@@ -2580,22 +2623,48 @@ namespace Protean
                         long SubId = Convert.ToInt64("0" + SubXml.GetAttribute("id"));
 
 
-                        var renewInterval = DateInterval.Day;
-                        switch (SubXml.GetAttribute("periodUnit") ?? "")
+                        RenewInterval renewInterval = RenewInterval.Day;
+
+                        switch ((SubXml.GetAttribute("periodUnit") ?? string.Empty).ToLowerInvariant())
                         {
-                            case "Week":
-                                {
-                                    renewInterval = DateInterval.WeekOfYear;
-                                    break;
-                                }
-                            case "Year":
-                                {
-                                    renewInterval = DateInterval.Year;
-                                    break;
-                                }
+                            case "week":
+                                renewInterval = RenewInterval.Week;
+                                break;
+
+                            case "year":
+                                renewInterval = RenewInterval.Year;
+                                break;
                         }
 
-                        var dNewStart = DateAndTime.DateAdd(renewInterval, Convert.ToInt16(SubXml.GetAttribute("period")) * -1, Convert.ToDateTime(SubXml.GetAttribute("expireDate")));
+                        DateTime expireDate;
+                        if (!DateTime.TryParse(SubXml.GetAttribute("expireDate"), out expireDate))
+                            throw new InvalidOperationException("Invalid expireDate");
+
+                        int period;
+                        if (!int.TryParse(SubXml.GetAttribute("period"), out period))
+                            period = 1;
+
+                        DateTime dNewStart;
+
+                        switch (renewInterval)
+                        {
+                            case RenewInterval.Day:
+                                dNewStart = expireDate.AddDays(-period);
+                                break;
+
+                            case RenewInterval.Week:
+                                dNewStart = expireDate.AddDays(-7 * period);
+                                break;
+
+                            case RenewInterval.Year:
+                                dNewStart = expireDate.AddYears(-period);
+                                break;
+
+                            default:
+                                dNewStart = expireDate;
+                                break;
+                        }
+
                         DateTime dNewEnd = Convert.ToDateTime(SubXml.GetAttribute("expireDate"));
 
                         double Amount = Convert.ToDouble(SubXml.GetAttribute("value"));
@@ -2993,7 +3062,7 @@ namespace Protean
                                     oPay = new PaymentProviders(ref this.myWeb);
                                     oPay.mcCurrency = moCartConfig["Currency"];
 
-                                    if (Strings.LCase(moCartConfig["PaymentTypeButtons"]) == "on")
+                                    if (string.Equals(moCartConfig["PaymentTypeButtons"], "on", StringComparison.OrdinalIgnoreCase))
                                     {
                                         // remove submit button
                                         XmlElement xSubmit = (XmlElement)this.moXformElmt.SelectSingleNode("descendant-or-self::submit");
