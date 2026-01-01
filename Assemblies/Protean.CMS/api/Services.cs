@@ -1126,7 +1126,7 @@ namespace Protean
 
             // We should be checking users permissions here.
 
-            xmlEle = myWeb.GetContentDetailXml(null, nContentKey, false);
+            xmlEle = myWeb.BuildPageContentDetailXml(null, nContentKey, false);
 
 
             return xmlEle;

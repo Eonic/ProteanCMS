@@ -2736,7 +2736,7 @@ namespace Protean
 
                     // myWeb.GetContentDetailXml(Nothing, ArtId, True, False)
 
-                    Tools.Xml.AddExistingNode(ref oReturnElmt, myWeb.GetContentDetailXml(default, Convert.ToInt64(ArtId), true, false));
+                    Tools.Xml.AddExistingNode(ref oReturnElmt, myWeb.BuildPageContentDetailXml(default, Convert.ToInt64(ArtId), true, false));
 
                     return oReturnXml;
                 }

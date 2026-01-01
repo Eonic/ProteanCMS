@@ -841,7 +841,7 @@ namespace Protean.Providers
                                             // bAdminMode = True
                                             sAdminLayout = "AdminXForm";
                                             mcEwCmd = "EditXForm";
-                                            oPageDetail = oWeb.GetContentDetailXml(default, Convert.ToInt64(myWeb.moRequest["id"]));
+                                            oPageDetail = oWeb.BuildPageContentDetailXml(default, Convert.ToInt64(myWeb.moRequest["id"]));
                                         }
                                         else
                                         {

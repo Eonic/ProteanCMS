@@ -1378,7 +1378,7 @@ namespace Protean
                                         bAdminMode = true;
                                         sAdminLayout = "AdminXForm";
                                         mcEwCmd = "EditXForm";
-                                        oPageDetail = oWeb.GetContentDetailXml(nArtId: Convert.ToInt64(myWeb.moRequest["id"]));
+                                        oPageDetail = oWeb.BuildPageContentDetailXml(nArtId: Convert.ToInt64(myWeb.moRequest["id"]));
                                     }
                                     else
                                     {
@@ -1495,7 +1495,7 @@ namespace Protean
                                         bAdminMode = true;
                                         sAdminLayout = "AdminXForm";
                                         mcEwCmd = "EditXForm";
-                                        oPageDetail = oWeb.GetContentDetailXml(nArtId: Convert.ToInt64(myWeb.moRequest["id"]));
+                                        oPageDetail = oWeb.BuildPageContentDetailXml(nArtId: Convert.ToInt64(myWeb.moRequest["id"]));
                                     }
                                     else
                                     {

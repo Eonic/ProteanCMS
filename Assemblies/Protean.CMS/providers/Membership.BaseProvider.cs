@@ -1,20 +1,11 @@
 ﻿// ***********************************************************************
 // $Library:     Protean.Providers.membership.base
-// $Revision:    3.1  
-// $Date:        2012-07-21
 // $Author:      Trevor Spink (trevor@eonic.digital)
 // &Website:     eonic.digital
 // &Licence:     Apache-2.0 license
-// $Copyright:   Copyright (c) 2002 - 2010 Eonic Ltd.
 // ***********************************************************************
 
-
-//using Microsoft.Identity.Client;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Protean.AdminProxy;
 using Protean.Providers.Authentication;
-using Protean.Providers.CDN;
 using Protean.Tools;
 using System;
 using System.Collections.Generic;
@@ -22,18 +13,14 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using System.Net.PeerToPeer;
 using System.Reflection;
-using System.Security.AccessControl;
 using System.Text;
 using System.Web;
 using System.Web.Configuration;
-using System.Windows.Controls;
 using System.Xml;
 using static Protean.Cms;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 
 namespace Protean.Providers
@@ -129,7 +116,7 @@ namespace Protean.Providers
                         Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)castObject;
                         var ourProvider = moPrvConfig.Providers[ProviderName];
                         Assembly assemblyInstance;
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["path"], "", false)))
+                        if (ourProvider.Parameters["path"] != null && !string.IsNullOrEmpty(Convert.ToString(ourProvider.Parameters["path"])))
                         {
                             assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"])));
                         }
@@ -137,7 +124,7 @@ namespace Protean.Providers
                         {
                             assemblyInstance = Assembly.Load(ourProvider.Type);
                         }
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.Parameters["rootClass"], "", false)))
+                        if (ourProvider.Parameters["rootClass"] == null || string.IsNullOrEmpty(Convert.ToString(ourProvider.Parameters["rootClass"])))
                         {
                             calledType = assemblyInstance.GetType("Protean.Providers.Membership." + ProviderName, true);
                         }
@@ -288,9 +275,9 @@ namespace Protean.Providers
 
                         base.NewFrm("UserLogon");
 
-                        if (mbAdminMode & myWeb.mnUserId == 0)
+                        if (mbAdminMode && myWeb.mnUserId == 0)
                             goto BuildForm;
-                        if (myWeb.moConfig["RememberMeMode"] == "KeepCookieAfterLogoff" | myWeb.moConfig["RememberMeMode"] == "ClearCookieAfterLogoff")
+                        if (myWeb.moConfig["RememberMeMode"] == "KeepCookieAfterLogoff" || myWeb.moConfig["RememberMeMode"] == "ClearCookieAfterLogoff")
                             bRememberMe = true;
                         string formPath = "/xforms/directory/" + FormName + ".xml";
                         if (myWeb.moConfig["cssFramework"] == "bs5")
@@ -366,7 +353,7 @@ namespace Protean.Providers
                         XmlElement xmlGroupElmt = (XmlElement)base.moXformElmt.SelectSingleNode("group");
                         // Set the action URL
                         // Is the membership email address secure.
-                        if (myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.moConfig["SecureMembershipAddress"] != null)
+                            if (!string.IsNullOrEmpty(myWeb.moConfig["SecureMembershipAddress"]))
                         {
                             XmlElement oSubElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant::submission");
                             oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.moConfig["ProjectPath"] + "/" + myWeb.mcPagePath);
@@ -396,11 +383,11 @@ namespace Protean.Providers
                                 if (!string.IsNullOrEmpty(cRememberedUsername))
                                     bRemembered = true;
                                 XmlElement baseInstanceElmt = (XmlElement)base.Instance;
-                                if (Xml.NodeState(ref baseInstanceElmt, "user", "", "", XmlNodeState.NotInstantiated, oElmt) != XmlNodeState.NotInstantiated & !base.isSubmitted())
-                                {
+                            if (Xml.NodeState(ref baseInstanceElmt, "user", "", "", XmlNodeState.NotInstantiated, oElmt) != XmlNodeState.NotInstantiated && !base.isSubmitted())
+                            {
 
-                                    oElmt.SetAttribute("rememberMe", Strings.LCase(Convert.ToString(bRemembered)));
-                                    Xml.NodeState(ref baseInstanceElmt, "user/username", cRememberedUsername);
+                                oElmt.SetAttribute("rememberMe", Convert.ToString(bRemembered).ToLower());
+                                Xml.NodeState(ref baseInstanceElmt, "user/username", cRememberedUsername);
 
                                 }
                             }
@@ -568,14 +555,14 @@ namespace Protean.Providers
                                                     goResponse.Cookies.Remove("RememberMeUserName");
                                                 oCookie = new System.Web.HttpCookie("RememberMeUserName");
                                                 oCookie.Value = myWeb.moRequest["cUserName"];
-                                                oCookie.Expires = DateAndTime.DateAdd(DateInterval.Day, 60d, DateTime.Now);
+                                                oCookie.Expires = DateTime.Now.AddDays(60);
                                                 goResponse.Cookies.Add(oCookie);
 
                                                 if (myWeb.moRequest.Cookies["RememberMeUserId"] != null)
                                                     goResponse.Cookies.Remove("RememberMeUserId");
                                                 oCookie = new System.Web.HttpCookie("RememberMeUserId");
                                                 oCookie.Value = Convert.ToString(myWeb.mnUserId);
-                                                oCookie.Expires = DateAndTime.DateAdd(DateInterval.Day, 60d, DateTime.Now);
+                                                oCookie.Expires = DateTime.Now.AddDays(60);
                                                 goResponse.Cookies.Add(oCookie);
                                             }
                                             else
@@ -932,22 +919,22 @@ namespace Protean.Providers
                                 {
                                     if (areEmailAddressesAllowed == true)
                                     {
-                                        cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirEmail = '" + Strings.LCase(cUsername) + "'";
-                                    }
-                                    else
-                                    {
-                                        cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirXml like '%<Email>" + Strings.LCase(cUsername) + "</Email>%'";
-                                    }
-                                }
-                                else if (areEmailAddressesAllowed == true)
-                                {
-                                    cSQL = "SELECT nDirKey, cDirEmail FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + Strings.LCase(cUsername) + "'";
+                                    cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirEmail = '" + cUsername.ToLower() + "'";
                                 }
                                 else
                                 {
-                                    cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + Strings.LCase(cUsername) + "'";
-
+                                    cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirXml like '%<Email>" + cUsername.ToLower() + "</Email>%'";
                                 }
+                            }
+                            else if (areEmailAddressesAllowed == true)
+                            {
+                                cSQL = "SELECT nDirKey, cDirEmail FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + cUsername.ToLower() + "'";
+                            }
+                            else
+                            {
+                                cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + cUsername.ToLower() + "'";
+
+                            }
 
                                 dsUsers = myWeb.moDbHelper.GetDataSet(cSQL, "tblTemp");
                                 nNumberOfUsers = dsUsers.Tables[0].Rows.Count;
@@ -1372,7 +1359,7 @@ namespace Protean.Providers
                                     // RJP 7 Nov 2012. Added LCase as a precaution against people entering string in Protean.Cms.Config lowercase, i.e. md5.
                                     if (myWeb.moConfig["MembershipEncryption"] != null)
                                     {
-                                        if ((myWeb.moConfig["MembershipEncryption"].ToLower()).StartsWith("md5") | (myWeb.moConfig["MembershipEncryption"].ToLower()).StartsWith("sha"))
+                        if ((myWeb.moConfig["MembershipEncryption"].ToLower()).StartsWith("md5") || (myWeb.moConfig["MembershipEncryption"].ToLower()).StartsWith("sha"))
                                         {
                                             // Remove password (and confirm password) fields
                                             foreach (XmlElement oPwdNode in base.moXformElmt.SelectNodes("/group/descendant-or-self::*[contains(@bind,'cDirPassword')]"))
@@ -1383,7 +1370,7 @@ namespace Protean.Providers
                                 }
 
                                 // Is the membership email address secure.
-                                if ((myWeb.moConfig["SecureMembershipAddress"] != "" & myWeb.moConfig["SecureMembershipAddress"] != null) & myWeb.mbAdminMode == false)
+                        if (!string.IsNullOrEmpty(myWeb.moConfig["SecureMembershipAddress"]) && myWeb.mbAdminMode == false)
                                 {
                                     XmlElement oSubElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant::submission");
                                     if (myWeb.mcPagePath is null)
@@ -1566,7 +1553,7 @@ namespace Protean.Providers
                                         useMemberCode(cCodeUsed, id);
 
                                         // If member codes were being applied then reconstruct the Group Instance.
-                                        if (gbMemberCodes & !string.IsNullOrEmpty(cCodeUsed))
+                        if (gbMemberCodes && !string.IsNullOrEmpty(cCodeUsed))
                                         {
                                             oGrpElmt = moDbHelper.getGroupsInstance(id, parId);
                                             base.Instance.ReplaceChild(oGrpElmt, base.Instance.LastChild);
@@ -1575,7 +1562,7 @@ namespace Protean.Providers
                                     }
 
                                     // lets add the user to any groups
-                                    if ((cDirectorySchemaName == "User" | cDirectorySchemaName == "Company") & maintainMembershipsOnAdd)
+                            if ((cDirectorySchemaName == "User" || cDirectorySchemaName == "Company") && maintainMembershipsOnAdd)
                                     {
                                         maintainMembershipsFromXForm((int)id);
 
@@ -1585,8 +1572,8 @@ namespace Protean.Providers
                                         {
                                             if (!string.IsNullOrEmpty(GroupsElmt.GetAttribute("addIds")))
                                             {
-                                                foreach (var i in Strings.Split(GroupsElmt.GetAttribute("addIds"), ","))
-                                                    moDbHelper.maintainDirectoryRelation(Convert.ToInt64(i), id, false);
+                                            foreach (var i in GroupsElmt.GetAttribute("addIds").Split(','))
+                                                moDbHelper.maintainDirectoryRelation(Convert.ToInt64(i), id, false);
                                             }
                                         }
                                         // code added by sonali for pure360
@@ -1675,7 +1662,7 @@ namespace Protean.Providers
                             // TS isLast forces an update everytime this loops not possible to tell if this will be the last time
                             bool bIsLast = true;
                             // If oElmt.NextSibling Is Nothing Then bIsLast = True
-                            if (Strings.LCase(oElmt.GetAttribute("isMember")) == "true" | Strings.LCase(oElmt.GetAttribute("isMember")) == "yes")
+                            if (oElmt.GetAttribute("isMember").ToLower() == "true" || oElmt.GetAttribute("isMember").ToLower() == "yes")
                             {
                                 // if user not in group
                                 if (!userMembershipIds.Contains(Convert.ToInt16(oElmt.GetAttribute("id"))))
@@ -1929,7 +1916,7 @@ namespace Protean.Providers
                             base.validate();
                             if (base.valid)
                             {
-                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, base.Instance, Convert.ToInt64(Interaction.IIf(id > 0L, id, -1)));
+                                moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, base.Instance, Convert.ToInt64(id > 0L ? id : -1));
                                 try
                                 {
                                     var argoNode = base.moXformElmt.SelectSingleNode("group/group(1)");
@@ -2050,9 +2037,9 @@ namespace Protean.Providers
 
                     try
                     {
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["nUserId"], 0, false)))
+                    if ((long?)moSession["nUserId"] != 0)
                         {
-                            myWeb.mnUserId = Convert.ToInt32(moSession["nUserId"]);
+                            myWeb.mnUserId = Convert.ToInt64(moSession["nUserId"]);
                         }
                         else
                         {
@@ -2085,13 +2072,13 @@ namespace Protean.Providers
 
                     try
                     {
-                        sProcessInfo = Convert.ToString(Operators.ConcatenateObject(Interaction.IIf(myWeb.moRequest.ServerVariables["HTTPS"] == "on", "https://", "http://"), sDomain));
-                        if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(moSession["nUserId"], null, false), mnUserId == 0)))
+                        sProcessInfo = (myWeb.moRequest.ServerVariables["HTTPS"] == "on" ? "https://" : "http://") + sDomain;
+                        if (moSession["nUserId"] == null && mnUserId == 0)
                         {
 
                             // first lets check for a remember me cookie
                             string rememberMeMode = moConfig["RememberMeMode"];
-                            if (moRequest.Cookies["RememberMeUserId"] != null & rememberMeMode != "KeepCookieAfterLogoff" & !string.IsNullOrEmpty(rememberMeMode))
+                            if (moRequest.Cookies["RememberMeUserId"] != null && rememberMeMode != "KeepCookieAfterLogoff" && !string.IsNullOrEmpty(rememberMeMode))
                             {
                                 if (Tools.Number.IsNumeric(moRequest.Cookies["RememberMeUserId"].Value))
                                 {
@@ -2132,7 +2119,7 @@ namespace Protean.Providers
                                 }
                             }
                         }
-                        else if (Convert.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(moSession["nUserId"], null, false), Operators.ConditionalCompareObjectEqual(moSession["nUserId"], 0, false))))
+                        else if (moSession["nUserId"] == null || (long?)moSession["nUserId"] == 0)
                         {
                             // this will get set on close
                             if (Tools.Number.IsNumeric(moSession["PreviewUser"]))
@@ -2151,10 +2138,10 @@ namespace Protean.Providers
 
                             if (moDbHelper != null)
                             {
-                                nCartUserId = Convert.ToInt64(moDbHelper.GetDataValue(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT nCartUserDirId FROM tblCartOrder o where o.cCartSchemaName='Order' and o.cCartSessionId = '", SqlFmt(moRequest["refSessionId"])), "'")), default, default, 0));
+                                nCartUserId = Convert.ToInt64(moDbHelper.GetDataValue("SELECT nCartUserDirId FROM tblCartOrder o where o.cCartSchemaName='Order' and o.cCartSessionId = '" + SqlFmt(moRequest["refSessionId"]) + "'", default, default, 0));
                             }
 
-                            if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(nCartUserId, moSession["nUserId"], false)))
+                        if (nCartUserId != (long?)moSession["nUserId"])
                             {
                                 mnUserId = 0;
                             }
@@ -2167,7 +2154,7 @@ namespace Protean.Providers
                         {
 
                             // feature to turn on preview mode with supplied user ID if token provided then this is happening in alternativeauthentication
-                            if (myWeb.moRequest["ewCmd"] == "PreviewOn" & Tools.Number.IsNumeric(myWeb.moRequest["PreviewUser"]))
+                        if (myWeb.moRequest["ewCmd"] == "PreviewOn" && Tools.Number.IsNumeric(myWeb.moRequest["PreviewUser"]))
                             {
                                 myWeb.moSession["PreviewUser"] = myWeb.moRequest["PreviewUser"];
                             }
@@ -2176,7 +2163,7 @@ namespace Protean.Providers
                             // lets finally set the user Id from the session
                             if (Tools.Number.IsNumeric(moSession["PreviewUser"]))
                             {
-                                if (myWeb.moRequest["ewCmd"] == "Normal" | myWeb.moRequest["ewCmd"] == "ExitPreview" | myWeb.moRequest["ewCmd"] == "EditContent" | myWeb.moRequest["ewCmd"] == "PublishContent")
+                            if (myWeb.moRequest["ewCmd"] == "Normal" || myWeb.moRequest["ewCmd"] == "ExitPreview" || myWeb.moRequest["ewCmd"] == "EditContent" || myWeb.moRequest["ewCmd"] == "PublishContent")
                                 {
                                     // jump out of admin mode...
                                     myWeb.moSession["PreviewUser"] = (object)null;
@@ -2219,11 +2206,11 @@ namespace Protean.Providers
                     {
                         if (moSession["nUserId"] != null)
                         {
-                            if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["nUserId"], 0, false)))
+                            if ((int?)moSession["nUserId"] == 0)
                             {
                                 moSession["nUserId"] = mnUserId;
                             }
-                            else if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(moSession["nUserId"], mnUserId, false), string.IsNullOrEmpty(Convert.ToString(moSession["PreviewUser"])))))
+                            else if ((int?)moSession["nUserId"] != mnUserId && string.IsNullOrEmpty(Convert.ToString(moSession["PreviewUser"])))
                             {
                                 // reset to a different value
                                 moSession["nUserId"] = mnUserId;
@@ -2283,7 +2270,7 @@ namespace Protean.Providers
                         adXfm.open(myWeb.moPageXml);
 
                         // logoff handler
-                        if (Convert.ToString(myWeb.moRequest["ewCmd"]) == "logoff" & mnUserId != 0)
+                        if (Convert.ToString(myWeb.moRequest["ewCmd"]) == "logoff" && mnUserId != 0)
                         {
 
                             if (Convert.ToString(myWeb.moSession["ewCmd"]) != "PreviewOn")
@@ -2292,11 +2279,11 @@ namespace Protean.Providers
                             }
 
                             // we are logging off so lets redirect
-                            if (myWeb.moConfig["BaseUrl"] != null & !(myWeb.moConfig["BaseUrl"] == ""))
+                            if (myWeb.moConfig["BaseUrl"] != null && !string.IsNullOrEmpty(myWeb.moConfig["BaseUrl"]))
                             {
                                 myWeb.msRedirectOnEnd = myWeb.moConfig["BaseUrl"];
                             }
-                            else if (myWeb.moConfig["RootPageId"] != null & !(myWeb.moConfig["RootPageId"] == ""))
+                            else if (myWeb.moConfig["RootPageId"] != null && !string.IsNullOrEmpty(myWeb.moConfig["RootPageId"]))
                             {
                                 myWeb.msRedirectOnEnd = myWeb.moConfig["ProjectPath"] + "/";
                             }
@@ -2335,7 +2322,7 @@ namespace Protean.Providers
                                 myWeb.AddContentXml(ref oXfmElmt);
                                 myWeb.moPageXml.DocumentElement.SetAttribute("layout", "Account_Reset");
 
-                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(adXfm.valid, true, false)))
+                        if (adXfm.valid)
                                 {
 
                                     sReturnValue = "LogOn";
@@ -2354,18 +2341,18 @@ namespace Protean.Providers
                                     {
                                         if (moSession["cLogonCmd"] != null)
                                         {
-                                            cLogonCmd = Strings.Split(Convert.ToString(moSession["cLogonCmd"]), "=")[0];
+                                            cLogonCmd = Convert.ToString(moSession["cLogonCmd"]).Split('=')[0];
                                             if (myWeb.mcOriginalURL.Contains(cLogonCmd + "="))
                                             {
                                                 cLogonCmd = "";
                                             }
                                             else if (myWeb.mcOriginalURL.Contains("="))
                                             {
-                                                cLogonCmd = Convert.ToString(Operators.ConcatenateObject("&", moSession["cLogonCmd"]));
+                                                cLogonCmd = "&" + Convert.ToString(moSession["cLogonCmd"]);
                                             }
                                             else
                                             {
-                                                cLogonCmd = Convert.ToString(Operators.ConcatenateObject("?", moSession["cLogonCmd"]));
+                                                cLogonCmd = "?" + Convert.ToString(moSession["cLogonCmd"]);
                                             }
                                         }
                                     }
@@ -2389,7 +2376,7 @@ namespace Protean.Providers
                         }
 
                         // display logon form for all pages if user is not logged on.
-                        if (mnUserId == 0 & (myWeb.moRequest["ewCmd"] != "passwordReminder" & myWeb.moRequest["ewCmd"] != "ResendActivation" & myWeb.moRequest["ewCmd"] != "ActivateAccount" & myWeb.moRequest["ewCmd"] != "AR"))
+                        if (mnUserId == 0 && (myWeb.moRequest["ewCmd"] != "passwordReminder" && myWeb.moRequest["ewCmd"] != "ResendActivation" && myWeb.moRequest["ewCmd"] != "ActivateAccount" && myWeb.moRequest["ewCmd"] != "AR"))
                         {
 
                             XmlElement oXfmElmt = (XmlElement)adXfm.xFrmUserLogon();
@@ -2405,7 +2392,7 @@ namespace Protean.Providers
 
                             }
 
-                            if (Convert.ToBoolean(Operators.OrObject(adXfm.valid, bAdditionalChecks)))
+                            if (adXfm.valid || bAdditionalChecks)
                             {
                                 myWeb.moContentDetail = null;
                                 mnUserId = myWeb.mnUserId;
@@ -2415,7 +2402,7 @@ namespace Protean.Providers
                                 {
                                     var oCookie = new System.Web.HttpCookie("RememberMe");
                                     oCookie.Value = mnUserId.ToString();
-                                    oCookie.Expires = DateAndTime.DateAdd(DateInterval.Day, 60d, DateTime.Now);
+                                    oCookie.Expires = DateTime.Now.AddDays(60);
                                     myWeb.moResponse.Cookies.Add(oCookie);
                                 }
                                 sReturnValue = "LogOn";
@@ -2434,41 +2421,41 @@ namespace Protean.Providers
                                 {
                                     if (moSession["cLogonCmd"] != null)
                                     {
-                                        cLogonCmd = Strings.Split(Convert.ToString(moSession["cLogonCmd"]), "=")[0];
+                                        cLogonCmd = Convert.ToString(moSession["cLogonCmd"]).Split('=')[0];
                                         if (myWeb.mcOriginalURL.Contains(cLogonCmd + "="))
                                         {
                                             cLogonCmd = "";
                                         }
                                         else if (myWeb.mcOriginalURL.Contains("="))
                                         {
-                                            cLogonCmd = Convert.ToString(Operators.ConcatenateObject("&", moSession["cLogonCmd"]));
-                                        }
-                                        else
-                                        {
-                                            cLogonCmd = Convert.ToString(Operators.ConcatenateObject("?", moSession["cLogonCmd"]));
+                                                cLogonCmd = "&" + Convert.ToString(moSession["cLogonCmd"]);
+                                            }
+                                            else
+                                            {
+                                                cLogonCmd = "?" + Convert.ToString(moSession["cLogonCmd"]);
+                                            }
                                         }
                                     }
+
+                                    // LogonProviderOptions
+
+                                    // ProviderActions(myWeb, "logonAction")
+
+                                    // do not cache
+                                    myWeb.bPageCache = false;
+                                    myWeb.logonRedirect(cLogonCmd);
                                 }
-
-                                // LogonProviderOptions
-
-                                // ProviderActions(myWeb, "logonAction")
-
-                                // do not cache
-                                myWeb.bPageCache = false;
-                                myWeb.logonRedirect(cLogonCmd);
-                            }
-                            else
-                            {
-                                myWeb.AddContentXml(ref oXfmElmt);
-                                // mnUserId = adXfm.mnUserId
-                            }
+                                else
+                                {
+                                    myWeb.AddContentXml(ref oXfmElmt);
+                                    // mnUserId = adXfm.mnUserId
+                                }
                         }
                         else if (moRequest["ewCmd"] == "passwordReminder")
                         {
 
                             XmlElement oXfmElmt;
-                            switch (Strings.LCase(moConfig["MembershipEncryption"]) ?? "")
+                            switch ((moConfig["MembershipEncryption"] ?? "").ToLower())
                             {
                                 case "md5salt":
                                 case "md5":
@@ -2539,7 +2526,7 @@ namespace Protean.Providers
                                 string userMode = "user"; // other values preview and admin
                                 string[] userDetails;
 
-                                if (sharedKey != null & loginKey != null)
+                    if (sharedKey != null && loginKey != null)
                                 {
                                     decryptedString = Encryption.RC4.Decrypt(loginKey, sharedKey);
                                     userDetails = decryptedString.Split('-');
@@ -2554,7 +2541,7 @@ namespace Protean.Providers
                                     // myWeb.moResponse.Write(DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
                                     try
                                     {
-                                        duration = DateAndTime.DateDiff(DateInterval.Minute, DateTime.Parse(timestamp), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")));
+                                    duration = (long)(DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")) - DateTime.Parse(timestamp)).TotalMinutes;
                                     }
                                     // myWeb.moResponse.Write(duration)
                                     // duration = DateDiff(DateInterval.Minute, DateTime.Parse(timestamp), DateTime.Parse(DateTime.Now.ToString("dd/MM/yyyy HH:MM")))
@@ -2804,18 +2791,18 @@ namespace Protean.Providers
                                                         {
                                                             if (moSession["cLogonCmd"] != null)
                                                             {
-                                                                cLogonCmd = Strings.Split(Convert.ToString(moSession["cLogonCmd"]), "=")[0];
+                                                                cLogonCmd = Convert.ToString(moSession["cLogonCmd"]).Split('=')[0];
                                                                 if (myWeb.mcOriginalURL.Contains(cLogonCmd + "="))
                                                                 {
                                                                     cLogonCmd = "";
                                                                 }
                                                                 else if (myWeb.mcOriginalURL.Contains("="))
                                                                 {
-                                                                    cLogonCmd = Convert.ToString(Operators.ConcatenateObject("&", moSession["cLogonCmd"]));
+                                                                    cLogonCmd = "&" + Convert.ToString(moSession["cLogonCmd"]);
                                                                 }
                                                                 else
                                                                 {
-                                                                    cLogonCmd = Convert.ToString(Operators.ConcatenateObject("?", moSession["cLogonCmd"]));
+                                                                    cLogonCmd = "?" + Convert.ToString(moSession["cLogonCmd"]);
                                                                 }
                                                             }
                                                         }
@@ -2914,7 +2901,7 @@ namespace Protean.Providers
                                                 // Activation was succesful, let's prepare the redirect
 
                                                 // Clear the cache.
-                                                string cSql = Convert.ToString(Operators.ConcatenateObject("DELETE dbo.tblXmlCache " + " WHERE cCacheSessionID = '" + moSession.SessionID + "' " + "         AND nCacheDirId = ", SqlFmt(mnUserId.ToString())));
+                                                string cSql = "DELETE dbo.tblXmlCache " + " WHERE cCacheSessionID = '" + moSession.SessionID + "' " + "         AND nCacheDirId = " + SqlFmt(mnUserId.ToString());
 
                                                 myWeb.moDbHelper.ExeProcessSqlorIgnore(cSql);
 
@@ -3119,7 +3106,7 @@ namespace Protean.Providers
                     try
                     {
                         // If logged on and in single login per user mode, log a session continuation flag.
-                        if (gbSingleLoginSessionPerUser & mnUserId > 0 & moSession != null)
+                        if (gbSingleLoginSessionPerUser && mnUserId > 0 && moSession != null)
                         {
                             // Log the session
                             moDbHelper.logActivity(dbHelper.ActivityType.SessionContinuation, mnUserId, 0, 0, 0, "", true);
@@ -3166,7 +3153,7 @@ namespace Protean.Providers
                     {
 
                         // Look for the RC4 token
-                        if (!string.IsNullOrEmpty(moRequest["token"]) & !string.IsNullOrEmpty(moConfig["AlternativeAuthenticationKey"]))
+                        if (!string.IsNullOrEmpty(moRequest["token"]) && !string.IsNullOrEmpty(moConfig["AlternativeAuthenticationKey"]))
                         {
 
                             cProcessInfo = "IP Address Checking";
@@ -3186,7 +3173,7 @@ namespace Protean.Providers
                                 // 1. Email address
                                 // 2. User ID
 
-                                cDecrypted = Strings.Trim(Encryption.RC4.Decrypt(cToken, cKey));
+                                                cDecrypted = Encryption.RC4.Decrypt(cToken, cKey).Trim();
 
                                 if (Text.IsEmail(cDecrypted))
                                 {

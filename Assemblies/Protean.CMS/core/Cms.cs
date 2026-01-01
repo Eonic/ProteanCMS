@@ -2722,15 +2722,15 @@ namespace Protean
 
                                 if (Convert.ToBoolean(validatedVersion))
                                 {
-                                    moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Convert.ToInt64(moRequest["verId"]));
+                                    moContentDetail = BuildPageContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Convert.ToInt64(moRequest["verId"]));
                                 }
                                 else if (Strings.LCase(moConfig["AllowContentDetailAccess"]) == "On")
                                 {
-                                    moContentDetail = GetContentDetailXml(oPageElmt);
+                                    moContentDetail = BuildPageContentDetailXml(oPageElmt);
                                 }
                                 else
                                 {
-                                    moContentDetail = GetContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true);
+                                    moContentDetail = BuildPageContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true);
                                 }
                             }
 
@@ -3566,11 +3566,11 @@ namespace Protean
 
                                                 if (!string.IsNullOrEmpty(moRequest["showParent"]))
                                                 {
-                                                    GetContentDetailXml(oPageElmt, Convert.ToInt64(moRequest["contentParId"]));
+                                                    BuildPageContentDetailXml(oPageElmt, Convert.ToInt64(moRequest["contentParId"]));
                                                 }
                                                 else
                                                 {
-                                                    GetContentDetailXml(oPageElmt, nContentId);
+                                                    BuildPageContentDetailXml(oPageElmt, nContentId);
                                                 }
 
                                                 ClearPageCache();
@@ -9474,15 +9474,15 @@ namespace Protean
             }
         }
 
-        public XmlElement GetContentDetailXml(XmlElement oPageElmt = null, long nArtId = 0L, bool disableRedirect = false, bool bCheckAccessToContentLocation = false, long nVersionId = 0L, bool bIgnoreContentStatus = false)
+        public XmlElement BuildPageContentDetailXml(XmlElement oPageElmt = null, long nArtId = 0L, bool disableRedirect = false, bool bCheckAccessToContentLocation = false, long nVersionId = 0L, bool bIgnoreContentStatus = false)
         {
-            PerfMon.Log("Web", "GetContentDetailXml");
+            PerfMon.Log("Web", "BuildPageContentDetailXml");
             XmlElement oRoot;
             XmlElement oElmt;
             XmlElement retElmt = null;
             string sContent;
             string sSql;
-            string sProcessInfo = "GetContentDetailXml";
+            string sProcessInfo = "BuildContentDetailXml";
             var oDs = new DataSet();
             string sFilterSql = "";
             bool bLoadAsXml;
