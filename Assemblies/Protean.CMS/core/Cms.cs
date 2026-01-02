@@ -9480,16 +9480,14 @@ namespace Protean
             XmlElement oRoot;
             XmlElement oElmt;
             XmlElement retElmt = null;
-            string sContent;
-            string sSql;
             string sProcessInfo = "BuildContentDetailXml";
-            var oDs = new DataSet();
-            string sFilterSql = "";
-            bool bLoadAsXml;
-            XmlComment oComment;
             if (nArtId > 0L)
             {
                 mnArtId = (int)nArtId;
+            }
+            if (mnArtId == 0L)
+            {
+                return null;
             }
             try
             {
@@ -9500,285 +9498,171 @@ namespace Protean
                     // that the user is not allowed to access.
                     // We can review the current menu structure xml instead of calling the super slow permissions functions.
 
-
-
-                    if (bCheckAccessToContentLocation & mnArtId > 0)
+                    // Check for historic events special case
+                    if (moPageXml.SelectSingleNode("Page/Contents/Content[@action='Protean.Cms+Content+Modules.ListHistoricEvents']") != null)
                     {
-                        if (!moDbHelper.checkContentLocationsInCurrentMenu((long)mnArtId, true))
-                        {
-                            mnArtId = 0;
-                        }
+                        bAllowExpired = true;
                     }
-                    if (mnArtId > 0)
+
+                    // Use the consolidated GetContentDetailXml method which handles:
+                    // - Access location checking
+                    // - SQL query building (including version support)
+                    // - DataSet processing
+                    // - XML conversion
+                    DateTime? contentUpdateDate;
+                    oElmt = moDbHelper.GetContentDetailXml(
+                        mnArtId,
+                        bIgnoreContentStatus,  // noFilter
+                        nVersionId,
+                        bIgnoreContentStatus,
+                        bCheckAccessToContentLocation,
+                        true,  // bIncludeLocations
+                        out contentUpdateDate);
+
+                    if (contentUpdateDate.HasValue)
                     {
-                        sProcessInfo = "loading content" + mnArtId;
+                        mdPageUpdateDate = contentUpdateDate.Value;
+                    }
 
-                        // I don't like this but need a quick solution
-                        if (moPageXml.SelectSingleNode("Page/Contents/Content[@action='Protean.Cms+Content+Modules.ListHistoricEvents']") != null)
-                        {
-                            bAllowExpired = true;
-                        }
-
-
-                        sFilterSql += GetStandardFilterSQLForContent();
-
+                    if (oElmt != null)
+                    {
+                        // Create the ContentDetail wrapper and import the content element
                         oRoot = moPageXml.CreateElement("ContentDetail");
+                        var importedElmt = (XmlElement)moPageXml.ImportNode(oElmt, true);
+                        oRoot.AppendChild(importedElmt);
+                        oElmt = importedElmt;
 
-                        // check if new function exists in DB, this logic can be later deprecated when all db are inline.
-                        bool bContLoc = moDbHelper.checkDBObjectExists("fxn_getContentLocations", Tools.Database.objectTypes.UserFunction);
-                        if (bContLoc)
+                        // Apply page-level processing
+                        XmlElement argoContentElmt = oElmt;
+                        moDbHelper.addRelatedContent(ref argoContentElmt, mnArtId, mbAdminMode);
+                        if (!string.IsNullOrEmpty(moConfig["ShowOwnerOnDetail"]))
                         {
-                            sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, dbo.fxn_getContentLocations(c.nContentKey) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c ";
-                        }
-                        else
-                        {
-                            sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c ";
-                        }
-                        sSql += "inner join tblAudit a on c.nAuditId = a.nAuditKey  ";
-                        // sSql &= "inner join tblContentLocation CL on c.nContentKey = CL.nContentId "
-
-                        if (bIgnoreContentStatus)
-                        {
-                            sSql += "where c.nContentKey = " + mnArtId;
-                        }
-                        else
-                        {
-                            sSql += "where c.nContentKey = " + mnArtId + sFilterSql + " ";
+                            string cContentType = oElmt.GetAttribute("type");
+                            if (moConfig["ShowOwnerOnDetail"].Contains(cContentType))
+                            {
+                                long nOwner = Convert.ToInt64("0" + oElmt.GetAttribute("owner"));
+                                if (nOwner > 0L)
+                                {
+                                    oElmt.AppendChild(GetUserXML(nOwner));
+                                }
+                            }
                         }
 
-                        // sSql &= "and CL.nStructId = " & mnPageId
+                        // If gbCart Or gbQuote Then
+                        // moDiscount.getAvailableDiscounts(oRoot)
+                        // End If
 
+                        XmlElement contentElmt = (XmlElement)oRoot.SelectSingleNode("Content");
                         if (nVersionId > 0L)
                         {
-                            sSql = "select c.nContentPrimaryId as id, nContentVersionKey as verid, nVersion as verno, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, dbo.fxn_getContentLocations(c.nContentPrimaryId) as locations, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContentVersions c ";
-                            sSql += "inner join tblAudit a on c.nAuditId = a.nAuditKey  ";
-                            sSql += "where c.nContentPrimaryId = " + mnArtId + " and nContentVersionKey=" + nVersionId + " ";
+                            contentElmt.SetAttribute("previewKey", Tools.Encryption.RC4.Encrypt(nVersionId.ToString(), moConfig["SharedKey"]));
                         }
-                        oDs = moDbHelper.GetDataSet(sSql, "Content", "ContentDetail");
-                        oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["ref"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["name"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["type"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["publish"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["expire"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["update"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["parId"].ColumnMapping = MappingType.Attribute;
-                        if (nVersionId > 0L)
+                        XmlElement argoContentElmt1 = oRoot;  // oRoot IS the ContentDetail element
+                        AddGroupsToContent(ref argoContentElmt1);
+                        if (oPageElmt != null)
                         {
-                            oDs.Tables[0].Columns["verid"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[0].Columns["verno"].ColumnMapping = MappingType.Attribute;
+                            var oContentDetail = contentElmt;
+                            if (oContentDetail != null && !string.IsNullOrEmpty(oContentDetail.InnerXml.Trim()))
+                            {
+                                // If we can find a content detail Content node, 
+                                // AND it contains some InnerXml, then YAY.
+                                oPageElmt.AppendChild(oRoot.CloneNode(true));
+                            }
+                            else
+                            {
+                                // OTHERWISE if there is nothing in the detail we get the brief instead.
+                                GetContentBriefXml(oPageElmt, nArtId);
+                            }
                         }
-                        if (bContLoc)
+                        retElmt = (XmlElement)oRoot.FirstChild;
+
+                        if (mbAdminMode == false & Strings.LCase(moConfig["RedirectToDescriptiveContentURLs"]) == "true")
                         {
-                            oDs.Tables[0].Columns["locations"].ColumnMapping = MappingType.Attribute;
+                            string SafeURLName = Tools.Text.CleanName(contentElmt.GetAttribute("name"), false, true);
+                            string myOrigURL;
+                            string myQueryString = "";
+                            if (mcOriginalURL.Contains("?"))
+                            {
+                                myOrigURL = mcOriginalURL.Substring(0, mcOriginalURL.IndexOf("?"));
+                                myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"));
+                            }
+                            else
+                            {
+                                myOrigURL = mcOriginalURL;
+                            }
+
+                            if ((myOrigURL ?? "") != (mcPageURL + "/" + mnArtId + "-/" + SafeURLName ?? ""))
+                            {
+                                // we redirect perminently
+                                mbRedirectPerm = Convert.ToString(true);
+                                msRedirectOnEnd = mcPageURL + "/" + mnArtId + "-/" + SafeURLName + myQueryString;
+                            }
                         }
-                        oDs.Tables[0].Columns["owner"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["status"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["content"].ColumnMapping = MappingType.SimpleContent;
+                        moContentDetail = (XmlElement)oRoot.FirstChild;
 
-                        // Need to check the content is found on the current page.
-
-
-                        if (oDs.Tables[0].Rows.Count > 0)
+                        // Add single item shipping costs for JSON-LD
+                        string ProductTypes = moConfig["ProductTypes"];
+                        if (string.IsNullOrEmpty(ProductTypes))
+                            ProductTypes = defaultProductTypes;
+                        if (ProductTypes.Contains(contentElmt.GetAttribute("type")) & moCart != null)
                         {
-                            oRoot.InnerXml = Strings.Replace(oDs.GetXml(), "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
-                            foreach (XmlNode oNode in oRoot.SelectNodes("/ContentDetail/Content"))
+                            try
                             {
-                                oElmt = (XmlElement)oNode;
-                                sContent = oElmt.InnerText;
-
-                                if (Information.IsDate(oElmt.GetAttribute("update")))
-                                    mdPageUpdateDate = Convert.ToDateTime(oElmt.GetAttribute("update"));
-
-
-                                // Try to convert the InnerText to InnerXml
-                                // Also if the innerxml has Content as a first node, then get the innerxml of the content node.
-                                try
+                                var oShippingElmt = moPageXml.CreateElement("ShippingCosts");
+                                string cDestinationCountry = moCart.moCartConfig["DefaultDeliveryCountry"];
+                                double nPrice = 0d;
+                                if (contentElmt.SelectSingleNode("Prices/Price[@type='sale']") != null)
                                 {
-                                    oElmt.InnerXml = sContent;
-                                    bLoadAsXml = true;
+                                    nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText);
                                 }
 
-                                catch (Exception)
+                                if (nPrice == 0d)
                                 {
-                                    // If the load failed, then flag it in the Content node and return the InnerText as a Comment
-                                    oComment = oRoot.OwnerDocument.CreateComment(oElmt.InnerText);
-                                    oElmt.SetAttribute("xmlerror", "getContentBriefXml");
-                                    oElmt.InnerXml = "";
-                                    oElmt.AppendChild(oComment);
-                                    oComment = null;
-                                    bLoadAsXml = false;
-                                }
-                                if (bLoadAsXml)
-                                {
-
-                                    // Successfully converted to XML.
-                                    // Now check if the node imported is a Content node - if so get rid of the Content node
-                                    var oFirst = Tools.Xml.firstElement(ref oElmt);
-                                    // NB 19-02-2010 Added to stop unsupported types falling over
-                                    if (oFirst != null)
+                                    if (contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") != null)
                                     {
-                                        if (oFirst.LocalName == "Content")
-                                        {
-                                            foreach (XmlAttribute oAttr in oElmt.SelectNodes("Content/@*"))
-                                            {
-                                                if (string.IsNullOrEmpty(oElmt.GetAttribute(oAttr.Name)))
-                                                {
-                                                    oElmt.SetAttribute(oAttr.Name, oAttr.InnerText);
-                                                }
-                                            }
-                                            oElmt.InnerXml = oFirst.InnerXml;
-                                        }
-                                    }
-
-                                    XmlElement argoContentElmt = (XmlElement)oNode;
-                                    moDbHelper.addRelatedContent(ref argoContentElmt, mnArtId, mbAdminMode);
-                                    //oNode = argoContentElmt;
-                                    if (!string.IsNullOrEmpty(moConfig["ShowOwnerOnDetail"]))
-                                    {
-                                        string cContentType = oElmt.GetAttribute("type");
-                                        if (moConfig["ShowOwnerOnDetail"].Contains(cContentType))
-                                        {
-                                            long nOwner = Convert.ToInt64("0" + oElmt.GetAttribute("owner"));
-                                            if (nOwner > 0L)
-                                            {
-                                                oElmt.AppendChild(GetUserXML(nOwner));
-                                            }
-                                        }
+                                        nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText);
                                     }
                                 }
+                                double nWeight = 0d;
+                                if (contentElmt.SelectSingleNode("ShippingWeight") != null)
+                                {
+                                    nWeight = Convert.ToDouble("0" + contentElmt.SelectSingleNode("ShippingWeight").InnerText);
+                                }
+                                var dsShippingOption = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1L, nWeight, mnArtId);
+                                if (dsShippingOption != null)
+                                {
+                                    oShippingElmt.InnerXml = Strings.Replace(dsShippingOption.GetXml(), "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+                                }
+                                contentElmt.AppendChild(oShippingElmt);
                             }
-
-                            // If gbCart Or gbQuote Then
-                            // moDiscount.getAvailableDiscounts(oRoot)
-                            // End If
-
-                            XmlElement contentElmt = (XmlElement)oRoot.SelectSingleNode("/ContentDetail/Content");
-                            if (nVersionId > 0L)
+                            catch (Exception)
                             {
-                                contentElmt.SetAttribute("previewKey", Tools.Encryption.RC4.Encrypt(nVersionId.ToString(), moConfig["SharedKey"]));
                             }
-                            XmlElement argoContentElmt1 = (XmlElement)oRoot.SelectSingleNode("/ContentDetail");
-                            AddGroupsToContent(ref argoContentElmt1);
-                            if (oPageElmt != null)
-                            {
-                                var oContentDetail = contentElmt;
-                                if (oContentDetail != null && !string.IsNullOrEmpty(oContentDetail.InnerXml.Trim()))
-                                {
-                                    // If we can find a content detail Content node, 
-                                    // AND it contains some InnerXml, then YAY.
-                                    oPageElmt.AppendChild(oRoot.FirstChild.CloneNode(true));
-                                }
-                                else
-                                {
-
-                                    // OTHERWISE if there is nothing in the detail we get the brief instead.
-                                    GetContentBriefXml(oPageElmt, nArtId);
-                                }
-                            }
-                            retElmt = (XmlElement)oRoot.FirstChild;
-
-                            if (mbAdminMode == false & Strings.LCase(moConfig["RedirectToDescriptiveContentURLs"]) == "true")
-                            {
-
-                                string SafeURLName = Tools.Text.CleanName(contentElmt.GetAttribute("name"), false, true);
-                                string myOrigURL;
-                                string myQueryString = "";
-                                if (mcOriginalURL.Contains("?"))
-                                {
-                                    myOrigURL = mcOriginalURL.Substring(0, mcOriginalURL.IndexOf("?"));
-                                    myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"));
-                                }
-                                else
-                                {
-                                    myOrigURL = mcOriginalURL;
-                                }
-
-                                if ((myOrigURL ?? "") != (mcPageURL + "/" + mnArtId + "-/" + SafeURLName ?? ""))
-                                {
-                                    // we redirect perminently
-                                    mbRedirectPerm = Convert.ToString(true);
-                                    msRedirectOnEnd = mcPageURL + "/" + mnArtId + "-/" + SafeURLName + myQueryString;
-                                }
-
-                            }
-                            moContentDetail = (XmlElement)oRoot.FirstChild;
-
-                            // Add single item shipping costs for JSON-LD
-                            string ProductTypes = moConfig["ProductTypes"];
-                            if (string.IsNullOrEmpty(ProductTypes))
-                                ProductTypes = defaultProductTypes;
-                            if (ProductTypes.Contains(contentElmt.GetAttribute("type")) & moCart != null)
-                            {
-                                try
-                                {
-                                    var oShippingElmt = moPageXml.CreateElement("ShippingCosts");
-                                    string cDestinationCountry = moCart.moCartConfig["DefaultDeliveryCountry"];
-                                    double nPrice = 0d;
-                                    if (contentElmt.SelectSingleNode("Prices/Price[@type='sale']") != null)
-                                    {
-                                        nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText);
-                                    }
-
-                                    if (nPrice == 0d)
-                                    {
-                                        if (contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") != null)
-                                        {
-                                            nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText);
-                                        }
-                                    }
-                                    double nWeight = 0d;
-                                    if (contentElmt.SelectSingleNode("ShippingWeight") != null)
-                                    {
-                                        nWeight = Convert.ToDouble("0" + contentElmt.SelectSingleNode("ShippingWeight").InnerText);
-                                    }
-                                    // Dim nWeight As Double = CDbl("0" & contentElmt.SelectSingleNode("ShippingWeight").InnerText)
-                                    var dsShippingOption = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1L, nWeight, mnArtId);
-                                    if (dsShippingOption != null)
-                                    {
-                                        oShippingElmt.InnerXml = Strings.Replace(dsShippingOption.GetXml(), "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
-                                    }
-                                    contentElmt.AppendChild(oShippingElmt);
-                                }
-                                catch (Exception)
-                                {
-
-                                }
-                            }
-
-                            return moContentDetail;
                         }
-                        else
-                        {
-                            sProcessInfo = "no content to add - we redirect";
-                            // this content is not found either page not found or re-direct home.
-                            if (!disableRedirect)
-                            {
-                                // put this in to prevent a redirect if we are calling this from somewhere strange.
-                                if (gnPageNotFoundId > 1L)
-                                {
-                                    // msRedirectOnEnd = "/System+Pages/Page+Not+Found"
-                                    mnPageId = (int)gnPageNotFoundId;
-                                    mnArtId = 0;
-                                    moPageXml = new XmlDocument();
-                                    BuildPageXML();
-                                    moResponse.StatusCode = 404;
-                                }
-                                else
-                                {
-                                    msRedirectOnEnd = moConfig["BaseUrl"];
-                                    moResponse.StatusCode = 404;
-                                }
-                                // End If
-                                // Return Nothing
-                            }
-                            // Else
-                            // Just a page no detail requested
-                            return null;
-                        }
+
+                        return moContentDetail;
                     }
                     else
                     {
+                        sProcessInfo = "no content to add - we redirect";
+                        // this content is not found either page not found or re-direct home.
+                        if (!disableRedirect)
+                        {
+                            // put this in to prevent a redirect if we are calling this from somewhere strange.
+                            if (gnPageNotFoundId > 1L)
+                            {
+                                mnPageId = (int)gnPageNotFoundId;
+                                mnArtId = 0;
+                                moPageXml = new XmlDocument();
+                                BuildPageXML();
+                                moResponse.StatusCode = 404;
+                            }
+                            else
+                            {
+                                msRedirectOnEnd = moConfig["BaseUrl"];
+                                moResponse.StatusCode = 404;
+                            }
+                        }
                         // Just a page no detail requested
                         return null;
                     }
@@ -9941,86 +9825,36 @@ namespace Protean
         /// <summary>
         /// This attempts to construct the standard SQL filter for getting LIVE content
         /// If version control is on it will also assess the page permissions, 
-        /// and if appropriate, it will get content that is not LIVe but, say, PENDING
+        /// and if appropriate, it will get content that is not LIVe but, say, PENDING.
+        /// This method delegates to the dbHelper's consolidated implementation.
         /// </summary>
         /// <returns></returns>
         /// <remarks></remarks>
         public string GetStandardFilterSQLForContent(bool bPrecedingAND = true)
         {
-
             PerfMon.Log("Web", "GetStandardFilterSQLForContent");
-
-            string sFilterSQL = "";
 
             try
             {
+                // Determine expire at end of day setting from config
+                bool expireAtEndOfDay = Strings.LCase(moConfig["ExpireAtEndOfDay"]) == "on";
 
-                // Only check for permissions if not in Admin Mode
-                if (!mbAdminMode)
-                {
+                // Delegate to the dbHelper's consolidated implementation with all context values
+                string sFilterSQL = moDbHelper.GetStandardFilterSQLForContent(
+                    bPrecedingAND,
+                    mbAdminMode,
+                    mnUserPagePermission,
+                    mbPreviewHidden,
+                    bAllowExpired,
+                    mdDate,
+                    expireAtEndOfDay);
 
-                    // Set the default filter
-                    if (!(mbPreviewHidden == true))
-                    {
-                        sFilterSQL = "a.nStatus = 1 ";
-                    }
-
-                    if (gbVersionControl && mnUserId > 0)
-                    {
-                        // Version control is on
-                        // Check the page permission
-                        if (Cms.dbHelper.CanAddUpdate(mnUserPagePermission))
-                        {
-
-                            // User has update permissions - now can they only have control over their own items
-                            if (Cms.dbHelper.CanOnlyUseOwn(mnUserPagePermission))
-                            {
-
-                                // Return everything with a status of live and anything that was created by
-                                // the user and has a status that isn't hidden
-                                sFilterSQL = "(a.nStatus = 1 OR (a.nStatus >= 1 AND a.nInsertDirId=" + mnUserId.ToString() + ")) ";
-                            }
-
-                            else
-                            {
-
-                                // Return anything with a status that isn't hidden
-                                sFilterSQL = "a.nStatus >= 1 ";
-
-                            }
-
-                        }
-                    }
-
-                    if (bPrecedingAND & !string.IsNullOrEmpty(sFilterSQL))
-                    {
-                        sFilterSQL = " AND " + sFilterSQL;
-                    }
-
-
-                    string ExpireLogic = ">= ";
-                    if (Strings.LCase(moConfig["ExpireAtEndOfDay"]) == "on")
-                    {
-                        ExpireLogic = "> ";
-                    }
-
-                    sFilterSQL += " and (a.dPublishDate is null or a.dPublishDate = 0 or a.dPublishDate <= " + Tools.Database.SqlDate(mdDate) + " )";
-
-                    if (!bAllowExpired)
-                    {
-                        sFilterSQL += " and (a.dExpireDate is null or a.dExpireDate = 0 or a.dExpireDate " + ExpireLogic + Tools.Database.SqlDate(mdDate) + " )";
-                    }
-
-                    // sFilterSQL &= " and (a.dPublishDate is null or a.dPublishDate <= " & Protean.Tools.Database.SqlDate(mdDate) & " )"
-                    // sFilterSQL &= " and (a.dExpireDate is null or a.dExpireDate " & ExpireLogic & Protean.Tools.Database.SqlDate(mdDate) & " )"
-                }
                 PerfMon.Log("Web", "GetStandardFilterSQLForContent-END");
                 return sFilterSQL;
             }
-
             catch (Exception ex)
             {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetStandardFilterSQLForContent", ex, sFilterSQL));
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetStandardFilterSQLForContent", ex, ""));
                 return "";
             }
         }

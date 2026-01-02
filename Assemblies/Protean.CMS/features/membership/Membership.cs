@@ -57,13 +57,13 @@ namespace Protean
                 }
             }
 
-            public string AccountResetLink(int AccountID)
+            public string AccountResetLink(long AccountID)
             {
                 try
                 {
                     // RJP 7 Nov 2012. Added LCase to MembershipEncryption.
                     string cLink = Strings.Trim(Tools.Encryption.HashString(Strings.UCase(Convert.ToString(DateTime.Now)), Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true));
-                    string cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cLink + "' WHERE nDirKey = " + AccountID;
+                    string cSQL = $"UPDATE tblDirectory SET cDirPassword = '{cLink}' WHERE nDirKey = {AccountID}";
                     cLink = Tools.Text.AscString(cLink);
                     Debug.WriteLine(cLink);
                     if (Tools.Number.IsNumeric((object)myWeb.moDbHelper.ExeProcessSql(cSQL)))

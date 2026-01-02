@@ -88,7 +88,7 @@ namespace Protean.Providers
             void LogSingleUserSession();
             void LogSingleUserSession(ref Cms myWeb);
 
-            string ResetUserAcct(ref Cms myWeb, int nUserId);            
+            string ResetUserAcct(ref Cms myWeb, long nUserId);            
         }
 
         public class ReturnProvider
@@ -950,7 +950,7 @@ namespace Protean.Providers
                                 else
                                 {
                                     oUserDetails = dsUsers.Tables[0].Rows[0];
-                                    int nAcc = Convert.ToInt16(oUserDetails["nDirKey"]);
+                                    long nAcc = Convert.ToInt64(oUserDetails["nDirKey"]);
                                     ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                                     IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
                                     //Providers.Membership.ReturnProvider oMembershipProv = new Providers.Membership.ReturnProvider.Get(myWeb, myWeb.moConfig["MembershipProvider"]);
@@ -2037,7 +2037,7 @@ namespace Protean.Providers
 
                     try
                     {
-                    if ((long?)moSession["nUserId"] != 0)
+                    if ((long?)moSession["nUserId"] != null && (long?)moSession["nUserId"] != 0)
                         {
                             myWeb.mnUserId = Convert.ToInt64(moSession["nUserId"]);
                         }
@@ -2083,7 +2083,7 @@ namespace Protean.Providers
                                 if (Tools.Number.IsNumeric(moRequest.Cookies["RememberMeUserId"].Value))
                                 {
                                     // AG - MAJOR SECURITY FUBAR!!! Commenting out for now.
-                                    // mnUserId = moRequest.Cookies("RememberMeUserId").Value
+                                    // mnUserId = Convert.ToInt64(moRequest.Cookies["RememberMeUserId"].Value);
                                 }
                             }
 
@@ -2124,7 +2124,7 @@ namespace Protean.Providers
                             // this will get set on close
                             if (Tools.Number.IsNumeric(moSession["PreviewUser"]))
                             {
-                                mnUserId = Convert.ToInt16(moSession["PreviewUser"]);
+                                mnUserId = Convert.ToInt64(moSession["PreviewUser"]);
                                 myWeb.mbPreview = true;
                             }
                         }
@@ -3315,7 +3315,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public virtual string ResetUserAcct(ref Cms myWeb, int nUserId)
+                public virtual string ResetUserAcct(ref Cms myWeb, long nUserId)
                 {
                     myWeb.PerfMon.Log("Web", "ResetUserAcct");
                     string sProcessInfo = "";
