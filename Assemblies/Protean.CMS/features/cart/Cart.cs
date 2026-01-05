@@ -1430,7 +1430,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, " CompleteOrder", ex, "", cProcessInfo, gbDebug);
                    
                 }
             }
