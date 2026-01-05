@@ -1070,17 +1070,25 @@ namespace Protean
                                 }
 
                                 if (Convert.ToBoolean(validatedVersion))
-                                    {
-                                        moContentDetail = await GetContentDetailXmlAsync(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Convert.ToInt64(moRequest["verId"]), cancellationToken: cancellationToken).ConfigureAwait(false);
-                                    }
-                                    else if ((moConfig["AllowContentDetailAccess"] ?? "").ToLower() == "on")
-                                    {
-                                        moContentDetail = await GetContentDetailXmlAsync(oPageElmt, cancellationToken: cancellationToken).ConfigureAwait(false);
-                                    }
-                                    else
-                                    {
-                                        moContentDetail = await GetContentDetailXmlAsync(oPageElmt, bCheckAccessToContentLocation: true, cancellationToken: cancellationToken).ConfigureAwait(false);
-                                    }
+                                {
+                                    var contentResult = await BuildPageContentDetailXmlAsync(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Convert.ToInt64(moRequest["verId"]), cancellationToken: cancellationToken).ConfigureAwait(false);
+                                    moContentDetail = contentResult.Element;
+                                    mdPageUpdateDate = contentResult.UpdateDate;
+
+
+                                }
+                                else if (moConfig["AllowContentDetailAccess"]?.ToLower() == "on")
+                                {
+                                    var contentResult = await BuildPageContentDetailXmlAsync(oPageElmt: oPageElmt, cancellationToken: cancellationToken).ConfigureAwait(false);
+                                    moContentDetail = contentResult.Element;
+                                    mdPageUpdateDate = contentResult.UpdateDate;
+                                }
+                                else
+                                {
+                                    var contentResult = await BuildPageContentDetailXmlAsync(oPageElmt, bCheckAccessToContentLocation: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+                                    moContentDetail = contentResult.Element;
+                                    mdPageUpdateDate = contentResult.UpdateDate;
+                                }
                             }
 
                             // Detail path checking and redirect logic
@@ -1244,7 +1252,10 @@ namespace Protean
                     }
 
                     CommonActions();
-                    string layoutCmd = LayoutActions();
+                    
+                    // retired in pre version 5 sites so removed from async version
+                    // string layoutCmd = LayoutActions();
+
                     AddCart();
 
                     if (gbQuote)
@@ -3045,7 +3056,236 @@ namespace Protean
                     mcModuleName, "GetContentXMLByTypeAndOffsetAsync", ex, sProcessInfo));
             }
         }
+        /// <summary>
+        /// Async version of BuildPageContentDetailXml that retrieves and processes content detail XML.
+        /// </summary>
+        /// <param name="oPageElmt">Optional page element to append content to</param>
+        /// <param name="nArtId">Article/content ID (0 to use mnArtId)</param>
+        /// <param name="disableRedirect">If true, disables 404 redirect when content not found</param>
+        /// <param name="bCheckAccessToContentLocation">If true, verifies content accessibility</param>
+        /// <param name="nVersionId">Version ID for version-controlled content (0 for live)</param>
+        /// <param name="bIgnoreContentStatus">If true, bypasses content status checks</param>
+        /// <param name="cancellationToken">Cancellation token for async operation</param>
+        /// <returns>Tuple containing the content detail XmlElement and update date</returns>
+        public async Task<(XmlElement Element, DateTime? UpdateDate)> BuildPageContentDetailXmlAsync(
+            XmlElement oPageElmt = null,
+            long nArtId = 0L,
+            bool disableRedirect = false,
+            bool bCheckAccessToContentLocation = false,
+            long nVersionId = 0L,
+            bool bIgnoreContentStatus = false,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            PerfMon.Log("Web", "BuildPageContentDetailXmlAsync");
+            XmlElement oRoot;
+            XmlElement oElmt;
+            XmlElement retElmt = null;
+            DateTime? contentUpdateDate = null;
+            string sProcessInfo = "BuildPageContentDetailXmlAsync";
 
+            if (nArtId > 0L)
+            {
+                mnArtId = (int)nArtId;
+            }
+            if (mnArtId == 0L)
+            {
+                return (null, null);
+            }
+
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                if (moContentDetail is null)
+                {
+                    // Check for historic events special case
+                    if (moPageXml.SelectSingleNode("Page/Contents/Content[@action='Protean.Cms+Content+Modules.ListHistoricEvents']") != null)
+                    {
+                        bAllowExpired = true;
+                    }
+
+                    // Use the async GetContentDetailXmlAsync method
+                    var result = await moDbHelper.GetContentDetailXmlAsync(
+                        mnArtId,
+                        bIgnoreContentStatus,  // noFilter
+                        nVersionId,
+                        bIgnoreContentStatus,
+                        bCheckAccessToContentLocation,
+                        true,  // bIncludeLocations
+                        cancellationToken).ConfigureAwait(false);
+
+                    oElmt = result.Element;
+                    contentUpdateDate = result.UpdateDate;
+
+                    if (contentUpdateDate.HasValue)
+                    {
+                        mdPageUpdateDate = contentUpdateDate.Value;
+                    }
+
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    if (oElmt != null)
+                    {
+                        // Create the ContentDetail wrapper and import the content element
+                        oRoot = moPageXml.CreateElement("ContentDetail");
+                        var importedElmt = (XmlElement)moPageXml.ImportNode(oElmt, true);
+                        oRoot.AppendChild(importedElmt);
+                        oElmt = importedElmt;
+
+                        // Apply page-level processing
+                        XmlElement argoContentElmt = oElmt;
+                        moDbHelper.addRelatedContent(ref argoContentElmt, mnArtId, mbAdminMode);
+
+                        if (!string.IsNullOrEmpty(moConfig["ShowOwnerOnDetail"]))
+                        {
+                            string cContentType = oElmt.GetAttribute("type");
+                            if (moConfig["ShowOwnerOnDetail"].Contains(cContentType))
+                            {
+                                long nOwner = Convert.ToInt64("0" + oElmt.GetAttribute("owner"));
+                                if (nOwner > 0L)
+                                {
+                                    oElmt.AppendChild(GetUserXML(nOwner));
+                                }
+                            }
+                        }
+
+                        XmlElement contentElmt = (XmlElement)oRoot.SelectSingleNode("Content");
+                        if (nVersionId > 0L)
+                        {
+                            contentElmt.SetAttribute("previewKey", Tools.Encryption.RC4.Encrypt(nVersionId.ToString(), moConfig["SharedKey"]));
+                        }
+
+                        XmlElement argoContentElmt1 = oRoot;
+                        AddGroupsToContent(ref argoContentElmt1);
+
+                        if (oPageElmt != null)
+                        {
+                            var oContentDetail = contentElmt;
+                            if (oContentDetail != null && !string.IsNullOrEmpty(oContentDetail.InnerXml.Trim()))
+                            {
+                                oPageElmt.AppendChild(oRoot.CloneNode(true));
+                            }
+                            else
+                            {
+                                GetContentBriefXml(oPageElmt, nArtId);
+                            }
+                        }
+                        retElmt = (XmlElement)oRoot.FirstChild;
+
+                        // Handle URL redirection for descriptive URLs
+                        if (mbAdminMode == false & moConfig["RedirectToDescriptiveContentURLs"].ToLower() == "true")
+                        {
+                            string SafeURLName = Tools.Text.CleanName(contentElmt.GetAttribute("name"), false, true);
+                            string myOrigURL;
+                            string myQueryString = "";
+                            if (mcOriginalURL.Contains("?"))
+                            {
+                                myOrigURL = mcOriginalURL.Substring(0, mcOriginalURL.IndexOf("?"));
+                                myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"));
+                            }
+                            else
+                            {
+                                myOrigURL = mcOriginalURL;
+                            }
+
+                            if ((myOrigURL ?? "") != (mcPageURL + "/" + mnArtId + "-/" + SafeURLName ?? ""))
+                            {
+                                mbRedirectPerm = Convert.ToString(true);
+                                msRedirectOnEnd = mcPageURL + "/" + mnArtId + "-/" + SafeURLName + myQueryString;
+                            }
+                        }
+                        moContentDetail = (XmlElement)oRoot.FirstChild;
+
+                        // Add single item shipping costs for JSON-LD
+                        string ProductTypes = moConfig["ProductTypes"];
+                        if (string.IsNullOrEmpty(ProductTypes))
+                            ProductTypes = defaultProductTypes;
+                        if (ProductTypes.Contains(contentElmt.GetAttribute("type")) & moCart != null)
+                        {
+                            try
+                            {
+                                var oShippingElmt = moPageXml.CreateElement("ShippingCosts");
+                                string cDestinationCountry = moCart.moCartConfig["DefaultDeliveryCountry"];
+                                double nPrice = 0d;
+                                if (contentElmt.SelectSingleNode("Prices/Price[@type='sale']") != null)
+                                {
+                                    nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText);
+                                }
+
+                                if (nPrice == 0d)
+                                {
+                                    if (contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") != null)
+                                    {
+                                        nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText);
+                                    }
+                                }
+                                double nWeight = 0d;
+                                if (contentElmt.SelectSingleNode("ShippingWeight") != null)
+                                {
+                                    nWeight = Convert.ToDouble("0" + contentElmt.SelectSingleNode("ShippingWeight").InnerText);
+                                }
+                                var dsShippingOption = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1L, nWeight, mnArtId);
+                                if (dsShippingOption != null)
+                                {
+                                    oShippingElmt.InnerXml = dsShippingOption.GetXml().Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+                                }
+                                contentElmt.AppendChild(oShippingElmt);
+                            }
+                            catch (Exception)
+                            {
+                                // Swallow shipping calculation errors
+                            }
+                        }
+
+                        return (moContentDetail, contentUpdateDate);
+                    }
+                    else
+                    {
+                        sProcessInfo = "no content to add - we redirect";
+                        if (!disableRedirect)
+                        {
+                            if (gnPageNotFoundId > 1L)
+                            {
+                                mnPageId = (int)gnPageNotFoundId;
+                                mnArtId = 0;
+                                moPageXml = new XmlDocument();
+                                await BuildPageXMLAsync(cancellationToken).ConfigureAwait(false);
+                                moResponse.StatusCode = 404;
+                            }
+                            else
+                            {
+                                msRedirectOnEnd = moConfig["BaseUrl"];
+                                moResponse.StatusCode = 404;
+                            }
+                        }
+                        return (null, null);
+                    }
+                }
+                else
+                {
+                    sProcessInfo = "content exists adding content";
+                    oRoot = moContentDetail.OwnerDocument.CreateElement("ContentDetail");
+                    oRoot.AppendChild(moContentDetail);
+                    if (oPageElmt != null)
+                    {
+                        oPageElmt.AppendChild(oRoot);
+                    }
+                    AddGroupsToContent(ref oRoot);
+                    retElmt = moContentDetail;
+                    moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentDetailViewed, mnUserId, SessionID, DateTime.Now, mnArtId, 0, "");
+                    return (moContentDetail, mdPageUpdateDate);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                throw; // Re-throw cancellation
+            }
+            catch (Exception ex)
+            {
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "BuildPageContentDetailXmlAsync", ex, sProcessInfo));
+                return (null, null);
+            }
+        }
         /// <summary>
         /// Asynchronously gets menu content from a SQL SELECT query.
         /// This is the async version of GetMenuContentFromSelect() that uses async database calls.
@@ -3340,242 +3580,6 @@ namespace Protean
             }
         }
 
-        /// <summary>
-        /// Asynchronously gets content detail XML for a specific article.
-        /// This async version converts the main database call to async operations.
-        /// 
-        /// KEY DIFFERENCES FROM SYNC VERSION:
-        /// ✅ Database calls use GetDataSetAsync() for non-blocking I/O
-        /// ✅ Uses async data reader operations where applicable
-        /// ✅ Supports CancellationToken for operation cancellation
-        /// ✅ Frees thread pool threads during database operations
-        /// ⚠️ Sub-functions like AddGroupsToContent remain synchronous (marked as future work)
-        /// </summary>
-        /// <param name="oPageElmt">Optional page element for context</param>
-        /// <param name="nArtId">Article/Content ID to get detail for (0 uses mnArtId)</param>
-        /// <param name="disableRedirect">Whether to disable redirects</param>
-        /// <param name="bCheckAccessToContentLocation">Whether to check access permissions</param>
-        /// <param name="nVersionId">Optional version ID to retrieve specific content version</param>
-        /// <param name="bIgnoreContentStatus">Whether to ignore content status checks</param>
-        /// <param name="cancellationToken">Cancellation token for operation</param>
-        /// <returns>XmlElement containing content detail, or null if not found/authorized</returns>
-        public async Task<XmlElement> GetContentDetailXmlAsync(
-            XmlElement oPageElmt = null,
-            long nArtId = 0L,
-            bool disableRedirect = false,
-            bool bCheckAccessToContentLocation = false,
-            long nVersionId = 0L,
-            bool bIgnoreContentStatus = false,
-            CancellationToken cancellationToken = default(CancellationToken))
-        {
-            PerfMon.Log("Web", "GetContentDetailXmlAsync");
-            string sProcessInfo = "Getting content detail for article " + nArtId;
 
-            try
-            {
-                // Handle default parameters (same logic as sync version)
-                if (nArtId == 0L)
-                {
-                    nArtId = (long)mnArtId;
-                }
-
-                if (nArtId == 0L)
-                {
-                    return null;
-                }
-
-                // ✅ SECURITY: Access control check (CRITICAL - was missing in async version)
-                if (bCheckAccessToContentLocation && mnArtId > 0)
-                {
-                    if (!moDbHelper.checkContentLocationsInCurrentMenu((long)mnArtId, true))
-                    {
-                        nArtId = 0;  // Deny access by clearing ID
-                    }
-                }
-
-                // Check if access was denied
-                if (nArtId == 0L)
-                {
-                    return null;  // Return null if access denied
-                }
-
-                // Initialize content detail element
-                XmlElement oContentDetail = moPageXml.CreateElement("ContentDetail");
-
-                // Build the standard filter for content (live status, date range, etc.)
-                string sFilterSql = GetStandardFilterSQLForContent();
-
-                // Build SQL query for content detail (same WHERE logic as sync version)
-                string sSql = "SELECT nContentKey as id, dbo.fxn_getContentParents(nContentKey) as parId, " +
-                    "cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, " +
-                    "cContentXmlDetail as content, nStatus as status, dpublishDate as publish, " +
-                    "dExpireDate as expire, dUpdateDate as [update], nInsertDirId as owner " +
-                    "FROM tblContent c INNER JOIN tblAudit a ON c.nAuditId = a.nAuditKey " +
-                    "WHERE c.nContentKey = " + nArtId + sFilterSql;
-
-                // Add version filter if specified
-                if (nVersionId > 0)
-                {
-                    sSql += " AND nVersionId = " + nVersionId;
-                }
-
-                // Add status filter unless ignored
-                if (!bIgnoreContentStatus && !mbAdminMode)
-                {
-                    sSql += " AND nStatus = 1";
-                }
-
-                // Add date filters (same as sync version)
-                if (!bIgnoreContentStatus && !mbAdminMode)
-                {
-                    sSql += " AND (dpublishDate IS NULL OR dpublishDate <= " + sqlDate(mdDate) + ") " +
-                            "AND (dExpireDate IS NULL OR dExpireDate > " + sqlDate(mdDate) + ")";
-                }
-
-                // ✅ ASYNC DATABASE CALL - Main performance benefit
-                var oDs = await moDbHelper.GetDataSetAsync(
-                    sql: sSql,
-                    tablename: "Content",
-                    datasetname: "ContentDetail",
-                    cancellationToken: cancellationToken
-                ).ConfigureAwait(false);
-
-                sProcessInfo = "Processing content detail dataset";
-
-                // Check if content was found
-                if (oDs == null || oDs.Tables.Count == 0 || oDs.Tables[0].Rows.Count == 0)
-                {
-                    return null;
-                }
-
-                // Check access permissions if required
-                if (bCheckAccessToContentLocation && !mbAdminMode)
-                {
-                    sProcessInfo = "Checking content location access";
-                    long nLocId = Convert.ToInt64(oDs.Tables[0].Rows[0]["id"]);
-                    // Note: Permission check methods remain sync; skip for async preservation
-                    // Actual permission checking would happen here if converted to async
-                }
-
-                // Convert dataset to XML (sync operation - data is already in memory)
-                DateTime dUpdateDate = mdPageUpdateDate ?? DateTime.Now;
-                var oXml = moDbHelper.ContentDataSetToXml(ref oDs, ref dUpdateDate);
-
-                // Import the XML content into the detail element
-                if (oXml != null && oXml.DocumentElement != null)
-                {
-                    foreach (XmlElement oNode in oXml.DocumentElement.SelectNodes("Content"))
-                    {
-                        XmlElement xmlContent = (XmlElement)oNode;
-                        DateTime dExpireTime = mdPageExpireDate ?? DateTime.Now;
-                        oContentDetail.AppendChild(
-                            moDbHelper.SimpleTidyContentNode(ref xmlContent, ref dExpireTime, ref dUpdateDate, "")
-                        );
-                    }
-                }
-
-                // ⚠️ REMAINING SYNC OPERATIONS (marked for future conversion):
-                // The following would benefit from async conversion but are kept sync for Phase 2:
-                // - AddGroupsToContent() - can be made async in future phase
-                // - Content redirect handling
-                // - Related content loading
-
-                // Handle content groups (future: convert to async)
-                if (!string.IsNullOrEmpty(gcMenuContentBriefTypes) && oContentDetail.SelectNodes("Content").Count > 0)
-                {
-                    sProcessInfo = "Adding content groups";
-                    AddGroupsToContent(ref oContentDetail);
-                }
-
-                moContentDetail = oContentDetail;
-                return oContentDetail;
-            }
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(
-                    mcModuleName, "GetContentDetailXmlAsync", ex, sProcessInfo));
-                return null;
-            }
-        }
-
-        //#endregion
-
-        //#region Backward Compatibility Wrappers
-
-        ///// <summary>
-        ///// BACKWARD COMPATIBILITY WRAPPER
-        ///// This synchronous wrapper calls the async version and blocks until completion.
-        ///// 
-        ///// ⚠️ WARNING: This wrapper uses .Wait() which can cause deadlocks if called from
-        ///// an async context. Use GetPageContentFromSelectFilterPaginationAsync() directly
-        ///// from async code to avoid thread pool starvation.
-        ///// 
-        ///// This wrapper is provided only for gradual migration from synchronous to async code.
-        ///// All new code should use the async version directly.
-        ///// </summary>
-        //[Obsolete("Use GetPageContentFromSelectFilterPaginationAsync() instead for new code", false)]
-        //public void GetPageContentFromSelectFilterPagination(
-        //    ref int nCount,
-        //    ref XmlElement oContentsNode,
-        //    ref XmlElement oPageDetail,
-        //    string sWhereSql,
-        //    bool bPrimaryOnly = false,
-        //    bool bIgnorePermissionsCheck = false,
-        //    int nReturnRows = 0,
-        //    string cOrderBy = "type, cl.nDisplayOrder",
-        //    string cAdditionalJoins = "",
-        //    bool bContentDetail = false,
-        //    long pageNumber = 0L,
-        //    bool distinct = false,
-        //    string cShowSpecificContentTypes = "",
-        //    bool ignoreActiveAndDate = false,
-        //    long nStartPos = 0L,
-        //    long nItemCount = 0L,
-        //    bool bShowContentDetails = true,
-        //    string cAdditionalColumns = "",
-        //    string cAdminMode = "false",
-        //    string cGroupBySql = "")
-        //{
-        //    try
-        //    {
-        //        // Call async method and block until completion
-        //        // Use CancellationToken.None for backward compatibility
-        //        GetPageContentFromSelectFilterPaginationAsync(
-        //            nCount,
-        //            oContentsNode,
-        //            oPageDetail,
-        //            sWhereSql,
-        //            bPrimaryOnly,
-        //            bIgnorePermissionsCheck,
-        //            nReturnRows,
-        //            cOrderBy,
-        //            cAdditionalJoins,
-        //            bContentDetail,
-        //            pageNumber,
-        //            distinct,
-        //            cShowSpecificContentTypes,
-        //            ignoreActiveAndDate,
-        //            nStartPos,
-        //            nItemCount,
-        //            bShowContentDetails,
-        //            cAdditionalColumns,
-        //            cAdminMode,
-        //            cGroupBySql,
-        //            CancellationToken.None
-        //        ).ConfigureAwait(false).GetAwaiter().GetResult();
-
-        //        // Note: ref parameters are automatically passed through
-        //        // The async method modifies oContentsNode and oPageDetail in place
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        OnComponentError(this, new Tools.Errors.ErrorEventArgs(
-        //            mcModuleName, "GetPageContentFromSelectFilterPagination", ex, 
-        //            "Backward compatibility wrapper"));
-        //        throw;
-        //    }
-        //}
-
-      //  #endregion
     }
 }

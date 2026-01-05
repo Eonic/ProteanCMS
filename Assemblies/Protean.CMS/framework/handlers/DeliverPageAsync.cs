@@ -31,7 +31,7 @@ namespace Protean.Handlers
                 
                 // ✅ CRITICAL: Open() must be called synchronously on the same context
                 // It initializes database connections and session state
-                oCms.Open();
+                await oCms.OpenAsync(cancellationToken).ConfigureAwait(false); ;
 
                 // Set default content type
                 context.Response.ContentType = "text/html";

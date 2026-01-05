@@ -1,1 +1,1 @@
-<%@ WebHandler Language="C#" Class="Protean.Handlers.DeliverPage" %>
+<%@ WebHandler Class="Protean.Handlers.DeliverPage" %>

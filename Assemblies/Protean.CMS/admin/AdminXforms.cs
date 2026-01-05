@@ -8539,7 +8539,7 @@ namespace Protean
                         XmlElement argoBindParent4 = null;
                         base.addBind("cSection", "cSection", oBindParent: ref argoBindParent4, "true()");
                         // Search sub pages
-                        oSelElmt2 = base.addSelect(ref oFrmElmt, "nSearchChildren", true, "&#160;", "", Protean.xForm.ApperanceTypes.Full);
+                        oSelElmt2 = base.addSelect(ref oFrmElmt, "nSearchChildren", true, "", "", Protean.xForm.ApperanceTypes.Full);
                         base.addOption(ref oSelElmt2, "Search all sub-pages", 1.ToString());
                         XmlElement argoBindParent5 = null;
                         base.addBind("nSearchChildren", "nSearchChildren", oBindParent: ref argoBindParent5, "false()");
