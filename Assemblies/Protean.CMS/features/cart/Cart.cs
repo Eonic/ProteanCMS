@@ -189,7 +189,7 @@ namespace Protean
             public bool mbQuitOnShowInvoice = true;
             private bool mbDepositOnly = false;
             public bool mbBlockCartCmd = false; // Used for reseting payment on subscripitions
-            public string mcAllowUpdateCart;
+            public string mcAllowUpdateCart=string.Empty;
 
 
             public enum cartError
@@ -3964,6 +3964,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetWalletDetails", ex, "", "", gbDebug);
                     return false;
                 }
 
@@ -11975,7 +11976,7 @@ namespace Protean
             {
                 try
                 {
-                    string cResult = "Success";
+                   // string cResult = "Success";
                     var oCartListElmt = moPageXml.CreateElement("Order");
                     //GetCart(ref oCartListElmt, nOrderId);
                     // Insert code into tblcartOrder

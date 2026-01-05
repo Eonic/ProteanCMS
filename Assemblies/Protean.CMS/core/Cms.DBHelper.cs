@@ -14581,7 +14581,7 @@ namespace Protean
             public string getContentIdFromOrder(string orderRef, string ContentName)
             {
                 // Dim oDr As SqlDataReader
-                string sSql;
+               // string sSql;
                 string nContentID = string.Empty;
 
                 string cProcessInfo = "";
