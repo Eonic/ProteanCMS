@@ -9,7 +9,7 @@ using static Protean.stdTools;
 namespace Protean
 {
 
-    public class PerfLog
+    public class PerfLog : IDisposable
     {
 
         public string cSiteName;
@@ -31,8 +31,10 @@ namespace Protean
         private PerformanceCounter _workingSetPrivateMemoryCounter;
         private PerformanceCounter _workingSetMemoryCounter;
 
+        // Disposal flag
+        private bool _disposed = false;
 
-        private System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
+        private System.Web.HttpContext moCtx;
 
         // Session / Request Level Properties
         public System.Web.HttpRequest moRequest;
@@ -57,21 +59,12 @@ namespace Protean
             }
         }
 
-        public PerfLog(string SiteName)
+        public PerfLog(string SiteName, System.Web.HttpContext oCtx)
         {
             try
             {
                 cSiteName = SiteName;
-
-                if (moCtx != null)
-                {
-                    moRequest = moCtx.Request;
-                    moResponse = moCtx.Response;
-                    if (moCtx.Session != null)
-                        moSession = moCtx.Session;
-                    moServer = moCtx.Server;
-                }
-
+                moCtx = oCtx;
 
                 if (moSession != null)
                 {
@@ -93,6 +86,15 @@ namespace Protean
             {
                 if (!bLoggingOn)
                 {
+                    if (moCtx != null)
+                    {
+                        moRequest = moCtx.Request;
+                        moResponse = moCtx.Response;
+                        if (moCtx.Session != null)
+                            moSession = moCtx.Session;
+                        moServer = moCtx.Server;
+                    }
+
                     Entries = new string[1001];
                     bLoggingOn = true;
                     nStep = 0;
@@ -144,6 +146,7 @@ namespace Protean
         {
             bLoggingOn = false;
             moSession["Logging"] = "Off";
+            Dispose();
         }
 
         public void Log(string cModuleName, string cProcessName, string cDescription = "")
@@ -280,6 +283,9 @@ namespace Protean
         {
             // If Not bLoggingOn Then Exit Sub
             string cProcessInfo = null;
+            System.Data.SqlClient.SqlConnection oCon = null;
+            System.Data.SqlClient.SqlCommand oCmd = null;
+            
             try
             {
                 if (bLoggingOn)
@@ -302,10 +308,12 @@ namespace Protean
                         }
                         ConStr = "Data Source=" + moConfig["DatabaseServer"] + "; " + "Initial Catalog=" + moConfig["DatabaseName"] + "; " + dbAuth;
                     }
-                    var oCon = new System.Data.SqlClient.SqlConnection(ConStr);
-                    var oCmd = new System.Data.SqlClient.SqlCommand();
+                    
+                    oCon = new System.Data.SqlClient.SqlConnection(ConStr);
+                    oCmd = new System.Data.SqlClient.SqlCommand();
                     oCmd.Connection = oCon;
                     oCon.Open();
+                    
                     int i;
                     var loopTo = Information.UBound(Entries);
                     for (i = 0; i <= loopTo; i++)
@@ -324,23 +332,99 @@ namespace Protean
                             }
                         }
                     }
-                    oCmd.Dispose();
-                    oCon.Close();
-                    oCon.Dispose();
-                    oCon = null;
+                    
                     bLoggingOn = false;
                 }
             }
             catch (Exception ex)
             {
-
                 Debug.WriteLine(cProcessInfo + " - errormsg - " + ex.ToString());
             }
             finally
             {
+                // CRITICAL: Ensure disposal even if exception occurs
+                if (oCmd != null)
+                {
+                    oCmd.Dispose();
+                    oCmd = null;
+                }
+                
+                if (oCon != null)
+                {
+                    try
+                    {
+                        if (oCon.State == System.Data.ConnectionState.Open)
+                        {
+                            oCon.Close();
+                        }
+                    }
+                    catch { /* Already closed or disposed */ }
+                    
+                    oCon.Dispose();
+                    oCon = null;
+                }
+                
                 Entries = null;
             }
         }
+
+        #region IDisposable Support
+        
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources
+                    try
+                    {
+                        // Dispose Performance Counters
+                        if (oPerfMonRequests != null)
+                        {
+                            oPerfMonRequests.Dispose();
+                            oPerfMonRequests = null;
+                        }
+                        
+                        if (_workingSetPrivateMemoryCounter != null)
+                        {
+                            _workingSetPrivateMemoryCounter.Dispose();
+                            _workingSetPrivateMemoryCounter = null;
+                        }
+                        
+                        if (_workingSetMemoryCounter != null)
+                        {
+                            _workingSetMemoryCounter.Dispose();
+                            _workingSetMemoryCounter = null;
+                        }
+                        
+                        // Clear large arrays
+                        if (Entries != null)
+                        {
+                            Array.Clear(Entries, 0, Entries.Length);
+                            Entries = null;
+                        }
+                        
+                        // Clear string to help GC
+                        LatestLog = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine("Error disposing PerfLog: " + ex.ToString());
+                    }
+                }
+                
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
+        #endregion
 
     }
 }

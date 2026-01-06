@@ -770,13 +770,15 @@ namespace Protean
             oTransform.mbDebug = gbDebug;
 
             msException = "";
-            icPageWriter = new StringWriter();
-            TextWriter argoWriter = icPageWriter;
-            oTransform.ProcessTimed(moPageXml, ref argoWriter);
-            icPageWriter = (StringWriter)argoWriter;
+            string foNetXml;
+            using (var stringWriter = new StringWriterWithEncoding(System.Text.Encoding.UTF8))
+            {
+                TextWriter writer = stringWriter;
+                oTransform.ProcessTimed(moPageXml, ref writer);
+                foNetXml = stringWriter.ToString();
+            }
 
-            string foNetXml = icPageWriter.ToString();
-
+           
             moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1,
                 (long)mnUserId, 0L, 0L, 0L, "Create Pdf Transformed", false);
 

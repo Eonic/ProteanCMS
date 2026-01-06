@@ -12478,8 +12478,8 @@ namespace Protean
             // Public Dispose method
             public void Dispose()
             {
-                //Dispose(true);
-               // GC.SuppressFinalize(this);
+                Dispose(true);
+                GC.SuppressFinalize(this);
             }
 
 

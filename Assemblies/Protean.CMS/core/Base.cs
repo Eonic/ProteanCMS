@@ -140,7 +140,7 @@ namespace Protean
 
                 goApp = new Protean.Framework.Adapters.FrameworkApplicationStateAdapter(sitename);
 
-                PerfMon = new PerfLog("");
+                PerfMon = new PerfLog("", moCtx);
                 PerfMon.Log("Base", "New");
 
                 EnumberateFeatures();

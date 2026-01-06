@@ -94,7 +94,7 @@ namespace Protean
         // BJR For Indexing
         public bool ibIndexMode = false;
         public bool ibIndexRelatedContent = false;
-        public StringWriter icPageWriter;
+      //  public StringWriter icPageWriter;
 
         private string gcEwSiteXsl;
 
@@ -1075,7 +1075,7 @@ namespace Protean
                 if (!string.IsNullOrEmpty(moRequest["perfmon"]) | bSessionLogging)
                 {
                     if (PerfMon is null)
-                        PerfMon = new PerfLog(moConfig["DatabaseName"]);
+                        PerfMon = new PerfLog(moConfig["DatabaseName"], moCtx);
                     if (moSession != null)
                     {
                         // only bother if we are not doing a scheduler thingie
@@ -1909,11 +1909,12 @@ namespace Protean
 
                                             var argaWeb1 = this;
                                             PerfMon.Log("Web", "GetPageHTML-loadxsl2");
-                                            var oTransform = new Protean.XmlHelper.Transform(ref argaWeb1, styleFile, gbCompiledTransform, 15000L, brecompile);
-                                            if (!string.IsNullOrEmpty(moConfig["XslTimeout"]))
-                                            {
-                                                oTransform.TimeOut = Convert.ToInt64(moConfig["XslTimeout"]);
-                                            }
+                                            using (var oTransform = new Protean.XmlHelper.Transform(ref argaWeb1, styleFile, gbCompiledTransform, 15000L, brecompile)) 
+                                            { 
+                                                if (!string.IsNullOrEmpty(moConfig["XslTimeout"]))
+                                                {
+                                                    oTransform.TimeOut = Convert.ToInt64(moConfig["XslTimeout"]);
+                                                }
                                             oTransform.mbDebug = gbDebug;
                                             PerfMon.Log("Web", "GetPageHTML-loadxsl3");
                                             if (bPageCache)
@@ -1969,21 +1970,18 @@ namespace Protean
                                                 string styleFile2 = goServer.MapPath(mcEwSiteXsl);
                                                 PerfMon.Log("Web", "ReturnPageHTML - loaded Style");
                                                 var argaWeb2 = this;
-                                                oTransform = new Protean.XmlHelper.Transform(ref argaWeb2, styleFile2, false);
-                                                oTransform.mbDebug = gbDebug;
-
-                                                msException = "";
-                                                icPageWriter = new StringWriter();
-
-                                                TextWriter argoWriter1 = icPageWriter;
-                                                oTransform.ProcessTimed(moPageXml, ref argoWriter1);
-                                                icPageWriter = (StringWriter)argoWriter1;
-
-                                                string foNetXml = icPageWriter.ToString();
-
+                                                string foNetXml;
+                                                    using (var oTransformPdf = new Protean.XmlHelper.Transform(ref argaWeb2, styleFile2, false)) { 
+                                                        oTransform.mbDebug = gbDebug;
+                                                        msException = "";
+                                                        using (var stringWriter = new StringWriterWithEncoding(System.Text.Encoding.UTF8))
+                                                        {
+                                                            TextWriter writer = stringWriter;
+                                                            oTransform.ProcessTimed(moPageXml, ref writer);
+                                                            foNetXml = stringWriter.ToString();
+                                                        }                                                    
+                                                    }
                                                 moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "Create Pdf Transformed", false);
-
-
 
                                                 if (foNetXml.StartsWith("<html"))
                                                 {
@@ -2107,9 +2105,9 @@ namespace Protean
                                                 oTransform.ProcessTimed(moPageXml, ref moResponse);
                                                 PerfMon.Log("Web", "GetPageHTML-endxsl");
                                             }
+                                            }
                                             PerfMon.Log("Web", "GetPageHTML-endxsl");
-                                            oTransform.Close();
-                                            oTransform = (Protean.XmlHelper.Transform)null;
+                                         
                                         }
 
                                         // moResponse.SuppressContent = False
@@ -3825,12 +3823,14 @@ namespace Protean
                 msException = "";
 
                 moTransform.mbDebug = gbDebug;
-                icPageWriter = new StringWriter();
-                TextWriter argoWriter = icPageWriter;
-                moTransform.ProcessTimed(moPageXml, ref argoWriter);
-                icPageWriter = (StringWriter)argoWriter;
 
-                cPageHTML = Strings.Replace(icPageWriter.ToString(), "<?xml version=\"1.0\" encoding=\"utf-16\"?>", "");
+                using (var stringWriter = new StringWriterWithEncoding(System.Text.Encoding.UTF8))
+                {
+                    TextWriter writer = stringWriter;
+                    moTransform.ProcessTimed(moPageXml, ref writer);
+                    cPageHTML = Strings.Replace(stringWriter.ToString(), "<?xml version=\"1.0\" encoding=\"utf-16\"?>", "");
+                }
+
                 cPageHTML = Strings.Replace(cPageHTML, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
 
                 if (bReturnBlankError & !string.IsNullOrEmpty(msException))
@@ -3855,10 +3855,6 @@ namespace Protean
                 {
                     return msException;
                 }
-            }
-            finally
-            {
-                icPageWriter.Dispose();
             }
 
         }
@@ -10319,14 +10315,14 @@ namespace Protean
                 msException = "";
 
                 moTransform.mbDebug = gbDebug;
-                icPageWriter = new StringWriter();
-                TextWriter argoWriter = icPageWriter;
-                moTransform.ProcessTimed(moPageXml, ref argoWriter);
-                icPageWriter = (StringWriter)argoWriter;
+                string foNetXml;
+                using (var stringWriter = new StringWriterWithEncoding(System.Text.Encoding.UTF8))
+                {
+                    TextWriter writer = stringWriter;
+                    moTransform.ProcessTimed(moPageXml, ref writer);
+                    foNetXml = stringWriter.ToString();
+                }
 
-
-
-                string foNetXml = icPageWriter.ToString();
 
                 if (foNetXml.StartsWith("<html"))
                 {
@@ -11761,13 +11757,6 @@ namespace Protean
                         // 2. DISPOSE CHILD COMPONENTS
                         // ====================
 
-                        // StringWriter (already being disposed - keep it)
-                        if (icPageWriter != null)
-                        {
-                            icPageWriter.Dispose();
-                            icPageWriter = null;
-                        }
-
                         // Membership Provider
                         if (moMemProv != null)
                         {
@@ -11814,6 +11803,7 @@ namespace Protean
                         {
                             try
                             {
+                                //moCart.Dispose();
                                 moCart.close(); // TODO: Change to Dispose() when Cart implements it properly
                             }
                             catch (Exception ex)
