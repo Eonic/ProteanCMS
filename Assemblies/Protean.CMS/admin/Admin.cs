@@ -3433,7 +3433,7 @@ namespace Protean
                         case "404ProductReport":
                             {
                                 // bLoadStructure = true;
-                                HeiddenProductWithoutRedirect(ref oPageDetail, ref sAdminLayout);
+                                HiddenProductWithoutRedirect(ref oPageDetail, ref sAdminLayout);
                                 //myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
                                 break;
                             }
@@ -7170,7 +7170,7 @@ from tblContentIndexDef";
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "SEOReport", ex, "", sProcessInfo, gbDebug);
                 }
             }
-            private void HeiddenProductWithoutRedirect(ref XmlElement oPageDetail, ref string sAdminLayout)
+            private void HiddenProductWithoutRedirect(ref XmlElement oPageDetail, ref string sAdminLayout)
             {
                 string sProcessInfo = "";
 
@@ -7198,7 +7198,7 @@ from tblContentIndexDef";
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "HeiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "HiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
                 }
             }
 
