@@ -4345,7 +4345,7 @@ namespace Protean
                                     // if OverrideCheapestPrice is "on" - we will ensure that when sales price is greater than rrp - highest(sales) price is considered.
                                     if (!(moCartConfig["OverrideCheapestPrice"] == null) & moCartConfig["OverrideCheapestPrice"] == "on")
                                     {
-                                        if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText) & Convert.ToInt64(oPNode.InnerText) != 0L)
+                                        if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText) & Convert.ToDouble(oPNode.InnerText) != 0L)
                                         {
                                             string oThePriceType = oThePrice.GetAttribute("type");
                                             string oPNodeType = oPNode.GetAttribute("type");

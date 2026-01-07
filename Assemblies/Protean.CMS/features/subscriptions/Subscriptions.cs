@@ -1179,7 +1179,7 @@ namespace Protean
                         // 1) Make sure there is only 1 subscription per subscritpion group (will remove the least valuable)
                         // 2) Change all subscription quantities to 1 (you dont want more)
                         // 3) Return true if there are subscription and user is logged in, OR, no subscriptions. Returns false if there are subscriptions but not logged in
-                        string cSQL = $"SELECT tblCartItem.nCartItemKey, tblContent.nContentKey, tblContent.cContentXmlDetail, tblCartCatProductRelations.nCatId, tblCartCatProductRelations.nDisplayOrder  FROM tblCartItem INNER JOIN tblContent ON tblCartItem.nItemId = tblContent.nContentKey LEFT OUTER JOIN tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentIdWHERE (tblCartItem.nCartOrderId = { nCartID }) AND (tblContent.cContentSchemaName = N'Subscription') ORDER BY tblCartItem.nCartItemKey";
+                        string cSQL = $"SELECT tblCartItem.nCartItemKey, tblContent.nContentKey, tblContent.cContentXmlDetail, tblCartCatProductRelations.nCatId, tblCartCatProductRelations.nDisplayOrder  FROM tblCartItem INNER JOIN tblContent ON tblCartItem.nItemId = tblContent.nContentKey LEFT OUTER JOIN tblCartCatProductRelations ON tblContent.nContentKey = tblCartCatProductRelations.nContentId WHERE (tblCartItem.nCartOrderId = { nCartID }) AND (tblContent.cContentSchemaName = N'Subscription') ORDER BY tblCartItem.nCartItemKey";
                         // " ORDER BY tblCartCatProductRelations.nDisplayOrder"
                         var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Subs");
                         if (oDS.Tables["Subs"].Rows.Count > 0)
