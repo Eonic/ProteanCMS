@@ -692,10 +692,10 @@ namespace Protean
                     string jsonString = string.Empty;
                     try
                     {
-                        string mcAllowUpdateCart = myCart.GetBlockCartUpdatesConfig();
+                        var cBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
 
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(cBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
