@@ -189,7 +189,7 @@ namespace Protean
             public bool mbQuitOnShowInvoice = true;
             private bool mbDepositOnly = false;
             public bool mbBlockCartCmd = false; // Used for reseting payment on subscripitions
-            public string mcAllowUpdateCart=string.Empty;
+            public string mcBlockCartUpdate;
 
 
             public enum cartError
@@ -243,6 +243,8 @@ namespace Protean
                     cOrderNoPrefix = value;
                 }
             }
+
+         
             #endregion
 
             #region Classes
@@ -547,34 +549,7 @@ namespace Protean
                 mcOrderType = "Order";
                 cOrderReference = "";
                 mcModuleName = "Protean.Cart";
-                PaymentProviders oPay;
-                if (moPay is null)
-                {
-                    oPay = new PaymentProviders(ref myWeb);
-                }
-                else
-                {
-                    oPay = moPay;
-                }
                 
-                Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
-               
-                XmlElement oProvider = oEwProv.GetValidPaymentProviders();
-
-                XmlNode oProviderNode = oProvider.SelectSingleNode("provider");
-                string sProviderName = oProviderNode.Attributes["name"].Value;
-                XmlNode oPaymentProviderCfg = oProvider.SelectSingleNode("provider[@name='" + sProviderName + "']");
-
-
-                if (oPaymentProviderCfg != null)
-                {
-                    XmlNode allowNode = oPaymentProviderCfg.SelectSingleNode("AllowCartUpdatesOnPaymentPage");
-
-                    if (allowNode != null && allowNode.Attributes["value"] != null)
-                    {
-                        mcAllowUpdateCart = allowNode.Attributes["value"].Value;
-                    }
-                }
                 string cProcessInfo = Conversions.ToString(string.IsNullOrEmpty("initialise variables"));
                 try
                 {
@@ -1099,7 +1074,6 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug);
                 }
             }
-
 
 
             public void writeSessionCookie()
@@ -3291,15 +3265,16 @@ namespace Protean
                         oCartElmt.SetAttribute("weight", weight.ToString());
                         oCartElmt.SetAttribute("orderType", mmcOrderType + "");
 
+                         mcBlockCartUpdate = GetBlockCartUpdatesConfig();
 
-                        if (!string.IsNullOrEmpty(mcAllowUpdateCart)
-                            && mcAllowUpdateCart.Trim().ToLower() == "on")
+                        if (!string.IsNullOrEmpty(mcBlockCartUpdate)
+                            && mcBlockCartUpdate.Trim().ToLower() == "on")
                         {
-                            oCartElmt.SetAttribute("AllowCartUpdate", "on");
+                            oCartElmt.SetAttribute("BlockCartUpdate", "on");
                         }
                         else
                         {
-                            oCartElmt.SetAttribute("AllowCartUpdate", "off");
+                            oCartElmt.SetAttribute("BlockCartUpdate", "off");
                         }
                         if (nStatusId == 6L)
                         {
@@ -8087,8 +8062,10 @@ namespace Protean
 
                     if (nQuantity < itemLimit)
                     {
+                        
+                        mcBlockCartUpdate = GetBlockCartUpdatesConfig();
 
-                        if (mnProcessId < 5 || string.Equals(mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                        if (mnProcessId < 5 || string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             oDS = moDBHelper.getDataSetForUpdate(cSQL, "CartItems", "Cart");
                             oDS.EnforceConstraints = false;
@@ -8674,7 +8651,9 @@ namespace Protean
             public int RemoveItem(long nItemId = 0L, long nContentId = 0L)
             {
 
-                if (mnProcessId > 4 && !string.Equals(mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                mcBlockCartUpdate = GetBlockCartUpdatesConfig();
+
+                if (mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                 {
                     return 1;
                 }
@@ -12276,6 +12255,33 @@ namespace Protean
                     }
                     return result;
                 }
+            }
+
+            public string GetBlockCartUpdatesConfig()
+            {
+               
+                string mcBlockCartUpdate = "";
+                string paymentMethod = myWeb?.moSession?["mcPaymentMethod"] as string;
+
+                if (!string.IsNullOrEmpty(paymentMethod))
+                {
+                    Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
+
+                XmlElement oProvider = oEwProv.GetValidPaymentProviders();
+                XmlNode oPaymentProviderCfg = oProvider.SelectSingleNode("provider[@name='" + paymentMethod + "']");
+
+
+                if (oPaymentProviderCfg != null)
+                {
+                    XmlNode allowNode = oPaymentProviderCfg.SelectSingleNode("BlockCartUpdates");
+
+                    if (allowNode != null && allowNode.Attributes["value"] != null)
+                    {
+                            mcBlockCartUpdate = allowNode.Attributes["value"].Value;
+                    }
+                }
+                }
+                return mcBlockCartUpdate;
             }
 
             #region IDisposable Implementation

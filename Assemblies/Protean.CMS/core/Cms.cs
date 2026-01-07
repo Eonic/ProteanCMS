@@ -3815,6 +3815,7 @@ namespace Protean
                     }
                     // reinitialize variables because we might've changed some
                     moCart.InitializeVariables();
+
                     moCart.apply();
                     // get any discount information for this page
                     XmlElement RootElmt = moPageXml.DocumentElement;

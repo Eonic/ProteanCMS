@@ -37,12 +37,10 @@ namespace Protean
                 public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Cart.JSONActions";
                 private const string cContactType = "Venue";
-                private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
                 private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 private Cms myWeb;
                 private Cart myCart;
-
-
+                
                 public JSONActions()
                 {
                     // string ctest = "this constructor is being hit"; // for testing
@@ -143,10 +141,10 @@ namespace Protean
                             }
                             myCart.mnProcessId = (short)1;
                         }
-                        var cAllowCartUpdateConfig = myCart.mcAllowUpdateCart;
+                        var cBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
 
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(cBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -220,9 +218,9 @@ namespace Protean
                 {
                     try
                     {
-                       
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -461,9 +459,9 @@ namespace Protean
 
                 public string UpdateDeliveryOptionByCountry(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    
+                    string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
                     if ((int)myCart.mnProcessId > 4 &&
-                        !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                        !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                     {
                         return "";
                     }
@@ -646,10 +644,10 @@ namespace Protean
                     string strMessage = string.Empty;
                     try
                     {
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
 
-                       
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -694,9 +692,10 @@ namespace Protean
                     string jsonString = string.Empty;
                     try
                     {
-                            
+                        string mcAllowUpdateCart = myCart.GetBlockCartUpdatesConfig();
+
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -1531,8 +1530,9 @@ namespace Protean
                 //}
 
                 #endregion
-
+               
             }
+           
 
             #endregion
         }
