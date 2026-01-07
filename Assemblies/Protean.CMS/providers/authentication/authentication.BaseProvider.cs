@@ -212,7 +212,7 @@ namespace Protean.Providers
                 if (!string.IsNullOrEmpty(_myWeb.moRequest.QueryString["userkey"]))
                 {
                     keyUrl = "|" + _myWeb.moRequest.QueryString["userkey"];
-                    _myWeb.mcOriginalURL = Regex.Replace(_myWeb.mcOriginalURL, @"(&|\?)userkey=[^&]*", "");
+                    _myWeb.mcOriginalURL = Regex.Replace(_myWeb.mcOriginalURL, @"(&|\?)(userkey|LogOff)=[^&]*", "");
                 }
                 return GetSamlLoginUrl(config["ssoUrl"].ToString(), appId, gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName, keyUrl);
             }
