@@ -728,11 +728,16 @@ namespace Protean
 
         public static object SqlFmt(string sText)
         {
-            object SqlFmtRet = default;
-            // 'PerfMon.Log("stdTools", "SqlFmt")
-            SqlFmtRet = sText.Replace( "'", "''");
-            return SqlFmtRet;
-
+            if (sText != null)
+            {
+                object SqlFmtRet = default;
+                // 'PerfMon.Log("stdTools", "SqlFmt")
+                SqlFmtRet = sText.Replace("'", "''");
+                return SqlFmtRet;
+            }
+            else {
+                return "";
+            }
         }
 
 

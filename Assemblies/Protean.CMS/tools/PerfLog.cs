@@ -212,11 +212,11 @@ namespace Protean
                     // cEntryFull &= CStr(moSession("SessionRequest") & "") & "','"
                     // End If
                     string cPath = "";
-                    if (System.Web.HttpContext.Current != null)
+                    if (moCtx != null)
                     {
-                        if (System.Web.HttpContext.Current.Request != null)
+                        if (moCtx.Request != null)
                         {
-                            cPath = System.Web.HttpContext.Current.Request["path"];
+                            cPath = moCtx.Request["Path"];
                         }
                     }
 
