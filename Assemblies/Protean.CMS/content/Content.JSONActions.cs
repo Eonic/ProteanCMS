@@ -340,6 +340,7 @@ namespace Protean
                     try
                     {
                         string SearchString = "";
+                      
                         int HitsLimit = 50;
                         string fuzzySearch = "";
                         if (searchFilter != null)
@@ -351,8 +352,10 @@ namespace Protean
                                 HitsLimit = (int)searchFilter["hitslimit"];
                             }
                         }
-
-
+                        if (myWeb.moConfig["EnableSearchStringLogging"] != null && myWeb.moConfig["EnableSearchStringLogging"].ToLower() == "on")
+                        {
+                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Search, myApi.mnUserId, 0L, 0L, SearchString);
+                        }
                         var oSrch = new Cms.Search(ref myApi);
                         var oResultsXml = new XmlDocument();
                         oResultsXml.AppendChild(oResultsXml.CreateElement("Results"));

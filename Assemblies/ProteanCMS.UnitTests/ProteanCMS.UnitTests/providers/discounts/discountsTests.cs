@@ -11,7 +11,7 @@ using static Protean.Cms;
 using static Protean.Cms.Cart;
 
 
-namespace ProteanCMS.UnitTests
+namespace Protean.CmsTests
 {
     [TestClass]
     public class discounts
@@ -38,11 +38,41 @@ namespace ProteanCMS.UnitTests
             XmlElement oCartXML = xCart.DocumentElement;
             string appliedCode = "";
 
-            moDiscount = new Protean.Cms.Cart.Discount();
-            myCart = new Protean.Cms.Cart();
+            try
+            {
+                myCart = new Protean.Cms.Cart();
+                moDiscount = new Protean.Cms.Cart.Discount(ref myCart);
 
-            XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode, myCart);
-            return result;
+                XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode, myCart);
+                return result;
+            }
+            finally
+            {
+                // ✅ Ensure proper disposal
+                if (moDiscount != null)
+                {
+                    try
+                    {
+                        moDiscount.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Error disposing moDiscount: {ex.Message}");
+                    }
+                }
+
+                if (myCart != null)
+                {
+                    try
+                    {
+                        myCart.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Error disposing myCart: {ex.Message}");
+                    }
+                }
+            }
         }       
 
         // Full XML assert

@@ -32,9 +32,10 @@ namespace Protean
     public class XmlHelper
     {
 
-        public class Transform
+        public class Transform : IDisposable
         {
-#pragma warning disable 618
+            private bool disposedValue = false; // To detect redundant calls
+
             public Cms myWeb;
             private string msXslFile = "";
             private string msXslLastFile = "";
@@ -371,27 +372,7 @@ namespace Protean
                 }
             }
 
-            public void Close()
-            {
-                Dispose();
-            }
-
-            public void Dispose()
-            {
-                string sProcessInfo = "";
-                try
-                {
-                    // AppDomain.Unload(xsltDomain)
-                    oStyle = null;
-                    oCStyle = null;
-                    xsltArgs = null;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "Dispose", ex, msXslFile, sProcessInfo, mbDebug);
-
-                }
-            }
+          
 
 
             public delegate void ProcessDelegate(XmlDocument oXml, HttpResponse oResponse);
@@ -951,6 +932,145 @@ namespace Protean
             }
 #pragma warning restore 618
 
+
+
+            #region IDisposable Implementation
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        try
+                        {
+                            // ====================
+                            // 1. DISPOSE MANAGED RESOURCES
+                            // ====================
+
+                            // XSLT Transform objects
+                            if (oStyle != null)
+                            {
+                                try
+                                {
+                                    oStyle = null; // XslTransform doesn't implement IDisposable
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing oStyle: {ex.Message}");
+                                }
+                            }
+
+                            if (oCStyle != null)
+                            {
+                                try
+                                {
+                                    oCStyle = null; // XslCompiledTransform doesn't implement IDisposable
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing oCStyle: {ex.Message}");
+                                }
+                            }
+
+                            // XSLT Arguments
+                            if (xsltArgs != null)
+                            {
+                                try
+                                {
+                                    xsltArgs.Clear();
+                                    xsltArgs = null;
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing xsltArgs: {ex.Message}");
+                                }
+                            }
+
+                            // AppDomain (if created)
+                            if (xsltDomain != null)
+                            {
+                                try
+                                {
+                                    // Only unload if we created it and it's not the current domain
+                                    if (xsltDomain != AppDomain.CurrentDomain)
+                                    {
+                                        AppDomain.Unload(xsltDomain);
+                                    }
+                                    xsltDomain = null;
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error unloading xsltDomain: {ex.Message}");
+                                }
+                            }
+
+                            // ====================
+                            // 2. CLEAR REFERENCES (NOT OWNED - DO NOT DISPOSE)
+                            // ====================
+
+                            // Parent reference - owned by parent Cms object
+                            myWeb = null;
+
+                            // Clear exception references
+                            transformException = null;
+                            currentError = null;
+
+                            // Clear path strings
+                            msXslFile = null;
+                            msXslLastFile = null;
+                            AssemblyPath = null;
+                            ClassName = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log disposal errors but don't throw
+                            System.Diagnostics.Debug.WriteLine(
+                                $"Error in Transform.Dispose: {ex.Message}");
+                        }
+                    }
+
+                    // Free unmanaged resources (if any)
+                    // No unmanaged resources to free
+
+                    disposedValue = true;
+                }
+            }
+
+            // Finalizer
+            ~Transform()
+            {
+                Dispose(false);
+            }
+
+            // Public Dispose method
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            // Legacy Close() method for backward compatibility
+            public void Close()
+            {
+                // Simply call Dispose() - maintains backward compatibility
+                Dispose();
+            }
+
+            // Helper method to prevent use after disposal
+            protected void ThrowIfDisposed()
+            {
+                if (disposedValue)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+            }
+
+            #endregion
         }
 
 

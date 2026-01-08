@@ -65,7 +65,7 @@
           <xsl:value-of select="$siteURL"/>
         </link>
         <xsl:apply-templates select="Contents/Content[@type='Product']" mode="contentItem"/>
-
+		 
       </channel>
     </rss>
   </xsl:template>
@@ -154,8 +154,7 @@
    
     </item>
 
-  </xsl:template>
-  
+  </xsl:template>	
   
   <!-- HANDLES SKU's as seperate items, using some elements of its parent products.-->
   <xsl:template match="Content[@type='Product' and @SkuOptions='skus']" mode="contentItem">
