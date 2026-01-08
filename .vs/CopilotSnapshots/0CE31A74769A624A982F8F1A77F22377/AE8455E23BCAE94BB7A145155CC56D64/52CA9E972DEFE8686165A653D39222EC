@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <!--Comment out this section if GAC Installer has been installed -->
   <!--<configSections>
@@ -81,12 +81,12 @@
         <remove name="X-Powered-By" />
       </customHeaders>
     </httpProtocol>
-   <handlers>
+    <!--<handlers>
       <remove name="SassAssetHandler" />
       <add name="SassAssetHandler" path="*.sass" verb="GET" type="BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss" resourceType="File" preCondition="" />
       <add name="ScssAssetHandler" path="*.scss" verb="GET" type="BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss" resourceType="File" preCondition="" />
       <add name="LessAssetHandler" path="*.less" verb="GET" type="BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less" resourceType="File" preCondition="" />
-    </handlers>
+    </handlers>-->
     <rewrite>
       <providers>
         <provider name="ReplaceProvider" type="ReplaceProvider, ReplaceProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0e5e11efc3341916">
@@ -252,7 +252,7 @@
       <css allowEmbeddedAspNetBlocks="false" blocksStartOnSameLine="NewLine" ignoreAllErrors="false" ignoreErrorList="" indentSize="4" lineBreakThreshold="2147482647" outputMode="SingleLine" preprocessorDefineList="" termSemicolons="false" colorNames="Hex" commentMode="Important" minifyExpressions="true" removeEmptyBlocks="true" severity="0" />
       <js allowEmbeddedAspNetBlocks="false" blocksStartOnSameLine="NewLine" ignoreAllErrors="false" ignoreErrorList="" indentSize="4" lineBreakThreshold="2147482647" outputMode="SingleLine" preprocessorDefineList="" termSemicolons="false" alwaysEscapeNonAscii="false" amdSupport="false" collapseToLiteral="true" constStatementsMozilla="false" debugLookupList="Debug,$Debug,WAssert,Msn.Debug,Web.Debug" errorIfNotInlineSafe="false" evalLiteralExpressions="true" evalTreatment="Ignore" ignoreConditionalCompilation="false" ignorePreprocessorDefines="false" inlineSafeStrings="true" knownGlobalNamesList="" localRenaming="CrunchAll" macSafariQuirks="true" manualRenamesProperties="true" noAutoRenameList="$super" preserveFunctionNames="false" preserveImportantComments="true" quoteObjectLiteralProperties="false" removeFunctionExpressionNames="true" removeUnneededCode="true" renamePairs="" reorderScopeDeclarations="true" scriptVersion="None" strictMode="false" stripDebugStatements="true" severity="0" />
     </microsoftAjax>
-  </bundleTransformer>
+    </bundleTransformer>
   -->
   <runtime>
     <assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
