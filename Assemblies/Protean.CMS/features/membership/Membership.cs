@@ -581,7 +581,7 @@ namespace Protean
 
 
             public void RegistrationActions(string cmdPrefix = "") {
-                string cProcessInfo = "";
+              string cProcessInfo = "RegistrationActions";
                 ReturnProvider RetProv;
                 IMembershipProvider moMemProv;
                 try
@@ -618,7 +618,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""));
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, cProcessInfo, ex, ""));
                 }
                 finally
                 {

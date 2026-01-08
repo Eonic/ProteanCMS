@@ -10,8 +10,10 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -24,13 +26,17 @@ namespace Protean
     public partial class Cms
     {
 
-        public partial class Cart
+        public partial class Cart : IDisposable
         {
             #region Declarations
 
 
             public System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
             public System.Collections.Specialized.NameValueCollection moConfig;
+
+            //XmlElement moPaymentCfg = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/payment");
+
+
             private System.Web.HttpServerUtility moServer;
 
             public XmlDocument moPageXml;
@@ -183,6 +189,7 @@ namespace Protean
             public bool mbQuitOnShowInvoice = true;
             private bool mbDepositOnly = false;
             public bool mbBlockCartCmd = false; // Used for reseting payment on subscripitions
+            public string mcBlockCartUpdate;
 
 
             public enum cartError
@@ -236,6 +243,8 @@ namespace Protean
                     cOrderNoPrefix = value;
                 }
             }
+
+         
             #endregion
 
             #region Classes
@@ -540,7 +549,7 @@ namespace Protean
                 mcOrderType = "Order";
                 cOrderReference = "";
                 mcModuleName = "Protean.Cart";
-
+                
                 string cProcessInfo = Conversions.ToString(string.IsNullOrEmpty("initialise variables"));
                 try
                 {
@@ -1067,7 +1076,6 @@ namespace Protean
             }
 
 
-
             public void writeSessionCookie()
             {
                 // writes the session cookie to persist the cart
@@ -1097,19 +1105,6 @@ namespace Protean
                 }
             }
 
-            public void close()
-            {
-                myWeb.PerfMon.Log("Cart", "close");
-                string cProcessInfo = "";
-                try
-                {
-                    PersistVariables();
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
-                }
-            }
 
             public virtual void PersistVariables()
             {
@@ -1313,7 +1308,106 @@ namespace Protean
 
             }
 
+            public void CompleteOrder(XmlDocument oCartXML, ref XmlElement oContentElmt, ref XmlElement oElmt)
+            {
+                string cProcessInfo = "Cart.CompleteOrder";
+                try
+                {
 
+                    oContentElmt = (XmlElement)CreateCartElement(oCartXML);
+                    oElmt = (XmlElement)oContentElmt.FirstChild;
+                    PersistVariables();
+
+                    if (oElmt.FirstChild is null)
+                    {
+                        GetCart(ref oElmt);
+                    }
+
+                    if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
+                    {
+
+                        if (moCartConfig["StockControl"] == "on")
+                        {
+                            UpdateStockLevels(ref oElmt);
+                        }
+                        UpdateGiftListLevels();
+                        addDateAndRef(ref oElmt);
+                        if (myWeb.mnUserId > 0)
+                        {
+                            var userXml = myWeb.moDbHelper.GetUserXML((long)myWeb.mnUserId, false);
+                            if (userXml != null)
+                            {
+                                XmlElement cartElement = (XmlElement)oContentElmt.SelectSingleNode("Cart");
+                                if (cartElement != null)
+                                {
+                                    cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, true));
+                                }
+                            }
+                        }
+
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["Settlement"], "true", false)))
+                        {
+                            // modifiy the cartXml in line with settlement
+                            if (mnProcessId == (int)cartProcess.DepositPaid)
+                            {
+                                mnProcessId = (short)cartProcess.Complete;
+
+                            }
+                            myWeb.moSession["Settlement"] = (object)null;
+                        }
+
+
+
+                        if (mnProcessId == (int)cartProcess.DepositPaid)
+                        {
+                            AddToLists("Deposit", ref oContentElmt);
+                        }
+                        else
+                        {
+                            AddToLists("Invoice", ref oContentElmt);
+                        }
+
+                        purchaseActions(ref oContentElmt);
+                        // update the cart if purchase actions have changed it
+                        // GetCart(oElmt)
+                        // done for ammerdown as we have removed a product.
+
+
+
+                        if (myWeb.mnUserId > 0)
+                        {
+                            if (moSubscription != null)
+                            {
+                                moSubscription.AddUserSubscriptions(mnCartId, myWeb.mnUserId, ref oContentElmt, mnPaymentId);
+                            }
+                        }
+
+                        if (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] != null)
+                        {
+                            if ((oElmt.GetAttribute("statusId") ?? "") != (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] ?? ""))
+                            {
+                                emailReceipts(ref oContentElmt);
+                            }
+                        }
+                        else
+                        {
+                            emailReceipts(ref oContentElmt);
+                        }
+
+
+                        moDiscount.DisablePromotionalDiscounts();
+
+                    }
+
+
+
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, " CompleteOrder", ex, "", cProcessInfo, gbDebug);
+                   
+                }
+            }
 
             public virtual void apply()
             {
@@ -1583,6 +1677,12 @@ namespace Protean
 
                                 // info to display the cart
                                 GetCart(ref oElmt);
+                                if (Convert.ToString(oElmt.Attributes["statusId"].Value) == "6")
+                                {
+                                    mnProcessId = 6;
+                                    mcCartCmd = "ShowInvoice";
+                                    goto processFlow;
+                                }
                                 GetWalletDetails(ref oElmt);
                                 break;
                             }
@@ -1904,15 +2004,26 @@ namespace Protean
                         case "EnterPaymentDetails":
                         case "SubmitPaymentDetails": // confirm order and submit for payment
                             {
+                                GetCart(ref oElmt);
+
+                                if (Convert.ToString(oElmt.Attributes["statusId"].Value) == cartProcess.Complete.ToString())
+                                {
+                                    mnProcessId = (short)cartProcess.Complete; ;
+                                    mcCartCmd = "ShowInvoice";
+                                    goto processFlow;
+                                }
+
                                 mnProcessId = 5;
+
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["PaymentMethod"]))
                                 {
                                     mcPaymentMethod = myWeb.moRequest["PaymentMethod"];
                                 }
-                                if (oElmt.FirstChild is null)
-                                {
-                                    GetCart(ref oElmt);
-                                }
+
+                                //if (oElmt.FirstChild is null)
+                                //{
+                                //    GetCart(ref oElmt);
+                                //}
 
                                 // Add the date and reference to the cart
 
@@ -2009,97 +2120,18 @@ namespace Protean
                                 }
                                 else
                                 {
-
-                                    PersistVariables();
-
-                                    if (oElmt.FirstChild is null)
+                                    GetCart(ref oElmt);
+                                    if (oElmt!=null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
                                     {
-                                        GetCart(ref oElmt);
+                                        CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
                                     }
-
-                                    if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
-                                    {
-
-                                        if (moCartConfig["StockControl"] == "on")
-                                        {
-                                            UpdateStockLevels(ref oElmt);
-                                        }
-                                        UpdateGiftListLevels();
-                                        addDateAndRef(ref oElmt);
-                                        if (myWeb.mnUserId > 0)
-                                        {
-                                            var userXml = myWeb.moDbHelper.GetUserXML((long)myWeb.mnUserId, false);
-                                            if (userXml != null)
-                                            {
-                                                XmlElement cartElement = (XmlElement)oContentElmt.SelectSingleNode("Cart");
-                                                if (cartElement != null)
-                                                {
-                                                    cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, true));
-                                                }
-                                            }
-                                        }
-
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["Settlement"], "true", false)))
-                                        {
-                                            // modifiy the cartXml in line with settlement
-                                            if (mnProcessId == (int)cartProcess.DepositPaid)
-                                            {
-                                                mnProcessId = (short)cartProcess.Complete;
-
-                                            }
-                                            myWeb.moSession["Settlement"] = (object)null;
-                                        }
-
-
-
-                                        if (mnProcessId == (int)cartProcess.DepositPaid)
-                                        {
-                                            AddToLists("Deposit", ref oContentElmt);
-                                        }
-                                        else
-                                        {
-                                            AddToLists("Invoice", ref oContentElmt);
-                                        }
-
-                                        purchaseActions(ref oContentElmt);
-                                        // update the cart if purchase actions have changed it
-                                        // GetCart(oElmt)
-                                        // done for ammerdown as we have removed a product.
-
-
-
-                                        if (myWeb.mnUserId > 0)
-                                        {
-                                            if (moSubscription != null)
-                                            {
-                                                moSubscription.AddUserSubscriptions(mnCartId, myWeb.mnUserId, ref oContentElmt, mnPaymentId);
-                                            }
-                                        }
-
-                                        if (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] != null)
-                                        {
-                                            if ((oElmt.GetAttribute("statusId") ?? "") != (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] ?? ""))
-                                            {
-                                                emailReceipts(ref oContentElmt);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            emailReceipts(ref oContentElmt);
-                                        }
-
-
-                                        moDiscount.DisablePromotionalDiscounts();
-
-                                    }
-
-
+                                  
 
                                     if (mbQuitOnShowInvoice)
                                     {
                                         EndSession();
                                     }
-
+                                   
                                 }
 
                                 break;
@@ -3233,6 +3265,17 @@ namespace Protean
                         oCartElmt.SetAttribute("weight", weight.ToString());
                         oCartElmt.SetAttribute("orderType", mmcOrderType + "");
 
+                         mcBlockCartUpdate = GetBlockCartUpdatesConfig();
+
+                        if (!string.IsNullOrEmpty(mcBlockCartUpdate)
+                            && mcBlockCartUpdate.Trim().ToLower() == "on")
+                        {
+                            oCartElmt.SetAttribute("BlockCartUpdate", "on");
+                        }
+                        else
+                        {
+                            oCartElmt.SetAttribute("BlockCartUpdate", "off");
+                        }
                         if (nStatusId == 6L)
                         {
                             oCartElmt.SetAttribute("complete", "True");
@@ -3683,7 +3726,7 @@ namespace Protean
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
-                                oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);                               
+                                oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);
                                 if (Convert.ToString(oElmt.FirstChild) != "")
                                 {
                                     if (oElmt.FirstChild.Name == "Notes")
@@ -3805,11 +3848,12 @@ namespace Protean
                     {
                         moSubscription.UpdateSubscriptionsTotals(ref oCartElmt);
                     }
-                 
+
                     mnCartId = (int)oldCartId;
-                  
-                    if (myWeb.moRequest["refresh"] == "true") {
-                        mnCartId = nCartIdUse;                        
+
+                    if (myWeb.moRequest["refresh"] == "true")
+                    {
+                        mnCartId = nCartIdUse;
                     }
 
                     //mnCartId = (int)oldCartId;
@@ -3895,6 +3939,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetWalletDetails", ex, "", "", gbDebug);
                     return false;
                 }
 
@@ -5635,14 +5680,15 @@ namespace Protean
                                         mcBillingAddressXform = mcBillingAddressXform.Replace("both-addresses.xml", "billing-address.xml");
                                     }
                                 }
-                                else {
+                                else
+                                {
                                     if (mcBillingAddressXform.Contains("BillingAndDeliveryAddress.xml"))
                                     {
                                         mcBillingAddressXform = mcBillingAddressXform.Replace("BillingAndDeliveryAddress.xml", "BillingAddress.xml");
                                     }
                                 }
 
-                                
+
                                 // ensure we hit this next time through...
                                 cCmdAction = "Billing";
                                 contactFormCmd2 = Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "editAddress", oDr["nContactKey"]));
@@ -8016,8 +8062,10 @@ namespace Protean
 
                     if (nQuantity < itemLimit)
                     {
+                        
+                        mcBlockCartUpdate = GetBlockCartUpdatesConfig();
 
-                        if (mnProcessId < 5)
+                        if (mnProcessId < 5 || string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             oDS = moDBHelper.getDataSetForUpdate(cSQL, "CartItems", "Cart");
                             oDS.EnforceConstraints = false;
@@ -8602,7 +8650,10 @@ namespace Protean
 
             public int RemoveItem(long nItemId = 0L, long nContentId = 0L)
             {
-                if (mnProcessId > 4)
+
+                mcBlockCartUpdate = GetBlockCartUpdatesConfig();
+
+                if (mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                 {
                     return 1;
                 }
@@ -11417,7 +11468,7 @@ namespace Protean
             }
 
 
-            public void AddProductOption(ref Newtonsoft.Json.Linq.JObject jObj)
+            public void AddProductOption(Newtonsoft.Json.Linq.JObject jObj)
             {
 
                 try
@@ -11428,6 +11479,7 @@ namespace Protean
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);
+
 
                     var json = jObj;
 
@@ -11493,8 +11545,13 @@ namespace Protean
                     XmlNode argoNode18 = oelmt;
                     addNewTextNode("xItemXml", ref argoNode18, (string)json.SelectToken("ItemXml"));
                     oelmt = (XmlElement)argoNode18;
+                    XmlNode argoNode19 = oelmt;
+                    addNewTextNode("nDepositAmount", ref argoNode19, (string)json.SelectToken("DepositAmount"));
+                    oelmt = (XmlElement)argoNode19;
 
                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
+                    
+                   
                 }
                 // UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
                 catch (Exception)
@@ -11513,7 +11570,7 @@ namespace Protean
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);
-
+                  
                     // Dim json As Newtonsoft.Json.Linq.JObject = jObj
 
                     // Dim CartItemId As Long = json.SelectToken("CartItemId")
@@ -11898,7 +11955,7 @@ namespace Protean
             {
                 try
                 {
-                    string cResult = "Success";
+                   // string cResult = "Success";
                     var oCartListElmt = moPageXml.CreateElement("Order");
                     //GetCart(ref oCartListElmt, nOrderId);
                     // Insert code into tblcartOrder
@@ -12056,15 +12113,20 @@ namespace Protean
                     {
                         useSavedAddressesOnCart(billingAddId, deliveryAddId, null);
                     }
-                    XmlElement instanceNode = (XmlElement)oePaymentDetailsInstanceElmt.SelectSingleNode("//PaymentDetails/instance");
+                    XmlElement instanceNode = (XmlElement)oePaymentDetailsInstanceElmt
+                             .SelectSingleNode("//PaymentDetails/instance");
 
-                    if (instanceNode != null)
-                    {
-                        ConfirmPayment(ref oCartListElmt, ref instanceNode, cNewAuthNumber, cMethodName, Amount);
-                        GetCart(ref oCartListElmt, mnCartId);
-                        oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber);
-                        SaveCartXML(oCartListElmt, mnCartId);
-                    }
+
+                    XmlElement targetNode = instanceNode ?? oePaymentDetailsInstanceElmt;
+
+                    ConfirmPayment(ref oCartListElmt, ref targetNode, cNewAuthNumber, cMethodName, Amount);
+
+                    GetCart(ref oCartListElmt, mnCartId);
+
+                    oCartListElmt.InnerXml = oCartListElmt.InnerXml.Replace(ReceiptId, cNewAuthNumber);
+
+                    SaveCartXML(oCartListElmt, mnCartId);
+
                     return mnCartId.ToString();
                 }
                 catch (Exception ex)
@@ -12080,7 +12142,7 @@ namespace Protean
                 string result = "";
                 try
                 {
-                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper(ref myWeb);
+                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper( myWeb);
                     Protean.Cms.modal.Contact contact = new Cms.modal.Contact();
                     if (!string.IsNullOrEmpty(cEmailAddress))
                     {
@@ -12194,6 +12256,189 @@ namespace Protean
                     return result;
                 }
             }
+
+            public string GetBlockCartUpdatesConfig()
+            {
+               
+                string mcBlockCartUpdate = "";
+                string paymentMethod = myWeb?.moSession?["mcPaymentMethod"] as string;
+
+                if (!string.IsNullOrEmpty(paymentMethod))
+                {
+                    Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
+
+                XmlElement oProvider = oEwProv.GetValidPaymentProviders();
+                XmlNode oPaymentProviderCfg = oProvider.SelectSingleNode("provider[@name='" + paymentMethod + "']");
+
+
+                if (oPaymentProviderCfg != null)
+                {
+                    XmlNode allowNode = oPaymentProviderCfg.SelectSingleNode("BlockCartUpdates");
+
+                    if (allowNode != null && allowNode.Attributes["value"] != null)
+                    {
+                            mcBlockCartUpdate = allowNode.Attributes["value"].Value;
+                    }
+                }
+                }
+                return mcBlockCartUpdate;
+            }
+
+            #region IDisposable Implementation
+
+            private bool disposedValue = false; // To detect redundant calls
+
+            // IDisposable
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        try
+                        {
+                            // ====================
+                            // 1. DISPOSE CHILD COMPONENTS
+                            // ====================
+
+                            // Discount engine
+                            if (moDiscount != null)
+                            {
+                                try
+                                {
+                                    if (moDiscount is IDisposable disposableDiscount)
+                                    {
+                                        disposableDiscount.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moDiscount: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moDiscount = null;
+                                }
+                            }
+
+                            // Subscription engine
+                            if (moSubscription != null)
+                            {
+                                try
+                                {
+                                    if (moSubscription is IDisposable disposableSubscription)
+                                    {
+                                        disposableSubscription.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moSubscription: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moSubscription = null;
+                                }
+                            }
+
+                            // Payment provider
+                            if (moPay != null)
+                            {
+                                try
+                                {
+                                    if (moPay is IDisposable disposablePay)
+                                    {
+                                        disposablePay.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moPay: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moPay = null;
+                                }
+                            }
+
+                            // Database helper (DO NOT dispose - owned by parent Cms object)
+                            // moDBHelper is a reference to myWeb.moDbHelper, not owned by Cart
+                            moDBHelper = null;
+
+                            // ====================
+                            // 2. NULL OUT LARGE OBJECTS
+                            // ====================
+                            moPageXml = null;
+                            moCartXml = null;
+                            oShippingOptions = null;
+
+                            // ====================
+                            // 3. NULL OUT REFERENCES
+                            // ====================
+                            myWeb = null;
+                            moConfig = null;
+                            moCartConfig = null;
+                            moServer = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log disposal errors but don't throw
+                            System.Diagnostics.Debug.WriteLine(
+                                $"Error in Cart.Dispose: {ex.Message}");
+                        }
+                    }
+
+                    // Free unmanaged resources (if any)
+
+                    disposedValue = true;
+                }
+            }
+
+            // Finalizer
+            ~Cart()
+            {
+                Dispose(false);
+            }
+
+            // Public Dispose method
+            public void Dispose()
+            {
+                //Dispose(true);
+               // GC.SuppressFinalize(this);
+            }
+
+
+            public void close()
+            {
+                myWeb.PerfMon.Log("Cart", "close");
+                string cProcessInfo = "";
+                try
+                {
+                    PersistVariables();
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
+                }
+                finally
+                {
+                    Dispose();
+                }
+            }
+
+            // Helper method to prevent use after disposal
+            protected void ThrowIfDisposed()
+            {
+                if (disposedValue)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+            }
+
+            #endregion
         }
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.VisualBasic;
 namespace Protean
 {
 
-    public class Base
+    public class Base : IDisposable
     {
 
 
@@ -22,21 +22,20 @@ namespace Protean
 
         protected virtual void OnComponentError(object sender, Tools.Errors.ErrorEventArgs e)
         {
-            // deals with the error
-            // returnException(e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug)
-            // close connection pooling
+            if (disposedValue)
+            {
+                return; // Don't process errors if disposed
+            }
+
             if (moDbHelper != null)
             {
                 try
                 {
                     moDbHelper.CloseConnection();
                 }
-                catch (Exception)
-                {
-
-                }
+                catch (Exception) { }
             }
-            // then raises a public event
+
             OnError?.Invoke(sender, e);
         }
 
@@ -71,7 +70,7 @@ namespace Protean
         public bool mbAdminMode = false;
 
         //private bool mbSystemPage = false;
-       // private Cms.dbHelper.PermissionLevel mnUserPagePermission = Cms.dbHelper.PermissionLevel.Open;
+        // private Cms.dbHelper.PermissionLevel mnUserPagePermission = Cms.dbHelper.PermissionLevel.Open;
 
         public bool mbOutputXml = false;
 
@@ -147,7 +146,9 @@ namespace Protean
             catch (Exception ex)
             {
                 // returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
+               // OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
+                Dispose();
+                throw;
             }
         }
 
@@ -221,17 +222,108 @@ namespace Protean
 
         }
 
-        private bool disposedValue = false;        // To detect redundant calls
+        private bool disposedValue = false;
 
-        // IDisposable
-        public virtual void Dispose(bool disposing)
+        // ✅ Add public Dispose() method
+        public void Dispose()
         {
-
-            disposedValue = true;
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
+        // ✅ Complete the protected Dispose(bool) pattern
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)  // ✅ Now checks the flag
+            {
+                if (disposing)
+                {
+                    try
+                    {
+                        // 1. Unsubscribe event handlers FIRST
+                        if (OnError != null)
+                        {
+                            foreach (var handler in OnError.GetInvocationList())
+                            {
+                                OnError -= (OnErrorEventHandler)handler;
+                            }
+                        }
+
+                        // 2. Dispose database helper (CRITICAL)
+                        if (_moDbHelper != null)
+                        {
+                            try
+                            {
+                                _moDbHelper.CloseConnection(true);
+                                if (_moDbHelper is IDisposable disposableHelper)
+                                {
+                                    disposableHelper.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log but don't throw in Dispose
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moDbHelper: {ex.Message}");
+                            }
+                            finally
+                            {
+                                _moDbHelper = null;
+                            }
+                        }
+
+                        // 3. Dispose PerfMon if it implements IDisposable
+                        if (PerfMon is IDisposable disposablePerfMon)
+                        {
+                            disposablePerfMon.Dispose();
+                        }
+                        PerfMon = null;
+
+                        // 4. Clear large collections
+                        Features?.Clear();
+                        Features = null;
+
+                        // 5. Null out context references
+                        moCtx = null;
+                        moRequest = null;
+                        moResponse = null;
+                        moSession = null;
+                        goServer = null;
+                        goCache = null;
+                        moConfig = null;
+                        goLangConfig = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log disposal errors but don't throw
+                        System.Diagnostics.Debug.WriteLine(
+                            $"Error in Base.Dispose: {ex.Message}");
+                    }
+                }
+
+                // Free unmanaged resources here if any exist
+
+                disposedValue = true;
+            }
+        }
+
+        // ✅ Remove empty finalizer OR implement properly if unmanaged resources exist
+        // If no unmanaged resources, delete this:
+        // ~Base() { }
+
+        // ✅ OR if keeping finalizer, implement properly:
         ~Base()
         {
+            Dispose(false);
+        }
+
+        // ✅ Add helper method to prevent use after disposal
+        protected void ThrowIfDisposed()
+        {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
         }
     }
 }

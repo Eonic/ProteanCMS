@@ -6,6 +6,7 @@ using Protean.Providers.Payment;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.Tools.Xml;
@@ -36,11 +37,10 @@ namespace Protean
                 public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Cart.JSONActions";
                 private const string cContactType = "Venue";
-                private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
+                private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 private Cms myWeb;
                 private Cart myCart;
-
-
+                
                 public JSONActions()
                 {
                     // string ctest = "this constructor is being hit"; // for testing
@@ -141,11 +141,13 @@ namespace Protean
                             }
                             myCart.mnProcessId = (short)1;
                         }
-                        if ((int)myCart.mnProcessId > 4)
+                        var cBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(cBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
-
                         else
                         {
                             if (jObj["Item"] != null)
@@ -216,7 +218,9 @@ namespace Protean
                 {
                     try
                     {
-                        if ((int)myCart.mnProcessId > 4)
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -455,7 +459,9 @@ namespace Protean
 
                 public string UpdateDeliveryOptionByCountry(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    if ((int)myCart.mnProcessId > 4)
+                    string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                    if ((int)myCart.mnProcessId > 4 &&
+                        !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                     {
                         return "";
                     }
@@ -582,22 +588,23 @@ namespace Protean
                     return JsonConvert.ToString(isSuccess);
                 }
 
-                public string AddProductOption(ref Protean.rest myApi, ref JObject jObj)
+                public string AddProductOption(Protean.rest myApi, JObject jObj)
                 {
                     string jsonString = string.Empty;
 
                     try
                     {
+                       
 
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
                         // myCart.GetCart(CartXml.FirstChild)
 
                         // add product option
-                        myCart.AddProductOption(ref jObj);
+                        myCart.AddProductOption(jObj);
                         // myCart.UpdatePackagingANdDeliveryType()
                         // myCart.GetCart(CartXml.FirstChild)   //Comment out this extra called method because this code already added in UpdatePackagingDeliveryOptions method - change on 5th jan 23
                         /// persist cart
-                        myCart.close();
+                        //myCart.close();
 
                         // CartXml = updateCartforJSON(CartXml)
 
@@ -637,8 +644,10 @@ namespace Protean
                     string strMessage = string.Empty;
                     try
                     {
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
 
-                        if ((int)myCart.mnProcessId > 4)
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -683,7 +692,10 @@ namespace Protean
                     string jsonString = string.Empty;
                     try
                     {
-                        if ((int)myCart.mnProcessId > 4)
+                        var cBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(cBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -1328,52 +1340,12 @@ namespace Protean
                     }
 
                 }
-
-
-                //public string GetPaymentSession(ref Protean.rest myApi, ref JObject jObj)
-                //{
-                //    try
-                //    {
-                //        //bool bIsAuthorized = false;
-                //        //string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
-                //        //bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
-
-
-                //        //if (bIsAuthorized == false)
-                //        //    return "Error -Authorization Failed";
-                //        string nOrderId = (jObj["orderId"] != null) ? jObj["orderId"].ToString() : "0";
-                //        decimal nAmount = (jObj["amount"] != null) ? Convert.ToDecimal(jObj["amount"]) : 0;
-                //        string cProviderName = (jObj["sProviderName"] != null) ? jObj["sProviderName"].ToString() : "";
-                //        var oCart = new Cart(ref myWeb);
-                //        string cPaymentSession = "";
-                //        string josResult = "";
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
-                //        {
-                //            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
-                //            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                //            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
-                //            cPaymentSession = Conversions.ToString(oPaymentProv.Activities.GetPaymentSession(nOrderId, nAmount));
-                //            var xmlDoc = new XmlDocument();
-                //            var xmlResponse = xmlDoc.CreateElement("Response");
-                //            xmlResponse.InnerXml = "<PaymentReceiptId>" + cPaymentSession + "</PaymentReceiptId>";
-                //            xmlDoc.LoadXml(xmlResponse.InnerXml.ToString());
-                //            josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
-                //            josResult = josResult.Replace("\"@", "\"_");
-                //            josResult = josResult.Replace("#cdata-section", "cDataValue");
-                //        }
-                //        return josResult;
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
-                //        return "Error";
-
-                //    }
-                //}
-
                 #endregion
 
+                
+
             }
+           
 
             #endregion
         }

@@ -1,6 +1,8 @@
 ﻿
 document.addEventListener("DOMContentLoaded", function () {
 
+
+
     var addGoogleReviewsAPIUrl = '/ewapi/Cms.Content/GetGoogleReviews';
 
     var isGoogleReview = document.querySelector(".GoogleReviews");
@@ -37,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     });
                 },
 
-                // ✅ Total count of ALL reviews
+                // Total count of ALL reviews
                 totalReviewCount: function () {
                     if (
                         !this.GoogleReviewResponse ||
@@ -52,7 +54,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 },
 
-                // ✅ Average rating of ALL reviews
+                //  Average rating of ALL reviews
                 overallAverageRating: function () {
                     if (
                         !this.GoogleReviewResponse ||
@@ -88,22 +90,38 @@ document.addEventListener("DOMContentLoaded", function () {
             methods: {
                 // Fetch Google Reviews
                 getGoogleReviews: function () {
-
                     var self = this;
+
                     axios.post(addGoogleReviewsAPIUrl)
                         .then(function (response) {
-
                             self.GoogleReviewResponse = response.data;
 
+                          
+                            self.$nextTick(() => {
+                                new Swiper(".myReviewSwiper", {
+                                    slidesPerView: 3,
+                                    spaceBetween: 25,
+                                    loop: false,
+                                    navigation: {
+                                        nextEl: ".swiper-button-next",
+                                        prevEl: ".swiper-button-prev"
+                                    },
+                                    pagination: {
+                                        el: ".swiper-pagination",
+                                        clickable: true
+                                    },
+                                    breakpoints: {
+                                        0: { slidesPerView: 1 },
+                                        600: { slidesPerView: 2 },
+                                        1000: { slidesPerView: 3 }
+                                    }
+                                });
+                            });
                         })
                         .catch(function (error) {
                             console.error("Error fetching Google Reviews:", error);
                         });
-                    //} else {
-                    //    console.warn("Missing Google API URL value.");
-                    //}
                 },
-
 
                 wordCount: function (text) {
                     if (!text) return 0;

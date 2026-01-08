@@ -195,7 +195,7 @@ namespace Protean
             }
             else
             {
-                moDBH = new Cms.dbHelper(ref myWeb);
+                moDBH = new Cms.dbHelper(myWeb);
             }
 
         }
@@ -726,7 +726,7 @@ namespace Protean
             string cContentType;
             string cDeleteMode;
             var oSoapBody = new XmlDocument();
-            var oDbt = new Cms.dbHelper(ref myWeb);
+            var oDbt = new Cms.dbHelper(myWeb);
 
             try
             {

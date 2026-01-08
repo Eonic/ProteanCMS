@@ -16,7 +16,7 @@ namespace Protean
     {
         public partial class Cart
         {
-            public class Discount
+            public class Discount : IDisposable
             {
 
                 private System.Collections.Specialized.NameValueCollection moCartConfig;
@@ -1878,10 +1878,12 @@ namespace Protean
                     string cUserGroupIds = getUserGroupIDs(); // get the user groups
                     try
                     {
-                        if (myCart.mnProcessId > 4)
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                        if (myCart.mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
+                        
                         else if (myCart.mnCartId > 0)
                         {
                             sSql = "select * from tblCartOrder where nCartOrderKey=" + myCart.mnCartId;
@@ -2532,7 +2534,8 @@ namespace Protean
                     string sPromoCode = "";
                     try
                     {
-                        if (myCart.mnProcessId > 4)
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                        if (myCart.mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -2865,9 +2868,79 @@ namespace Protean
 
                 #endregion
 
+                #region IDisposable Implementation
+
+                private bool disposedValue = false; // To detect redundant calls
+
+                // IDisposable
+                protected virtual void Dispose(bool disposing)
+                {
+                    if (!disposedValue)
+                    {
+                        if (disposing)
+                        {
+                            try
+                            {
+                                // ====================
+                                // NULL OUT REFERENCES (NOT OWNED - DO NOT DISPOSE)
+                                // ====================
+
+                                // myWeb is owned by parent/caller, just clear reference
+                                myWeb = null;
+
+                                // myCart is owned by parent/caller, just clear reference
+                                myCart = null;
+
+                                // Configuration references (owned by parent)
+                                moCartConfig = null;
+                                moConfig = null;
+
+                                // Clear string collections
+                                cPromotionalDiscounts = ",";
+                                cVouchersUsed = ",";
+                                mcGroups = null;
+                                mcCurrency = null;
+                                mcPriceModOrder = null;
+                                mcUnitModOrder = null;
+
+                                // Reset flags
+                                bHasPromotionalDiscounts = false;
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log disposal errors but don't throw
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error in Discount.Dispose: {ex.Message}");
+                            }
+                        }
+
+                        // Free unmanaged resources (if any)
+
+                        disposedValue = true;
+                    }
+                }
+
+                // Public Dispose method
+                public void Dispose()
+                {
+                    Dispose(true);
+                    GC.SuppressFinalize(this);
+                }
+
+                // Helper method to prevent use after disposal
+                protected void ThrowIfDisposed()
+                {
+                    if (disposedValue)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                }
+
+                #endregion
 
                 ~Discount()
                 {
+                    Dispose(false);
                 }
             }
         }

@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Xml;
 
-namespace ProteanCMS.UnitTests
+namespace Protean.CmsTests
 {
     [TestClass]
     public class Directory

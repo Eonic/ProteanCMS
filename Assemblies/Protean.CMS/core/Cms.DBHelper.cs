@@ -29,6 +29,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.Cms;
@@ -94,7 +95,7 @@ namespace Protean
             #region Initialisation
 
 
-            public dbHelper(ref Cms aWeb) : base()
+            public dbHelper( Cms aWeb) : base()
             {
                 try
                 {
@@ -7331,6 +7332,19 @@ namespace Protean
                         if (root.SelectSingleNode("cContactTelCountryCode") is null)
                         {
                             root.AppendChild(root.OwnerDocument.CreateElement("cContactTelCountryCode"));
+                        }
+                        //This if condition requires because when we logged in protean and clicked on intranet button 
+                        // then valid user needs to directly logged in intranet, so we are passing userkey to set session user in intranet
+                        if (myWeb.mnUserId > 0)
+                        {                           
+                            XmlElement EncryptedUserKey = moPageXml.CreateElement("EncryptedUserKey");
+                            if(root.GetAttribute("name") !="")
+                            {
+                                string username = root.GetAttribute("name");
+                                string token = Protean.Tools.AESCGM.EncryptAesGcm(username.ToString(), myWeb.moConfig["SharedKey"]);
+                                EncryptedUserKey.InnerText = HttpUtility.UrlEncode(token);
+                                root.AppendChild(EncryptedUserKey);
+                            }                            
                         }
                     }
                     PerfMonLog("DBHelper", "GetUserXML - END");
@@ -14581,7 +14595,7 @@ namespace Protean
             public string getContentIdFromOrder(string orderRef, string ContentName)
             {
                 // Dim oDr As SqlDataReader
-                string sSql;
+               // string sSql;
                 string nContentID = string.Empty;
 
                 string cProcessInfo = "";
@@ -14665,7 +14679,24 @@ namespace Protean
                     return null;
                 }
             }
-            
+
+            public System.Data.DataTable GetAllHiddenProducts()
+            {
+                PerfMonLog("dbTools", "GetContacts");
+                string sSql;
+                DataSet oDs;
+                try
+                {
+                    sSql = "EXEC spGetHiddenProductUrls";
+                    oDs = GetDataSet(sSql, "Content");
+                    return oDs.Tables[0];
+                }
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSQLfromFile", ex, ""));
+                    return null;
+                }
+            }
         }
 
 
