@@ -12,6 +12,7 @@ using AngleSharp.Dom;
 using AngleSharp.Io;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.Ajax.Utilities;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Authentication;
@@ -7335,7 +7336,7 @@ namespace Protean
                         }
                         //This if condition requires because when we logged in protean and clicked on intranet button 
                         // then valid user needs to directly logged in intranet, so we are passing userkey to set session user in intranet
-                        if (myWeb.mnUserId > 0)
+                        if (myWeb.mnUserId > 0 && !string.IsNullOrEmpty(myWeb.moConfig["SharedKey"]))
                         {                           
                             XmlElement EncryptedUserKey = moPageXml.CreateElement("EncryptedUserKey");
                             if(root.GetAttribute("name") !="")
