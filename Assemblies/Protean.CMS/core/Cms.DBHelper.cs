@@ -12,6 +12,7 @@ using AngleSharp.Dom;
 using AngleSharp.Io;
 using DocumentFormat.OpenXml.Bibliography;
 using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.Ajax.Utilities;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Authentication;
@@ -29,6 +30,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.Cms;
@@ -7333,6 +7335,19 @@ namespace Protean
                         if (root.SelectSingleNode("cContactTelCountryCode") is null)
                         {
                             root.AppendChild(root.OwnerDocument.CreateElement("cContactTelCountryCode"));
+                        }
+                        //This if condition requires because when we logged in protean and clicked on intranet button 
+                        // then valid user needs to directly logged in intranet, so we are passing userkey to set session user in intranet
+                        if (myWeb.mnUserId > 0 && !string.IsNullOrEmpty(myWeb.moConfig["SharedKey"]))
+                        {                           
+                            XmlElement EncryptedUserKey = moPageXml.CreateElement("EncryptedUserKey");
+                            if(root.GetAttribute("name") !="")
+                            {
+                                string username = root.GetAttribute("name");
+                                string token = Protean.Tools.AESCGM.EncryptAesGcm(username.ToString(), myWeb.moConfig["SharedKey"]);
+                                EncryptedUserKey.InnerText = HttpUtility.UrlEncode(token);
+                                root.AppendChild(EncryptedUserKey);
+                            }                            
                         }
                     }
                     PerfMonLog("DBHelper", "GetUserXML - END");

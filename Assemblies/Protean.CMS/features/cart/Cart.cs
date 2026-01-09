@@ -3950,7 +3950,12 @@ namespace Protean
 
                         foreach (XmlElement opElmt in xElmtPaymentProvider)
                         {
-
+                            if (opElmt.GetAttribute("name") == "Pay360")
+                            {
+                                // Pay360 Google Pay is NOT a wallet provider
+                                // It is just a payment method inside Pay360
+                                continue; // Skip wallet logic entirely
+                            }
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
                             IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
                             XmlElement oWallets = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
