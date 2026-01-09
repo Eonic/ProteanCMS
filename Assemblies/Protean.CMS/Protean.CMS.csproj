@@ -345,6 +345,7 @@
     <Compile Include="core\Cms.DBHelper-Import.cs" />
     <Compile Include="core\Cms.dbImport.cs" />
     <Compile Include="features\membership\Membership.Modules.cs" />
+    <Compile Include="modal\APILog.cs" />
     <Compile Include="providers\Authentication\Authentication.Microsoft.cs" />
     <Compile Include="providers\Authentication\Authentication.Google.cs" />
     <Compile Include="providers\Authentication\Authentication.BaseProvider.cs" />
