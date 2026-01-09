@@ -1680,6 +1680,7 @@ namespace Protean
                                 if (Convert.ToString(oElmt.Attributes["statusId"].Value) == "6")
                                 {
                                     mnProcessId = 6;
+                                    addDateAndRef(ref oElmt);
                                     mcCartCmd = "ShowInvoice";
                                     goto processFlow;
                                 }
@@ -2005,7 +2006,7 @@ namespace Protean
                         case "SubmitPaymentDetails": // confirm order and submit for payment
                             {
                                 GetCart(ref oElmt);
-
+                                addDateAndRef(ref oElmt);
                                 if (Convert.ToString(oElmt.Attributes["statusId"].Value) == cartProcess.Complete.ToString())
                                 {
                                     mnProcessId = (short)cartProcess.Complete; ;
@@ -2027,7 +2028,7 @@ namespace Protean
 
                                 // Add the date and reference to the cart
 
-                                addDateAndRef(ref oElmt);
+                               
 
                                 if (mcPaymentMethod == "No Charge")
                                 {
@@ -2121,11 +2122,38 @@ namespace Protean
                                 else
                                 {
                                     GetCart(ref oElmt);
-                                    if (oElmt!=null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
+
+                                    if (oElmt != null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
                                     {
                                         CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
                                     }
-                                  
+                                    else
+                                    {
+                                        if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
+                                        {
+
+                                            //if (moCartConfig["StockControl"] == "on")
+                                            //{
+                                            //    UpdateStockLevels(ref oElmt);
+                                            //}
+                                            //UpdateGiftListLevels();
+                                            addDateAndRef(ref oElmt);
+                                            oContentElmt = oCartXML.DocumentElement;
+                                            if (myWeb.mnUserId > 0)
+                                            {
+                                                var userXml = myWeb.moDbHelper.GetUserXML((long)myWeb.mnUserId, false);
+                                                if (userXml != null)
+                                                {
+                                                    XmlElement cartElement = (XmlElement)oContentElmt.SelectSingleNode("Cart");
+                                                    if (cartElement != null)
+                                                    {
+                                                        cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, true));
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+
 
                                     if (mbQuitOnShowInvoice)
                                     {
