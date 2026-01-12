@@ -12,4 +12,3 @@ BEGIN
     WHERE c.cContentSchemaName = 'Product'
       AND a.nStatus = 0;  
 END
-GO
