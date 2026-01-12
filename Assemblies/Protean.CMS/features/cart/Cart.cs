@@ -1367,7 +1367,7 @@ namespace Protean
                             AddToLists("Invoice", ref oContentElmt);
                         }
 
-                        purchaseActions(ref oContentElmt);
+                        purchaseActions(oContentElmt,false);
                         // update the cart if purchase actions have changed it
                         // GetCart(oElmt)
                         // done for ammerdown as we have removed a product.
@@ -2138,19 +2138,7 @@ namespace Protean
                                             //}
                                             //UpdateGiftListLevels();
                                             addDateAndRef(ref oElmt);
-                                            oContentElmt = oCartXML.DocumentElement;
-                                            if (myWeb.mnUserId > 0)
-                                            {
-                                                var userXml = myWeb.moDbHelper.GetUserXML((long)myWeb.mnUserId, false);
-                                                if (userXml != null)
-                                                {
-                                                    XmlElement cartElement = (XmlElement)oContentElmt.SelectSingleNode("Cart");
-                                                    if (cartElement != null)
-                                                    {
-                                                        cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, true));
-                                                    }
-                                                }
-                                            }
+                                            purchaseActions(oContentElmt, true);
                                         }
                                     }
 
@@ -2565,7 +2553,7 @@ namespace Protean
                 }
             }
 
-            public virtual void purchaseActions(ref XmlElement oCartElmt)
+            public virtual void purchaseActions( XmlElement oCartElmt, bool bRenderScriptOnly=false)
             {
                 myWeb.PerfMon.Log("Cart", "purchaseActions");
                 // Dim sMessageResponse As String
@@ -2592,9 +2580,16 @@ namespace Protean
 
                         if (passCMS == "true")
                         {
-                            args = new object[2];
+                            args = new object[3];
                             args[0] = myWeb;
                             args[1] = oCartElmt;
+                            args[2] = bRenderScriptOnly;
+                        }
+                        else if(bRenderScriptOnly==true)
+                        {
+                            args = new object[2];
+                            args[0] = oCartElmt;
+                            args[1] = bRenderScriptOnly;
                         }
                         else
                         {
@@ -2655,8 +2650,20 @@ namespace Protean
                                 var o = Activator.CreateInstance(calledType);
 
                                 var args = new object[2];
-                                args[0] = myWeb;
-                                args[1] = ocNode;
+                                if(bRenderScriptOnly == true)
+                                {
+                                    args = new object[3];
+                                    args[0] = myWeb;
+                                    args[1] = ocNode;
+                                    args[2] = bRenderScriptOnly;
+                                }
+                                else
+                                {
+                                    args[0] = myWeb;
+                                    args[1] = ocNode;
+                                }
+                               
+                                args[2]= bRenderScriptOnly;
 
                                 calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
                             }
