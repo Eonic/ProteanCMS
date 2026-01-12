@@ -1680,7 +1680,8 @@ namespace Protean
                                 if (Convert.ToString(oElmt.Attributes["statusId"].Value) == "6")
                                 {
                                     mnProcessId = 6;
-                                    addDateAndRef(ref oElmt);
+                                   // addDateAndRef(ref oElmt);
+                                   // purchaseActions(oContentElmt,true);
                                     mcCartCmd = "ShowInvoice";
                                     goto processFlow;
                                 }
@@ -2006,10 +2007,11 @@ namespace Protean
                         case "SubmitPaymentDetails": // confirm order and submit for payment
                             {
                                 GetCart(ref oElmt);
-                                addDateAndRef(ref oElmt);
+                               
                                 if (Convert.ToString(oElmt.Attributes["statusId"].Value) == cartProcess.Complete.ToString())
                                 {
-                                    mnProcessId = (short)cartProcess.Complete; ;
+                                    mnProcessId = (short)cartProcess.Complete;
+                                  //  purchaseActions(oContentElmt, true);
                                     mcCartCmd = "ShowInvoice";
                                     goto processFlow;
                                 }
@@ -2027,8 +2029,9 @@ namespace Protean
                                 //}
 
                                 // Add the date and reference to the cart
-
                                
+                                addDateAndRef(ref oElmt);
+
 
                                 if (mcPaymentMethod == "No Charge")
                                 {
@@ -2132,11 +2135,6 @@ namespace Protean
                                         if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
                                         {
 
-                                            //if (moCartConfig["StockControl"] == "on")
-                                            //{
-                                            //    UpdateStockLevels(ref oElmt);
-                                            //}
-                                            //UpdateGiftListLevels();
                                             addDateAndRef(ref oElmt);
                                             purchaseActions(oContentElmt, true);
                                         }
@@ -2663,8 +2661,6 @@ namespace Protean
                                     args[1] = ocNode;
                                 }
                                
-                                args[2]= bRenderScriptOnly;
-
                                 calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
                             }
 
@@ -3957,12 +3953,12 @@ namespace Protean
 
                         foreach (XmlElement opElmt in xElmtPaymentProvider)
                         {
-                            if (opElmt.GetAttribute("name") == "Pay360")
-                            {
-                                // Pay360 Google Pay is NOT a wallet provider
-                                // It is just a payment method inside Pay360
-                                continue; // Skip wallet logic entirely
-                            }
+                            //if (opElmt.GetAttribute("name") == "Pay360")
+                            //{
+                            //    // Pay360 Google Pay is NOT a wallet provider
+                            //    // It is just a payment method inside Pay360
+                            //    continue; // Skip wallet logic entirely
+                            //}
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
                             IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
                             XmlElement oWallets = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
