@@ -617,13 +617,15 @@ namespace Protean
 
                 private string getUserGroupIDs()
                 {
+                    try
+                    {
 
-                    int nNonAuthenticatedUsersGroupId;
-                    int nAuthenticatedUsersGroupId;
-                    int nAllsersGroupId = 0;
+                        long nNonAuthenticatedUsersGroupId;
+                    long nAuthenticatedUsersGroupId;
+                    long nAllsersGroupId = 0;
                     var strGroupIds = new System.Text.StringBuilder();
-                    nNonAuthenticatedUsersGroupId = Convert.ToInt16("0" + myWeb.moConfig["NonAuthenticatedUsersGroupId"]);
-                    nAuthenticatedUsersGroupId = Convert.ToInt16("0" + myWeb.moConfig["AuthenticatedUsersGroupId"]);
+                    nNonAuthenticatedUsersGroupId = Convert.ToInt64("0" + myWeb.moConfig["NonAuthenticatedUsersGroupId"]);
+                    nAuthenticatedUsersGroupId = Convert.ToInt64("0" + myWeb.moConfig["AuthenticatedUsersGroupId"]);
 
                     // start by adding the all user group, 0
                     strGroupIds.Append(nAllsersGroupId.ToString());
@@ -659,7 +661,13 @@ namespace Protean
                     }
 
                     return strGroupIds.ToString();
-
+                    }
+                    // Thats all folks!
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Discount_ApplyToCart", ex, "", "", gbDebug);
+                        return null;
+                    }
                 }
 
                 public decimal Discount_ApplyToCart(ref XmlElement oCartXML, XmlDocument oDiscountXml)

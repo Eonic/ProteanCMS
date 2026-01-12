@@ -2461,13 +2461,16 @@ namespace Protean
                         queryToBeParsed.Append(" OR ");
                         BuildLuceneKeywordQuery(ref queryToBeParsed, queryTerms, "", 1, _includeFuzzySearch);
                         // apply status filter to show only active Products
-                        if (moConfig["IndexIncludesHidden"].ToLower() == "on")
-                        {
-                            if (!bShowHiddenForUser)
+                        if (!string.IsNullOrEmpty(moConfig["IndexIncludesHidden"]))
+                        { 
+                            if (moConfig["IndexIncludesHidden"].ToLower() == "on")
                             {
-                                queryToBeParsed.Append(" AND ");
-                                queryTerms = ParseKeywordsAndPhrases("1");
-                                BuildLuceneKeywordQuery(ref queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch);
+                                if (!bShowHiddenForUser)
+                                {
+                                    queryToBeParsed.Append(" AND ");
+                                    queryTerms = ParseKeywordsAndPhrases("1");
+                                    BuildLuceneKeywordQuery(ref queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch);
+                                }
                             }
                         }
                     }

@@ -8004,7 +8004,7 @@ namespace Protean
                         // user id exists
                         sSql = "DELETE FROM dbo.tblXmlCache ";
                         // clear from app level too
-                        if (myWeb != null)
+                        if (myWeb != null && myWeb.goApp["AdminStructureCache"] != null)
                         {
                             myWeb.goApp["AdminStructureCache"] = (object)null;
                         }

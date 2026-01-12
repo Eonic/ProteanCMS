@@ -566,15 +566,12 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                try
-                {
-                    oIndexWriter.Dispose();
-                    oIndexWriter = null;
-                }
-                catch (Exception)
-                {
-
-                }
+             
+                    if (oIndexWriter != null)
+                    {
+                        oIndexWriter.Dispose();
+                        oIndexWriter = null;
+                    }
                 cExError += ex.ToString() + Constants.vbCrLf;
                 stdTools.returnException(ref myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
             }

@@ -301,9 +301,9 @@
 	<!-- ############################################ SEARCH ############################################### -->
 	<xsl:template match="/" mode="searchBrief">
 		<div class="searchBrief">
-			<form method="post" action="/information/search" id="searchInputxs" class="ewXform">
+			<form method="post" action="/search" id="searchInputxs" class="ewXform">
         <label for="searchStringxs" class="visually-hidden">Search</label>
-				<input type="hidden" name="searchMode" value="REGEX" />
+				<input type="hidden" name="searchMode" value="INDEX" />
 				<input type="hidden" name="contentType" value="Product" />
 				<input type="hidden" name="searchFormId" value="8923" />
 				<input type="text" class="CTAsearch" name="searchString" id="searchStringxs" value="" placeholder="Search" />
@@ -327,10 +327,10 @@
 	</xsl:template>
 
 	<xsl:template match="/" mode="searchSimple">
-		<form method="post" action="/information/search" id="searchInput" class="input-group">
+		<form method="post" action="/search" id="searchInput" class="input-group">
 			<label for="searchString" class="visually-hidden">Search</label>
 			<input type="text" class="form-control CTAsearch" name="searchString" id="searchString" value="" placeholder="Search" />
-			<input type="hidden" name="searchMode" value="REGEX" class="d-none" />
+			<input type="hidden" name="searchMode" value="INDEX" class="d-none" />
 			<input type="hidden" name="contentType" value="Product" class="d-none"/>
 			<input type="hidden" name="searchFormId" value="8923" class="d-none"/>
 			<button type="submit" class="btn btn-outline-primary" name="Search" value="Submit">
@@ -343,10 +343,10 @@
 	</xsl:template>
 
 	<xsl:template match="/" mode="searchSimpleXS">
-		<form method="post" action="/information/search" id="searchInputxs" class="input-group">
+		<form method="post" action="/search" id="searchInputxs" class="input-group">
 			<label for="searchStringxs" class="visually-hidden">Search</label>
 			<input type="text" class="form-control CTAsearch" name="searchString" id="searchStringxs" value="" placeholder="Search" />
-			<input type="hidden" name="searchMode" value="REGEX" class="d-none" />
+			<input type="hidden" name="searchMode" value="INDEX" class="d-none" />
 			<input type="hidden" name="contentType" value="Product" class="d-none"/>
 			<input type="hidden" name="searchFormId" value="8923" class="d-none"/>
 			<button type="submit" class="btn btn-outline-primary" name="Search" value="Submit">

@@ -91,6 +91,7 @@ namespace Protean
                         modbHelper = myWeb.moDbHelper;
                         moPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
                         base.moPageXML = myWeb.moPageXml;
+                        //mcCurrency = myWeb.moCart.mcCurrency;
                     }
 
                     catch (Exception ex)
