@@ -1,4 +1,4 @@
-CREATE PROCEDURE spGetHiddenProductUrls
+CREATE PROCEDURE [dbo].[spGetHiddenProductUrls]
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -12,4 +12,3 @@ BEGIN
     WHERE c.cContentSchemaName = 'Product'
       AND a.nStatus = 0;  
 END
-GO

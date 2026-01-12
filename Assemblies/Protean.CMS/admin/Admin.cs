@@ -3026,24 +3026,7 @@ namespace Protean
                                 }
 
                                 break;
-                            }
-
-                        case "AuthRedirectURL":
-                            {
-                                if (!string.IsNullOrEmpty(myWeb.moConfig["AuthRedirectURL"]))
-                                {
-                                    string redirectUrl = myWeb.moConfig["AuthRedirectURL"];
-                                    string AdminUserName = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText;
-                                    if (!string.IsNullOrEmpty(redirectUrl) && !string.IsNullOrEmpty(AdminUserName))
-                                    {
-                                        string encryptedUrl = Encryption.RC4.Encrypt(redirectUrl, myWeb.moConfig["SharedKey"]);
-                                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
-                                        oMembershipProv.AdminXforms.GenerateAuthenticatedRedirect(AdminUserName, encryptedUrl);
-                                    }
-                                }
-                                break;
-                            }
+                            }                      
 
                         case "RelateSearch":
                             {
