@@ -913,7 +913,7 @@ namespace Protean
 
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
                         myCart.GetCart(ref argoCartElmt);
-                        myCart.purchaseActions(CartXml);
+                        myCart.purchaseActions(CartXml,false);
                         // persist cart
                         myCart.close();
                         CartXml = updateCartforJSON(CartXml);

@@ -2583,7 +2583,7 @@ namespace Protean
                             args[1] = oCartElmt;
                             args[2] = bRenderScriptOnly;
                         }
-                        else if(bRenderScriptOnly==true)
+                        else if(bRenderScriptOnly!=null)
                         {
                             args = new object[2];
                             args[0] = oCartElmt;
