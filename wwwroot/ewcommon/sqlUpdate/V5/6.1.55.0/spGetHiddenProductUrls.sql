@@ -1,4 +1,4 @@
-CREATE PROCEDURE spGetHiddenProductUrls
+CREATE PROCEDURE [dbo].[spGetHiddenProductUrls]
 AS
 BEGIN
     SET NOCOUNT ON;
