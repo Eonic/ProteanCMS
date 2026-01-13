@@ -1039,7 +1039,7 @@ div[class$="List"] {
 
 .nobox .listItem .lIinner,
 .relatedcontent .listItem .lIinner {
-    // @include boxed-listItem;
+     @include boxed-listItem;
 }
 
 .TestimonialList .listItem .lIinner {
