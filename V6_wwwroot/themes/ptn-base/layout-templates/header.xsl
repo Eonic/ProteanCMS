@@ -647,13 +647,13 @@
                   </xsl:if>
                   <xsl:choose>
                     <xsl:when test="$nav-dropdown='true'">
-                      <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
+                      <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenudropdown">
                         <xsl:with-param name="overviewLink">self</xsl:with-param>
                         <xsl:with-param name="menu-back">true</xsl:with-param>
                       </xsl:apply-templates>
                     </xsl:when>
                     <xsl:when test="$nav-dropdown='hover'">
-                      <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer']" mode="mainmenudropdown">
+                      <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenudropdown">
                         <xsl:with-param name="overviewLink">self</xsl:with-param>
                         <xsl:with-param name="hover">false</xsl:with-param>
                         <xsl:with-param name="accessible-hover">true</xsl:with-param>
@@ -665,6 +665,13 @@
                     </xsl:otherwise>
                   </xsl:choose>
                 </ul>
+                <xsl:if test="Menu/MenuItem/MenuItem[not(DisplayName/@exclude='true') and DisplayName/@featuredLink='true']">
+                  <div class="header-featured-btn">
+                    <xsl:for-each select="Menu/MenuItem/MenuItem[not(DisplayName/@exclude='true') and DisplayName/@featuredLink='true']">
+                      <xsl:apply-templates select="." mode="menuLink"/>
+                    </xsl:for-each>
+                  </div>
+                </xsl:if>
                 <!--INFO NAV-->
                 <xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
                   <ul class="navbar-nav info-nav-xs xs-only">
@@ -712,7 +719,7 @@
       </div>
     </header>
   </xsl:template>
-  
+
   <!--HEADER BASIC-->
   <xsl:template match="Page" mode="header-basic1">
     <xsl:param name="nav-collapse" />
@@ -812,5 +819,5 @@
       </div>
     </nav>
   </xsl:template>
-  
+
 </xsl:stylesheet>
