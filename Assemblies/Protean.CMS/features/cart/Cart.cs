@@ -548,35 +548,8 @@ namespace Protean
                 string cartXmlFromDatabase = "";
                 mcOrderType = "Order";
                 cOrderReference = "";
-                mcModuleName = "Protean.Cart";
-                
-                if (moPay is null)
-                {
-                    oPay = new PaymentProviders(ref myWeb);
-                }
-                else
-                {
-                    oPay = moPay;
-                }
-                
-                Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
+                mcModuleName = "Protean.Cart";                
                
-                XmlElement oProvider = oEwProv.GetValidPaymentProviders();
-
-                XmlNode oProviderNode = oProvider.SelectSingleNode("provider");
-                string sProviderName = oProviderNode.Attributes["name"].Value;
-                XmlNode oPaymentProviderCfg = oProvider.SelectSingleNode("provider[@name='" + sProviderName + "']");
-
-
-                if (oPaymentProviderCfg != null)
-                {
-                    XmlNode allowNode = oPaymentProviderCfg.SelectSingleNode("AllowCartUpdatesOnPaymentPage");
-
-                    if (allowNode != null && allowNode.Attributes["value"] != null)
-                    {
-                        mcAllowUpdateCart = allowNode.Attributes["value"].Value;
-                    }
-                }
                 string cProcessInfo = Conversions.ToString(string.IsNullOrEmpty("initialise variables"));
                 try
                 {

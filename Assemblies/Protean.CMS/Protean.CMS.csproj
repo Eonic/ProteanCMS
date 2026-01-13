@@ -349,18 +349,7 @@
     <Compile Include="core\Cms.dbImport.cs" />
     <Compile Include="core\enviornment.cs" />
     <Compile Include="features\membership\Membership.Modules.cs" />
-<<<<<<< HEAD
-    <Compile Include="framework\adapters\ApplicationAdapter.cs" />
-    <Compile Include="framework\handlers\DeliverAjaxElmt.cs" />
-    <Compile Include="framework\handlers\DeliverExcel.cs" />
-    <Compile Include="framework\handlers\DeliverExport.cs" />
-    <Compile Include="framework\handlers\DeliverPageAsync.cs" />
-    <Compile Include="framework\handlers\KeepAlive.cs" />
-    <Compile Include="framework\handlers\DeliverPageAsPdf.cs" />
-    <Compile Include="framework\handlers\docDownload.cs" />
-=======
     <Compile Include="modal\APILog.cs" />
->>>>>>> ITB-GEN-DEV
     <Compile Include="providers\Authentication\Authentication.Microsoft.cs" />
     <Compile Include="providers\Authentication\Authentication.Google.cs" />
     <Compile Include="providers\Authentication\Authentication.BaseProvider.cs" />

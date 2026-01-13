@@ -1,16 +1,12 @@
 ﻿using System;
+using System.Globalization;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.Tools.Xml;
 
 namespace Protean
 {
-
-
     public partial class Cms
     {
-
         public class Calendar : IDisposable
         {
 
@@ -89,7 +85,7 @@ namespace Protean
 
 
                         int cGetMonth = Convert.ToInt16(oCalContent.SelectSingleNode("DisplaySettings/Months").InnerText);
-                        bool bSDateAsToday = Convert.ToBoolean(Interaction.IIf(oCalContent.SelectSingleNode("DisplaySettings/StartDateAsToday").InnerText == "true", true, false));
+                        bool bSDateAsToday = string.Equals(oCalContent.SelectSingleNode("DisplaySettings/StartDateAsToday")?.InnerText, "true",StringComparison.OrdinalIgnoreCase);
                         string cSDateinMonths = oCalContent.SelectSingleNode("DisplaySettings/StartDateInMonths").InnerText;
                         string sContentTypes = oCalContent.SelectSingleNode("ContentTypes").InnerText;
                         XmlElement xmloCalContent = oCalContent;
@@ -147,14 +143,12 @@ namespace Protean
                     else
                     {
                         // the start date is cSDateinMonths months ahead of the current date
-                        dCalendarStart = DateAndTime.DateAdd(DateInterval.Month, Convert.ToInt16(cSDateinMonths), dCalendarEnd);
+                        dCalendarStart = dCalendarEnd.AddMonths(Convert.ToInt32(cSDateinMonths));
                     }
 
 
                     // end date is always cGetMonths on from the start date
-                    dCalendarEnd = DateAndTime.DateAdd(DateInterval.Month, cMonthsToGet, dCalendarStart);
-                    dCalendarEnd = DateAndTime.DateAdd(DateInterval.Day, -1, dCalendarEnd);
-
+                    dCalendarEnd = dCalendarStart.AddMonths(cMonthsToGet).AddDays(-1);
 
                     // get xml for calendar element within these dates
                     var oCalendar = new Tools.Calendar(dCalendarStart, dCalendarEnd);
@@ -226,7 +220,7 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    return Convert.ToDateTime("01" + " " + DateAndTime.MonthName(dInput.Month) + " " + dInput.Year);
+                    return new DateTime(dInput.Year, dInput.Month, 1);
                 }
                 catch (Exception ex)
                 {
@@ -255,9 +249,12 @@ namespace Protean
                     }
                     strDate.Append(" ");
 
-                    strDate.Append(DateAndTime.MonthName(Convert.ToInt16(cInput.Substring(4, 2)))); // month
+                    int month = int.Parse(cInput.Substring(4, 2));
+                    int year = int.Parse(cInput.Substring(0, 4));
+
+                    strDate.Append(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month));
                     strDate.Append(" ");
-                    strDate.Append(cInput.Substring(0, 4)); // year
+                    strDate.Append(year);
 
                     return Convert.ToDateTime(strDate.ToString());
                 }
@@ -525,7 +522,8 @@ namespace Protean
                         moCalendar = new Calendar(ref myWeb);
 
                         int cGetMonth = Convert.ToInt16(oContentNode.GetAttribute("months"));
-                        bool bSDateAsToday = Convert.ToBoolean(Interaction.IIf(oContentNode.GetAttribute("startDateAsToday") == "true", true, false));
+                        bool bSDateAsToday;
+                        bool.TryParse(oContentNode.GetAttribute("startDateAsToday"), out bSDateAsToday);
                         string cSDateinMonths = oContentNode.GetAttribute("startDateInMonths");
                         string cContentTypes = oContentNode.GetAttribute("contentTypes");
 
