@@ -10,6 +10,8 @@
             padding: $nav-padding-y 0 !important;
             margin: 0 $nav-padding-x;
             position: relative;
+            font-weight:400;
+            text-transform:uppercase;
 
             &:focus-within {
                 padding: calc($nav-padding-y + 5px) 5px !important;
@@ -91,12 +93,13 @@ header.header-menu-right {
     display: block;
 
     .header-above {
-        background: $info;
+        background: $header-above;
 
         .container-fluid,
         .container {
             display: flex;
             justify-content: flex-end;
+            align-items: center;
         }
     }
 }
@@ -637,7 +640,6 @@ header {
 }
 /*############### INFO NAV #################*/
 .info-nav {
-    
     margin: 0 ($header-spacing/2) - $info-nav-spacing;
 
     ul {
@@ -647,6 +649,18 @@ header {
 
     .nav-link {
         padding: 0.5rem $info-nav-spacing;
+        color: $info-nav-color;
+        font-size: $info-nav-size;
+
+        &:hover,
+        &:focus {
+            color: $info-nav-hover;
+        }
+
+        &.active,
+        &.on {
+            color: $info-nav-active;
+        }
     }
 }
 
@@ -791,9 +805,124 @@ header {
     }
 }
 
+@mixin search-small {
+    position: relative;
+
+    .input-group {
+        display: block;
+
+        input {
+            overflow: hidden;
+            padding-left: 0.8rem;
+            padding-right: 2rem;
+            width: 100%;
+            border-radius: 0 !important;
+            border: 0;
+            margin: 7px 0;
+            font-size: 0.9rem;
+
+            &::placeholder {
+                color: #757575;
+            }
+        }
+
+        button {
+            border: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 20;
+            padding: 5px 7px;
+
+            &:focus,
+            &:active {
+                box-shadow: none;
+            }
+        }
+
+
+        button:hover,
+        button:focus,
+        button:active,
+        button.btn-outline-primary:hover,
+        button.btn-outline-primary:focus,
+        button.btn-outline-primary:active {
+            background: transparent;
+            color: rgba($body-color,0.8);
+        }
+
+        button,
+        button.btn-outline-primary {
+            color: $body-color;
+        }
+    }
+}
+
+@mixin search-tint {
+    position: relative;
+
+    .input-group {
+        display: block;
+
+        input {
+            border-radius: 0px !important;
+            overflow: hidden;
+            border-left: color-contrast($header-above) 1px solid;
+            border-right: color-contrast($header-above) 1px solid;
+            border-top: 0;
+            border-bottom: 0;
+            padding-left: 0.8rem;
+            padding-right: 2rem;
+            width: 100%;
+            background: lighten($header-above,10%);
+            color: color-contrast($header-above);
+            border-width: 1px;
+
+            &::placeholder {
+                color: color-contrast($header-above);
+            }
+        }
+
+        button {
+            border: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 20;
+            padding: 0.5rem 0.8rem;
+
+
+            &:focus,
+            &:active {
+                box-shadow: none;
+            }
+        }
+
+
+        button:hover,
+        button:focus,
+        button:active,
+        button.btn-outline-primary:hover,
+        button.btn-outline-primary:focus,
+        button.btn-outline-primary:active {
+            background: transparent;
+            color: color-contrast($header-above);
+        }
+
+        button,
+        button.btn-outline-primary {
+            color: color-contrast($header-above);
+        }
+    }
+}
+
 .search-wrapper {
     margin: 0 ($header-spacing/2);
     @include search-simple;
+}
+.header-above .search-wrapper {
+    // @include search-tint;
+    @include search-small;
 }
 
 .search-btn {

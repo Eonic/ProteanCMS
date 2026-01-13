@@ -818,6 +818,9 @@ section.stretchBG {
     padding-top: 3rem;
 }
 /*############### LIST ITEMS #################*/
+.listItem .title {
+    font-size: 1.5rem;
+}
 .date,
 .dtstamp {
     font-size: 0.75rem;
@@ -850,7 +853,7 @@ section.stretchBG {
 }
 
 @mixin boxed-listItem {
-    padding: $listItem-padding;
+    //padding: $listItem-padding;
     //border: 1px solid $grey;
     border-radius: $border-radius;
     // height: 100%;
@@ -858,6 +861,8 @@ section.stretchBG {
     flex-direction: column;
     background: $light;
     color: $body-color;
+    margin-bottom: $grid-gutter-height;
+    height: calc(100% - $grid-gutter-height);
 
     .btn-custom {
         @extend .#{$btn-list-style};
@@ -872,11 +877,10 @@ section.stretchBG {
     }
 
     *:nth-last-child(2) {
-        flex-grow: 2;
+     //   flex-grow: 2;
     }
 
-    .list-image-link,
-    .list-image-span {
+    .list-image-link, .list-image-span {
         margin-top: -$listItem-padding;
         margin-left: -$listItem-padding;
         margin-right: -$listItem-padding;
@@ -885,6 +889,12 @@ section.stretchBG {
         img.thumbnail {
             margin-bottom: 0;
         }
+    }
+
+    .media-inner {
+        padding: $listItem-padding;
+        height: auto;
+        flex-grow: 2;
     }
 }
 
@@ -1039,7 +1049,7 @@ div[class$="List"] {
 
 .nobox .listItem .lIinner,
 .relatedcontent .listItem .lIinner {
-     @include boxed-listItem;
+    @include boxed-listItem;
 }
 
 .TestimonialList .listItem .lIinner {
@@ -1192,7 +1202,7 @@ div[class$="List"] {
     }
 
     .media-inner {
-        padding: 1.5rem 0;
+        //padding: 1.5rem 0;
 
         .entryFooter {
             padding-top: 1rem;

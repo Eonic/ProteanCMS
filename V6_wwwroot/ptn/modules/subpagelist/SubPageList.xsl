@@ -145,7 +145,7 @@
     <xsl:variable name="pageName">
       <xsl:apply-templates select="." mode="getDisplayName"/>
     </xsl:variable>
-    <xsl:if test="(@name!='Info Menu' and (not(DisplayName/@exclude='true'))) or (@name!='Info Menu' and $showHidden='true')">
+    <xsl:if test="((@name!='Info Menu' and @name!='Footer') and (not(DisplayName/@exclude='true'))) or ((@name!='Info Menu' and @name!='Footer') and $showHidden='true')">
       <li class="nav-item">
         <xsl:apply-templates select="." mode="inlinePopupOptions">
           <xsl:with-param name="class" select="'nav-item'"/>
@@ -189,7 +189,7 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <xsl:if test="(@name!='Info Menu' and (not(DisplayName/@exclude='true'))) or (@name!='Info Menu' and $showHidden='true')">
+    <xsl:if test="((@name!='Info Menu' and @name!='Footer') and (not(DisplayName/@exclude='true'))) or ((@name!='Info Menu' and @name!='Footer') and $showHidden='true')">
       <xsl:variable name="classValues">
         <xsl:text>listItem subpageItem</xsl:text>
         <xsl:if test="$linked='true'">
