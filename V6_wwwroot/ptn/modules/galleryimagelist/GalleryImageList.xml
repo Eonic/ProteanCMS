@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content moduleType="GalleryImageList" contentType="LibraryImage" box="" title="" link="" linkType="internal" linkText="More images" sortBy="publish" order="descending" cols="" stepBy="" stepCount="0" display="all" position="" crop="false" noStretch="true" carousel="false" autoplay="true" autoPlaySpeed="2000" lightbox="true"/>
+					<Content moduleType="GalleryImageList" contentType="LibraryImage" box="" title="" link="" linkType="internal" linkText="More images" sortBy="publish" order="descending" cols="" stepBy="" stepCount="0" display="all" position="" crop="false" noStretch="true" carousel="false" autoplay="true" autoPlaySpeed="2000" lightbox="true" heading="h2"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
