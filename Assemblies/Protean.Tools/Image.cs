@@ -52,10 +52,18 @@ namespace Protean.Tools
             {
                 cLocation = Location; // set the location
                 ReLoad(); // load the image
+                
+                // Verify image loaded successfully
+                if (oImg == null)
+                {
+                    throw new InvalidOperationException($"Failed to load image from: {Location}");
+                }
             }
             catch (Exception ex)
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""));
+                // Re-throw to prevent object creation with null image
+                throw;
             }
         }
 
@@ -96,18 +104,22 @@ namespace Protean.Tools
             // load the image
             try
             {
-                if (File.Exists(cLocation))
+                if (!File.Exists(cLocation))
                 {
-                    oImg = SKBitmap.Decode(cLocation);  // ✅ SkiaSharp method
-                    if (oImg == null)
-                    {
-                        throw new Exception($"Failed to decode image: {cLocation}");
-                    }
+                    throw new FileNotFoundException($"Image file not found: {cLocation}", cLocation);
+                }
+                
+                oImg = SKBitmap.Decode(cLocation);  // ✅ SkiaSharp method
+                if (oImg == null)
+                {
+                    throw new InvalidOperationException($"Failed to decode image: {cLocation}");
                 }
             }
             catch (Exception ex)
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ReLoad", ex, ""));
+                // Re-throw to prevent continued execution with null image
+                throw;
             }
         }
 
@@ -115,6 +127,13 @@ namespace Protean.Tools
         {
             try
             {
+                if (oImg == null)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UploadProcessing", 
+                        new InvalidOperationException("Cannot process upload: Image is null"), ""));
+                    return;
+                }
+                
                 if (!string.IsNullOrEmpty(_WatermarkText))
                 {
                     AddWatermark(oImg, _WatermarkText, _WatermarkImgPath);
@@ -127,7 +146,7 @@ namespace Protean.Tools
 
             catch (Exception ex)
             {
-                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""));
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "UploadProcessing", ex, ""));
             }
         }
 
@@ -334,6 +353,13 @@ namespace Protean.Tools
             // decides on the new sizes for the image
             try
             {
+                if (oImg == null)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Resize", 
+                        new InvalidOperationException("Cannot resize: Image is null"), ""));
+                    return;
+                }
+                
                 int nNewWidth;
                 int nNewHeight;
 
@@ -382,6 +408,12 @@ namespace Protean.Tools
         {
             try
             {
+                if (oImg == null)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResizeMax", 
+                        new InvalidOperationException("Cannot resize: Image is null"), ""));
+                    return;
+                }
 
                 if (bCrop)
                 {
@@ -548,7 +580,28 @@ namespace Protean.Tools
             // does the actual resize using SkiaSharp
             try
             {
+                if (oImage == null)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImageResize", 
+                        new ArgumentNullException(nameof(oImage), "Source image is null"), ""));
+                    return oImage;
+                }
+                
+                if (nWidth <= 0 || nHeight <= 0)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImageResize", 
+                        new ArgumentException($"Invalid dimensions: {nWidth}x{nHeight}"), ""));
+                    return oImage;
+                }
+
                 oSourceImg = oImage.Copy();
+                
+                if (oSourceImg == null)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImageResize", 
+                        new InvalidOperationException("Failed to copy source image"), ""));
+                    return oImage;
+                }
 
                 // Create new bitmap with target dimensions
                 var resizedBitmap = new SKBitmap(nWidth, nHeight, oImage.ColorType, oImage.AlphaType);
@@ -884,6 +937,20 @@ namespace Protean.Tools
         {
             try
             {
+                if (oImage == null)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CropImage", 
+                        new ArgumentNullException(nameof(oImage), "Image to crop is null"), ""));
+                    return oImage;
+                }
+                
+                if (nMaxWidthCrop <= 0 || nMaxHeightCrop <= 0)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "CropImage", 
+                        new ArgumentException($"Invalid crop dimensions: {nMaxWidthCrop}x{nMaxHeightCrop}"), ""));
+                    return oImage;
+                }
+                
                 var cropped = new SKBitmap(nMaxWidthCrop, nMaxHeightCrop, oImage.ColorType, oImage.AlphaType);
 
                 using (var canvas = new SKCanvas(cropped))
@@ -928,6 +995,13 @@ namespace Protean.Tools
         {
             try
             {
+                if (oImg == null)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddReflection", 
+                        new InvalidOperationException("Cannot add reflection: Image is null"), ""));
+                    return oImg;
+                }
+                
                 SKBitmap _image = oImg;
 
                 // Calculate the size of the new image
@@ -1095,6 +1169,13 @@ namespace Protean.Tools
         {
             try
             {
+                if (oImg == null)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddWatermark", 
+                        new InvalidOperationException("Cannot add watermark: Image is null"), ""));
+                    return oImg;
+                }
+                
                 int phWidth = oImg.Width;
                 int phHeight = oImg.Height;
 
@@ -1178,6 +1259,13 @@ namespace Protean.Tools
             // Note: Renamed parameter from oImg to oImgParam to avoid confusion with field
             try
             {
+                if (oImgParam == null)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddWatermark", 
+                        new ArgumentNullException(nameof(oImgParam), "Image parameter is null"), ""));
+                    return oImgParam;
+                }
+                
                 int phWidth = oImgParam.Width;
                 int phHeight = oImgParam.Height;
 

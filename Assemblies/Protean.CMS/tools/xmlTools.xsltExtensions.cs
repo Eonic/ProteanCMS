@@ -1783,14 +1783,17 @@ namespace Protean
                             {
                                 using (var bitmap = SKBitmap.Decode(goServer.MapPath(cVirtualPath)))
                                 {
-                                    using (var image = SKImage.FromBitmap(bitmap))
-                                    using (var data = image.Encode(SKEncodedImageFormat.Webp, WebPQuality))
-                                    using (var saveImageStream = File.OpenWrite(goServer.MapPath(webpFileName)))
+                                    if (bitmap != null)
                                     {
-                                        data.SaveTo(saveImageStream);
+                                        using (var image = SKImage.FromBitmap(bitmap))
+                                        using (var data = image.Encode(SKEncodedImageFormat.Webp, WebPQuality))
+                                        using (var saveImageStream = File.OpenWrite(goServer.MapPath(webpFileName)))
+                                        {
+                                            data.SaveTo(saveImageStream);
+                                        }
                                     }
                                 }
-                            }
+                             }
                         }
                         return webpFileName;
                     }

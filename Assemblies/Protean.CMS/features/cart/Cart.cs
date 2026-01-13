@@ -632,7 +632,7 @@ namespace Protean
 
                             if (allowNode != null && allowNode.Attributes["value"] != null)
                             {
-                                mcAllowUpdateCart = allowNode.Attributes["value"].Value;
+                                mcBlockCartUpdate = allowNode.Attributes["value"].Value;
                             }
                         }
 
@@ -2036,11 +2036,11 @@ namespace Protean
                         case "SubmitPaymentDetails": // confirm order and submit for payment
                             {
                                 GetCart(ref oElmt);
-                               
+
                                 if (Convert.ToString(oElmt.Attributes["statusId"].Value) == cartProcess.Complete.ToString())
                                 {
                                     mnProcessId = (short)cartProcess.Complete;
-                                  //  purchaseActions(oContentElmt, true);
+                                    //  purchaseActions(oContentElmt, true);
                                     mcCartCmd = "ShowInvoice";
                                     goto processFlow;
                                 }
@@ -2057,17 +2057,18 @@ namespace Protean
                                 //    GetCart(ref oElmt);
                                 //}
 
-                                // Add the date and reference to the cart
-                               
+                            // Add the date and reference to the cart
+                            if (oElmt != null)
+                            {
                                 addDateAndRef(ref oElmt);
+                            }
 
-
-                                if (mcPaymentMethod == "No Charge")
-                                {
-                                    mcCartCmd = "ShowInvoice";
-                                    mnProcessId = (short)cartProcess.Complete;
-                                    goto processFlow;
-                                }
+                            if (mcPaymentMethod == "No Charge")
+                            {
+                                mcCartCmd = "ShowInvoice";
+                                mnProcessId = (short)cartProcess.Complete;
+                                goto processFlow;
+                            }
 
                                 cProcessInfo = "Payment Method from session = '" + mcPaymentMethod + "'";
                                 //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, mcPaymentMethod);
@@ -2127,12 +2128,12 @@ namespace Protean
                                     foreach (XmlNode oNodeCart in oElmt.SelectNodes("*"))
                                         oElmt.RemoveChild(oNodeCart);
                                     // oEwProv = Nothing
-                                    goto processFlow;
+                                    //goto processFlow;
                                     if (oElmt != null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
                                     {
                                         CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
                                     }
-                                    else
+                                    else if (oElmt != null)
                                     {
                                         if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
                                         {
@@ -2141,6 +2142,7 @@ namespace Protean
                                             purchaseActions(oContentElmt, true);
                                         }
                                     }
+                                }
 
                                 else
                                 {
@@ -2149,8 +2151,10 @@ namespace Protean
                                     moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt);
                                 }
 
-                                break;
-                            }
+                                    break;
+                                }
+                            
+
                         // oEwProv = Nothing
 
                         case "ShowInvoice":
@@ -5232,13 +5236,14 @@ namespace Protean
                     {
                         oElmt = currentOElmt;
                         string cThisAddressType;
-                        if (oElmt.ParentNode.SelectSingleNode("input[@bind='cContactType' or @bind='cDelContactType']/value") is null)
+                        var contactTypeNode = oElmt.ParentNode.SelectSingleNode("input[@bind='cContactType' or @bind='cDelContactType']/value");
+                        if (contactTypeNode is null)
                         {
                             cThisAddressType = cAddressType;
                         }
                         else
                         {
-                            cThisAddressType = oElmt.ParentNode.SelectSingleNode("input[@bind='cContactType' or @bind='cDelContactType']/value").InnerText;
+                            cThisAddressType = contactTypeNode.InnerText;
                         }
                         if (mbNoDeliveryAddress)
                         {

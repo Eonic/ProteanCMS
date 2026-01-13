@@ -925,22 +925,21 @@ namespace Protean.Providers
                                 {
                                     if (areEmailAddressesAllowed == true)
                                     {
-                                    cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirEmail = '" + cUsername.ToLower() + "'";
+                                        cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirEmail = '" + cUsername.ToLower() + "'";
+                                    }
+                                    else
+                                    {
+                                        cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirXml like '%<Email>" + cUsername.ToLower() + "</Email>%'";
+                                    }
+                                }
+                                else if (areEmailAddressesAllowed == true)
+                                {
+                                    cSQL = "SELECT nDirKey, cDirEmail FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + cUsername.ToLower() + "'";
                                 }
                                 else
                                 {
-                                    cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirXml like '%<Email>" + cUsername.ToLower() + "</Email>%'";
+                                    cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + cUsername.ToLower() + "'";
                                 }
-                            }
-                            else if (areEmailAddressesAllowed == true)
-                            {
-                                cSQL = "SELECT nDirKey, cDirEmail FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + cUsername.ToLower() + "'";
-                            }
-                            else
-                            {
-                                cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + cUsername.ToLower() + "'";
-
-                            }
 
                                 dsUsers = myWeb.moDbHelper.GetDataSet(cSQL, "tblTemp");
                                 nNumberOfUsers = dsUsers.Tables[0].Rows.Count;
@@ -2050,7 +2049,7 @@ namespace Protean.Providers
                             myWeb.mnUserId = 0;
                             return myWeb.mnUserId;
                         }
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["nUserId"], 0, false)))
+                        if (moSession["nUserId"] != null && !moSession["nUserId"].Equals(0))
                         {
                             myWeb.mnUserId = Convert.ToInt64(moSession["nUserId"]);
                         }
@@ -2219,11 +2218,11 @@ namespace Protean.Providers
                     {
                         if (moSession["nUserId"] != null)
                         {
-                            if ((int?)moSession["nUserId"] == 0)
+                            if ((long?)moSession["nUserId"] == 0)
                             {
                                 moSession["nUserId"] = mnUserId;
                             }
-                            else if ((int?)moSession["nUserId"] != mnUserId && string.IsNullOrEmpty(Convert.ToString(moSession["PreviewUser"])))
+                            else if ((long?)moSession["nUserId"] != mnUserId && string.IsNullOrEmpty(Convert.ToString(moSession["PreviewUser"])))
                             {
                                 // reset to a different value
                                 moSession["nUserId"] = mnUserId;

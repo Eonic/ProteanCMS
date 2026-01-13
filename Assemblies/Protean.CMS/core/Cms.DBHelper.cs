@@ -7393,7 +7393,7 @@ namespace Protean
                             {
                                 string username = root.GetAttribute("name");
                                 string token = Protean.Tools.AESCGM.EncryptAesGcm(username.ToString(), myWeb.moConfig["SharedKey"]);
-                                EncryptedUserKey.InnerText = HttpUtility.UrlEncode(token);
+                                EncryptedUserKey.InnerText = System.Net.WebUtility.UrlEncode(token);
                                 root.AppendChild(EncryptedUserKey);
                             }                            
                         }
