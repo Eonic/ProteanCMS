@@ -3026,24 +3026,7 @@ namespace Protean
                                 }
 
                                 break;
-                            }
-
-                        case "AuthRedirectURL":
-                            {
-                                if (!string.IsNullOrEmpty(myWeb.moConfig["AuthRedirectURL"]))
-                                {
-                                    string redirectUrl = myWeb.moConfig["AuthRedirectURL"];
-                                    string AdminUserName = myWeb.moPageXml.SelectSingleNode("Page/User/@name").InnerText;
-                                    if (!string.IsNullOrEmpty(redirectUrl) && !string.IsNullOrEmpty(AdminUserName))
-                                    {
-                                        string encryptedUrl = Encryption.RC4.Encrypt(redirectUrl, myWeb.moConfig["SharedKey"]);
-                                        Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
-                                        IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, myWeb.moConfig["MembershipProvider"]);
-                                        oMembershipProv.AdminXforms.GenerateAuthenticatedRedirect(AdminUserName, encryptedUrl);
-                                    }
-                                }
-                                break;
-                            }
+                            }                      
 
                         case "RelateSearch":
                             {
@@ -3450,7 +3433,7 @@ namespace Protean
                         case "404ProductReport":
                             {
                                 // bLoadStructure = true;
-                                HeiddenProductWithoutRedirect(ref oPageDetail, ref sAdminLayout);
+                                HiddenProductWithoutRedirect(ref oPageDetail, ref sAdminLayout);
                                 //myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
                                 break;
                             }
@@ -6189,7 +6172,7 @@ from tblContentIndexDef";
                 string cUrl = moConfig["BaseUrl"];
 
                 // DBHelper for the Scheduler database
-                var dbt = new Cms.dbHelper(ref myWeb);
+                var dbt = new Cms.dbHelper(myWeb);
 
                 try
                 {
@@ -7187,7 +7170,7 @@ from tblContentIndexDef";
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "SEOReport", ex, "", sProcessInfo, gbDebug);
                 }
             }
-            private void HeiddenProductWithoutRedirect(ref XmlElement oPageDetail, ref string sAdminLayout)
+            private void HiddenProductWithoutRedirect(ref XmlElement oPageDetail, ref string sAdminLayout)
             {
                 string sProcessInfo = "";
 
@@ -7215,7 +7198,7 @@ from tblContentIndexDef";
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "HeiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "HiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
                 }
             }
 

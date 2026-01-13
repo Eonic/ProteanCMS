@@ -189,7 +189,7 @@ namespace Protean
             public bool mbQuitOnShowInvoice = true;
             private bool mbDepositOnly = false;
             public bool mbBlockCartCmd = false; // Used for reseting payment on subscripitions
-            public string mcAllowUpdateCart;
+            public string mcBlockCartUpdate;
 
 
             public enum cartError
@@ -243,6 +243,8 @@ namespace Protean
                     cOrderNoPrefix = value;
                 }
             }
+
+         
             #endregion
 
             #region Classes
@@ -547,7 +549,34 @@ namespace Protean
                 mcOrderType = "Order";
                 cOrderReference = "";
                 mcModuleName = "Protean.Cart";
+                
+                if (moPay is null)
+                {
+                    oPay = new PaymentProviders(ref myWeb);
+                }
+                else
+                {
+                    oPay = moPay;
+                }
+                
+                Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
+               
+                XmlElement oProvider = oEwProv.GetValidPaymentProviders();
 
+                XmlNode oProviderNode = oProvider.SelectSingleNode("provider");
+                string sProviderName = oProviderNode.Attributes["name"].Value;
+                XmlNode oPaymentProviderCfg = oProvider.SelectSingleNode("provider[@name='" + sProviderName + "']");
+
+
+                if (oPaymentProviderCfg != null)
+                {
+                    XmlNode allowNode = oPaymentProviderCfg.SelectSingleNode("AllowCartUpdatesOnPaymentPage");
+
+                    if (allowNode != null && allowNode.Attributes["value"] != null)
+                    {
+                        mcAllowUpdateCart = allowNode.Attributes["value"].Value;
+                    }
+                }
                 string cProcessInfo = Conversions.ToString(string.IsNullOrEmpty("initialise variables"));
                 try
                 {
@@ -1103,7 +1132,6 @@ namespace Protean
             }
 
 
-
             public void writeSessionCookie()
             {
                 // writes the session cookie to persist the cart
@@ -1395,7 +1423,7 @@ namespace Protean
                             AddToLists("Invoice", ref oContentElmt);
                         }
 
-                        purchaseActions(ref oContentElmt);
+                        purchaseActions(oContentElmt,false);
                         // update the cart if purchase actions have changed it
                         // GetCart(oElmt)
                         // done for ammerdown as we have removed a product.
@@ -1432,7 +1460,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, " CompleteOrder", ex, "", cProcessInfo, gbDebug);
                    
                 }
             }
@@ -1708,6 +1736,8 @@ namespace Protean
                                 if (Convert.ToString(oElmt.Attributes["statusId"].Value) == "6")
                                 {
                                     mnProcessId = 6;
+                                   // addDateAndRef(ref oElmt);
+                                   // purchaseActions(oContentElmt,true);
                                     mcCartCmd = "ShowInvoice";
                                     goto processFlow;
                                 }
@@ -2033,10 +2063,11 @@ namespace Protean
                         case "SubmitPaymentDetails": // confirm order and submit for payment
                             {
                                 GetCart(ref oElmt);
-
-                                if(Convert.ToString(oElmt.Attributes["statusId"].Value) =="6")
+                               
+                                if (Convert.ToString(oElmt.Attributes["statusId"].Value) == cartProcess.Complete.ToString())
                                 {
-                                    mnProcessId = 6;
+                                    mnProcessId = (short)cartProcess.Complete;
+                                  //  purchaseActions(oContentElmt, true);
                                     mcCartCmd = "ShowInvoice";
                                     goto processFlow;
                                 }
@@ -2054,8 +2085,9 @@ namespace Protean
                                 //}
 
                                 // Add the date and reference to the cart
-
+                               
                                 addDateAndRef(ref oElmt);
+
 
                                 if (mcPaymentMethod == "No Charge")
                                 {
@@ -2123,7 +2155,20 @@ namespace Protean
                                         oElmt.RemoveChild(oNodeCart);
                                     // oEwProv = Nothing
                                     goto processFlow;
-                                }
+                                    if (oElmt != null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
+                                    {
+                                        CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
+                                    }
+                                    else
+                                    {
+                                        if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
+                                        {
+
+                                            addDateAndRef(ref oElmt);
+                                            purchaseActions(oContentElmt, true);
+                                        }
+                                    }
+
                                 else
                                 {
 
@@ -2148,90 +2193,7 @@ namespace Protean
                                 }
                                 else
                                 {
-
-                                    PersistVariables();
-
-                                    if (oElmt.FirstChild is null)
-                                    {
-                                        GetCart(ref oElmt);
-                                    }
-
-                                    if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
-                                    {
-
-                                        if (moCartConfig["StockControl"] == "on")
-                                        {
-                                            UpdateStockLevels(ref oElmt);
-                                        }
-                                        UpdateGiftListLevels();
-                                        addDateAndRef(ref oElmt);
-                                        if (myWeb.mnUserId > 0)
-                                        {
-                                            var userXml = myWeb.moDbHelper.GetUserXML((long)myWeb.mnUserId, false);
-                                            if (userXml != null)
-                                            {
-                                                XmlElement cartElement = (XmlElement)oContentElmt.SelectSingleNode("Cart");
-                                                if (cartElement != null)
-                                                {
-                                                    cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, true));
-                                                }
-                                            }
-                                        }
-
-                                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["Settlement"], "true", false)))
-                                        {
-                                            // modifiy the cartXml in line with settlement
-                                            if (mnProcessId == (int)cartProcess.DepositPaid)
-                                            {
-                                                mnProcessId = (short)cartProcess.Complete;
-
-                                            }
-                                            myWeb.moSession["Settlement"] = (object)null;
-                                        }
-
-
-
-                                        if (mnProcessId == (int)cartProcess.DepositPaid)
-                                        {
-                                            AddToLists("Deposit", ref oContentElmt);
-                                        }
-                                        else
-                                        {
-                                            AddToLists("Invoice", ref oContentElmt);
-                                        }
-
-                                        purchaseActions(ref oContentElmt);
-                                        // update the cart if purchase actions have changed it
-                                        // GetCart(oElmt)
-                                        // done for ammerdown as we have removed a product.
-
-
-
-                                        if (myWeb.mnUserId > 0)
-                                        {
-                                            if (moSubscription != null)
-                                            {
-                                                moSubscription.AddUserSubscriptions(mnCartId, myWeb.mnUserId, ref oContentElmt, mnPaymentId);
-                                            }
-                                        }
-
-                                        if (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] != null)
-                                        {
-                                            if ((oElmt.GetAttribute("statusId") ?? "") != (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] ?? ""))
-                                            {
-                                                emailReceipts(ref oContentElmt);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            emailReceipts(ref oContentElmt);
-                                        }
-
-
-                                        moDiscount.DisablePromotionalDiscounts();
-
-                                    }
-
+                                    GetCart(ref oElmt);
 
                                     CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
 
@@ -2645,7 +2607,7 @@ namespace Protean
                 }
             }
 
-            public virtual void purchaseActions(ref XmlElement oCartElmt)
+            public virtual void purchaseActions( XmlElement oCartElmt, bool bRenderScriptOnly=false)
             {
                 myWeb.PerfMon.Log("Cart", "purchaseActions");
                 // Dim sMessageResponse As String
@@ -2672,9 +2634,16 @@ namespace Protean
 
                         if (passCMS == "true")
                         {
-                            args = new object[2];
+                            args = new object[3];
                             args[0] = myWeb;
                             args[1] = oCartElmt;
+                            args[2] = bRenderScriptOnly;
+                        }
+                        else if(bRenderScriptOnly!=null)
+                        {
+                            args = new object[2];
+                            args[0] = oCartElmt;
+                            args[1] = bRenderScriptOnly;
                         }
                         else
                         {
@@ -2735,9 +2704,19 @@ namespace Protean
                                 var o = Activator.CreateInstance(calledType);
 
                                 var args = new object[2];
-                                args[0] = myWeb;
-                                args[1] = ocNode;
-
+                                if(bRenderScriptOnly == true)
+                                {
+                                    args = new object[3];
+                                    args[0] = myWeb;
+                                    args[1] = ocNode;
+                                    args[2] = bRenderScriptOnly;
+                                }
+                                else
+                                {
+                                    args[0] = myWeb;
+                                    args[1] = ocNode;
+                                }
+                               
                                 calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
                             }
 
@@ -3373,15 +3352,16 @@ namespace Protean
                         oCartElmt.SetAttribute("weight", weight.ToString());
                         oCartElmt.SetAttribute("orderType", mmcOrderType + "");
 
+                         mcBlockCartUpdate = GetBlockCartUpdatesConfig();
 
-                        if (!string.IsNullOrEmpty(mcAllowUpdateCart)
-                            && mcAllowUpdateCart.Trim().ToLower() == "on")
+                        if (!string.IsNullOrEmpty(mcBlockCartUpdate)
+                            && mcBlockCartUpdate.Trim().ToLower() == "on")
                         {
-                            oCartElmt.SetAttribute("AllowCartUpdate", "on");
+                            oCartElmt.SetAttribute("BlockCartUpdate", "on");
                         }
                         else
                         {
-                            oCartElmt.SetAttribute("AllowCartUpdate", "off");
+                            oCartElmt.SetAttribute("BlockCartUpdate", "off");
                         }
                         if (nStatusId == 6L)
                         {
@@ -4029,7 +4009,12 @@ namespace Protean
 
                         foreach (XmlElement opElmt in xElmtPaymentProvider)
                         {
-
+                            //if (opElmt.GetAttribute("name") == "Pay360")
+                            //{
+                            //    // Pay360 Google Pay is NOT a wallet provider
+                            //    // It is just a payment method inside Pay360
+                            //    continue; // Skip wallet logic entirely
+                            //}
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
                             IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
                             XmlElement oWallets = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
@@ -4046,6 +4031,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetWalletDetails", ex, "", "", gbDebug);
                     return false;
                 }
 
@@ -8168,8 +8154,10 @@ namespace Protean
 
                     if (nQuantity < itemLimit)
                     {
+                        
+                        mcBlockCartUpdate = GetBlockCartUpdatesConfig();
 
-                        if (mnProcessId < 5 || string.Equals(mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                        if (mnProcessId < 5 || string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             oDS = moDBHelper.getDataSetForUpdate(cSQL, "CartItems", "Cart");
                             oDS.EnforceConstraints = false;
@@ -8755,7 +8743,9 @@ namespace Protean
             public int RemoveItem(long nItemId = 0L, long nContentId = 0L)
             {
 
-                if (mnProcessId > 4 && !string.Equals(mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                mcBlockCartUpdate = GetBlockCartUpdatesConfig();
+
+                if (mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                 {
                     return 1;
                 }
@@ -12056,7 +12046,7 @@ namespace Protean
             {
                 try
                 {
-                    string cResult = "Success";
+                   // string cResult = "Success";
                     var oCartListElmt = moPageXml.CreateElement("Order");
                     //GetCart(ref oCartListElmt, nOrderId);
                     // Insert code into tblcartOrder
@@ -12243,7 +12233,7 @@ namespace Protean
                 string result = "";
                 try
                 {
-                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper(ref myWeb);
+                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper( myWeb);
                     Protean.Cms.modal.Contact contact = new Cms.modal.Contact();
                     if (!string.IsNullOrEmpty(cEmailAddress))
                     {
@@ -12356,6 +12346,33 @@ namespace Protean
                     }
                     return result;
                 }
+            }
+
+            public string GetBlockCartUpdatesConfig()
+            {
+               
+                string mcBlockCartUpdate = "";
+                string paymentMethod = myWeb?.moSession?["mcPaymentMethod"] as string;
+
+                if (!string.IsNullOrEmpty(paymentMethod))
+                {
+                    Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
+
+                XmlElement oProvider = oEwProv.GetValidPaymentProviders();
+                XmlNode oPaymentProviderCfg = oProvider.SelectSingleNode("provider[@name='" + paymentMethod + "']");
+
+
+                if (oPaymentProviderCfg != null)
+                {
+                    XmlNode allowNode = oPaymentProviderCfg.SelectSingleNode("BlockCartUpdates");
+
+                    if (allowNode != null && allowNode.Attributes["value"] != null)
+                    {
+                            mcBlockCartUpdate = allowNode.Attributes["value"].Value;
+                    }
+                }
+                }
+                return mcBlockCartUpdate;
             }
 
             #region IDisposable Implementation

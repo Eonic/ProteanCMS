@@ -631,11 +631,18 @@ namespace Protean.Providers
                         }
                         if (!string.IsNullOrEmpty(encryptedUrl))
                         {
-                            // 2. decrypt to get original URL
-                            string redirectUrl = Encryption.RC4.Decrypt(encryptedUrl, myWeb.moConfig["SharedKey"]);
+                            // decode the incoming query value, normalize common URL transport issues, then decrypt
+                            string raw = HttpUtility.UrlDecode(encryptedUrl ?? "");
+                            raw = raw.Replace(" ", "+"); // fix for spaces turned from '+' in some cases
+
+                            // If you want legacy RC4 fallback, call DecryptToken; otherwise call DecryptAesGcm directly
+                            // Preferred: wrapper that tries AES-GCM then RC4 if needed
+                            string redirectUrl = Protean.Tools.AESCGM.DecryptToken(raw, myWeb.moConfig["SharedKey"]);
+                            // Or, if you are sure it's AES-GCM:
+                            // redirectUrl = Protean.Tools.Encryption.DecryptAesGcm(raw, myWeb.moConfig["SharedKey"]);
 
                             //SET SESSION FOR INTRANET HERE
-                            string token = Encryption.RC4.Encrypt(username.ToString(), myWeb.moConfig["SharedKey"]);
+                            string token = Protean.Tools.AESCGM.EncryptAesGcm(username.ToString(), myWeb.moConfig["SharedKey"]);
                             if (redirectUrl.Contains("?"))
                                 redirectUrl += "&userkey=" + HttpUtility.UrlEncode(token);
                             else
@@ -646,8 +653,7 @@ namespace Protean.Providers
                                 redirectUrl.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                             {
                                 myWeb.moResponse.Redirect(redirectUrl, false);
-                                HttpContext.Current.ApplicationInstance.CompleteRequest();
-                                myWeb.moSession["AuthRedirectURL"] = null;
+                                HttpContext.Current.ApplicationInstance.CompleteRequest();                                
                                 return null; // Important to stop further processing
                             }
                         }
@@ -2037,7 +2043,14 @@ namespace Protean.Providers
 
                     try
                     {
-                    if ((long?)moSession["nUserId"] != null && (long?)moSession["nUserId"] != 0)
+                        if (myWeb.moRequest["LogOff"] == "1")
+                        {
+                            moSession["nUserId"] = null;
+                            moSession.Abandon();
+                            myWeb.mnUserId = 0;
+                            return myWeb.mnUserId;
+                        }
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["nUserId"], 0, false)))
                         {
                             myWeb.mnUserId = Convert.ToInt64(moSession["nUserId"]);
                         }

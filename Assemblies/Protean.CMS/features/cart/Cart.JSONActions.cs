@@ -37,12 +37,10 @@ namespace Protean
                 public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Cart.JSONActions";
                 private const string cContactType = "Venue";
-                private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
                 private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 private Cms myWeb;
                 private Cart myCart;
-
-
+                
                 public JSONActions()
                 {
                     // string ctest = "this constructor is being hit"; // for testing
@@ -143,10 +141,10 @@ namespace Protean
                             }
                             myCart.mnProcessId = (short)1;
                         }
-                        var cAllowCartUpdateConfig = myCart.mcAllowUpdateCart;
+                        var cBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
 
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(cAllowCartUpdateConfig?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(cBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -220,9 +218,9 @@ namespace Protean
                 {
                     try
                     {
-                       
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -461,9 +459,9 @@ namespace Protean
 
                 public string UpdateDeliveryOptionByCountry(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    
+                    string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
                     if ((int)myCart.mnProcessId > 4 &&
-                        !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                        !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                     {
                         return "";
                     }
@@ -514,7 +512,7 @@ namespace Protean
                         string dirId = (string)jObj["dirId"];
                         // Dim offerId As String = jObj("offerId")
 
-                        object userContacts = myWeb.moDbHelper.GetUserContactsXml(Convert.ToInt16(dirId));
+                        object userContacts = myWeb.moDbHelper.GetUserContactsXml(Conversions.ToInteger(dirId));
                         JsonResult = JsonConvert.SerializeObject(userContacts);
                         return JsonResult;
                     }
@@ -578,7 +576,7 @@ namespace Protean
                     try
                     {
                         string cContactKey = (string)jObj["nContactKey"];
-                        int argnContactKey = Convert.ToInt16(cContactKey);
+                        int argnContactKey = Conversions.ToInteger(cContactKey);
                         isSuccess = myWeb.moDbHelper.DeleteContact(ref argnContactKey);
                         cContactKey = argnContactKey.ToString();
                     }
@@ -646,10 +644,10 @@ namespace Protean
                     string strMessage = string.Empty;
                     try
                     {
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
 
-                       
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -694,9 +692,10 @@ namespace Protean
                     string jsonString = string.Empty;
                     try
                     {
-                            
+                        var cBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+
                         if ((int)myCart.mnProcessId > 4 &&
-                            !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                            !string.Equals(cBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -731,7 +730,7 @@ namespace Protean
                         double cProductPrice = (double)jObj["itemPrice"];
                         long cartItemId = (long)jObj["itemId"];
 
-                        if (myWeb.moDbHelper.checkUserRole(myCart.moCartConfig["AllowPriceUpdateRole"], "Role", Convert.ToInt64(Operators.ConcatenateObject("0", myWeb.moSession["nUserId"]))))
+                        if (myWeb.moDbHelper.checkUserRole(myCart.moCartConfig["AllowPriceUpdateRole"], "Role", Conversions.ToLong(Operators.ConcatenateObject("0", myWeb.moSession["nUserId"]))))
                         {
 
                             myCart.UpdateItemPrice(cartItemId, cProductPrice);
@@ -829,7 +828,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        return Convert.ToInt16(ex.Message);
+                        return Conversions.ToInteger(ex.Message);
                     }
                 }
 
@@ -914,7 +913,7 @@ namespace Protean
 
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
                         myCart.GetCart(ref argoCartElmt);
-                        myCart.purchaseActions(ref CartXml);
+                        myCart.purchaseActions(CartXml,false);
                         // persist cart
                         myCart.close();
                         CartXml = updateCartforJSON(CartXml);
@@ -1064,7 +1063,7 @@ namespace Protean
                     catch (Exception ex)
                     {
                         OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "SaveToSellerNotes", ex, ""));
-                        return Convert.ToBoolean(ex.Message);
+                        return Conversions.ToBoolean(ex.Message);
                     }
                 }
 
@@ -1127,9 +1126,9 @@ namespace Protean
                 //        string strCounty = searchFilter["sCounty"].ToObject<string>();
                 //        var cProviderName = Interaction.IIf(searchFilter["sProviderName"] != null, (string)searchFilter["sProviderName"], "");
 
-                //        //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Convert.ToString(cProviderName));
+                //        //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
                 //        Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                //        IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Convert.ToString(cProviderName));
+                //        IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
 
                 //        System.Collections.Specialized.NameValueCollection moConfig;
                 //        moConfig = myApi.moConfig;
@@ -1138,9 +1137,9 @@ namespace Protean
                 //        {
                 //            if (moConfig["CountryListforJudopayISOCode"].ToLower().Contains(strCountry.ToLower()) & !string.IsNullOrEmpty(strCountry))
                 //            {
-                //                if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
+                //                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
                 //                {
-                //                    strISOCode = Convert.ToString(oPaymentProv.Activities.getStateISOCode(strCounty, strCountry));
+                //                    strISOCode = Conversions.ToString(oPaymentProv.Activities.getStateISOCode(strCounty, strCountry));
                 //                }
                 //            }
                 //        }
@@ -1169,7 +1168,7 @@ namespace Protean
 
                         bool bIsAuthorized = false;
                         var validGroup = Interaction.IIf(jObj["validGroup"] != null, (string)jObj["validGroup"], "");
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Convert.ToString(validGroup));
+                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(validGroup));
 
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
@@ -1182,16 +1181,16 @@ namespace Protean
                         decimal nAmount = Convert.ToDecimal(Interaction.IIf(jObj["nAmount"] != null, (decimal)jObj["nAmount"], "0"));
                         var cProviderName = Interaction.IIf(jObj["sProviderName"] != null, (string)jObj["sProviderName"], "");
                         object cRefundPaymentReceipt = "";
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
                         {
-                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Convert.ToString(cProviderName));
+                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Convert.ToString(cProviderName));
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
                             cRefundPaymentReceipt = oPaymentProv.Activities.RefundPayment(nProviderReference.ToString(), nAmount);
 
                             var xmlDoc = new XmlDocument();
                             var xmlResponse = xmlDoc.CreateElement("Response");
-                            xmlResponse.InnerXml = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<RefundPaymentReceiptId>", cRefundPaymentReceipt), "</RefundPaymentReceiptId>"));
+                            xmlResponse.InnerXml = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<RefundPaymentReceiptId>", cRefundPaymentReceipt), "</RefundPaymentReceiptId>"));
                             xmlDoc.LoadXml(xmlResponse.InnerXml.ToString());
                             josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
 
@@ -1223,7 +1222,7 @@ namespace Protean
                         string josResult = "";
                         bool bIsAuthorized = false;
                         var validGroup = Interaction.IIf(jObj["validGroup"] != null, (string)jObj["validGroup"], "");
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Convert.ToString(validGroup));
+                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(validGroup));
 
                         // If bIsAuthorized = False Then Return "Error -Authorization Failed"
 
@@ -1231,13 +1230,13 @@ namespace Protean
                         string receiptID = jObj["AuthNumber"].ToString();
                         var cProviderName = Interaction.IIf(jObj["sProviderName"] != null, (string)jObj["sProviderName"], "");
                         object strConsumerRef = "";
-                        if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false), Operators.ConditionalCompareObjectNotEqual(receiptID, 0, false))))
+                        if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false), Operators.ConditionalCompareObjectNotEqual(receiptID, 0, false))))
                         {
-                            // var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Convert.ToString(cProviderName));
+                            // var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Convert.ToString(cProviderName));
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
                             strConsumerRef = oPaymentProv.Activities.UpdateOrderWithPaymentResponse(receiptID);
-                            josResult = Convert.ToString(strConsumerRef);
+                            josResult = Conversions.ToString(strConsumerRef);
                         }
                         return josResult;
                     }
@@ -1261,7 +1260,7 @@ namespace Protean
                     {
                         bool bIsAuthorized = false;
                         string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Convert.ToString(cValidGroup));
+                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
 
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
@@ -1286,12 +1285,12 @@ namespace Protean
 
                         string cPaymentReceipt = "";
                         string josResult = "";
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
                         {
-                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Convert.ToString(cProviderName));
+                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Convert.ToString(cProviderName));
-                            cPaymentReceipt = Convert.ToString(oPaymentProv.Activities.ProcessNewPayment(nOrderId, nAmount, cCardNumber, cCV2, dExpiryDate, dStartDate, cCardHolderName, cAddress1, cAddress2, cTown, cPostCode, cCounty, cCountry, cValidGroup));
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
+                            cPaymentReceipt = Conversions.ToString(oPaymentProv.Activities.ProcessNewPayment(nOrderId, nAmount, cCardNumber, cCV2, dExpiryDate, dStartDate, cCardHolderName, cAddress1, cAddress2, cTown, cPostCode, cCounty, cCountry, cValidGroup));
                             var xmlDoc = new XmlDocument();
                             var xmlResponse = xmlDoc.CreateElement("Response");
                             xmlResponse.InnerXml = "<PaymentReceiptId>" + cPaymentReceipt + "</PaymentReceiptId>";
@@ -1323,7 +1322,7 @@ namespace Protean
                         string josResult = "";
                         bool bIsAuthorized = false;
                         string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Convert.ToString(cValidGroup));
+                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
                         if(jObj["cEmailAddress"] != null && jObj["cEmailAddress"].ToString()!="")
@@ -1343,196 +1342,10 @@ namespace Protean
                 }
                 #endregion
 
-                #region Pay360 Apple Pay and Google Pay functionality
-
-                public object ProcessGooglePayPaymentApi(ref Protean.rest myApi, ref JObject jObj)
-                {
-                    try
-                    {
-                        // string googlePayToken = jObj["token"]?.ToString();
-                        string googlePayToken = HttpUtility.UrlDecode(myWeb.moRequest["googlePayToken"]);
-                        if (string.IsNullOrEmpty(googlePayToken))
-                            throw new Exception("Google Pay token is missing");
-
-                        XmlDocument cartDoc = new XmlDocument();
-                        myCart.CreateCartElement(cartDoc);
-                        myCart.GetCart();
-                        XmlElement oOrder = (XmlElement)myCart.moCartXml.FirstChild;
-
-                        // Get payment provider(Pay360)
-                        Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-
-                        IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, myWeb.moRequest["PaymentMethod"]);
-
-                        // Call your modified GetPaymentFormLocal with extra token
-                        var response = oPaymentProv.Activities.ProcessGooglePayPayment(ref myWeb, ref myCart, ref oOrder, googlePayToken);
-
-                        return response; // send back to JS
-                    }
-                    catch(Exception ex)
-                    {
-                        Protean.stdTools.returnException(ref myWeb.msException, "ProcessGooglePayPaymentApi", "", ex);
-                        return null;
-                    }
-                }
-
-                public object ApplePayMerchantValidation(string validationURL)
-                {
-                    if (string.IsNullOrEmpty(validationURL))
-                    {
-                        return new
-                        {
-                            error = "validationURL is required"
-                        };
-                    }
-
-                    try
-                    {
-                        // Get payment provider (Pay360)
-                        Protean.Providers.Payment.ReturnProvider oPayProv =
-                            new Protean.Providers.Payment.ReturnProvider();
-
-                        IPaymentProvider oPaymentProv =
-                            oPayProv.Get(ref myWeb, myWeb.moRequest["PaymentMethod"]);
-
-                        // Call Pay360 Activities method
-                        var sessionObject =
-                            oPaymentProv.Activities.ValidateApplePayMerchant(validationURL);
-
-                        /*
-                         IMPORTANT:
-                         - Do NOT wrap
-                         - Do NOT stringify
-                         - Do NOT modify
-                         - Return raw object
-                        */
-
-                        return sessionObject;
-                    }
-                    catch (Exception ex)
-                    {
-                        // Apple Pay expects JSON, even on error
-                        return new
-                        {
-                            error = ex.Message
-                        };
-                    }
-                }
-
-
-                public object ProcessApplePayPaymentApi(string applePayToken)
-                {
-                    try
-                    {
-                        XmlDocument cartDoc = new XmlDocument();
-                        myCart.CreateCartElement(cartDoc);
-                        myCart.GetCart();
-                        XmlElement oOrder = (XmlElement)myCart.moCartXml.FirstChild;
-
-                        Protean.Providers.Payment.ReturnProvider oPayProv =
-                            new Protean.Providers.Payment.ReturnProvider();
-
-                        IPaymentProvider oPaymentProv =
-                            oPayProv.Get(ref myWeb, "Pay360");
-
-                        dynamic result =
-                            oPaymentProv.Activities.ProcessApplePayPayment( oOrder.OwnerDocument,applePayToken);
-
-                        // or GetOrderXml() depending on your project
-                        XmlElement oContentElmt = null;
-                        XmlElement oElmt = null;
-
-                        // Set process state to COMPLETE
-                        myCart.mnProcessId = (int)cartProcess.Complete;
-
-                        // 3Attach payment info BEFORE completing order
-                        XmlElement cartElmt = cartDoc.SelectSingleNode("//Cart") as XmlElement;
-
-                        if (cartElmt != null)
-                        {
-                            cartElmt.SetAttribute("paymentMethod", "ApplePay");
-                            cartElmt.SetAttribute("paymentStatus", "success");
-                            cartElmt.SetAttribute("paymentRef", (string)result.transactionReference);
-
-                            // Store gateway response safely (CDDATA)
-                            XmlElement paymentNode = cartElmt.SelectSingleNode("Payment") as XmlElement ?? cartDoc.CreateElement("Payment");
-
-                            paymentNode.RemoveAll();
-                            paymentNode.AppendChild(
-                                cartDoc.CreateCDataSection((string)result.rawResponse ?? string.Empty)
-                            );
-
-                            if (paymentNode.ParentNode == null)
-                                cartElmt.AppendChild(paymentNode);
-                        }
-
-                        // Call EXISTING CompleteOrder method
-                        myCart.CompleteOrder(cartDoc, ref oContentElmt, ref oElmt );
-
-                        return new
-                        {
-                            success = false,
-                            message = (string)result.message
-                        };
-                    }
-                    catch (Exception ex)
-                    {
-                        return new
-                        {
-                            success = false,
-                            message = ex.Message
-                        };
-                    }
-                }
-
-
-
-
-
-                //public string GetPaymentSession(ref Protean.rest myApi, ref JObject jObj)
-                //{
-                //    try
-                //    {
-                //        //bool bIsAuthorized = false;
-                //        //string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
-                //        //bIsAuthorized = this.ValidateAPICall(ref myWeb, Convert.ToString(cValidGroup));
-
-
-                //        //if (bIsAuthorized == false)
-                //        //    return "Error -Authorization Failed";
-                //        string nOrderId = (jObj["orderId"] != null) ? jObj["orderId"].ToString() : "0";
-                //        decimal nAmount = (jObj["amount"] != null) ? Convert.ToDecimal(jObj["amount"]) : 0;
-                //        string cProviderName = (jObj["sProviderName"] != null) ? jObj["sProviderName"].ToString() : "";
-                //        var oCart = new Cart(ref myWeb);
-                //        string cPaymentSession = "";
-                //        string josResult = "";
-                //        if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
-                //        {
-                //            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Convert.ToString(cProviderName));
-                //            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                //            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Convert.ToString(cProviderName));
-                //            cPaymentSession = Convert.ToString(oPaymentProv.Activities.GetPaymentSession(nOrderId, nAmount));
-                //            var xmlDoc = new XmlDocument();
-                //            var xmlResponse = xmlDoc.CreateElement("Response");
-                //            xmlResponse.InnerXml = "<PaymentReceiptId>" + cPaymentSession + "</PaymentReceiptId>";
-                //            xmlDoc.LoadXml(xmlResponse.InnerXml.ToString());
-                //            josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
-                //            josResult = josResult.Replace("\"@", "\"_");
-                //            josResult = josResult.Replace("#cdata-section", "cDataValue");
-                //        }
-                //        return josResult;
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
-                //        return "Error";
-
-                //    }
-                //}
-
-                #endregion
+                
 
             }
+           
 
             #endregion
         }

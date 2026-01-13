@@ -815,5 +815,32 @@ namespace Protean.Tools
 
             return xmlString;
         }
+
+        public static bool IsAppleDevice(string userAgent)
+        {
+            if (string.IsNullOrEmpty(userAgent))
+            {
+                return false;
+            }
+
+            // Check for iPhone, iPod, or iPad (for older iOS versions)
+            if (userAgent.Contains("iphone") || userAgent.Contains("ipod"))
+            {
+                return true;
+            }
+            // Check for iPad (for newer iPadOS which might use "Macintosh" in UA string)
+            else if (userAgent.Contains("ipad") || userAgent.Contains("macintosh"))
+            {
+
+                return true;
+            }
+            // if a broader "Apple device" detection is needed beyond mobile devices.
+            if (userAgent.Contains("mac os x"))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

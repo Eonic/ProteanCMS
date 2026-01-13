@@ -9774,7 +9774,7 @@ namespace Protean
                     string cProcessInfo = "";
                     try
                     {
-                        var dbh = new Cms.dbHelper(ref myWeb);
+                        var dbh = new Cms.dbHelper( myWeb);
                         dbh.ResetConnection(sSchedCon);
 
                         base.NewFrm("EditScheduleItem");

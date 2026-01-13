@@ -1,16 +1,22 @@
-<indexInfo startTime="2026-01-08T19:48:00" cPageXsl="/ptn/features/search/clean-page.xsl" cExtractXsl="/ptn/features/search/extract.xsl" IndexDetailTypes="NewsArticle,Event,Product,Contact,Document,Job" indexCount="7" pagesIndexed="5" pagesRemaining="0" pagesSkipped="3" contentCount="7" contentSkipped="0" documentsIndexed="0" documentsSkipped="0" endTime="2026-01-08T19:48:12">
+<indexInfo startTime="2026-01-08T19:10:41" cPageXsl="/ptn/features/search/clean-page.xsl" cExtractXsl="/ptn/features/search/extract.xsl" IndexDetailTypes="NewsArticle,Event,Product,Contact,Document,Job" indexCount="7" pagesIndexed="4" pagesRemaining="0" pagesSkipped="4" contentCount="7" contentSkipped="0" documentsIndexed="0" documentsSkipped="0" endTime="2026-01-08T19:10:49">
   <page url="/About" contentCount="4">
-    <Contact artId="62" url="/About" />
+    <Contact artId="62" url="/About/62-/Jane-Smith" />
     <Contact artId="55" url="/About" />
     <Contact artId="61" url="/About" />
     <Contact artId="63" url="/About" />
   </page>
-  <page url="/Search" contentCount="0" />
-  <page url="/Get-in-Touch" contentCount="0" />
   <page url="/Blog" contentCount="3">
-    <NewsArticle artId="32" url="/Blog" />
-    <NewsArticle artId="29" url="/Blog" />
+    <NewsArticle artId="32" url="/Blog/32-/NewsArticle" />
+    <NewsArticle artId="29" url="/Blog/29-/NewsArticle" />
     <NewsArticle artId="30" url="/Blog" />
   </page>
+  <page url="/Get-in-Touch" contentCount="0" />
   <page url="/Info-Menu" contentCount="0" />
+  <error>System.IO.DirectoryNotFoundException: Could not find a part of the path 'F:\HostingSpaces\eonic\demo6.proteancms.com\Index\Write'.
+   at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+   at System.IO.FileSystemEnumerableIterator`1.CommonInit()
+   at System.IO.FileSystemEnumerableIterator`1..ctor(String path, String originalUserPath, String searchPattern, SearchOption searchOption, SearchResultHandler`1 resultHandler, Boolean checkHost)
+   at System.IO.Directory.GetDirectories(String path)
+   at Protean.IndexerAsync.EmptyFolder(String cDirectory) in D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\features\search\IndexerAsync.cs:line 533
+</error>
 </indexInfo>
