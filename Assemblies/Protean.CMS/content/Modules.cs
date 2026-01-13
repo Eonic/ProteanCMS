@@ -703,7 +703,7 @@ namespace Protean
                                         if (orderBySql.Length > 0)
 
                                         {
-                                            cAdditionalColumns += "," + orderBySql.ToLower().Replace("asc", "").Replace("desc", "");
+                                            cAdditionalColumns += "," + orderBySql.ToLower().Replace("asc", "").Replace(" desc", "");
                                             if (!myWeb.moConfig["ExcludeFilterForJoin"].Contains(className))
                                             {
                                                 string cAlies = className.Replace("Filter", "");

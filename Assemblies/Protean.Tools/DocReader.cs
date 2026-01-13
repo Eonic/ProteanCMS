@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
-//using Microsoft.VisualBasic;
 
 namespace Protean.Tools.IFilter
 {

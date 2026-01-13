@@ -577,16 +577,7 @@
             <xsl:text> </xsl:text>
           </li>
 
-        </ul>
-			<ul class="nav navbar-nav navbar-right">
-				<xsl:if test="/Page/User/Role[@name='ITB Customer Services']">
-					<a href="{$appPath}?ewCmd=AuthRedirectURL" class="btn btn-default btn-lg">
-						ITB Intranet<xsl:text> </xsl:text><i class="fa fa-arrow-alt-circle-up fa-white">
-							<xsl:text> </xsl:text>
-						</i>
-					</a>		
-				</xsl:if>
-			</ul>
+        </ul>			
         </div>
         <!-- /.navbar-collapse -->
 

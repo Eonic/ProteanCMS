@@ -1886,8 +1886,8 @@ namespace Protean
                     string cUserGroupIds = getUserGroupIDs(); // get the user groups
                     try
                     {
-                        
-                        if (myCart.mnProcessId > 4 && !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                        if (myCart.mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -2542,8 +2542,8 @@ namespace Protean
                     string sPromoCode = "";
                     try
                     {
-                        
-                        if (myCart.mnProcessId > 4 && !string.Equals(myCart.mcAllowUpdateCart?.Trim(), "on", StringComparison.OrdinalIgnoreCase))
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                        if (myCart.mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }

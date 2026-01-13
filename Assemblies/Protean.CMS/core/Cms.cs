@@ -349,7 +349,7 @@ namespace Protean
         {
 
             var argaWeb = this;
-            return new Cms.dbHelper(ref argaWeb);
+            return new Cms.dbHelper(argaWeb);
 
         }
 
@@ -3937,6 +3937,7 @@ namespace Protean
                     }
                     // reinitialize variables because we might've changed some
                     moCart.InitializeVariables();
+
                     moCart.apply();
                     // get any discount information for this page
                     XmlElement RootElmt = moPageXml.DocumentElement;

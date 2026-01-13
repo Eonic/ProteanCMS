@@ -51,6 +51,8 @@ namespace Protean.Providers
             string GetMethodDetail(ref Cms oWeb, ref string nPaymentProviderRef);
             bool AddPaymentButton(ref Cms myWeb, ref Protean.Cms.Cart oCart, ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue);
             void ValidatePaymentByCart(int nCartId, bool bValid);
+
+            bool CheckReceiptIdExists(string cReceiptId);
             string RefundPayment(string providerPaymentReference, decimal amount, string validGroup = "");
             string CancelPayments(ref Cms oWeb, ref string nPaymentProviderRef);
             string CollectPayment(ref Cms myWeb, long nPaymentMethodId, double Amount, string CurrencyCode, string PaymentDescription, ref Cms.Cart oCart);
@@ -631,7 +633,7 @@ namespace Protean.Providers
                
                 public object ProcessGooglePayPayment(ref Cms myWeb, ref Cart oCart, ref XmlElement oOrder, string googlePayToken)
                 {
-                    throw null;
+                    throw new NotImplementedException();
                 }
 
                 public object ProcessApplePayPayment(XmlDocument orderXml, string applePayToken)
@@ -641,6 +643,11 @@ namespace Protean.Providers
 
                 
                 public object ValidateApplePayMerchant(string validationURL)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public bool CheckReceiptIdExists(string cReceiptId)
                 {
                     throw new NotImplementedException();
                 }
