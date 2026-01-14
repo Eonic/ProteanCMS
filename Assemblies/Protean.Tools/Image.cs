@@ -63,7 +63,7 @@ namespace Protean.Tools
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""));
                 // Re-throw to prevent object creation with null image
-                throw;
+                // throw;
             }
         }
 

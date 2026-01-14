@@ -4942,11 +4942,8 @@ namespace Protean
                         // search for file in content and pages
                         var oFsh = new Protean.fsHelper();
                         oFsh.initialiseVariables(nType);
-                        string fileToFind = "/" + oFsh.mcRoot + cPath.Replace(@"\", "/") + "/" + cName;
+                        string fileToFind = "/" + oFsh.mcRoot + cPath.Replace(@"\", "/") + "/" + Protean.Tools.Database.EscapeFullTextSearch(cName);
 
-
-                        //string sSQL = "select * from tblContent where cContentXmlBrief like '%" + fileToFind + "%' or cContentXmlDetail like '%" + fileToFind + "%'";
-                        //string sSQL = "select nContentKey,cContentSchemaName,cContentName from tblContent where contains(cContentXmlBrief,'" + fileToFind + "') or contains(cContentXmlDetail,'" + fileToFind + "')";
                         SqlDataReader oDr;
                         if (myWeb.moDbHelper.checkDBObjectExists("spCheckFileInUse", Database.objectTypes.StoredProcedure))
                         {

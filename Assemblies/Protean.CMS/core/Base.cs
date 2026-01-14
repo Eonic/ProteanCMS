@@ -134,7 +134,11 @@ namespace Protean
                 moResponse = moCtx.Response;
                 moSession = moCtx.Session;
                 goServer = moCtx.Server;
-                goCache = moCtx.Cache;              
+                goCache = moCtx.Cache;
+
+                sitename = moRequest.ServerVariables["HTTP_HOST"];
+
+                goApp = new Protean.Framework.Adapters.FrameworkApplicationStateAdapter(sitename);
 
                 PerfMon = new PerfLog("", moCtx);
                 PerfMon.Log("Base", "New");
@@ -144,7 +148,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                // returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
+               //  returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
                // OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
                 Dispose();
                 throw;
@@ -157,56 +161,57 @@ namespace Protean
         {
             Features.Add("Lite", "Lite");
             Features.Add("Pro", "Pro");
-            if (moConfig["Cart"] != null && moConfig["Cart"].ToString().ToLower() == "on")
+            
+            if (IsFeatureEnabled("Cart"))
             {
                 Features.Add("Cart", "Cart");
             }
-            if (moConfig["Quote"] != null && moConfig["Quote"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("Quote"))
             {
                 Features.Add("Quote", "Quote");
             }
-            if (moConfig["Membership"] != null && moConfig["Membership"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("Membership"))
             {
                 Features.Add("Membership", "Membership");
             }
-            if (moConfig["MailingList"] != null && moConfig["MailingList"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("MailingList"))
             {
                 Features.Add("MailingList", "MailingList");
             }
-            if (moConfig["Search"] != null && moConfig["Search"].ToString().ToLower() == "on" | moConfig["SiteSearch"] != null && moConfig["SiteSearch"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("Search") || IsFeatureEnabled("SiteSearch"))
             {
                 Features.Add("Search", "Search");
             }
-            if (moConfig["VersionControl"] != null && moConfig["VersionControl"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("VersionControl"))
             {
                 Features.Add("VersionControl", "VersionControl");
             }
-            if (moConfig["Import"] != null && moConfig["Import"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("Import"))
             {
                 Features.Add("Import", "Import");
             }
-            if (moConfig["Sync"] != null && moConfig["Sync"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("Sync"))
             {
                 Features.Add("Sync", "Sync");
             }
-            if (moConfig["MemberCodes"] != null && moConfig["MemberCodes"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("MemberCodes"))
             {
                 Features.Add("MemberCodes", "MemberCodes");
             }
-            if (moConfig["Subscriptions"] != null && moConfig["Subscriptions"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("Subscriptions"))
             {
                 Features.Add("Subscriptions", "Subscriptions");
             }
-            if (moConfig["Scheduler"] != null && moConfig["Scheduler"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("Scheduler"))
             {
                 Features.Add("Scheduler", "Scheduler");
             }
-            if (moConfig["ActivityLogging"] != null && moConfig["ActivityLogging"].ToString().ToLower() == "on" | moConfig["ActivityReporting"] != null && moConfig["ActivityReporting"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("ActivityLogging") || IsFeatureEnabled("ActivityReporting"))
             {
                 Features.Add("ActivityLogging", "ActivityLogging");
                 Features.Add("ActivityReporting", "ActivityReporting");
             }
-            if (moConfig["PageVersions"] != null && moConfig["PageVersions"].ToString().ToLower() == "on")
+            if (IsFeatureEnabled("PageVersions"))
             {
                 Features.Add("PageVersions", "PageVersions");
             }
@@ -218,7 +223,18 @@ namespace Protean
             {
                 Features.Add("Themes", "Themes");
             }
+        }
 
+        /// <summary>
+        /// Checks if a feature is enabled in the configuration.
+        /// Performs null-safe, case-insensitive comparison without allocations.
+        /// </summary>
+        /// <param name="featureName">The feature name to check in moConfig</param>
+        /// <returns>True if the feature config value equals "on" (case-insensitive), false otherwise</returns>
+        private bool IsFeatureEnabled(string featureName)
+        {
+            string value = moConfig?[featureName];
+            return value != null && string.Equals(value, "on", StringComparison.OrdinalIgnoreCase);
         }
 
         private bool disposedValue = false;

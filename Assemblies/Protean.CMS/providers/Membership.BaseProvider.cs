@@ -2131,7 +2131,7 @@ namespace Protean.Providers
                                 }
                             }
                         }
-                        else if (moSession["nUserId"] == null || (long?)moSession["nUserId"] == 0)
+                        else if (moSession["nUserId"] == null || myWeb.SessionUserId == 0)
                         {
                             // this will get set on close
                             if (Tools.Number.IsNumeric(moSession["PreviewUser"]))
@@ -2159,7 +2159,7 @@ namespace Protean.Providers
                             }
                             else
                             {
-                                mnUserId = Convert.ToInt16(moSession["nUserId"]);
+                                mnUserId = (long)moSession["nUserId"];
                             }
                         }
                         else
@@ -2218,11 +2218,11 @@ namespace Protean.Providers
                     {
                         if (moSession["nUserId"] != null)
                         {
-                            if ((long?)moSession["nUserId"] == 0)
+                            if (myWeb.SessionUserId == 0)
                             {
                                 moSession["nUserId"] = mnUserId;
                             }
-                            else if ((long?)moSession["nUserId"] != mnUserId && string.IsNullOrEmpty(Convert.ToString(moSession["PreviewUser"])))
+                            else if (myWeb.SessionUserId != mnUserId && string.IsNullOrEmpty(Convert.ToString(moSession["PreviewUser"])))
                             {
                                 // reset to a different value
                                 moSession["nUserId"] = mnUserId;

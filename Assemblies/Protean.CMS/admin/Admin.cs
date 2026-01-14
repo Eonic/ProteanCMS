@@ -82,7 +82,7 @@ namespace Protean
                 {
                     if (!string.IsNullOrEmpty(Convert.ToString(Operators.ConcatenateObject(myWeb.moSession["PreviewUser"], ""))))
                     {
-                        mnAdminUserId = Convert.ToInt16(myWeb.moSession["nUserId"]);
+                        mnAdminUserId = (long)myWeb.moSession["nUserId"];
                     }
                     else
                     {

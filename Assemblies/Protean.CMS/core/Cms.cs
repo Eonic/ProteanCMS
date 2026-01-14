@@ -303,7 +303,20 @@ namespace Protean
 
         #endregion
 
+        public long SessionUserId
+        {
+            get
+            {
+                if (moSession?["nUserId"] is long userId)
+                    return userId;
 
+                if (moSession != null &&
+                    long.TryParse(moSession["nUserId"]?.ToString(), out long parsedId))
+                    return parsedId;
+
+                return 0;
+            }
+        }
 
         public string mcEwSiteXsl
         {
@@ -3311,7 +3324,7 @@ namespace Protean
                 // Dim oAdmin As Admin = New Admin(Me)
                 // Dim oAdmin As Protean.Cms.Admin = New Protean.Cms.Admin(Me)
                 moAdmin.open(moPageXml);
-                if (Convert.ToInt16(Operators.ConcatenateObject("0", moSession["nUserId"])) > 0)
+                if (SessionUserId > 0)
                 {
                     moAdmin.GetPreviewMenu();
                 }
@@ -3489,12 +3502,12 @@ namespace Protean
                             if (mbPreview & moConfig["inlineContentPermissions"] == "AdminUser")
                             {
                                 // commented out because it was breaking PSMG edit jobs
-                                mnUserId = Convert.ToInt16(moSession["nUserId"]);
+                                mnUserId = SessionUserId;
                             }
 
                             if (mnUserId == 0)
                             {
-                                mnUserId = Convert.ToInt16(moConfig["NonAuthUserID"]);
+                                mnUserId = Convert.ToInt64(moConfig["NonAuthUserID"]);
                                 moDbHelper.mnUserId = (long)mnUserId;
                                 bResetUser = true;
                             }
