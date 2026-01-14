@@ -1367,7 +1367,7 @@ namespace Protean
                             AddToLists("Invoice", ref oContentElmt);
                         }
 
-                        purchaseActions(oContentElmt,false);
+                        purchaseActions(oContentElmt);
                         // update the cart if purchase actions have changed it
                         // GetCart(oElmt)
                         // done for ammerdown as we have removed a product.
@@ -2136,7 +2136,7 @@ namespace Protean
                                         {
 
                                             addDateAndRef(ref oElmt);
-                                            purchaseActions(oContentElmt, true);
+                                           // purchaseActions(oContentElmt);
                                         }
                                     }
 
@@ -2551,7 +2551,7 @@ namespace Protean
                 }
             }
 
-            public virtual void purchaseActions( XmlElement oCartElmt, bool bRenderScriptOnly=false)
+            public virtual void purchaseActions( XmlElement oCartElmt)
             {
                 myWeb.PerfMon.Log("Cart", "purchaseActions");
                 // Dim sMessageResponse As String
@@ -2578,17 +2578,12 @@ namespace Protean
 
                         if (passCMS == "true")
                         {
-                            args = new object[3];
+                            args = new object[2];
                             args[0] = myWeb;
                             args[1] = oCartElmt;
-                            args[2] = bRenderScriptOnly;
+                          
                         }
-                        else if(bRenderScriptOnly==true)
-                        {
-                            args = new object[2];
-                            args[0] = oCartElmt;
-                            args[1] = bRenderScriptOnly;
-                        }
+                       
                         else
                         {
                             args[0] = oCartElmt;
@@ -2648,14 +2643,7 @@ namespace Protean
                                 var o = Activator.CreateInstance(calledType);
 
                                 var args = new object[2];
-                                if(bRenderScriptOnly == true)
-                                {
-                                    args = new object[3];
-                                    args[0] = myWeb;
-                                    args[1] = ocNode;
-                                    args[2] = bRenderScriptOnly;
-                                }
-                                else
+                              
                                 {
                                     args[0] = myWeb;
                                     args[1] = ocNode;
