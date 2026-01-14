@@ -665,7 +665,7 @@ namespace Protean
                 {
                     string jsonResult = string.Empty;
                     XmlElement cReviewNode = myWeb.moPageXml.CreateElement("GoogleReview");
-
+                    DateTime oneYearAgo = DateTime.UtcNow.AddYears(-1);
                     try
                     {
                         if (moWebConfig["PlaceId"] != null && moWebConfig["PlaceId"] != "" &&
@@ -673,6 +673,7 @@ namespace Protean
                         {
                             string placeId = moWebConfig["PlaceId"].ToString();
                             string apiKey = moWebConfig["GoogleReviewAPIKey"].ToString();
+                           
 
                             string cUrl = $"https://maps.googleapis.com/maps/api/place/details/json?place_id={placeId}&fields=name,rating,user_ratings_total,reviews&key={apiKey}";
 
@@ -703,6 +704,10 @@ namespace Protean
                                         {
                                             foreach (var r in allReviews)
                                             {
+                                                long unixTime = r["time"] != null ? Convert.ToInt64(r["time"]) : 0;
+                                                DateTime reviewDateTime = DateTimeOffset.FromUnixTimeSeconds(unixTime).UtcDateTime;
+
+
                                                 XmlElement cContentNode = myWeb.moPageXml.CreateElement("Content");
 
                                                 cContentNode.SetAttribute("name", r["author_name"]?.ToString() ?? "");
@@ -714,9 +719,17 @@ namespace Protean
                                                 XmlElement reviewer = myWeb.moPageXml.CreateElement("Reviewer");
                                                 reviewer.InnerText = r["author_name"]?.ToString() ?? "";
 
+                                               
                                                 XmlElement reviewDate = myWeb.moPageXml.CreateElement("ReviewDate");
-                                                reviewDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
-
+                                                if (reviewDateTime >= oneYearAgo)
+                                                {
+                                                    reviewDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
+                                                }
+                                                else
+                                                {
+                                                    reviewDate.InnerText = "";   // hide date
+                                                }
+                                                
                                                 XmlElement url = myWeb.moPageXml.CreateElement("Url");
                                                 url.InnerText = r["author_url"]?.ToString() ?? "";
 
