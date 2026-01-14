@@ -2222,9 +2222,9 @@ namespace Protean
 
                     string[] QueryArr = Query.Split('.');
                     Query1 = QueryArr[0];
-                    if (QueryArr.Length > 0)
-                        Query2 = QueryArr[1];
                     if (QueryArr.Length > 1)
+                        Query2 = QueryArr[1];
+                    if (QueryArr.Length > 2)
                         Query3 = QueryArr[2];
                     var oXfrms = new Cms.xForm(ref myWeb.msException);
                     oXfrms.moPageXML = myWeb.moPageXml;

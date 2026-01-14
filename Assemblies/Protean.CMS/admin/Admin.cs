@@ -4752,7 +4752,11 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    myWeb.msRedirectOnEnd = "?ewCmd=" + LibType.ToString() + @"Lib&fld=\";
+                                    string redirectCmd = LibType.ToString();
+                                    if (LibType == fsHelper.LibraryType.Documents) { 
+                                        redirectCmd = "Docs";
+                                    };
+                                    myWeb.msRedirectOnEnd = $"?ewCmd={redirectCmd}Lib&fld=\\";
                                     bShowTree = true;
                                 }
 
