@@ -606,36 +606,7 @@ namespace Protean
                         mcCurrencyRef = moCartConfig["Currency"];
                         if (string.IsNullOrEmpty(mcCurrency))
                             mcCurrency = "GBP";
-
-
-                        PaymentProviders oPay;
-                        if (moPay is null)
-                        {
-                            oPay = new PaymentProviders(ref myWeb);
-                        }
-                        else
-                        {
-                            oPay = moPay;
-                        }
-
-                        Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
-                        oEwProv.mcCurrency = mcCurrency;
-                        XmlElement oProvider = oEwProv.GetValidPaymentProviders();
-
-                        XmlNode oProviderNode = oProvider.SelectSingleNode("provider");
-                        string sProviderName = oProviderNode.Attributes["name"].Value;
-                        XmlNode oPaymentProviderCfg = oProvider.SelectSingleNode("provider[@name='" + sProviderName + "']");
-
-                        if (oPaymentProviderCfg != null)
-                        {
-                            XmlNode allowNode = oPaymentProviderCfg.SelectSingleNode("AllowCartUpdatesOnPaymentPage");
-
-                            if (allowNode != null && allowNode.Attributes["value"] != null)
-                            {
-                                mcAllowUpdateCart = allowNode.Attributes["value"].Value;
-                            }
-                        }
-
+                      
                         XmlNode moPaymentCfg;
 
                         // change currency based on language selection
@@ -2128,24 +2099,9 @@ namespace Protean
                                         oElmt.RemoveChild(oNodeCart);
                                     // oEwProv = Nothing
                                     goto processFlow;
-                                    if (oElmt != null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
-                                    {
-                                        CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
-                                    }
-                                    else
-                                    {
-                                        if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
-                                        {
-
-                                            addDateAndRef(ref oElmt);
-                                            purchaseActions(oContentElmt, true);
-                                        }
-                                    }
-
+                                }
                                 else
                                 {
-
-
                                     moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt);
                                 }
 

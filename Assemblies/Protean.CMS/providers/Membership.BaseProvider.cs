@@ -2050,7 +2050,7 @@ namespace Protean.Providers
                             myWeb.mnUserId = 0;
                             return myWeb.mnUserId;
                         }
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["nUserId"], 0, false)))
+                        if (moSession["nUserId"] != null && Convert.ToInt64(moSession["nUserId"]) != 0)
                         {
                             myWeb.mnUserId = Convert.ToInt64(moSession["nUserId"]);
                         }
