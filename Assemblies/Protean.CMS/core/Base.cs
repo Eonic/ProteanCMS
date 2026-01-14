@@ -4,7 +4,6 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
 using static Protean.Env;
 
 namespace Protean
@@ -135,10 +134,7 @@ namespace Protean
                 moResponse = moCtx.Response;
                 moSession = moCtx.Session;
                 goServer = moCtx.Server;
-                goCache = moCtx.Cache;
-                sitename = moRequest.ServerVariables["HTTP_HOST"];
-
-                goApp = new Protean.Framework.Adapters.FrameworkApplicationStateAdapter(sitename);
+                goCache = moCtx.Cache;              
 
                 PerfMon = new PerfLog("", moCtx);
                 PerfMon.Log("Base", "New");
@@ -161,56 +157,56 @@ namespace Protean
         {
             Features.Add("Lite", "Lite");
             Features.Add("Pro", "Pro");
-            if (Strings.LCase(moConfig["Cart"]) == "on")
+            if (moConfig["Cart"] != null && moConfig["Cart"].ToString().ToLower() == "on")
             {
                 Features.Add("Cart", "Cart");
             }
-            if (Strings.LCase(moConfig["Quote"]) == "on")
+            if (moConfig["Quote"] != null && moConfig["Quote"].ToString().ToLower() == "on")
             {
                 Features.Add("Quote", "Quote");
             }
-            if (Strings.LCase(moConfig["Membership"]) == "on")
+            if (moConfig["Membership"] != null && moConfig["Membership"].ToString().ToLower() == "on")
             {
                 Features.Add("Membership", "Membership");
             }
-            if (Strings.LCase(moConfig["MailingList"]) == "on")
+            if (moConfig["MailingList"] != null && moConfig["MailingList"].ToString().ToLower() == "on")
             {
                 Features.Add("MailingList", "MailingList");
             }
-            if (Strings.LCase(moConfig["Search"]) == "on" | Strings.LCase(moConfig["SiteSearch"]) == "on")
+            if (moConfig["Search"] != null && moConfig["Search"].ToString().ToLower() == "on" | moConfig["SiteSearch"] != null && moConfig["SiteSearch"].ToString().ToLower() == "on")
             {
                 Features.Add("Search", "Search");
             }
-            if (Strings.LCase(moConfig["VersionControl"]) == "on")
+            if (moConfig["VersionControl"] != null && moConfig["VersionControl"].ToString().ToLower() == "on")
             {
                 Features.Add("VersionControl", "VersionControl");
             }
-            if (Strings.LCase(moConfig["Import"]) == "on")
+            if (moConfig["Import"] != null && moConfig["Import"].ToString().ToLower() == "on")
             {
                 Features.Add("Import", "Import");
             }
-            if (Strings.LCase(moConfig["Sync"]) == "on")
+            if (moConfig["Sync"] != null && moConfig["Sync"].ToString().ToLower() == "on")
             {
                 Features.Add("Sync", "Sync");
             }
-            if (Strings.LCase(moConfig["MemberCodes"]) == "on")
+            if (moConfig["MemberCodes"] != null && moConfig["MemberCodes"].ToString().ToLower() == "on")
             {
                 Features.Add("MemberCodes", "MemberCodes");
             }
-            if (Strings.LCase(moConfig["Subscriptions"]) == "on")
+            if (moConfig["Subscriptions"] != null && moConfig["Subscriptions"].ToString().ToLower() == "on")
             {
                 Features.Add("Subscriptions", "Subscriptions");
             }
-            if (Strings.LCase(moConfig["Scheduler"]) == "on")
+            if (moConfig["Scheduler"] != null && moConfig["Scheduler"].ToString().ToLower() == "on")
             {
                 Features.Add("Scheduler", "Scheduler");
             }
-            if (Strings.LCase(moConfig["ActivityLogging"]) == "on" | Strings.LCase(moConfig["ActivityReporting"]) == "on")
+            if (moConfig["ActivityLogging"] != null && moConfig["ActivityLogging"].ToString().ToLower() == "on" | moConfig["ActivityReporting"] != null && moConfig["ActivityReporting"].ToString().ToLower() == "on")
             {
                 Features.Add("ActivityLogging", "ActivityLogging");
                 Features.Add("ActivityReporting", "ActivityReporting");
             }
-            if (Strings.LCase(moConfig["PageVersions"]) == "on")
+            if (moConfig["PageVersions"] != null && moConfig["PageVersions"].ToString().ToLower() == "on")
             {
                 Features.Add("PageVersions", "PageVersions");
             }

@@ -9,8 +9,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Payment;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -147,28 +145,28 @@ namespace Protean
                             }
                             else
                             {
-                                string[] aGroups = Strings.Split(oElmt.GetAttribute("validGroups"), ",");
-                                int i;
-                                var loopTo = Information.UBound(aGroups);
-                                for (i = 0; i <= loopTo; i++)
+                                string[] aGroups = oElmt.GetAttribute("validGroups").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);                              
+
+                                foreach (var group in aGroups)
                                 {
-                                    if (modbHelper.checkUserRole(aGroups[i], "Group"))
+                                    if (modbHelper.checkUserRole(group.Trim(), "Group"))
                                     {
                                         bAllowUser = true;
+                                        break;
                                     }
                                 }
                             }
 
                             if (!string.IsNullOrEmpty(oElmt.GetAttribute("invalidGroups")))
                             {
-                                string[] aInvalidGroups = Strings.Split(oElmt.GetAttribute("invalidGroups"), ",");
-                                int i2;
-                                var loopTo1 = Information.UBound(aInvalidGroups);
-                                for (i2 = 0; i2 <= loopTo1; i2++)
+                                string[] aInvalidGroups = oElmt.GetAttribute("invalidGroups").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
+                                foreach (var group in aInvalidGroups)
                                 {
-                                    if (modbHelper.checkUserRole(aInvalidGroups[i2], "Group"))
+                                    if (modbHelper.checkUserRole(group.Trim(), "Group"))
                                     {
                                         bAllowUser = false;
+                                        break; // stop once an invalid group is found
                                     }
                                 }
                             }
@@ -179,20 +177,17 @@ namespace Protean
                             }
                             else
                             {
-                                string[] aCurs = Strings.Split(oElmt.GetAttribute("validCurrencies"), ",");
-                                int i;
-                                var loopTo2 = Information.UBound(aCurs);
-                                for (i = 0; i <= loopTo2; i++)
+                                string[] aCurs = oElmt.GetAttribute("validCurrencies").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                bAllowCurrencies = false;
+                                foreach (var cur in aCurs)
                                 {
-                                    if ((aCurs[i] ?? "") == (mcCurrency ?? ""))
+                                    if (string.Equals(cur.Trim(), mcCurrency, StringComparison.OrdinalIgnoreCase))
                                     {
                                         bAllowCurrencies = true;
-                                    }
-                                    else
-                                    {
-                                        bAllowCurrencies = false;
+                                        break; // stop once a match is found
                                     }
                                 }
+
                             }
                             if (bAllowUser & bAllowCurrencies)
                             {
@@ -370,83 +365,88 @@ namespace Protean
                             }
                             else
                             {
-                                string[] aGroups = Strings.Split(oElmt.GetAttribute("validGroups"), ",");
-                                int i;
-                                var loopTo = Information.UBound(aGroups);
-                                for (i = 0; i <= loopTo; i++)
+                                // replace old loop that iterated through validGroups
+                                string[] aGroups = (oElmt.GetAttribute("validGroups") ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                bAllowUser = false;
+                                foreach (var grp in aGroups)
                                 {
-                                    if (modbHelper.checkUserRole(aGroups[i], "Group"))
+                                    if (modbHelper.checkUserRole(grp.Trim(), "Group"))
                                     {
                                         bAllowUser = true;
+                                        break; // stop on first match
                                     }
                                 }
                             }
 
                             // Allow preview users to use additional payment methods
-                            if (Convert.ToInt64(Operators.ConcatenateObject("0", myWeb.moSession["nUserId"])) > 0L)
+                            long userId = 0;
+
+                            if (myWeb.moSession["nUserId"] != null && long.TryParse(myWeb.moSession["nUserId"].ToString(), out userId) && userId > 0)
                             {
-                                string[] aGroups = Strings.Split(oElmt.GetAttribute("validGroups"), ",");
-                                string[] aInvalidGroups = Strings.Split(oElmt.GetAttribute("invalidGroups"), ",");
+                                string[] aGroups = oElmt.GetAttribute("validGroups").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                string[] aInvalidGroups = oElmt.GetAttribute("invalidGroups").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+
                                 int i;
                                 int i2;
-                                var loopTo1 = Information.UBound(aGroups);
-                                for (i = 0; i <= loopTo1; i++)
+                                bAllowUser = false;
+
+                                // Safely get userId                               
+                                long.TryParse(myWeb.moSession["nUserId"]?.ToString(), out userId);
+                                foreach (var group in aGroups)
                                 {
-                                    if (modbHelper.checkUserRole(aGroups[i], "Group", Convert.ToInt64(myWeb.moSession["nUserId"])))
+                                    if (modbHelper.checkUserRole(group, "Group", userId) ||
+                                        modbHelper.checkUserRole(group, "Role", userId))
                                     {
                                         bAllowUser = true;
-                                    }
-                                    if (modbHelper.checkUserRole(aGroups[i], "Role", Convert.ToInt64(myWeb.moSession["nUserId"])))
-                                    {
-                                        bAllowUser = true;
+                                        break; // stop once a match is found
                                     }
                                 }
-                                var loopTo2 = Information.UBound(aInvalidGroups);
-                                for (i2 = 0; i2 <= loopTo2; i2++)
+
+                                // Safely get userId once                             
+                                long.TryParse(myWeb.moSession["nUserId"]?.ToString(), out userId);
+
+                                foreach (var group in aInvalidGroups)
                                 {
-                                    if (modbHelper.checkUserRole(aInvalidGroups[i2], "Group", Convert.ToInt64(myWeb.moSession["nUserId"])))
+                                    if (modbHelper.checkUserRole(group, "Group", userId) ||
+                                        modbHelper.checkUserRole(group, "Role", userId))
                                     {
                                         bAllowUser = false;
-                                    }
-                                    if (modbHelper.checkUserRole(aInvalidGroups[i2], "Role", Convert.ToInt64(myWeb.moSession["nUserId"])))
-                                    {
-                                        bAllowUser = false;
+                                        break; // deny immediately if any invalid group/role matches
                                     }
                                 }
+
                             }
 
+                            // Check invalid groups
                             if (!string.IsNullOrEmpty(oElmt.GetAttribute("invalidGroups")))
                             {
-                                string[] aInvalidGroups = Strings.Split(oElmt.GetAttribute("invalidGroups"), ",");
-                                int i2;
-                                var loopTo3 = Information.UBound(aInvalidGroups);
-                                for (i2 = 0; i2 <= loopTo3; i2++)
+                                string[] aInvalidGroups = oElmt.GetAttribute("invalidGroups").Split(',');
+                                foreach (string group in aInvalidGroups)
                                 {
-                                    if (modbHelper.checkUserRole(aInvalidGroups[i2], "Group"))
+                                    if (modbHelper.checkUserRole(group, "Group"))
                                     {
                                         bAllowUser = false;
+                                        break; // no need to check further
                                     }
                                 }
                             }
 
-                            if (oElmt.GetAttribute("validCurrencies") == "all" | string.IsNullOrEmpty(oElmt.GetAttribute("validCurrencies")))
+                            // Check valid currencies
+                            string validCurrencies = oElmt.GetAttribute("validCurrencies");
+                            if (validCurrencies == "all" || string.IsNullOrEmpty(validCurrencies))
                             {
                                 bAllowCurrencies = true;
                             }
                             else
                             {
-                                string[] aCurs = Strings.Split(oElmt.GetAttribute("validCurrencies"), ",");
-                                int i;
-                                var loopTo4 = Information.UBound(aCurs);
-                                for (i = 0; i <= loopTo4; i++)
+                                string[] aCurs = validCurrencies.Split(',');
+                                bAllowCurrencies = false; // initialize as false
+                                foreach (string cur in aCurs)
                                 {
-                                    if ((aCurs[i] ?? "") == (mcCurrency ?? ""))
+                                    if ((cur ?? "") == (mcCurrency ?? ""))
                                     {
                                         bAllowCurrencies = true;
-                                    }
-                                    else
-                                    {
-                                        bAllowCurrencies = false;
+                                        break; // found a match, no need to continue
                                     }
                                 }
                             }
@@ -2754,19 +2754,30 @@ namespace Protean
 
                         oCartAdd = oRoot.SelectSingleNode("Contact[@type='Billing Address']");
 
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["validateCV2"], "on", false)))
-                            //bCv2 = true;
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDictOpt["secure3d"], "on", false)))
+                        // Check CV2 validation
+                        if (oDictOpt.ContainsKey("validateCV2") && oDictOpt["validateCV2"]?.ToString() == "on")
+                        {
+                            // bCv2 = true; // uncomment if needed
+                        }
+
+                        // Check 3D Secure
+                        if (oDictOpt.ContainsKey("secure3d") && oDictOpt["secure3d"]?.ToString() == "on")
                         {
                             b3dSecure = true;
-                            // Check the IP Addresses for a block
-                            if (oDictOpt["secure3dIpBlock"] != null)
+
+                            // Check the IP addresses for a block
+                            if (oDictOpt.ContainsKey("secure3dIpBlock") && oDictOpt["secure3dIpBlock"] != null)
                             {
-                                var oRE = new Regex("(,|^)" + Strings.Replace(cIPAddress, ".", @"\.") + "(,|$)");
-                                if (oRE.IsMatch(Convert.ToString(oDictOpt["secure3dIpBlock"])))
+                                // Escape dots in IP address
+                                string pattern = @"(,|^)" + Regex.Escape(cIPAddress) + "(,|$)";
+                                var oRE = new Regex(pattern);
+                                if (oRE.IsMatch(oDictOpt["secure3dIpBlock"].ToString()))
+                                {
                                     b3dSecure = false;
+                                }
                             }
                         }
+
 
                         if (b3dSecure)
                         {
@@ -2778,7 +2789,15 @@ namespace Protean
                         }
 
                         // Load the Xform
-                        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, Convert.ToString(oDictOpt["cardsAccepted"]), true, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " ", oDictOpt["currency"]), " by Credit/Debit Card")));
+                        ccXform = creditCardXform(
+                                                    ref oRoot,
+                                                    "PayForm",
+                                                    sSubmitPath,
+                                                    Convert.ToString(oDictOpt["cardsAccepted"]),
+                                                    true,
+                                                    $"Make Payment of {mnPaymentAmount:F2} {oDictOpt["currency"]} by Credit/Debit Card"
+                                                );
+
 
                         if (b3dSecure)
                         {
@@ -2796,11 +2815,11 @@ namespace Protean
                                 // 3D Secure Resume
                                 cRequest = "intInstID=" + this.goServer.UrlEncode(Convert.ToString(oDictOpt["installationId"])) + "&";
                                 cRequest = cRequest + "fltAPIVersion=" + sAPIVer + "&";
-                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intTestMode=", oDictOpt["testMode"]), "&"));
-                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intTransID=", this.goSession["intTransID"]), "&"));
-                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "strSecurityToken=", this.goSession["strSecurityToken"]), "&"));
+                                cRequest += "intTestMode=" + oDictOpt["testMode"]?.ToString() + "&";
+                                cRequest += "intTransID=" + this.goSession["intTransID"]?.ToString() + "&";
+                                cRequest += "strSecurityToken=" + this.goSession["strSecurityToken"]?.ToString() + "&";
                                 cRequest = cRequest + "strTransType=S3DAUTH&";
-                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "strS3DTransID=", this.goSession["strS3DTransID"]), "&"));
+                                cRequest += "strS3DTransID=" + this.goSession["strS3DTransID"]?.ToString() + "&";
                                 cRequest = cRequest + "strS3DResponse=" + this.goServer.UrlEncode(this.goRequest["PaRes"]) + "&";
                                 cRequest = cRequest + "strS3DMerchantData=" + this.goServer.UrlEncode(this.goRequest["MD"]);
                             }
@@ -2813,8 +2832,10 @@ namespace Protean
                                 cRequest = cRequest + "strDesc=" + this.goServer.UrlEncode(mcPaymentOrderDescription) + "&";
                                 cRequest = cRequest + "fltAmount=" + this.goServer.UrlEncode(mnPaymentAmount.ToString()) + "&";
                                 cRequest = cRequest + "strCurrency=" + this.goServer.UrlEncode(Convert.ToString(oDictOpt["currency"])) + "&";
-                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intAuthMode=", oDictOpt["authMode"]), "&")); // 0=omited 1=full auth 2=pre-auth only
-                                cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "intTestMode=", oDictOpt["testMode"]), "&")); // 0=omited 1=allsuccess auth 2=all failed
+                                // 0=omitted, 1=full auth, 2=pre-auth only
+                                cRequest += "intAuthMode=" + oDictOpt["authMode"]?.ToString() + "&";
+                                // 0=omitted, 1=all success auth, 2=all failed
+                                cRequest += "intTestMode=" + oDictOpt["testMode"]?.ToString() + "&";
                                 cRequest = cRequest + "strCardHolder=" + this.goServer.UrlEncode(mcCardHolderName) + "&";
                                 cRequest = cRequest + "strAddress=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("Street").InnerText) + "&";
                                 cRequest = cRequest + "strCity=" + this.goServer.UrlEncode(oCartAdd.SelectSingleNode("City").InnerText) + "&";
@@ -2832,7 +2853,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    cRequest = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cRequest + "strEmail=", oDictOpt["MerchantEmail"]), "&"));
+                                    cRequest += "strEmail=" + oDictOpt["MerchantEmail"]?.ToString() + "&";
                                 }
 
                                 cRequest = cRequest + "strCardNumber=" + this.goServer.UrlEncode(this.FormatCreditCardNumber(this.goRequest["creditCard/number"]).ToString()) + "&";
@@ -2846,14 +2867,12 @@ namespace Protean
                                 cRequest = cRequest + "strCardType=" + this.goServer.UrlEncode(this.goRequest["creditCard/type"]) + "&";
                                 cRequest = cRequest + "strUserIP=" + this.goRequest.ServerVariables["REMOTE_ADDR"] + "&";
                                 cRequest = cRequest + "fltAPIVersion=" + sAPIVer + "&";
-                                if (mdFulfillmentDate == default)
-                                {
-                                    cRequest = cRequest + "datFulfillment=" + Strings.FormatDateTime(DateTime.Now, DateFormat.ShortDate) + "&";
-                                }
-                                else
-                                {
-                                    cRequest = cRequest + "datFulfillment=" + Strings.FormatDateTime(mdFulfillmentDate, DateFormat.ShortDate) + "&";
-                                }
+                                // Use the provided date or today's date if default
+                                DateTime fulfillmentDate = mdFulfillmentDate == default ? DateTime.Now : mdFulfillmentDate;
+
+                                // Format as short date (e.g., MM/dd/yyyy)
+                                cRequest += "datFulfillment=" + fulfillmentDate.ToString("d") + "&";
+
                                 cRequest = cRequest + "strTransType=PAYMENT&";
                             }
 
@@ -2880,7 +2899,7 @@ namespace Protean
 
                             // Validate the response.
 
-                            if (string.IsNullOrEmpty(cMChgResponse) | Strings.InStr(cMChgResponse, "=") == 0)
+                            if (string.IsNullOrEmpty(cMChgResponse) || !cMChgResponse.Contains("="))
                             {
                                 err_msg = "There was a communications error.";
                             }
@@ -2892,7 +2911,7 @@ namespace Protean
 
                                 nResult = Convert.ToInt64(oResponseDict["intStatus"]);
 
-                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oResponseDict["strTransType"], "S3DVALIDATE", false)))
+                                if (oResponseDict.ContainsKey("strTransType") && oResponseDict["strTransType"]?.ToString() == "S3DVALIDATE")
                                 {
 
                                     // create an xform that automatically redirects to Aquiring Banks 3DS portal.
@@ -2922,13 +2941,13 @@ namespace Protean
                                                 // Failed / Error Authorisation
                                                 cMessage = Convert.ToString(oResponseDict["strMessage"]);
 
-                                                if (Strings.InStr(cMessage, "card number") > 0)
+                                                if (cMessage != null && cMessage.Contains("card number"))
                                                     ccXform.addNote("creditCard/number", Protean.xForm.noteTypes.Alert, "The card number given is not valid.");
-                                                if (Strings.InStr(cMessage, "IssueNumber") > 0)
+                                                if (cMessage != null && cMessage.Contains("IssueNumber"))
                                                     ccXform.addNote("creditCard/issueNumber", Protean.xForm.noteTypes.Alert, "The issue number is not valid - it may not be required for non-Switch/Solo cards.");
-                                                if (Strings.InStr(cMessage, "StartDate") > 0 | Strings.InStr(cMessage, "Start Date") > 0)
+                                                if (cMessage != null && cMessage.Contains("StartDate") | cMessage != null && cMessage.Contains("Start Date"))
                                                     ccXform.addNote("creditCard/issueDate", Protean.xForm.noteTypes.Alert, "The issue date is not valid - it may not be required for Switch or Solo cards.");
-                                                if (Strings.InStr(cMessage, "ExpiryDate") > 0 | Strings.InStr(cMessage, "Expiry Date") > 0)
+                                                if (cMessage != null && cMessage.Contains("ExpiryDate") | cMessage != null && cMessage.Contains("Expiry Date"))
                                                     ccXform.addNote("creditCard/expireDate", Protean.xForm.noteTypes.Alert, "The expiry date is not valid.");
 
                                                 err_msg_log = cMessage;
@@ -2948,7 +2967,7 @@ namespace Protean
                                         case 1L:
                                             {
                                                 // Successful Authorisation
-                                                err_msg = Convert.ToString(Operators.ConcatenateObject("Payment was successful. Transaction ref: ", oResponseDict["strSecurityToken"]));
+                                                err_msg = "Payment was successful. Transaction ref: " + oResponseDict["strSecurityToken"]?.ToString();
                                                 bIsValid = true;
                                                 break;
                                             }
@@ -2968,12 +2987,13 @@ namespace Protean
                             {
                                 if (bIsValid)
                                 {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Received) "), Constants.vbLf), "comment: "), err_msg);
+                                    oRow["cSellerNotes"] = $"{oRow["cSellerNotes"]}{Environment.NewLine}{DateTime.Now}: changed to: (Payment Received) {Environment.NewLine}comment: {err_msg}";
                                 }
                                 else
                                 {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Payment Failed) "), Constants.vbLf), "comment: "), err_msg_log);
+                                    oRow["cSellerNotes"] = $"{oRow["cSellerNotes"]}{Environment.NewLine}{DateTime.Now}: changed to: (Payment Failed) {Environment.NewLine}comment: {err_msg_log}";
                                 }
+
                             }
                             modbHelper.updateDataset(ref oDs, "Order");
 
@@ -3667,7 +3687,9 @@ namespace Protean
 
                         if (oSecEmailCfg is null)
                         {
-                            Information.Err().Raise(1005, "paySecureEmail", "The Secure Email provider section is yet to be added to the Protean.Config");
+                            throw new InvalidOperationException(
+                                "The Secure Email provider section is yet to be added to the Protean.Config"
+                            );
                         }
 
                         string cGnuDirectory = oSecEmailCfg.SelectSingleNode("GnuDirectory/@value").InnerText;
@@ -3679,7 +3701,15 @@ namespace Protean
                         if (oSecEmailCfg.SelectSingleNode("validateCV2/@value").InnerText == "on")
                             bCv2 = true;
 
-                        ccXform = creditCardXform(ref oRoot, "PayForm", sSubmitPath, sCardAccepted, bCv2, "Make Payment of " + Strings.FormatNumber(mnPaymentAmount, 2) + " " + mcCurrency + " by Credit/Debit Card");
+                        ccXform = creditCardXform(
+     ref oRoot,
+     "PayForm",
+     sSubmitPath,
+     sCardAccepted,
+     bCv2,
+     $"Make Payment of {mnPaymentAmount:F2} {mcCurrency} by Credit/Debit Card"
+ );
+
 
                         if (ccXform.valid == true)
                         {
@@ -3722,17 +3752,16 @@ namespace Protean
                             {
                                 if (sResponse == "Message Sent")
                                 {
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Secure Email Sent) "), Constants.vbLf);
+                                    oRow["cSellerNotes"] = $"{oRow["cSellerNotes"]}{Environment.NewLine}{DateTime.Now}: changed to: (Secure Email Sent){Environment.NewLine}";
                                 }
                                 else
                                 {
                                     ccXform.valid = false;
-                                    //XmlNode argoNode = (XmlNode)ccXform.moXformElmt;
                                     ccXform.addNote(ref ccXform.moXformElmt, Protean.xForm.noteTypes.Alert, sResponse);
-                                    //ccXform.moXformElmt = (XmlElement)argoNode;
-                                    oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Secure Email Failed:"), sResponse), ") "), Constants.vbLf);
+                                    oRow["cSellerNotes"] = $"{oRow["cSellerNotes"]}{Environment.NewLine}{DateTime.Now}: changed to: (Secure Email Failed: {sResponse}){Environment.NewLine}";
                                 }
                             }
+
                             modbHelper.updateDataset(ref oDs, "Order");
                         }
 
@@ -4050,8 +4079,11 @@ namespace Protean
                         oAccountCfg = moPaymentCfg.SelectSingleNode("provider[@name='Pay On Account' or @name='PayOnAccount']");
                         if (oAccountCfg is null)
                         {
-                            Information.Err().Raise(1003, "payOnAccount", "The Pay On Account provider section is yet to be added to the Protean.Config");
+                            throw new InvalidOperationException(
+                                "The Pay On Account provider section is yet to be added to the Protean.Config"
+                            );
                         }
+
                         if (oAccountCfg.SelectSingleNode("AccountXform/@value") != null)
                         {
                             mcAccountXForm = oAccountCfg.SelectSingleNode("AccountXform/@value").InnerText;
@@ -4136,7 +4168,9 @@ namespace Protean
                             sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
                             oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
                             foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                                oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Order Placed)"), Constants.vbLf), Constants.vbLf), cPaymentDetails);
+                            {
+                                oRow["cSellerNotes"] = $"{oRow["cSellerNotes"]}{Environment.NewLine}{DateTime.Now}: changed to: (Order Placed){Environment.NewLine}{Environment.NewLine}{cPaymentDetails}";
+                            }
 
                             modbHelper.updateDataset(ref oDs, "Order");
 
@@ -4193,8 +4227,11 @@ namespace Protean
                         oAccountCfg = moPaymentCfg.SelectSingleNode("provider[@name='PayByCash']");
                         if (oAccountCfg is null)
                         {
-                            Information.Err().Raise(1003, "payByCash", "The Pay By Cash provider section is yet to be added to the Protean.Config");
+                            throw new InvalidOperationException(
+                                "The Pay By Cash provider section is yet to be added to the Protean.Config"
+                            );
                         }
+
                         if (oAccountCfg.SelectSingleNode("AccountXform/@value") != null)
                         {
                             mcAccountXForm = oAccountCfg.SelectSingleNode("AccountXform/@value").InnerText;
@@ -4278,7 +4315,9 @@ namespace Protean
                             sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
                             oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
                             foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                                oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Order Placed)"), Constants.vbLf), Constants.vbLf), cPaymentDetails);
+                            {
+                                oRow["cSellerNotes"] = $"{oRow["cSellerNotes"]}{Environment.NewLine}{DateTime.Now}: changed to: (Order Placed){Environment.NewLine}{Environment.NewLine}{cPaymentDetails}";
+                            }
 
                             modbHelper.updateDataset(ref oDs, "Order");
                             mnProcessIdOnComplete = Cart.cartProcess.AwaitingPayment;
@@ -4329,7 +4368,9 @@ namespace Protean
                         oAccountCfg = moPaymentCfg.SelectSingleNode("provider[@name='Save Order' or @name='SaveOrder']");
                         if (oAccountCfg is null)
                         {
-                            Information.Err().Raise(1003, "saveOrder", "The Save Order provider section is yet to be added to the Protean.Config");
+                            throw new InvalidOperationException(
+                                "The Save Order provider section is yet to be added to the Protean.Config"
+                            );
                         }
                         if (oAccountCfg.SelectSingleNode("AccountXform/@value") != null)
                         {
@@ -4415,10 +4456,11 @@ namespace Protean
                             oDs = modbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
                             foreach (DataRow oRow in oDs.Tables["Order"].Rows)
                             {
-                                oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": changed to: (Order Saved)"), Constants.vbLf), Constants.vbLf), cPaymentDetails);
+                                oRow["cSellerNotes"] = $"{oRow["cSellerNotes"]}{Environment.NewLine}{DateTime.Now}: changed to: (Order Saved){Environment.NewLine}{Environment.NewLine}{cPaymentDetails}";
 
                                 oRow["nCartStatus"] = Cart.cartProcess.AwaitingPayment;
                             }
+
                             modbHelper.updateDataset(ref oDs, "Order");
                         }
                         // savedPaymentId = savePayment(myWeb.mnUserId, "Pay On Account", mnCartId, "Pay on Account", oPayElmt, Now, False, 0) '0 amount paid as yet
@@ -4996,8 +5038,11 @@ namespace Protean
                     {
                         // The dates are formatted "mm yyyy" - convert them to "mmyy"
                         if (!string.IsNullOrEmpty(sdate))
-                            strReturn = Strings.Left(sdate, 2) + Strings.Right(sdate, 2);
+                        {
+                            strReturn = sdate.Substring(0, 2) + sdate.Substring(sdate.Length - 2, 2);
+                        }
                         return strReturn;
+
                     }
                     catch (Exception ex)
                     {
@@ -5016,12 +5061,14 @@ namespace Protean
                     {
                         // The dates are formatted "mm yyyy" - convert them to "mm/yy"
                         if (!string.IsNullOrEmpty(sdate))
-                            return Strings.Left(sdate, 2) + "/" + Strings.Right(sdate, 2);
+                        {
+                            return sdate.Substring(0, 2) + "/" + sdate.Substring(sdate.Length - 2, 2);
+                        }
                         else
+                        {
                             return null;
+                        }
                     }
-
-
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref myWeb.msException, mcModuleName, "fmtSecPayDate", ex, "", cProcessInfo, gbDebug);
@@ -5206,7 +5253,7 @@ namespace Protean
                     string cResult = "";
                     var oRE = new Regex(@"\D");
                     cResult = oRE.Replace(sCCNumber, "");
-                    cResult = Strings.Replace(cResult, " ", ""); // also strip out spaces
+                    cResult = cResult.Replace(" ", ""); // also strip out spaces
                     if (string.IsNullOrEmpty(cResult))
                         cResult = 0.ToString();
                     return Convert.ToInt64(cResult);
@@ -5231,7 +5278,7 @@ namespace Protean
 
                         // New addition to fix acs_url being url decoded - 23/06/2014
                         string cleanACSURL = myWeb.goServer.UrlDecode(acs_url);
-                        cleanACSURL = Strings.Replace(cleanACSURL, "&amp;", "&");
+                        cleanACSURL = cleanACSURL.Replace("&amp;", "&");
 
                         // hack because server 5 is flukey !
                         // acs_url = acs_url.Replace("secure5.arcot", "secure4.arcot")
@@ -5244,7 +5291,7 @@ namespace Protean
                         oFrmInstance = (XmlElement)argoNode;
 
                         XmlNode argoNode1 = oFrmInstance;
-                        addNewTextNode("TermUrl", ref argoNode1, Strings.Replace(callbackUrl, "&amp;", "&"));
+                        addNewTextNode("TermUrl", ref argoNode1, callbackUrl.Replace("&amp;", "&"));
                         oFrmInstance = (XmlElement)argoNode1;
                         XmlNode argoNode2 = oFrmInstance;
                         addNewTextNode("MD", ref argoNode2, MD);
@@ -5304,7 +5351,7 @@ namespace Protean
                         addNewTextNode("SongbirdURL", ref argoNode1, SongbirdURL);
                         oFrmInstance = (XmlElement)argoNode1;
                         XmlNode argoNode2 = oFrmInstance;
-                        addNewTextNode("CallbackUrl", ref argoNode2, Strings.Replace(callbackUrl, "&amp;", "&"));
+                        addNewTextNode("CallbackUrl", ref argoNode2, callbackUrl.Replace("&amp;", "&"));
                         oFrmInstance = (XmlElement)argoNode2;
 
                         oXform.Instance.AppendChild(oFrmInstance);
@@ -5489,7 +5536,7 @@ namespace Protean
                                 }
                             case "settlement":
                                 {
-                                    oFrmGroup.SelectSingleNode("label").InnerText = Strings.Replace(sFormTitle, "Payment", "Settlement Payment");
+                                    oFrmGroup.SelectSingleNode("label").InnerText = sFormTitle.Replace("Payment", "Settlement Payment");
                                     break;
                                 }
                         }
@@ -5513,14 +5560,15 @@ namespace Protean
                         }
 
                         oXform.addSelect1(ref oFrmGroup, "creditCard/type", false, "Card Type", "required", Protean.xForm.ApperanceTypes.Full, "cc-type");
-                        aCardTypes = Strings.Split(cardTypes, ",");
-                        var loopTo = Information.UBound(aCardTypes);
-                        for (i = 0; i <= loopTo; i++)
+                        aCardTypes = cardTypes.Split(',');
+
+                        foreach (var cardType in aCardTypes)
                         {
-                            aCardTypes2 = Strings.Split(aCardTypes[i], ":");
+                            aCardTypes2 = cardType.Split(':');
                             XmlElement argoSelectNode = (XmlElement)oFrmGroup.LastChild;
                             oXform.addOption(ref argoSelectNode, aCardTypes2[0], aCardTypes2[1]);
                         }
+
                         XmlElement oGroup;
                         switch (myWeb.moConfig["cssFramework"] ?? "")
                         {
@@ -5635,7 +5683,10 @@ namespace Protean
                                 {
                                     if (oMatch.Groups.Count == 3)
                                     {
-                                        if (Operators.CompareString(string.Concat(oMatch.Groups[2].Value, oMatch.Groups[1].Value), DateTime.Today.ToString("yyyyMM"), false) < 0)
+                                        string combined = oMatch.Groups[2].Value + oMatch.Groups[1].Value;
+                                        string todayStr = DateTime.Today.ToString("yyyyMM");
+
+                                        if (string.Compare(combined, todayStr, StringComparison.Ordinal) < 0)
                                         {
                                             cDateMessage = "The expiry date is in the past. Please check the date on your card.";
                                         }
@@ -5643,6 +5694,7 @@ namespace Protean
                                         {
                                             bDateState = true;
                                         }
+
                                     }
                                 }
                             }
@@ -5672,7 +5724,10 @@ namespace Protean
                                 {
                                     if (oMatch.Groups.Count == 3)
                                     {
-                                        if (Operators.CompareString(string.Concat(oMatch.Groups[2].Value, oMatch.Groups[1].Value), DateTime.Today.ToString("yyyyMM"), false) > 0)
+                                        string combined = oMatch.Groups[2].Value + oMatch.Groups[1].Value;
+                                        string todayStr = DateTime.Today.ToString("yyyyMM");
+
+                                        if (string.Compare(combined, todayStr, StringComparison.Ordinal) > 0)
                                         {
                                             cDateMessage = "The issue date is in the past. Please check the date on your card.";
                                         }
@@ -5700,12 +5755,16 @@ namespace Protean
 
                             if (bCV2)
                             {
-                                if (!Tools.Number.IsNumeric(oXform.Instance.SelectSingleNode("creditCard/CV2").InnerText) & Strings.Len(oXform.Instance.SelectSingleNode("creditCard/CV2").InnerText) != 3)
+                                var cv2Node = oXform.Instance.SelectSingleNode("creditCard/CV2");
+                                string cv2Text = cv2Node?.InnerText ?? "";
+
+                                if (!int.TryParse(cv2Text, out _) || cv2Text.Length != 3)
                                 {
                                     oXform.addNote("creditCard/CV2", Protean.xForm.noteTypes.Alert, "Please provide the last 3 digits on the signature strip.");
                                     oXform.AddValidationError("Please provide the last 3 digits on the signature strip.");
                                     oXform.valid = false;
                                 }
+
                             }
                         }
 
@@ -6380,10 +6439,14 @@ namespace Protean
                             {
                                 string cDisplay = Convert.ToString(oRow["cPayMthdAcctName"]);
                                 var oElmt = oXForm.Instance.OwnerDocument.CreateElement("Details");
-                                oElmt.InnerXml = Strings.Replace(Strings.Replace(Convert.ToString(oRow["cPayMthdDetailXml"]), "&gt;", ">"), "&lt;", "<");
+                                oElmt.InnerXml = Convert.ToString(oRow["cPayMthdDetailXml"]).Replace("&gt;", ">").Replace("&lt;", "<");
+
                                 if (oElmt.FirstChild.Attributes["Display"] != null)
+                                {
                                     cDisplay = oElmt.FirstChild.Attributes["Display"].Value;
-                                oXForm.addOption(ref oSelectElmt, cDisplay, Convert.ToString(Operators.ConcatenateObject("Repeat_", oRow["nPayMthdKey"])));
+                                }
+
+                                oXForm.addOption(ref oSelectElmt, cDisplay, "Repeat_" + oRow["nPayMthdKey"]);
                             }
 
                             nCount = oDS.Tables["PaymentMethods"].Rows.Count;
@@ -6514,7 +6577,7 @@ namespace Protean
                         oXform.addSubmit(ref oGrpElmt, "Cancel", "Cancel", "Cancel", "");
                         oXform.addSubmit(ref oGrpElmt, "Proceed", "Proceed", "Proceed");
 
-                        oXform.Instance.InnerXml = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<RepeatPayments><Repeat_" + nPaymentId + ">" + nPaymentId + "</Repeat_" + nPaymentId + "><Payment>", oRow["cPayMthdAcctName"]), "</Payment></RepeatPayments><Password/>"));
+                        oXform.Instance.InnerXml = $"<RepeatPayments><Repeat_{nPaymentId}>{nPaymentId}</Repeat_{nPaymentId}><Payment>{oRow["cPayMthdAcctName"]}</Payment></RepeatPayments><Password/>";
                         oXform.addValues();
 
                         if (oXform.isSubmitted())
@@ -6584,7 +6647,7 @@ namespace Protean
                             addNewTextNode("nAuditKey", ref argoNode, nAuditId);
                             oElmt = (XmlElement)argoNode;
                             XmlNode argoNode1 = oElmt;
-                            addNewTextNode("nStatus", ref argoNode1, Convert.ToString(Interaction.IIf(bValid, 1, 0)));
+                            addNewTextNode("nStatus", ref argoNode1, bValid ? "1" : "0");
                             oElmt = (XmlElement)argoNode1;
                             oInstance.AppendChild(oElmt);
 
@@ -6603,11 +6666,12 @@ namespace Protean
                     try
                     {
                         if (!amount.Contains("."))
-                            return Strings.Replace(amount, ",", "");
-                        amount = Strings.Replace(amount, ",", "");
-                        string[] cAmounts = Strings.Split(amount, ".");
-                        if (Information.UBound(cAmounts) > 2)
+                            return amount.Replace(",", "");
+                        amount = amount.Replace(",", "");
+                        string[] cAmounts = amount.Split('.');
+                        if (cAmounts.Length > 2)
                             return amount;
+
                         amount = cAmounts[0] + ".";
                         if (cAmounts[1].Length < 2)
                         {

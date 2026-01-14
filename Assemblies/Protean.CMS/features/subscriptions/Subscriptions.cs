@@ -1,6 +1,4 @@
 ﻿using Microsoft.ClearScript.Windows;
-//using Microsoft.VisualBasic;
-//using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Payment;
 using System;
 using System.Collections.Generic;
