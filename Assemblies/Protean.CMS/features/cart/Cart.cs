@@ -6027,7 +6027,7 @@ namespace Protean
                         // 1. It has addresses in it
                         // 2. There is no request to Add
 
-                        else if (oXform.moXformElmt.SelectSingleNode("/model/instance").HasChildNodes & !!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
+                        else if (oXform.moXformElmt.InnerXml.ToString().contains("addNewAddress") & !!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
                         {
                             oReturnForm = oXform;
                         }
