@@ -239,13 +239,18 @@
 			<xsl:if test="descendant::upload">
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 			</xsl:if>
+
 			<xsl:for-each select="group">
 				<div class="panel-body">
 					<xsl:apply-templates select="label" mode="legend"/>
-					<p>Welcome back, please sign in to your account</p>	
+<p>Welcome back, please sign in to your account</p>
 					<xsl:apply-templates select="parent::*/alert" mode="xform"/>
 					<xsl:apply-templates select="group | repeat | input | secret | select | select1 | range | textarea | upload | hint | help | alert | div | submit" mode="xform"/>
-				</div>				
+
+
+
+				</div>
+				
 			</xsl:for-each>
 		</form>
 		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>

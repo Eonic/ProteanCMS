@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content moduleType="EmailForm" box="" title="Contact Form" process="xform" position="">
+					<Content moduleType="EmailForm" box="" title="Contact Form" process="xform" position="" heading="h2">
 						<model class="ewXform">
 							<instance>
 								<emailer xmlns="http://www.eonic.co.uk/ewcommon/Services">

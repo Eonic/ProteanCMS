@@ -1367,7 +1367,7 @@ namespace Protean
                             AddToLists("Invoice", ref oContentElmt);
                         }
 
-                        purchaseActions(ref oContentElmt);
+                        purchaseActions(oContentElmt);
                         // update the cart if purchase actions have changed it
                         // GetCart(oElmt)
                         // done for ammerdown as we have removed a product.
@@ -1680,6 +1680,8 @@ namespace Protean
                                 if (Convert.ToString(oElmt.Attributes["statusId"].Value) == "6")
                                 {
                                     mnProcessId = 6;
+                                   // addDateAndRef(ref oElmt);
+                                   // purchaseActions(oContentElmt,true);
                                     mcCartCmd = "ShowInvoice";
                                     goto processFlow;
                                 }
@@ -2005,10 +2007,11 @@ namespace Protean
                         case "SubmitPaymentDetails": // confirm order and submit for payment
                             {
                                 GetCart(ref oElmt);
-
+                               
                                 if (Convert.ToString(oElmt.Attributes["statusId"].Value) == cartProcess.Complete.ToString())
                                 {
-                                    mnProcessId = (short)cartProcess.Complete; ;
+                                    mnProcessId = (short)cartProcess.Complete;
+                                  //  purchaseActions(oContentElmt, true);
                                     mcCartCmd = "ShowInvoice";
                                     goto processFlow;
                                 }
@@ -2026,8 +2029,9 @@ namespace Protean
                                 //}
 
                                 // Add the date and reference to the cart
-
+                               
                                 addDateAndRef(ref oElmt);
+
 
                                 if (mcPaymentMethod == "No Charge")
                                 {
@@ -2121,11 +2125,21 @@ namespace Protean
                                 else
                                 {
                                     GetCart(ref oElmt);
-                                    if (oElmt!=null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
+
+                                    if (oElmt != null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
                                     {
                                         CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
                                     }
-                                  
+                                    else
+                                    {
+                                        if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
+                                        {
+
+                                            addDateAndRef(ref oElmt);
+                                           // purchaseActions(oContentElmt);
+                                        }
+                                    }
+
 
                                     if (mbQuitOnShowInvoice)
                                     {
@@ -2537,7 +2551,7 @@ namespace Protean
                 }
             }
 
-            public virtual void purchaseActions(ref XmlElement oCartElmt)
+            public virtual void purchaseActions( XmlElement oCartElmt)
             {
                 myWeb.PerfMon.Log("Cart", "purchaseActions");
                 // Dim sMessageResponse As String
@@ -2567,7 +2581,9 @@ namespace Protean
                             args = new object[2];
                             args[0] = myWeb;
                             args[1] = oCartElmt;
+                          
                         }
+                       
                         else
                         {
                             args[0] = oCartElmt;
@@ -2627,9 +2643,12 @@ namespace Protean
                                 var o = Activator.CreateInstance(calledType);
 
                                 var args = new object[2];
-                                args[0] = myWeb;
-                                args[1] = ocNode;
-
+                              
+                                {
+                                    args[0] = myWeb;
+                                    args[1] = ocNode;
+                                }
+                               
                                 calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
                             }
 
@@ -3922,7 +3941,12 @@ namespace Protean
 
                         foreach (XmlElement opElmt in xElmtPaymentProvider)
                         {
-
+                            //if (opElmt.GetAttribute("name") == "Pay360")
+                            //{
+                            //    // Pay360 Google Pay is NOT a wallet provider
+                            //    // It is just a payment method inside Pay360
+                            //    continue; // Skip wallet logic entirely
+                            //}
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
                             IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
                             XmlElement oWallets = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);

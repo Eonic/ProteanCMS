@@ -17,7 +17,7 @@
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
 					<!-- v3 refers to the version of the GoogleMaps API -->
-					<Content position="" moduleType="GoogleMapv3" box="" title="" link="" linkType="internal" >
+					<Content position="" moduleType="GoogleMapv3" box="" title="" link="" linkType="internal" heading="h2">
 						<Zoom allow="true" disableMouseWheel="false">8</Zoom>
 						<Control>Large</Control>
 						<View>ROADMAP</View>
