@@ -3951,9 +3951,12 @@ namespace Protean
                             IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
                             XmlElement oWallets = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
                             //just check if wallets object is empty.
-                            if (oWallets.InnerXml != string.Empty)
+                            if (oWallets != null)
                             {
-                                oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oWallets, true));
+                                if (oWallets.InnerXml != string.Empty)
+                                {
+                                    oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oWallets, true));
+                                }
                             }
                         }
 
@@ -6028,7 +6031,7 @@ namespace Protean
                         // 1. It has addresses in it
                         // 2. There is no request to Add
 
-                        else if (oXform.moXformElmt.SelectSingleNode("/model/instance").HasChildNodes & !!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
+                        else if (oXform.moXformElmt.InnerXml.ToString().Contains("addNewAddress") & !!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
                         {
                             oReturnForm = oXform;
                         }
@@ -6083,10 +6086,6 @@ namespace Protean
                             // pass through the xform to make transparent
                             oReturnForm = oContactXform;
                         }
-
-
-
-
                     }
 
                     // TS not sure if required after rewrite, think it is deleting addresses unessesarily.

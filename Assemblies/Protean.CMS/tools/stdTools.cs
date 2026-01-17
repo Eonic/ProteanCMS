@@ -1163,12 +1163,12 @@ namespace Protean
                 {
                     double adjustment = Math.Pow(10d, nDecimalPlaces);
                     // RetVal = Math.Floor(nNumber, adjustment)/adjustment;
-                    RetVal = Math.Round((Decimal)nNumber, nDecimalPlaces, MidpointRounding.ToEven);
+                    RetVal = Math.Round(Convert.ToDecimal(nNumber), nDecimalPlaces, MidpointRounding.ToEven);
                 }
                 // RetVal = Math.Round(nNumber, nDecimalPlaces, MidpointRounding.ToEven)
                 else
                 {
-                    RetVal = Math.Round((Decimal)nNumber, nDecimalPlaces);
+                    RetVal = Math.Round(Convert.ToDecimal(nNumber), nDecimalPlaces);
                 }
                 return RetVal;
             }
