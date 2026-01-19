@@ -1630,7 +1630,7 @@ namespace Protean
                             if (moSession != null) {
                                 if (gbCart | gbQuote)
                                 {
-                                    if (Convert.ToInt16("0" + moSession["CartId"] ?? string.Empty) > 0)
+                                    if (int.TryParse(moSession["CartId"]?.ToString(), out int cartId) && cartId > 0)
                                     {
                                         bPageCache = false;
                                     }
