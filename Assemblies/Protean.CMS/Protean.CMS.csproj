@@ -343,6 +343,10 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="api\soap.cs" />
+    <Compile Include="core\Cms-Actions.cs" />
+    <Compile Include="core\Cms-User.cs" />
+    <Compile Include="core\Cms-Content.cs" />
+    <Compile Include="core\Cms-Menu.cs" />
     <Compile Include="core\Cms.Async.cs" />
     <Compile Include="core\Cms.DBHelper-Import.cs" />
     <Compile Include="core\Cms.DBHelper.Async.cs" />
