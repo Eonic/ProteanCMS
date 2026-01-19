@@ -348,6 +348,12 @@
     <Compile Include="core\Cms.DBHelper.Async.cs" />
     <Compile Include="core\Cms.dbImport.cs" />
     <Compile Include="core\enviornment.cs" />
+    <Compile Include="features\cart\Cart-invoice.cs" />
+    <Compile Include="features\cart\Cart-options.cs" />
+    <Compile Include="features\cart\Cart-notes.cs" />
+    <Compile Include="features\cart\Cart-discount.cs" />
+    <Compile Include="features\cart\Cart-admin.cs" />
+    <Compile Include="features\cart\Cart-address.cs" />
     <Compile Include="features\membership\Membership.Modules.cs" />
     <Compile Include="framework\adapters\ApplicationAdapter.cs" />
     <Compile Include="framework\handlers\DeliverAjaxElmt.cs" />
