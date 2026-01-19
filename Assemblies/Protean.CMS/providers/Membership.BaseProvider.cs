@@ -2153,13 +2153,13 @@ namespace Protean.Providers
                                 nCartUserId = Convert.ToInt64(moDbHelper.GetDataValue("SELECT nCartUserDirId FROM tblCartOrder o where o.cCartSchemaName='Order' and o.cCartSessionId = '" + SqlFmt(moRequest["refSessionId"]) + "'", default, default, 0));
                             }
 
-                        if (nCartUserId != (long?)moSession["nUserId"])
+                        if (nCartUserId != myWeb.SessionUserId)
                             {
                                 mnUserId = 0;
                             }
                             else
                             {
-                                mnUserId = (long)moSession["nUserId"];
+                                mnUserId = myWeb.SessionUserId;
                             }
                         }
                         else

@@ -6562,13 +6562,13 @@ $(document).ready(function () {
 
           <!--<a href="{$appPath}?ewCmd=EditUserContact&amp;parid={$dirid}&amp;id={nContactKey}" class="btn btn-primary btn-sm float-end">-->
           <span class="btn-group-spaced float-end">
-            <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-primary btn-sm ">
+            <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={nContactKey}&amp;id={nContactDirId}" class="btn btn-primary btn-sm ">
               <i class="fa fa-edit">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>
               Edit
             </a>
-            <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-danger btn-sm ">
+            <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={nContactKey}&amp;id={nContactDirId}" class="btn btn-danger btn-sm ">
               <i class="fa fa-trash-alt">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Delete

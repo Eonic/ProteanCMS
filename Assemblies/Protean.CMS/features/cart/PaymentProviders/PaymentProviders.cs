@@ -9,6 +9,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
+using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.Ajax.Utilities;
 using Protean.Providers.Payment;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -350,18 +352,22 @@ namespace Protean
 
                             var oprovider = moPaymentCfg.SelectNodes("provider")[cnt];
                             bool bAllowUser = false;
+                            bool bSkipGroupCheck = false;
                             bool bAllowCurrencies = false;
                             if (!string.IsNullOrEmpty(validGroup) & oElmt.GetAttribute("validGroups") != "all")
                             {
                                 if (oElmt.GetAttribute("validGroups").Contains(validGroup))
                                 {
                                     bAllowUser = true;
+                                    bSkipGroupCheck = true;
+
                                 }
                             }
-                            else if (oElmt.GetAttribute("validGroups") == "all" & string.IsNullOrEmpty(validGroup))
+                            else if (oElmt.GetAttribute("validGroups").ToLower() == "all" & string.IsNullOrEmpty(validGroup))
                             {
 
                                 bAllowUser = true;
+                                bSkipGroupCheck = true;
                             }
                             else
                             {
@@ -379,19 +385,17 @@ namespace Protean
                             }
 
                             // Allow preview users to use additional payment methods
-                            long userId = 0;
 
-                            if (myWeb.moSession["nUserId"] != null && long.TryParse(myWeb.moSession["nUserId"].ToString(), out userId) && userId > 0)
+                            // Safely get userId    
+                            long userId = myWeb.SessionUserId;
+                            if (!bSkipGroupCheck) { 
+                            if (userId > 0)
                             {
                                 string[] aGroups = oElmt.GetAttribute("validGroups").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 string[] aInvalidGroups = oElmt.GetAttribute("invalidGroups").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-                                int i;
-                                int i2;
                                 bAllowUser = false;
-
-                                // Safely get userId                               
-                                long.TryParse(myWeb.moSession["nUserId"]?.ToString(), out userId);
+                           
                                 foreach (var group in aGroups)
                                 {
                                     if (modbHelper.checkUserRole(group, "Group", userId) ||
@@ -402,8 +406,6 @@ namespace Protean
                                     }
                                 }
 
-                                // Safely get userId once                             
-                                long.TryParse(myWeb.moSession["nUserId"]?.ToString(), out userId);
 
                                 foreach (var group in aInvalidGroups)
                                 {
@@ -416,24 +418,11 @@ namespace Protean
                                 }
 
                             }
-
-                            // Check invalid groups
-                            if (!string.IsNullOrEmpty(oElmt.GetAttribute("invalidGroups")))
-                            {
-                                string[] aInvalidGroups = oElmt.GetAttribute("invalidGroups").Split(',');
-                                foreach (string group in aInvalidGroups)
-                                {
-                                    if (modbHelper.checkUserRole(group, "Group"))
-                                    {
-                                        bAllowUser = false;
-                                        break; // no need to check further
-                                    }
-                                }
                             }
 
                             // Check valid currencies
                             string validCurrencies = oElmt.GetAttribute("validCurrencies");
-                            if (validCurrencies == "all" || string.IsNullOrEmpty(validCurrencies))
+                            if (validCurrencies == "all" || string.IsNullOrEmpty(validCurrencies) || string.IsNullOrEmpty(mcCurrency))
                             {
                                 bAllowCurrencies = true;
                             }
@@ -450,6 +439,7 @@ namespace Protean
                                     }
                                 }
                             }
+                           
 
                             if (bAllowUser & bAllowCurrencies)
                             {
