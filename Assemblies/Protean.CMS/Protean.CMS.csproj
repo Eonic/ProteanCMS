@@ -333,9 +333,21 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="admin\Admin-Spare.cs" />
+    <Compile Include="admin\Admin-Cart.cs" />
     <Compile Include="admin\Admin.cs" />
     <Compile Include="admin\Admin.JSONActions.cs" />
     <Compile Include="admin\Admin.Redirects.cs" />
+    <Compile Include="admin\AdminXforms-Cart.cs" />
+    <Compile Include="admin\AdminXforms-Subscriptions.cs" />
+    <Compile Include="admin\AdminXforms-Reports.cs" />
+    <Compile Include="admin\AdminXforms-Config.cs" />
+    <Compile Include="admin\AdminXforms-Pages.cs" />
+    <Compile Include="admin\xFormContentLocations.cs" />
+    <Compile Include="admin\AdminXforms-FileSystem.cs" />
+    <Compile Include="admin\AdminXforms-Directory.cs" />
+    <Compile Include="admin\AdminXforms-Content.cs" />
+    <Compile Include="admin\AdminXforms-obsolete.cs" />
     <Compile Include="admin\AdminXforms.cs" />
     <Compile Include="admin\xFormEditor.cs" />
     <Compile Include="api\rest.cs" />
