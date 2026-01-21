@@ -12,6 +12,32 @@ namespace Protean
     {
         public partial class Admin
         {
+
+            /// <summary>
+            /// <para>XFormEditor facilitates the editting of xforms within an xform.</para>
+            /// <para>
+            /// It creates a MasterXForm, which is the Content node under ContentDetail of the content being worked on.
+            /// It maintains a MasterInstance which is the object instance of the content as a whole (from GetObjectInstance)
+            /// </para>
+            /// <para>
+            /// MasterInstance and MasterXform are different, with MasterXform being a subcomponent of MasterInstance
+            /// </para>
+            /// <para>
+            /// It is instantiaated with a content id.  It is then invoked with methods specific to each xform control (e.g. group, input etc).
+            /// </para>
+            /// </summary> 
+            /// <remarks>
+            /// <para>
+            /// This is overridden by EonicLMS, which uses it for editting questionnaires.
+            /// This has been written in a way that should work without EonicLMS (i.e. for generic form editting),
+            /// but needs the following areas addressed for this generic implementation
+            /// </para>
+            /// <list>
+            /// <item>The xform xml files for each control do not exist.  Currently only found in wellardsCommon</item>
+            /// <item>xFrmEditXFormInput - New control items will not have binds created. </item>
+            /// <item>I also think instantiating the object without a content id will not work.  I'm not sure if it actually should be possible.</item>
+            /// </list>
+            /// </remarks>
             public class XFormEditor : Protean.xForm
             {
 
