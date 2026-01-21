@@ -8,8 +8,6 @@
 // $Copyright:   Copyright (c) 2002 - 2022 Eonic Digital LLP.
 // ***********************************************************************
 
-
-using Microsoft.VisualBasic;
 using Protean.Providers.CDN;
 using Protean.Providers.Membership;
 using Protean.Providers.Payment;
@@ -263,7 +261,7 @@ namespace Protean
                                             // if we are only 2 levels from the root then we use choices
                                             if (oParentParentNode != null)
                                             {
-                                                if ((oParentParentNode.GetAttribute("id") ?? "") == (selectItem.Root.ToString() ?? "") & Strings.LCase(_selectItem.GetAttribute("showAllLevels")) != "true")
+                                                if (string.Equals(oParentParentNode?.GetAttribute("id") ?? "", selectItem != null ? selectItem.Root.ToString() : "", StringComparison.Ordinal) && !string.Equals(_selectItem?.GetAttribute("showAllLevels") ?? "", "true", StringComparison.OrdinalIgnoreCase ))
                                                 {
                                                     XmlElement xmlselect = _selectItem;
                                                     if (proceedingParent is null)
@@ -431,7 +429,7 @@ namespace Protean
                                 // Determine its Root Id
                                 string argpropertyName = "root";
                                 string rootId = getPropertyFromClass(ref argpropertyName);
-                                _rootId = Convert.ToInt64(Interaction.IIf(!string.IsNullOrEmpty(rootId) & Tools.Number.IsNumeric(rootId), Convert.ToInt64(rootId), 0));
+                                _rootId = (!string.IsNullOrEmpty(rootId) && Tools.Number.IsNumeric(rootId)) ? Convert.ToInt64(rootId) : 0L;
 
                                 // Determine the root mode
                                 string argpropertyName1 = "rootMode";

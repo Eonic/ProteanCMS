@@ -3,8 +3,6 @@ using System.Collections;
 using System.Data;
 using System.Runtime.CompilerServices;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 using static Protean.stdTools;
 
@@ -136,24 +134,25 @@ namespace Protean
                                     cInfo = "Pop Alert";
                                     oNewAlert.Populate();
                                     cInfo = "Add To AlertItems";
-                                    oAlertItems.Add(Operators.ConcatenateObject("A", oDR[0]), oNewAlert);
+                                    oAlertItems.Add("A" + oDR[0], oNewAlert);
 
                                     // Go through the dir item to get the user id
                                     // if its a group we iterate down through the groups
                                     // to get all the users underneath
                                     var oDSUsers = new DataSet();
                                     cInfo = "CheckGroup";
-                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual((oDR[4]), "group", false)))
+                                    if ((oDR[4]?.ToString() ?? "") == "group")
                                     {
                                         cInfo = "Is Group";
-                                        myWeb.moDbHelper.addTableToDataSet(ref oDSUsers, Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("EXEC sp_AllDirUsers ", oDR[1]), ", "), Tools.Database.SqlDate(dTimeNow, true))), "Users");
+                                        string sql = "EXEC sp_AllDirUsers " + oDR[1] + ", " + Tools.Database.SqlDate(dTimeNow, true);
+                                        myWeb.moDbHelper.addTableToDataSet(ref oDSUsers, sql, "Users");
                                     }
                                     else
                                     {
                                         cInfo = "Is User";
                                         cSQL = "SELECT tblDirectory.nDirKey, tblDirectory.cDirSchema, tblDirectory.cDirForiegnRef, tblDirectory.cDirName, tblDirectory.cDirXml ";
                                         cSQL += " FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey";
-                                        cSQL = Convert.ToString(cSQL + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE (tblDirectory.nDirKey = ", oDR[1]), ") AND (tblAudit.dPublishDate >= "), Tools.Database.SqlDate(dTimeNow, true)), " OR"));
+                                        cSQL += " WHERE (tblDirectory.nDirKey = " + oDR[1] + ") AND (tblAudit.dPublishDate >= " + Tools.Database.SqlDate(dTimeNow, true) + " OR";
                                         cSQL += " tblAudit.dPublishDate IS NULL) AND (tblAudit.dExpireDate <= " + Tools.Database.SqlDate(dTimeNow, true) + " OR";
                                         cSQL += " tblAudit.dExpireDate IS NULL)";
                                         myWeb.moDbHelper.addTableToDataSet(ref oDSUsers, cSQL, "Users");
@@ -214,7 +213,7 @@ namespace Protean
                                 for (int i = 0, loopTo = oMember.Alerts.Count - 1; i <= loopTo; i++)
                                 {
                                     cInfo = "Each MemberAlert";
-                                    AlertItem oAlert = (AlertItem)oAlertItems[Operators.ConcatenateObject("A", oMember.Alerts[i])];
+                                    AlertItem oAlert = (AlertItem)oAlertItems["A" + oMember.Alerts[i]];
                                     cInfo += "1";
                                     if (oAlert.ContentElement != null)
                                         oAlertElmt.AppendChild(oAlert.ContentElement);
@@ -576,7 +575,7 @@ namespace Protean
                                 // Alert Item has been logged, therefore update the record
 
                                 cSql = "UPDATE tblActivityLog ";
-                                cSql = Convert.ToString(cSql + Operators.ConcatenateObject(Operators.ConcatenateObject("SET cActivityDetail = '", SqlFmt(Strings.Left(cStatus, 800))), "' "));
+                                cSql += "SET cActivityDetail = '" + SqlFmt(cStatus.Length > 800 ? cStatus.Substring(0, 800) : cStatus) + "' ";
                                 cSql += "WHERE nActivityKey = " + AlertLogKey;
                                 myWeb.moDbHelper.ExeProcessSql(cSql);
                             }
@@ -591,7 +590,7 @@ namespace Protean
                                 cSql += nAlertKey + ",";
                                 cSql += Tools.Database.SqlDate(DateTime.Now, true) + ",";
                                 cSql += ((int)Cms.dbHelper.ActivityType.Alert).ToString() + ",";
-                                cSql = Convert.ToString(cSql + Operators.ConcatenateObject(Operators.ConcatenateObject("'", SqlFmt(Strings.Left(cStatus, 800))), "',"));
+                                cSql += "'" + SqlFmt(cStatus.Length > 800 ? cStatus.Substring(0, 800) : cStatus) + "',";
                                 cSql += "'')";
 
                                 // Changed this from ExeProcessSqlOrIgnore to ExeProcessSql as for user alerts
@@ -616,30 +615,39 @@ namespace Protean
 
                             foreach (DataRow oRow in oDS.Tables["tblAlerts"].Rows)
                             {
-                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cAlertTitle"], ""), "", false)))
-                                    cAlertTitle = Convert.ToString(oRow["cAlertTitle"]);
-                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["nPageId"], 0), 0, false)))
-                                    nPageId = Convert.ToInt16(oRow["nPageId"]);
-                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["nFrequency"], 0), 0, false)))
-                                    nFrequency = Convert.ToInt16(oRow["nFrequency"]);
-                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cXsltFile"], ""), "", false)))
-                                    cXsltFile = Convert.ToString(oRow["cXsltFile"]);
+                                if (!string.IsNullOrEmpty(Convert.ToString(CellValue(oRow["cAlertTitle"], ""))))
+                                    cAlertTitle = Convert.ToString(oRow["cAlertTitle"] ?? "");
+
+                                if (Convert.ToInt32(CellValue(oRow["nPageId"], 0)) != 0)
+                                    nPageId = Convert.ToInt16(oRow["nPageId"] ?? 0);
+
+                                if (Convert.ToInt32(CellValue(oRow["nFrequency"], 0)) != 0)
+                                    nFrequency = Convert.ToInt16(oRow["nFrequency"] ?? 0);
+
+                                if (!string.IsNullOrEmpty(Convert.ToString(CellValue(oRow["cXsltFile"], ""))))
+                                    cXsltFile = Convert.ToString(oRow["cXsltFile"] ?? "");
+
 
                                 bUpdatedOnly = Convert.ToBoolean(CellValue(oRow["bUpdatedOnly"], false));
                                 bItterateDown = Convert.ToBoolean(CellValue(oRow["bItterateDown"], false));
                                 bRelatedContentUpdates = Convert.ToBoolean(CellValue(oRow["bRelatedContentUpdates"], false));
-                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cExtraXml"], ""), "", false)))
-                                    cAlertTitle = Convert.ToString(oRow["cExtraXml"]);
+                                if (!string.IsNullOrEmpty(Convert.ToString(CellValue(oRow["cExtraXml"], ""))))
+                                {
+                                    cAlertTitle = Convert.ToString(oRow["cExtraXml"] ?? "");
+                                }
 
-                                if (Convert.ToBoolean(!Operators.ConditionalCompareObjectEqual(CellValue(oRow["cContentType"], ""), "", false)))
+                                if (!string.IsNullOrEmpty(Convert.ToString(CellValue(oRow["cContentType"], ""))))
                                 {
                                     if (!string.IsNullOrEmpty(cContentTypes))
                                         cContentTypes += ",";
-                                    cContentTypes = Convert.ToString(cContentTypes + Operators.ConcatenateObject(Operators.ConcatenateObject("'", oRow["cContentType"]), "'"));
+
+                                    cContentTypes += "'" + (oRow["cContentType"]?.ToString() ?? "") + "'";
                                 }
                                 string cLastDone = Convert.ToString(myWeb.moDbHelper.GetDataValue("SELECT TOP 1 dDateTime FROM tblActivityLog WHERE (nActivityType = " + ((int)Cms.dbHelper.ActivityType.Alert).ToString() + ") AND (nOtherId = " + nAlertKey + ") AND nActivityKey <> " + AlertLogKey + " ORDER BY dDateTime DESC", CommandType.Text, null, ""));
-                                if (Information.IsDate(cLastDone))
-                                    dLastDone = Convert.ToDateTime(cLastDone);
+                                if (DateTime.TryParse(cLastDone, out DateTime parsedDate))
+                                {
+                                    dLastDone = parsedDate;
+                                }
                                 else
                                     dLastDone = DateTime.Now;
                                 // PopulateContent(nPageId, Nothing)

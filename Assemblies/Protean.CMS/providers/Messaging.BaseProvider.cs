@@ -17,8 +17,6 @@ using System.Runtime.InteropServices;
 using System.Web.Configuration;
 
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.Cms;
 using static Protean.stdTools;
 using Protean.Tools;
@@ -108,7 +106,7 @@ namespace Protean.Providers
                         Assembly assemblyInstance;
                         // = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
 
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["path"], "", false)))
+                        if (!string.IsNullOrEmpty(ourProvider.Parameters["path"]?.ToString()))
                         {
                             cProgressInfo = goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"]));
                             assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"])));
@@ -118,19 +116,19 @@ namespace Protean.Providers
                             assemblyInstance = Assembly.Load(ourProvider.Type);
                         }
 
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["className"], "", false)))
+                        if (!string.IsNullOrEmpty(ourProvider.Parameters["className"]?.ToString()))
                         {
                             ProviderName = Convert.ToString(ourProvider.Parameters["className"]);
                         }
 
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.Parameters["rootClass"], "", false)))
+                        if (string.IsNullOrEmpty(ourProvider.Parameters["rootClass"]?.ToString()))
                         {
                             calledType = assemblyInstance.GetType("Protean.Providers.Messaging." + ProviderName, true);
                         }
                         else
                         {
                             // calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
-                            calledType = assemblyInstance.GetType(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], ".Providers.Messaging."), ProviderName)), true);
+                            calledType = assemblyInstance.GetType($"{ourProvider.Parameters["rootClass"]}.Providers.Messaging.{ProviderName}", true);
                         }
                     }
 
@@ -331,7 +329,7 @@ namespace Protean.Providers
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Groups", "2col", "Please select a group(s) to send to.");
 
-                        cDefaultEmail = Strings.Trim(cDefaultEmail);
+                        cDefaultEmail = cDefaultEmail?.Trim();
 
                         oCol1 = base.addGroup(ref oFrmElmt, "", "col1", "");
                         oCol2 = base.addGroup(ref oFrmElmt, "", "col2", "");
@@ -406,7 +404,7 @@ namespace Protean.Providers
                                 {
                                     // moDbHelper.logActivity(dbHelper.ActivityType.Email, myWeb.mnUserId, nPageId, , oGroupElmt.InnerText)
                                     moDbHelper.CommitLogToDB(dbHelper.ActivityType.NewsLetterSent, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, myWeb.mnPageId, 0, "", true);
-                                    string cGroupStr = "<Groups><Group>" + Strings.Replace(oGroupElmt.InnerText, ",", "</Group><Group>") + "</Group></Groups>";
+                                    string cGroupStr = "<Groups><Group>" + oGroupElmt.InnerText.Replace(",", "</Group><Group>") + "</Group></Groups>";
                                     // add mssage and return to form so they can sen another
                                     var oMsgElmt = oPageDetail.OwnerDocument.CreateElement("Content");
                                     oMsgElmt.SetAttribute("type", "Message");

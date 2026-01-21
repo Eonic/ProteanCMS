@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Net.FtpClient;
 using System.Net.FtpClient.Extensions;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Tools;
 
 namespace Protean

@@ -1,5 +1,4 @@
 ﻿using Imazen.WebP;
-using Microsoft.VisualBasic;
 using Microsoft.Win32;
 using SkiaSharp;
 using System;
@@ -333,7 +332,7 @@ namespace Protean
                     }
                 }
 
-                string webpFileName = Strings.Replace(cVirtualPath, ".png", ".webp");
+                string webpFileName = cVirtualPath.Replace(".png", ".webp");
                 var oEw = new Cms();
                 oEw.InitializeVariables();
 

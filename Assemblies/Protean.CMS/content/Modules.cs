@@ -1,8 +1,7 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using System;
+﻿using System;
 using System.Collections;
 using System.Data;
+using System.Globalization;
 using System.Reflection;
 using System.Web.Configuration;
 using System.Xml;
@@ -106,16 +105,18 @@ namespace Protean
 
                         foreach (DataRow dr in DateSet.Tables[0].Rows)
                         {
-                            if (Information.IsDate(dr["publish"]))
+                            if (DateTime.TryParse(dr["publish"]?.ToString(), out DateTime publishDate))
                             {
-                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectLess(dr["publish"], dEarliestDate, false)))
+                                if (publishDate < dEarliestDate)
                                 {
-                                    dEarliestDate = Convert.ToDateTime(dr["publish"]);
+                                    dEarliestDate = publishDate;
                                 }
-                                counter = counter - 1L;
-                                if (counter == 0L)
+
+                                counter -= 1;
+
+                                if (counter == 0)
                                 {
-                                    FirstPageLastDate = Convert.ToDateTime(dr["publish"]);
+                                    FirstPageLastDate = publishDate;
                                 }
                             }
                         }
@@ -200,7 +201,8 @@ namespace Protean
                             if (contentCount > 0)
                             {
                                 thisDateQuery = nThisYear + "-" + nThisMonth;
-                                NewMenu.AddMenuItem(DateAndTime.MonthName(nThisMonth) + " " + nThisYear, thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, contentCount: contentCount);
+                                NewMenu.AddMenuItem(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(nThisMonth) + " " + nThisYear, thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, contentCount: contentCount);
+
                                 if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                                 {
                                     startDate = Convert.ToDateTime(firstDayloopMonth);
@@ -339,11 +341,11 @@ namespace Protean
                     int ReturnCount = 0;
                     foreach (DataRow dr in ods.Tables[0].Rows)
                     {
-                        if (Information.IsDate(dr["publish"]))
+                        if (DateTime.TryParse(dr["publish"]?.ToString(), out DateTime publishDate))
                         {
-                            if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectGreaterEqual(dr["publish"], startDate, false), Operators.ConditionalCompareObjectLessEqual(dr["publish"], endDate, false))))
+                            if (publishDate >= startDate && publishDate <= endDate)
                             {
-                                ReturnCount = ReturnCount + 1;
+                                ReturnCount += 1;
                             }
                         }
                     }
@@ -352,7 +354,7 @@ namespace Protean
 
                 public DateTime dhLastDayInMonth(DateTime dtmDate)
                 {
-                    return DateAndTime.DateSerial(System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetYear(dtmDate), System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetMonth(dtmDate) + 1, 0);
+                    return new DateTime( System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetYear(dtmDate), System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetMonth(dtmDate) + 1, 1).AddDays(-1);
                 }
 
                 public void ProductStepper(ref Cms myWeb, ref XmlElement oContentNode)
@@ -511,7 +513,7 @@ namespace Protean
                             if (!string.IsNullOrEmpty(className))
                             {
 
-                                if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
+                                if (string.IsNullOrEmpty(providerName) | (providerName).ToLower() == "default")
                                 {
                                     providerName = "Protean.Providers.Filters." + className;
                                     calledType = Type.GetType(providerName, true);
@@ -538,7 +540,8 @@ namespace Protean
                                     else
                                     {
 
-                                        calledType = assemblyInstance.GetType(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                                        string fullTypeName = ourProvider.Parameters["rootClass"] + "." + className;
+                                        calledType = assemblyInstance.GetType(fullTypeName, true);
                                     }
                                 }
 
@@ -614,7 +617,7 @@ namespace Protean
                                     if (!string.IsNullOrEmpty(className))
                                     {
 
-                                        if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
+                                        if (string.IsNullOrEmpty(providerName) | (providerName).ToLower() == "default")
                                         {
                                             providerName = "Protean.Providers.Filters." + className;
                                             calledType = Type.GetType(providerName, true);
@@ -641,7 +644,8 @@ namespace Protean
                                             else
                                             {
 
-                                                calledType = assemblyInstance.GetType(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                                                string fullTypeName = (ourProvider.Parameters["rootClass"]?.ToString() ?? "") + "." + className;
+                                                calledType = assemblyInstance.GetType(fullTypeName, true);
                                             }
                                         }
 
@@ -894,7 +898,7 @@ namespace Protean
                                 if ((excludeClassName ?? "") != (className ?? ""))
                                 {
 
-                                    if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
+                                    if (string.IsNullOrEmpty(providerName) | (providerName).ToLower() == "default")
                                     {
                                         providerName = "Protean.Providers.Filters." + className;
                                         calledType = Type.GetType(providerName, true);
@@ -914,14 +918,17 @@ namespace Protean
                                         {
                                             assemblyInstance = Assembly.Load(ourProvider.Type);
                                         }
-                                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.Parameters["rootClass"], "", false)))
+                                        if ((ourProvider.Parameters["rootClass"]?.ToString() ?? "") == "")
                                         {
                                             calledType = assemblyInstance.GetType("Protean.Providers.Filters." + providerName, true);
                                         }
                                         else
                                         {
 
-                                            calledType = assemblyInstance.GetType(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                                            string rootClass = ourProvider.Parameters["rootClass"]?.ToString() ?? "";
+                                            string fullTypeName = rootClass + "." + className;
+                                            calledType = assemblyInstance.GetType(fullTypeName, true);
+
                                         }
                                     }
 

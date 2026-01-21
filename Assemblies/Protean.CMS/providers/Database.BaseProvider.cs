@@ -17,8 +17,6 @@ using System.Runtime.InteropServices;
 using System.Web.Configuration;
 
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.Cms;
 using static Protean.stdTools;
 using Protean.Tools;
@@ -64,8 +62,7 @@ namespace Protean.Providers
                         System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[ProviderName];
                         Assembly assemblyInstance;
                         // = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
-
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["path"], "", false)))
+                        if (!string.IsNullOrEmpty(ourProvider.Parameters["path"]?.ToString()))
                         {
                             cProgressInfo = goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"]));
                             assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"])));
@@ -75,19 +72,19 @@ namespace Protean.Providers
                             assemblyInstance = Assembly.Load(ourProvider.Type);
                         }
 
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["className"], "", false)))
+                        if (!string.IsNullOrEmpty(ourProvider.Parameters["className"]?.ToString()))
                         {
                             ProviderName = Convert.ToString(ourProvider.Parameters["className"]);
                         }
 
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.Parameters["rootClass"], "", false)))
+                        if (string.IsNullOrEmpty(ourProvider.Parameters["rootClass"]?.ToString()))
                         {
                             calledType = assemblyInstance.GetType("Protean.Providers.Database." + ProviderName, true);
                         }
                         else
                         {
                             // calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
-                            calledType = assemblyInstance.GetType(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], ".Providers.Database."), ProviderName)), true);
+                            calledType = assemblyInstance.GetType($"{ourProvider.Parameters["rootClass"]}.Providers.Database.{ProviderName}", true);
                         }
                     }
 

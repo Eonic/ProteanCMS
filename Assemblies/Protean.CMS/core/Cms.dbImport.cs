@@ -15,8 +15,6 @@ using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Protean
 {
@@ -102,14 +100,16 @@ namespace Protean
                 string logMessage;
                 try
                 {
-                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(importStateObj.totalInstances, 0, false)))
+                    if (importStateObj.totalInstances == 0)
                     {
-                        logMessage = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(importStateObj.cDeleteTempTableName, " Streaming Objects, "), importStateObj.CompleteCount), " Processed"));
+                        logMessage = importStateObj.cDeleteTempTableName + " Streaming Objects, " + importStateObj.CompleteCount + " Processed";
                     }
                     else
                     {
-                        logMessage = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(importStateObj.cDeleteTempTableName, " Importing "), importStateObj.totalInstances), " Objects, "), importStateObj.CompleteCount), " Processed"));
+                        logMessage = importStateObj.cDeleteTempTableName + " Importing " + importStateObj.totalInstances +
+                                     " Objects, " + importStateObj.CompleteCount + " Processed";
                     }
+
                     modbhelper.ResetConnection(oConnString);
                     if (importStateObj.CompleteCount.ToString().EndsWith("0"))
                     {
@@ -192,11 +192,11 @@ namespace Protean
 
                         modbhelper.ResetConnection(oConnString);
 
-                        if (Convert.ToBoolean(Operators.AndObject(nId > 0L, importStateObj.oInstance.GetAttribute("delete").Contains("true"))))
+                        if (nId > 0 && importStateObj.oInstance.GetAttribute("delete")?.Contains("true") == true)
                         {
                             modbhelper.DeleteObject(oObjType, nId);
                         }
-                        else if (Convert.ToBoolean(Operators.AndObject(nId > 0L, importStateObj.oInstance.GetAttribute("update").Contains("surgical"))))
+                        else if (nId > 0 && importStateObj.oInstance.GetAttribute("update")?.Contains("surgical") == true)
                         {
                             // Get origional instance
                             var origInstance = new XmlDocument();
@@ -245,7 +245,8 @@ namespace Protean
                                 var xmlDoc = new XmlDocument();
                                 modbhelper.moPageXml = xmlDoc;
                                 modbhelper.ResetConnection(oConnString);
-                                long PrimaryLocation = Convert.ToInt64(Operators.ConcatenateObject("0", modbhelper.GetDataValue("select nStructId from tblContentLocation where bPrimary=1 and nContentId = " + nId)));
+                                string dataValue = Convert.ToString(modbhelper.GetDataValue("select nStructId from tblContentLocation where bPrimary=1 and nContentId = " + nId));
+                                long PrimaryLocation = Convert.ToInt64("0" + (dataValue ?? "0"));
 
                                 if (PrimaryLocation == 0L)
                                 {
@@ -253,8 +254,8 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    long resetIfHere = Convert.ToInt64(Operators.ConcatenateObject("0", importStateObj.oInstance.GetAttribute("resetifhere")));
-                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectGreater(importStateObj.nResetLocationIfHere, 0, false)))
+                                    long resetIfHere = Convert.ToInt64("0" + (importStateObj.oInstance.GetAttribute("resetifhere") ?? "0"));
+                                    if (importStateObj.nResetLocationIfHere > 0)
                                     {
                                         resetIfHere = Convert.ToInt64(importStateObj.nResetLocationIfHere);
                                     }
@@ -289,7 +290,7 @@ namespace Protean
 
                             XmlElement updateInstance = (XmlElement)importStateObj.oInstance;
 
-                            if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(importStateObj.oInstance.GetAttribute("insert"), "reparse", false)))
+                            if ((importStateObj.oInstance.GetAttribute("insert") ?? "") == "reparse")
                             {
                                 // run XSL again on instance....
                                 TextWriter oTW = new StringWriter();
@@ -360,7 +361,7 @@ namespace Protean
                         if (Convert.ToBoolean(importStateObj.bDeleteNonEntries))
                         {
 
-                            string cSQL = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("INSERT INTO dbo.", importStateObj.cDeleteTempTableName), " (cImportID , cTableName) VALUES ('"), SqlFmt(fRef)), "','"), SqlFmt(cTableName)), "')"));
+                            string cSQL = "INSERT INTO dbo." + importStateObj.cDeleteTempTableName + " (cImportID , cTableName) VALUES ('" + SqlFmt(fRef) + "','" + SqlFmt(cTableName) + "')";
                             modbhelper.ResetConnection(oConnString);
                             modbhelper.ExeProcessSql(cSQL);
 
@@ -370,14 +371,16 @@ namespace Protean
                     }
 
                     // update every 10 records
-                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(importStateObj.totalInstances, importStateObj.CompleteCount, false)))
+                    if (importStateObj.totalInstances == importStateObj.CompleteCount)
                     {
-                        modbhelper.updateActivity(Convert.ToInt64(importStateObj.LogId), Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(importStateObj.cDeleteTempTableName, " Imported "), importStateObj.totalInstances), " Objects, "), importStateObj.CompleteCount), " Completed")));
+                        string message = importStateObj.cDeleteTempTableName + " Imported " + importStateObj.totalInstances + " Objects, " +  importStateObj.CompleteCount + " Completed";
+                        modbhelper.updateActivity(Convert.ToInt64(importStateObj.LogId), message);
                     }
+
 
                     fRefNode = null;
 
-                    if (Convert.ToBoolean(Operators.AndObject(importStateObj.bDeleteNonEntries, importStateObj.LastItem)))
+                    if (importStateObj.bDeleteNonEntries && importStateObj.LastItem)
                     {
 
                         string cSQL = "";
@@ -385,7 +388,7 @@ namespace Protean
                         // The following check ensures if the temp table is empty, nothing is deleted
                         // This is incase nothing is imported, maybe due to wrong import XSL
                         string nSizeCheck = "";
-                        cSQL = Convert.ToString(Operators.ConcatenateObject("SELECT * FROM ", importStateObj.cDeleteTempTableName));
+                        cSQL = "SELECT * FROM " + importStateObj.cDeleteTempTableName;
                         nSizeCheck = "" + modbhelper.ExeProcessSqlScalar(cSQL);
 
                         if (!nSizeCheck.Equals(""))
@@ -399,16 +402,15 @@ namespace Protean
                                 case "Content":
                                     {
                                         // Delete Content Items
-                                        cSQL = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Select nContentKey FROM tblContent " + "WHERE nContentKey IN (SELECT nContentKey FROM tblContent c " + " LEFT OUTER JOIN ", importStateObj.cDeleteTempTableName), " t "), " ON c.cContentForiegnRef = t.cImportID "));
+                                        cSQL = "Select nContentKey FROM tblContent " + "WHERE nContentKey IN (SELECT nContentKey FROM tblContent c " + " LEFT OUTER JOIN " + importStateObj.cDeleteTempTableName + " t " + " ON c.cContentForiegnRef = t.cImportID ";
 
-
-                                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(importStateObj.cDefiningWhereStmt, "", false)))
+                                        if (string.IsNullOrEmpty(importStateObj.cDefiningWhereStmt))
                                         {
-                                            cSQL = Convert.ToString(cSQL + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE t.cImportID is null AND c.", importStateObj.cDefiningField), " = '"), SqlFmt(Convert.ToString(importStateObj.cDefiningFieldValue))), "'"));
+                                            cSQL += " WHERE t.cImportID is null AND c." + importStateObj.cDefiningField + " = '" + SqlFmt(Convert.ToString(importStateObj.cDefiningFieldValue)) + "'";
                                         }
                                         else
                                         {
-                                            cSQL = Convert.ToString(cSQL + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE t.cImportID is null AND c.", importStateObj.cDefiningField), " = '"), SqlFmt(Convert.ToString(importStateObj.cDefiningFieldValue))), "' AND "), importStateObj.cDefiningWhereStmt), ""));
+                                            cSQL += " WHERE t.cImportID is null AND c." + importStateObj.cDefiningField + " = '" + SqlFmt(Convert.ToString(importStateObj.cDefiningFieldValue)) + "' AND " + importStateObj.cDefiningWhereStmt;
                                         }
                                         cSQL += ")";
 
@@ -424,25 +426,26 @@ namespace Protean
                                 case "Directory":
                                     {
                                         // Delete Directory Items
-                                        cSQL = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Select nDirKey FROM tblDirectory " + "WHERE nDirKey IN (SELECT nDirKey FROM tblDirectory d " + " LEFT OUTER JOIN ", importStateObj.cDeleteTempTableName), " t "), " ON d.cDirForiegnRef = t.cImportID "));
+                                        cSQL = "Select nDirKey FROM tblDirectory " + "WHERE nDirKey IN (SELECT nDirKey FROM tblDirectory d " + " LEFT OUTER JOIN " + importStateObj.cDeleteTempTableName + " t " + " ON d.cDirForiegnRef = t.cImportID ";
 
-
-                                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(importStateObj.cDefiningWhereStmt, "", false)))
+                                        if (string.IsNullOrEmpty(importStateObj.cDefiningWhereStmt))
                                         {
-                                            cSQL = Convert.ToString(cSQL + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE t.cImportID is null AND d.", importStateObj.cDefiningField), " = '"), SqlFmt(Convert.ToString(importStateObj.cDefiningFieldValue))), "'"));
+                                            cSQL += " WHERE t.cImportID is null AND d." + importStateObj.cDefiningField + " = '" + SqlFmt(Convert.ToString(importStateObj.cDefiningFieldValue)) + "'";
                                         }
                                         else
                                         {
-                                            cSQL = Convert.ToString(cSQL + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE t.cImportID is null AND d.", importStateObj.cDefiningField), " = '"), SqlFmt(Convert.ToString(importStateObj.cDefiningFieldValue))), "' AND "), importStateObj.cDefiningWhereStmt), ""));
+                                            cSQL += " WHERE t.cImportID is null AND d." + importStateObj.cDefiningField + " = '" + SqlFmt(Convert.ToString(importStateObj.cDefiningFieldValue)) + "' AND " + importStateObj.cDefiningWhereStmt;
                                         }
+
                                         cSQL += ")";
+
 
                                         using (var oDr = modbhelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                                         {
 
                                             while (oDr.Read())
                                             {
-                                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr[0], 1, false)))
+                                                if (!oDr[0].Equals(1))
                                                 {
                                                     // dont delete admin logon
                                                     modbhelper.DeleteObject(dbHelper.objectTypes.Directory, Convert.ToInt64(oDr[0]));
@@ -457,16 +460,15 @@ namespace Protean
 
 
                         }
-                        cSQL = Convert.ToString(Operators.ConcatenateObject("DROP TABLE ", importStateObj.cDeleteTempTableName));
+                        cSQL = "DROP TABLE " + importStateObj.cDeleteTempTableName;
                         modbhelper.ExeProcessSql(cSQL);
                     }
                 }
 
                 catch (Exception ex)
                 {
-                    modbhelper.logActivity(dbHelper.ActivityType.ValidationError, 0L, 0L, ErrorId, Strings.Right(ex.Message + " - " + ex.StackTrace, 700), fRef);
+                    modbhelper.logActivity(dbHelper.ActivityType.ValidationError, 0L, 0L, ErrorId, (ex.Message + " - " + ex.StackTrace).Length > 700 ? (ex.Message + " - " + ex.StackTrace).Substring((ex.Message + " - " + ex.StackTrace).Length - 700) : (ex.Message + " - " + ex.StackTrace), fRef);
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ImportSingleObject", ex, ""));
-
                 }
                 finally
                 {

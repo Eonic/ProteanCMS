@@ -9,8 +9,6 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Services;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Lucene.Net.Documents.Field;
 using static Protean.stdTools;
 using static QRCoder.PayloadGenerator;
@@ -20,7 +18,7 @@ namespace Protean
 
     [WebService(Namespace = "http://www.eonic.co.uk/ewcommon/Services")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    [DesignerGenerated()]
+    //[DesignerGenerated()]
     public class Services : WebService
     {
         #region Declarations
@@ -124,7 +122,7 @@ namespace Protean
                 System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 string SoapIps = moConfig["SoapIps"];
 
-                if (Strings.LCase(moConfig["Debug"]) == "on")
+                if ((moConfig["Debug"]).ToLower() == "on")
                 {
                     SoapIps = SoapIps + ",127.0.0.1,::1,";
                 }
@@ -244,8 +242,8 @@ namespace Protean
                     // using multiple addresses here
                     if (recipientEmail.Contains(cSeperator))
                     {
-                        string[] oTos = Strings.Split(recipientEmail, cSeperator);
-                        string[] oModes = Strings.Split(Mode, cSeperator);
+                        string[] oTos = (recipientEmail ?? "").Split('/');
+                        string[] oModes = (Mode ?? "").Split('/');
                         int i;
                         var loopTo = oTos.Length - 1;
                         for (i = 0; i <= loopTo; i++)
@@ -428,7 +426,7 @@ namespace Protean
                 // oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)
                 // oMsg.deleteAttachment(cAttachmentFilePath)
                 string FileName = cAttachmentFilePath.Substring(cAttachmentFilePath.LastIndexOf("/") + 1);
-                FTPFolder = FTPFolder.Trim('/') + "/" + Strings.Replace(fromName, " ", "-");
+                FTPFolder = FTPFolder.Trim('/') + "/" + (fromName ?? "").Replace(" ", "-");
 
                 // Dim miUri As String = "ftp://" & FTPServer & "/" & FTPFolder & "/" & Replace(fromName, " ", "-") & "/" & FileName
                 // Dim miRequest As Net.FtpWebRequest = Net.WebRequest.Create(miUri)
@@ -823,7 +821,7 @@ namespace Protean
                             var oMsg = new Messaging(ref myWeb.msException);
 
                             string cEmail = oVConfig["notificationEmail"];
-                            string cXSLPath = Convert.ToString(Interaction.IIf(string.IsNullOrEmpty("" + oVConfig["notificationXsl"]), "/ewcommon/xsl/Email/pendingcontentNotification.xsl", oVConfig["notificationXsl"]));
+                            string cXSLPath = string.IsNullOrEmpty(oVConfig["notificationXsl"]?.ToString()) ? "/ewcommon/xsl/Email/pendingcontentNotification.xsl" : oVConfig["notificationXsl"].ToString();
                             string cWebmasterEmail = oVConfig["notificationEmailSender"];
                             if (string.IsNullOrEmpty(cWebmasterEmail))
                                 cWebmasterEmail = myWeb.moConfig["SiteAdminEmail"];
@@ -988,7 +986,10 @@ namespace Protean
                         if (oDr.HasRows)
                         {
                             while (oDr.Read())
-                                sResult = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oDr[1], "."), oDr[2]), "."), oDr[3]), "."), oDr[4]));
+                            {
+                                sResult = string.Join(".", oDr[1]?.ToString() ?? "", oDr[2]?.ToString() ?? "", oDr[3]?.ToString() ?? "", oDr[4]?.ToString() ?? "");
+                            }
+
                         }
                         else
                         {
@@ -1021,11 +1022,11 @@ namespace Protean
 
                 // Start LocalOrCommonBin
                 oElmt = oRXML.CreateElement("LocalOrCommonBin");
-                if (!string.IsNullOrEmpty(FileSystem.Dir(Server.MapPath("../default.ashx"))))
+                if (System.IO.File.Exists(Server.MapPath("../default.ashx")))
                 {
                     oElmt.InnerText = "Local";
                 }
-                else if (!string.IsNullOrEmpty(FileSystem.Dir(Server.MapPath("../ewcommon/default.ashx"))))
+                else if (System.IO.File.Exists(Server.MapPath("../ewcommon/default.ashx")))
                 {
                     oElmt.InnerText = "Common";
                 }

@@ -22,7 +22,6 @@ using System;
 using System.Collections;
 using System.IO;
 using System.Xml;
-//using Microsoft.VisualBasic;
 using Protean.Tools;
 using Protean.Tools.Integration.Twitter;
 using static Protean.Tools.Database;

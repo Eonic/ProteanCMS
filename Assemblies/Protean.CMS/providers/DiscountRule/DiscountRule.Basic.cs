@@ -1,6 +1,4 @@
 ﻿using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Providers.Authentication;
@@ -65,7 +63,7 @@ namespace Protean.Providers
                     // Optional: add XML declaration
                     XmlDeclaration xmlDecl = oFinalDiscounts.CreateXmlDeclaration("1.0", "UTF-8", null);                   
                     int nCount;
-                    var loopTo1 = Information.UBound(cPriceModifiers);
+                    var loopTo1 = cPriceModifiers.Length - 1;
                     for (nCount = 0; nCount <= loopTo1; nCount++)
                     {
                         switch (cPriceModifiers[nCount] ?? "")
@@ -296,9 +294,10 @@ namespace Protean.Providers
                                             // here we go through and find the biggest discount
                                             if (oPriceBreakElmt != null)
                                             {
-                                                if (Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceElmt.GetAttribute("Total"), false) <= 0 & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceBreakElmt.GetAttribute("nDiscountMinPrice"), false) > 0)
-
+                                                if (string.Compare(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceElmt.GetAttribute("Total")) <= 0 &&  string.Compare(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceBreakElmt.GetAttribute("nDiscountMinPrice")) > 0)
+                                                {
                                                     oPriceBreakElmt = oTmpLoop;
+                                                }
                                             }
                                             else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinPrice")) & Tools.Number.IsNumeric(oPriceElmt.GetAttribute("Total")))
                                             {
@@ -310,12 +309,16 @@ namespace Protean.Providers
 
                                             if (oQuantityBreakElmt != null)
                                             {
-                                                if (Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), false) <= 0 & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oQuantityBreakElmt.GetAttribute("nDiscountMinQuantity"), false) > 0)
-
+                                                if (string.Compare(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units")) <= 0 &&  string.Compare(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oQuantityBreakElmt.GetAttribute("nDiscountMinQuantity")) > 0)
+                                                {
                                                     oQuantityBreakElmt = oTmpLoop;
+                                                }
                                             }
-                                            else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinQuantity")) & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), false) <= 0)
+                                            else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinQuantity")) &&  string.Compare(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units")) <= 0)
+                                            {
                                                 oQuantityBreakElmt = oTmpLoop;
+                                            }
+
                                         }
 
                                         // which is going to be the bigger discount

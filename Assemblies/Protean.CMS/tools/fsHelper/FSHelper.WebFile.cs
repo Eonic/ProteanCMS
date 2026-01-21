@@ -10,7 +10,6 @@
 
 using System;
 using System.IO;
-using Microsoft.VisualBasic;
 using Protean.Tools.Integration.Twitter;
 
 namespace Protean
@@ -160,7 +159,7 @@ namespace Protean
                 _absolutepath = physicalPath;
                 if (_exists)
                 {
-                    _extension = Strings.LCase(fi.Extension);
+                    _extension = fi.Extension.ToLower();
                     _filename = fi.Name;
                     _libraryType = GetLibraryTypeFromExtension(_extension);
                 }

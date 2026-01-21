@@ -8,8 +8,6 @@ using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
 using System.Xml.Linq;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 using Protean.Tools;
 using Protean.Tools.Integration.Twitter;
@@ -71,7 +69,7 @@ namespace Protean
                 oAdmXFrm.myWeb = oDBH.myWeb;
 
                 // set the main values
-                cFeedURL = Strings.Replace(cURL, "&amp;", "&"); // when saving a url it can replace ampersands
+                cFeedURL = cURL.Replace("&amp;", "&"); // when saving a url it can replace ampersands
                 cXSLTransformPath = cXSLPath;
                 nHostPageID = (int)nPageId;
                 nSave = (SaveMode)nSaveMode;
@@ -148,14 +146,14 @@ namespace Protean
 
 
 
-                switch (Strings.LCase(oConfig["FeedMode"]) ?? "")
+                switch ((oConfig["FeedMode"]).ToLower() ?? "")
                 {
                     case "import":
                         {
                             var oInstanceXML = GetFeedItems();
                             if (oInstanceXML != null)
                             {
-                                if (Strings.LCase(oConfig["Debug"]) == "on")
+                                if ((oConfig["Debug"]).ToLower() == "on")
                                 {
                                     oInstanceXML.Save(goServer.MapPath("/parsedFeed.xml"));
                                 }
@@ -221,7 +219,7 @@ namespace Protean
             try
             {
 
-                if (Strings.LCase(oConfig["CompileImportXsl"]) == "off")
+                if ((oConfig["CompileImportXsl"]).ToLower() == "off")
                 {
 
                     oTransform.Compiled = false;
@@ -260,7 +258,7 @@ namespace Protean
                     settings.CheckCharacters = true;
                     string debugFolder = "";
 
-                    if (Strings.LCase(oConfig["Debug"]) == "on")
+                    if ((oConfig["Debug"]).ToLower() == "on")
                     {
                         var ofs = new fsHelper();
                         ofs.mcRoot = "../";
@@ -591,7 +589,7 @@ namespace Protean
 
 
                 oResXML.InnerXml = oFeedXML;
-                if (Strings.LCase(oConfig["Debug"]) == "on")
+                if ((oConfig["Debug"]).ToLower() == "on")
                 {
                     File.WriteAllText(goServer.MapPath("/recivedFeedRaw.xml"), oResXML.OuterXml);
                 }
@@ -675,12 +673,11 @@ namespace Protean
             // vacancy test.
             for (int i = 0, loopTo = textIn.Length - 1; i <= loopTo; i++)
             {
-                current = Strings.AscW(textIn[i]);
-
+                current = char.ConvertToUtf32(textIn, i);
 
                 if (current == 0x9 || current == 0xA || current == 0xD || current >= 0x20 && current <= 0xD7FF || current >= 0xE000 && current <= 0xFFFD || current >= 0x10000 && current <= 0x10FFFF)
                 {
-                    textOut.Append(Strings.ChrW(current));
+                    textOut.Append(char.ConvertFromUtf32(current));
                 }
             }
             return textOut.ToString();
@@ -730,8 +727,8 @@ namespace Protean
                         foreach (DataRow currentODR in oDS.Tables["Items"].Rows)
                         {
                             oDR = currentODR;
-                            Debug.WriteLine(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("'", oDR["cContentForiegnRef"]), "' = '"), cId), "' = ("), Interaction.IIf(Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["cContentForiegnRef"], cId, false)), "True", "False")), ")"));
-                            if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["cContentForiegnRef"], cId, false)))
+                            Debug.WriteLine($"'{oDR["cContentForiegnRef"]}' = '{cId}' = ({(oDR["cContentForiegnRef"]?.ToString() == cId ? "True" : "False")})");
+                            if (oDR["cContentForiegnRef"]?.ToString() == cId)
                             {
                                 oDR["InFeed"] = 1;
                                 nContentKey = Convert.ToInt16(oDR["nContentKey"]);
@@ -794,7 +791,7 @@ namespace Protean
                         foreach (DataRow currentODR1 in oDS.Tables["Items"].Rows)
                         {
                             oDR = currentODR1;
-                            if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["InFeed"], 0, false)))
+                            if (Convert.ToInt32(oDR["InFeed"]) == 0)
                             {
                                 switch (nSave)
                                 {
@@ -853,7 +850,7 @@ namespace Protean
                 }
                 catch (Exception)
                 {
-                    oElmt.InnerText = Strings.Replace(Strings.Replace(cMessage, "&gt;", ">"), "&lt;", "<");
+                    oElmt.InnerText = cMessage.Replace("&gt;", ">").Replace("&lt;", "<");
                 }
                 if (!string.IsNullOrEmpty(id))
                     oElmt.SetAttribute("id", id);

@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Protean.Providers.Membership;
 using System;
 using System.Collections.Generic;
@@ -45,7 +43,7 @@ namespace Protean
                     IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, moConfig["MembershipProvider"]);
                     mnUserId = Convert.ToInt64(oMembershipProv.Activities.GetUserId(ref myWeb));
 
-                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
+                    if (string.Equals(moSession["adminMode"]?.ToString(), "true", StringComparison.OrdinalIgnoreCase))
                     {
                         mbAdminMode = true;
                         // moDbHelper.gbAdminMode = mbAdminMode
@@ -57,7 +55,7 @@ namespace Protean
 
                 if (moConfig["Debug"] != null)
                 {
-                    switch (Strings.LCase(moConfig["Debug"]) ?? "")
+                    switch ((moConfig["Debug"]).ToLower() ?? "")
                     {
                         case "on":
                             {
@@ -105,7 +103,7 @@ namespace Protean
                     path = path.Substring(0, path.IndexOf("?"));
                 }
 
-                string[] pathsplit = Strings.Split(path, "/");
+                string[] pathsplit = (path ?? "").Split('/');
                 // URL = /API/ProviderName/methodName
 
                 string ProviderName = pathsplit[2];
@@ -168,8 +166,12 @@ namespace Protean
                 Type calledType = null;
 
 
-                if (Strings.LCase(ProviderName) == "cms.cart" | Strings.LCase(ProviderName) == "cms.content" | Strings.LCase(ProviderName) == "cms.admin")
+                string provider = ProviderName?.ToLower();
+
+                if (provider == "cms.cart" || provider == "cms.content" || provider == "cms.admin")
+                {
                     ProviderName = "";
+                }
 
                 if (!string.IsNullOrEmpty(ProviderName))
                 {
@@ -177,7 +179,7 @@ namespace Protean
                     if (ProviderName.Contains("."))
                     {
                         string[] pnArr = ProviderName.Split('.');
-                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/" + Strings.LCase(pnArr[0]) + "Providers");
+                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/" + (pnArr[0]).ToLower() + "Providers");
 
                         if (moPrvConfig != null)
                         {
@@ -195,7 +197,7 @@ namespace Protean
                             }
 
                             moResponse.StatusCode = 200;
-                            myResponse = "Config Section - protean/" + Strings.LCase(pnArr[0]) + "Providers Not Found";
+                            myResponse = "Config Section - protean/" + (pnArr[0]?.ToLower() ?? "") + "Providers Not Found";
                         }
 
                     }
@@ -220,7 +222,7 @@ namespace Protean
                 else
                 {
                     // case for methods within ProteanCMS Core DLL
-                    calledType = Type.GetType("Protean." + Strings.Replace(classPath, ".", "+"), true);
+                    calledType = Type.GetType("Protean." + (classPath ?? "").Replace(".", "+"), true);
                 }
                 if (calledType != null)
                 {

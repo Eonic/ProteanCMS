@@ -1,6 +1,4 @@
 ﻿using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Providers.Payment;
