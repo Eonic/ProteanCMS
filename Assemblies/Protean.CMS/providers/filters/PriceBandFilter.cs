@@ -1,5 +1,4 @@
 using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Filter;
 using System;
 using System.Collections;

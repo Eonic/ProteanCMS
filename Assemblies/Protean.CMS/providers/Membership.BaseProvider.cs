@@ -272,8 +272,14 @@ namespace Protean.Providers
                         Protean.Providers.Authentication.ReturnProvider oAuthProv = new Protean.Providers.Authentication.ReturnProvider();
                         IEnumerable<IauthenticaitonProvider> oAuthProviders = oAuthProv.Get(ref myWeb);
 
+                        if (string.IsNullOrWhiteSpace(FormName))
+                        {
+                            FormName = "UserLogon";
+                        }
 
-                        base.NewFrm("UserLogon");
+                        base.NewFrm(FormName);
+
+                        //base.NewFrm("UserLogon");
 
                         if (mbAdminMode && myWeb.mnUserId == 0)
                             goto BuildForm;
@@ -2378,7 +2384,7 @@ namespace Protean.Providers
                             }
 
                         }
-                        if (!(myWeb.moConfig["SecureMembershipAddress"] == ""))
+                        if (!string.IsNullOrEmpty(myWeb.moConfig["SecureMembershipAddress"]))
                         {
 
                             var oMembership = new Cms.Membership(ref myWeb);
@@ -2467,7 +2473,7 @@ namespace Protean.Providers
                         {
 
                             XmlElement oXfmElmt;
-                            switch ((moConfig["MembershipEncryption"] ?? "").ToLower())
+                            switch ((moConfig["MembershipEncryption"] ?? "").ToLowerInvariant())
                             {
                                 case "md5salt":
                                 case "md5":
@@ -2662,7 +2668,7 @@ namespace Protean.Providers
                         }
 
                         // Site Redirection Process
-                        if (!string.IsNullOrEmpty(moConfig["SiteGroupRedirection"]) & mnUserId != 0)
+                        if (!string.IsNullOrEmpty(moConfig["SiteGroupRedirection"]) && mnUserId != 0)
                         {
                             myWeb.SiteRedirection();
                         }

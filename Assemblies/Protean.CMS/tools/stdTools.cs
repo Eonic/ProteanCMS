@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.Collections;
 using System.Data;
 using System.Diagnostics;
@@ -764,7 +763,12 @@ namespace Protean
             if (Tools.Text.IsDate(dDate))
             {
                 sdate = Convert.ToString(Convert.ToDateTime(dDate));
-                niceDateRet = System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetDayOfMonth(Convert.ToDateTime(sdate)) + " " + DateAndTime.MonthName(System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetMonth(Convert.ToDateTime(sdate)), true) + " " + System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetYear(Convert.ToDateTime(sdate));
+                DateTime parsedDate = Convert.ToDateTime(sdate);
+                var culture = System.Threading.Thread.CurrentThread.CurrentCulture;
+                niceDateRet = culture.Calendar.GetDayOfMonth(parsedDate) + " " +
+                              culture.DateTimeFormat.GetAbbreviatedMonthName(culture.Calendar.GetMonth(parsedDate)) + " " +
+                              culture.Calendar.GetYear(parsedDate);
+
             }
             else if (dDate.ToString() != "00:00:00")
             {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Protean
 {
@@ -246,7 +245,7 @@ namespace Protean
                                     tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/StartDate[1]', 'VARCHAR(255)') + ' ' + (CAST(xItemXml AS XML)).value('/Content[1]/Times[1]/@start', 'VARCHAR(255)') AS 'Time',";
                                     tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/StartDate[1]', 'VARCHAR(255)') AS 'EventDate'";
                                     tktDet += " From tblCartItem inner Join tblCartOrder On tblCartOrder.nCartOrderKey = tblCartItem.nCartOrderId";
-                                    tktDet = Convert.ToString(tktDet + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" Where tblCartOrder.nCartOrderKey = ", oDr["nCartOrderKey"]), " and tblCartItem.nCartItemKey = "), oDr["nCartItemKey"]));
+                                    tktDet = tktDet + " Where tblCartOrder.nCartOrderKey = " + oDr["nCartOrderKey"] + " and tblCartItem.nCartItemKey = " + oDr["nCartItemKey"];
                                     using (var oDr1 = myWeb.moDbHelper.getDataReaderDisposable(tktDet))  // Done by nita on 6/7/22
                                     {
                                         while (oDr1.Read())

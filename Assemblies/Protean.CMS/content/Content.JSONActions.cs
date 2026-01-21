@@ -2,8 +2,6 @@
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Tools.Integration.Twitter;
@@ -311,15 +309,24 @@ namespace Protean
                             using (var oDre = myWeb.moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                             {
                                 while (oDre.Read())
-                                    cTmp = Convert.ToString(cTmp + Operators.ConcatenateObject(oDre[0], ","));
+                                {
+                                    cTmp += (oDre[0]?.ToString() ?? "") + ",";
+                                }
                                 oDre.Close();
                             }
                             if (!string.IsNullOrEmpty(cTmp))
-                                cTmp = Strings.Left(cTmp, Strings.Len(cTmp) - 1);
+                                cTmp = cTmp.Substring(0, cTmp.Length - 1);
                         }
 
                         XmlElement searchResultXML;
-                        searchResultXML = myWeb.moDbHelper.RelatedContentSearch(Convert.ToInt16(nRoot), cContentType, bChilds, cExpression, Convert.ToInt16(nParId), Convert.ToInt16(Interaction.IIf(Convert.ToBoolean(bIgnoreParID), 0, nParId)), cTmp.Split(','), bIncRelated);
+                        short root = Convert.ToInt16(nRoot);
+                        short parId = Convert.ToInt16(nParId);
+
+                        bool ignorePar = false;
+                        bool.TryParse(bIgnoreParID, out ignorePar);
+
+                        short effectiveParId = ignorePar ? (short)0 : parId;
+                        searchResultXML = myWeb.moDbHelper.RelatedContentSearch( Convert.ToInt16(nRoot), cContentType, bChilds, cExpression, Convert.ToInt16(nParId), effectiveParId, cTmp.Split(','), bIncRelated);
 
                         string jsonString = JsonConvert.SerializeXmlNode(searchResultXML, Newtonsoft.Json.Formatting.Indented);
                         return jsonString.Replace("\"@", "\"_");

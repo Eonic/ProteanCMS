@@ -13,8 +13,6 @@ using System;
 using System.Reflection;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Tools.Integration.Twitter;
 using static Protean.Cms;
 using static Protean.Cms.Cart;
@@ -241,7 +239,7 @@ namespace Protean.Providers
                     try
                     {
 
-                        oEwProv.mcCurrency =Convert.ToString(Interaction.IIf(oCart.mcCurrencyCode == "", oCart.mcCurrency, oCart.mcCurrencyCode));
+                        oEwProv.mcCurrency = string.IsNullOrEmpty(oCart.mcCurrencyCode) ? oCart.mcCurrency : oCart.mcCurrencyCode;
                         oEwProv.mcCurrencySymbol = oCart.mcCurrencySymbol;
                         if (string.IsNullOrEmpty(oOrder.GetAttribute("payableType")))
                         {
@@ -261,8 +259,7 @@ namespace Protean.Providers
                             oEwProv.mcPaymentType = oOrder.GetAttribute("payableType");
                         }
                         oEwProv.mnCartId = oCart.mnCartId;
-                        oEwProv.mcPaymentOrderDescription = "Ref:" + oCart.OrderNoPrefix + oCart.mnCartId + " An online purchase from: " + oCart.mcSiteURL + " on " + niceDate(DateTime.Now) + " " + DateAndTime.TimeValue(Convert.ToString(DateTime.Now));
-
+                        oEwProv.mcPaymentOrderDescription = "Ref:" + oCart.OrderNoPrefix + oCart.mnCartId + " An online purchase from: " + oCart.mcSiteURL +  " on " + niceDate(DateTime.Now) + " " + DateTime.Now.ToString("HH:mm:ss");
                         if (oOrder.SelectSingleNode("Contact[@type='Billing Address']/GivenName") != null)
                         {
                             oEwProv.mcCardHolderName = oOrder.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
@@ -278,10 +275,10 @@ namespace Protean.Providers
 
                         //Build the billing address string
                         XmlNode xmloOrder = oOrder;
-                        cBillingAddress = getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/Street") + Constants.vbLf +
-                            getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/City") + Constants.vbLf +
-                            getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/State") + Constants.vbLf +
-                            getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/Country") + Constants.vbLf;
+                        cBillingAddress = getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/Street") + "\n" +
+                  getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/City") + "\n" +
+                  getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/State") + "\n" +
+                  getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/Country") + "\n";
 
                         oEwProv.mcCardHolderAddress = cBillingAddress;
                         oEwProv.moBillingContact = (XmlElement)oOrder.SelectSingleNode("Contact[@type='Billing Address']");
@@ -306,7 +303,7 @@ namespace Protean.Providers
                         {
                             if (oOrder.SelectSingleNode(moCartConfig["FullfillmentDateXpath"]) is null)
                             {
-                                Information.Err().Raise(1009, "invalidFullfilmentXpath", moCartConfig["FullfillmentDateXpath"] + " is invalid.");
+                                throw new InvalidOperationException($"Error 1009: {moCartConfig["FullfillmentDateXpath"]} is invalid.");
                             }
                             else
                             {
@@ -361,13 +358,13 @@ namespace Protean.Providers
 
                             default:
                                 {
-                                    if (Strings.InStr(mcPaymentMethod, "Repeat_") > 0)
+                                    if (mcPaymentMethod?.Contains("Repeat_") == true)
                                     {
                                         // get repeat id
                                         string cOld = "";
                                         string cNew = "";
                                         int i = 1;
-                                        int nStart = Strings.InStr(mcPaymentMethod, "Repeat_") + 6;
+                                        int nStart = mcPaymentMethod?.IndexOf("Repeat_") + 7 ?? 0; // +7 because C# is 0-based
                                         while (!(!Tools.Number.IsNumeric(cNew) & !string.IsNullOrEmpty(cNew) | nStart + (i - 1) >= mcPaymentMethod.Length))
                                         {
                                             cOld = cNew;
@@ -585,7 +582,7 @@ namespace Protean.Providers
                             addNewTextNode("nAuditKey", ref argoNode, nAuditId);
                             oElmt = (XmlElement)argoNode;
                             XmlNode argoNode1 = oElmt;
-                            addNewTextNode("nStatus", ref argoNode1, Convert.ToString(Interaction.IIf(bValid, 1, 0)));
+                            addNewTextNode("nStatus", ref argoNode1, bValid ? "1" : "0");
                             oElmt = (XmlElement)argoNode1;
                             oInstance.AppendChild(oElmt);
 

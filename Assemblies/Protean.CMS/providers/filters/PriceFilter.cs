@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic.CompilerServices;
-using Protean.Providers.Filter;
+﻿using Protean.Providers.Filter;
 using System;
 using System.Collections;
 using System.Collections.Generic;

@@ -2,7 +2,6 @@
 using System.Data;
 using System.IO;
 using System.Xml;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Payment;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;

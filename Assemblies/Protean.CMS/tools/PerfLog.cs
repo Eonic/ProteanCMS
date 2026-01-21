@@ -2,8 +2,6 @@
 using System.Diagnostics;
 using System.Text;
 using System.Web.Configuration;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 namespace Protean
@@ -68,7 +66,7 @@ namespace Protean
 
                 if (moSession != null)
                 {
-                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["Logging"], "On", false)))
+                    if (moSession["Logging"]?.ToString() == "On")
                     {
                         TurnOn();
                     }
@@ -193,7 +191,7 @@ namespace Protean
                         try
                         {
                             cEntryFull += moSession.SessionID + "" + "','";
-                            cEntryFull += Convert.ToString(Operators.ConcatenateObject(moSession["SessionRequest"], "")) + "','";
+                            cEntryFull += (moSession["SessionRequest"]?.ToString() ?? "") + "','";
                         }
                         catch (Exception)
                         {
@@ -220,10 +218,10 @@ namespace Protean
                         }
                     }
 
-                    cEntryFull = Convert.ToString(cEntryFull + Operators.ConcatenateObject(SqlFmt(cPath), "','"));
-                    cEntryFull = Convert.ToString(cEntryFull + Operators.ConcatenateObject(SqlFmt(cModuleName), "','"));
-                    cEntryFull += Strings.Left(Convert.ToString(SqlFmt(cProcessName)), 254) + "','";
-                    cEntryFull += Strings.Left(Convert.ToString(SqlFmt(cDescription)), 3999) + "',";
+                    cEntryFull += SqlFmt(cPath) + "','";
+                    cEntryFull += SqlFmt(cModuleName) + "','";
+                    cEntryFull += SqlFmt(cProcessName).ToString().Substring(0, Math.Min(254, SqlFmt(cProcessName).ToString().Length)) + "','";
+                    cEntryFull += SqlFmt(cDescription).ToString().Substring(0, Math.Min(3999, SqlFmt(cDescription).ToString().Length)) + "',";
                     cEntryFull += nStep + ",";
                     cEntryFull += oLN.TotalMilliseconds + ",";
                     cEntryFull += nTimeAccumalative + ",";
@@ -315,7 +313,7 @@ namespace Protean
                     oCon.Open();
                     
                     int i;
-                    var loopTo = Information.UBound(Entries);
+                    var loopTo = Entries.Length - 1;
                     for (i = 0; i <= loopTo; i++)
                     {
                         if (!string.IsNullOrEmpty(Entries[i]))

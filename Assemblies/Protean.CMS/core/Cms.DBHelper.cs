@@ -8787,7 +8787,7 @@ namespace Protean
 
                 try
                 {
-                    if (myWeb.moConfig["EmailUsernames"].ToLower() == "on")
+                    if (string.Equals(myWeb.moConfig["EmailUsernames"], "on", StringComparison.OrdinalIgnoreCase))
                     {
                         if (nCurrId > 0L)
                         {

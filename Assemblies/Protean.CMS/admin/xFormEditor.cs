@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -153,7 +152,7 @@ namespace Protean
                     try
                     {
                         // Set the update mode
-                        cMode = Interaction.IIf(string.IsNullOrEmpty(cRef), "Add", "Edit").ToString();
+                        cMode = string.IsNullOrEmpty(cRef) ? "Add" : "Edit";
 
                         // Create the form that we're going to populate for updating this xform control
                         NewFrm("EditGroup");
