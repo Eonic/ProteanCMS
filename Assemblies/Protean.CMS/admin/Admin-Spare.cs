@@ -7,9 +7,6 @@
 // &Licence:     Apache-2.0 license
 // $Copyright:   Copyright (c) 2002 - 2026 Eonic Digital Group Ltd.
 // ***********************************************************************
-
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Protean.Tools;
