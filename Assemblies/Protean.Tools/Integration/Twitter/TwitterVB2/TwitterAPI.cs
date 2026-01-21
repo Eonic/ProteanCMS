@@ -39,7 +39,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Xml;
-using Microsoft.VisualBasic; // Install-Package Microsoft.VisualBasic
 using Protean.Tools.Integration.Twitter.TwitterVB2;
 using Protean.Tools.Integration.Twitter.TwitterVB2.Objects;
 using static Protean.Tools.Integration.Twitter.Globals;
