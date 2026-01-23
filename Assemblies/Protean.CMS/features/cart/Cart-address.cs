@@ -806,7 +806,7 @@ namespace Protean
                                 }
                                 // If it exists and we are here means we may have changed the Delivery address country
 
-                                else if ((moCartConfig["BlockRemoveDelivery"]).ToLower() != "on")
+                                else if ((moCartConfig["BlockRemoveDelivery"])?.ToLower() != "on")
                                 {
                                     RemoveDeliveryOption(mnCartId);
 

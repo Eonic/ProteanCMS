@@ -257,18 +257,18 @@ namespace Protean
                                     // Calculate any shipping cost overage
                                     nShippingCost = Math.Round(Convert.ToDouble(oRow["nShippingTotal"]), 2);
                                     double overageUnit = 0;
-                                    if (oRow["nShipOptWeightOverageUnit"] != DBNull.Value)
+                                    if (oRow.Table.Columns.Contains("nShipOptWeightOverageUnit") && oRow["nShipOptWeightOverageUnit"] != DBNull.Value)
                                     {
                                         double.TryParse(oRow["nShipOptWeightOverageUnit"].ToString(), out overageUnit);
                                     }
 
                                     double overageRate = 0;
-                                    if (oRow["nShipOptWeightOverageRate"] != DBNull.Value)
+                                    if (oRow.Table.Columns.Contains("nShipOptWeightOverageRate") && oRow["nShipOptWeightOverageRate"] != DBNull.Value)
                                     {
                                         double.TryParse(oRow["nShipOptWeightOverageRate"].ToString(), out overageRate);
                                     }
 
-                                    double overageWeightMax = Convert.ToDouble(oRow["nShipOptWeightMax"]);
+                                    double overageWeightMax = oRow.Table.Columns.Contains("nShipOptWeightMax") && oRow["nShipOptWeightMax"] != DBNull.Value ? Convert.ToDouble(oRow["nShipOptWeightMax"]) : 0;
                                     nShippingCost = calcShippingCost(nShippingCost, overageUnit, overageRate, nWeight, overageWeightMax);
 
                                     oOptXform.addInput(ref oGrpElmt, "nShipOptKey", false, oRow["cShipOptName"].ToString() + "-" + oRow["cShipOptCarrier"].ToString(), "hidden");
@@ -402,16 +402,14 @@ namespace Protean
                                                 nLastID = Convert.ToInt16(oRow["nShipOptKey"]);
                                             }
                                         }
-
                                     }
                                 }
-
                             }
                         }
 
                         ods = null;
 
-                        if ((moCartConfig["NotesOnOptions"]).ToLower() == "on")
+                        if ((moCartConfig["NotesOnOptions"])?.ToLower() == "on")
                         {
 
                             // Dim oNotesGrp As XmlElement = oOptXform.addGroup(oOptXform.moXformElmt, "notes", "term4051", "Please add any details for the delivery here")
@@ -623,7 +621,7 @@ namespace Protean
 
                         // Save notes to cart
 
-                        if ((moCartConfig["NotesOnOptions"]).ToLower() == "on")
+                        if ((moCartConfig["NotesOnOptions"])?.ToLower() == "on")
                         {
                             // If myWeb.moRequest("tblCartOrder/cClientNotes/Notes/Notes") <> "" Then
                             this.AddClientNotes(myWeb.moRequest["tblCartOrder/cClientNotes/Notes/Notes"]);

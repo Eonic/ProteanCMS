@@ -639,7 +639,7 @@ namespace Protean
             {
                 bResult = false;
                 AddResponse(ex.ToString());
-                returnException(ref msException, mcModuleName, "GetPendingContent", ex, bDebug: gbDebug);
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetAdminStatus", ex, ""));
             }
             finally
             {
@@ -3859,8 +3859,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-
-                returnException(ref msException, mcModuleName, "returnPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug);
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ReturnPageHTML", ex, sProcessInfo));
                 if (bReturnBlankError)
                 {
                     return "";
@@ -6616,7 +6615,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "ProcessContentForLanguage", ex, "", "", gbDebug);
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessPageXMLForLanguage", ex, ""));
             }
         }
 
