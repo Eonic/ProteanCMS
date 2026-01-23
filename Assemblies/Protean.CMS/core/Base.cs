@@ -149,7 +149,7 @@ namespace Protean
             catch (Exception ex)
             {
                //  returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
-               // OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
                 Dispose();
                 throw;
             }

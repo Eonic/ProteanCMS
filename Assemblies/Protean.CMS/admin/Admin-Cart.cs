@@ -365,7 +365,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "OrderProcess", ex, "", sProcessInfo, gbDebug);
+                    myWeb.OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "OrderProcess", ex, sProcessInfo));
                 }
             }
 
@@ -423,7 +423,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ShippingLocationsProcess", ex, "", sProcessInfo, gbDebug);
+                    myWeb.OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ShippingLocationsProcess", ex, sProcessInfo));
                 }
             }
 
@@ -507,7 +507,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
+                    myWeb.OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "DeliveryMethodProcess", ex, sProcessInfo));
                 }
             }
 
@@ -563,8 +563,8 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CarriersProcess", ex, "", sProcessInfo, gbDebug);
-                }
+                    myWeb.OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "CarriersProcess", ex, sProcessInfo));
+               }
             }
 
             private void PaymentProviderProcess(ref XmlElement oPageDetail, ref string sAdminLayout)
@@ -618,7 +618,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
+                    myWeb.OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "DeliveryMethodProcess", ex, sProcessInfo));
                 }
             }
 
@@ -691,7 +691,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DeliveryMethodProcess", ex, "", sProcessInfo, gbDebug);
+                    myWeb.OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "DeliveryMethodProcess", ex, sProcessInfo));
                 }
             }
 
@@ -786,7 +786,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "DiscountRulesProcess", ex, "", sProcessInfo, gbDebug);
+                    myWeb.OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "DiscountRulesProcess", ex, sProcessInfo));
                 }
             }
 

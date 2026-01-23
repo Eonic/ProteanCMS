@@ -129,7 +129,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "open", ex, "", cProcessInfo, gbDebug);
+                    myWeb.OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "open", ex, cProcessInfo));
                 }
             }
 

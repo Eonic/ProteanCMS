@@ -1976,7 +1976,7 @@ namespace Protean
                     // PerfMon.Log("xmlTools", "ResizeImage - End")
                     if ((myWeb.moConfig["Debug"]).ToLower() == "on")
                     {
-                        stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
+                        stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, myWeb.moCtx, vstrFurtherInfo: cProcessInfo);
                         return awaitingImgPath + "?Error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
                     }
                     else

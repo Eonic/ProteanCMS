@@ -33,7 +33,7 @@ namespace Protean
         protected override void OnComponentError(object sender, Tools.Errors.ErrorEventArgs e)
         {
             // deals with the error
-            returnException(ref msException, e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug);
+            returnException(ref msException, e.ModuleName, e.ProcedureName, e.Exception, moCtx, mcEwSiteXsl, e.AddtionalInformation, gbDebug);
             // close connection poolinguseralerts
             if (moDbHelper != null)
             {
@@ -295,8 +295,7 @@ namespace Protean
             // 
             catch (Exception ex)
             {
-                // returnException(msException, mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
+               OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
             }
         }
 
