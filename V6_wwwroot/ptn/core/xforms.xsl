@@ -675,6 +675,7 @@
       <i class="fa fa-info-sign fa-2x float-start">
         <xsl:text> </xsl:text>
       </i>
+		<xsl:text> </xsl:text>
       <xsl:copy-of select="node()"/>
     </div>
   </xsl:template>
@@ -684,6 +685,7 @@
       <i class="fas fa-info-circle fa-2x float-start me-3">
         <xsl:text> </xsl:text>
       </i>
+		<xsl:text> </xsl:text>
       <xsl:copy-of select="node()"/>
     </div>
   </xsl:template>
@@ -736,16 +738,19 @@
               <i class="fa fa-check fa-2x float-start">
                 <xsl:text> </xsl:text>
               </i>
+				<xsl:text>&#160;&#160;&#160;</xsl:text>
             </xsl:when>
             <xsl:when test="$classVal!=''">
               <i class="fa fa-exclamation-triangle float-start">
                 <xsl:text> </xsl:text>
               </i>
+				<xsl:text>&#160;&#160;&#160;</xsl:text>
             </xsl:when>
             <xsl:otherwise>
               <i class="fa fa-exclamation-triangle float-start">
                 <xsl:text> </xsl:text>
               </i>
+				<xsl:text>&#160;&#160;&#160;</xsl:text>
             </xsl:otherwise>
           </xsl:choose>
           <span class="alert-msg">
