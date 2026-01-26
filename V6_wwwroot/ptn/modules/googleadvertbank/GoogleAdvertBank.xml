@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="GoogleAdvertBank" contentType="GoogleAdvert" box="" title="" link="" linkType="internal" linkText="More adverts" height="" sortBy="Position" order="" cols="1" stepBy="" stepCount="0" display="related" position=""/>
+          <Content moduleType="GoogleAdvertBank" contentType="GoogleAdvert" box="" title="" link="" linkType="internal" linkText="More adverts" height="" sortBy="Position" order="" cols="1" stepBy="" stepCount="0" display="related" position="" heading="h2"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
