@@ -13208,7 +13208,8 @@ namespace Protean
 
                         if (base.isSubmitted() || autosend)
                         {
-                            // MyBase.updateInstanceFromRequest()
+                            //this was commented out so does not update this breaks why was this done?
+                            base.updateInstanceFromRequest();
                             base.validate();
                             if (base.valid)
                             {
