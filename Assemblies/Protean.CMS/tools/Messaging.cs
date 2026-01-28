@@ -572,7 +572,7 @@ namespace Protean
                     // Don't add the sender if it's the same address as the from
                     else if (!Equals(mailSender, adFrom))
                     {
-                        if ((goConfig["EnableReplyTo"]).ToLower() == "on")
+                        if (goConfig["EnableReplyTo"]?.ToLower() == "on")
                         {
                             oMailn.ReplyToList.Add(adFrom);
                             oMailn.From = mailSender;

@@ -11,6 +11,7 @@
 using Protean.Providers.Authentication;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
+using SkiaSharp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,15 +21,15 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Web;// Used for Httputility.UrlEncode
 using System.Web.Configuration;
 using System.Xml;
-using SkiaSharp;
 using static Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.Cms.dbImport;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
-using System.Web;// Used for Httputility.UrlEncode
+using static Protean.Env;
 
 namespace Protean
 {
@@ -60,6 +61,7 @@ namespace Protean
 
             private System.Web.HttpContext moCtx;
 
+            public Protean.Env.IHttpApplicationState goApp;
             public System.Web.HttpRequest goRequest;
             public System.Web.HttpResponse goResponse;
             public System.Web.SessionState.HttpSessionState goSession; // we need to pass this through from Web
@@ -90,6 +92,7 @@ namespace Protean
                 try
                 {
                     myWeb = aWeb;
+                    goApp = myWeb.goApp;
                     PerfMonLog("dbHelper", "New");
                     if (moCtx is null)
                     {
@@ -106,6 +109,8 @@ namespace Protean
 
                     InitializeConnectionPooling();
 
+                    
+
                     moPageXml = myWeb.moPageXml;
                     mnUserId = (long)myWeb.mnUserId;
 
@@ -113,6 +118,11 @@ namespace Protean
                     {
                         gbVersionControl = myWeb.gbVersionControl;
                     }
+
+                    // oConn.Open();
+                    ValidateDatabaseConnectionApplicationCached(forceRevalidation: false);
+
+
                 }
 
                 catch (Exception ex)
@@ -139,11 +149,14 @@ namespace Protean
 
                     if (moCtx != null)
                     {
-                        // goApp = moCtx.Application
+                        
                         goRequest = moCtx.Request;
                         goResponse = moCtx.Response;
                         goSession = moCtx.Session;
                         goServer = moCtx.Server;
+                        string sitename = goRequest.ServerVariables["HTTP_HOST"];
+
+                        goApp = new Protean.Framework.Adapters.FrameworkApplicationStateAdapter(sitename);
                     }
 
 
@@ -154,6 +167,11 @@ namespace Protean
                     ResetConnection(cConnectionString);
 
                     InitializeConnectionPooling();
+
+                    ValidateDatabaseConnectionApplicationCached(forceRevalidation: false);
+
+
+
                 }
                 catch (Exception ex)
                 {
@@ -178,10 +196,13 @@ namespace Protean
                     goResponse = moCtx.Response;
                     goSession = moCtx.Session;
                     goServer = moCtx.Server;
+                    string sitename = goRequest.ServerVariables["HTTP_HOST"];
+
+                    goApp = new Protean.Framework.Adapters.FrameworkApplicationStateAdapter(sitename);
 
                     ResetConnection($"Data Source={cDbServer}; Initial Catalog={cDbName}; {GetDBAuth()}");
 
-                    InitializeConnectionPooling();
+                    ValidateDatabaseConnectionApplicationCached(forceRevalidation: false);
 
                     myWeb = null;
                     // moPageXml = myWeb.moPageXml
@@ -239,6 +260,61 @@ namespace Protean
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "getDBAuth", ex, ""));
                     return null;
+                }
+            }
+
+            /// <summary>
+            /// Validates database connection once per application lifetime and caches result
+            /// </summary>
+            public bool ValidateDatabaseConnectionApplicationCached(bool forceRevalidation = false)
+            {
+                const string appKey = "ProteanCMS_DBConnectionValidated";
+
+                try
+                {
+                    // Check application cache
+                    if (!forceRevalidation && goApp?[appKey] != null)
+                    {
+                        var cacheEntry = goApp[appKey] as Tuple<bool, DateTime>;
+                        if (cacheEntry != null && cacheEntry.Item1)
+                        {
+                            // Check if cache is still valid (e.g., 1 hour)
+                            if ((DateTime.Now - cacheEntry.Item2).TotalHours < 1)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+
+                    // Perform validation
+                    using (var oDB = new Tools.Database())
+                    {
+
+                        if (!oDB.ConnectionValid)
+                        {
+                            // Cache failure
+                            if (goApp != null)
+                            {
+                                goApp[appKey] = Tuple.Create(false, DateTime.Now);
+                            }
+
+                            throw new InvalidOperationException(
+                                $"Database connection validation failed.");
+                        }
+                    }
+
+                    // Cache success with timestamp
+                    if (goApp != null)
+                    {
+                        goApp[appKey] = Tuple.Create(true, DateTime.Now);
+                    }
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException(
+                        $"Failed to validate database connection: {ex.Message}", ex);
                 }
             }
 

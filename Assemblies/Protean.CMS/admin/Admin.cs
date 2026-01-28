@@ -219,12 +219,16 @@ namespace Protean
                     // mbPreviewMode = False
                     // End If
 
-                    string[] EwCmd = myWeb.moRequest["ewCmd"].Split('.');
-                    mcEwCmd = EwCmd[0];
-                    if (EwCmd.Length - 1 > 0)
-                        mcEwCmd2 = EwCmd[1];
-                    if (EwCmd.Length - 1 > 1)
-                        mcEwCmd3 = EwCmd[2];
+                    string[] EwCmd = myWeb.moRequest["ewCmd"]?.Split('.');
+                    if (EwCmd != null)
+                    {
+                        mcEwCmd = EwCmd[0];
+                        if (EwCmd.Length - 1 > 0)
+                            mcEwCmd2 = EwCmd[1];
+                        if (EwCmd.Length - 1 > 1)
+                            mcEwCmd3 = EwCmd[2];
+                    }
+
 
                     if (!string.IsNullOrEmpty(myWeb.moRequest["ewCmd2"]))
                     {

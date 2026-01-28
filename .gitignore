@@ -24,8 +24,7 @@ wwwroot/images/**
 wwwroot/ewcommon/bin/**
 
 V6_wwwroot/bin/**
-V6_wwwroot/images/**
-V6_wwwroot/ptn/Bin/**
+V6_wwwroot/ewCache/**
 
 Assemblies/Protean.CMS/bin/**
 Assemblies/Protean.CMS/obj/**

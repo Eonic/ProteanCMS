@@ -51,13 +51,16 @@ namespace Protean.Tools
             try
             {
                 cLocation = Location; // set the location
-                ReLoad(); // load the image
+                if (cLocation != "") { 
+                    ReLoad(); // load the image
                 
-                // Verify image loaded successfully
-                if (oImg == null)
-                {
-                    throw new InvalidOperationException($"Failed to load image from: {Location}");
+                    // Verify image loaded successfully
+                    if (oImg == null)
+                    {
+                        throw new InvalidOperationException($"Failed to load image from: {Location}");
+                    }
                 }
+                // we allow the creation of empty image object without error.
             }
             catch (Exception ex)
             {

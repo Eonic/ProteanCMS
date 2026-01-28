@@ -5179,7 +5179,7 @@ namespace Protean
                                     string sBlockCartAddMsg = string.Empty;
                                     if (moSubscription != null)
                                     {
-                                        if ((moCartConfig["SubsExclusiveOrder"]).ToLower() == "on")
+                                        if (moCartConfig["SubsExclusiveOrder"]?.ToLower() == "on")
                                         {
 
                                             // get contentType to be added
