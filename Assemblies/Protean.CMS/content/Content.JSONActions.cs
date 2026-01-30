@@ -75,7 +75,8 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        // OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -145,7 +146,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs("Content.JsonActions", "UpdateContentValue", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs("Content.JsonActions", "UpdateContentValue", ex, ""));
                         return $"{{ \"error\": \"{ex.Message}\" }}";
                     }
                 }
@@ -248,7 +249,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -281,7 +282,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -324,7 +325,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "SearchContent", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "SearchContent", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -365,7 +366,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "SearchContent", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "SearchContent", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -398,7 +399,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -478,7 +479,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
 
@@ -544,7 +545,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ReviewImagePath", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ReviewImagePath", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -606,7 +607,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertXFormToJSON", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertXFormToJSON", ex, ""));
                         return JsonConvert.SerializeObject(new { error = ex.Message });
                     }
                 }
@@ -637,7 +638,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertJSONToXForm", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertJSONToXForm", ex, ""));
                         return JsonConvert.SerializeObject(new { error = ex.Message });
                     }
                 }

@@ -386,7 +386,11 @@ namespace Protean
                 return bIsAuthorized;
             }
 
-
+            protected void RaiseOnError(Tools.Errors.ErrorEventArgs e)
+            {
+                // Raise the event from within the declaring type so derived classes can call this helper
+                OnError?.Invoke(this, e);
+            }
         }
     }
 }
