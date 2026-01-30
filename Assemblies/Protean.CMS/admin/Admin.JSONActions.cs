@@ -33,7 +33,7 @@ namespace Protean
 
             #region JSON Actions
 
-            public class JSONActions : Protean.rest.JsonActions
+            public class JSONActions : Protean.rest.JSONActions
             {
 
                 public event OnErrorEventHandler OnError;
@@ -91,7 +91,7 @@ namespace Protean
                     try
                     {
 
-                        if (this.ValidateAPICall(ref myWeb, "Administrator"))
+                        if (this.ValidateAPICall("Administrator"))
                         {
 
                             if (inputJson["objType"] != null)
@@ -121,7 +121,7 @@ namespace Protean
                     {
                         string count = "0";
                         bool bIsAuthorized = false;
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, "Administrator");
+                        bIsAuthorized = this.ValidateAPICall("Administrator");
                         if (bIsAuthorized)
                         {
 
@@ -534,7 +534,7 @@ namespace Protean
                         if (objservices.CheckUserIP())
                         {
                             bool bIsAuthorized = false;
-                            bIsAuthorized = this.ValidateAPICall(ref myWeb, "Administrator");
+                            bIsAuthorized = this.ValidateAPICall("Administrator");
                             if (bIsAuthorized)
                             {
                                 var objAdmin = new Admin();

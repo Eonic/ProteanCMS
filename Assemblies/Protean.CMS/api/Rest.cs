@@ -293,10 +293,26 @@ namespace Protean
         }
 
 
-        public class JsonActions
+        public class JSONActions
         {
+            private Cms myWeb;
+            private const string mcModuleName = "Eonic.Rest.JSONActions";
 
-            public bool ValidateAPICall(ref Cms myWeb, string sGroupName, string cSchemaName = "Role")
+            public event OnErrorEventHandler OnError;
+
+            public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+
+
+            public JSONActions()
+            {
+                //string ctest = "this constructor is being hit"; // for testing
+                myWeb = new Cms();
+                myWeb.InitializeVariables();
+                myWeb.Open();
+
+            }
+
+            public bool ValidateAPICall(string sGroupName, string cSchemaName = "Role")
             {
                 // Create -InsertOrder Group and pass as a input
                 // check user present in the group
@@ -370,7 +386,11 @@ namespace Protean
                 return bIsAuthorized;
             }
 
-
+            protected void RaiseOnError(Tools.Errors.ErrorEventArgs e)
+            {
+                // Raise the event from within the declaring type so derived classes can call this helper
+                OnError?.Invoke(this, e);
+            }
         }
     }
 }

@@ -13,6 +13,7 @@
 	<xsl:template match="Report" mode="reportHeaders">
 		<xsl:variable name="orderDownloadHeader">
 			<Item>
+				<OrderDateTime/>
 				<OrderDate/>
 				<OrderReference/>
 				<Customer_Name/>
@@ -66,6 +67,9 @@
 
 		<xsl:variable name="orderItem">
 			<Item>
+				<OrderDateTime>
+					<xsl:value-of select="$item/dInsertDate"/>
+				</OrderDateTime>
 				<OrderDate>
 					<xsl:value-of select="$order/@InvoiceDate"/>
 				</OrderDate>
