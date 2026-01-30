@@ -29,13 +29,10 @@ namespace Protean
 
             #region JSON Actions
 
-            public class JSONActions
+            public class JSONActions : Protean.rest.JSONActions
             {
 
-                public event OnErrorEventHandler OnError;
-
-                public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
-                private const string mcModuleName = "Eonic.Content.JSONActions";
+                 private const string mcModuleName = "Eonic.Content.JSONActions";
                 private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
                 private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
