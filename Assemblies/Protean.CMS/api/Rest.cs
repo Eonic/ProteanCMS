@@ -4,11 +4,13 @@ using Newtonsoft.Json;
 using Protean.Providers.Membership;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Web.Configuration;
+using static Protean.Cms.modal;
 
 namespace Protean
 {
@@ -17,7 +19,7 @@ namespace Protean
     {
 
         public bool gbDebug = false;
-
+        public Cms.modal.APILog apiLog;
 
         public rest() : base(System.Web.HttpContext.Current)
         {
@@ -44,7 +46,7 @@ namespace Protean
                     ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                     IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, moConfig["MembershipProvider"]);
                     mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref myWeb));
-
+                  
                     if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
                     {
                         mbAdminMode = true;
@@ -95,8 +97,12 @@ namespace Protean
             PerfMon.Log("API", "Request");
             string sProcessInfo = "";
             string myResponse = "";
+            Cms oWeb = new Cms();
             try
             {
+
+
+                apiLog = new Cms.modal.APILog();
 
                 string path = moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"];
 
@@ -121,6 +127,29 @@ namespace Protean
                     jsonString = moRequest["data"];
                 }
 
+                try
+                {
+                    if (oWeb.moDbHelper.TableExists("APILog") == true)
+                    {
+
+                        apiLog.nUserId = oWeb.mnUserId;
+                        apiLog.cMethodName = moCtx.Request.RequestType;
+                        apiLog.cRequestedUrl = moCtx.Request.RawUrl.ToString();
+                        apiLog.cResponseData = "";
+                        apiLog.cResponseType = "";
+                        apiLog.cPayLoad = Convert.ToString(jsonString);
+                        apiLog.cRequestType = moCtx.Request.RequestType;
+                        apiLog.dRequestDateTime = DateTime.Now;
+                        apiLog.cSourceIP = moCtx.Request.UserHostAddress;
+                        apiLog.cUserAgent = moCtx.Request.UserAgent;
+                        apiLog.nAPILogKey = oWeb.moDbHelper.AddAPILog(apiLog);
+
+                    }
+                }
+                catch
+                {
+
+                }
                 Newtonsoft.Json.Linq.JObject jObj = null;
                 Dictionary<string, string> paramDictionary = null;
                 if (jsonString != null)
@@ -249,8 +278,16 @@ namespace Protean
                     myResponse = Conversions.ToString(calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args));
 
                 }
+                // Protean.Cms myWeb = new Cms();
+                if (oWeb.moDbHelper.TableExists("APILog") == true)
+                {
 
-
+                    apiLog.cResponseData = myResponse;// ex.StackTrace;
+                    apiLog.cResponseType = moCtx.Response.Status;
+                    apiLog.dResponseDateTime = DateTime.Now;
+                    oWeb.moDbHelper.UpdateAPILog(apiLog);
+                }
+                oWeb = null;
 
             }
 
@@ -295,12 +332,13 @@ namespace Protean
 
         public class JSONActions
         {
-            private Cms myWeb;
+            public Cms myWeb;
+            
             private const string mcModuleName = "Eonic.Rest.JSONActions";
 
             public event OnErrorEventHandler OnError;
 
-            public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+           // public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
 
 
             public JSONActions()
@@ -326,7 +364,7 @@ namespace Protean
                 string password = string.Empty;
                 int nUserId = 0;
                 string sValidResponse = string.Empty;
-
+              
                 try
                 {
                     if (myWeb.moSession != null)
@@ -377,10 +415,10 @@ namespace Protean
                 }
 
 
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs("API", "ValidateAPICall", ex, ""))
-
+                  
                     return false;
                 }
                 return bIsAuthorized;
@@ -389,6 +427,11 @@ namespace Protean
             protected void RaiseOnError(Tools.Errors.ErrorEventArgs e)
             {
                 // Raise the event from within the declaring type so derived classes can call this helper
+                
+                myWeb.goAPILog.cResponseData = e.Exception.StackTrace;
+                myWeb.goAPILog.cResponseType = myWeb.moCtx.Response.Status;
+                myWeb.goAPILog.dResponseDateTime = DateTime.Now;
+                myWeb.moDbHelper.UpdateAPILog(myWeb.goAPILog);
                 OnError?.Invoke(this, e);
             }
         }
