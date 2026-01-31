@@ -120,7 +120,9 @@ namespace Protean
                     }
 
                     // oConn.Open();
-                    ValidateDatabaseConnectionApplicationCached(forceRevalidation: false);
+                    if (!ValidateDatabaseConnectionApplicationCached(forceRevalidation: false)) {
+                        throw new InvalidOperationException("Database connection is not available");
+                    };
 
 
                 }
@@ -128,6 +130,8 @@ namespace Protean
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, ""));
+                    throw new InvalidOperationException("Database connection validation failed", ex);
+
                 }
 
                 base.OnError += _OnError;
@@ -168,8 +172,10 @@ namespace Protean
 
                     InitializeConnectionPooling();
 
-                    ValidateDatabaseConnectionApplicationCached(forceRevalidation: false);
-
+                    if (!ValidateDatabaseConnectionApplicationCached(forceRevalidation: false))
+                    {
+                        throw new InvalidOperationException("Database connection is not available");
+                    };
 
 
                 }
@@ -202,8 +208,10 @@ namespace Protean
 
                     ResetConnection($"Data Source={cDbServer}; Initial Catalog={cDbName}; {GetDBAuth()}");
 
-                    ValidateDatabaseConnectionApplicationCached(forceRevalidation: false);
-
+                    if (!ValidateDatabaseConnectionApplicationCached(forceRevalidation: false))
+                    {
+                        throw new InvalidOperationException("Database connection is not available");
+                    };
                     myWeb = null;
                     // moPageXml = myWeb.moPageXml
                     mnUserId = nUserId;

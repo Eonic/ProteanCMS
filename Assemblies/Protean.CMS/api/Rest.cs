@@ -295,7 +295,7 @@ namespace Protean
         }
 
 
-        public class JsonActions
+        public class JSONActions
         {
 
             public bool ValidateAPICall(ref Cms myWeb, string sGroupName, string cSchemaName = "Role")

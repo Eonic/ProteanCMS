@@ -32,7 +32,7 @@ namespace Protean
 
             #region JSON Actions
 
-            public class JSONActions : Protean.rest.JsonActions
+            public class JSONActions : Protean.rest.JSONActions
             {
 
                 public event OnErrorEventHandler OnError;

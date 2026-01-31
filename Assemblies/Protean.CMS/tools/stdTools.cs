@@ -401,7 +401,7 @@ namespace Protean
                             // TODO: When Cms constructor accepts IHttpContext, use:
                             // errWeb = new Protean.Cms(httpContext);
                             // For now, check if we can get legacy context
-                            if (System.Web.HttpContext.Current != null)
+                            if (System.Web.HttpContext.Current != null && oException.Message != "Database connection validation failed")
                             {
                                 errWeb = new Protean.Cms(System.Web.HttpContext.Current);
                                 errWeb.InitializeVariables();

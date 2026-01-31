@@ -289,6 +289,9 @@ namespace Protean
                 if (moDbHelper is null)
                 {
                     moDbHelper = (Cms.dbHelper)GetDbHelper();
+                    if (!moDbHelper.ConnectionValid) {
+                        throw new  InvalidOperationException($"Failed to validate database connection");
+                    }
                 }
             }
             // Open()
@@ -296,6 +299,8 @@ namespace Protean
             catch (Exception ex)
             {
                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
+                //Re-throw with context so we don't continue
+                throw new InvalidOperationException("Database connection validation failed", ex);
             }
         }
 
