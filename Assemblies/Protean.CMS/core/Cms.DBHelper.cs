@@ -14710,7 +14710,8 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    sSql = String.Format("INSERT INTO [dbo].[tblAPILog] ([nUserId],[dRequestDateTime],[cRequestedUrl],[cMethodName],[cPayLoad],[cRequestType],[cSourceIP],[cUserAgent]) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}')", apiLog.nUserId, apiLog.dRequestDateTime, apiLog.cRequestedUrl, apiLog.cMethodName, apiLog.cPayLoad, apiLog.cRequestType,apiLog.cSourceIP,apiLog.cUserAgent);
+
+                    sSql = String.Format("INSERT INTO [dbo].[tblAPILog] ([nUserId],[dRequestDateTime],[cRequestedUrl],[cMethodName],[cPayLoad],[cRequestType],[cSourceIP],[cUserAgent],[cResponseData],[cResponseType]) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", apiLog.nUserId, apiLog.dRequestDateTime, apiLog.cRequestedUrl, apiLog.cMethodName, apiLog.cPayLoad, apiLog.cRequestType,apiLog.cSourceIP,apiLog.cUserAgent,apiLog.cResponseData,apiLog.cResponseType);
 
                     nId = GetIdInsertSql(sSql);
 

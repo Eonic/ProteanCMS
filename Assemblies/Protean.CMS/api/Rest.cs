@@ -129,7 +129,7 @@ namespace Protean
 
                 try
                 {
-                    if (oWeb.moDbHelper.TableExists("APILog") == true)
+                    if (oWeb.moDbHelper.TableExists("tblAPILog") == true)
                     {
 
                         apiLog.nUserId = oWeb.mnUserId;
@@ -279,7 +279,7 @@ namespace Protean
 
                 }
                 // Protean.Cms myWeb = new Cms();
-                if (oWeb.moDbHelper.TableExists("APILog") == true)
+                if (oWeb.moDbHelper.TableExists("tblAPILog") == true)
                 {
 
                     apiLog.cResponseData = myResponse;// ex.StackTrace;
@@ -427,11 +427,20 @@ namespace Protean
             protected void RaiseOnError(Tools.Errors.ErrorEventArgs e)
             {
                 // Raise the event from within the declaring type so derived classes can call this helper
-                
-                myWeb.goAPILog.cResponseData = e.Exception.StackTrace;
-                myWeb.goAPILog.cResponseType = myWeb.moCtx.Response.Status;
-                myWeb.goAPILog.dResponseDateTime = DateTime.Now;
-                myWeb.moDbHelper.UpdateAPILog(myWeb.goAPILog);
+                if (myWeb.moDbHelper.TableExists("tblAPILog") == true)
+                {
+                    myWeb.goAPILog.cResponseData = e.Exception.StackTrace;
+                    myWeb.goAPILog.cResponseType = myWeb.moCtx.Response.Status;
+                    myWeb.goAPILog.dResponseDateTime = DateTime.Now;
+                    if (myWeb.goAPILog.nAPILogKey == 0)
+                    {
+                        myWeb.moDbHelper.AddAPILog(myWeb.goAPILog);
+                    }
+                    else
+                    {
+                        myWeb.moDbHelper.UpdateAPILog(myWeb.goAPILog);
+                    }
+                }
                 OnError?.Invoke(this, e);
             }
         }
