@@ -818,6 +818,10 @@ section.stretchBG {
     padding-top: 3rem;
 }
 /*############### LIST ITEMS #################*/
+.listItem .title {
+    font-size: 1.5rem;
+}
+
 .date,
 .dtstamp {
     font-size: 0.75rem;
@@ -850,7 +854,7 @@ section.stretchBG {
 }
 
 @mixin boxed-listItem {
-    padding: $listItem-padding;
+    //padding: $listItem-padding;
     //border: 1px solid $grey;
     border-radius: $border-radius;
     // height: 100%;
@@ -858,6 +862,9 @@ section.stretchBG {
     flex-direction: column;
     background: $light;
     color: $body-color;
+    margin-bottom: 0;
+   // height: calc(100% - ($grid-gutter-height / 2));
+   height:100%;
 
     .btn-custom {
         @extend .#{$btn-list-style};
@@ -872,18 +879,28 @@ section.stretchBG {
     }
 
     *:nth-last-child(2) {
-        flex-grow: 2;
+        //   flex-grow: 2;
     }
 
-    .list-image-link,
-    .list-image-span {
-        margin-top: -$listItem-padding;
+    .list-image-link, .list-image-span {
+        /* margin-top: -$listItem-padding;
         margin-left: -$listItem-padding;
         margin-right: -$listItem-padding;
-        margin-bottom: $listItem-padding;
+        margin-bottom: $listItem-padding;*/
+        margin-bottom: 0;
 
         img.thumbnail {
             margin-bottom: 0;
+        }
+    }
+
+    .media-inner {
+        padding: $listItem-padding;
+        height: auto;
+        flex-grow: 2;
+
+        *:nth-last-child(2) {
+            flex-grow: 2;
         }
     }
 }
@@ -920,14 +937,15 @@ section.stretchBG {
     }
 }
 
+
 div[class$="List"] {
     //@include listItem-spacing;
     .list-image-link {
-        overflow: hidden;
+       // overflow: hidden;
     }
 
     .btn-custom {
-        margin-top: 1rem;
+       // margin-top: 1rem;
         border-color: $btn-list-btn;
     }
     /*.btn-custom {
@@ -948,7 +966,7 @@ div[class$="List"] {
     }*/
 }
 
-.ContactList {
+/*.ContactList {
     .lIinner {
         max-width: 496px;
         margin: 0 auto;
@@ -973,7 +991,7 @@ div[class$="List"] {
             line-height: 1;
         }
     }
-}
+}*/
 
 @mixin testimonial1 {
     @include unboxed-listItem;
@@ -1037,9 +1055,18 @@ div[class$="List"] {
     }
 }
 
-.nobox .listItem .lIinner,
-.relatedcontent .listItem .lIinner {
-    // @include boxed-listItem;
+.nobox .listItem,
+.relatedcontent .listItem {
+    margin-top: 0;
+    margin-bottom: var(--bs-gutter-x);
+
+    .lIinner {
+        @include boxed-listItem;
+
+        .entryFooter {
+            margin-top: 1rem;
+        }
+    }
 }
 
 .TestimonialList .listItem .lIinner {
@@ -1192,7 +1219,7 @@ div[class$="List"] {
     }
 
     .media-inner {
-        padding: 1.5rem 0;
+        //padding: 1.5rem 0;
 
         .entryFooter {
             padding-top: 1rem;

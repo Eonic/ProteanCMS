@@ -14702,56 +14702,65 @@ namespace Protean
             }
 
 
-            //public int AddAPILog(Cms.modal.APILog apiLog)
-            //{
-            //    PerfMonLog("DBHelper", "AddAPILog ([args])");
-            //    string sSql;
-            //    string nId;
-            //    string cProcessInfo = "";
-            //    try
-            //    {
-            //        sSql =String.Format("INSERT INTO [dbo].[tblAPILog] ([nUserId],[dRequestDateTime],[cRequestedUrl],[cMethodName],[cPayLoad],[cRequestType]) VALUES {0},{1},{2},{3},{4},{5}", apiLog.nUserId, apiLog.dRequestDateTime, apiLog.cRequestedUrl, apiLog.cMethodName, apiLog.cPayLoad, apiLog.cResponseData);
-           
-            //        nId = GetIdInsertSql(sSql);
+            public int AddAPILog(Cms.modal.APILog apiLog)
+            {
+                PerfMonLog("DBHelper", "AddAPILog ([args])");
+                string sSql;
+                string nId;
+                string cProcessInfo = "";
+                try
+                {
 
-            //        if (nId == "0")
-            //        {
+                    sSql = String.Format("INSERT INTO [dbo].[tblAPILog] ([nUserId],[dRequestDateTime],[cRequestedUrl],[cMethodName],[cPayLoad],[cRequestType],[cSourceIP],[cUserAgent],[cResponseData],[cResponseType]) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", apiLog.nUserId, apiLog.dRequestDateTime, apiLog.cRequestedUrl, apiLog.cMethodName, apiLog.cPayLoad, apiLog.cRequestType,apiLog.cSourceIP,apiLog.cUserAgent,apiLog.cResponseData,apiLog.cResponseType);
 
-            //            throw new Exception("Api log not saved");
+                    nId = GetIdInsertSql(sSql);
 
-            //        }
+                    if (nId == "0")
+                    {
 
-            //        return Conversions.ToInteger(nId);
-            //    }
+                        throw new Exception("Api log not saved");
 
-            //    catch (Exception ex)
-            //    {
-            //        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddAPILog", ex, cProcessInfo));
-            //        return Conversions.ToInteger(false);
-            //    }
-            //}
+                    }
 
-            //public bool UpdateAPILog(Cms.modal.APILog apiLog)
-            //{
-            //    PerfMonLog("DBHelper", "UpdateContact ([args])");
-            //    string sSql;
-            //    string cProcessInfo = "";
-            //    try
-            //    {
-            //        if (apiLog.nAPILogKey != 0)
-                   
-            //        sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactAddress2] = '" + Tools.Database.SqlFmt(contact.cContactAddress2) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
-                
-            //        ExeProcessSql(sSql);
-            //        return true;
-            //    }
+                    return Conversions.ToInteger(nId);
+                }
 
-            //    catch (Exception ex)
-            //    {
-            //        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateAPILog", ex, cProcessInfo));
-            //        return false;
-            //    }
-            //}
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddAPILog", ex, cProcessInfo));
+                    return Conversions.ToInteger(false);
+                }
+            }
+
+            public bool UpdateAPILog(Cms.modal.APILog apiLog)
+            {
+                PerfMonLog("DBHelper", "UpdateContact ([args])");
+                string sSql;
+                string cProcessInfo = "";
+                try
+                {
+                    if (apiLog.nAPILogKey != 0)
+                    {
+
+                        sSql = "UPDATE [dbo].[tblAPILog]" + "SET [cResponseData] = '" + Tools.Database.SqlFmt(apiLog.cResponseData) + "', [cResponseType] = '" + Tools.Database.SqlFmt(apiLog.cResponseType) + "', [dResponseDateTime] = '" + apiLog.dResponseDateTime + "' WHERE [nAPILogKey] = " + Convert.ToString(apiLog.nAPILogKey);
+
+
+                        ExeProcessSql(sSql);
+                        return true;
+                    }
+                    else
+                    {
+                        throw new Exception("Invalid APILog Key");
+
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateAPILog", ex, cProcessInfo));
+                    return false;
+                }
+            }
         }
 
 

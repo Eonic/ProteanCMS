@@ -24,6 +24,9 @@ namespace Protean
                 public string cResponseData { get; set; }
                 public string cResponseType { get; set; }
                 public string cRequestType { get; set; }
+
+                public string cSourceIP { get; set; }
+                public string cUserAgent { get; set; }
             }
         }
     }
