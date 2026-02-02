@@ -1,0 +1,2 @@
+ALTER TABLE tblOptOutAddresses
+ADD dGDPROptOut DATE NULL;

@@ -1,0 +1,15 @@
+<indexInfo startTime="2026-01-08T19:10:41" cPageXsl="/ptn/features/search/clean-page.xsl" cExtractXsl="/ptn/features/search/extract.xsl" IndexDetailTypes="NewsArticle,Event,Product,Contact,Document,Job" indexCount="7" pagesIndexed="4" pagesRemaining="0" pagesSkipped="4" contentCount="7" contentSkipped="0" documentsIndexed="0" documentsSkipped="0">
+  <page url="/About" contentCount="4">
+    <Contact artId="62" url="/About/62-/Jane-Smith" />
+    <Contact artId="55" url="/About" />
+    <Contact artId="61" url="/About" />
+    <Contact artId="63" url="/About" />
+  </page>
+  <page url="/Blog" contentCount="3">
+    <NewsArticle artId="32" url="/Blog/32-/NewsArticle" />
+    <NewsArticle artId="29" url="/Blog/29-/NewsArticle" />
+    <NewsArticle artId="30" url="/Blog" />
+  </page>
+  <page url="/Get-in-Touch" contentCount="0" />
+  <page url="/Info-Menu" contentCount="0" />
+</indexInfo>
