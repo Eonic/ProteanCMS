@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="SlideCarousel" contentType="Image" box="" title="" link="" linkType="internal" linkText="More images" sortBy="Position" order="descending" cols="1" stepBy="" stepCount="0" display="related" position="" SlidesShowing="5" AutoPlay="true" hAlign="center" vAlign="center" SlideHeight="260" SlideWidth="400" CarouselHeight="320" CarouselWidth="960" fadebetween="7000" slideshowtype="sequence"/>
+          <Content moduleType="SlideCarousel" contentType="Image" box="" title="" link="" linkType="internal" linkText="More images" sortBy="Position" order="descending" cols="1" stepBy="" stepCount="0" display="related" position="" SlidesShowing="5" AutoPlay="true" hAlign="center" vAlign="center" SlideHeight="260" SlideWidth="400" CarouselHeight="320" CarouselWidth="960" fadebetween="7000" slideshowtype="sequence" heading="h2"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>

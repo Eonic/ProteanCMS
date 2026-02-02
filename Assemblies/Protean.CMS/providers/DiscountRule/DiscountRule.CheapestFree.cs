@@ -48,7 +48,7 @@ namespace Protean.Providers
                 return this;
             }
 
-            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag)
+            public new void ApplyDiscount(ref XmlDocument oFinalDiscounts, ref int nPriceCount, bool mbRoundUp, ref Cms.Cart myCart, string[] cPriceModifiers, ref int nPromocodeApplyFlag, ref XmlElement oCartXML)
             {
                 string exceptionMessage = string.Empty;
                 XmlElement oPriceElmt = null;
@@ -140,7 +140,8 @@ namespace Protean.Providers
                         if (aPriceArray.Length > 0)
                         {
                             Array.Sort(aPriceArray);
-                            int itemsToDiscount = (int)Math.Floor(nQualifyingItemsQty / (double)nMinItems);
+                            //int itemsToDiscount = (int)Math.Floor(nQualifyingItemsQty / (double)nMinItems);
+                            int itemsToDiscount = nQualifyingItemsQty / (nMinItems + 1);
                             decimal nLastPrice = 0m;
 
                             for (i = 0; i < aPriceArray.Length && itemsToDiscount > 0; i++)
@@ -196,8 +197,44 @@ namespace Protean.Providers
                                     if (unitCount == 1)
                                         oPriceElmt.SetAttribute("UnitPrice", nUnitPriceDiscounted.ToString());
 
-                                    oItemLoop.AppendChild(oDiscount);
+                                    oItemLoop.AppendChild(oDiscount);                                    
                                 }
+                                // Update all cart items after applying discounts
+                                foreach (XmlElement oItemLoop in oFinalDiscounts.SelectNodes("//Item"))
+                                {
+                                    int nId = Conversions.ToInteger(oItemLoop.GetAttribute("id"));
+                                    XmlElement cartItem = (XmlElement)oCartXML.SelectSingleNode($"Item[@id='{nId}']");
+                                    if (cartItem == null) continue;
+
+                                    // Get DiscountPrice if exists, else fallback to original price
+                                    XmlElement discountPrice = (XmlElement)oItemLoop.SelectSingleNode("DiscountPrice");
+
+                                    decimal originalUnitPrice = Conversions.ToDecimal(oItemLoop.GetAttribute("price"));
+                                    decimal unitPrice = originalUnitPrice;
+                                    int quantity = Conversions.ToInteger(oItemLoop.GetAttribute("quantity"));
+                                    decimal unitSaving = 0m;
+                                    decimal totalSaving = 0m;
+
+                                    if (discountPrice != null)
+                                    {
+                                        unitPrice = Conversions.ToDecimal(discountPrice.GetAttribute("UnitPrice"));
+                                        unitSaving = Conversions.ToDecimal(discountPrice.GetAttribute("UnitSaving"));
+                                        totalSaving = Conversions.ToDecimal(discountPrice.GetAttribute("TotalSaving"));
+                                    }
+
+                                    // Calculate total for this item
+                                    decimal itemTotal = priceRound((unitPrice * quantity), bForceRoundup: mbRoundUp);
+
+                                    // Update cart XML attributes
+                                    cartItem.SetAttribute("originalPrice", originalUnitPrice.ToString("0.00"));
+                                    cartItem.SetAttribute("price", unitPrice.ToString("0.00"));
+                                    cartItem.SetAttribute("itemTotal", itemTotal.ToString("0.00"));
+                                    cartItem.SetAttribute("unitSaving", unitSaving.ToString("0.00"));
+                                    cartItem.SetAttribute("itemSaving", totalSaving.ToString("0.00"));
+                                    cartItem.SetAttribute("discount", totalSaving.ToString("0.00"));
+                                }
+
+
                             }
                         }
                     }

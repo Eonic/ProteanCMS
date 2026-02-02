@@ -40,6 +40,8 @@
         <nStatus>1</nStatus>
         <cDescription/>
         <bAllProductExcludeGroups/>
+		  <nUseCount/>
+		  <nUseLimit/>
       </tblCartDiscountRules>
     </instance>
     <submission id="EditDiscount" action="" method="post" event="return form_check(this)"/>
@@ -73,6 +75,8 @@
         <alert>You must select a "Voucher Code Group" value.</alert>
       </bind>
       <bind id="bAllProductExcludeGroups" nodeset="bAllProductExcludeGroups" required="false()" type="string"/>
+		<bind id="nUseCount" nodeset="nUseCount" required="false()" type="number"/>
+				<bind id="nUseLimit" nodeset="nUseLimit" required="true()" type="number"/>
       <!--<bind id="nDiscountCodeBank" nodeset="nDiscountCodeBank" required="false()" constraint="(//nDiscountCodeType='3' and //nDiscountCodeBank!='')" type="string">
         <alert>You must select a "Voucher Code Group" value.</alert>
       </bind>-->
@@ -114,6 +118,9 @@
         <input bind="nDiscountValue" class="required short">
           <label>Value</label>
         </input>
+		  <input bind="nUseLimit" class="required short">
+					<label>Use Limit</label>
+				</input>
         <!--<select bind="bFreeGiftBox" appearance="full" class="required vshort" >
           <item>
             <label>Free Gift Box</label>

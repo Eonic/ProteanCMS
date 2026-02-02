@@ -5,14 +5,17 @@ using BundleTransformer.Core.Transformers;
 using Imazen.WebP;
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Data.SqlTypes;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -1624,7 +1627,7 @@ namespace Protean
                             }
                             catch (Exception)
                             {
-
+                                cProcessInfo = "test";
                             }
 
                         }
@@ -3266,10 +3269,41 @@ namespace Protean
 
             }
 
-            #endregion
 
+            public static string GetLatLong(string address)
+            {
+                System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+
+                string apiKey = moConfig["GoogleAPIKey"];
+                string url = $"https://maps.googleapis.com/maps/api/geocode/json?address={Uri.EscapeDataString(address)}&key={apiKey}";
+                try
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        var response = client.GetAsync(url).Result;
+                        var json = response.Content.ReadAsStringAsync().Result;
+                        JObject obj = JObject.Parse(json);
+                        var location = obj["results"]?[0]?["geometry"]?["location"];
+                        if (location != null)
+                        {
+                            string lat = location["lat"].ToString();
+                            string lng = location["lng"].ToString();
+                            return $"{lat},{lng}";
+                        }
+                    }
+                    return ",";
+                }
+                catch (Exception ex)
+                {
+                    return ",";
+                }
+            }
         }
 
 
+        #endregion
+
     }
+
+
 }

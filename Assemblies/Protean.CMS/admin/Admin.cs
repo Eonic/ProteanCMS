@@ -30,11 +30,11 @@ namespace Protean
 
     public partial class Cms
     {
-        public partial class Admin
+        public partial class Admin : IDisposable
         {
 
             #region Declarations
-
+            private bool disposedValue = false; // To detect redundant calls
 
             public XmlDocument moPageXML = new XmlDocument();
 
@@ -134,20 +134,7 @@ namespace Protean
                 }
             }
 
-            public void close()
-            {
-                string cProcessInfo = "";
-                try
-                {
 
-                    moAdXfm = (Admin.AdminXforms)null;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
-                }
-            }
 
             public string Command
             {
@@ -427,7 +414,7 @@ namespace Protean
                                 var args = new object[2];
                                 args[0] = this;
                                 args[1] = oPageDetail;
-
+                                sProcessInfo = "Error loading: " + methodName;
                                 calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
 
                                 // Error Handling ?
@@ -556,7 +543,7 @@ namespace Protean
 
                         case "PasswordReminder":
                             {
-                                sAdminLayout = "AdminXForm";
+                                sAdminLayout = "Logon";
                                 Cms argmyWeb = myWeb;
                                 Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                                 IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb, moConfig["MembershipProvider"]);
@@ -583,7 +570,7 @@ namespace Protean
                             }
                         case "AR":
                             {
-                                sAdminLayout = "AdminXForm";
+                                sAdminLayout = "Logon";
                                 Cms argmyWeb2 = myWeb;
                                 Protean.Providers.Membership.ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                                 IMembershipProvider oMembershipProv = RetProv.Get(ref argmyWeb2, moConfig["MembershipProvider"]);
@@ -1354,7 +1341,7 @@ namespace Protean
                                 nContentId = 0L;
                                 string zcReturnSchema = "";
                                 string AlternateFormName = "";
-                                XmlElement localxFrmEditContent() { int argnReturnId = (int)nContentId; var ret = moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Conversions.ToLong(myWeb.moRequest["pgid"]), "", false, nReturnId: ref argnReturnId, ref zcReturnSchema, ref AlternateFormName, nVersionId: Convert.ToInt64(cVersionKey)); nContentId = argnReturnId; return ret; }
+                                XmlElement localxFrmEditContent() { int argnReturnId = (int)nContentId; var ret = moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Conversions.ToLong("0" + myWeb.moRequest["pgid"]), "", false, nReturnId: ref argnReturnId, ref zcReturnSchema, ref AlternateFormName, nVersionId: Convert.ToInt64(cVersionKey)); nContentId = argnReturnId; return ret; }
 
                                 oPageDetail.AppendChild(localxFrmEditContent());
 
@@ -2334,7 +2321,13 @@ namespace Protean
                                 oCart = (Cms.Cart)null;
                                 break;
                             }
-
+                        case "ListUserContent":
+                            {
+                                sAdminLayout = "UserContent";
+                                oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML(Conversions.ToLong(myWeb.moRequest["dirId"]), true));
+                                oPageDetail.AppendChild(myWeb.moDbHelper.GetUserContentXml((int)Conversions.ToInteger("0" + myWeb.moRequest["dirId"]), oPageDetail));
+                                break;
+                            }
                         case "ListUserContacts":
                         case "ListContacts":
                         case "ListDirContacts":
@@ -3033,7 +3026,7 @@ namespace Protean
                                 }
 
                                 break;
-                            }
+                            }                      
 
                         case "RelateSearch":
                             {
@@ -3394,7 +3387,9 @@ namespace Protean
                         case "DownSubscription":
                         case "ListSubscribers":
                         case "ManageUserSubscription":
+                        case "EmailAlertSubscription":
                         case "UpcomingRenewals":
+                        case "ExpiredRolling":
                         case "ExpiredSubscriptions":
                         case "CancelledSubscriptions":
                         case "RenewalAlerts":
@@ -3430,12 +3425,18 @@ namespace Protean
                             }
                         case "SEOReport":
                             {
-                               // bLoadStructure = true;
-                                SEOReport(ref oPageDetail, ref sAdminLayout);                                
+                                // bLoadStructure = true;
+                                SEOReport(ref oPageDetail, ref sAdminLayout);
                                 //myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
                                 break;
                             }
-
+                        case "404ProductReport":
+                            {
+                                // bLoadStructure = true;
+                                HiddenProductWithoutRedirect(ref oPageDetail, ref sAdminLayout);
+                                //myWeb.moSession["lastPage"] = myWeb.mcOriginalURL;
+                                break;
+                            }
 
                     }
 
@@ -4936,9 +4937,11 @@ namespace Protean
 
                                     bool forceRefresh = false;
                                     // TS removed as we do not want to refresh the cart XML as it destroys discount info and order ref etc.
-                                    // If myWeb.moRequest("nStatus") = 9 Then
-                                    // forceRefresh = True
-                                    // End If
+                                    if (myWeb.moRequest["refresh"] == "true")
+                                    {
+                                        forceRefresh = true;
+                                    }
+
                                     oCart.ListOrders(myWeb.moRequest["id"], true, 0, ref oPageDetail, forceRefresh, nUserId: 0L);
 
                                     // :TODO Behaviour to manage resending recipts.
@@ -4973,10 +4976,11 @@ namespace Protean
                                     {
                                         myWeb.mcOutputFileName = "DeliveryNote-various.pdf";
                                     }
-                                    else { 
+                                    else
+                                    {
                                         myWeb.mcOutputFileName = "DeliveryNote-" + orderId + ".pdf";
                                     }
-                                    
+
                                     string DeliveryNoteXslPath = @"\xsl\docs\deliverynote.xsl";
                                     if (myWeb.bs5)
                                     {
@@ -4986,7 +4990,7 @@ namespace Protean
                                     myWeb.mcEwSiteXsl = ofs.checkCommonFilePath(moConfig["ProjectPath"] + DeliveryNoteXslPath);
 
                                     oCart.ListOrders(orderId, true, 0, ref oPageDetail, bForceRefresh: false, nUserId: 0L);
-                                    
+
                                     myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)myWeb.mnUserId, 0L, 0L, 0L, "Print Delivery 2" + orderId, false);
 
                                     break;
@@ -5898,20 +5902,29 @@ from tblContentIndexDef";
                 try
                 {
                     string status = myWeb.moRequest["isActive"];
+                    string search = myWeb.moRequest["search"];
                     if (status == "1")
                     {
-                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)  and a.nStatus=1";
+                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)  and a.nStatus=1 and dr.cDiscountCode not like '%VOUCHER' AND (dr.nUseLimit IS NULL OR dr.nUseLimit = 0 OR dr.nUseCount IS NULL OR dr.nUseCount < dr.nUseLimit )  order by a.dPublishDate desc";
                     }
                     else if (status == "0")
                     {
-
-                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where a.dExpireDate <= getdate()  or a.nStatus=0";
+                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate <= getdate()  or a.nStatus=0) and dr.cDiscountCode not like '%VOUCHER' order by a.dPublishDate desc";
                     }
-                    // ElseIf status = "singleUse" Then
-                    // cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where dr.cDiscountCode like '%VOUCHER'"
+                    else if (status == "singleUse")
+                    {
+                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where a.nStatus=0 and dr.cDiscountCode like '%VOUCHER' order by a.dPublishDate desc";
+                    }
                     else
                     {
-                        cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)   and a.nStatus=1";
+                        if (search != null)
+                        {
+                            cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)   and a.nStatus=1 and dr.cDiscountCode like '%" + search + "%' order by a.dPublishDate desc";
+                        }
+                        else
+                        {
+                            cSql = "Select *, a.nStatus as status, a.dPublishDate as publishDate, a.dExpireDate as expireDate From tblCartDiscountRules dr inner join tblaudit a on dr.nAuditid = a.nAuditKey where (a.dExpireDate >= getdate() or a.dExpireDate is null)   and a.nStatus=1 and dr.cDiscountCode not like '%VOUCHER'  AND (dr.nUseLimit IS NULL OR dr.nUseLimit = 0 OR dr.nUseCount IS NULL OR dr.nUseCount < dr.nUseLimit ) order by a.dPublishDate desc";
+                        }
                     }
 
 
@@ -6159,7 +6172,7 @@ from tblContentIndexDef";
                 string cUrl = moConfig["BaseUrl"];
 
                 // DBHelper for the Scheduler database
-                var dbt = new Cms.dbHelper(ref myWeb);
+                var dbt = new Cms.dbHelper(myWeb);
 
                 try
                 {
@@ -6580,6 +6593,47 @@ from tblContentIndexDef";
                             sAdminLayout = "ManageUserSubscription";
                             break;
                         }
+                    case "EmailAlertSubscription":
+                        {
+                            long nSubscriptionId = Conversions.ToInteger(myWeb.moRequest["id"]);
+
+                            string AlertType = "PaymentFailed";
+                            if (!String.IsNullOrEmpty(myWeb.moRequest["EmailType"])) {
+                                AlertType = myWeb.moRequest["EmailType"];
+                            }
+                            string AlertXformPath = "xforms/EmailAlert/EmailAlert.xml";
+                            string EmailContentXsltPath = "/xsl/subscription/emailcontent.xsl";
+                            string Subject = "Subscription Renewal";
+                            string SenderName = myWeb.moConfig["SiteAdminName"];
+                            string SenderEmail = myWeb.moConfig["SiteAdminEmail"];
+                            string CcName = "";//myAdmin.myWeb.moCart.moCartConfig["MerchantName"];
+                            string CcEmail = "";//myAdmin.myWeb.moCart.moCartConfig["MerchantEmail"];
+
+                            string BccName = myWeb.moCart.moCartConfig["MerchantName"];
+                            string BccEmail = myWeb.moCart.moCartConfig["MerchantEmail"];
+
+                            XmlElement AlertData = myWeb.moPageXml.CreateElement("instance");
+                            oSub.GetSubscriptionDetail(ref AlertData, Conversions.ToInteger(nSubscriptionId));
+
+
+                            string recipientFullName = AlertData.SelectSingleNode("Subscription/User/FirstName").InnerText + " " + AlertData.SelectSingleNode("Subscription/User/LastName").InnerText;
+                            string RecipientEmail = AlertData.SelectSingleNode("Subscription/User/Email").InnerText;
+
+                            // AlertData.SetAttribute("subjectId", nSubscriptionId.ToString());
+
+                            oPageDetail.AppendChild(oADX.xFrmAlertEmail(AlertType, (XmlElement)AlertData.FirstChild, AlertXformPath, Subject, SenderName, SenderEmail, recipientFullName, RecipientEmail, CcName, CcEmail, BccName, BccEmail, EmailContentXsltPath, false));
+                            sAdminLayout = "AdminXForm";
+                            if (oADX.valid)
+                            {
+                                cCmd = "ManageUserSubscription";
+                                // oSub.CancelSubscription(myWeb.moRequest("subId"))
+                                goto SP;
+                            }
+
+
+                            break;
+                        }
+
                     // If oADX.valid Then
                     // cCmd = "Subscriptions"
                     // GoTo SP
@@ -6668,7 +6722,11 @@ from tblContentIndexDef";
                             oSub.ListUpcomingRenewals(ref oPageDetail);
                             break;
                         }
-
+                    case "ExpiredRolling":
+                        {
+                            oSub.ListExpiredRollingSubscriptions(ref oPageDetail);
+                            break;
+                        }
                     case "ExpiredSubscriptions":
                         {
                             oSub.ListExpiredSubscriptions(ref oPageDetail);
@@ -6869,7 +6927,11 @@ from tblContentIndexDef";
                                     oPageDetail.AppendChild(oCont);
                                     break;
                                 }
-
+                            case "ImportCodes":
+                                {
+                                    moAdXfm.xFrmImportCodes(nId);
+                                    break;
+                                }
                             case "ManageCodeGroups":
                                 {
                                     moAdXfm.xFrmMemberCodeset(nId, "CodesGroups");
@@ -6877,6 +6939,12 @@ from tblContentIndexDef";
                                         bListCodesets = true;
                                     break;
                                 }
+                            case "DeleteCodeGroup":
+                                {
+
+                                    break;
+                                }
+
                         }
 
                         if (!bListCodesets)
@@ -7096,8 +7164,8 @@ from tblContentIndexDef";
                 string sProcessInfo = "";
 
                 try
-                {                   
-                    oPageDetail.AppendChild(moAdXfm.GetAllMenuMetaDetails());                   
+                {
+                    oPageDetail.AppendChild(moAdXfm.GetAllMenuMetaDetails());
                 }
 
                 catch (Exception ex)
@@ -7105,10 +7173,148 @@ from tblContentIndexDef";
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "SEOReport", ex, "", sProcessInfo, gbDebug);
                 }
             }
+            private void HiddenProductWithoutRedirect(ref XmlElement oPageDetail, ref string sAdminLayout)
+            {
+                string sProcessInfo = "";
+
+                try
+                {
+                    // Read QueryString params
+                    string sPage = myWeb.moRequest["Page"];
+                    string sPageSize = myWeb.moRequest["PageSize"];
+
+                    int page = 1;
+                    int pageSize = 100;
+
+                    int.TryParse(sPage, out page);
+                    int.TryParse(sPageSize, out pageSize);
+
+                    if (page <= 0) page = 1;
+                    if (pageSize <= 0) pageSize = 100;
+
+                    var doc = oPageDetail.OwnerDocument;
+                    var oElmt = doc.CreateElement("HiddenProducts");
+                    XmlNode imported = doc.ImportNode(moAdXfm.GetAllHiddenProducts(page, pageSize), true);
+                    oElmt.AppendChild(imported);
+                    oPageDetail.AppendChild(oElmt);
+
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "HiddenProductWithoutRedirect", ex, "", sProcessInfo, gbDebug);
+                }
+            }
+
+
+
+            #region IDisposable Implementation
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        try
+                        {
+                            // ====================
+                            // DISPOSE CHILD COMPONENTS
+                            // ====================
+
+                            // AdminXforms instance
+                            if (moAdXfm != null)
+                            {
+                                try
+                                {
+                                    if (moAdXfm is IDisposable disposableAdXfm)
+                                    {
+                                        disposableAdXfm.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moAdXfm: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moAdXfm = null;
+                                }
+                            }
+
+                            // ====================
+                            // NULL OUT LARGE OBJECTS
+                            // ====================
+                            moPageXML = null;
+                            moDeniedAdminMenuElmt = null;
+
+                            // ====================
+                            // NULL OUT REFERENCES (NOT OWNED - DO NOT DISPOSE)
+                            // ====================
+
+                            // myWeb is owned by parent/caller, just clear reference
+                            myWeb = null;
+
+                            // Configuration references (owned by parent)
+                            moConfig = null;
+                            goServer = null;
+
+                            // Clear command strings
+                            mcEwCmd = null;
+                            mcEwCmd2 = null;
+                            mcEwCmd3 = null;
+                            mcPagePath = null;
+                            lEditContext = null;
+                            adminLayout = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log disposal errors but don't throw
+                            System.Diagnostics.Debug.WriteLine(
+                                $"Error in Admin.Dispose: {ex.Message}");
+                        }
+                    }
+
+                    // Free unmanaged resources (if any)
+
+                    disposedValue = true;
+                }
+            }
+
+
+            // Finalizer
+            ~Admin()
+            {
+                Dispose(false);
+            }
+
+            // Public Dispose method
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            // Legacy close() method for backward compatibility
+            public void close()
+            {
+                // Simply call Dispose() - maintains backward compatibility
+                Dispose();
+            }
+
+            // Helper method to prevent use after disposal
+            protected void ThrowIfDisposed()
+            {
+                if (disposedValue)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+            }
+        }
+            #endregion
 
         }
 
 
 
     }
-}

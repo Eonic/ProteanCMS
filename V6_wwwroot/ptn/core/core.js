@@ -1,5 +1,7 @@
 ﻿/*  ==  Scripts for Both the site and the admin system for all websites and themes  =====================  */
 
+var skipValidation = false;
+
 $(document).ready(function () {
     //$(".navbar-brand").click(function () {
     //    $(this).toggleClass('show-click');
@@ -612,13 +614,13 @@ $.fn.prepareXform = function () {
     };
 
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll('.needs-validation')
+    const forms = document.querySelectorAll('.needs-validation')
 
         // Loop over them and prevent submission
     Array.from(forms).forEach(form => {
-
-            form.removeEventListener('submit', validateForm, false)
-            form.addEventListener('submit', validateForm, false)
+   
+         form.removeEventListener('submit', validateForm, false)
+         form.addEventListener('submit', validateForm, false)
     })
 
     // deals with next buttons in tabbed forms
@@ -634,16 +636,13 @@ $.fn.prepareXform = function () {
 };
 
 function validateForm(event){
-    //alert("validating...");
-    if (!form.checkValidity()) {
-        event.preventDefault();
-        event.stopPropagation();
-    }
-    form.classList.add('was-validated')
+
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        form.classList.add('was-validated')  
 }
-
-
-
 
 /*  USED IN ALL EW:xFORMS - For when an Radio Button Toggles a switch /case */
 function checkboxshowDependant(checkboxId, dependant, allDependants) {

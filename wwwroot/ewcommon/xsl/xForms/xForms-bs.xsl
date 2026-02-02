@@ -1,48 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
 
-  <xsl:template match="Page" mode="xform_control_scripts">
+	<xsl:template match="Page" mode="xform_control_scripts">
+		<xsl:if test="descendant-or-self::instance">
+			<!--################################################ modal for alert-->
+			<div class="modal fade" id="xFrmAlertModal" role="dialog" style ="padding-top:15%!important">
+				<div class="modal-dialog">
+					<div class="modal-content  alert alert-danger" role="alert">
+						<div class="modal-body">
+							<i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
+							<xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
+							<button type="button" class="close" data-dismiss="modal"  aria-label="close">
+								<i class="fa fa-times">&#160;</i>
+							</button>
+							<span id="errorMessage">&#160;</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</xsl:if>
 
-    <xsl:if test="descendant-or-self::instance">
-      <!--################################################ modal for alert-->
-      <div class="modal fade" id="xFrmAlertModal" role="dialog" style ="padding-top:15%!important">
-        <div class="modal-dialog">
-          <div class="modal-content  alert alert-danger" role="alert">
-            <div class="modal-body">
-				<xsl:text> </xsl:text>
-              <i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">
-				  <xsl:text> </xsl:text>
-			  </i>
-              <xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
-              <button type="button" class="close" data-dismiss="modal"  aria-label="close">
-                <i class="fa fa-times">
-					<xsl:text> </xsl:text>
-				</i>
-              </button>
-              <span id="errorMessage">
-				  <xsl:text> </xsl:text>
-			  </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </xsl:if>
+		<xsl:if test="descendant-or-self::textarea[contains(@class,'xhtml')]">
+			<script type="text/javascript">
+				var tinymcelinklist = <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')][1]" mode="tinymcelinklist"/>;
+			</script>
+		</xsl:if>
 
-    <xsl:if test="descendant-or-self::textarea[contains(@class,'xhtml')]">
-      <script type="text/javascript">
-        var tinymcelinklist = <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')][1]" mode="tinymcelinklist"/>;
-      </script>
-    </xsl:if>
+		<xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>
+		<xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
+		<xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
+		<xsl:apply-templates select="descendant-or-self::*[alert]" mode="xform_control_script"/>
+		<xsl:apply-templates select="descendant-or-self::select1[@class='siteTree']" mode="xform_control_script"/>
+		<xsl:apply-templates select="descendant-or-self::select1[item[toggle]]" mode="xform_control_script"/>
+		<xsl:apply-templates select="descendant-or-self::submit" mode="xform_control_script"/>
+		<xsl:apply-templates select="descendant-or-self::button" mode="xform_control_script"/>
+		<xsl:apply-templates select="descendant-or-self::input" mode="xform_control_script"/>
+		<xsl:apply-templates select="descendant-or-self::*[contains(@class,'has-script')]" mode="xform_control_script"/>
 
-    <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>
-    <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xml')]" mode="xform_control_script"/>
-    <xsl:apply-templates select="descendant-or-self::group[contains(@class,'hidden-modal')]" mode="xform_control_script"/>
-    <xsl:apply-templates select="descendant-or-self::*[alert]" mode="xform_control_script"/>
-  </xsl:template>
-  
-  <xsl:template match="*" mode="xform_control_script"></xsl:template>
+	</xsl:template>
 
-  <xsl:template match="Content[ancestor::Page[@adminMode='true']] | div[@class='xform' and ancestor::Page[@adminMode='true']]" mode="xform">
+	<xsl:template match="*" mode="xform_control_script"></xsl:template>
+	<xsl:template match="*" mode="tinymcelinklist"></xsl:template>
+
+	<xsl:template match="*[alert]" mode="xform_control_script">
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+		<xsl:variable name="ref2">
+			<xsl:value-of select="translate($ref,'/','-')"/>
+		</xsl:variable>
+		<xsl:if test="$ref!=''">
+			<script>
+				$(function () {
+				<xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
+				<xsl:text>-btn').popover('show');</xsl:text>
+				});
+			</script>
+		</xsl:if>
+	</xsl:template>
+
+
+	<xsl:template match="Content[ancestor::Page[@adminMode='true']] | div[@class='xform' and ancestor::Page[@adminMode='true']]" mode="xform">
     <form method="{model/submission/@method}" action="">
       <xsl:attribute name="class">
         <xsl:text>ewXform panel panel-default</xsl:text>
@@ -1556,5 +1574,108 @@
     </div>
     -->
   </xsl:template>
+
+	<!--ReCaptchaV3 and ReCaptchaV2 template Handles rendering of the hidden field + JS -->
+	<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform">
+		<!-- Get reCAPTCHA settings -->
+		<xsl:variable name="recaptchaVersion">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaVersion'"/>
+			</xsl:call-template>
+		</xsl:variable>
+		<xsl:variable name="recaptchaKey">
+			<xsl:choose>
+				<xsl:when test="contains($recaptchaVersion, 'v3')">
+					<xsl:call-template name="getXmlSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'ReCaptchaKeyV3'"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="getXmlSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<!-- Conditional rendering -->
+		<xsl:choose>
+			<!-- Version 3 -->
+			<xsl:when test="contains($recaptchaVersion, 'v3')">
+				<input type="hidden" name="g-recaptcha-response" id="recaptcha-token" class="recaptcha" />
+			</xsl:when>
+
+			<!-- Version 2 -->
+			<xsl:otherwise>
+				<div class="g-recaptcha" data-sitekey="{$recaptchaKey}">
+					<xsl:for-each select="@*[starts-with(name(),'data-')]">
+						<xsl:attribute name="{name()}">
+							<xsl:value-of select="."/>
+						</xsl:attribute>
+					</xsl:for-each>
+					<xsl:text> </xsl:text>
+				</div>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform_control_script">
+		<xsl:variable name="recaptchaVersion">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaVersion'"/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:variable name="recaptchaKey">
+			<xsl:choose>
+				<xsl:when test="contains($recaptchaVersion, 'v3')">
+					<xsl:call-template name="getXmlSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'ReCaptchaKeyV3'"/>
+					</xsl:call-template>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:call-template name="getXmlSettings">
+						<xsl:with-param name="sectionName" select="'web'"/>
+						<xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
+					</xsl:call-template>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:choose>
+			<!-- reCAPTCHA v3 -->
+			<xsl:when test="contains($recaptchaVersion, 'v3')">
+				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}">
+					<xsl:text> </xsl:text>
+				</script>
+				<script>
+					var hiddenInput = document.getElementById('recaptcha-token');
+					var form = hiddenInput.closest('form');
+					form.addEventListener('submit', function(e) {
+					e.preventDefault();
+					grecaptcha.ready(function() {
+					grecaptcha.execute('<xsl:value-of select="$recaptchaKey"/>', { action: 'submit' })
+					.then(function(token) {
+					hiddenInput.value = token;
+					form.submit();
+					});
+					});
+					});
+				</script>
+			</xsl:when>
+			<!-- reCAPTCHA v2 -->
+			<xsl:otherwise>
+				<script src="https://www.google.com/recaptcha/api.js" async="" defer="">
+					<xsl:text> </xsl:text>
+				</script>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
 
 </xsl:stylesheet>

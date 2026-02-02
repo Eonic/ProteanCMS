@@ -69,6 +69,7 @@
       <MenuItem name="Upcoming Renewals" cmd="UpcomingRenewals" display="true" icon="fa fa-calendar-plus-o"/>
       <MenuItem name="Renewal Alerts" cmd="RenewalAlerts" display="true" icon="fa fa-envelope-o"/>
       <MenuItem name="Recent Renewals" cmd="RecentRenewals" display="true" icon="fa fa-calendar-plus-o"/>
+		<MenuItem name="Expired Rolling" cmd="ExpiredRolling" display="true" icon="fa fa-calendar-times-o"/>
       <MenuItem name="Expired Subscriptions" cmd="ExpiredSubscriptions" display="true" icon="fa fa-calendar-times-o"/>
       <MenuItem name="Cancelled Subscriptions" cmd="CancelledSubscriptions" display="true" icon="fa fa-calendar-times-o"/>
       <MenuItem name="Cancel Subscription" cmd="CancelSubscription" display="false" icon="fa fa-envelope-o"/>
@@ -181,6 +182,7 @@
 		<MenuItem name="Filter Indexes" cmd="FilterIndex" display="true" feature="FilterIndex" icon="fa-sign-in"/>
 		<MenuItem name="Reset WebConfig" cmd="ResetWebConfig" display="true" feature="ResetWebConfig" icon="fa-sign-in"/>
 		<MenuItem name="Page Titles and Descriptions" cmd="SEOReport" display="true" feature="SEOReport" icon="fa-sign-in"/>
+      <MenuItem name="404 Product Report" cmd="404ProductReport" display="true" feature="404ProductReport" icon="fa-sign-in"/>
       </MenuItem>
   </MenuItem>
 </AdminMenu>

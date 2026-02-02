@@ -725,7 +725,7 @@ namespace Protean
                 }
 
                 // Check if we need to send the email
-                if (string.IsNullOrEmpty(goConfig["MailServer"]))
+                if (string.IsNullOrEmpty(goConfig["MailServer"]) && string.IsNullOrEmpty(goConfig["MsGraphTennantId"]))
                 {
                     return "Mailserver Not Specified.";
                 }
@@ -847,7 +847,27 @@ namespace Protean
                         // Send direct
                         try
                         {
-                            oSmtpn.Host = goConfig["MailServer"];
+                            if (!string.IsNullOrEmpty(goConfig["MsGraphTennantId"])) { 
+                                
+                                var graphClient = new Protean.Tools.GraphMailClient(goConfig["MsGraphClientId"], goConfig["MsGraphClientSecret"], goConfig["MsGraphTennantId"]);
+
+                                graphClient.sendFromAcct = goConfig["MailServerUsername"];
+                                try
+                                {
+                                    graphClient.SendMail(oMailn);
+                                }
+                                catch (Exception ex) {
+                                    failureMessage = failureMessage + " - Error1: " + ex.Message + " - " + cProcessInfo + " - " + ex.StackTrace;
+                                    failedSend = true;
+                                }
+                               
+
+                            }
+                            else
+                            { 
+
+
+                                oSmtpn.Host = goConfig["MailServer"];
                             if (!string.IsNullOrEmpty(goConfig["MailServerPort"]))
                             {
                                 oSmtpn.Port = Conversions.ToInteger(goConfig["MailServerPort"]);
@@ -929,6 +949,7 @@ namespace Protean
                                     }
 
                                 }
+                            }
                             }
                         }
                         catch (Exception ex)
@@ -1041,9 +1062,9 @@ namespace Protean
                                     oXml.AppendChild(oXml.ImportNode(redactedElement, true));
                                 }
 
-                                long logId = odbHelper.emailActivity((Int16)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString(), oXml.OuterXml);
+                                long logId = odbHelper.emailActivity((Int16)mnUserId, cActivityDetail, oMailn.To.ToString(), oMailn.From.ToString(), oXml.OuterXml, SubjectLine);
                                 odbHelper.myWeb = new Cms(moCtx);
-                                odbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, (Int16)logId, 0, otherId, activitySchema, false, null);
+                                odbHelper.logActivity(Cms.dbHelper.ActivityType.Email, mnUserId, (Int64)logId, 0, otherId, activitySchema, false, null);
                                 //odbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Email, mnUserId, SessionId, DateTime.Now, (Int16)logId, 0, activitySchema);
                             }
 

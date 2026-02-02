@@ -2601,13 +2601,13 @@
 					</xsl:when>
 				</xsl:choose>
 			</xsl:variable>
-			<link rel="preload" href="{$src}" as="image" type="{$MimeType}" />
+			<link rel="preload" href="{$src}" fetchpriority="high" as="image" type="{$MimeType}" />
 			<xsl:if test="not($src!='')">
 				<xsl:copy-of select="."/>
 			</xsl:if>
 		</xsl:if>	
 		<xsl:for-each select="ms:node-set($image)/descendant-or-self::*[local-name() = 'picture']/*[local-name() = 'source' and @type='image/webp']">
-			<link rel="preload" href="{@srcset}" as="image" type="image/webp" />
+			<link rel="preload" href="{@srcset}" fetchpriority="high" as="image" type="image/webp" />
 		</xsl:for-each>
 	</xsl:template>
 
@@ -3703,7 +3703,7 @@
 						<xsl:attribute name="class">EmailForm hideLabel</xsl:attribute>
 					</xsl:if>
 					<!-- display form-->
-					<xsl:apply-templates select="." mode="cleanXhtml"/>
+					<xsl:apply-templates select="." mode="xform"/>
 				</div>
 			</xsl:otherwise>
 		</xsl:choose>
@@ -3995,7 +3995,7 @@
 
 	<xsl:template match="MenuItem" mode="submenuitem2">
 		<xsl:variable name="dateQuery" select="ancestor::Content/@dateQuery"/>
-		<li>
+		<li class="{@class}">
 			<xsl:variable name="class">
 				<xsl:if test="position()=1">
 					<xsl:text>first </xsl:text>
@@ -4008,7 +4008,7 @@
 				</xsl:if>
 				<xsl:if test="descendant::MenuItem[@id=$dateQuery] and @url!='/'">
 					<xsl:text>active </xsl:text>
-				</xsl:if>
+				</xsl:if> I have	
 			</xsl:variable>
 			<xsl:apply-templates select="self::MenuItem" mode="menuLink">
 				<xsl:with-param name="class" select="$class"/>

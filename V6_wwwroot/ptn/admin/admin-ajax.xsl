@@ -104,7 +104,13 @@
 					<xsl:text> active collapsable</xsl:text>
 				</xsl:if>
 			</xsl:attribute>
-			<a href="{$appPath}?ewCmd={/Page/@ewCmd}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
+			<xsl:variable name="contentTypeParam">
+				<xsl:if test="/Page/Request/QueryString/Item[@name='popup']/node()">
+					<xsl:text>contentType=popup</xsl:text>
+				</xsl:if>
+			<xsl:text>&amp;</xsl:text>
+			</xsl:variable>
+			<a href="{$appPath}?{$contentTypeParam}ewCmd={/Page/@ewCmd}&amp;fld={$fld}&amp;targetForm={/Page/Request/QueryString/Item[@name='targetForm']/node()}&amp;targetField={/Page/Request/QueryString/Item[@name='targetField']/node()}">
 				<i>
 					<xsl:attribute name="class">
 						<xsl:text>fas fa-lg</xsl:text>

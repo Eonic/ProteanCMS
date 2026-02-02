@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="ContentFilter" filterTarget="Product" contentType="ContentFilter" resultCount="0" box="" title="" link="" linkType="filter" order="Position" cols="1" stepBy="" stepCount="24" display="all" position="" action="Protean.Cms+Content+Modules.ContentFilter" ShowContentListlevel="false">
+          <Content moduleType="ContentFilter" filterTarget="Product" contentType="ContentFilter" resultCount="0" box="" title="" link="" linkType="filter" order="Position" cols="1" stepBy="" stepCount="24" display="all" position="" action="Protean.Cms+Content+Modules.ContentFilter" ShowContentListlevel="false" heading="h2">
             </Content>
 			
         </cContentXmlBrief>

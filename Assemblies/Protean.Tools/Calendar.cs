@@ -123,6 +123,7 @@ namespace Protean.Tools
                     {
                         oElmt.SetAttribute("dateid", dDate.ToString("yyyyMMdd"));
                         oElmt.SetAttribute("index", dDate.Day.ToString());
+                        oElmt.SetAttribute("date", dDate.ToString("yyyy-MM-dd") + "T00:00:00");
                         break;
                     }
 

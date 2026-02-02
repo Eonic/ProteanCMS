@@ -994,6 +994,16 @@
     <xsl:variable name="bgContentPosition">
       <xsl:value-of select="@bgContentPosition"/>
     </xsl:variable>
+	  <xsl:variable name="title">
+				<xsl:choose>
+					<xsl:when test="Content[@lang=$lang]">
+						<xsl:value-of select="Content[@lang=$lang]/@title"/>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@title"/>
+					</xsl:otherwise>
+				</xsl:choose>
+		</xsl:variable>
     <div id="mod_{@id}{$id}" class="module nobox pos-{@position} {$thisClass}">
       <xsl:apply-templates select="." mode="themeModuleExtras"/>
       <xsl:if test="@mobileview!=''">
@@ -1102,7 +1112,7 @@
       </xsl:if>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
         </div>
       </xsl:if>
       <xsl:if test="not(@position='header' or @position='footer' or (@position='column1' and $page/@layout='Modules_1_column'))">
@@ -1180,7 +1190,7 @@
           <div>
             <xsl:apply-templates select="." mode="inlinePopupOptions" />
             <xsl:text> </xsl:text>
-            <xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
+            <xsl:if test="$title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
               <xsl:choose>
                 <xsl:when test="@contentType='Module'">
                   <h2 class="layout-title">
@@ -1227,7 +1237,7 @@
           </div>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
+          <xsl:if test="$title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
             <xsl:choose>
               <xsl:when test="@contentType='Module'">
                 <h2 class="layout-title">
@@ -1297,7 +1307,7 @@
       </xsl:if>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
         </div>
       </xsl:if>
       <xsl:apply-templates select="." mode="displayBrief"/>
@@ -1319,7 +1329,7 @@
               </xsl:choose>
             </xsl:with-param>
             <xsl:with-param name="linkText" select="@linkText"/>
-            <xsl:with-param name="altText" select="@title"/>
+            <xsl:with-param name="altText" select="$title"/>
             <xsl:with-param name="linkWindow" select="@linkWindow"/>
             <xsl:with-param name="linkObject" select="@linkObject"/>
           </xsl:apply-templates>
@@ -1368,7 +1378,16 @@
 
   <xsl:template match="Content" mode="moduleBox">
     <xsl:param name="id"/>
-
+	  <xsl:variable name="title">
+		  <xsl:choose>
+			  <xsl:when test="Content[@lang=$lang]">
+				  <xsl:value-of select="Content[@lang=$lang]/@title"/>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="@title"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
     <div id="mod_{@id}{$id}">
       <xsl:apply-templates select="." mode="themeModuleExtras"/>
       <!-- define classes for box -->
@@ -1384,7 +1403,7 @@
         <xsl:text> module</xsl:text>
         <!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
               stled differently to a title bar. -->
-        <xsl:if test="@title=''">
+        <xsl:if test="$title=''">
           <xsl:text> boxnotitle</xsl:text>
         </xsl:if>
         pos-<xsl:value-of select="@position"/>
@@ -1400,10 +1419,10 @@
       </xsl:attribute>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
         </div>
       </xsl:if>
-      <xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
+      <xsl:if test="$title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
 
         <xsl:apply-templates select="." mode="inlinePopupOptions"/>
         <xsl:if test="@rss and @rss!='false'">
@@ -1423,11 +1442,11 @@
       <xsl:if test="not(@listGroup='true')">
         <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
           <div class="panel-image">
-            <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+            <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
           </div>
         </xsl:if>
         <div>
-          <xsl:if test="not(@title!='')">
+          <xsl:if test="not($title!='')">
             <xsl:apply-templates select="." mode="inlinePopupOptions"/>
           </xsl:if>
           <xsl:apply-templates select="." mode="displayBrief"/>
@@ -1436,7 +1455,7 @@
       </xsl:if>
       <xsl:if test="@listGroup='true'">
         <div class="card-body">
-          <xsl:if test="not(@title!='')">
+          <xsl:if test="not($title!='')">
             <xsl:apply-templates select="." mode="inlinePopupOptions">
               <xsl:with-param name="class" select="'card-body'"/>
             </xsl:apply-templates>
@@ -1463,7 +1482,7 @@
               </xsl:choose>
             </xsl:with-param>
             <xsl:with-param name="linkText" select="@linkText"/>
-            <xsl:with-param name="altText" select="@title"/>
+            <xsl:with-param name="altText" select="$title"/>
           </xsl:apply-templates>
           <xsl:text> </xsl:text>
         </div>
@@ -1474,7 +1493,16 @@
 
   <xsl:template match="Content[starts-with(@box,'bg') or starts-with(@box,'border') or starts-with(@box,'Default') or starts-with(@box,'card')]" mode="moduleBox">
     <xsl:param name="id"/>
-
+	  <xsl:variable name="title">
+		  <xsl:choose>
+			  <xsl:when test="Content[@lang=$lang]">
+				  <xsl:value-of select="Content[@lang=$lang]/@title"/>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="@title"/>
+			  </xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
     <div id="mod_{@id}{$id}" class="card">
       <xsl:apply-templates select="." mode="themeModuleExtras"/>
       <!-- define classes for box -->
@@ -1507,7 +1535,7 @@
         <xsl:value-of select="@moduleType"/>
         <!-- if no title, we may still want TL/TR for rounded boxs with no title bar,
               stled differently to a title bar. -->
-        <xsl:if test="@title=''">
+        <xsl:if test="$title=''">
           <xsl:text> boxnotitle</xsl:text>
         </xsl:if>
         <xsl:if test="@icon!='' or @icon-class!='' or @uploadIcon!=''">
@@ -1548,10 +1576,10 @@
       </xsl:attribute>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
         </div>
       </xsl:if>
-      <xsl:if test="@title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
+      <xsl:if test="$title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
         <div class="card-header">
           <xsl:if test="not(node())">
             <xsl:attribute name="class">
@@ -1600,7 +1628,7 @@
       </xsl:if>
       <xsl:variable name="thisClass">
         <xsl:text>card-body</xsl:text>
-        <xsl:if test="@title!=''">
+        <xsl:if test="$title!=''">
           <xsl:text> card-body-w-head</xsl:text>
         </xsl:if>
         <xsl:if test="@linkText!='' and @link!='' and not(@accessibleText='true')">
@@ -1610,12 +1638,12 @@
       <xsl:if test="not(@listGroup='true')">
         <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
           <div class="panel-image">
-            <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+            <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
           </div>
         </xsl:if>
         <!--<xsl:if test="node()"> TS this hides donate button-->
         <div class="{$thisClass}">
-          <xsl:if test="not(@title!='')">
+          <xsl:if test="not($title!='')">
             <xsl:apply-templates select="." mode="inlinePopupOptions">
               <xsl:with-param name="class" select="$thisClass"/>
             </xsl:apply-templates>
@@ -1627,7 +1655,7 @@
       </xsl:if>
       <xsl:if test="@listGroup='true'">
         <div class="{$thisClass}">
-          <xsl:if test="not(@title!='')">
+          <xsl:if test="not($title!='')">
             <xsl:apply-templates select="." mode="inlinePopupOptions">
               <xsl:with-param name="class" select="'card-body'"/>
             </xsl:apply-templates>
@@ -1655,7 +1683,7 @@
               </xsl:choose>
             </xsl:with-param>
             <xsl:with-param name="linkText" select="@linkText"/>
-            <xsl:with-param name="altText" select="@title"/>
+            <xsl:with-param name="altText" select="$title"/>
           </xsl:apply-templates>
           <xsl:text> </xsl:text>
         </div>
@@ -1678,7 +1706,7 @@
               </xsl:choose>
             </xsl:with-param>
             <xsl:with-param name="linkText" select="@linkText"/>
-            <xsl:with-param name="altText" select="@title"/>
+            <xsl:with-param name="altText" select="$title"/>
             <xsl:with-param name="stretchLink">true</xsl:with-param>
           </xsl:apply-templates>
           <xsl:text> </xsl:text>
@@ -2018,6 +2046,7 @@
         <xsl:otherwise>h3</xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
+	
     <div class="clearfix {@moduleType}">
       <xsl:apply-templates select="." mode="module-header"/>
       <div>

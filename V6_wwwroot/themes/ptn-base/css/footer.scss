@@ -61,6 +61,10 @@
             color: $footer-link-hover;
             text-decoration-color: rgba($footer-link-hover,0.5);
         }
+
+        &:focus-visible {
+            box-shadow: 0 0 0 $focus-ring-width rgba($footer-link, $focus-ring-opacity);
+        }
     }
 
     .footer-nav {
@@ -115,6 +119,14 @@
 
         &.align-center {
             text-align: center;
+        }
+    }
+
+    .socialLinks a {
+        display: inline-block;
+
+        &:focus-visible {
+            margin: 0;
         }
     }
 
