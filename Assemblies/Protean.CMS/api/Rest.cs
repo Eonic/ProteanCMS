@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Web.Configuration;
+using static Protean.Cms.dbHelper.utils;
 using static Protean.Cms.modal;
 
 namespace Protean
@@ -19,12 +20,11 @@ namespace Protean
     {
 
         public bool gbDebug = false;
-        public Cms.modal.APILog apiLog;
+        public Protean.Cms.dbHelper.utils.APILog apiLog;
 
         public rest() : base(System.Web.HttpContext.Current)
         {
             InitialiseVariables();
-
         }
 
         public void InitialiseVariables()
@@ -35,7 +35,7 @@ namespace Protean
             string rootPageIdFromConfig = string.Empty;
             try
             {
-
+                
                 // if we access base via soap the session is not available
                 if (moSession != null)
                 {
@@ -102,7 +102,7 @@ namespace Protean
             {
 
 
-                apiLog = new Cms.modal.APILog();
+                apiLog = new Protean.Cms.dbHelper.utils.APILog(oWeb.moDbHelper);
 
                 string path = moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"];
 
@@ -127,29 +127,21 @@ namespace Protean
                     jsonString = moRequest["data"];
                 }
 
-                try
-                {
-                    if (oWeb.moDbHelper.TableExists("tblAPILog") == true)
-                    {
+                apiLog.nUserId = oWeb.mnUserId;
+                apiLog.cMethodName = moCtx.Request.RequestType;
+                apiLog.cRequestedUrl = moCtx.Request.RawUrl.ToString();
+                apiLog.cResponseData = "";
+                apiLog.cResponseType = "";
+                apiLog.cPayLoad = Convert.ToString(jsonString);
+                apiLog.cRequestType = moCtx.Request.RequestType;
+                apiLog.dRequestDateTime = DateTime.Now;
+                apiLog.cSourceIP = moCtx.Request.UserHostAddress;
+                apiLog.cUserAgent = moCtx.Request.UserAgent;
+                apiLog.Add();
+               
 
-                        apiLog.nUserId = oWeb.mnUserId;
-                        apiLog.cMethodName = moCtx.Request.RequestType;
-                        apiLog.cRequestedUrl = moCtx.Request.RawUrl.ToString();
-                        apiLog.cResponseData = "";
-                        apiLog.cResponseType = "";
-                        apiLog.cPayLoad = Convert.ToString(jsonString);
-                        apiLog.cRequestType = moCtx.Request.RequestType;
-                        apiLog.dRequestDateTime = DateTime.Now;
-                        apiLog.cSourceIP = moCtx.Request.UserHostAddress;
-                        apiLog.cUserAgent = moCtx.Request.UserAgent;
-                        apiLog.nAPILogKey = oWeb.moDbHelper.AddAPILog(apiLog);
-
-                    }
-                }
-                catch
-                {
-
-                }
+               
+               
                 Newtonsoft.Json.Linq.JObject jObj = null;
                 Dictionary<string, string> paramDictionary = null;
                 if (jsonString != null)
@@ -279,14 +271,13 @@ namespace Protean
 
                 }
                 // Protean.Cms myWeb = new Cms();
-                if (oWeb.moDbHelper.TableExists("tblAPILog") == true)
-                {
+               
 
                     apiLog.cResponseData = myResponse;// ex.StackTrace;
                     apiLog.cResponseType = moCtx.Response.Status;
                     apiLog.dResponseDateTime = DateTime.Now;
-                    oWeb.moDbHelper.UpdateAPILog(apiLog);
-                }
+                apiLog.Update();
+              
                 oWeb = null;
 
             }
@@ -303,6 +294,10 @@ namespace Protean
                     moResponse.StatusCode = 200;
                 }
                 OnComponentError(this, new Tools.Errors.Error(mcModuleName, "JSONRequest", ex, sProcessInfo, 0, null, moResponse.Status, moResponse.StatusCode, "", "", ""));
+
+                apiLog.cResponseData = JsonConvert.SerializeObject(ex);
+                apiLog.cResponseType = moCtx.Response.Status;
+                apiLog.Update();
 
                 //this.OnComponentError(this, new Tools.Errors.ErrorEventArgs(this.mcModuleName, "JSONRequest", ex, sProcessInfo));
                 // returnException(mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
@@ -326,6 +321,7 @@ namespace Protean
                     myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, 0, 0, 0, myResponse);
                 }
             }
+            apiLog = null;
             PerfMon.Write();
         }
 

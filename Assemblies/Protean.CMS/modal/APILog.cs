@@ -14,7 +14,7 @@ namespace Protean
             public partial class APILog
             {
                 public APILog() { }
-                public int nAPILogKey { get; set; }
+                public long nAPILogKey { get; set; }
                 public int nUserId { get; set; }
                 public DateTime dRequestDateTime { get; set; }
                 public DateTime dResponseDateTime { get; set; }
