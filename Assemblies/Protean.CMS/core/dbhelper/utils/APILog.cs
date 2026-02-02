@@ -1,11 +1,9 @@
-﻿using Protean.Cms;
-using Protean.Tools;
+﻿using Protean.Tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;

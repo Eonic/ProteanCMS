@@ -52,7 +52,7 @@ namespace Protean
 
 
 
-                public JSONActions()
+                public JSONActions(Cms.dbHelper.utils.APILog apiLog)
                 {
                     //string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
@@ -64,7 +64,7 @@ namespace Protean
                     moAdminXfm = (Admin.AdminXforms)myWeb.getAdminXform();
                     goConfig = myWeb.moConfig;
                     moCtx = myWeb.moCtx;
-
+                    this.apiLog = apiLog;
                 }
 
                 public void Open(XmlDocument oPageXml)

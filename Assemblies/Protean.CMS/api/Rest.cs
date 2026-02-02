@@ -245,7 +245,10 @@ namespace Protean
                 }
                 if (calledType != null)
                 {
-                    var o = Activator.CreateInstance(calledType);
+                    var JSONActionsArgs = new object[1];
+                    JSONActionsArgs[0] = apiLog;
+
+                    var o = Activator.CreateInstance(calledType, JSONActionsArgs);
 
                     var args = new object[1];
                     args[0] = this;
@@ -295,7 +298,7 @@ namespace Protean
                 }
                 OnComponentError(this, new Tools.Errors.Error(mcModuleName, "JSONRequest", ex, sProcessInfo, 0, null, moResponse.Status, moResponse.StatusCode, "", "", ""));
 
-                apiLog.cResponseData = JsonConvert.SerializeObject(ex);
+                apiLog.cResponseData = apiLog.cResponseData + JsonConvert.SerializeObject(ex);
                 apiLog.cResponseType = moCtx.Response.Status;
                 apiLog.Update();
 
@@ -329,7 +332,9 @@ namespace Protean
         public class JSONActions
         {
             public Cms myWeb;
-            
+
+            public Protean.Cms.dbHelper.utils.APILog apiLog;
+
             private const string mcModuleName = "Eonic.Rest.JSONActions";
 
             public event OnErrorEventHandler OnError;
@@ -337,13 +342,20 @@ namespace Protean
            // public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
 
 
+            public JSONActions(Cms.dbHelper.utils.APILog apiLog)
+            {
+                //string ctest = "this constructor is being hit"; // for testing
+                myWeb = new Cms();
+                myWeb.InitializeVariables();
+                myWeb.Open();
+                this.apiLog = apiLog;
+            }
             public JSONActions()
             {
                 //string ctest = "this constructor is being hit"; // for testing
                 myWeb = new Cms();
                 myWeb.InitializeVariables();
                 myWeb.Open();
-
             }
 
             public bool ValidateAPICall(string sGroupName, string cSchemaName = "Role")
@@ -423,20 +435,12 @@ namespace Protean
             protected void RaiseOnError(Tools.Errors.ErrorEventArgs e)
             {
                 // Raise the event from within the declaring type so derived classes can call this helper
-                if (myWeb.moDbHelper.TableExists("tblAPILog") == true)
-                {
-                    myWeb.goAPILog.cResponseData = e.Exception.StackTrace;
-                    myWeb.goAPILog.cResponseType = myWeb.moCtx.Response.Status;
-                    myWeb.goAPILog.dResponseDateTime = DateTime.Now;
-                    if (myWeb.goAPILog.nAPILogKey == 0)
-                    {
-                        myWeb.moDbHelper.AddAPILog(myWeb.goAPILog);
-                    }
-                    else
-                    {
-                        myWeb.moDbHelper.UpdateAPILog(myWeb.goAPILog);
-                    }
-                }
+           
+                    apiLog.cResponseData = JsonConvert.SerializeObject(e); 
+                    apiLog.cResponseType = myWeb.moCtx.Response.Status;
+                    apiLog.dResponseDateTime = DateTime.Now;
+                    apiLog.Update();
+
                 OnError?.Invoke(this, e);
             }
         }

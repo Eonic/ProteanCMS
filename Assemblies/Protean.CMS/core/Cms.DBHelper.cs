@@ -48,7 +48,7 @@ namespace Protean
     {
 
         // Inherits dbTools
-         public partial class dbHelper : Tools.Database
+        public partial class dbHelper : Tools.Database
         {
 
             #region New Error Handling
@@ -96,7 +96,7 @@ namespace Protean
             #region Initialisation
 
 
-            public dbHelper( Cms aWeb) : base()
+            public dbHelper(Cms aWeb) : base()
             {
                 try
                 {
@@ -320,7 +320,7 @@ namespace Protean
                 CartCarrier = 32,
                 SubscriptionRenewal = 33,
                 CartPayment = 34,
-                OptOutAddresses=35,
+                OptOutAddresses = 35,
                 // 100-199 reserved for LMS
                 CpdLog = 100,
                 Certificate = 101,
@@ -331,7 +331,7 @@ namespace Protean
                 // indexdefkey = 201
                 nShipProdCatRelKey = 202,
                 nEmailActivityKey = 203,
-                    APILog=204
+                APILog = 204
             }
 
             public enum TableNames
@@ -372,7 +372,7 @@ namespace Protean
                 tblCartCarrier = 32,
                 tblSubscriptionRenewal = 33,
                 tblCartPayment = 34,
-                tblOptOutAddresses=35,
+                tblOptOutAddresses = 35,
 
                 // 100-199 reserved for LMS
                 tblCpdLog = 100,
@@ -384,7 +384,7 @@ namespace Protean
                 tblContentIndexDef = 200,
                 tblCartShippingProductCategoryRelations = 202,
                 tblEmailActivityLog = 203,
-                tblAPILog=204
+                tblAPILog = 204
             }
 
             public enum PermissionLevel
@@ -1675,7 +1675,7 @@ namespace Protean
                                         {
                                             ItemIdPath = nArtId + "-/";
                                             string redirectUrl = "/" + thisPrefix + "/" + ItemIdPath + Protean.Tools.Text.CleanName(sPath).Replace(" ", "-").Trim('-');
-                                            
+
 
                                             if (myWeb.moConfig["DetailPathTrailingSlash"] == "on")
                                             {
@@ -1731,8 +1731,9 @@ namespace Protean
                                                     nPageId = checkPermissionPageId;
                                                 }
                                             }
-                                            else { 
-                                            
+                                            else
+                                            {
+
                                             }
                                         }
                                         else
@@ -7339,15 +7340,15 @@ namespace Protean
                         //This if condition requires because when we logged in protean and clicked on intranet button 
                         // then valid user needs to directly logged in intranet, so we are passing userkey to set session user in intranet
                         if (myWeb.mnUserId > 0 && !string.IsNullOrEmpty(myWeb.moConfig["SharedKey"]))
-                        {                           
+                        {
                             XmlElement EncryptedUserKey = moPageXml.CreateElement("EncryptedUserKey");
-                            if(root.GetAttribute("name") !="")
+                            if (root.GetAttribute("name") != "")
                             {
                                 string username = root.GetAttribute("name");
                                 string token = Protean.Tools.AESCGM.EncryptAesGcm(username.ToString(), myWeb.moConfig["SharedKey"]);
                                 EncryptedUserKey.InnerText = HttpUtility.UrlEncode(token);
                                 root.AppendChild(EncryptedUserKey);
-                            }                            
+                            }
                         }
                     }
                     PerfMonLog("DBHelper", "GetUserXML - END");
@@ -7378,7 +7379,7 @@ namespace Protean
                     string cAdditionalColumns = "PC.cContentName as ParentName, PC.nContentKey as ParentId";
                     string specificContentTypes = null;
 
-                    myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, ref oContent, oPageDetail: ref oPageDetail, false, false, nReturnRows: (int)nTop, cOrderBy: cOrderBy, cAdditionalJoins: joinSQL,false,0,true, specificContentTypes,true,0, nCount,false, cAdditionalColumns);
+                    myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, ref oContent, oPageDetail: ref oPageDetail, false, false, nReturnRows: (int)nTop, cOrderBy: cOrderBy, cAdditionalJoins: joinSQL, false, 0, true, specificContentTypes, true, 0, nCount, false, cAdditionalColumns);
 
                     return oContent;
                 }
@@ -8164,7 +8165,7 @@ namespace Protean
                         {
                             sReturn = sReturn; // "<span class=""msg-1015"">The username was not found</span>"
                             //need to check authentication with google or microsoft user not found in proteanCMS
-                            if(oAuthProviders != null && myWeb.moRequest["SAMLResponse"] != null)
+                            if (oAuthProviders != null && myWeb.moRequest["SAMLResponse"] != null)
                             {
                                 return sReturn = "<span class=\"msg-1037\">The user <span class=\"UserName\">" + cUsername + "</span> is not authorised to access this site. Please see the site administrator.</span>";
                             }
@@ -8185,7 +8186,7 @@ namespace Protean
                             if (oAuthProviders != null)
                             {
                                 if (oAuthProviders.Count() > 0)
-                                {                                    
+                                {
                                     foreach (IauthenticaitonProvider authProvider in oAuthProviders)
                                     {
                                         Boolean bUse = false;
@@ -8194,7 +8195,7 @@ namespace Protean
                                             bUse = true;
                                         }
                                         if (bUse && authProvider.name.ToLower() == cPasswordForm.ToLower())  // this extra if added because direct checking available provider.
-                                        {                                           
+                                        {
                                             if (myWeb.moRequest["SAMLResponse"] != null && authProvider.name == cPasswordDatabase)
                                             {
                                                 bValidPassword = true;
@@ -8202,9 +8203,9 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                return sReturn = "<span class=\"msg-1036\">Login failed. Please use your <span class=\"AuthName\">" + authProvider.name + "</span> account to sign in.</span>";                                                
+                                                return sReturn = "<span class=\"msg-1036\">Login failed. Please use your <span class=\"AuthName\">" + authProvider.name + "</span> account to sign in.</span>";
                                             }
-                                        }                                                                          
+                                        }
                                     }
                                 }
                             }
@@ -8246,7 +8247,7 @@ namespace Protean
                                         if (cPasswordDatabase == cHashedPassword)
                                         {
                                             bValidPassword = true;
-                                        }                                       
+                                        }
                                         break;
                                 }
                             }
@@ -12235,23 +12236,24 @@ namespace Protean
                     string cSQL;
                     if (!string.IsNullOrEmpty(nCheckAddress))
                     {
-                        if (checkTableColumnExists("tblOptOutAddresses","status")) {
-                        bool bReturn;
-                        if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nStatus"))
+                        if (checkTableColumnExists("tblOptOutAddresses", "status"))
                         {
-                            cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE nStatus=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
-                        }
-                        else
-                        {
-                            cSQL = "SELECT EmailAddress FROM tblOptOutAddresses WHERE EmailAddress = '" + nCheckAddress + "'";
-                        }
+                            bool bReturn;
+                            if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nStatus"))
+                            {
+                                cSQL = "SELECT top 1 EmailAddress FROM tblOptOutAddresses WHERE nStatus=1 and EmailAddress = '" + nCheckAddress + "' order by 1 desc";
+                            }
+                            else
+                            {
+                                cSQL = "SELECT EmailAddress FROM tblOptOutAddresses WHERE EmailAddress = '" + nCheckAddress + "'";
+                            }
 
-                        using (var oDRe = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
-                        {
-                            bReturn = oDRe.HasRows;
-                            oDRe.Close();
-                            return bReturn;
-                        }
+                            using (var oDRe = getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
+                            {
+                                bReturn = oDRe.HasRows;
+                                oDRe.Close();
+                                return bReturn;
+                            }
                         }
                         else
                         {
@@ -12329,7 +12331,7 @@ namespace Protean
                 PerfMonLog("dbTools", "CleanDatabase");
                 try
                 {
-                    string cSQL= "spCleanDatabase";
+                    string cSQL = "spCleanDatabase";
                     ExeProcessSql(cSQL, CommandType.StoredProcedure);
                     return "Deleted 100 records from order table and inactive promotional code "; ;
 
@@ -12600,10 +12602,10 @@ namespace Protean
 
                 return element;
             }
- 
 
 
-        public void RemoveDuplicateDirRelations()
+
+            public void RemoveDuplicateDirRelations()
             {
                 try
                 {
@@ -14598,7 +14600,7 @@ namespace Protean
             public string getContentIdFromOrder(string orderRef, string ContentName)
             {
                 // Dim oDr As SqlDataReader
-               // string sSql;
+                // string sSql;
                 string nContentID = string.Empty;
 
                 string cProcessInfo = "";
@@ -14705,5 +14707,6 @@ namespace Protean
 
 
 
+        }
     }
 }

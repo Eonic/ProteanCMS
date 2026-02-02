@@ -40,14 +40,15 @@ namespace Protean
                 private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 private Cms myWeb;
                 private Cart myCart;
-                
-                public JSONActions()
+
+                public JSONActions(Cms.dbHelper.utils.APILog ApiLog)
                 {
                     // string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
                     myWeb.InitializeVariables();
                     myWeb.Open();
                     myCart = new Cart(ref myWeb);
+                    this.apiLog = ApiLog;
 
                 }
 

@@ -40,13 +40,14 @@ namespace Protean
                 private Protean.Cms.Cart myCart;
                 public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
                 public string cleanUploadedPaths;
-                public JSONActions()
+                public JSONActions(Cms.dbHelper.utils.APILog ApiLog)
                 {
                     //string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
                     myWeb.InitializeVariables();
                     myWeb.Open();
                     myCart = new Cms.Cart(ref myWeb);
+                    this.apiLog = ApiLog;
 
                 }
 
