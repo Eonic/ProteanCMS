@@ -461,7 +461,7 @@ namespace Protean
                 {
                     string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
                     if ((int)myCart.mnProcessId > 4 &&
-                        !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
+                        !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(mcBlockCartUpdate))
                     {
                         return "";
                     }
