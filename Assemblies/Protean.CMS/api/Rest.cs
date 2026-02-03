@@ -138,10 +138,11 @@ namespace Protean
                 apiLog.cSourceIP = moCtx.Request.UserHostAddress;
                 apiLog.cUserAgent = moCtx.Request.UserAgent;
                 apiLog.Add();
-               
+                //apiLog.nAPILogKey= apiLog.Add();
 
-               
-               
+
+
+
                 Newtonsoft.Json.Linq.JObject jObj = null;
                 Dictionary<string, string> paramDictionary = null;
                 if (jsonString != null)
@@ -278,8 +279,8 @@ namespace Protean
 
                     apiLog.cResponseData = myResponse;// ex.StackTrace;
                     apiLog.cResponseType = moCtx.Response.Status;
-                    apiLog.dResponseDateTime = DateTime.Now;
-                apiLog.Update();
+                    //apiLog.dResponseDateTime = DateTime.Now;
+                    apiLog.Update();
               
                 oWeb = null;
 
@@ -438,7 +439,7 @@ namespace Protean
            
                     apiLog.cResponseData = JsonConvert.SerializeObject(e); 
                     apiLog.cResponseType = myWeb.moCtx.Response.Status;
-                    apiLog.dResponseDateTime = DateTime.Now;
+                    //apiLog.dResponseDateTime = DateTime.Now;
                     apiLog.Update();
 
                 OnError?.Invoke(this, e);

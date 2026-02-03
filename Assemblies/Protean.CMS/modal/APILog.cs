@@ -17,7 +17,7 @@ namespace Protean
                 public long nAPILogKey { get; set; }
                 public int nUserId { get; set; }
                 public DateTime dRequestDateTime { get; set; }
-                public DateTime dResponseDateTime { get; set; }
+                public long dResponseTimeDiff { get; set; }
                 public string cRequestedUrl { get; set; }
                 public string cMethodName { get; set; }
                 public string cPayLoad { get; set; }

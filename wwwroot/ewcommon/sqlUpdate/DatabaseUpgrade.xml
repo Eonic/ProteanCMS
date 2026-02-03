@@ -698,6 +698,8 @@
 			  <Sub3 Number="0">
 				  <Action Order="0" Type="Drop" ObjectType="Table" ObjectName="tblAPILog"/>
 				  <Action Order="1" Type="File" ObjectType="File" ObjectName="/v5/6.1.56.0/tblAPILog.sql"/>
+				  <Action Order="2" Type="Drop" ObjectType="Procedure" ObjectName="UpdateAPILog"/>
+				  <Action Order="3" Type="File" ObjectType="File" ObjectName="/v5/6.1.56.0/UpdateAPILog.sql"/>
 			  </Sub3>
 		  </Sub2>
 	  </Sub1>

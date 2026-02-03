@@ -39,10 +39,10 @@ namespace Protean
                         get { return apiLog.dRequestDateTime; }
                         set { apiLog.dRequestDateTime = value; }
                     }
-                    public DateTime dResponseDateTime
+                    public long dResponseTimeDiff
                     {
-                        get { return apiLog.dResponseDateTime; }
-                        set { apiLog.dResponseDateTime = value; }
+                        get { return apiLog.dResponseTimeDiff; }
+                        set { apiLog.dResponseTimeDiff = value; }
                     }
                     public string cRequestedUrl
                     {
@@ -109,7 +109,7 @@ namespace Protean
                     }
 
 
-                    public Int64 Add()
+                    public void Add()
                     {
                         myDbh.PerfMonLog("DBHelper", "AddAPILog ([args])");
                         string sSql;
@@ -129,18 +129,18 @@ namespace Protean
                                     throw new Exception("Api log not saved");
 
                                 }
-
-                                return Convert.ToInt64(nId);
+                                apiLog.nAPILogKey= Convert.ToInt64(nId);
+                                //return Convert.ToInt64(nId);
                             }
-                            else {
-                                return 0;
-                            }
+                            //else {
+                            //   // return 0;
+                            //}
                         }
 
                         catch (Exception ex)
                         {
                             myDbh.OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddAPILog", ex, cProcessInfo));
-                            return 0;
+                            //return 0;
                         }
                     }
 
@@ -156,10 +156,17 @@ namespace Protean
                                 if (apiLog.nAPILogKey != 0)
                                 {
 
-                                    sSql = "UPDATE [dbo].[tblAPILog]" + "SET [cResponseData] = '" + Tools.Database.SqlFmt(apiLog.cResponseData) + "', [cResponseType] = '" + Tools.Database.SqlFmt(apiLog.cResponseType) + "', [dResponseDateTime] = '" + apiLog.dResponseDateTime + "' WHERE [nAPILogKey] = " + Convert.ToString(apiLog.nAPILogKey);
+                                    //sSql = "UPDATE [dbo].[tblAPILog]" + "SET [cResponseData] = '" + Tools.Database.SqlFmt(apiLog.cResponseData) + "', [cResponseType] = '" + Tools.Database.SqlFmt(apiLog.cResponseType) + "', [dResponseDateTime] = '" + apiLog.dResponseDateTime + "' WHERE [nAPILogKey] = " + Convert.ToString(apiLog.nAPILogKey);
+                                    sSql = "UpdateAPILog";
+                                    var arrParms = new System.Collections.Hashtable();
+                                  
 
+                                    arrParms.Add("@APILogKey", apiLog.nAPILogKey);
+                                    arrParms.Add("@ResponseData", apiLog.cResponseData);
+                                    arrParms.Add("@ResponseType", apiLog.cResponseType);
+                                    myDbh.ExeProcessSql(sSql,System.Data.CommandType.StoredProcedure, arrParms);
 
-                                    myDbh.ExeProcessSql(sSql);
+                                  //  myDbh.ExeProcessSql(sSql);
                                     return true;
                                 }
                                 else

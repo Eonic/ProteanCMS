@@ -1,10 +1,10 @@
 
 
 CREATE TABLE [dbo].[tblAPILog](
-	[nAPILogKey] [int] IDENTITY(1,1) NOT NULL,
+	[nAPILogKey] [bigint] IDENTITY(1,1) NOT NULL,
 	[nUserId] [int] NULL,
 	[dRequestDateTime] [datetime] NULL,
-	[dResponseDateTime] [datetime] NULL,
+	[dResponseTimeDiff] [bigint] NULL,
 	[cRequestedUrl] [varchar](300) NULL,
 	[cMethodName] [varchar](100) NULL,
 	[cPayLoad] [varchar](max) NULL,
