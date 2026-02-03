@@ -9,8 +9,8 @@ Public Class Handler : Implements IHttpHandler
         context.Response.ContentType = "text/plain"
         Dim oWeb As New Protean.Cms
 
-
-        Dim pa As New Protean.Cms.Admin.JSONActions
+        Dim apiLog = New Protean.Cms.dbHelper.utils.APILog(oWeb.moDbHelper)
+        Dim pa As New Protean.Cms.Admin.JSONActions(apiLog)
 
 
         Dim type As Type = pa.GetType()
