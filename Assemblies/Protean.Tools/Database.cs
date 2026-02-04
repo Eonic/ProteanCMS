@@ -192,7 +192,12 @@ namespace Protean.Tools
                 // cReturn &= "; Pwd=" & DatabasePassword
                 // cReturn &= ";"
                 // Case Else
-                cReturn = "Data Source=" + DatabaseServer;
+                if (DatabaseServer.StartsWith("(localdb)")) {
+                    cReturn = $"Server={DatabaseServer};Database={DatabaseName};Trusted_Connection=True;MultipleActiveResultSets=true;";
+                }
+                else { 
+
+                    cReturn = "Data Source=" + DatabaseServer;
                 cReturn += ";Initial Catalog=" + DatabaseName;
                 cReturn += ";User ID=" + DatabaseUser;
                 cReturn += ";password=" + DatabasePassword;
@@ -206,8 +211,8 @@ namespace Protean.Tools
                 }
                 if (bAsync)
                     cReturn += ";Asynchronous Processing=true";
-                // End Select
-
+                    // End Select
+                }
                 return cReturn;
             }
         }
@@ -218,12 +223,18 @@ namespace Protean.Tools
             {
                 try
                 {
-                    oConn.Open();
-                    oConn.Close();
-                    return true;
+                    if (oConn.State == ConnectionState.Open) {
+                        return true;
+                    }
+                    else { 
+                        oConn.Open();
+                        oConn.Close();
+                        return true;
+                    }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    ErrorMsg = ex.Message;
                     return false;
                 }
             }

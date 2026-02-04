@@ -119,12 +119,10 @@ namespace Protean
                         gbVersionControl = myWeb.gbVersionControl;
                     }
 
-                    // oConn.Open();
+                    //oConn.Open();
                     if (!ValidateDatabaseConnectionApplicationCached(forceRevalidation: false)) {
                         throw new InvalidOperationException("Database connection is not available");
                     };
-
-
                 }
 
                 catch (Exception ex)
@@ -295,10 +293,9 @@ namespace Protean
                     }
 
                     // Perform validation
-                    using (var oDB = new Tools.Database())
-                    {
+                   
 
-                        if (!oDB.ConnectionValid)
+                        if (!ConnectionValid)
                         {
                             // Cache failure
                             if (goApp != null)
@@ -309,7 +306,6 @@ namespace Protean
                             throw new InvalidOperationException(
                                 $"Database connection validation failed.");
                         }
-                    }
 
                     // Cache success with timestamp
                     if (goApp != null)
@@ -13503,7 +13499,8 @@ namespace Protean
                             {
                                 cProcessInfo += column.ToString() + " - " + instanceElmt.SelectSingleNode("*/" + column.ToString()).InnerXml;
                                 // 14/05/19 ts remed out as recent change was preventing updates.
-                                if (!column.AllowDBNull && instanceElmt.SelectSingleNode("*/" + column.ToString()) != null)
+                                //if (!column.AllowDBNull && instanceElmt.SelectSingleNode("*/" + column.ToString()) != null)
+                                if (!(column.AllowDBNull & instanceElmt.SelectSingleNode("*/" + column.ToString()) is null))
                                 {
                                     oRow[column] = convertDtXMLtoSQL( column.DataType, instanceElmt.SelectSingleNode("*/" + column.ToString()), column.ToString().Contains("Xml"));
                                 }
