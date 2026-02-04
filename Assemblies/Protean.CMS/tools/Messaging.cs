@@ -739,7 +739,6 @@ namespace Protean
                             {
                                 return failureMessage + ": Email address provided is invalid";
                             }
-
                         default:
                             {
                                 return failureMessage + ": Email addresses provided are invalid";

@@ -1814,15 +1814,20 @@ namespace Protean
                                 BodyElmt.SetAttribute("subjectLine", subjectLine);
 
                                 Cms.dbHelper argodbHelper = null;
-                                oMsg.emailer(BodyElmt, xsltPath, fromName, fromEmail, email, subjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed", recipientName, ccEmail1, bccEmail1);
+
+                                object mailResponse = oMsg.emailer(BodyElmt, xsltPath, fromName, fromEmail, email, subjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed", recipientName, ccEmail1, bccEmail1);
+                                string sResponse = mailResponse.ToString();
+                                XmlNode grpNode = moXformElmt.SelectSingleNode("descendant-or-self::group[1]");
+                                addNote(ref grpNode, noteTypes.Alert, sResponse, true, "alert-success");
+
+
 
                                 if (myWeb.moSession["lastPage"] != null)
                                 {
-                                    myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
+                                    if (sResponse == "Message Sent") { 
+                                        myWeb.msRedirectOnEnd = myWeb.moSession["lastPage"].ToString();
+                                    }
                                 }
-
-
-
                             }
                         }
 
