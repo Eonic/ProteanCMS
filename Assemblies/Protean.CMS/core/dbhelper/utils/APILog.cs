@@ -20,7 +20,7 @@ namespace Protean
             {
                 public class APILog
                 {
-                    Protean.Cms.modal.APILog apiLog;
+                    Protean.Cms.model.APILog apiLog;
                     dbHelper myDbh;
                     Boolean isActive = false;
 
@@ -88,7 +88,7 @@ namespace Protean
 
                     public APILog(dbHelper myDbh)
                     {
-                        apiLog = new Protean.Cms.modal.APILog();
+                        apiLog = new Protean.Cms.model.APILog();
                         this.myDbh = myDbh;
                         if (Convert.ToBoolean(myDbh.myWeb.goApp["apilog"]) == true)
                         {

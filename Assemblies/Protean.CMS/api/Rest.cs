@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Text;
 using System.Web.Configuration;
 using static Protean.Cms.dbHelper.utils;
-using static Protean.Cms.modal;
+using static Protean.Cms.model;
 
 namespace Protean
 {
