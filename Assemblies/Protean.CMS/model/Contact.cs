@@ -28,7 +28,7 @@ namespace Protean
                 }
             }
         }
-        public partial class modal
+        public partial class model
         {
             public class Contact
             {

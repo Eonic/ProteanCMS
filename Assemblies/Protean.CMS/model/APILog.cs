@@ -9,7 +9,7 @@ namespace Protean
     public partial class Cms
     {
 
-        public partial class modal
+        public partial class model
         {
             public partial class APILog
             {

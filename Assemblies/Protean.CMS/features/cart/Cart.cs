@@ -12167,7 +12167,7 @@ namespace Protean
                 try
                 {
                     Protean.Cms.dbHelper dbHelper = new Cms.dbHelper( myWeb);
-                    Protean.Cms.modal.Contact contact = new Cms.modal.Contact();
+                    Protean.Cms.model.Contact contact = new Cms.model.Contact();
                     if (!string.IsNullOrEmpty(cEmailAddress))
                     {
                         DataSet oDS;
