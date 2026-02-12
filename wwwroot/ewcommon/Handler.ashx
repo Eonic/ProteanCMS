@@ -9,8 +9,10 @@ Public Class Handler : Implements IHttpHandler
 
     Public Sub ProcessRequest(ByVal context As HttpContext) Implements IHttpHandler.ProcessRequest
         context.Response.ContentType = "text/plain"
+        Dim oWeb As New Protean.Cms
 
-        Dim jsa As New Protean.Cms.Cart.JSONActions
+        Dim apiLog = New Protean.Cms.dbHelper.utils.APILog(oWeb.moDbHelper)
+        Dim jsa As New Protean.Cms.Cart.JSONActions(apiLog)
         context.Response.Write(jsa.GetType().ToString())
 
         ' Dim calledType As Type

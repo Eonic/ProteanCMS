@@ -1334,6 +1334,107 @@ namespace Protean
 
             }
 
+            public void CompleteOrder(XmlDocument oCartXML, ref XmlElement oContentElmt, ref XmlElement oElmt)
+            {
+                string cProcessInfo = "Cart.CompleteOrder";
+                try
+                {
+
+                    oContentElmt = (XmlElement)CreateCartElement(oCartXML);
+                    oElmt = (XmlElement)oContentElmt.FirstChild;
+                    PersistVariables();
+
+                    if (oElmt.FirstChild is null)
+                    {
+                        GetCart(ref oElmt);
+                    }
+
+                    if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
+                    {
+
+                        if (moCartConfig["StockControl"] == "on")
+                        {
+                            UpdateStockLevels(ref oElmt);
+                        }
+                        UpdateGiftListLevels();
+                        addDateAndRef(ref oElmt);
+                        if (myWeb.mnUserId > 0)
+                        {
+                            var userXml = myWeb.moDbHelper.GetUserXML((long)myWeb.mnUserId, false);
+                            if (userXml != null)
+                            {
+                                XmlElement cartElement = (XmlElement)oContentElmt.SelectSingleNode("Cart");
+                                if (cartElement != null)
+                                {
+                                    cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, true));
+                                }
+                            }
+                        }
+
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["Settlement"], "true", false)))
+                        {
+                            // modifiy the cartXml in line with settlement
+                            if (mnProcessId == (int)cartProcess.DepositPaid)
+                            {
+                                mnProcessId = (short)cartProcess.Complete;
+
+                            }
+                            myWeb.moSession["Settlement"] = (object)null;
+                        }
+
+
+
+                        if (mnProcessId == (int)cartProcess.DepositPaid)
+                        {
+                            AddToLists("Deposit", ref oContentElmt);
+                        }
+                        else
+                        {
+                            AddToLists("Invoice", ref oContentElmt);
+                        }
+
+                        purchaseActions(oContentElmt);
+                        // update the cart if purchase actions have changed it
+                        // GetCart(oElmt)
+                        // done for ammerdown as we have removed a product.
+
+
+
+                        if (myWeb.mnUserId > 0)
+                        {
+                            if (moSubscription != null)
+                            {
+                                moSubscription.AddUserSubscriptions(mnCartId, myWeb.mnUserId, ref oContentElmt, mnPaymentId);
+                            }
+                        }
+
+                        if (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] != null)
+                        {
+                            if ((oElmt.GetAttribute("statusId") ?? "") != (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] ?? ""))
+                            {
+                                emailReceipts(ref oContentElmt);
+                            }
+                        }
+                        else
+                        {
+                            emailReceipts(ref oContentElmt);
+                        }
+
+
+                        moDiscount.DisablePromotionalDiscounts();
+
+                    }
+
+
+
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, " CompleteOrder", ex, "", cProcessInfo, gbDebug);
+                   
+                }
+            }
+
             public virtual void apply()
             {
                 myWeb.PerfMon.Log("Cart", "apply");
@@ -2054,7 +2155,20 @@ namespace Protean
                                 {
                                     GetCart(ref oElmt);
 
-                                    CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
+                                    if (oElmt != null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
+                                    {
+                                        CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
+                                    }
+                                    else
+                                    {
+                                        if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
+                                        {
+
+                                            addDateAndRef(ref oElmt);
+                                           // purchaseActions(oContentElmt);
+                                        }
+                                    }
+
 
                                     if (mbQuitOnShowInvoice)
                                     {
@@ -7253,7 +7367,7 @@ namespace Protean
                 try
                 {
                     Protean.Cms.dbHelper dbHelper = new Cms.dbHelper( myWeb);
-                    Protean.Cms.modal.Contact contact = new Cms.modal.Contact();
+                    Protean.Cms.model.Contact contact = new Cms.model.Contact();
                     if (!string.IsNullOrEmpty(cEmailAddress))
                     {
                         DataSet oDS;

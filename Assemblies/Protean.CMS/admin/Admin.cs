@@ -5841,6 +5841,9 @@ from tblContentIndexDef";
                             long nSubscriptionId = Convert.ToInt16(myWeb.moRequest["id"]);
 
                             string AlertType = "PaymentFailed";
+                            if (!String.IsNullOrEmpty(myWeb.moRequest["EmailType"])) {
+                                AlertType = myWeb.moRequest["EmailType"];
+                            }
                             string AlertXformPath = "xforms/EmailAlert/EmailAlert.xml";
                             string EmailContentXsltPath = "/xsl/subscription/emailcontent.xsl";
                             string Subject = "Subscription Renewal";

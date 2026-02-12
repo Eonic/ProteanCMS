@@ -10,7 +10,7 @@
 							</Message>
 						</Items>
 					</oBodyXML>
-					<xsltPath>xsl/email/SubscriptionAlert.xsl</xsltPath>
+					<xsltPath>/xsl/email/SubscriptionAlert.xsl</xsltPath>
 					<fromName></fromName>
 					<fromEmail></fromEmail>
 					<recipientName></recipientName>

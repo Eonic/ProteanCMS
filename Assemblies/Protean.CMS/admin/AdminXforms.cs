@@ -1790,8 +1790,12 @@ namespace Protean
 
                         if (base.isSubmitted() || autosend)
                         {
-                            // MyBase.updateInstanceFromRequest()
-                            base.validate();
+                            if (!autosend) {
+                                //this was commented out so does not update this breaks why was this done?
+                                //If autosend there is not request to update from
+                                base.updateInstanceFromRequest();
+                            }
+                                                  base.validate();
                             if (base.valid)
                             {
                                 NameValueCollection moMailConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");

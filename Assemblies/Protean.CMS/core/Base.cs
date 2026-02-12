@@ -130,6 +130,8 @@ namespace Protean
                 {
                     moCtx = Context;
                 }
+
+                goApp = moCtx.Application;
                 moRequest = moCtx.Request;
                 moResponse = moCtx.Response;
                 moSession = moCtx.Session;

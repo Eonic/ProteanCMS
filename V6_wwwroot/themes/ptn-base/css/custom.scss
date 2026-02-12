@@ -940,11 +940,11 @@ section.stretchBG {
 div[class$="List"] {
     //@include listItem-spacing;
     .list-image-link {
-        overflow: hidden;
+       // overflow: hidden;
     }
 
     .btn-custom {
-        margin-top: 1rem;
+       // margin-top: 1rem;
         border-color: $btn-list-btn;
     }
     /*.btn-custom {
@@ -1057,7 +1057,7 @@ div[class$="List"] {
 .nobox .listItem,
 .relatedcontent .listItem {
     margin-top: 0;
-    margin-bottom: $grid-gutter-height;
+    margin-bottom: var(--bs-gutter-x);
 
     .lIinner {
         @include boxed-listItem;
