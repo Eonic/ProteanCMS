@@ -1375,7 +1375,7 @@ namespace Protean
 
             #region Eonicweb Specific
 
-            public int setContentLocationByRef(string cStructName, int nContentId, int bPrimary, int bCascade)
+            public long setContentLocationByRef(string cStructName, int nContentId, int bPrimary, int bCascade)
             {
                 try
                 {

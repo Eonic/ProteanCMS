@@ -4642,11 +4642,11 @@ namespace Protean
                 return default;
 
             }
-            public int getAuditId(int nStatus = 1, long nDirId = 0L, string cDescription = "", object dPublishDate = null, object dExpireDate = null, object dInsertDate = null, object dUpdateDate = null)
+            public long getAuditId(int nStatus = 1, long nDirId = 0L, string cDescription = "", object dPublishDate = null, object dExpireDate = null, object dInsertDate = null, object dUpdateDate = null)
             {
                 PerfMonLog("DBHelper", "getAuditId");
                 string sSql;
-                int nId;
+                long nId;
                 long nUserId;
 
                 if (nDirId == 0L)
@@ -4674,7 +4674,7 @@ namespace Protean
                     // nUserId & "," & sqlDate(dUpdateDate) & ", " & nUserId & "," & nStatus & ", '" & cDescription & "')"
                     sSql = $"insert into tblAudit (dPublishDate, dExpireDate, dInsertDate, nInsertDirId, dUpdateDate, nUpdateDirId, nStatus, cDescription) Values ({SqlDate(dPublishDate)}, {SqlDate(dExpireDate)},{SqlDate(dInsertDate, true)}, {nUserId},{SqlDate(dUpdateDate, true)}, {nUserId},{nStatus}, '{cDescription}')";
                     // Protean.Tools.Database.SqlDate
-                    nId = Convert.ToInt16(GetIdInsertSql(sSql));
+                    nId = Convert.ToInt64(GetIdInsertSql(sSql));
 
                     return nId;
                 }
@@ -5223,7 +5223,7 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    int auditId = getAuditId((int)nStatus, cDescription: cDescription, dPublishDate: dPublishDate, dExpireDate: dExpireDate);
+                    long auditId = getAuditId((int)nStatus, cDescription: cDescription, dPublishDate: dPublishDate, dExpireDate: dExpireDate);
                     sSql = $@"Insert Into tblContentStructure (nStructParId, cStructForiegnRef, cStructName, cStructDescription, cStructLayout, nAuditId, nStructOrder, nVersionParId, cVersionLang, cVersionDescription, nVersionType)
                         values ({nStructParId}, '{SqlFmt(cStructForiegnRef)}', '{SqlFmt(cStructName)}', '{SqlFmt(cStructDescription)}', '{SqlFmt(cStructLayout)}', {auditId}, {nOrder}, {nVersionParId}, '{cVersionLang}', '{cVersionDescription}', {(int)nVersionType})";
 
@@ -6029,7 +6029,7 @@ namespace Protean
 
             }
 
-            public int setContentLocation(long nStructId, long nContentId, bool bPrimary = false, bool bCascade = false, bool bOveridePrimary = false, string cPosition = "", bool bUpdatePosition = true, long nDisplayOrder = 0L)
+            public long setContentLocation(long nStructId, long nContentId, bool bPrimary = false, bool bCascade = false, bool bOveridePrimary = false, string cPosition = "", bool bUpdatePosition = true, long nDisplayOrder = 0L)
             {
                 PerfMonLog("DBHelper", "setContentLocation");
                 // this is so we can save some content without trying to change any locations
@@ -6039,7 +6039,7 @@ namespace Protean
                 string sSql;
                 DataSet oDs;
                 DataRow oRow;
-                string nId;
+                long nId;
                 string cProcessInfo = "";
                 bool bReorderLocations = false;
                 try
@@ -6082,7 +6082,7 @@ namespace Protean
                     }
 
                     updateDataset(ref oDs, "ContentLocation", false);
-                    nId = Convert.ToInt16(ExeProcessSqlScalar(sSql)).ToString();
+                    nId = Convert.ToInt64(ExeProcessSqlScalar(sSql));
 
                     if (bReorderLocations)
                     {
@@ -6094,7 +6094,7 @@ namespace Protean
                             }
                         }
                     }
-                    return Convert.ToInt16(nId);
+                    return nId;
                 }
                 catch (Exception ex)
                 {
@@ -6126,7 +6126,7 @@ namespace Protean
                     {
                         int primaryVal = bPrimary ? 1 : 0;
                         int cascadeVal = bCascade ? 1 : 0;
-                        int auditId = getAuditId();
+                        long auditId = getAuditId();
                         sSql = $"INSERT INTO tblContentLocation (nStructId, nContentId, bPrimary, bCascade, nDisplayOrder, nAuditId) VALUES ({nStructId}, {nContentId}, {primaryVal}, {cascadeVal}, 0, {auditId});select scope_identity()";
                     }
                     else
@@ -9928,7 +9928,7 @@ namespace Protean
             // End Try
             // End Function
 
-            public int setContentLocationByRef(string cStructFRef, int nContentId, int bPrimary, int bCascade)
+            public long setContentLocationByRef(string cStructFRef, int nContentId, int bPrimary, int bCascade)
             {
 
                 PerfMonLog("DBHelper", "setContentLocationByRef", $"ref={cStructFRef} nContentId={nContentId}");
@@ -9941,7 +9941,7 @@ namespace Protean
                     // oDr = getDataReader("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")
                     using (var oDr = getDataReaderDisposable($"select nStructKey from tblContentStructure where cStructForiegnRef like '{SqlFmt(cStructFRef)}'"))  // Done by nita on 6/7/22
                     {
-                        int lastloc = 0;
+                        long lastloc = 0;
 
                         while (oDr.Read())
                         {
@@ -9968,7 +9968,7 @@ namespace Protean
             }
 
 
-            public int setContentLocationByRef(string cStructFRef, int nContentId, int bPrimary, int bCascade, string cPosition, long nDisplayOrder = 0L)
+            public long setContentLocationByRef(string cStructFRef, int nContentId, int bPrimary, int bCascade, string cPosition, long nDisplayOrder = 0L)
             {
 
                 PerfMonLog("DBHelper", "setContentLocationByRef", $"ref={cStructFRef} nContentId={nContentId}");
@@ -9982,7 +9982,7 @@ namespace Protean
                                      // oDr = getDataReader("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")
                     using (var oDr = getDataReaderDisposable($"select nStructKey from tblContentStructure where cStructForiegnRef like '{SqlFmt(cStructFRef)}'"))  // Done by nita on 6/7/22
                     {
-                        int lastloc = 0;
+                        long lastloc = 0;
                         if (oDr != null)
                         {
                             while (oDr.Read())
@@ -14110,7 +14110,7 @@ namespace Protean
                     oInstance.AppendChild(oElmt);
                     if (!(nPaymentMethodKey > 0L))
                     {
-                        int nAudit = getAuditId(0, (long)myWeb.mnUserId, "Payment", DateTime.Now, dExpire, DateTime.Now, DateTime.Now);
+                        long nAudit = getAuditId(0, (long)myWeb.mnUserId, "Payment", DateTime.Now, dExpire, DateTime.Now, DateTime.Now);
 
                         XmlNode argoNode5 = oElmt;
                         addNewTextNode("nAuditId", ref argoNode5, nAudit.ToString());

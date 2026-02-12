@@ -4304,7 +4304,7 @@ namespace Protean
                         oPageElmt = moPageXML.DocumentElement;
                     }
 
-                    if (!(myWeb.mnUserId == 0))
+                    if (!(mnAdminUserId == 0))
                     {
                         // oPageElmt.AppendChild(oWeb.GetUserXML())
                         if (bLoadStructure)
