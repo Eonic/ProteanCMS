@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
+using System.Xml.XPath;
 using static Protean.stdTools;
 
 namespace Protean
@@ -967,51 +968,79 @@ namespace Protean
                                 break;
                         }
                         // Looking for true() or false()
-                        if (bBindValue)
+                        object myEval = xPathNav2.Evaluate(expr);
+
+                        // Convert to boolean - if it returns a value (not null/empty), treat as true
+                        bool isRequired = false;
+                        if (myEval != null)
+                        {
+                            if (myEval is bool)
                             {
-                                // Look for data
-                                if (objValue.ToString() == "")
-                                {
-                                    // No data - error message
-                                    bIsValid = false;
-                                    bIsThisBindValid = false;
-                                    string sRef = oBindElmt.GetAttribute("id");
-                                    string validationMsg = "";
-                                    if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg") != null)
+                                isRequired = (bool)myEval;
+                            }
+                            else if (myEval is XPathNodeIterator)
+                            {
+                                XPathNodeIterator nodeIterator = (XPathNodeIterator)myEval;
+                                if (nodeIterator.Count > 0) {
+                                    isRequired = true;
+                                }
+                            }
+                            else if (myEval is string)
+                            {
+                                string evalStr = myEval.ToString().Trim().ToLower();
+                                // If it's "true" or any non-empty value, treat as true
+                                isRequired = !string.IsNullOrEmpty(evalStr) && evalStr != "false";
+                            }
+                            else
+                            {
+                                // For any other type, try standard conversion
+                                isRequired = Conversions.ToBoolean(myEval);
+                            }
+                        }
+
+                        if (isRequired)
+                        {
+
+                            // Look for data
+                            if (objValue.ToString() == "")
+                            {
+                                // No data - error message
+                                bIsValid = false;
+                                bIsThisBindValid = false;
+                                string sRef = oBindElmt.GetAttribute("id");
+                                string validationMsg = "";
+                                if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg") != null) {
+                                    validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg").InnerText;
+                                }
+                                if (validationMsg == "") {
+                                    if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label") != null)
                                     {
-                                        validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/@validationMsg").InnerText;
-                                    }
-                                    if (validationMsg == "")
-                                    {
-                                        if (moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label") != null)
+                                        validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerText;
+                                        if (validationMsg == "")
                                         {
-                                            validationMsg = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerText;
-                                            if (validationMsg == "")
-                                            {
-                                                string innerHtml = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerXml;
-                                                validationMsg = $"<span class=\"term4053\">Please Complete</span>&#160;{innerHtml}";
-                                            }
-                                            else
-                                            {
-                                                validationMsg = $"<span class=\"term4053\">Please Complete</span>&#160;{validationMsg}";
-                                            }
+                                            string innerHtml = moXformElmt.SelectSingleNode("descendant-or-self::*[(@ref='" + sRef + "' or @bind='" + sRef + "') and not(@class='hidden')]/label").InnerXml;
+                                            validationMsg = $"<span class=\"term4053\">Please Complete</span>&#160;{innerHtml}";
                                         }
                                         else
                                         {
-                                            //control not found so add error to form.
-                                            cValidationError = $"<span class=\"term4053\">Control not found : Please Complete </span>&#160;{sRef}";
+                                            validationMsg = $"<span class=\"term4053\">Please Complete</span>&#160;{validationMsg}";
                                         }
                                     }
-                                    if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=\"msg-1007\">" + validationMsg + " </span>") == false)
-                                    {
-                                        missedError = true;
-                                    }
-                                    if (cValidationError.Contains(validationMsg) != true)
-                                    {
-                                        cValidationError += validationMsg;
+                                    else {
+                                        //control not found so add error to form.
+                                        cValidationError = $"<span class=\"term4053\">Control not found : Please Complete </span>&#160;{sRef}";
                                     }
                                 }
+                                if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=\"msg-1007\">" + validationMsg + " </span>") == false)
+                                {
+                                    missedError = true;
+                                }
+                                if (cValidationError.Contains(validationMsg) != true)
+                                {
+                                    cValidationError += validationMsg;
+                                }
                             }
+                        }
                     }
 
                     // case for constraint
