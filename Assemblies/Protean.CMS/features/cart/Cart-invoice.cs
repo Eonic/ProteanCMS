@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using static Lucene.Net.QueryParsers.QueryParser;
 using static Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.stdTools;
@@ -87,7 +88,7 @@ namespace Protean
                             AddToLists("Invoice", ref oContentElmt);
                         }
 
-                        purchaseActions(oContentElmt, false);
+                        purchaseActions(oContentElmt);
                         // update the cart if purchase actions have changed it
                         // GetCart(oElmt)
                         // done for ammerdown as we have removed a product.

@@ -1066,7 +1066,7 @@ namespace Protean
                     catch (Exception ex)
                     {
                         RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "SaveToSellerNotes", ex, ""));
-                        return Conversions.ToBoolean(ex.Message);
+                        return Convert.ToBoolean(ex.Message);
                     }
                 }
 
@@ -1171,7 +1171,7 @@ namespace Protean
 
                         bool bIsAuthorized = false;
                         string validGroup = jObj["validGroup"] != null ? (string)jObj["validGroup"] : "";
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Convert.ToString(validGroup));
+                        bIsAuthorized = this.ValidateAPICall(Convert.ToString(validGroup));
 
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
@@ -1225,7 +1225,7 @@ namespace Protean
                         string josResult = "";
                         bool bIsAuthorized = false;
                         string validGroup = jObj["validGroup"] != null ? (string)jObj["validGroup"] : "";
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Convert.ToString(validGroup));
+                        bIsAuthorized = this.ValidateAPICall(Convert.ToString(validGroup));
 
                         // If bIsAuthorized = False Then Return "Error -Authorization Failed"
 
@@ -1263,7 +1263,7 @@ namespace Protean
                     {
                         bool bIsAuthorized = false;
                         string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Convert.ToString(cValidGroup));
+                        bIsAuthorized = this.ValidateAPICall(Convert.ToString(cValidGroup));
 
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
@@ -1325,7 +1325,7 @@ namespace Protean
                         string josResult = "";
                         bool bIsAuthorized = false;
                         string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Convert.ToString(cValidGroup));
+                        bIsAuthorized = this.ValidateAPICall(Convert.ToString(cValidGroup));
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
                         if(jObj["cEmailAddress"] != null && jObj["cEmailAddress"].ToString()!="")

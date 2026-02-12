@@ -29,7 +29,7 @@ namespace Protean
                         set { apiLog.nAPILogKey = value; }
                     }
 
-                    public int nUserId
+                    public long nUserId
                     {
                         get { return apiLog.nUserId; }
                         set { apiLog.nUserId = value; }
