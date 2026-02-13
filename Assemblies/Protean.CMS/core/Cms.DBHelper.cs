@@ -5434,7 +5434,7 @@ namespace Protean
                                     foreach (DataRow currentORow in oDs.Tables[getTable(objectType)].Rows)
                                     {
                                         oRow = currentORow;
-                                        if (Equals(oRow[sKeyField], nKey))
+                                        if (Equals(Convert.ToInt64(oRow[sKeyField]), nKey))
                                         {
                                             oRow[getOrderFname(objectType)] = 1;
                                         }
@@ -5452,7 +5452,7 @@ namespace Protean
                                     foreach (DataRow currentORow1 in oDs.Tables[getTable(objectType)].Rows)
                                     {
                                         oRow = currentORow1;
-                                        if (Equals(oRow[sKeyField], nKey))
+                                        if (Equals(Convert.ToInt64(oRow[sKeyField]), nKey))
                                         {
                                             oRow[getOrderFname(objectType)] = RecCount;
                                         }
@@ -5470,7 +5470,7 @@ namespace Protean
                                     foreach (DataRow currentORow2 in oDs.Tables[getTable(objectType)].Rows)
                                     {
                                         oRow = currentORow2;
-                                        if (Equals(oRow[sKeyField], nKey) && i != 1)
+                                        if (Equals(Convert.ToInt64(oRow[sKeyField]), nKey) && i != 1)
                                         {
                                             // swap with previous
                                             oDs.Tables[getTable(objectType)].Rows[i - 2][getOrderFname(objectType)] = i;
@@ -5490,7 +5490,7 @@ namespace Protean
                                     foreach (DataRow currentORow3 in oDs.Tables[getTable(objectType)].Rows)
                                     {
                                         oRow = currentORow3;
-                                        if (Equals(oRow[sKeyField], nKey) && i != RecCount)
+                                        if (Equals(Convert.ToInt64(oRow[sKeyField]), nKey) && i != RecCount)
                                         {
                                             // swap with next
                                             oDs.Tables[getTable(objectType)].Rows[i][getOrderFname(objectType)] = i;
