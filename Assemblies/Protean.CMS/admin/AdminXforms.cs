@@ -12,6 +12,7 @@
 //using Microsoft.VisualBasic;
 //using Microsoft.VisualBasic.CompilerServices;
 
+using Lucene.Net.Support;
 using Protean.Providers.CDN;
 using Protean.Providers.Membership;
 using Protean.Providers.Payment;
@@ -1170,9 +1171,15 @@ namespace Protean
                                     XmlElement oElmt = (XmlElement)base.Instance.FirstChild;
 
                                     int lastBackslashIndex = fUpld.FileName.LastIndexOf(@"\");
-                                    string cFilename = oFs.mcStartFolder + fUpld.FileName.Substring(lastBackslashIndex);
-                                    //cFilename = cFilename.Replace(" ", "-");
-                                    oElmt.SetAttribute("filename", cFilename);
+                                    string cFilename;
+                                    if (lastBackslashIndex > -1) { 
+                                        cFilename = oFs.mcStartFolder + fUpld.FileName.Substring(lastBackslashIndex);
+                                    }
+                                    else {
+                                        cFilename = oFs.mcStartFolder + fUpld.FileName;
+                                    }
+                                //cFilename = cFilename.Replace(" ", "-");
+                                oElmt.SetAttribute("filename", cFilename);
 
                                     if ((sValidResponse ?? "") == (fUpld.FileName ?? ""))
                                     {
