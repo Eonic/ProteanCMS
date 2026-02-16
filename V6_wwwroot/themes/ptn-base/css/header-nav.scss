@@ -131,6 +131,7 @@ header {
 
         .navbar-content {
             flex-wrap: nowrap;
+            flex-grow:2;
         }
 
         .main-nav ul.navbar-nav {
@@ -374,7 +375,7 @@ header {
                 margin-top: 15px;
 
                 > li {
-                    float: left
+                    float: none
                 }
             }
 
@@ -964,7 +965,6 @@ header {
         display: flex;
         align-items: center;
         margin: 1px;
-        font-weight:600;
         text-transform:uppercase;
     }
 }
@@ -1068,7 +1068,16 @@ header {
         margin-top: 1rem;
     }
 
+    .accordion-item {
+        border-color: $body-bg;
+        border-width: 3px;
+    }
+
     .accordion-button {
+        background: $primary;
+        color: color-contrast($primary);
+
+
         &:after {
             background-image: none;
             mask-image: var(--bs-accordion-btn-icon);
