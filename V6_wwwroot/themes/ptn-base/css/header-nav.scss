@@ -158,6 +158,10 @@ header {
 
         a {
             @include focus-visible-offset();
+
+            &:focus-visible {
+                box-shadow: 0 0 0 $focus-ring-width $focus-ring-color;
+            }
         }
     }
 
@@ -255,9 +259,15 @@ header {
                     color: $nav-link-hover-color;
                 }
 
-                &:focus-visible {
+                &:focus {
                     border-radius: 3px;
-                    box-shadow: 0 0 0 $focus-ring-width rgba($header-color, $focus-ring-opacity);
+                    box-shadow: 0 0 0 $focus-ring-width $focus-ring-opacity;
+
+                    span {
+                        padding: $focus-ring-offset;
+                        margin: -#{$focus-ring-offset};
+                        display:block;
+                    }
                 }
             }
         }
@@ -1083,6 +1093,11 @@ header {
             mask-image: var(--bs-accordion-btn-icon);
             background-color: #fff;
         }
+    }
+
+    .accordion-body h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
     }
 }
 
