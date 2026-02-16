@@ -344,8 +344,9 @@
     <Compile Include="api\soap.cs" />
     <Compile Include="core\Cms.DBHelper-Import.cs" />
     <Compile Include="core\Cms.dbImport.cs" />
+    <Compile Include="core\dbhelper\utils\APILog.cs" />
     <Compile Include="features\membership\Membership.Modules.cs" />
-    <Compile Include="modal\APILog.cs" />
+    <Compile Include="model\APILog.cs" />
     <Compile Include="providers\Authentication\Authentication.Microsoft.cs" />
     <Compile Include="providers\Authentication\Authentication.Google.cs" />
     <Compile Include="providers\Authentication\Authentication.BaseProvider.cs" />
@@ -359,7 +360,7 @@
     <Compile Include="core\Cms.DBHelper.cs" />
     <Compile Include="core\Cms.xForm.cs" />
     <Compile Include="content\Calendar.cs" />
-    <Compile Include="modal\Contact.cs" />
+    <Compile Include="model\Contact.cs" />
     <Compile Include="content\Content.JSONActions.cs" />
     <Compile Include="content\Modules.cs" />
     <Compile Include="core\Base.cs" />

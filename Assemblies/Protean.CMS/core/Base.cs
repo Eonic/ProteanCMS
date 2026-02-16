@@ -93,7 +93,7 @@ namespace Protean
 
         // Application Level Properties   
         public NameValueCollection moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-        // Public goApp As System.Web.HttpApplicationState
+        public System.Web.HttpApplicationState goApp;
         public System.Web.Caching.Cache goCache;
         public System.Web.HttpServerUtility goServer;
         public XmlElement goLangConfig = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/languages");
@@ -130,7 +130,7 @@ namespace Protean
                     moCtx = Context;
                 }
 
-                // goApp = moCtx.Application
+                goApp = moCtx.Application;
                 moRequest = moCtx.Request;
                 moResponse = moCtx.Response;
                 moSession = moCtx.Session;

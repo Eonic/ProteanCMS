@@ -70,7 +70,7 @@ namespace Protean
         public string mcContentType = System.Net.Mime.MediaTypeNames.Text.Html;
         public string mcContentDisposition = "";
         public long mnProteanCMSError = 0L;
-
+        public Cms.model.APILog goAPILog;
 
         public string msException = "";
 
