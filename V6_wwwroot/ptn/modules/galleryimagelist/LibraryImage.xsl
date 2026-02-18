@@ -90,7 +90,7 @@
       </xsl:apply-templates>
       <xsl:choose>
         <xsl:when test="$lightbox='true'">
-          <a data-src="{$lgImgSrc}" data-fancybox="gallery-{$parentId}" class="lightbox-link">
+          <button data-src="{$lgImgSrc}" data-fancybox="gallery-{$parentId}" class="lightbox-link">
             <div class="thumbnail">
               <xsl:apply-templates select="." mode="displayThumbnail">
                 <xsl:with-param name="crop" select="$cropSetting" />
@@ -108,7 +108,7 @@
                 </div>
               </xsl:if>
             </div>
-          </a>
+          </button>
         </xsl:when>
         <xsl:otherwise>
           <div class="thumbnail-wrapper">
