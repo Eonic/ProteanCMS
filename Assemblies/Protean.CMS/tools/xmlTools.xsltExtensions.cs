@@ -1347,8 +1347,13 @@ namespace Protean
                     }
                         return savedFile;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    if (gbDebug)
+                    {
+                        return ex.Message;
+                    }
+
                     return "";
                 }
             }

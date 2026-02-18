@@ -943,10 +943,10 @@ namespace Protean
             try
             {
                 httpURL = httpURL.Replace(@"\", "/");
-                string filename = httpURL.Substring(httpURL.LastIndexOf('\\') + 1);
+                string filename = httpURL.Substring(httpURL.LastIndexOf('/') + 1);
                 if (filename.IndexOf("?") > -1)
                 {
-                    filename = filename.Substring(filename.LastIndexOf('\\') + 1);
+                    filename = filename.Substring(filename.LastIndexOf('/') + 1);
                 }
                 // here we will fix any unsafe web charactors in the name
                 filename = filename.Replace(" ", "-");
@@ -976,7 +976,39 @@ namespace Protean
                         remoteStream = response.GetResponseStream();
                         try
                         {
-                            img = SKBitmap.Decode(remoteStream);
+                            // Buffer the entire stream to prevent partial reads
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                remoteStream.CopyTo(memoryStream);
+                                memoryStream.Position = 0;
+
+                                // For PNG files, use premultiplied alpha to prevent black artifacts
+                                string fileExt = httpURL.Substring(httpURL.LastIndexOf('.') + 1).ToLower();
+                                bool isPng = fileExt == "png";
+
+                                // Use SKCodec for better control over decoding with alpha channel
+                                using (var codec = SKCodec.Create(memoryStream))
+                                {
+                                    if (codec != null)
+                                    {
+                                        // Use Premul for PNG to prevent black pixels on transparent areas
+                                        // Use Unpremul for other formats
+                                        var info = new SKImageInfo(
+                                            codec.Info.Width, 
+                                            codec.Info.Height, 
+                                            SKColorType.Rgba8888, 
+                                            isPng ? SKAlphaType.Premul : SKAlphaType.Unpremul
+                                        );
+                                        img = SKBitmap.Decode(codec, info);
+                                    }
+                                    else
+                                    {
+                                        // Fallback: reset stream and try direct decode
+                                        memoryStream.Position = 0;
+                                        img = SKBitmap.Decode(memoryStream);
+                                    }
+                                }
+                            }
                         }
                         catch (Exception ex2)
                         {
@@ -996,8 +1028,9 @@ namespace Protean
                                 {
                                     SKEncodedImageFormat format;
                                     int quality = 90;
+                                    string fileExtension = httpURL.Substring(httpURL.LastIndexOf('.') + 1).ToLower();
 
-                                    switch (httpURL.Substring(httpURL.LastIndexOf('\\') + 1) ?? "")
+                                    switch (fileExtension ?? "")
                                     {
                                         case "gif":
                                             // GIF -> convert to PNG (SkiaSharp doesn't support GIF encoding)
@@ -1018,10 +1051,30 @@ namespace Protean
                                             return "filetype not handled:" + filename;
                                     }
 
-                                    using (var data = image.Encode(format, quality))
-                                    using (var fileStream = File.OpenWrite(mcStartFolder + cFolderPath + @"\" + filename))
+                                    // For PNG files, ensure we're encoding with the correct pixel format to preserve alpha
+                                    if (fileExtension == "png" || fileExtension == "gif")
                                     {
-                                        data.SaveTo(fileStream);
+                                        // Create a new bitmap with the correct format if needed
+                                        using (var surface = SKSurface.Create(new SKImageInfo(img.Width, img.Height, SKColorType.Rgba8888, SKAlphaType.Premul)))
+                                        using (var canvas = surface.Canvas)
+                                        {
+                                            canvas.Clear(SKColors.Transparent);
+                                            canvas.DrawBitmap(img, 0, 0);
+                                            using (var pngImage = surface.Snapshot())
+                                            using (var data = pngImage.Encode(SKEncodedImageFormat.Png, quality))
+                                            using (var fileStream = File.OpenWrite(mcStartFolder + cFolderPath + @"\" + filename))
+                                            {
+                                                data.SaveTo(fileStream);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        using (var data = image.Encode(format, quality))
+                                        using (var fileStream = File.OpenWrite(mcStartFolder + cFolderPath + @"\" + filename))
+                                        {
+                                            data.SaveTo(fileStream);
+                                        }
                                     }
                                 }
 
