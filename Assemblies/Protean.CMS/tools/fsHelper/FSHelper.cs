@@ -319,7 +319,7 @@ namespace Protean
             // PerfMon.Log("fsHelper", "getDirectoryTreeXml")
             string tempStartFolder;
             XmlElement TreeXml;
-            string[] aVirtualImageDirectories = goConfig["VirtualImageDirectories"].Split(',');
+            string[] aVirtualImageDirectories = goConfig["VirtualImageDirectories"]?.Split(',') ?? new string[0];
             try
             {
 
