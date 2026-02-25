@@ -146,11 +146,11 @@
     <Reference Include="Lucene.Net, Version=3.0.3.0, Culture=neutral, PublicKeyToken=85089178b9ac3181, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Lucene.Net.3.0.3\lib\NET40\Lucene.Net.dll</HintPath>
     </Reference>
-    <Reference Include="Magick.NET-Q8-x64, Version=14.9.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=AMD64">
-      <HintPath>..\..\packages\Magick.NET-Q8-x64.14.9.1\lib\netstandard20\Magick.NET-Q8-x64.dll</HintPath>
+    <Reference Include="Magick.NET-Q8-x64, Version=14.10.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=AMD64">
+      <HintPath>..\..\packages\Magick.NET-Q8-x64.14.10.1\lib\netstandard20\Magick.NET-Q8-x64.dll</HintPath>
     </Reference>
-    <Reference Include="Magick.NET.Core, Version=14.9.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Magick.NET.Core.14.9.1\lib\netstandard20\Magick.NET.Core.dll</HintPath>
+    <Reference Include="Magick.NET.Core, Version=14.10.0.0, Culture=neutral, PublicKeyToken=2004825badfa91ec, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Magick.NET.Core.14.10.1\lib\netstandard20\Magick.NET.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Bcl.AsyncInterfaces, Version=9.0.0.10, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Bcl.AsyncInterfaces.9.0.10\lib\net462\Microsoft.Bcl.AsyncInterfaces.dll</HintPath>
@@ -333,9 +333,21 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="admin\Admin-Spare.cs" />
+    <Compile Include="admin\Admin-Cart.cs" />
     <Compile Include="admin\Admin.cs" />
     <Compile Include="admin\Admin.JSONActions.cs" />
     <Compile Include="admin\Admin.Redirects.cs" />
+    <Compile Include="admin\AdminXforms-Cart.cs" />
+    <Compile Include="admin\AdminXforms-Subscriptions.cs" />
+    <Compile Include="admin\AdminXforms-Reports.cs" />
+    <Compile Include="admin\AdminXforms-Config.cs" />
+    <Compile Include="admin\AdminXforms-Pages.cs" />
+    <Compile Include="admin\xFormContentLocations.cs" />
+    <Compile Include="admin\AdminXforms-FileSystem.cs" />
+    <Compile Include="admin\AdminXforms-Directory.cs" />
+    <Compile Include="admin\AdminXforms-Content.cs" />
+    <Compile Include="admin\AdminXforms-obsolete.cs" />
     <Compile Include="admin\AdminXforms.cs" />
     <Compile Include="admin\xFormEditor.cs" />
     <Compile Include="api\rest.cs" />
@@ -343,24 +355,34 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="api\soap.cs" />
+    <Compile Include="core\Cms-Actions.cs" />
+    <Compile Include="core\Cms-User.cs" />
+    <Compile Include="core\Cms-Content.cs" />
+    <Compile Include="core\Cms-Menu.cs" />
     <Compile Include="core\Cms.Async.cs" />
     <Compile Include="core\Cms.DBHelper-Import.cs" />
     <Compile Include="core\Cms.DBHelper.Async.cs" />
     <Compile Include="core\Cms.dbImport.cs" />
+    <Compile Include="core\dbhelper\utils\APILog.cs" />
     <Compile Include="core\enviornment.cs" />
+    <Compile Include="features\cart\Cart-invoice.cs" />
+    <Compile Include="features\cart\Cart-options.cs" />
+    <Compile Include="features\cart\Cart-notes.cs" />
+    <Compile Include="features\cart\Cart-discount.cs" />
+    <Compile Include="features\cart\Cart-admin.cs" />
+    <Compile Include="features\cart\Cart-address.cs" />
     <Compile Include="features\membership\Membership.Modules.cs" />
-<<<<<<< HEAD
     <Compile Include="framework\adapters\ApplicationAdapter.cs" />
     <Compile Include="framework\handlers\DeliverAjaxElmt.cs" />
     <Compile Include="framework\handlers\DeliverExcel.cs" />
     <Compile Include="framework\handlers\DeliverExport.cs" />
-    <Compile Include="framework\handlers\DeliverPageAsync.cs" />
-    <Compile Include="framework\handlers\KeepAlive.cs" />
     <Compile Include="framework\handlers\DeliverPageAsPdf.cs" />
+    <Compile Include="framework\handlers\DeliverPageAsync.cs" />
     <Compile Include="framework\handlers\docDownload.cs" />
-=======
-    <Compile Include="modal\APILog.cs" />
->>>>>>> ITB-GEN-DEV
+    <Compile Include="framework\handlers\KeepAlive.cs" />
+    <Compile Include="framework\handlers\UploadFiles.cs" />
+    <Compile Include="model\APILog.cs" />
+    <Compile Include="model\Contact.cs" />
     <Compile Include="providers\Authentication\Authentication.Microsoft.cs" />
     <Compile Include="providers\Authentication\Authentication.Google.cs" />
     <Compile Include="providers\Authentication\Authentication.BaseProvider.cs" />
@@ -374,7 +396,6 @@
     <Compile Include="core\Cms.DBHelper.cs" />
     <Compile Include="core\Cms.xForm.cs" />
     <Compile Include="content\Calendar.cs" />
-    <Compile Include="modal\Contact.cs" />
     <Compile Include="content\Content.JSONActions.cs" />
     <Compile Include="content\Modules.cs" />
     <Compile Include="core\Base.cs" />
@@ -519,12 +540,12 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.5.0\build\Microsoft.ClearScript.V8.Native.win-x64.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.5.0\build\Microsoft.ClearScript.V8.Native.win-x64.props'))" />
     <Error Condition="!Exists('..\..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets'))" />
-    <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-x64.14.9.1\build\netstandard20\Magick.NET-Q8-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-x64.14.9.1\build\netstandard20\Magick.NET-Q8-x64.targets'))" />
     <Error Condition="!Exists('..\..\packages\SkiaSharp.NativeAssets.macOS.3.119.0\build\net462\SkiaSharp.NativeAssets.macOS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SkiaSharp.NativeAssets.macOS.3.119.0\build\net462\SkiaSharp.NativeAssets.macOS.targets'))" />
     <Error Condition="!Exists('..\..\packages\SkiaSharp.NativeAssets.Win32.3.119.0\build\net462\SkiaSharp.NativeAssets.Win32.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\SkiaSharp.NativeAssets.Win32.3.119.0\build\net462\SkiaSharp.NativeAssets.Win32.targets'))" />
+    <Error Condition="!Exists('..\..\packages\Magick.NET-Q8-x64.14.10.1\build\netstandard20\Magick.NET-Q8-x64.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Magick.NET-Q8-x64.14.10.1\build\netstandard20\Magick.NET-Q8-x64.targets'))" />
   </Target>
   <Import Project="..\..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets" Condition="Exists('..\..\packages\System.ValueTuple.4.6.1\build\net471\System.ValueTuple.targets')" />
-  <Import Project="..\..\packages\Magick.NET-Q8-x64.14.9.1\build\netstandard20\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-x64.14.9.1\build\netstandard20\Magick.NET-Q8-x64.targets')" />
   <Import Project="..\..\packages\SkiaSharp.NativeAssets.macOS.3.119.0\build\net462\SkiaSharp.NativeAssets.macOS.targets" Condition="Exists('..\..\packages\SkiaSharp.NativeAssets.macOS.3.119.0\build\net462\SkiaSharp.NativeAssets.macOS.targets')" />
   <Import Project="..\..\packages\SkiaSharp.NativeAssets.Win32.3.119.0\build\net462\SkiaSharp.NativeAssets.Win32.targets" Condition="Exists('..\..\packages\SkiaSharp.NativeAssets.Win32.3.119.0\build\net462\SkiaSharp.NativeAssets.Win32.targets')" />
+  <Import Project="..\..\packages\Magick.NET-Q8-x64.14.10.1\build\netstandard20\Magick.NET-Q8-x64.targets" Condition="Exists('..\..\packages\Magick.NET-Q8-x64.14.10.1\build\netstandard20\Magick.NET-Q8-x64.targets')" />
 </Project>
