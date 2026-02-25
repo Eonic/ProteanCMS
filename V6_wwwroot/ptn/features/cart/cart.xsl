@@ -28,7 +28,7 @@
 			</xsl:choose>
 		</xsl:variable>
 		<xsl:choose>
-			<xsl:when test="Stock!='' and not(Stock&lt;1)">
+			<xsl:when test="(Stock!='' and not(Stock&lt;1)) or not(Stock!='')">
 				<div id="cartButtons{@id}" class="cartButtons">
 					<form action="{$actionURL}" method="post" class="ewXform">
 						<xsl:apply-templates select="." mode="Options_List"/>
@@ -48,7 +48,7 @@
 			</xsl:when>
 			<xsl:otherwise>
 				<span class="badge bg-info">
-					<xsl:call-template name="term3095" />
+					<xsl:call-template name="term3095" /> 
 				</span>
 			</xsl:otherwise>
 		</xsl:choose>

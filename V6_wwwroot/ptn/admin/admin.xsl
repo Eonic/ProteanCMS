@@ -265,7 +265,7 @@
   </xsl:template>
 
 
-	<xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
+	<xsl:template match="label[ancestor::Content[@name='UserLogon' or @name='AdminLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
 		<xsl:choose>
 			<xsl:when test="$page/Settings/add[@key='web.proteanProductName']/@value!=''">
 				<xsl:call-template name="proteanAdminSystemName"/>

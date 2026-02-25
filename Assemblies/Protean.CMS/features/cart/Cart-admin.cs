@@ -450,7 +450,7 @@ namespace Protean
                                         catch (Exception ex)
                                         {
                                             cProcessInfo = ex.Message;
-                                            mnCartId = Convert.ToInt32(oDR["nCartOrderKey"]);
+                                            mnCartId = Convert.ToInt64(oDR["nCartOrderKey"]);
                                             GetCart(ref oContent, mnCartId);
                                             mnCartId = 0;
                                         }

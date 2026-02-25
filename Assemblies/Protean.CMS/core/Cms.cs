@@ -2679,7 +2679,7 @@ namespace Protean
                                 int argresult = 0;
                                 if (int.TryParse(Convert.ToString(sArtId), out argresult))
                                 {
-                                    mnArtId = Convert.ToInt16(sArtId);
+                                    mnArtId = Convert.ToInt64(sArtId);
                                 }
                             }
                         }

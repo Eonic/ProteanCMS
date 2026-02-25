@@ -48,7 +48,7 @@ namespace Protean
                 public long savedPaymentId;
 
                 public string mcCurrencySymbol;
-                public int mnCartId;
+                public long mnCartId;
                 public string mcOrderRef;
 
                 public string mcCartEmailXslt; // Template for sending emails
@@ -6619,7 +6619,7 @@ namespace Protean
 
                 }
 
-                public void ValidatePaymentByCart(int nCartId, bool bValid)
+                public void ValidatePaymentByCart(long nCartId, bool bValid)
                 {
                     try
                     {

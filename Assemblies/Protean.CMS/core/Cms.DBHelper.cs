@@ -14031,7 +14031,7 @@ namespace Protean
                 }
             }
 
-            public int savePayment(int CartId, long nUserId, string cProviderName, string cProviderRef, string cMethodName, XmlElement oDetailXML, DateTime dExpire, bool bUserSaved, double nAmountPaid, string paymentType = "full")
+            public int savePayment(long CartId, long nUserId, string cProviderName, string cProviderRef, string cMethodName, XmlElement oDetailXML, DateTime dExpire, bool bUserSaved, double nAmountPaid, string paymentType = "full")
             {
                 string cSQL = "";
                 string cRes = "";
@@ -14203,7 +14203,7 @@ namespace Protean
                 }
             }
 
-            public void CartPaymentMethod(int CartId, int PaymentId)
+            public void CartPaymentMethod(long CartId, int PaymentId)
             {
                 try
                 {

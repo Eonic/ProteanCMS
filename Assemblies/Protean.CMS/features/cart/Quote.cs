@@ -1112,7 +1112,7 @@ namespace Protean
                         XmlElement xmlnothing = null;
                         nCurrentCart =Convert.ToInt32(otmpcart.CreateNewCart(ref xmlnothing));
                     }
-                    int nQuoteId = mnCartId;
+                    long nQuoteId = mnCartId;
 
                     var oDS = new DataSet();
                     oDS = base.moDBHelper.GetDataSet("Select * From tblCartItem WHERE nCartOrderID = " + nQuoteId, "CartItems");

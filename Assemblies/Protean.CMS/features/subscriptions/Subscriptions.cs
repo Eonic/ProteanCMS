@@ -1167,7 +1167,7 @@ namespace Protean
                     }
                 }
 
-                public bool CheckCartForSubscriptions(int nCartID, long nSubUserId)
+                public bool CheckCartForSubscriptions(long nCartID, long nSubUserId)
                 {
                     try
                     {
@@ -1707,7 +1707,7 @@ namespace Protean
                     return default;
                 }
 
-                public virtual void AddUserSubscriptions(int nCartId, long nSubUserId, ref XmlElement oCartXml, int nPaymentMethodId = 0)
+                public virtual void AddUserSubscriptions(long nCartId, long nSubUserId, ref XmlElement oCartXml, int nPaymentMethodId = 0)
                 {
 
                     string cLastSubXml = "";

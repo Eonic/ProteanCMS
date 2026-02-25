@@ -2587,7 +2587,7 @@ namespace Protean
                 }
 
                 // update packaging from giftbox to standard when removing promocode
-                public void UpdatePackagingforRemovePromoCode(int CartId, string sPromoCode)
+                public void UpdatePackagingforRemovePromoCode(long CartId, string sPromoCode)
                 {
                     try
                     {

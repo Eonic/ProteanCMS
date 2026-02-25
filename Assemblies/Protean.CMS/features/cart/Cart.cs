@@ -66,7 +66,7 @@ namespace Protean
             public string mcSiteURL; // Site Identifier, used for User Cookie Name
             public string mcCartURL; // Site Identifier, used for User Cookie Name
 
-            public int mnCartId; // Unique Id refering to this session cart
+            public long mnCartId; // Unique Id refering to this session cart
             public string mcSessionId; // Session ID - Unique for each client browser
                                        // private string mcRefSessionId; // Referrer Site Session ID - The session ID from the referrer site, if passed.
             public long mnEwUserId; // User Id for Membership integration
@@ -2445,7 +2445,7 @@ namespace Protean
                 valDict = XmltoDictionary(xListElement, true);
                 return valDict;
             }
-            private void RemoveDeliveryOption(int nOrderId)
+            private void RemoveDeliveryOption(long nOrderId)
             {
                 try
                 {
@@ -2465,12 +2465,12 @@ namespace Protean
             /// <param name="oCartElmt"></param>
             /// <param name="nSelCartId"></param>
             /// <remarks></remarks>
-            public void GetCartSummary(ref XmlElement oCartElmt, int nSelCartId = 0)
+            public void GetCartSummary(ref XmlElement oCartElmt, long nSelCartId = 0)
             {
                 // Sets content for the XML to be displayed in the small summary plugin attached
                 // to the current content page
                 myWeb.PerfMon.Log("Cart", "GetCartSummary");
-                int nCartIdUse;
+                long nCartIdUse;
                 if (nSelCartId > 0)
                 {
                     nCartIdUse = nSelCartId;
@@ -2508,7 +2508,7 @@ namespace Protean
                 }
             }
 
-            public void GetCart(ref XmlElement oCartElmt, int nSelCartId = 0)
+            public void GetCart(ref XmlElement oCartElmt, long nSelCartId = 0)
             {
                 oCartElmt.InnerXml = "";
                 myWeb.PerfMon.Log("Cart", "GetCart");
@@ -2544,7 +2544,7 @@ namespace Protean
                 object bCheckSubscriptions = false;
                 string cOptionGroupName = "";
 
-                int nCartIdUse;
+                long nCartIdUse;
                 if (nSelCartId > 0)
                 {
                     nCartIdUse = nSelCartId;
@@ -4635,7 +4635,7 @@ namespace Protean
                             oElmt = (XmlElement)argoNode20;
                         }
 
-                        mnCartId = Convert.ToInt16(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement));
+                        mnCartId = Convert.ToInt64(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement));
                         return mnCartId;
                     }
                     else
@@ -6884,7 +6884,7 @@ namespace Protean
                     var nCheckPrice = default(double);
                     XmlElement oCheckPrice;
 
-                    int nCartIdUse;
+                    long nCartIdUse;
                     nCartIdUse = mnCartId;
 
                     if (moDBHelper.checkTableColumnExists("tblCartItem", "xItemXml"))

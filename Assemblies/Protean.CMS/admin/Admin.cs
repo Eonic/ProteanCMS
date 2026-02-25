@@ -4331,7 +4331,7 @@ namespace Protean
                     // not sure if we need this block
                     if (!string.IsNullOrEmpty(myWeb.moRequest["artid"]))
                     {
-                        myWeb.mnArtId = Convert.ToInt16(myWeb.moRequest["artid"]);
+                        myWeb.mnArtId = Convert.ToInt64(myWeb.moRequest["artid"]);
                     }
                     else
                     {

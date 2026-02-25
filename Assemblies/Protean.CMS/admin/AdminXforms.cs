@@ -201,10 +201,10 @@ namespace Protean
 
 
                 // Check if a specific button has been pressed
-                public bool isSubmittedOther(int pgid = 0)
+                public bool isSubmittedOther(long pgid = 0)
                 {
                     int nRelId;
-                    var nParId = default(int);
+                    long nParId = default(int);
                     // Dim oDbh As New dbHelper(myWeb)
                     bool bResult = false;
 
@@ -214,7 +214,7 @@ namespace Protean
                         if (oTmpNode != null)
                         {
                             if (Tools.Number.IsNumeric(oTmpNode.InnerText))
-                                nParId = Convert.ToInt16(oTmpNode.InnerText);
+                                nParId = Convert.ToInt64(oTmpNode.InnerText);
                             var bCascade = default(bool);
                             foreach (var myItem in goRequest.Form.Keys)
                             {
