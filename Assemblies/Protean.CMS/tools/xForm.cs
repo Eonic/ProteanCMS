@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
+using System.Xml.XPath;
 using static Protean.stdTools;
 
 namespace Protean
@@ -947,7 +948,37 @@ namespace Protean
                         expr.SetContext(nsMgr);
 
                         // Looking for true() or false()
-                        if (Conversions.ToBoolean(xPathNav2.Evaluate(expr)))
+                        object myEval = xPathNav2.Evaluate(expr);
+
+                        // Convert to boolean - if it returns a value (not null/empty), treat as true
+                        bool isRequired = false;
+                        if (myEval != null)
+                        {
+                            if (myEval is bool)
+                            {
+                                isRequired = (bool)myEval;
+                            }
+                            else if (myEval is XPathNodeIterator)
+                            {
+                                XPathNodeIterator nodeIterator = (XPathNodeIterator)myEval;
+                                if (nodeIterator.Count > 0) {
+                                    isRequired = true;
+                                }
+                            }
+                            else if (myEval is string)
+                            {
+                                string evalStr = myEval.ToString().Trim().ToLower();
+                                // If it's "true" or any non-empty value, treat as true
+                                isRequired = !string.IsNullOrEmpty(evalStr) && evalStr != "false";
+                            }
+                            else
+                            {
+                                // For any other type, try standard conversion
+                                isRequired = Conversions.ToBoolean(myEval);
+                            }
+                        }
+
+                        if (isRequired)
                         {
 
                             // Look for data
