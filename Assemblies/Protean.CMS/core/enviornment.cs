@@ -618,6 +618,70 @@ namespace Protean
             int ScriptTimeout { get; set; }
         }
 
+        /// <summary>
+        /// Abstraction for exception handling and reporting across .NET Framework and .NET Core.
+        /// Provides unified interface for transforming exceptions into HTTP responses.
+        /// </summary>
+        public interface IExceptionHandler
+        {
+            /// <summary>
+            /// Renders an exception as an HTTP response using XSLT transformation.
+            /// </summary>
+            /// <param name="exception">The exception to render</param>
+            /// <param name="moduleName">Module where the exception occurred</param>
+            /// <param name="routineName">Method/routine where the exception occurred</param>
+            /// <param name="furtherInfo">Additional context information</param>
+            /// <param name="xsltTemplatePath">Path to XSLT template for rendering</param>
+            /// <param name="subjectLinePrefix">Email subject prefix for error notifications</param>
+            /// <returns>The rendered exception HTML</returns>
+            string RenderException(
+                Exception exception,
+                string moduleName,
+                string routineName,
+                string furtherInfo,
+                string xsltTemplatePath,
+                string subjectLinePrefix = "");
+
+            /// <summary>
+            /// Writes the exception to the HTTP response and ends the response.
+            /// </summary>
+            /// <param name="exceptionHtml">The rendered exception HTML</param>
+            void WriteExceptionResponse(string exceptionHtml);
+
+            /// <summary>
+            /// Logs exception to event log (Windows) or structured logging (Core).
+            /// </summary>
+            /// <param name="exception">The exception to log</param>
+            /// <param name="context">Additional context information</param>
+            /// <param name="originalException">Original exception if this is a wrapper</param>
+            /// <param name="originalInfo">Original exception context</param>
+            void LogException(
+                Exception exception,
+                string context,
+                Exception originalException = null,
+                string originalInfo = "");
+
+            /// <summary>
+            /// Sends exception notification email if configured.
+            /// </summary>
+            /// <param name="exception">The exception to report</param>
+            /// <param name="moduleName">Module name</param>
+            /// <param name="routineName">Routine name</param>
+            /// <param name="context">Additional context</param>
+            /// <param name="subjectPrefix">Email subject prefix</param>
+            void SendExceptionEmail(
+                Exception exception,
+                string moduleName,
+                string routineName,
+                string context,
+                string subjectPrefix = "");
+
+            /// <summary>
+            /// Gets the current HTTP context for exception handling.
+            /// </summary>
+            IHttpContext HttpContext { get; }
+        }
+
 
         public class HttpCookie : IHttpCookie
         {

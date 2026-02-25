@@ -192,7 +192,12 @@ namespace Protean.Tools
                 // cReturn &= "; Pwd=" & DatabasePassword
                 // cReturn &= ";"
                 // Case Else
-                cReturn = "Data Source=" + DatabaseServer;
+                if (DatabaseServer.StartsWith("(localdb)")) {
+                    cReturn = $"Server={DatabaseServer};Database={DatabaseName};Trusted_Connection=True;MultipleActiveResultSets=true;";
+                }
+                else { 
+
+                    cReturn = "Data Source=" + DatabaseServer;
                 cReturn += ";Initial Catalog=" + DatabaseName;
                 cReturn += ";User ID=" + DatabaseUser;
                 cReturn += ";password=" + DatabasePassword;
@@ -206,8 +211,8 @@ namespace Protean.Tools
                 }
                 if (bAsync)
                     cReturn += ";Asynchronous Processing=true";
-                // End Select
-
+                    // End Select
+                }
                 return cReturn;
             }
         }
@@ -218,12 +223,18 @@ namespace Protean.Tools
             {
                 try
                 {
-                    oConn.Open();
-                    oConn.Close();
-                    return true;
+                    if (oConn.State == ConnectionState.Open) {
+                        return true;
+                    }
+                    else { 
+                        oConn.Open();
+                        oConn.Close();
+                        return true;
+                    }
                 }
-                catch
+                catch (Exception ex)
                 {
+                    ErrorMsg = ex.Message;
                     return false;
                 }
             }
@@ -1506,6 +1517,78 @@ namespace Protean.Tools
             {
                 return text.Replace("'", "''");
             }
+        }
+
+        /// <summary>
+        /// Escapes special characters for SQL Server Full-Text Search (CONTAINS/FREETEXT).
+        /// Full-text search has different special characters than LIKE queries.
+        /// </summary>
+        /// <param name="value">The string to escape for full-text search</param>
+        /// <returns>Escaped string safe for use in CONTAINS or FREETEXT queries</returns>
+        /// <remarks>
+        /// Full-text search special characters that need escaping:
+        /// - Double quotes (") - used for phrase searches
+        /// - Square brackets [] - used in pattern matching
+        /// - Ampersand (&amp;) - AND operator
+        /// - Pipe (|) - OR operator  
+        /// - Tilde (~) - NOT operator
+        /// - Asterisk (*) - wildcard suffix
+        /// - Less/Greater than (&lt;&gt;) - proximity searches
+        /// - Parentheses () - grouping
+        /// </remarks>
+        public static string EscapeFullTextSearch(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return value;
+
+            // Escape double quotes by doubling them (standard FTS escaping)
+            // Remove or escape other special FTS characters
+            return value
+                .Replace("\"", "\"\"")           // Escape quotes (phrase search delimiter)
+                .Replace("[", "")                // Remove left bracket (pattern matching)
+                .Replace("]", "")                // Remove right bracket (pattern matching)
+                .Replace("&", "")                // Remove ampersand (AND operator)
+                .Replace("|", "")                // Remove pipe (OR operator)
+                .Replace("~", "")                // Remove tilde (NOT operator)
+                .Replace("*", "")                // Remove asterisk (wildcard)
+                .Replace("<", "")                // Remove less than (proximity)
+                .Replace(">", "")                // Remove greater than (proximity)
+                .Replace("(", "")                // Remove left paren (grouping)
+                .Replace(")", "");               // Remove right paren (grouping)
+        }
+
+        /// <summary>
+        /// Wraps a string value in double quotes for exact phrase matching in full-text search.
+        /// This is the recommended approach for searching file paths in FTS.
+        /// </summary>
+        /// <param name="value">The string to wrap</param>
+        /// <returns>Quoted string safe for CONTAINS queries</returns>
+        /// <remarks>
+        /// Example: WrapForFullTextSearch("test.jpg") returns "\"test.jpg\""
+        /// This creates an exact phrase search in CONTAINS queries.
+        /// </remarks>
+        public static string WrapForFullTextSearch(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return "\"\"";
+
+            // Escape any existing quotes, then wrap in quotes
+            string escaped = EscapeFullTextSearch(value);
+            return $"\"{escaped}\"";
+        }
+
+
+        public static string EscapeSqlLikeWildcards(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return value;
+
+            return value
+                .Replace("]", "[]]")     // Escape ] (becomes []])
+                .Replace("%", "[%]")     // Escape % (becomes [%])
+                .Replace("_", "[_]")     // Escape _ (becomes [_])
+                .Replace("^", "[^]");    // Escape ^ (becomes [^])
+
         }
 
         public static string SqlString(string text)

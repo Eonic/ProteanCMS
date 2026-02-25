@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.VisualBasic;
 
 namespace Protean
 {
@@ -38,9 +37,9 @@ namespace Protean
                         int i = 1;
                         while (cTest != ".")
                         {
-                            cTest = Strings.Left(Strings.Right(cPath, i), 1);
+                            cTest = cPath.Substring(cPath.Length - i, 1);
                             if (i > 1)
-                                cExt = Strings.Right(cPath, i - 1);
+                                cExt = cPath.Substring(cPath.Length - (i - 1));
                             i += 1;
                         }
                     }

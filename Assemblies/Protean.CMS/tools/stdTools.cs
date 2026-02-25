@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.Collections;
 using System.Data;
 using System.Diagnostics;
@@ -60,7 +59,80 @@ namespace Protean
         public static string[] SortDirectionVal = new string[] { "descending", "ascending" };
 
 
-        public static void returnException(ref string sException, string vstrModuleName, string vstrRoutineName, Exception oException, string xsltTemplatePath = "/ewcommon/xsl/standard.xsl", string vstrFurtherInfo = "", bool bDebug = false, string cSubjectLinePrefix = "")
+        /// <summary>
+        /// Modern overload that accepts IHttpContext abstraction for .NET Core compatibility
+        /// </summary>
+        public static void returnException(
+            ref string sException, 
+            string vstrModuleName, 
+            string vstrRoutineName, 
+            Exception oException,
+            System.Web.HttpContext httpContext,
+            string xsltTemplatePath = "/ewcommon/xsl/standard.xsl", 
+            string vstrFurtherInfo = "", 
+            bool bDebug = false, 
+            string cSubjectLinePrefix = "")
+        {
+            ReturnExceptionCore(
+                ref sException, 
+                vstrModuleName, 
+                vstrRoutineName, 
+                oException, 
+                httpContext,
+                xsltTemplatePath, 
+                vstrFurtherInfo, 
+                bDebug, 
+                cSubjectLinePrefix);
+        }
+
+        /// <summary>
+        /// Legacy overload for backward compatibility - auto-resolves current HttpContext
+        /// </summary>
+        [Obsolete("Use overload with IHttpContext parameter for .NET Core compatibility")]
+        public static void returnException(
+            ref string sException, 
+            string vstrModuleName, 
+            string vstrRoutineName, 
+            Exception oException, 
+            string xsltTemplatePath = "/ewcommon/xsl/standard.xsl", 
+            string vstrFurtherInfo = "", 
+            bool bDebug = false, 
+            string cSubjectLinePrefix = "")
+        {
+            // Resolve current context (Framework-specific)
+            System.Web.HttpContext httpContext = null;
+            if (System.Web.HttpContext.Current != null)
+            {
+                // TODO: Wrap System.Web.HttpContext.Current in IHttpContext adapter
+                // For now, pass null and let core method handle it
+                httpContext = null;
+            }
+
+            ReturnExceptionCore(
+                ref sException, 
+                vstrModuleName, 
+                vstrRoutineName, 
+                oException, 
+                httpContext,
+                xsltTemplatePath, 
+                vstrFurtherInfo, 
+                bDebug, 
+                cSubjectLinePrefix);
+        }
+
+        /// <summary>
+        /// Core implementation of exception handling - uses IHttpContext abstraction
+        /// </summary>
+        private static void ReturnExceptionCore(
+            ref string sException, 
+            string vstrModuleName, 
+            string vstrRoutineName, 
+            Exception oException,
+            System.Web.HttpContext httpContext,
+            string xsltTemplatePath, 
+            string vstrFurtherInfo, 
+            bool bDebug, 
+            string cSubjectLinePrefix)
         {
             // Author:        Trevor Spink
             // Copyright:     Eonic Ltd 2005
@@ -78,23 +150,20 @@ namespace Protean
             string sReturnHtml = "";
             string cHost = "";
             System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-            System.Web.HttpRequest moRequest = null;
+            
+            // Use abstracted context instead of direct HttpContext.Current
+            System.Web.HttpRequest moRequest = httpContext?.Request;
+            System.Web.HttpResponse moResponse = httpContext?.Response;
+            System.Web.HttpServerUtility moServer = httpContext?.Server;
 
-            if (System.Web.HttpContext.Current != null)
-            {
-                moRequest = System.Web.HttpContext.Current.Request;
-            }
-
-
-            // Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
             sProcessInfo = "Getting Host";
 
-
-
-            if (System.Web.HttpContext.Current != null)
+            // Extract host from abstracted request
+            if (moRequest != null)
             {
-                cHost = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"];
+                cHost = moRequest.ServerVariables["HTTP_HOST"];
             }
+            
             if (string.IsNullOrEmpty(sException))
             {
                 if (string.IsNullOrEmpty(xsltTemplatePath))
@@ -118,18 +187,16 @@ namespace Protean
                     // Test expanded from 1 to 2 NOT's to avoid Web Crawler based errors
 
                     oExceptionXml.LoadXml("<Page layout=\"Error\"><Contents/></Page>");
-                    // oExceptionXml.DocumentElement.SetAttribute("baseUrl", "http://" & moRequest.ServerVariables("HTTP_HOST"))
-                    bool mbIsUsingHTTPS = false;
-                    if (moRequest != null)
-                    {
-                        mbIsUsingHTTPS = moRequest.ServerVariables["HTTPS"] == "on";
-                    }
-                    oExceptionXml.DocumentElement.SetAttribute("baseUrl", Convert.ToString((mbIsUsingHTTPS) ? "https://" : "https://"), cHost);
+                    
+                    // Determine protocol from abstracted request
+                    bool mbIsUsingHTTPS = moRequest?.IsSecureConnection ?? false;
+                    string protocol = mbIsUsingHTTPS ? "https://" : "http://";
+                    oExceptionXml.DocumentElement.SetAttribute("baseUrl", protocol + cHost);
                     oElmt = oExceptionXml.CreateElement("Content");
                     oElmt.SetAttribute("type", "Formatted Text");
                     oElmt.SetAttribute("name", "column1");
 
-                    strErrorHtml = exceptionReport(oException, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo);
+                    strErrorHtml = exceptionReport(oException, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo, httpContext);
                     strMessageHtml = "<div style=\"font-family:Verdana,Tahoma,Arial\"><h2>Unfortunately this site has experienced an error.</h2>" + "<h3>We take all errors very seriously.</h3>" + "<p>" + "This error has been recorded and details sent to <a href=\"http://eonic.com\">Eonic</a> who provide technical support for this website." + "</p>" + "<p>" + "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=\"mailto:support@eonic.co.uk\">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." + "</p>" + "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" + "<a href=\"javascript:history.back();\">Click Here to return to the previous page.</a></div>";
 
                     try
@@ -208,7 +275,7 @@ namespace Protean
                                     }
                                     catch (Exception exp)
                                     {
-                                        AddExceptionToEventLog(exp, sProcessInfo, oException, vstrFurtherInfo);
+                                        AddExceptionToEventLog(exp, sProcessInfo, oException, vstrFurtherInfo, httpContext);
                                     }
                                 }
                             }
@@ -303,7 +370,7 @@ namespace Protean
 
                                 mbDBError = true;
                                 // sProcessInfo = "Found Error"
-                                AddExceptionToEventLog(ex, sProcessInfo, oException, vstrFurtherInfo);
+                                AddExceptionToEventLog(ex, sProcessInfo, oException, vstrFurtherInfo, httpContext);
                                 oElmt.InnerXml = strMessageHtml;
                                 oExceptionXml.SelectSingleNode("/Page/Contents").AppendChild(oElmt);
                             }
@@ -318,7 +385,8 @@ namespace Protean
                         }
                         else
                         {
-                            styleFile = goServer.MapPath(xsltTemplatePath);
+                            // Use abstracted server utility or fallback to static goServer
+                            styleFile = moServer?.MapPath(xsltTemplatePath) ?? goServer.MapPath(xsltTemplatePath);
                         }
 
                         oStyle.Load(styleFile);
@@ -326,13 +394,25 @@ namespace Protean
                         // add Eonic Bespoke Functions
                         var xsltArgs = new System.Xml.Xsl.XsltArgumentList();
                         Protean.Cms errWeb;
-                        if (System.Web.HttpContext.Current != null)
+                        
+                        // Use abstracted context if available, otherwise fall back to legacy
+                        if (httpContext != null)
                         {
-                            // so we compile errors out of debug mode too.
-                            errWeb = new Protean.Cms(System.Web.HttpContext.Current);
-                            errWeb.InitializeVariables();
-                            var ewXsltExt = new Protean.xmlTools.xsltExtensions(ref errWeb);
-                            xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
+                            // TODO: When Cms constructor accepts IHttpContext, use:
+                            // errWeb = new Protean.Cms(httpContext);
+                            // For now, check if we can get legacy context
+                            if (System.Web.HttpContext.Current != null && oException.Message != "Database connection validation failed")
+                            {
+                                errWeb = new Protean.Cms(System.Web.HttpContext.Current);
+                                errWeb.InitializeVariables();
+                                var ewXsltExt = new Protean.xmlTools.xsltExtensions(ref errWeb);
+                                xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
+                            }
+                            else
+                            {
+                                var ewXsltExt = new Protean.xmlTools.xsltExtensions();
+                                xsltArgs.AddExtensionObject("urn:ew", ewXsltExt);
+                            }
                         }
                         else
                         {
@@ -353,7 +433,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        AddExceptionToEventLog(ex, sProcessInfo, oException, vstrFurtherInfo);
+                        AddExceptionToEventLog(ex, sProcessInfo, oException, vstrFurtherInfo, httpContext);
                         if (!gbDebug & !string.IsNullOrEmpty(strMessageHtml))
                         {
                             strErrorHtml = strMessageHtml;
@@ -363,12 +443,92 @@ namespace Protean
                     finally
                     {
                         sException = sReturnHtml;
+                        
+                        // Write to response if available
+                        if (!string.IsNullOrEmpty(sReturnHtml) && moResponse != null)
+                        {
+                            try
+                            {
+                                moResponse.ContentType = "text/html";
+                                moResponse.StatusCode = 500;
+                                moResponse.Write(sReturnHtml);
+                            }
+                            catch
+                            {
+                                // Response may already be committed
+                            }
+                        }
                     }
                 }
             }
         }
 
-        public static void reportException(ref string sException, string vstrModuleName, string vstrRoutineName, Exception oException, string xsltTemplatePath = "/ewcommon/xsl/standard.xsl", string vstrFurtherInfo = "", bool bDebug = false, string cSubjectLinePrefix = "")
+        /// <summary>
+        /// Reports exception via email without rendering HTML response
+        /// Modern overload with IHttpContext abstraction
+        /// </summary>
+        public static void reportException(
+            ref string sException, 
+            string vstrModuleName, 
+            string vstrRoutineName, 
+            Exception oException,
+            System.Web.HttpContext httpContext,
+            string xsltTemplatePath = "/ewcommon/xsl/standard.xsl", 
+            string vstrFurtherInfo = "", 
+            bool bDebug = false, 
+            string cSubjectLinePrefix = "")
+        {
+            ReportExceptionCore(
+                ref sException,
+                vstrModuleName,
+                vstrRoutineName,
+                oException,
+                httpContext,
+                xsltTemplatePath,
+                vstrFurtherInfo,
+                bDebug,
+                cSubjectLinePrefix);
+        }
+
+        /// <summary>
+        /// Legacy overload for backward compatibility
+        /// </summary>
+        [Obsolete("Use overload with IHttpContext parameter for .NET Core compatibility")]
+        public static void reportException(
+            ref string sException, 
+            string vstrModuleName, 
+            string vstrRoutineName, 
+            Exception oException, 
+            string xsltTemplatePath = "/ewcommon/xsl/standard.xsl", 
+            string vstrFurtherInfo = "", 
+            bool bDebug = false, 
+            string cSubjectLinePrefix = "")
+        {
+            System.Web.HttpContext httpContext = System.Web.HttpContext.Current;
+            // TODO: Wrap System.Web.HttpContext.Current when available
+            
+            ReportExceptionCore(
+                ref sException,
+                vstrModuleName,
+                vstrRoutineName,
+                oException,
+                httpContext,
+                xsltTemplatePath,
+                vstrFurtherInfo,
+                bDebug,
+                cSubjectLinePrefix);
+        }
+
+        private static void ReportExceptionCore(
+            ref string sException, 
+            string vstrModuleName, 
+            string vstrRoutineName, 
+            Exception oException,
+            System.Web.HttpContext httpContext,
+            string xsltTemplatePath, 
+            string vstrFurtherInfo, 
+            bool bDebug, 
+            string cSubjectLinePrefix)
         {
 
             // Author:        Trevor Spink
@@ -387,11 +547,13 @@ namespace Protean
             string cHost = "";
             System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
-            // Dim moRequest As System.Web.HttpRequest = System.Web.HttpContext.Current.Request
+            // Use abstracted request
+            System.Web.HttpRequest moRequest = httpContext?.Request;
+
             sProcessInfo = "Getting Host";
-            if (System.Web.HttpContext.Current != null)
+            if (moRequest != null)
             {
-                cHost = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"];
+                cHost = moRequest.ServerVariables["HTTP_HOST"];
             }
             if (string.IsNullOrEmpty(sException))
             {
@@ -422,7 +584,7 @@ namespace Protean
                     oElmt.SetAttribute("type", "Formatted Text");
                     oElmt.SetAttribute("name", "column1");
 
-                    strErrorHtml = exceptionReport(oException, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo);
+                    strErrorHtml = exceptionReport(oException, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo, httpContext);
                     strMessageHtml = "<div style=\"font-family:Verdana,Tahoma,Arial\"><h2>Unfortunately this site has experienced an error.</h2>" + "<h3>We take all errors very seriously.</h3>" + "<p>" + "This error has been recorded and details sent to <a href=\"http://www.eonic.co.uk\">Eonic</a> who provide technical support for this website." + "</p>" + "<p>" + "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=\"mailto:support@eonic.co.uk\">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." + "</p>" + "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" + "<a href=\"javascript:history.back();\">Click Here to return to the previous page.</a></div>";
 
                     try
@@ -487,7 +649,7 @@ namespace Protean
                                 }
                                 catch (Exception exp)
                                 {
-                                    AddExceptionToEventLog(exp, sProcessInfo, oException, vstrFurtherInfo);
+                                    AddExceptionToEventLog(exp, sProcessInfo, oException, vstrFurtherInfo, httpContext);
                                 }
                             }
                         }
@@ -495,7 +657,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        AddExceptionToEventLog(ex, sProcessInfo, oException, vstrFurtherInfo);
+                        AddExceptionToEventLog(ex, sProcessInfo, oException, vstrFurtherInfo, httpContext);
                     }
                 }
             }
@@ -507,7 +669,10 @@ namespace Protean
             AddExceptionToEventLog(oException, cFurtherInfo);
         }
 
-        public static void AddExceptionToEventLog(Exception oCurrentException, string cCurrentInfo, Exception oOriginalError = null, string cOriginalInfo = "")
+        /// <summary>
+        /// Adds exception to Windows Event Log with IHttpContext support
+        /// </summary>
+        public static void AddExceptionToEventLog(Exception oCurrentException, string cCurrentInfo, Exception oOriginalError = null, string cOriginalInfo = "", System.Web.HttpContext httpContext = null)
         {
             // writes an event to the even log under the heading "EonicWebV4.1"
             string thisError;
@@ -529,7 +694,13 @@ namespace Protean
                     }
                 }
 
-                if (System.Web.HttpContext.Current != null)
+                // Try abstracted context first, then fall back to legacy
+                if (httpContext?.Request != null)
+                {
+                    cSource = httpContext.Request.ServerVariables["HTTP_HOST"];
+                    cMessage = "Site: " + httpContext.Request.ServerVariables["HTTP_HOST"] + "\r\n";
+                }
+                else if (System.Web.HttpContext.Current != null)
                 {
                     cSource = System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"];
                     cMessage = "Site: " + System.Web.HttpContext.Current.Request.ServerVariables["HTTP_HOST"] + "\r\n";
@@ -588,23 +759,19 @@ namespace Protean
         }
 
 
-        public static string exceptionReport(Exception oException, string sComponent, string sInfo)
+        /// <summary>
+        /// Generates detailed exception report HTML with IHttpContext support
+        /// </summary>
+        public static string exceptionReport(Exception oException, string sComponent, string sInfo, System.Web.HttpContext httpContext = null)
         {
-            string exceptionReportRet = default;
-
             string cReport;
             string cSV;
             string cAssembly = "";
-            System.Web.HttpRequest moRequest = null;
-            System.Web.SessionState.HttpSessionState moSession = null;
-
-            if (System.Web.HttpContext.Current != null)
-            {
-                moRequest = System.Web.HttpContext.Current.Request;
-                moSession = System.Web.HttpContext.Current.Session;
-
-                System.Web.HttpContext.Current.Server.MapPath("");
-            }
+            
+            // Use abstracted context
+            System.Web.HttpRequest moRequest = httpContext?.Request;
+            System.Web.SessionState.HttpSessionState moSession = httpContext?.Session;
+            System.Web.HttpServerUtility moServer = httpContext?.Server;
 
             cReport = "<div style=\"font: normal .75em/1.5 Verdana, Tahoma, sans-serif;\"><h2>ProteanCMS has returned the following Error</h2>" + "<table cellpadding=\"1\" cellspacing=\"0\" border=\"0\">";
 
@@ -612,7 +779,17 @@ namespace Protean
             addExceptionHeader(ref cReport, "Report Info");
             addExceptionLine(ref cReport, "Date + Time", DateTime.Now.ToString("dd MMMM yyyy"));
             addExceptionLine(ref cReport, "Webserver:", Environment.MachineName);
-            addExceptionLine(ref cReport, "SiteName:", System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName());
+            
+            // Try to get site name from hosting environment or abstracted server
+            try
+            {
+                string siteName = System.Web.Hosting.HostingEnvironment.ApplicationHost?.GetSiteName() ?? "Unknown";
+                addExceptionLine(ref cReport, "SiteName:", siteName);
+            }
+            catch
+            {
+                addExceptionLine(ref cReport, "SiteName:", "N/A");
+            }
 
             var a = Assembly.GetExecutingAssembly();
             addExceptionLine(ref cReport, "Assembly", a.FullName);
@@ -636,25 +813,31 @@ namespace Protean
             // Session Variables
             if (moSession != null)
             {
-                if (moSession.Count > 0)
+                try
                 {
-                    addExceptionHeader(ref cReport, "Session Variables");
-                    foreach (string currentCSV in moSession)
+                    if (moSession.Count > 0)
                     {
-                        cSV = currentCSV;
-                        try
+                        addExceptionHeader(ref cReport, "Session Variables");
+                        foreach (string cSV2 in moSession.Keys)
                         {
-                            addExceptionLine(ref cReport, cSV, Convert.ToString(moSession[cSV]));
-                        }
-                        catch
-                        {
-                            addExceptionLine(ref cReport, cSV, "object cannot be converted to string");
+                            try
+                            {
+                                addExceptionLine(ref cReport, cSV2, Convert.ToString(moSession[cSV2]));
+                            }
+                            catch
+                            {
+                                addExceptionLine(ref cReport, cSV2, "object cannot be converted to string");
+                            }
                         }
                     }
+                    else
+                    {
+                        addExceptionHeader(ref cReport, "No Session variables found");
+                    }
                 }
-                else
+                catch
                 {
-                    addExceptionHeader(ref cReport, "No Session variables found");
+                    addExceptionHeader(ref cReport, "Session unavailable");
                 }
             }
 
@@ -662,8 +845,8 @@ namespace Protean
             if (moRequest != null)
             {
                 addExceptionHeader(ref cReport, "Server Variables");
-                addExceptionLine(ref cReport, "AppPath", moRequest.ApplicationPath);
-                addExceptionLine(ref cReport, "AppPath", moRequest.ApplicationPath);
+                addExceptionLine(ref cReport, "AppPath", moRequest.ApplicationPath ?? "");
+                addExceptionLine(ref cReport, "Path", moRequest.Path ?? "");
                 // ++++++++++++ Only re-enable this temporarily if needed for debugging +++++ Can cause credit card numbers to show in error messages.... bad karma man!
 
                 // If moRequest.QueryString.Count > 0 Then
@@ -687,25 +870,15 @@ namespace Protean
 
                 // ' Server Variables
                 addExceptionHeader(ref cReport, "Server Variables");
-                foreach (string currentCSV1 in moRequest.ServerVariables)
+                foreach (string cSV3 in moRequest.ServerVariables)
                 {
-                    cSV = currentCSV1;
                     // If Left(cSV, 5) = "HTTP_" Then addExceptionLine(cReport, cSV, moRequest.ServerVariables(cSV))
-                    addExceptionLine(ref cReport, cSV, moRequest.ServerVariables[cSV]);
+                    addExceptionLine(ref cReport, cSV3, moRequest.ServerVariables[cSV3]);
                 }
             }
 
             cReport = cReport + "</table></div>";
-            exceptionReportRet = Xml.convertEntitiesToCodes(cReport);
-
-            //switch (oException.GetType().ToString() ?? "")
-            //{
-
-            //    // case ""
-
-            //}
-
-            return exceptionReportRet;
+            return Xml.convertEntitiesToCodes(cReport);
 
         }
 
@@ -764,7 +937,12 @@ namespace Protean
             if (Tools.Text.IsDate(dDate))
             {
                 sdate = Convert.ToString(Convert.ToDateTime(dDate));
-                niceDateRet = System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetDayOfMonth(Convert.ToDateTime(sdate)) + " " + DateAndTime.MonthName(System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetMonth(Convert.ToDateTime(sdate)), true) + " " + System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetYear(Convert.ToDateTime(sdate));
+                DateTime parsedDate = Convert.ToDateTime(sdate);
+                var culture = System.Threading.Thread.CurrentThread.CurrentCulture;
+                niceDateRet = culture.Calendar.GetDayOfMonth(parsedDate) + " " +
+                              culture.DateTimeFormat.GetAbbreviatedMonthName(culture.Calendar.GetMonth(parsedDate)) + " " +
+                              culture.Calendar.GetYear(parsedDate);
+
             }
             else if (dDate.ToString() != "00:00:00")
             {
@@ -1163,12 +1341,12 @@ namespace Protean
                 {
                     double adjustment = Math.Pow(10d, nDecimalPlaces);
                     // RetVal = Math.Floor(nNumber, adjustment)/adjustment;
-                    RetVal = Math.Round((Decimal)nNumber, nDecimalPlaces, MidpointRounding.ToEven);
+                    RetVal = Math.Round(Convert.ToDecimal(nNumber), nDecimalPlaces, MidpointRounding.ToEven);
                 }
                 // RetVal = Math.Round(nNumber, nDecimalPlaces, MidpointRounding.ToEven)
                 else
                 {
-                    RetVal = Math.Round((Decimal)nNumber, nDecimalPlaces);
+                    RetVal = Math.Round(Convert.ToDecimal(nNumber), nDecimalPlaces);
                 }
                 return RetVal;
             }

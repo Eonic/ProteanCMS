@@ -3,8 +3,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
 using static Protean.stdTools;
 
@@ -196,8 +194,8 @@ namespace Protean
                                 while (oDr.Read())
                                 {
                                     mnGiftListId = Convert.ToInt32(oDr["nGiftListId"]);
-                                    mnTaxRate = Convert.ToDouble(Operators.ConcatenateObject("0", oDr["nTaxRate"]));
-                                    mnProcessId = Convert.ToInt16(Operators.ConcatenateObject("0", oDr["nCartStatus"]));
+                                    mnTaxRate = Convert.ToDouble(oDr["nTaxRate"]?.ToString() ?? "0");
+                                    mnProcessId = Convert.ToInt16(oDr["nCartStatus"]?.ToString() ?? "0");
                                 }
                             }
                             else
@@ -229,7 +227,7 @@ namespace Protean
                         }
                         else
                         {
-                            sSql = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='cart' and o.cCartSessionId = '", stdTools.SqlFmt(mcSessionId)), "' and DATEDIFF(hh,a.dInsertDate,GETDATE())<24"));
+                            sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId " + "where o.cCartSchemaName='cart' and o.cCartSessionId = '" + stdTools.SqlFmt(mcSessionId) + "' and DATEDIFF(hh,a.dInsertDate,GETDATE())<24";
                         }
                         using (SqlDataReader oDr = base.moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                         {
@@ -249,9 +247,11 @@ namespace Protean
                                         mnProcessId = 5;
 
                                         // If a cart has been found, we need to update the session ID in it.
-                                        if (!Operators.ConditionalCompareObjectEqual(oDr["cCartSessionId"], mcSessionId, false))
+                                        if (!Equals(oDr["cCartSessionId"]?.ToString(), mcSessionId))
                                         {
-                                            base.moDBHelper.ExeProcessSql("update tblCartOrder set cCartSessionId = '" + mcSessionId + "' where nCartOrderKey = " + mnCartId);
+                                            base.moDBHelper.ExeProcessSql(
+                                                $"update tblCartOrder set cCartSessionId = '{mcSessionId}' where nCartOrderKey = {mnCartId}"
+                                            );
                                         }
 
                                         // Reactivate the order in the database
@@ -1112,7 +1112,7 @@ namespace Protean
                         XmlElement xmlnothing = null;
                         nCurrentCart =Convert.ToInt32(otmpcart.CreateNewCart(ref xmlnothing));
                     }
-                    int nQuoteId = mnCartId;
+                    long nQuoteId = mnCartId;
 
                     var oDS = new DataSet();
                     oDS = base.moDBHelper.GetDataSet("Select * From tblCartItem WHERE nCartOrderID = " + nQuoteId, "CartItems");
@@ -1144,57 +1144,60 @@ namespace Protean
 
                     foreach (DataRow oDR1 in oDS.Tables["CartItems"].Rows)
                     {
-                        if (Convert.ToInt16(Operators.ConcatenateObject("0", oDR1["nParentId"])) == 0)
+                        if (Convert.ToInt16(oDR1["nParentId"]?.ToString() ?? "0") == 0)
                         {
-                            sSQL = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " + "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " + "nTaxRate, nQuantity, nWeight, nAuditId) VALUES (";
-                            sSQL += nCurrentCart + ",";
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nItemId"] is DBNull, "Null", oDR1["nItemId"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nParentId"] is DBNull, "Null", oDR1["nParentId"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["cItemRef"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR1["cItemRef"])), "',"));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["cItemURL"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR1["cItemURL"])), "',"));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["cItemName"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR1["cItemName"])), "',"));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nItemOptGrpIdx"] is DBNull, "Null", oDR1["nItemOptGrpIdx"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nItemOptIdx"] is DBNull, "Null", oDR1["nItemOptIdx"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nPrice"] is DBNull, "Null", oDR1["nPrice"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nShpCat"] is DBNull, "Null", oDR1["nShpCat"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nDiscountCat"] is DBNull, "Null", oDR1["nDiscountCat"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nDiscountValue"] is DBNull, "Null", oDR1["nDiscountValue"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nTaxRate"] is DBNull, "Null", oDR1["nTaxRate"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nQuantity"] is DBNull, "Null", oDR1["nQuantity"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nWeight"] is DBNull, "Null", oDR1["nWeight"]), ","));
-                            sSQL += base.moDBHelper.getAuditId() + ")";
+                            sSQL = $"INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " +
+                                          "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " +
+                                          "nTaxRate, nQuantity, nWeight, nAuditId) VALUES (" +
+                                          $"{nCurrentCart}," +
+                                          $"{(oDR1["nItemId"] is DBNull ? "NULL" : oDR1["nItemId"])}," +
+                                          $"{(oDR1["nParentId"] is DBNull ? "NULL" : oDR1["nParentId"])}," +
+                                          $"{(oDR1["cItemRef"] is DBNull ? "NULL" : $"'{oDR1["cItemRef"]}'")}," +
+                                          $"{(oDR1["cItemURL"] is DBNull ? "NULL" : $"'{oDR1["cItemURL"]}'")}," +
+                                          $"{(oDR1["cItemName"] is DBNull ? "NULL" : $"'{oDR1["cItemName"]}'")}," +
+                                          $"{(oDR1["nItemOptGrpIdx"] is DBNull ? "NULL" : oDR1["nItemOptGrpIdx"])}," +
+                                          $"{(oDR1["nItemOptIdx"] is DBNull ? "NULL" : oDR1["nItemOptIdx"])}," +
+                                          $"{(oDR1["nPrice"] is DBNull ? "NULL" : oDR1["nPrice"])}," +
+                                          $"{(oDR1["nShpCat"] is DBNull ? "NULL" : oDR1["nShpCat"])}," +
+                                          $"{(oDR1["nDiscountCat"] is DBNull ? "NULL" : oDR1["nDiscountCat"])}," +
+                                          $"{(oDR1["nDiscountValue"] is DBNull ? "NULL" : oDR1["nDiscountValue"])}," +
+                                          $"{(oDR1["nTaxRate"] is DBNull ? "NULL" : oDR1["nTaxRate"])}," +
+                                          $"{(oDR1["nQuantity"] is DBNull ? "NULL" : oDR1["nQuantity"])}," +
+                                          $"{(oDR1["nWeight"] is DBNull ? "NULL" : oDR1["nWeight"])}," +
+                                          $"{base.moDBHelper.getAuditId()})";
+
                             nParentID = Convert.ToInt32(base.moDBHelper.GetIdInsertSql(sSQL));
+
                             // now for any children
                             foreach (DataRow oDR2 in oDS.Tables["CartItems"].Rows)
                             {
-                                if (!(oDR2["nParentId"] is DBNull))
+                                if (!(oDR2["nParentId"] is DBNull) && Equals(oDR2["nParentId"], oDR1["nCartItemKey"]))
                                 {
-                                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR2["nParentId"], oDR1["nCartItemKey"], false)))
-                                    {
-                                        sSQL = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " + "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " + "nTaxRate, nQuantity, nWeight, nAuditId) VALUES (";
-                                        sSQL += nCurrentCart + ",";
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nItemId"] is DBNull, "Null", oDR2["nItemId"]), ","));
-                                        sSQL += nParentID + ",";
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["cItemRef"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR2["cItemRef"])), "',"));
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["cItemURL"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR2["cItemURL"])), "',"));
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["cItemName"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR2["cItemName"])), "',"));
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nItemOptGrpIdx"] is DBNull, "Null", oDR2["nItemOptGrpIdx"]), ","));
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nItemOptIdx"] is DBNull, "Null", oDR2["nItemOptIdx"]), ","));
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nPrice"] is DBNull, "Null", oDR2["nPrice"]), ","));
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nShpCat"] is DBNull, "Null", oDR2["nShpCat"]), ","));
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nDiscountCat"] is DBNull, "Null", oDR2["nDiscountCat"]), ","));
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nDiscountValue"] is DBNull, "Null", oDR2["nDiscountValue"]), ","));
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nTaxRate"] is DBNull, "Null", oDR2["nTaxRate"]), ","));
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nQuantity"] is DBNull, "Null", oDR2["nQuantity"]), ","));
-                                        sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nWeight"] is DBNull, "Null", oDR2["nWeight"]), ","));
-                                        sSQL += base.moDBHelper.getAuditId() + ")";
-                                        base.moDBHelper.GetIdInsertSql(sSQL);
-                                        // now for any children
-                                    }
-                                }
+                                    sSQL = $"INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " +
+                                           "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " +
+                                           "nTaxRate, nQuantity, nWeight, nAuditId) VALUES (" +
+                                           $"{nCurrentCart}," +
+                                           $"{(oDR2["nItemId"] is DBNull ? "NULL" : oDR2["nItemId"])}," +
+                                           $"{nParentID}," +
+                                           $"{(oDR2["cItemRef"] is DBNull ? "NULL" : $"'{oDR2["cItemRef"]}'")}," +
+                                           $"{(oDR2["cItemURL"] is DBNull ? "NULL" : $"'{oDR2["cItemURL"]}'")}," +
+                                           $"{(oDR2["cItemName"] is DBNull ? "NULL" : $"'{oDR2["cItemName"]}'")}," +
+                                           $"{(oDR2["nItemOptGrpIdx"] is DBNull ? "NULL" : oDR2["nItemOptGrpIdx"])}," +
+                                           $"{(oDR2["nItemOptIdx"] is DBNull ? "NULL" : oDR2["nItemOptIdx"])}," +
+                                           $"{(oDR2["nPrice"] is DBNull ? "NULL" : oDR2["nPrice"])}," +
+                                           $"{(oDR2["nShpCat"] is DBNull ? "NULL" : oDR2["nShpCat"])}," +
+                                           $"{(oDR2["nDiscountCat"] is DBNull ? "NULL" : oDR2["nDiscountCat"])}," +
+                                           $"{(oDR2["nDiscountValue"] is DBNull ? "NULL" : oDR2["nDiscountValue"])}," +
+                                           $"{(oDR2["nTaxRate"] is DBNull ? "NULL" : oDR2["nTaxRate"])}," +
+                                           $"{(oDR2["nQuantity"] is DBNull ? "NULL" : oDR2["nQuantity"])}," +
+                                           $"{(oDR2["nWeight"] is DBNull ? "NULL" : oDR2["nWeight"])}," +
+                                           $"{base.moDBHelper.getAuditId()})";
 
+                                    base.moDBHelper.GetIdInsertSql(sSQL);
+                                }
                             }
                         }
+
                         // now to copy the addresses
                         oDS = base.moDBHelper.GetDataSet("Select * From tblCartContact WHERE nContactCartID = " + nQuoteId, "CartContacts");
                         string cNewSQL = "";
@@ -1222,16 +1225,16 @@ namespace Protean
                                 else if (Tools.Number.IsNumeric(oDR[odc.ColumnName]))
                                 {
                                     cFields += odc.ColumnName + ",";
-                                    cValues = Convert.ToString(cValues + Operators.ConcatenateObject(oDR[odc.ColumnName], ","));
+                                    cValues += oDR[odc.ColumnName] + ",";
                                 }
                                 else
                                 {
                                     cFields += odc.ColumnName + ",";
-                                    cValues = Convert.ToString(cValues + Operators.ConcatenateObject(Operators.ConcatenateObject("'", oDR[odc.ColumnName]), "',"));
+                                    cValues += $"'{oDR[odc.ColumnName]}'" + ",";
                                 }
                             }
-                            cFields = Strings.Left(cFields, cFields.Length - 1);
-                            cValues = Strings.Left(cValues, cValues.Length - 1);
+                            cFields = cFields.Substring(0, cFields.Length - 1);
+                            cValues = cValues.Substring(0, cValues.Length - 1);
                             cNewSQL += "(" + cFields + ") VALUES ";
                             cNewSQL += "(" + cValues + ")  ";
                             base.moDBHelper.GetIdInsertSql(cNewSQL);
@@ -1314,50 +1317,56 @@ namespace Protean
                     base.moDBHelper.ExeProcessSql(sSQL);
                     foreach (DataRow oDR1 in oDS.Tables["CartItems"].Rows)
                     {
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR1["nParentId"], 0, false)))
+                        if (Convert.ToInt16(oDR1["nParentId"]?.ToString() ?? "0") == 0)
                         {
-                            sSQL = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " + "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " + "nTaxRate, nQuantity, nWeight, nAuditId) VALUES (";
-                            sSQL += mnCartId + ",";
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nItemId"] is DBNull, "Null", oDR1["nItemId"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nParentId"] is DBNull, "Null", oDR1["nParentId"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["cItemRef"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR1["cItemRef"])), "',"));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["cItemURL"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR1["cItemURL"])), "',"));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["cItemName"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR1["cItemName"])), "',"));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nItemOptGrpIdx"] is DBNull, "Null", oDR1["nItemOptGrpIdx"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nItemOptIdx"] is DBNull, "Null", oDR1["nItemOptIdx"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nPrice"] is DBNull, "Null", oDR1["nPrice"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nShpCat"] is DBNull, "Null", oDR1["nShpCat"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nDiscountCat"] is DBNull, "Null", oDR1["nDiscountCat"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nDiscountValue"] is DBNull, "Null", oDR1["nDiscountValue"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nTaxRate"] is DBNull, "Null", oDR1["nTaxRate"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nQuantity"] is DBNull, "Null", oDR1["nQuantity"]), ","));
-                            sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nWeight"] is DBNull, "Null", oDR1["nWeight"]), ","));
-                            sSQL += base.moDBHelper.getAuditId() + ")";
-                            nParentID =Convert.ToInt32(base.moDBHelper.GetIdInsertSql(sSQL));
-                            // now for any children
+                            sSQL = $"INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " +
+                                          "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " +
+                                          "nTaxRate, nQuantity, nWeight, nAuditId) VALUES (" +
+                                          $"{mnCartId}," +
+                                          $"{(oDR1["nItemId"] is DBNull ? "NULL" : oDR1["nItemId"])}," +
+                                          $"{(oDR1["nParentId"] is DBNull ? "NULL" : oDR1["nParentId"])}," +
+                                          $"{(oDR1["cItemRef"] is DBNull ? "NULL" : $"'{oDR1["cItemRef"]}'")}," +
+                                          $"{(oDR1["cItemURL"] is DBNull ? "NULL" : $"'{oDR1["cItemURL"]}'")}," +
+                                          $"{(oDR1["cItemName"] is DBNull ? "NULL" : $"'{oDR1["cItemName"]}'")}," +
+                                          $"{(oDR1["nItemOptGrpIdx"] is DBNull ? "NULL" : oDR1["nItemOptGrpIdx"])}," +
+                                          $"{(oDR1["nItemOptIdx"] is DBNull ? "NULL" : oDR1["nItemOptIdx"])}," +
+                                          $"{(oDR1["nPrice"] is DBNull ? "NULL" : oDR1["nPrice"])}," +
+                                          $"{(oDR1["nShpCat"] is DBNull ? "NULL" : oDR1["nShpCat"])}," +
+                                          $"{(oDR1["nDiscountCat"] is DBNull ? "NULL" : oDR1["nDiscountCat"])}," +
+                                          $"{(oDR1["nDiscountValue"] is DBNull ? "NULL" : oDR1["nDiscountValue"])}," +
+                                          $"{(oDR1["nTaxRate"] is DBNull ? "NULL" : oDR1["nTaxRate"])}," +
+                                          $"{(oDR1["nQuantity"] is DBNull ? "NULL" : oDR1["nQuantity"])}," +
+                                          $"{(oDR1["nWeight"] is DBNull ? "NULL" : oDR1["nWeight"])}," +
+                                          $"{base.moDBHelper.getAuditId()})";
+
+                            nParentID = Convert.ToInt32(base.moDBHelper.GetIdInsertSql(sSQL));
+
+                            // Insert child items
                             foreach (DataRow oDR2 in oDS.Tables["CartItems"].Rows)
                             {
-                                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR2["nParentId"], oDR1["nCartItemKey"], false)))
+                                if (!(oDR2["nParentId"] is DBNull) && Equals(oDR2["nParentId"], oDR1["nCartItemKey"]))
                                 {
-                                    sSQL = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " + "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " + "nTaxRate, nQuantity, nWeight, nAuditId) VALUES (";
-                                    sSQL += mnCartId + ",";
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nItemId"] is DBNull, "Null", oDR2["nItemId"]), ","));
-                                    sSQL += nParentID + ",";
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["cItemRef"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR2["cItemRef"])), "',"));
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["cItemURL"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR2["cItemURL"])), "',"));
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["cItemName"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR2["cItemName"])), "',"));
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nItemOptGrpIdx"] is DBNull, "Null", oDR2["nItemOptGrpIdx"]), ","));
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nItemOptIdx"] is DBNull, "Null", oDR2["nItemOptIdx"]), ","));
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nPrice"] is DBNull, "Null", oDR2["nPrice"]), ","));
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nShpCat"] is DBNull, "Null", oDR2["nShpCat"]), ","));
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nDiscountCat"] is DBNull, "Null", oDR2["nDiscountCat"]), ","));
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nDiscountValue"] is DBNull, "Null", oDR2["nDiscountValue"]), ","));
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nTaxRate"] is DBNull, "Null", oDR2["nTaxRate"]), ","));
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nQuantity"] is DBNull, "Null", oDR2["nQuantity"]), ","));
-                                    sSQL = Convert.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nWeight"] is DBNull, "Null", oDR2["nWeight"]), ","));
-                                    sSQL += base.moDBHelper.getAuditId() + ")";
+                                    sSQL = $"INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " +
+                                           "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " +
+                                           "nTaxRate, nQuantity, nWeight, nAuditId) VALUES (" +
+                                           $"{mnCartId}," +
+                                           $"{(oDR2["nItemId"] is DBNull ? "NULL" : oDR2["nItemId"])}," +
+                                           $"{nParentID}," +
+                                           $"{(oDR2["cItemRef"] is DBNull ? "NULL" : $"'{oDR2["cItemRef"]}'")}," +
+                                           $"{(oDR2["cItemURL"] is DBNull ? "NULL" : $"'{oDR2["cItemURL"]}'")}," +
+                                           $"{(oDR2["cItemName"] is DBNull ? "NULL" : $"'{oDR2["cItemName"]}'")}," +
+                                           $"{(oDR2["nItemOptGrpIdx"] is DBNull ? "NULL" : oDR2["nItemOptGrpIdx"])}," +
+                                           $"{(oDR2["nItemOptIdx"] is DBNull ? "NULL" : oDR2["nItemOptIdx"])}," +
+                                           $"{(oDR2["nPrice"] is DBNull ? "NULL" : oDR2["nPrice"])}," +
+                                           $"{(oDR2["nShpCat"] is DBNull ? "NULL" : oDR2["nShpCat"])}," +
+                                           $"{(oDR2["nDiscountCat"] is DBNull ? "NULL" : oDR2["nDiscountCat"])}," +
+                                           $"{(oDR2["nDiscountValue"] is DBNull ? "NULL" : oDR2["nDiscountValue"])}," +
+                                           $"{(oDR2["nTaxRate"] is DBNull ? "NULL" : oDR2["nTaxRate"])}," +
+                                           $"{(oDR2["nQuantity"] is DBNull ? "NULL" : oDR2["nQuantity"])}," +
+                                           $"{(oDR2["nWeight"] is DBNull ? "NULL" : oDR2["nWeight"])}," +
+                                           $"{base.moDBHelper.getAuditId()})";
+
                                     base.moDBHelper.GetIdInsertSql(sSQL);
-                                    // now for any children
                                 }
                             }
                         }

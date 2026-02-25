@@ -38,6 +38,9 @@
 							<img class="detail"/>
 						</Images>
 						<ShortDescription/>
+						<Specs>
+							<Spec name=""></Spec>
+						</Specs>
 					</Content>
 				</cContentXmlBrief>
 				<cContentXmlDetail>
@@ -71,6 +74,9 @@
 						<ShortDescription/>
 						<Body/>
 						<SpecificationDocument/>
+						<Specs>
+							<Spec name=""></Spec>
+						</Specs>
 						<Keywords/>
 					</Content>
 				</cContentXmlDetail>
@@ -88,14 +94,21 @@
 		</instance>
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind nodeset="tblContent">
-			<bind id="cContentProductName" nodeset="cContentName" required="true()" type="string"/>
+			<bind id="cContentProductNameURL" nodeset="cContentName" required="true()" type="string"/>
 			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
 			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
 			<bind id="nStatus" nodeset="nStatus" required="true()" type="string"/>
 			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+			<bind id="cFref" nodeset="cContentForiegnRef" required="false()" type="string"/>
 			<bind nodeset="cContentXmlBrief/Content">
 				<bind id="cContentProductName" nodeset="Name" required="true()" type="string"/>
 				<bind id="cContentManufacturer" nodeset="Manufacturer" required="false()" type="string"/>
+				<bind nodeset="Specs">
+					<bind id="cSpecRpt1" nodeset="Spec">
+						<bind id="cSpecName1" nodeset="@name" required="false()" type="string"/>
+						<bind id="cSpecInfo1" nodeset="" required="false()" type="string"/>
+					</bind>
+				</bind>
 				<bind nodeset="Options/OptGroup[@type='Options1']">
 					<bind id="cOptName1" nodeset="@name" required="false()" type="string"/>
 					<bind id="cOptType1" nodeset="@selectType" required="false()" type="string"/>
@@ -197,7 +210,13 @@
 					<input bind="cContentProductName" class="required long">
 						<label>Product name</label>
 						<help class="inline">
-							<p>This is the name that will display for the product, and also form the URL.</p>
+							<p>This is the name that will display for the product.</p>
+						</help>
+					</input>
+					<input bind="cContentProductNameURL" class="required long">
+						<label>Product URL</label>
+						<help class="inline">
+							<p>This is the name that will display for the URL.</p>
 							<p>Try to avoid ALL CAPS, as this can have a detramental effect on search engine listings or Product feed submissions.</p>
 						</help>
 					</input>
@@ -301,16 +320,13 @@
               <label>RRP Interval</label>
               <help class="inline">The interval of a payment e.g. pm</help>
           </input>-->
-							</group>
+						
 						</group>
 					</group>
 				</group>
-				<group class="horizontal-form">
-					<input bind="cContentSpecificationDocument" class="short pickDocument">
-						<label>Specification document</label>
-					</input>
+		
 				</group>
-				<group>
+				<group><group class="form-section-wrapper horizontal-form">
 					<label>Descriptions</label>
 
 					<textarea bind="cContentStrap" class="TextArea xhtml" rows="1">
@@ -320,13 +336,49 @@
 					<textarea bind="cContentBody" class="TextArea xhtml" rows="10">
 						<label>Full description</label>
 					</textarea>
+					<group class="form-section-wrapper">
+						<group class="horizontal-form">
+							<input bind="cContentSpecificationDocument" class="short pickDocument">
+								<label>Specification document</label>
+							</input>
+						</group>
 
-				</group>
+            <group >
+              <label>Additional Documents</label>
+              <relatedContent search="find add" type="Document" relationType="" direction="2way"/>
+            </group>
+					</group>
+						</group>
 				<!--<group>
 				<input bind="cContentKeywords" class="long">
 					<label>Additional Keywords</label>
 				</input>
 			</group>-->
+				<group class="form-section-wrapper mb-0 product-specs">
+									<div>
+										* NOTE: Spec labels are populated from all other products on the same page.
+									</div>
+									<trigger>
+										<label>Add Spec</label>
+										<insert position="after" bind="cSpecRpt1" at="index('cSpecRpt1')" class="add float-md-end"/>
+									</trigger>
+									<label>Specifications</label>
+									<repeat bind="cSpecRpt1" class="inline-form horizontal-form">
+										<input bind="cSpecName1" class="">
+											<label>Label</label>
+										</input>
+										<input bind="cSpecInfo1" class="">
+											<label>Info</label>
+										</input>
+										<trigger>
+											<label>Del</label>
+											<delete bind="cSpecRpt1" at="index('cOptRpt1')"/>
+										</trigger>
+									</repeat>
+								</group>
+
+			
+						</group>
 				<group>
 					<group class="form-section-wrapper horizontal-form">
 						<label>Product Variations</label>
@@ -368,7 +420,7 @@
 								<toggle case="cSkuOptions_2" event="DOMActivate"/>
 							</item>
 						</select1>
-
+						
 						<switch class="disable" for="cSkuOptions">
 							<case id="cSkuOptions_0"/>
 							<case id="cSkuOptions_1">

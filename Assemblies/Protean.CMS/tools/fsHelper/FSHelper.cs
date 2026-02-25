@@ -20,8 +20,6 @@ using System.Web.Configuration;
 using System.Xml;
 using AngleSharp.Io;
 using DelegateWrappers;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using SkiaSharp;
 using static Protean.stdTools;
 
@@ -115,7 +113,7 @@ namespace Protean
             {
 
                 mcRoot = GetFileLibraryPath(nLib);
-                mcRoot = Strings.Replace(mcRoot, "/", @"\");
+                mcRoot = mcRoot.Replace("/", @"\");
 
                 if (mcRoot.StartsWith(@"\"))
                     mcRoot = mcRoot.Substring(1);
@@ -151,7 +149,7 @@ namespace Protean
             try
             {
 
-                mcRoot = Strings.Replace(mcRoot, "/", @"\");
+                mcRoot = mcRoot.Replace("/", @"\");
                 if (mcRoot.StartsWith(@"\"))
                     mcRoot = mcRoot.Substring(1);
 
@@ -291,7 +289,7 @@ namespace Protean
             string cProcessInfo = "";
             try
             {
-                cPath = Strings.Replace(cPath, @"\", "/");
+                cPath = cPath.Replace(@"\", "/");
                 if (!cPath.StartsWith("/"))
                 {
                     cPath = "/" + cPath;
@@ -321,7 +319,7 @@ namespace Protean
             // PerfMon.Log("fsHelper", "getDirectoryTreeXml")
             string tempStartFolder;
             XmlElement TreeXml;
-            string[] aVirtualImageDirectories = Strings.Split(goConfig["VirtualImageDirectories"], ",");
+            string[] aVirtualImageDirectories = goConfig["VirtualImageDirectories"]?.Split(',') ?? new string[0];
             try
             {
 
@@ -413,7 +411,7 @@ namespace Protean
         {
             // PerfMon.Log("fsHelper", "CreatePath", cFolderPath)
             // in order to make this work the root directory needs to have read permissions for everyone or at lease asp.net acct
-            cFolderPath = Strings.Replace(cFolderPath, @"\", "/");
+            cFolderPath = cFolderPath.Replace(@"\", "/");
             string[] aFolderNames = cFolderPath.Split('/');
             int i;
             string tempFolder = "";
@@ -461,7 +459,7 @@ namespace Protean
                     rootDir.CreateSubdirectory(startFolderName);
                 }
 
-                var loopTo = Information.UBound(aFolderNames);
+                var loopTo = aFolderNames.Length - 1;
                 for (i = 0; i <= loopTo; i++)
                 {
                     if (!string.IsNullOrEmpty(aFolderNames[i]))
@@ -514,8 +512,8 @@ namespace Protean
             try
             {
                 // get file extension and path
-                int nDotPos = Strings.InStrRev(cFilePathFull, ".");
-                int nSlashPos = Strings.InStrRev(cFilePathFull, @"\");
+                int nDotPos = cFilePathFull.LastIndexOf('.');
+                int nSlashPos = cFilePathFull.LastIndexOf('\\');
                 cFilePath = cFilePathFull.Substring(0, nDotPos - 1);
                 cFileName = cFilePath.Substring(nSlashPos, cFilePath.Length - nSlashPos);
                 cFilePath = cFilePathFull.Substring(0, nSlashPos - 1);
@@ -736,7 +734,7 @@ namespace Protean
             try
             {
                 string cVP = mcStartFolder + cVirtualPath.Replace("/", @"\");
-                if (File.Exists(cVP) & File.GetLastWriteTime(cVP) > DateAndTime.DateAdd(DateInterval.Hour, hours * -1, DateTime.Now))
+                if (File.Exists(cVP) && File.GetLastWriteTime(cVP) > DateTime.Now.AddHours(-hours))
                 {
                     return 1;
                 }
@@ -871,9 +869,9 @@ namespace Protean
             try
             {
                 // here we will fix any unsafe web charactors in the name
-                FileName = Strings.Replace(FileName, " ", "-");
+                FileName = FileName.Replace(" ", "-");
 
-                cFolderPath = Strings.Replace(cFolderPath, "~", "");
+                cFolderPath = cFolderPath.Replace("~", "");
 
                 var dir = new DirectoryInfo(mcStartFolder + cFolderPath + @"\");
                 if (!dir.Exists)
@@ -911,10 +909,10 @@ namespace Protean
             // PerfMon.Log("fsHelper", "SaveFile")
             try
             {
-                string filename = Strings.Right(postedFile.FileName, postedFile.FileName.Length - postedFile.FileName.LastIndexOf(@"\") - 1);
+                string filename = postedFile.FileName.Substring(postedFile.FileName.LastIndexOf('\\') + 1);
 
                 // here we will fix any unsafe web charactors in the name
-                filename = Strings.Replace(filename, " ", "-");
+                filename = filename.Replace(" ", "-");
 
                 var dir = new DirectoryInfo(mcStartFolder + cFolderPath + @"\");
                 if (dir.Exists)
@@ -945,17 +943,17 @@ namespace Protean
             try
             {
                 httpURL = httpURL.Replace(@"\", "/");
-                string filename = Strings.Right(httpURL, httpURL.Length - httpURL.LastIndexOf("/") - 1);
+                string filename = httpURL.Substring(httpURL.LastIndexOf('/') + 1);
                 if (filename.IndexOf("?") > -1)
                 {
-                    filename = Strings.Right(filename, filename.Length - filename.LastIndexOf("=") - 1);
+                    filename = filename.Substring(filename.LastIndexOf('/') + 1);
                 }
                 // here we will fix any unsafe web charactors in the name
-                filename = Strings.Replace(filename, " ", "-");
+                filename = filename.Replace(" ", "-");
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 if (File.Exists(mcStartFolder + cFolderPath + @"\" + filename))
                 {
-                    return Strings.Replace(Strings.Replace(cFolderPath, @"..\", "/"), @"\", "/") + "/" + filename;
+                    return cFolderPath.Replace(@"..\", "/").Replace(@"\", "/") + "/" + filename;
                 }
                 else
                 {
@@ -978,7 +976,39 @@ namespace Protean
                         remoteStream = response.GetResponseStream();
                         try
                         {
-                            img = SKBitmap.Decode(remoteStream);
+                            // Buffer the entire stream to prevent partial reads
+                            using (var memoryStream = new MemoryStream())
+                            {
+                                remoteStream.CopyTo(memoryStream);
+                                memoryStream.Position = 0;
+
+                                // For PNG files, use premultiplied alpha to prevent black artifacts
+                                string fileExt = httpURL.Substring(httpURL.LastIndexOf('.') + 1).ToLower();
+                                bool isPng = fileExt == "png";
+
+                                // Use SKCodec for better control over decoding with alpha channel
+                                using (var codec = SKCodec.Create(memoryStream))
+                                {
+                                    if (codec != null)
+                                    {
+                                        // Use Premul for PNG to prevent black pixels on transparent areas
+                                        // Use Unpremul for other formats
+                                        var info = new SKImageInfo(
+                                            codec.Info.Width, 
+                                            codec.Info.Height, 
+                                            SKColorType.Rgba8888, 
+                                            isPng ? SKAlphaType.Premul : SKAlphaType.Unpremul
+                                        );
+                                        img = SKBitmap.Decode(codec, info);
+                                    }
+                                    else
+                                    {
+                                        // Fallback: reset stream and try direct decode
+                                        memoryStream.Position = 0;
+                                        img = SKBitmap.Decode(memoryStream);
+                                    }
+                                }
+                            }
                         }
                         catch (Exception ex2)
                         {
@@ -998,8 +1028,9 @@ namespace Protean
                                 {
                                     SKEncodedImageFormat format;
                                     int quality = 90;
+                                    string fileExtension = httpURL.Substring(httpURL.LastIndexOf('.') + 1).ToLower();
 
-                                    switch (Strings.Right(httpURL, httpURL.Length - httpURL.LastIndexOf(".") - 1) ?? "")
+                                    switch (fileExtension ?? "")
                                     {
                                         case "gif":
                                             // GIF -> convert to PNG (SkiaSharp doesn't support GIF encoding)
@@ -1020,10 +1051,30 @@ namespace Protean
                                             return "filetype not handled:" + filename;
                                     }
 
-                                    using (var data = image.Encode(format, quality))
-                                    using (var fileStream = File.OpenWrite(mcStartFolder + cFolderPath + @"\" + filename))
+                                    // For PNG files, ensure we're encoding with the correct pixel format to preserve alpha
+                                    if (fileExtension == "png" || fileExtension == "gif")
                                     {
-                                        data.SaveTo(fileStream);
+                                        // Create a new bitmap with the correct format if needed
+                                        using (var surface = SKSurface.Create(new SKImageInfo(img.Width, img.Height, SKColorType.Rgba8888, SKAlphaType.Premul)))
+                                        using (var canvas = surface.Canvas)
+                                        {
+                                            canvas.Clear(SKColors.Transparent);
+                                            canvas.DrawBitmap(img, 0, 0);
+                                            using (var pngImage = surface.Snapshot())
+                                            using (var data = pngImage.Encode(SKEncodedImageFormat.Png, quality))
+                                            using (var fileStream = File.OpenWrite(mcStartFolder + cFolderPath + @"\" + filename))
+                                            {
+                                                data.SaveTo(fileStream);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        using (var data = image.Encode(format, quality))
+                                        using (var fileStream = File.OpenWrite(mcStartFolder + cFolderPath + @"\" + filename))
+                                        {
+                                            data.SaveTo(fileStream);
+                                        }
                                     }
                                 }
 
@@ -1066,7 +1117,7 @@ namespace Protean
             {
 
                 // here we will fix any unsafe web charactors in the name
-                FileName = Strings.Replace(FileName, " ", "-");
+                FileName = FileName.Replace(" ", "-");
 
                 var dir = new DirectoryInfo(goServer.MapPath("/") + cFolderSource);
                 var DestDir = new DirectoryInfo(goServer.MapPath("/") + cFolderDestination);
@@ -1243,7 +1294,7 @@ namespace Protean
                 if (thisDir.Name.StartsWith(FolderPrefix) | string.IsNullOrEmpty(FolderPrefix))
                 {
                     var LogFile = new FileInfo(goServer.MapPath(path) + "/optimiselog.txt");
-                    if (LogFile.Exists == false | DateAndTime.DateDiff(DateInterval.Hour, LogFile.LastWriteTimeUtc, DateTime.Now) > 24L)
+                    if (!LogFile.Exists || (DateTime.Now - LogFile.LastWriteTimeUtc).TotalHours > 24)
                     {
                         object FileCountBefore = nFileCount;
 
@@ -1255,8 +1306,8 @@ namespace Protean
                             nFileCount = nFileCount + 1L;
                         }
 
-                        long FilesProcessedCount = Convert.ToInt64(Operators.SubtractObject(nFileCount, FileCountBefore));
-                        string LogText = "Last Optimised:" + DateTime.Now.ToLongDateString() + " Savings:" + newSavings + " FileCount:" + FilesProcessedCount + Constants.vbCrLf;
+                        long FilesProcessedCount = Convert.ToInt64(Convert.ToInt64(nFileCount) - Convert.ToInt64(FileCountBefore));
+                        string LogText = "Last Optimised:" + DateTime.Now.ToLongDateString() + " Savings:" + newSavings + " FileCount:" + FilesProcessedCount +  Environment.NewLine;
                         if (LogFile.Exists)
                         {
                             using (var fs = File.AppendText(goServer.MapPath(path) + "/optimiselog.txt"))
@@ -1269,7 +1320,7 @@ namespace Protean
                         {
                             using (var fs = File.Create(goServer.MapPath(path) + "/optimiselog.txt"))
                             {
-                                byte[] info = new System.Text.UTF8Encoding(true).GetBytes(LogText + Constants.vbCrLf);
+                                byte[] info = new System.Text.UTF8Encoding(true).GetBytes(LogText + Environment.NewLine);
                                 fs.Write(info, 0, info.Length);
                                 fs.Close();
                             }
@@ -1449,7 +1500,7 @@ namespace Protean
                 byte[] buffer = new byte[1024];
 
                 var l = inputStream.Read(buffer, 0, 1024);
-                while (Operators.ConditionalCompareObjectGreater(l, 0, false))
+                while (l > 0)
                 {
                     fs.Write(buffer, 0, l);
                     l = inputStream.Read(buffer, 0, 1024);
@@ -1556,11 +1607,15 @@ namespace Protean
                     context.Session["ExistsFileName"] = cfileName;
                     file.SaveAs(mcStartFolder + cfileName);
 
-                    if (Strings.LCase(mcStartFolder + cfileName).EndsWith(".jpg") | Strings.LCase(mcStartFolder + cfileName).EndsWith(".jpeg") | Strings.LCase(mcStartFolder + cfileName).EndsWith(".png"))
+                    string lowerFile = (mcStartFolder + cfileName).ToLower();
+                    if (lowerFile.EndsWith(".jpg") || lowerFile.EndsWith(".jpeg") || lowerFile.EndsWith(".png"))
                     {
                         var eImg = new Tools.Image(mcStartFolder + cfileName);
-                        System.Collections.Specialized.NameValueCollection moWebCfg = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-                        eImg.UploadProcessing(Convert.ToString(moWebCfg["WatermarkText"]), Convert.ToString(Operators.ConcatenateObject(mcRoot, moWebCfg["WatermarkImage"])));
+                        var moWebCfg = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+                        eImg.UploadProcessing(
+                            Convert.ToString(moWebCfg["WatermarkText"]),
+                            Convert.ToString(mcRoot + moWebCfg["WatermarkImage"])
+                        );
                     }
 
                     string fullName = Path.GetFileName(Convert.ToString(file.FileName)).Replace("'", "");
@@ -1641,7 +1696,7 @@ namespace Protean
                 }
                 else
                 {
-                    sVirtualPath = Strings.Replace(Folder, mcStartFolder, "");
+                    sVirtualPath = Folder.Replace(mcStartFolder, "");
                 }
 
                 mcPopulateFilesNode = mcPopulateFilesNode.Replace("/", @"\");
@@ -1657,9 +1712,9 @@ namespace Protean
                     short fileCount = 1;
                     foreach (var fi in files)
                     {
-                        if (!(Strings.Left(fi.Name, 5) == "Icon_") & !(fi.Name.ToLower() == "thumbs.db") & !(fi.Name.ToLower() == ".ds_store"))
+                        if (!fi.Name.StartsWith("Icon_") && fi.Name.ToLower() != "thumbs.db" && fi.Name.ToLower() != ".ds_store")
                         {
-                            string cExt = Strings.LCase(fi.Extension);
+                            string cExt = fi.Extension.ToLower();
                             var fileElem = XmlElement("file", fi.Name);
                             fileElem.Attributes.Append(XmlAttribute("Extension", cExt));
                             fileElem.Attributes.Append(XmlAttribute("length", (fi.Length / 1000d).ToString()));
@@ -1720,7 +1775,7 @@ namespace Protean
                                     {
 
                                         string cIcon = "Icon_";
-                                        switch (Strings.LCase(fi.Extension) ?? "")
+                                        switch ((fi.Extension ?? "").ToLower())
                                         {
                                             case ".doc":
                                             case ".rtf":
@@ -1784,7 +1839,7 @@ namespace Protean
                 {
                     if (sd.Name != "_vti_cnf" & !sd.Name.StartsWith("~"))
                     {
-                        var folderElem = XmlElement("folder", Strings.Replace(sd.Name, @"\", "/"));
+                        var folderElem = XmlElement("folder", sd.Name.Replace(@"\", "/"));
                         string sPath;
 
                         if (mcStartFolder.Contains(".."))
@@ -1796,7 +1851,7 @@ namespace Protean
                         }
                         else
                         {
-                            sPath = Strings.Replace(sd.FullName, mcStartFolder, "");
+                            sPath = sd.FullName.Replace(mcStartFolder, "");
                         }
 
                         folderElem.Attributes.Append(XmlAttribute("path", pathPrefix + sPath));
@@ -1946,7 +2001,7 @@ namespace Protean
                         }
                 }
 
-                path = Strings.Replace(path, @"\", "/");
+                path = path.Replace(@"\", "/");
 
                 // remove trailing slash
 
@@ -1982,7 +2037,7 @@ namespace Protean
             if (folder.Exists)
             {
                 // Filter out the files by type and return the full name
-                var fileInfoList = new List<FileInfo>(folder.GetFiles("*.*", (SearchOption)Convert.ToInt16(Interaction.IIf(includeSubfolders, SearchOption.AllDirectories, SearchOption.TopDirectoryOnly))));
+                var fileInfoList = new List<FileInfo>( folder.GetFiles("*.*", includeSubfolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly));
                 fileInfoList = fileInfoList.FindAll(new PredicateWrapper<FileInfo, LibraryType>(libraryType, FileInfoTypeFilter));
                 fileList = fileInfoList.ConvertAll(new Converter<FileInfo, string>(FullNameFromFileInfo));
             }

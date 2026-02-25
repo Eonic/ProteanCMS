@@ -6,7 +6,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Xml;
 using Lucene.Net.Search;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Filter;
 
 namespace Protean.Providers

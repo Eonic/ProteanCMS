@@ -10,8 +10,6 @@
 
 using AngleSharp.Dom;
 using AngleSharp.Io;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Authentication;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
@@ -81,7 +79,8 @@ namespace Protean
                     string FeedCheck = "";
                     if (!string.IsNullOrEmpty(FeedRef))
                     {
-                        string sSQL = "select TOP 1 cActivityDetail from tblActivityLog where nActivityType = 44 and cActivityDetail like '" + FeedRef + "%' and not(cActivityDetail like '%Complete') and dDateTime > " + sqlDateTime(DateAndTime.DateAdd(DateInterval.Minute, -60, DateTime.Now)) + " order by dDateTime DESC";
+                        string sqlDate = sqlDateTime(DateTime.Now.AddMinutes(-60));
+                        string sSQL = "SELECT TOP 1 cActivityDetail FROM tblActivityLog " + "WHERE nActivityType = 44 " + "AND cActivityDetail LIKE '" + FeedRef + "%' " + "AND NOT (cActivityDetail LIKE '%Complete') " + "AND dDateTime > " + sqlDate + " " + "ORDER BY dDateTime DESC";
                         FeedCheck = ExeProcessSqlScalar(sSQL);
                     }
 
@@ -98,7 +97,9 @@ namespace Protean
                         FeedCheck = ExeProcessSqlScalar(sSQL) + "";
                         if (FeedCheck.EndsWith(" Processed"))
                         {
-                            string sProcessesQty = Strings.Mid(FeedCheck, FeedCheck.IndexOf("Objects, ") + 10, FeedCheck.IndexOf(" Processed") - FeedCheck.IndexOf("Objects, ") - 9);
+                            int startIndex = FeedCheck.IndexOf("Objects, ") + 9; // Index after "Objects, "
+                            int length = FeedCheck.IndexOf(" Processed") - startIndex;
+                            string sProcessesQty = FeedCheck.Substring(startIndex, length);
                             if (Tools.Number.IsNumeric(sProcessesQty))
                             {
                                 startNo = Convert.ToInt64(sProcessesQty);
@@ -404,7 +405,7 @@ namespace Protean
                                             if (!string.IsNullOrEmpty(oLocation.GetAttribute("foriegnRef")))
                                             {
                                                 string cleanFref = oLocation.GetAttribute("foriegnRef");
-                                                if (Convert.ToBoolean(Strings.InStr(cleanFref, "&")))
+                                                if(cleanFref.Contains("&"))
                                                 {
                                                     cleanFref = cleanFref.Replace("&amp;", "&");
                                                 }
@@ -467,7 +468,7 @@ namespace Protean
                                             {
                                                 if (Tools.Number.IsNumeric(relContId))
                                                 {
-                                                    if (Strings.LCase(oRelation.GetAttribute("direction")) == "child")
+                                                    if (oRelation.GetAttribute("direction").ToLower() == "child")
                                                     {
                                                         insertContentRelation(Convert.ToInt32(relContId), savedId.ToString(), false, oRelation.GetAttribute("type"), true);
                                                     }

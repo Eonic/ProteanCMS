@@ -2,7 +2,6 @@
 using System.Data;
 using System.IO;
 using System.Xml;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Payment;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -405,7 +404,7 @@ namespace Protean
                         try
                         {
                             // First we check if free trail
-                            if (Convert.ToInt16("0" + contentNode.SelectSingleNode("Prices/Price[@type='sale']").InnerText) == 0 & Convert.ToInt16("0" + contentNode.SelectSingleNode("SubscriptionPrices/Price[@type='sale']").InnerText) == 0)
+                            if (Convert.ToDouble("0" + contentNode.SelectSingleNode("Prices/Price[@type='sale']").InnerText) == 0 & Convert.ToDouble("0" + contentNode.SelectSingleNode("SubscriptionPrices/Price[@type='sale']").InnerText) == 0)
                             {
                                 if (myWeb.mnUserId > 0)
                                 {

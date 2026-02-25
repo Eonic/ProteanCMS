@@ -1146,13 +1146,13 @@
 						<xsl:choose>
 							<xsl:when test="@moduleType!=''">
 								<li class="title">
-									<xsl:value-of select="@moduleType"/>
+									<xsl:value-of select="@moduleType"/> test2
 								</li>
 								<li class="divider">&#160;</li>
 							</xsl:when>
 							<xsl:otherwise>
 								<li class="title">
-									<xsl:value-of select="@type"/>
+									<xsl:value-of select="@type"/> test2
 								</li>
 								<li class="divider">&#160;</li>
 							</xsl:otherwise>
@@ -1232,6 +1232,326 @@
 									</a>
 								</li>
 							</xsl:if>
+						<xsl:choose>
+							<xsl:when test="$page/Contents/Content/Content[@id=$id] and (@parId != $pageId)">
+								<li>
+									<a href="?ewCmd=RemoveContentRelation&amp;relId={$page/Contents/Content[Content/@id=$id]/@id}&amp;id={@id}" title="Click here to unrelate this item">
+										<i class="fa fa-unlink">&#160;</i>&#160;Un-relate
+									</a>
+								</li>
+								<li>
+									<a href="?ewCmd=Normal&amp;pgid={@parId}" title="Click here to remove from this page">
+										<i class="fa fa-eye">
+											<xsl:text> </xsl:text>
+										</i>
+										<xsl:text> </xsl:text>
+										View Parent Page
+									</a>
+								</li>
+							</xsl:when>
+							<xsl:when test="@parId!=$page/@id">
+								<li>
+									<a href="?ewCmd=RemoveContentLocation&amp;pgid={$page/@id}&amp;id={@id}" title="Click here to remove from this page">
+										<i class="fa fa-times">&#160;</i>&#160;Remove From Page
+									</a>
+								</li>
+								<li>
+									<a href="?ewCmd=Normal&amp;pgid={@parId}" title="Click here to remove from this page">
+										<i class="fa fa-eye">
+											<xsl:text> </xsl:text>
+										</i>
+										<xsl:text> </xsl:text>
+										Visit Parent Page
+									</a>
+								</li>
+							</xsl:when>
+							<xsl:otherwise>
+								<xsl:if test="@status='1'">
+									<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='HideContent']">
+										<li>
+											<a href="?ewCmd=HideContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to hide this item">
+												<i class="fa fa-times-circle">
+													<xsl:text> </xsl:text>
+												</i>
+												<xsl:text> </xsl:text>Hide
+											</a>
+										</li>
+									</xsl:if>
+								</xsl:if>
+								<xsl:if test="@status='0'">
+									<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='ShowContent']">
+										<li>
+											<a href="?ewCmd=ShowContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to show this item">
+												<i class="fa fa-eye">&#160;</i>&#160;Show
+											</a>
+										</li>
+									</xsl:if>
+									<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='DeleteContent']">
+										<li>
+											<a href="?ewCmd=DeleteContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to delete this item">
+												<i class="fa fa-trash-alt">&#160;</i>&#160;Delete
+											</a>
+										</li>
+									</xsl:if>
+								</xsl:if>
+							</xsl:otherwise>
+						</xsl:choose>
+
+						<xsl:if test="@type='Poll'">
+							<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='ManagePollVotes']">
+								<li>
+									<a href="?ewCmd=ManagePollVotes&amp;pgid={$page/@id}&amp;id={@id}" title="Click here to Manage Poll Votes">
+										<i class="fa fa-check-square">&#160;</i>&#160;Manage Votes
+									</a>
+								</li>
+							</xsl:if>
+						</xsl:if>
+
+						<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='AwaitingApproval']">
+							<li>
+								<a href="?ewCmd=ContentVersions&amp;pgid={/Page/@id}&amp;id={@id}{$subTypeOption}" title="Click here to view version history">
+									<i class="fa fa-history">&#160;</i>&#160;Version History -<xsl:value-of select="$sortBy"/>
+								</a>
+							</li>
+						</xsl:if>
+
+						<xsl:choose>
+							<xsl:when test="$page/descendant-or-self::Content[@id=$id and parent::*[name()='Content']]">
+								<xsl:variable name="parId" select="parent::*[name()='Content']/@id"/>
+								<li class="divider">&#160;</li>
+								<li class="updown">
+									<a href="?ewCmd=MoveTop&amp;relId={$parId}&amp;id={@id}{$modulePosition}" title="Move this item to the top" class="btn btn-xs">
+										<i class="fa fa-step-backward fa-rotate-90">&#160;</i>
+										<xsl:value-of select="$sortBy"/>
+									</a>
+									<a href="?ewCmd=MoveUp&amp;relId={$parId}&amp;id={@id}{$modulePosition}" title="Move this item up by one space" class="btn btn-xs">
+										<i class="fa fa-caret-up fa-lg">&#160;</i>
+									</a>
+									<a href="?ewCmd=MoveDown&amp;relId={$parId}&amp;id={@id}{$modulePosition}" title="Move this item down by one space" class="btn btn-xs">
+										<i class="fa fa-caret-down fa-lg">&#160;</i>
+									</a>
+									<a href="?ewCmd=MoveBottom&amp;relId={$parId}&amp;id={@id}{$modulePosition}" title="Move this item to the bottom" class="btn btn-xs">
+										<i class="fa fa-step-forward fa-rotate-90">&#160;</i>
+									</a>
+								</li>
+							</xsl:when>
+							<xsl:when test="$sortBy='' or $sortBy='Position'">
+								<li class="divider">&#160;</li>
+								<li class="updown">
+									<a href="?ewCmd=MoveTop&amp;pgid={$pageId}&amp;id={@id}{$modulePosition}" title="Move this item to the top" class="btn btn-xs">
+										<i class="fa fa-step-backward fa-rotate-90">&#160;</i>
+									</a>
+									<a href="?ewCmd=MoveUp&amp;pgid={$pageId}&amp;id={@id}{$modulePosition}" title="Move this item up by one space" class="btn btn-xs">
+										<i class="fa fa-caret-up fa-lg">&#160;</i>
+									</a>
+									<a href="?ewCmd=MoveDown&amp;pgid={$pageId}&amp;id={@id}{$modulePosition}" title="Move this item down by one space" class="btn btn-xs">
+										<i class="fa fa-caret-down fa-lg">&#160;</i>
+									</a>
+									<a href="?ewCmd=MoveBottom&amp;pgid={$pageId}&amp;id={@id}{$modulePosition}" title="Move this item to the bottom" class="btn btn-xs">
+										<i class="fa fa-step-forward fa-rotate-90">&#160;</i>
+									</a>
+								</li>
+							</xsl:when>
+							<xsl:otherwise>
+								<li class="title">
+									<xsl:text>sorted by: </xsl:text>
+									<xsl:value-of select="$sortBy"/>
+								</li>
+							</xsl:otherwise>
+						</xsl:choose>
+					</ul>
+				</div>
+				<xsl:if test="@status=0">
+					<i class="fas fa-eye-slash text-primary indicate-visibility">&#160;</i>
+				</xsl:if>
+				<xsl:if test="@type='Module' and not(starts-with(@position,'column1') and $page/@layout='Modules_Masonary')">
+					<a href="#" class="text-primary text-primary-darker drag">
+						<i class="fas fa-grip-vertical">&#160;</i>
+						<span>Move in page</span>
+					</a>
+				</xsl:if>
+			</div>
+		</xsl:if>
+
+	</xsl:template>
+
+	<xsl:template match="Content[ancestor::ContentDetail/Content]" mode="inlinePopupOptions">
+		<xsl:param name="class"/>
+		<xsl:param name="editLabel"/>
+		<xsl:param name="sortBy"/>
+		<!-- sortBy used as a flag, only set on content items to control wheterh to show the re-order buttons -->
+		<xsl:variable name="subTypeOption">
+			<xsl:if test="@subType!=''">
+				<xsl:text>&amp;type=</xsl:text>
+				<xsl:value-of select="@subType"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="versionId">
+			<xsl:if test="@versionid!=''">
+				<xsl:text>&amp;verId=</xsl:text>
+				<xsl:value-of select="@versionid"/>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="modulePosition">
+			<xsl:if test="@type='Module'">
+				<xsl:text>&amp;position=</xsl:text>
+				<xsl:choose>
+					<xsl:when test="starts-with(@position,'column1') and $page/@layout='Modules_Masonary'">
+						<xsl:text>column1-</xsl:text>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:value-of select="@position"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+		</xsl:variable>
+		<xsl:variable name="id" select="@id"/>
+		<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='EditContent'] and $adminMode">
+			<xsl:attribute name="class">
+				<xsl:if test="$class!=''">
+					<xsl:value-of select="$class"/>
+				</xsl:if>
+				<xsl:if test="@class!=''">
+					<xsl:value-of select="@class"/>
+				</xsl:if>
+				<xsl:value-of select="@class"/>
+				<xsl:text> editable</xsl:text>
+			</xsl:attribute>
+			<div>
+				<xsl:attribute name="class">
+					<xsl:text>ptn-edit options</xsl:text>
+					<xsl:if test="@type='Module'">
+						<xsl:text> moduleDrag</xsl:text>
+					</xsl:if>
+					<xsl:if test="@title!='' or not(@contentType!='')">
+						<xsl:text> over-content</xsl:text>
+					</xsl:if>
+				</xsl:attribute>
+				<xsl:if test="@contentType!=''">
+					<xsl:apply-templates select="." mode="inlinePopupRelateTop"/>
+				</xsl:if>
+
+				<div class="dropdown pull-right">
+					<xsl:variable name="isMail">
+						<xsl:if test="$page/@ewCmd='NormalMail'">
+							<xsl:text>Mail</xsl:text>
+						</xsl:if>
+					</xsl:variable>
+
+					<xsl:choose>
+						<!-- NEED A TRIGGER FOR ONLY CASCADED STUFF TO EDIT ON PARID <xsl:when test="@parId=/Page/@id">-->
+						<xsl:when test="false()">
+							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={@parId}&amp;cModuleType={@moduleType}" title="Click here to edit this content" class="btn btn-primary btn-xs">
+								<xsl:choose>
+									<xsl:when test="@contentType!=''">
+										<xsl:attribute name="class">btn btn-primary btn-primary-darker btn-xs</xsl:attribute>
+										<i class="fas fa-cog fa-lg">&#160;</i>&#160;
+									</xsl:when>
+									<xsl:otherwise>
+										<i class="fas fa-pen">&#160;</i>&#160;
+									</xsl:otherwise>
+								</xsl:choose>
+							</a>
+						</xsl:when>
+						<xsl:when test="@status='3' and @versionid!=''">
+							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={@parId}&amp;verId={@versionid}" title="Click here to edit this content" class="btn btn-primary btn-xs">
+								<i class="fa fa-pen">&#160;</i>&#160;Edit Pending Change
+							</a>
+						</xsl:when>
+						<xsl:otherwise>
+							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={$pageId}&amp;cModuleType={@moduleType}" title="Click here to edit this content" class="btn btn-primary btn-xs">
+								<xsl:choose>
+									<xsl:when test="@contentType!=''">
+										<xsl:attribute name="class">btn btn-primary btn-primary-darker btn-xs</xsl:attribute>
+										<i class="fas fa-cog fa-lg">&#160;</i>&#160;
+									</xsl:when>
+									<xsl:otherwise>
+										<i class="fas fa-pen">&#160;</i>&#160;
+									</xsl:otherwise>
+								</xsl:choose>
+							</a>
+						</xsl:otherwise>
+					</xsl:choose>
+
+
+					<a href="#" class="btn btn-primary btn-xs dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false">
+						<xsl:if test="@contentType!=''">
+							<xsl:attribute name="class">btn btn-primary btn-primary-darker btn-xs dropdown-toggle</xsl:attribute>
+						</xsl:if>
+
+						<i class="fas fa-ellipsis-h">&#160;</i>&#160;
+						<xsl:value-of select="$editLabel"/>
+						<xsl:if test="@status=2">
+							<xsl:text>&#160;[superceeded]</xsl:text>
+						</xsl:if>
+						<xsl:if test="@status=4">
+							<xsl:text>&#160;[preview]</xsl:text>
+						</xsl:if>
+					</a>
+
+					<ul class="dropdown-menu">
+						<xsl:choose>
+							<xsl:when test="@moduleType!=''">
+								<li class="title">
+									<xsl:value-of select="@moduleType"/> TEST
+								</li>
+								<li class="divider">&#160;</li>
+							</xsl:when>
+							<xsl:otherwise>
+								<li class="title">
+									<xsl:value-of select="@type"/> TEST2
+								</li>
+								<li class="divider">&#160;</li>
+							</xsl:otherwise>
+						</xsl:choose>
+
+
+						<!-- WHEN CASCADING - Edit on ParId - else changes to Cascade won't stick.-->
+						<!--  except we can't tell if cascaded in XML.
+                      when we can replace the below false() with a condition
+                      and edit on parId
+          -->
+						<xsl:if test="starts-with(@position,'column1') and $page/@layout='Modules_Masonary'">
+							<li class="updown">
+								<a href="?ewCmd=MoveTop&amp;pgid={$pageId}&amp;id={@id}{$modulePosition}" title="Move this item to the top" class="btn btn-xs">
+									<i class="fa fa-step-backward fa-rotate-90">&#160;</i>
+								</a>
+								<a href="?ewCmd=MoveUp&amp;pgid={$pageId}&amp;id={@id}{$modulePosition}" title="Move this item up by one space" class="btn btn-xs">
+									<i class="fa fa-caret-up fa-lg">&#160;</i>
+								</a>
+								<a href="?ewCmd=MoveDown&amp;pgid={$pageId}&amp;id={@id}{$modulePosition}" title="Move this item down by one space" class="btn btn-xs">
+									<i class="fa fa-caret-down fa-lg">&#160;</i>
+								</a>
+								<a href="?ewCmd=MoveBottom&amp;pgid={$pageId}&amp;id={@id}{$modulePosition}" title="Move this item to the bottom" class="btn btn-xs">
+									<i class="fa fa-step-forward fa-rotate-90">&#160;</i>
+								</a>
+							</li>
+						</xsl:if>
+
+
+						<xsl:if test="@status!='3'">
+							<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='CopyContent']">
+								<li>
+									<a href="?ewCmd=CopyContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to create a copy">
+										<i class="fa fa-copy">&#160;</i>&#160;Copy
+									</a>
+								</li>
+							</xsl:if>
+						</xsl:if>
+						<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='MoveContent']">
+							<li>
+								<a href="?ewCmd=MoveContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to move to another page">
+									<i class="fas fa-share">&#160;</i>&#160;Move
+								</a>
+							</li>
+						</xsl:if>
+						<xsl:if test="$page/AdminMenu/descendant-or-self::MenuItem[@cmd='LocateContent']">
+							<li>
+								<a href="?ewCmd=LocateContent&amp;pgid={$pageId}&amp;id={@id}" title="Click here to locate on other pages">
+									<i class="fas fa-angle-double-right">&#160;</i>&#160;Locations
+								</a>
+							</li>
+						</xsl:if>
 						<xsl:choose>
 							<xsl:when test="$page/Contents/Content/Content[@id=$id] and (@parId != $pageId)">
 								<li>

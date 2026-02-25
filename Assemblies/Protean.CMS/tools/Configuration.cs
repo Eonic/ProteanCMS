@@ -3,7 +3,6 @@ using System.Configuration;
 using System.Web.Configuration;
 using System.Xml;
 using System.Xml.Serialization;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Protean
 {

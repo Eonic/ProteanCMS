@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Runtime.InteropServices.ComTypes;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
 using static Protean.stdTools;
 
@@ -64,7 +62,7 @@ namespace Protean
                                 }
                             }
 
-                            if (Convert.ToBoolean(Operators.OrObject(oAdXfm.valid, bAdditionalChecks)))
+                            if ((oAdXfm.valid as bool? == true) || bAdditionalChecks)
                             {
                                 myWeb.moContentDetail = (XmlElement)null;
                                 // mnUserId = adXfm.mnUserId
@@ -74,7 +72,7 @@ namespace Protean
                                 {
                                     var oCookie = new System.Web.HttpCookie("RememberMe");
                                     oCookie.Value = myWeb.mnUserId.ToString();
-                                    oCookie.Expires = DateAndTime.DateAdd(DateInterval.Day, 60d, DateTime.Now);
+                                    oCookie.Expires = DateTime.Now.AddDays(60);
                                     myWeb.moResponse.Cookies.Add(oCookie);
                                 }
                                 // Now we want to reload as permissions have changed
@@ -82,18 +80,18 @@ namespace Protean
                                 {
                                     if (myWeb.moSession["cLogonCmd"] != null)
                                     {
-                                        cLogonCmd = Strings.Split(Convert.ToString(myWeb.moSession["cLogonCmd"]), "=")[0];
+                                        cLogonCmd = Convert.ToString(myWeb.moSession["cLogonCmd"])?.Split('=')[0];
                                         if (myWeb.mcOriginalURL.Contains(cLogonCmd + "="))
                                         {
                                             cLogonCmd = "";
                                         }
                                         else if (myWeb.mcOriginalURL.Contains("="))
                                         {
-                                            cLogonCmd = Convert.ToString(Operators.ConcatenateObject("&", myWeb.moSession["cLogonCmd"]));
+                                            cLogonCmd = "&" + Convert.ToString(myWeb.moSession["cLogonCmd"]);
                                         }
                                         else
                                         {
-                                            cLogonCmd = Convert.ToString(Operators.ConcatenateObject("?", myWeb.moSession["cLogonCmd"]));
+                                            cLogonCmd = "?" + Convert.ToString(myWeb.moSession["cLogonCmd"]);
                                         }
                                     }
                                 }
@@ -116,7 +114,7 @@ namespace Protean
                         else if (myWeb.moRequest["ewCmd"] == "passwordReminder")
                         {
                             // RJP 7 Nov 2012. Amended to use Lower Case to prevent against case sensitive entries in Protean.Cms.Config.
-                            switch (Strings.LCase(myWeb.moConfig["MembershipEncryption"]) ?? "")
+                            switch ((myWeb.moConfig["MembershipEncryption"]).ToLower() ?? "")
                             {
                                 case "md5":
                                 case "md5_salt":
@@ -266,7 +264,7 @@ namespace Protean
                                             {
                                                 sRedirectPath = "https://www.facebook.com/v2.8/dialog/oauth?";
                                                 appId = moConfig["OauthFacebookId"];
-                                                sRedirectPath = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(sRedirectPath, "client_id="), appId), "&redirect_uri="), redirectURI);
+                                                sRedirectPath = $"{sRedirectPath}client_id={appId}&redirect_uri={redirectURI}";
                                                 break;
                                             }
                                         case "twitter":
@@ -437,18 +435,18 @@ namespace Protean
                                 {
                                     if (moSession["cLogonCmd"] != null)
                                     {
-                                        cLogonCmd = Strings.Split(Convert.ToString(moSession["cLogonCmd"]), "=")[0];
+                                        cLogonCmd = Convert.ToString(moSession["cLogonCmd"])?.Split('=')[0];
                                         if (myWeb.mcOriginalURL.Contains(cLogonCmd + "="))
                                         {
                                             cLogonCmd = "";
                                         }
                                         else if (myWeb.mcOriginalURL.Contains("="))
                                         {
-                                            cLogonCmd = Convert.ToString(Operators.ConcatenateObject("&", moSession["cLogonCmd"]));
+                                            cLogonCmd = "&" + Convert.ToString(moSession["cLogonCmd"]);
                                         }
                                         else
                                         {
-                                            cLogonCmd = Convert.ToString(Operators.ConcatenateObject("?", moSession["cLogonCmd"]));
+                                            cLogonCmd = "?" + Convert.ToString(moSession["cLogonCmd"]);
                                         }
                                     }
                                 }
@@ -508,7 +506,7 @@ namespace Protean
                         XmlElement oXfmElmt;
                         if (myWeb.mnUserId == 0)
                         {
-                            switch (Strings.LCase(moConfig["MembershipEncryption"]) ?? "")
+                            switch ((moConfig["MembershipEncryption"]).ToLower() ?? "")
                             {
                                 case "md5salt":
                                 case "md5":
@@ -523,11 +521,19 @@ namespace Protean
                                             // strip out any spaces to prevent SQL injection
                                             if (cAccountHash.Contains(" "))
                                             {
-                                                cAccountHash = Strings.Left(cAccountHash, Strings.InStr(cAccountHash, " "));
+                                                int spaceIndex = cAccountHash.IndexOf(' ');
+                                                if (spaceIndex >= 0)
+                                                {
+                                                    cAccountHash = cAccountHash.Substring(0, spaceIndex);
+                                                }
                                             }
                                             if (cAccountHash.Contains("%20"))
                                             {
-                                                cAccountHash = Strings.Left(cAccountHash, Strings.InStr(cAccountHash, "%20"));
+                                                int index = cAccountHash.IndexOf("%20");
+                                                if (index >= 0)
+                                                {
+                                                    cAccountHash = cAccountHash.Substring(0, index);
+                                                }
                                             }
                                             var regex = new System.Text.RegularExpressions.Regex(@"[\d,]");
 
@@ -855,7 +861,7 @@ namespace Protean
                             strSql.Append("INNER JOIN tblActivityLog al on al.nOtherId = eal.nEmailActivityKey ");
                             strSql.Append("where al.nUserDirId = " + myWeb.mnUserId);
                             var oDsJobs = myWeb.moDbHelper.GetDataSet(strSql.ToString(), "Application", "JobApplications");
-                            oContentNode.InnerXml = Strings.Replace(oDsJobs.GetXml(), "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+                            oContentNode.InnerXml = oDsJobs.GetXml().Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
                             string sContent;
                             foreach (XmlElement oElmt2 in oContentNode.SelectNodes("descendant-or-self::cActivityXml | descendant-or-self::cActivityDetail"))
                             {
@@ -905,7 +911,7 @@ namespace Protean
                                 strSql.Append("SELECT eal.nEmailActivityKey FROM [tblEmailActivityLog] eal ");
                                 strSql.Append("INNER JOIN tblActivityLog al on al.nOtherId = eal.nEmailActivityKey ");
                                 strSql.Append("where al.nUserDirId = " + myWeb.mnUserId + " and al.nArtId = " + JobId);
-                                long EmailActivityId = Convert.ToInt64(Operators.ConcatenateObject("0", myWeb.moDbHelper.GetDataValue(strSql.ToString())));
+                                long EmailActivityId = Convert.ToInt64("0" + myWeb.moDbHelper.GetDataValue(strSql.ToString()));
                                 if (EmailActivityId > 0L)
                                 {
                                     // load in a saved instance
@@ -949,7 +955,7 @@ namespace Protean
                                     if (EmailActivityId > 0L)
                                     {
                                         var strSql3 = new System.Text.StringBuilder();
-                                        strSql3.Append(Operators.ConcatenateObject(Operators.ConcatenateObject("update tblEmailActivityLog set cActivityXml = '", stdTools.SqlFmt(oXform.Instance.OuterXml)), "'"));
+                                        strSql3.Append("update tblEmailActivityLog set cActivityXml = '" + stdTools.SqlFmt(oXform.Instance.OuterXml) + "'");
                                         strSql3.Append("where nEmailActivityKey = " + EmailActivityId);
                                         myWeb.moDbHelper.ExeProcessSql(strSql3.ToString());
                                     }
@@ -992,7 +998,7 @@ namespace Protean
                                         }
 
                                         var strSql3 = new System.Text.StringBuilder();
-                                        strSql3.Append(Operators.ConcatenateObject(Operators.ConcatenateObject("update tblEmailActivityLog set cActivityXml = '", stdTools.SqlFmt(oXform.Instance.OuterXml)), "'"));
+                                        strSql3.Append("update tblEmailActivityLog set cActivityXml = '" + stdTools.SqlFmt(oXform.Instance.OuterXml) + "'");
                                         strSql3.Append("where nEmailActivityKey = " + EmailActivityId);
                                         myWeb.moDbHelper.ExeProcessSql(strSql3.ToString());
 

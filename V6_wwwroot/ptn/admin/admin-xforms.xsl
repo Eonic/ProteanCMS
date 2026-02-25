@@ -514,7 +514,7 @@
 	</xsl:template>
 
 	<!-- Template for login, pick page-->
-	<xsl:template match="Content[@name='UserLogon']" mode="xform">
+	<xsl:template match="Content[@name='UserLogon' or @name='AdminLogon']" mode="xform">
 		<form method="{model/submission/@method}" action=""  novalidate="novalidate">
 			<xsl:attribute name="class">
 				<xsl:text>xform needs-validation</xsl:text>
@@ -545,7 +545,7 @@
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 			</xsl:if>
 			<xsl:for-each select="group">
-				<div class="admin-body {@class}">
+				<div class="admin-body {@class}">					
 					<xsl:apply-templates select="label" mode="legend"/>
 					<p>Welcome back, please sign in to your account</p>
 					<xsl:apply-templates select="parent::*/alert" mode="xform"/>						

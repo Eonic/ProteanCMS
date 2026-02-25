@@ -18,8 +18,6 @@ using Lucene.Net.Index;
 using Lucene.Net.QueryParsers;
 using Lucene.Net.Search;
 using Lucene.Net.Store;
-//using Microsoft.VisualBasic;
-//using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 using static Protean.Tools.Number;

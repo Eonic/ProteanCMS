@@ -2,8 +2,6 @@
 using System;
 using System.Collections;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Protean.Integration
 {
@@ -65,7 +63,7 @@ namespace Protean.Integration
 
         public string GetSetting(string key)
         {
-            return Convert.ToString(Interaction.IIf(_settings.ContainsKey(key), _settings[key].ToString(), ""));
+            return _settings.ContainsKey(key) ? _settings[key].ToString() : "";
         }
 
         public XmlElement Serialize()

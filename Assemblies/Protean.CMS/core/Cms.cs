@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+﻿
 using Protean.Providers.Membership;
 using System;
 using System.Collections;
@@ -34,7 +33,7 @@ namespace Protean
         protected override void OnComponentError(object sender, Tools.Errors.ErrorEventArgs e)
         {
             // deals with the error
-            returnException(ref msException, e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug);
+            returnException(ref msException, e.ModuleName, e.ProcedureName, e.Exception, moCtx, mcEwSiteXsl, e.AddtionalInformation, gbDebug);
             // close connection poolinguseralerts
             if (moDbHelper != null)
             {
@@ -63,14 +62,14 @@ namespace Protean
 
         public XmlDocument moPageXml = new XmlDocument();
         //private XmlDocument moXmlAddedContent;
-        public DateTime? mdPageExpireDate = DateAndTime.DateAdd(DateInterval.Year, 1d, DateTime.Now);
-        public DateTime? mdPageUpdateDate = DateAndTime.DateAdd(DateInterval.Year, -1, DateTime.Now);
+        public DateTime? mdPageExpireDate = DateTime.Now.AddYears(1);
+        public DateTime? mdPageUpdateDate = DateTime.Now.AddYears(-1);
         private int mnPageCacheMode;
         public XmlElement moContentDetail;
         public string mcContentType = System.Net.Mime.MediaTypeNames.Text.Html;
         public string mcContentDisposition = "";
         public long mnProteanCMSError = 0L;
-
+        public Cms.model.APILog goAPILog;
 
         public string msException = "";
 
@@ -290,20 +289,37 @@ namespace Protean
                 if (moDbHelper is null)
                 {
                     moDbHelper = (Cms.dbHelper)GetDbHelper();
+                    if (!moDbHelper.ConnectionValid) {
+                        throw new  InvalidOperationException($"Failed to validate database connection");
+                    }
                 }
             }
             // Open()
             // 
             catch (Exception ex)
             {
-                // returnException(msException, mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
+               OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
+                //Re-throw with context so we don't continue
+                throw new InvalidOperationException("Database connection validation failed", ex);
             }
         }
 
         #endregion
 
+        public long SessionUserId
+        {
+            get
+            {
+                if (moSession?["nUserId"] is long userId)
+                    return userId;
 
+                if (moSession != null &&
+                    long.TryParse(moSession["nUserId"]?.ToString(), out long parsedId))
+                    return parsedId;
+
+                return 0;
+            }
+        }
 
         public string mcEwSiteXsl
         {
@@ -462,8 +478,8 @@ namespace Protean
                     {
                         if (oDr.HasRows)
                         {
-                            while (oDr.Read())
-                                sResult = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oDr[1], "."), oDr[2]), "."), oDr[3]), "."), oDr[4]));
+                        while (oDr.Read())
+                            sResult = $"{oDr[1]}.{oDr[2]}.{oDr[3]}.{oDr[4]}";
                         }
                         else
                         {
@@ -512,7 +528,7 @@ namespace Protean
                     if (oDr.HasRows)
                     {
                         while (oDr.Read())
-                            oResponseElmt.SetAttribute("totalPageRedirects", Convert.ToString(Operators.SubtractObject(oDr[0], Convert.ToInt16("0" + oResponseElmt.GetAttribute("totalPageCount")))));
+                            oResponseElmt.SetAttribute("totalPageRedirects", (Convert.ToInt32(oDr[0]) - Convert.ToInt16("0" + oResponseElmt.GetAttribute("totalPageCount"))).ToString());
                     }
                 }
 
@@ -535,11 +551,11 @@ namespace Protean
 
                 // Start LocalOrCommonBin
                 oElmt = oRXML.CreateElement("LocalOrCommonBin");
-                if (!string.IsNullOrEmpty(FileSystem.Dir(goServer.MapPath("/default.ashx"))))
+                if (File.Exists(goServer.MapPath("/default.ashx")))
                 {
                     oElmt.InnerText = "Local";
                 }
-                else if (!string.IsNullOrEmpty(FileSystem.Dir(goServer.MapPath("/ewcommon/default.ashx"))))
+                else if (File.Exists(goServer.MapPath("/ewcommon/default.ashx")))
                 {
                     oElmt.InnerText = "Common";
                 }
@@ -628,7 +644,7 @@ namespace Protean
             {
                 bResult = false;
                 AddResponse(ex.ToString());
-                returnException(ref msException, mcModuleName, "GetPendingContent", ex, bDebug: gbDebug);
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetAdminStatus", ex, ""));
             }
             finally
             {
@@ -676,7 +692,7 @@ namespace Protean
 
                     if (moSession != null)
                     {
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
+                        if (moSession["adminMode"]?.ToString() == "true")
                         {
                             mbAdminMode = true;
                             moDbHelper.gbAdminMode = mbAdminMode;
@@ -714,7 +730,7 @@ namespace Protean
                     mcPagePath = moRequest["path"] + "";
                     mcPagePath = mcPagePath.Replace("//", "/");
 
-                    if (Strings.LCase(moConfig["CheckDetailPath"]) == "on") {
+                    if (moConfig["CheckDetailPath"]?.ToLower() == "on") {
                         mbCheckDetailPath = true;
                        }
 
@@ -754,7 +770,7 @@ namespace Protean
                     if (moRequest["ewerror"] != null)
                     {
                         // If moRequest("ewerror") <> "nodebug" Then gbDebug = True Else gbDebug = False
-                        throw new Exception(Strings.LCase("errortest:" + moRequest["ewerror"]));
+                        throw new Exception(("errortest:" + moRequest["ewerror"]).ToLower());
                     }
 
 
@@ -767,18 +783,18 @@ namespace Protean
                     {
                         // Admin mode
                         string ewCmd;
-                        if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(moSession["ewCmd"], "PreviewOn", false), Strings.LCase(moRequest["ewCmd"]) == "logoff")))
+                        if (moSession["ewCmd"]?.ToString() == "PreviewOn" && moRequest["ewCmd"]?.ToLower() == "logoff")
                         {
                             // case to cater for logoff in preview mode
                             ewCmd = "PreviewOn";
                         }
                         else
                         {
-                            ewCmd = Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(moRequest["ewCmd"]), moSession["ewCmd"], moRequest["ewCmd"]));
+                            ewCmd = string.IsNullOrEmpty(moRequest["ewCmd"]) ? moSession["ewCmd"]?.ToString() : moRequest["ewCmd"];
                         }
 
 
-                        if (Convert.ToInt64("0" + moConfig["AdminRootPageId"]) > 0L & Strings.LCase(ewCmd) != "logoff")
+                        if (Convert.ToInt64("0" + moConfig["AdminRootPageId"]) > 0L & ewCmd?.ToLower() != "logoff")
                         {
                             rootPageIdFromConfig = moConfig["AdminRootPageId"];
                         }
@@ -1030,7 +1046,7 @@ namespace Protean
 
                 // Set the debug mode
                 //this.moConfig = this.moConfig;
-                switch (Strings.LCase(moConfig["CssFramework"]) ?? "")
+                switch (moConfig["CssFramework"]?.ToLower() ?? "")
                 {
                     case "bs5":
                         { bs5 = true; break; }
@@ -1042,7 +1058,7 @@ namespace Protean
 
                 if (moConfig["Debug"] != null)
                 {
-                    switch (Strings.LCase(moConfig["Debug"]) ?? "")
+                    switch (moConfig["Debug"]?.ToLower() ?? "")
                     {
                         case "on":
                             {
@@ -1066,7 +1082,7 @@ namespace Protean
                 bool bSessionLogging = false;
                 if (moSession != null)
                 {
-                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["Logging"], "On", false)))
+                    if (moSession["Logging"]?.ToString() == "On")
                     {
                         bSessionLogging = true;
                     }
@@ -1087,7 +1103,7 @@ namespace Protean
                         {
                             PerfMon.Stop();
                         }
-                        else if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["Logging"], "On", false)))
+                        else if (moSession["Logging"]?.ToString() == "On")
                         {
                             PerfMon.Start();
                         }
@@ -1127,43 +1143,43 @@ namespace Protean
                     gbCompiledTransform = false;
                 }
 
-                if (Strings.LCase(moConfig["Membership"]) == "on")
+                if (moConfig["Membership"]?.ToLower() == "on")
                 {
                     gbMembership = true;
                 }
 
-                if (Strings.LCase(moConfig["Cart"]) == "on")
+                if (moConfig["Cart"]?.ToLower() == "on")
                 {
                     gbCart = true;
                 }
 
-                if (Strings.LCase(moConfig["Quote"]) == "on")
+                if (moConfig["Quote"]?.ToLower() == "on")
                 {
                     gbQuote = true;
                 }
 
-                if (Strings.LCase(moConfig["Report"]) == "on")
+                if (moConfig["Report"]?.ToLower() == "on")
                 {
                     gbReport = true;
                 }
 
-                if (Strings.LCase(moConfig["SiteCache"]) == "on")
+                if (moConfig["SiteCache"]?.ToLower() == "on")
                 {
                     gbSiteCacheMode = true;
                 }
 
-                if (Strings.LCase(moConfig["Clone"]) == "on")
+                if (moConfig["Clone"]?.ToLower() == "on")
                 {
                     gbClone = true;
                 }
 
-                gbMemberCodes = Strings.LCase(moConfig["MemberCodes"]) == "on";
-                gbVersionControl = Strings.LCase(moConfig["VersionControl"]) == "on";
-                gbIPLogging = Strings.LCase(moConfig["IPLogging"]) == "on";
-                gbUseLanguageStylesheets = Strings.LCase(moConfig["LanguageStylesheets"]) == "on";
-                gcProjectPath = Convert.ToString(Interaction.IIf(moConfig["ProjectPath"] is null, "", moConfig["ProjectPath"] + ""));
-                gbUserIntegrations = Strings.LCase(moConfig["UserIntegrations"]) == "on";
-                gbSingleLoginSessionPerUser = Strings.LCase(moConfig["SingleLoginSessionPerUser"]) == "on";
+                gbMemberCodes = moConfig["MemberCodes"]?.ToLower() == "on";
+                gbVersionControl = moConfig["VersionControl"]?.ToLower() == "on";
+                gbIPLogging = moConfig["IPLogging"]?.ToLower() == "on";
+                gbUseLanguageStylesheets = moConfig["LanguageStylesheets"]?.ToLower() == "on";
+                gcProjectPath = moConfig["ProjectPath"] is null ? "" : moConfig["ProjectPath"] + "";
+                gbUserIntegrations = moConfig["UserIntegrations"]?.ToLower() == "on";
+                gbSingleLoginSessionPerUser = moConfig["SingleLoginSessionPerUser"]?.ToLower() == "on";
                 if (!string.IsNullOrEmpty(moConfig["SingleLoginSessionTimeout"]))
                 {
                     gnSingleLoginSessionTimeout = (short)Tools.Number.ConvertStringToIntegerWithFallback("0" + moConfig["SingleLoginSessionTimeout"], (int)gnSingleLoginSessionTimeout);
@@ -1242,7 +1258,7 @@ namespace Protean
                     mcContentType = moRequest.ContentType;
                 }
 
-                string ContentType = Strings.LCase(moRequest["contentType"]);
+                string ContentType = moRequest["contentType"]?.ToLower();
 
                 if (mcOriginalURL.StartsWith("/ewapi/") || mcOriginalURL.StartsWith("/ptnapi/"))
                 {
@@ -1355,12 +1371,12 @@ namespace Protean
 
                                 if (gnResponseCode == 200L & moRequest.Form.Count == 0 & mnUserId == 0 & bAllowCachePage) //!moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
                                 {
-                                    bPageCache = Strings.LCase(moConfig["PageCache"]) == "on" ? true : false;
+                                    bPageCache = moConfig["PageCache"]?.ToLower() == "on" ? true : false;
                                 }
 
                                 if (moRequest["perfmon"] == "on" & moRequest.QueryString.Count == 1)
                                 {
-                                    bPageCache = Strings.LCase(moConfig["PageCache"]) == "on" ? true : false;
+                                    bPageCache = moConfig["PageCache"]?.ToLower() == "on" ? true : false;
                                 }
 
                                 if (moRequest["reBundle"] != null)
@@ -1413,7 +1429,7 @@ namespace Protean
                     gcEwBaseUrl = moConfig["BaseUrl"];
                 }
 
-                mcRequestDomain = Convert.ToString(Operators.ConcatenateObject(Interaction.IIf(mbIsUsingHTTPS, "https://", "http://"), moRequest.ServerVariables["SERVER_NAME"]));
+                mcRequestDomain = (mbIsUsingHTTPS ? "https://" : "http://") + moRequest.ServerVariables["SERVER_NAME"];
 
                 // Language sites.
                 // If LanguageStyleSheets is on, then we look for the xsl with the language as a suffix
@@ -1438,7 +1454,7 @@ namespace Protean
 
                 var commonfolders = new ArrayList();
 
-                mcClientCommonFolder = Convert.ToString(Interaction.IIf(moConfig["ClientCommonFolder"] is null, "", moConfig["ClientCommonFolder"] + ""));
+                mcClientCommonFolder = moConfig["ClientCommonFolder"] is null ? "" : moConfig["ClientCommonFolder"] + "";
 
                 if (!string.IsNullOrEmpty(gcProjectPath))
                     commonfolders.Add(gcProjectPath);
@@ -1476,7 +1492,7 @@ namespace Protean
             bool bTrailingSlash = false;
             if (moSession != null)
             {
-                if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
+                if (moSession["adminMode"]?.ToString() == "true")
                 {
                     mbAdminMode = true;
                 }
@@ -1495,7 +1511,7 @@ namespace Protean
                 {
                     if (moConfig["TrailingSlash"] == "on")
                     {
-                        if (pageUrl.Length != 0 & Strings.Right(pageUrl, 1) != "/")
+                        if (pageUrl.Length != 0 & pageUrl.Length > 0 && pageUrl[pageUrl.Length - 1] != '/')
                         {
                             if (pageUrl.Length != 1)
                             {
@@ -1600,7 +1616,7 @@ namespace Protean
                             {
                                 isSecure = "http://";
                             }
-                            QRPath = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(isSecure, moRequest.ServerVariables["SERVER_NAME"]), QRPath));
+                            QRPath = isSecure + moRequest.ServerVariables["SERVER_NAME"] + QRPath;
                             var qrGenerator = new QRCoder.QRCodeGenerator();
                             var qrCodeData = qrGenerator.CreateQrCode(QRPath, QRCoder.QRCodeGenerator.ECCLevel.Q);
                             var qrCode = new QRCoder.QRCode(qrCodeData);
@@ -1617,7 +1633,7 @@ namespace Protean
                             if (moSession != null) {
                                 if (gbCart | gbQuote)
                                 {
-                                    if (Convert.ToInt16("0" + moSession["CartId"] ?? string.Empty) > 0)
+                                    if (int.TryParse(moSession["CartId"]?.ToString(), out int cartId) && cartId > 0)
                                     {
                                         bPageCache = false;
                                     }
@@ -1790,7 +1806,7 @@ namespace Protean
                                         }
                                         if (mbOutputXml == true)
                                         {
-                                            switch (Strings.LCase(mcContentType) ?? "")
+                                            switch (mcContentType.ToLower() ?? "")
                                             {
                                                 case "application/xml":
                                                     {
@@ -1811,11 +1827,11 @@ namespace Protean
                                             string styleFile;
                                             if (mbAdminMode == true)
                                             {
-                                                if (Strings.LCase(moPageXml.DocumentElement.GetAttribute("adminMode")) == "false" | mbPopupMode == true | mcContentType != "text/html")
+                                                if (moPageXml.DocumentElement.GetAttribute("adminMode").ToLower() == "false" | mbPopupMode == true | mcContentType != "text/html")
                                                 {
                                                     styleFile = goServer.MapPath(mcEwSiteXsl);
                                                 }
-                                                else if (Strings.LCase(moConfig["AdminXsl"]) == "common")
+                                                else if (moConfig["AdminXsl"]?.ToLower() == "common")
                                                 {
                                                     // uses the default admin xsl
                                                     styleFile = goServer.MapPath("/ewcommon/xsl/admin/page.xsl");
@@ -2022,37 +2038,37 @@ namespace Protean
                                                         DirectoryInfo[] subDirs = dir.GetDirectories();
                                                         FileInfo[] files = dir.GetFiles();
 
-                                                        foreach (var fi in files)
-                                                        {
-                                                            string cExt = Strings.LCase(fi.Extension);
-                                                            switch (cExt ?? "")
-                                                            {
-                                                                case ".otf":
-                                                                    {
-                                                                        rendererOpts.AddPrivateFont(fi);
-                                                                        break;
-                                                                    }
-                                                            }
-                                                        }
-                                                    }
+                        foreach (var fi in files)
+                        {
+                            string cExt = fi.Extension.ToLower();
+                            switch (cExt ?? "")
+                            {
+                                case ".otf":
+                                    {
+                                        rendererOpts.AddPrivateFont(fi);
+                                        break;
+                                    }
+                            }
+                        }
+                    }
 
-                                                    fontPath = goServer.MapPath("/ewcommon") + "/fonts";
+                    fontPath = goServer.MapPath("/ewcommon") + "/fonts";
                                                     if (bs5)
                                                     {
                                                         fontPath = goServer.MapPath("/ptn") + "/fonts";
                                                     }
 
-                                                    dir = new DirectoryInfo(fontPath);
+                                    dir = new DirectoryInfo(fontPath);
 
-                                                    if (dir.Exists)
-                                                    {
-                                                        DirectoryInfo[] subDirs = dir.GetDirectories();
-                                                        FileInfo[] files = dir.GetFiles();
+                                    if (dir.Exists)
+                                    {
+                                        DirectoryInfo[] subDirs = dir.GetDirectories();
+                                        FileInfo[] files = dir.GetFiles();
 
-                                                        foreach (var fi in files)
-                                                        {
-                                                            string cExt = Strings.LCase(fi.Extension);
-                                                            switch (cExt ?? "")
+                                        foreach (var fi in files)
+                                        {
+                                            string cExt = fi.Extension.ToLower();
+                                            switch (cExt ?? "")
                                                             {
                                                                 case ".otf":
                                                                     {
@@ -2072,22 +2088,22 @@ namespace Protean
                                                     string strFileSize = ofileStream.Length.ToString();
                                                     byte[] Buffer = ofileStream.ToArray();
 
-                                                    moCtx.Response.Clear();
-                                                    // Const adTypeBinary = 1
-                                                    moCtx.Response.AddHeader("Connection", "keep-alive");
-                                                    if (moCtx.Request.QueryString["mode"] == "open")
-                                                    {
-                                                        moCtx.Response.AddHeader("Content-Disposition", "filename=" + Strings.Replace(strFileName, ",", ""));
-                                                    }
-                                                    else
-                                                    {
-                                                        moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" + Strings.Replace(strFileName, ",", ""));
-                                                    }
-                                                    moCtx.Response.AddHeader("Content-Length", strFileSize);
-                                                    // ctx.Response.Charset = "UTF-8"
-                                                    moCtx.Response.ContentType = Tools.FileHelper.GetMIMEType("PDF");
-                                                    moCtx.Response.BinaryWrite(Buffer);
-                                                    moCtx.Response.Flush();
+                                    moCtx.Response.Clear();
+                                    // Const adTypeBinary = 1
+                                    moCtx.Response.AddHeader("Connection", "keep-alive");
+                                    if (moCtx.Request.QueryString["mode"] == "open")
+                                    {
+                                        moCtx.Response.AddHeader("Content-Disposition", "filename=" + strFileName.Replace(",", ""));
+                                    }
+                                    else
+                                    {
+                                        moCtx.Response.AddHeader("Content-Disposition", "attachment; filename=" + strFileName.Replace(",", ""));
+                                    }
+                                    moCtx.Response.AddHeader("Content-Length", strFileSize);
+                                    // ctx.Response.Charset = "UTF-8"
+                                    moCtx.Response.ContentType = Tools.FileHelper.GetMIMEType("PDF");
+                                    moCtx.Response.BinaryWrite(Buffer);
+                                    moCtx.Response.Flush();
 
                                                     moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "FO.Net-End", false);
                                                     // objStream = Nothing
@@ -2259,13 +2275,13 @@ namespace Protean
                 string styleFile;
                 if (mbAdminMode == true)
                 {
-                    if (Strings.LCase(moPageXml.DocumentElement.GetAttribute("adminMode")) == "false"
+                    if (moPageXml.DocumentElement.GetAttribute("adminMode").ToLower() == "false"
                         || mbPopupMode == true
                         || mcContentType != "text/html")
                     {
                         styleFile = goServer.MapPath(mcEwSiteXsl);
                     }
-                    else if (Strings.LCase(moConfig["AdminXsl"]) == "common")
+                    else if (moConfig["AdminXsl"]?.ToLower() == "common")
                     {
                         styleFile = goServer.MapPath("/ewcommon/xsl/admin/page.xsl");
                     }
@@ -2389,13 +2405,13 @@ namespace Protean
                                     pagePath = mcPagePath;
                                     if (moConfig["TrailingSlash"] == "on")
                                     {
-                                        if (url.Length != 0 & Strings.Right(url, 1) == "/")
+                                        if (url.Length != 0 && url.Length > 0 && url[url.Length - 1] == '/')
                                         {
-                                            url = Strings.Left(url, url.Length - 1);
+                                            url = url.Substring(0, url.Length - 1);
                                         }
-                                        if (pagePath.Length != 0 & Strings.Right(pagePath, 1) == "/")
+                                        if (pagePath.Length != 0 && pagePath.Length > 0 && pagePath[pagePath.Length - 1] == '/')
                                         {
-                                            pagePath = Strings.Left(pagePath, pagePath.Length - 1);
+                                            pagePath = pagePath.Substring(0, pagePath.Length - 1);
                                         }
                                     }
 
@@ -2433,7 +2449,7 @@ namespace Protean
                     string layoutCmd = "";
                     if (moSession != null & !ibIndexMode)
                     {
-                        if (((double)mnUserId != Convert.ToDouble("0") | Strings.LCase(moConfig["LogAll"]) == "On") & mbAdminMode == false & Features.ContainsKey("ActivityReporting"))
+                        if (((double)mnUserId != Convert.ToDouble("0") | moConfig["LogAll"]?.ToLower() == "on") & mbAdminMode == false & Features.ContainsKey("ActivityReporting"))
                         {
                             if (moRequest["noFrames"] != "True") // Fix for frameset double counting                   
                             {
@@ -2460,13 +2476,13 @@ namespace Protean
                         // TS-Moved to after add bulk related content to enable filters to be processed.
                         // not sure if this is before for a reason. I cannot seem to think of one.
                         // required for related images on contentgrabber for practitioner so added config setting
-                        if (Strings.LCase(moConfig["ActionsBeforeAddBulk"]) == "on")
+                        if (moConfig["ActionsBeforeAddBulk"]?.ToLower() == "on")
                         {
                             ContentActions();
                         }
 
                    
-                        if (Strings.LCase(moConfig["FinalAddBulk"]) == "on")
+                        if (moConfig["FinalAddBulk"]?.ToLower() == "on")
                         {
 
                             string cShowRelatedBriefDepth = moConfig["ShowRelatedBriefDepth"] + "";
@@ -2512,7 +2528,7 @@ namespace Protean
                             sProcessInfo = "End Quote";
                         }
 
-                        if (Strings.LCase(moConfig["Search"]) == "On")
+                        if (moConfig["Search"]?.ToLower() == "on")
                         {
 
                             var oSearchNode = moPageXml.CreateElement("Search");
@@ -2561,7 +2577,7 @@ namespace Protean
 
                     if (moSession != null)
                     {
-                        if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(moSession["RedirectReason"], "", false), !bRedirectStarted))) // bRegistrationSuccessful is a local variable and is only set before the redirection occurs - hence looking for it being False.
+                        if (moSession["RedirectReason"]?.ToString() != "" && !bRedirectStarted) // bRegistrationSuccessful is a local variable and is only set before the redirection occurs - hence looking for it being False.
                         {
                             // Add a flag - the XSL can pick this up
                             moPageXml.DocumentElement.SetAttribute("RedirectReason", Convert.ToString(moSession["RedirectReason"]));
@@ -2643,14 +2659,14 @@ namespace Protean
                         // 
                         if (!string.IsNullOrEmpty(gcMenuContentCountTypes))
                         {
-                            foreach (var contentType in Strings.Split(gcMenuContentCountTypes, ","))
-                                AddContentCount((XmlElement)moPageXml.SelectSingleNode("/Page/Menu"), Strings.Trim(contentType));
+                            foreach (var contentType in gcMenuContentCountTypes.Split(','))
+                                AddContentCount((XmlElement)moPageXml.SelectSingleNode("/Page/Menu"), contentType.Trim());
                         }
 
                         if (!string.IsNullOrEmpty(gcMenuContentBriefTypes))
                         {
-                            foreach (var contentType in Strings.Split(gcMenuContentBriefTypes, ","))
-                                AddContentBrief((XmlElement)moPageXml.SelectSingleNode("/Page/Menu"), Strings.Trim(contentType));
+                            foreach (var contentType in gcMenuContentBriefTypes.Split(','))
+                                AddContentBrief((XmlElement)moPageXml.SelectSingleNode("/Page/Menu"), contentType.Trim());
                         }
 
                         // establish the artid
@@ -2663,7 +2679,7 @@ namespace Protean
                                 int argresult = 0;
                                 if (int.TryParse(Convert.ToString(sArtId), out argresult))
                                 {
-                                    mnArtId = Convert.ToInt16(sArtId);
+                                    mnArtId = Convert.ToInt64(sArtId);
                                 }
                             }
                         }
@@ -2677,7 +2693,8 @@ namespace Protean
                         oPageElmt.SetAttribute("id", mnPageId.ToString());
                         if (moSession != null)
                         {
-                            if (Convert.ToBoolean(Operators.AndObject(Convert.ToInt16(Operators.ConcatenateObject("0", moSession["LogonRedirectId"])) > 0, !Operators.ConditionalCompareObjectEqual(moSession["LogonRedirectId"], mnPageId, false))))
+                            int logonRedirectId = Convert.ToInt16("0" + moSession["LogonRedirectId"]);
+                            if (logonRedirectId > 0 && !logonRedirectId.Equals(mnPageId))
                             {
                                 oPageElmt.SetAttribute("requestedId", Convert.ToString(moSession["LogonRedirectId"]));
                             }
@@ -2724,7 +2741,7 @@ namespace Protean
                                     moContentDetail = null;
                                     moContentDetail = BuildPageContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Convert.ToInt64(moRequest["verId"]));
                                 }
-                                else if (Strings.LCase(moConfig["AllowContentDetailAccess"]) == "On")
+                                else if (moConfig["AllowContentDetailAccess"]?.ToLower() == "on")
                                 {
                                     // MEMORY FIX: Clear previous moContentDetail reference to allow GC
                                     moContentDetail = null;
@@ -2756,7 +2773,8 @@ namespace Protean
                                     mcOriginalURL = mcOriginalURL.TrimEnd('?');
                                     if (mcOriginalURL.Contains("-/"))
                                     {
-                                        RequestedContentName = Strings.Right(mcOriginalURL, mcOriginalURL.Length - Strings.InStr(mcOriginalURL, "-/") - 1);
+                                        int dashSlashIndex = mcOriginalURL.IndexOf("-/") + 1; // +1 because InStr is 1-based
+                                        RequestedContentName = mcOriginalURL.Substring(dashSlashIndex + 1); // +1 to skip the slash
                                     }
 
                                     if ((RequestedContentName ?? "") != (cContentDetailName ?? ""))
@@ -2806,7 +2824,7 @@ namespace Protean
                         oPageElmt.SetAttribute("updateDate", Tools.Xml.XmlDate(mdPageUpdateDate));
                         oPageElmt.SetAttribute("userIntegrations", gbUserIntegrations.ToString().ToLower());
                         oPageElmt.SetAttribute("pageViewDate", Tools.Xml.XmlDate(mdDate));
-                        oPageElmt.SetAttribute("previewHidden", Convert.ToString(Interaction.IIf(mbPreviewHidden, "on", "off")));
+                        oPageElmt.SetAttribute("previewHidden", mbPreviewHidden ? "on" : "off");
 
                         // Assess if this page is a cloned page.
                         // Is it a direct clone (in which case the page id will have a @clone node in the Menu Item
@@ -2875,7 +2893,7 @@ namespace Protean
                 // AJG - application/xhtml+xml is interpretly correctly by many browsers, especially IE
                 // Default Content type returned to be XHTML (to clear warning on XHTML validator)
                 processInfo = "Determine the mimeType";
-                mimeType = Convert.ToString(Interaction.IIf(ValidatedOutputXml | string.IsNullOrEmpty(mimeType), System.Net.Mime.MediaTypeNames.Text.Xml, Strings.Replace(mimeType, " ", "+")));
+                mimeType = (ValidatedOutputXml | string.IsNullOrEmpty(mimeType)) ? System.Net.Mime.MediaTypeNames.Text.Xml : mimeType.Replace(" ", "+");
                 mcContentType = mimeType;
                 moResponse.ContentType = mcContentType;
 
@@ -2946,7 +2964,7 @@ namespace Protean
                     string mimeTypeFlattened = new Regex("[^A-Z0-9]", RegexOptions.IgnoreCase).Replace(mimeType, "-");
 
                     // Determine a default feedName, just in case it's blank
-                    feedName = Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(feedName), "generic", feedName));
+                    feedName = string.IsNullOrEmpty(feedName) ? "generic" : feedName;
 
                     // Add the paths to an array
                     rootPaths.Add(pathprefix + feedName + "/" + contentSchema + "-" + mimeTypeFlattened + ".xsl");
@@ -3169,32 +3187,32 @@ namespace Protean
                     }
 
                     // NB put the parId code here?
-                    foreach (XmlElement currentOElmt1 in oPageElmt.SelectNodes("/Page/Contents/Content"))
+                foreach (XmlElement currentOElmt1 in oPageElmt.SelectNodes("/Page/Contents/Content"))
+                {
+                    oElmt = currentOElmt1;
+                    processInfo = "Cleaning parId for: " + oElmt.OuterXml;
+                    string parId = oElmt.GetAttribute("parId");
+                    if (Convert.ToBoolean(parId.Contains(",")))
                     {
-                        oElmt = currentOElmt1;
-                        processInfo = "Cleaning parId for: " + oElmt.OuterXml;
-                        string parId = oElmt.GetAttribute("parId");
-                        if (Convert.ToBoolean(parId.Contains(",")))
-                        {
-                            parId = oElmt.GetAttribute("parId").Split(',')[1];
-                        }
-                        if (Convert.ToInt64(Operators.ConcatenateObject("0", parId)) > 0L)
-                        {
-                            // processInfo = "Cleaning parId for: " & oElmt.OuterXml
-                            long primaryParId = 0L;
+                        parId = oElmt.GetAttribute("parId").Split(',')[1];
+                    }
+                    if (Convert.ToInt64("0" + parId) > 0L)
+                    {
+                        // processInfo = "Cleaning parId for: " & oElmt.OuterXml
+                        long primaryParId = 0L;
 
-                            if (Strings.InStr(oElmt.GetAttribute("parId"), ",") > 0)
+                        if (oElmt.GetAttribute("parId").Contains(","))
                             {
 
-                                string[] aParIds = oElmt.GetAttribute("parId").ToString().Split(',');
+                        string[] aParIds = oElmt.GetAttribute("parId").ToString().Split(',');
 
-                                foreach (string cParId in aParIds)
+                            foreach (string cParId in aParIds)
+                            {
+                                if (oPageElmt.SelectSingleNode("descendant-or-self::MenuItem[@id='" + cParId + "']") != null)
                                 {
-                                    if (oPageElmt.SelectSingleNode("descendant-or-self::MenuItem[@id='" + cParId + "']") != null)
-                                    {
-                                        primaryParId = Convert.ToInt64(cParId);
-                                    }
+                                    primaryParId = Convert.ToInt64(cParId);
                                 }
+                            }
 
                                 oElmt.SetAttribute("parId", primaryParId.ToString());
 
@@ -3311,7 +3329,7 @@ namespace Protean
                 // Dim oAdmin As Admin = New Admin(Me)
                 // Dim oAdmin As Protean.Cms.Admin = New Protean.Cms.Admin(Me)
                 moAdmin.open(moPageXml);
-                if (Convert.ToInt16(Operators.ConcatenateObject("0", moSession["nUserId"])) > 0)
+                if (SessionUserId > 0)
                 {
                     moAdmin.GetPreviewMenu();
                 }
@@ -3458,8 +3476,8 @@ namespace Protean
 
                             string classPath = moRequest["method"];
 
-                            string methodName = Strings.Right(classPath, Strings.Len(classPath) - classPath.LastIndexOf(".") - 1);
-                            classPath = Strings.Left(classPath, classPath.LastIndexOf("."));
+                            string methodName = classPath.Substring(classPath.LastIndexOf(".") + 1);
+                            classPath = classPath.Substring(0, classPath.LastIndexOf("."));
 
                             calledType = assemblyInstance.GetType(classPath, true);
                             var o = Activator.CreateInstance(calledType);
@@ -3489,12 +3507,12 @@ namespace Protean
                             if (mbPreview & moConfig["inlineContentPermissions"] == "AdminUser")
                             {
                                 // commented out because it was breaking PSMG edit jobs
-                                mnUserId = Convert.ToInt16(moSession["nUserId"]);
+                                mnUserId = SessionUserId;
                             }
 
                             if (mnUserId == 0)
                             {
-                                mnUserId = Convert.ToInt16(moConfig["NonAuthUserID"]);
+                                mnUserId = Convert.ToInt64(moConfig["NonAuthUserID"]);
                                 moDbHelper.mnUserId = (long)mnUserId;
                                 bResetUser = true;
                             }
@@ -3558,7 +3576,7 @@ namespace Protean
                                                 // if we have a parent releationship lets add it
                                                 if (!string.IsNullOrEmpty(moRequest["contentParId"]))
                                                 {
-                                                    moDbHelper.insertContentRelation(Convert.ToInt16(moRequest["contentParId"]), nContentId.ToString(), Convert.ToBoolean(Interaction.IIf(moRequest["2way"] == "true", true, false)));
+                                                    moDbHelper.insertContentRelation(Convert.ToInt16(moRequest["contentParId"]), nContentId.ToString(), moRequest["2way"] == "true");
                                                 }
                                                 // simply output the content detail XML
                                                 // As this is content that we must've been able to get,
@@ -3637,7 +3655,8 @@ namespace Protean
                                 // raise error or do nothing
                                 var oPageDetail = moPageXml.CreateElement("ContentDetail");
                                 oPageElmt.AppendChild(oPageDetail);
-                                oPageDetail.InnerXml = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<Content type=\" error\"><div>Sorry you do not have permission to ", Interaction.IIf(AjaxCmd == "Delete", "delete", "update")), " this item, please contact the site administrator.</div></Content>"));
+                                string actionWord = AjaxCmd == "Delete" ? "delete" : "update";
+                                oPageDetail.InnerXml = "<Content type=\" error\"><div>Sorry you do not have permission to " + actionWord + " this item, please contact the site administrator.</div></Content>";
 
                             }
 
@@ -3689,8 +3708,8 @@ namespace Protean
                             // 
                             if (!string.IsNullOrEmpty(gcMenuContentCountTypes))
                             {
-                                foreach (var contentType in Strings.Split(gcMenuContentCountTypes, ","))
-                                    AddContentCount(FullMenuXml, Strings.Trim(contentType));
+                                foreach (var contentType in gcMenuContentCountTypes.Split(','))
+                                    AddContentCount(FullMenuXml, contentType.Trim());
                             }
 
 
@@ -3828,10 +3847,10 @@ namespace Protean
                 {
                     TextWriter writer = stringWriter;
                     moTransform.ProcessTimed(moPageXml, ref writer);
-                    cPageHTML = Strings.Replace(stringWriter.ToString(), "<?xml version=\"1.0\" encoding=\"utf-16\"?>", "");
+                    cPageHTML = stringWriter.ToString().Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "");
                 }
 
-                cPageHTML = Strings.Replace(cPageHTML, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
+                cPageHTML = cPageHTML.Replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
 
                 if (bReturnBlankError & !string.IsNullOrEmpty(msException))
                 {
@@ -3845,8 +3864,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-
-                returnException(ref msException, mcModuleName, "returnPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug);
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ReturnPageHTML", ex, sProcessInfo));
                 if (bReturnBlankError)
                 {
                     return "";
@@ -3859,983 +3877,7 @@ namespace Protean
 
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void AddCurrency()
-        {
-            string sProcessInfo = "PerfMon";
-            PerfMon.Log("Web", "AddCurrency");
-            // Isolated function to provide the facility to overload the cart when called from an overloaded .web
-            try
-            {
-                if (gbCart)
-                {
-
-                    sProcessInfo = "Begin AddCurrency";
-                    if (moCart is null)
-                    {
-                        var argaWeb = this;
-                        moCart = new Cms.Cart(ref argaWeb);
-                    }
-                    moCart.SelectCurrency();
-                    sProcessInfo = "End AddCurrency";
-
-                }
-            }
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddCurrency", ex, sProcessInfo));
-            }
-        }
-
-        public virtual void InitialiseCart()
-        {
-            string sProcessInfo = "PerfMon";
-            PerfMon.Log("Web", "addCart");
-            // Isolated function to provide the facility to overload the cart when called from an overloaded .web
-            try
-            {
-                if (gbCart)
-                {
-                    if (moSession != null)
-                    {
-                        if (moCart is null)
-                        {
-                            // we should not hit this because addCurrency should establish it.
-                            var argaWeb = this;
-                            moCart = new Cms.Cart(ref argaWeb);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "addCart", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddCart", ex, sProcessInfo));
-            }
-        }
-        /// <summary>
-        /// 
-        /// </summary>
-        public virtual void AddCart()
-        {
-            string sProcessInfo = "PerfMon";
-            PerfMon.Log("Web", "addCart");
-            // Isolated function to provide the facility to overload the cart when called from an overloaded .web
-            try
-            {
-                if (gbCart)
-                {
-
-                    sProcessInfo = "Begin Cart";
-                    if (moCart is null)
-                    {
-                        // we should not hit this because addCurrency should establish it.
-                        var argaWeb = this;
-                        moCart = new Cms.Cart(ref argaWeb);
-                    }
-                    // reinitialize variables because we might've changed some
-                    moCart.InitializeVariables();
-
-                    moCart.apply();
-                    // get any discount information for this page
-                    XmlElement RootElmt = moPageXml.DocumentElement;
-                    if (moDiscount != null)
-                    {
-                        moDiscount.getAvailableDiscounts(ref RootElmt);
-                    }
-                    sProcessInfo = "End Cart";
-                }
-            }
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "addCart", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddCart", ex, sProcessInfo));
-            }
-        }
-
-        public virtual void ProcessReports()
-        {
-            string sProcessInfo = "PerfMon";
-            PerfMon.Log("Web", "ProcessReports");
-            // Isolated function to provide the facility to overload the cart when called from an overloaded .web
-            try
-            {
-                if (gbReport)
-                {
-                    sProcessInfo = "Begin Report";
-                    var argaWeb = this;
-                    var oEr = new Cms.Report(ref argaWeb);
-                    oEr.apply();
-                    oEr.close();
-                    oEr = (Cms.Report)null;
-                    sProcessInfo = "End Report";
-                }
-            }
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "ProcessReports", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessReports", ex, sProcessInfo));
-
-            }
-        }
-
-        public virtual void ProcessCalendar()
-        {
-            string sProcessInfo = "PerfMon";
-            PerfMon.Log("Web", "ProcessCalendar");
-            try
-            {
-                sProcessInfo = "Begin Calendar";
-                var argaWeb = this;
-                moCalendar = new Cms.Calendar(ref argaWeb);
-                moCalendar.apply();
-                moCalendar = (Cms.Calendar)null;
-                sProcessInfo = "End Calendar";
-            }
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessCalendar", ex, sProcessInfo));
-            }
-        }
-
-
-        private void ProcessPolls()
-        {
-            PerfMon.Log("Web", "ProcessPolls");
-
-            string sProcessInfo = "PerfMon";
-            string sPollField = "";
-            string sPollItemField = "";
-            string sPollId = "";
-            string sTable = "";
-            string sSql = "";
-            string sVoteFrequency = "";
-            var dCurrentVotesExpiryDate = default(DateTime);
-            var dPreviousVotesCreationDate = default(DateTime);
-            bool bVoteOnce = false;
-            string sVoteIdentifiers = "";
-
-            string sEmail = "";
-            string cValidationError = "";
-
-            // Dim oDr As SqlDataReader
-
-            bool bUseUserId = false;
-            bool bUseCookies = false;
-            bool bUseEmail = false;
-            bool bUseIPAddress = false;
-
-            bool bCanVote = true;
-            var nVoteBlockReason = PollBlockReason.None;
-            string cCookieName = "";
-            string cLastVotedSql = string.Empty;
-
-            var openDate = DateTime.MinValue;
-            var closeDate = DateTime.MaxValue;
-
-
-            bool bHasVoted = false;
-
-            try
-            {
-                sProcessInfo = "Begin Poll Processing";
-
-                foreach (XmlElement ocNode in moPageXml.SelectNodes("/Page/Contents/Content[@type='Poll']"))
-                {
-
-                    // Reset variables - this is why I would like this to be a class instead.
-                    bCanVote = true;
-                    nVoteBlockReason = PollBlockReason.None;
-                    cValidationError = "";
-                    cCookieName = "";
-                    cLastVotedSql = "";
-                    bVoteOnce = false;
-                    sVoteIdentifiers = "";
-                    bUseUserId = false;
-                    bUseCookies = false;
-                    bUseEmail = false;
-                    bUseIPAddress = false;
-                    openDate = DateTime.MinValue;
-                    closeDate = DateTime.MaxValue;
-
-                    // Look for required nodes
-                    if (ocNode.SelectSingleNode("Restrictions/Frequency") is null | ocNode.SelectSingleNode("Restrictions/RegisteredVotersOnly") is null | ocNode.SelectSingleNode("Restrictions/Identifiers") is null)
-
-                    {
-                    }
-                    // Required nodes are missing
-                    else
-                    {
-                        // Set the config options for this poll
-                        sVoteFrequency = ocNode.SelectSingleNode("Restrictions/Frequency").InnerText;
-                        bUseUserId = ocNode.SelectSingleNode("Restrictions/RegisteredVotersOnly").InnerText == "true";
-                        sVoteIdentifiers = ocNode.SelectSingleNode("Restrictions/Identifiers").InnerText;
-
-                        // Check open and close dates
-                        if (ocNode.SelectSingleNode("dOpenDate") != null && Information.IsDate(ocNode.SelectSingleNode("dOpenDate").InnerText))
-                        {
-                            openDate = Convert.ToDateTime(ocNode.SelectSingleNode("dOpenDate").InnerText);
-                        }
-                        if (ocNode.SelectSingleNode("dCloseDate") != null && Information.IsDate(ocNode.SelectSingleNode("dCloseDate").InnerText))
-                        {
-                            closeDate = Convert.ToDateTime(ocNode.SelectSingleNode("dCloseDate").InnerText);
-                        }
-                        if (openDate > DateTime.Now | closeDate < DateTime.Now)
-                        {
-                            bCanVote = false;
-                            nVoteBlockReason = PollBlockReason.PollNotAvailable;
-                        }
-
-
-                        // Sort out the vote frequency
-                        switch (sVoteFrequency ?? "")
-                        {
-                            case "once":
-                                {
-                                    bVoteOnce = true;
-                                    break;
-                                }
-                            case "daily":
-                                {
-                                    dCurrentVotesExpiryDate = DateAndTime.DateAdd(DateInterval.Hour, 24d, DateTime.Now);
-                                    dPreviousVotesCreationDate = DateAndTime.DateAdd(DateInterval.Hour, -24, DateTime.Now);
-                                    break;
-                                }
-                            case "weekly":
-                                {
-                                    dCurrentVotesExpiryDate = DateAndTime.DateAdd(DateInterval.Day, 7d, DateTime.Now);
-                                    dPreviousVotesCreationDate = DateAndTime.DateAdd(DateInterval.Day, -7, DateTime.Now);
-                                    break;
-                                }
-                            case "monthly":
-                                {
-                                    dCurrentVotesExpiryDate = DateAndTime.DateAdd(DateInterval.Month, 1d, DateTime.Now);
-                                    dPreviousVotesCreationDate = DateAndTime.DateAdd(DateInterval.Month, -1, DateTime.Now);
-                                    break;
-                                }
-                        }
-
-
-                        // If we're not using a registered user then set the other identifiers
-                        if (!bUseUserId)
-                        {
-                            bUseCookies = sVoteIdentifiers.Contains("cookies");
-                            bUseEmail = sVoteIdentifiers.Contains("email");
-                            bUseIPAddress = sVoteIdentifiers.Contains("ipaddress");
-                            if (bUseIPAddress)
-                            {
-                                gbIPLogging = true;
-                                gbIPLogging = true;
-                            }
-                        }
-
-
-                        // Set the metadata
-                        sPollField = "nArtId";
-                        sPollItemField = "nOtherId";
-                        sTable = "tblActivityLog";
-                        sPollId = ocNode.GetAttribute("id");
-                        cCookieName = "pvote-" + sPollId;
-
-                        // Get the poll items
-                        var oCRNode = moPageXml.CreateElement("PollItems");
-                        moDbHelper.addRelatedContent(ref oCRNode, Convert.ToInt32(sPollId), true);
-                        ocNode.AppendChild(oCRNode);
-
-                        // ===================================================================
-                        // Check the restrictions
-                        // ===================================================================
-                        // This should tell us if the user can vote, and has voted.
-
-                        // First - is this restricted to logged on users only
-                        if (bUseUserId & !(mnUserId > 0))
-                        {
-                            bCanVote = false;
-                            nVoteBlockReason = PollBlockReason.RegisteredUsersOnly;
-                        }
-
-                        if (bCanVote)
-                        {
-
-                            // There are two places that votes can be identified
-                            // tblActivityLog - if User Id, IP address or email are being used
-                            // Cookie - if cookies are being used.
-
-                            // We need to check for both and then assess whether they can vote.
-                            sSql = "";
-
-                            if (bUseUserId)
-                            {
-                                sSql += " AND nUserDirId=" + mnUserId;
-                            }
-                            else
-                            {
-                                // First check if a cookie is being used - if it exists then we block voting.
-                                if (bUseCookies && moRequest.Cookies[cCookieName] != null)
-                                {
-                                    bCanVote = false;
-                                    nVoteBlockReason = PollBlockReason.CookieFound;
-                                }
-
-                                // If no cookie formulate the sql for the other restrictions.
-                                if (bCanVote)
-                                {
-
-                                    if (bUseIPAddress)
-                                    {
-                                        moDbHelper.checkForIpAddressCol();
-                                        sSql += " AND cIPAddress=" + Tools.Database.SqlString(Strings.Left(moRequest.ServerVariables["REMOTE_ADDR"], 15));
-                                    }
-
-                                    if (moRequest["poll-email"] != null)
-                                    {
-                                        sEmail = moRequest["poll-email"].ToString();
-                                        if (bUseEmail)
-                                            sSql += " AND cActivityDetail=" + Tools.Database.SqlString(sEmail);
-                                    }
-                                }
-                            }
-
-                            // Finally, check the tblActivityLog for votes
-                            if (bCanVote)
-                            {
-
-
-                                // Get the last tblActivityVote
-                                if (!string.IsNullOrEmpty(sSql))
-                                {
-
-
-                                    // Check for blocking
-                                    // First get the scope of blocking, either Global or Poll
-                                    string blockingScope = moConfig["PollBlockingScope"];
-                                    string blockingScopeQuery = "";
-                                    if (string.IsNullOrEmpty(blockingScope))
-                                        blockingScope = "Global";
-                                    if (blockingScope.ToLower() == "poll")
-                                    {
-                                        blockingScopeQuery = "AND nArtId=" + sPollId + " ";
-                                    }
-
-                                    // Check for blocks / exclusions
-                                    blockingScopeQuery = "SELECT TOP 1 nActivityKey " + "FROM	dbo.tblActivityLog " + "WHERE   nActivityType=" + ((int)Cms.dbHelper.ActivityType.VoteExcluded).ToString() + " " + blockingScopeQuery + sSql;
-
-
-
-                                    string blocked = Convert.ToString(moDbHelper.GetDataValue(blockingScopeQuery, CommandType.Text, null, ""));
-                                    if (!string.IsNullOrEmpty(blocked))
-                                    {
-                                        // Block has been found
-                                        bCanVote = false;
-                                        nVoteBlockReason = PollBlockReason.Excluded;
-                                    }
-                                    else
-                                    {
-                                        // Get the last tblActivityVote
-                                        sSql = "SELECT  TOP 1 dDateTime As LastVoted " + "FROM	dbo.tblActivityLog " + "WHERE   nActivityType=" + ((int)Cms.dbHelper.ActivityType.SubmitVote).ToString() + " " + "AND nArtId=" + sPollId + " " + sSql;
-
-
-
-                                        string cLastVoted = Convert.ToString(moDbHelper.GetDataValue(sSql, CommandType.Text, null, ""));
-                                        if (!string.IsNullOrEmpty(cLastVoted) && Information.IsDate(cLastVoted))
-                                        {
-                                            // We found a vote, check the date
-                                            if (bVoteOnce || Convert.ToDateTime(cLastVoted) > dPreviousVotesCreationDate)
-                                            {
-                                                // Block the vote
-                                                bCanVote = false;
-                                                nVoteBlockReason = PollBlockReason.LogFound;
-                                            }
-                                        }
-
-                                    }
-
-
-                                }
-                            }
-                        }
-
-
-
-
-                        // ===================================================================
-                        // Look for votes being submitted
-                        // ===================================================================
-
-                        if (bCanVote && moRequest["pollsubmit-" + sPollId] != null && !string.IsNullOrEmpty(moRequest["pollsubmit-" + sPollId].ToString()) && moRequest["polloption-" + sPollId] != null)
-
-
-                        {
-
-                            string sResult = moRequest["polloption-" + sPollId].ToString();
-
-                            sEmail = "";
-                            if (moRequest["poll-email"] != null)
-                            {
-                                sEmail = moRequest["poll-email"].ToString();
-                            }
-
-                            bHasVoted = true;
-
-                            if (!bUseEmail & string.IsNullOrEmpty(sEmail) | Tools.Text.IsEmail(sEmail))
-                            {
-                                moDbHelper.logActivity(Cms.dbHelper.ActivityType.SubmitVote, (long)mnUserId, (long)mnPageId, (long)Convert.ToInt16(sPollId), (long)Convert.ToInt16(sResult), sEmail);
-
-                                if (bUseCookies)
-                                {
-                                    var oCookie = new System.Web.HttpCookie(cCookieName, "voted");
-                                    oCookie.Expires = dCurrentVotesExpiryDate;
-                                    moResponse.Cookies.Add(oCookie);
-                                }
-
-
-                                bCanVote = false;
-                                nVoteBlockReason = PollBlockReason.JustVoted;
-                            }
-                            else if (bUseEmail & string.IsNullOrEmpty(sEmail))
-                            {
-                                cValidationError = "Email address required";
-                            }
-                            else
-                            {
-                                cValidationError = "Invalid email address";
-                            }
-
-                        }
-
-                        // Add the status node
-
-                        var oCStatusNode = moPageXml.CreateElement("Status");
-                        oCStatusNode.SetAttribute("canVote", Convert.ToString(Interaction.IIf(bCanVote, "true", "false")));
-                        if (bHasVoted)
-                            oCStatusNode.SetAttribute("justVoted", "true");
-                        if (nVoteBlockReason != PollBlockReason.None)
-                            oCStatusNode.SetAttribute("blockReason", nVoteBlockReason.ToString());
-                        if (!string.IsNullOrEmpty(cValidationError))
-                            oCStatusNode.SetAttribute("validationError", cValidationError);
-                        ocNode.AppendChild(oCStatusNode);
-
-
-                        // Calculate the results
-                        var oCResNode = moPageXml.CreateElement("Results");
-                        // Do we need to check the table exists?
-                        sSql = "SELECT DISTINCT " + sPollItemField + " AS PollOption, Count(" + sPollItemField + ") AS ResultsCount FROM " + sTable + " WHERE nActivityType=" + ((int)Cms.dbHelper.ActivityType.SubmitVote).ToString() + " AND " + sPollField + " = '" + sPollId + "' GROUP BY " + sPollItemField;
-                        using (var oDr = moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
-                        {
-
-                            while (oDr.Read())
-                            {
-                                var oResNode = moPageXml.CreateElement("PollResult");
-                                oResNode.SetAttribute("entryId", Convert.ToString(oDr[0]));
-                                oResNode.SetAttribute("votes", Convert.ToString(oDr[1]));
-                                oCResNode.AppendChild(oResNode);
-                            }
-                            oDr.Close();
-                        }
-
-                        ocNode.AppendChild(oCResNode);
-                    }
-
-
-                }
-
-                sProcessInfo = "End  Poll Processing";
-            }
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessPolls", ex, sProcessInfo));
-            }
-        }
-
-        public virtual void AddSearch(ref Cms aWeb)
-        {
-            var argaWeb = this;
-            oSrch = new Cms.Search(ref argaWeb);
-            oSrch.apply();
-        }
-
-        /// <summary>
-        /// Executes processing on specific content types.
-        /// </summary>
-        /// <remarks>In most cases, plugins (e.g. Search, Reports) and LayoutActions do this, so this is for content types that require a non-layout, non-function specific approach.</remarks>
-        private void ContentActions()
-        {
-
-            PerfMon.Log("Web", "ContentActions - Start");
-            string sProcessInfo = "";
-            XmlElement ocNode;
-
-            try
-            {
-
-                // Load in any specified content files
-
-                foreach (XmlElement currentOcNode in moPageXml.SelectNodes("/Page/Contents/Content[@contentFile!=''] | /Page/ContentDetail/descendant-or-self::Content[@contentFile!='']"))
-                {
-                    ocNode = currentOcNode;
-
-                    if (File.Exists(goServer.MapPath("/" + gcProjectPath + ocNode.GetAttribute("contentFile"))))
-                    {
-                        var newXml = new XmlDocument();
-                        newXml.PreserveWhitespace = true;
-                        // copy related nodes
-                        newXml.Load(goServer.MapPath("/" + gcProjectPath + ocNode.GetAttribute("contentFile")));
-                        foreach (XmlElement relElem in ocNode.SelectNodes("Content"))
-                        {
-                            var argnodeToAddTo = newXml.DocumentElement;
-                            Tools.Xml.AddExistingNode(ref argnodeToAddTo, relElem);
-
-                        }
-                        ocNode.InnerXml = newXml.DocumentElement.InnerXml;
-                        // ocNode.AppendChild(moPageXml.ImportNode(Protean.Tools.Xml.firstElement(newXml.DocumentElement), True))
-                    }
-
-                }
-
-                foreach (XmlElement currentOcNode1 in moPageXml.SelectNodes("/Page/*/Content[@appendFile!='']"))
-                {
-                    ocNode = currentOcNode1;
-
-                    if (File.Exists(goServer.MapPath("/" + gcProjectPath + ocNode.GetAttribute("appendFile"))))
-                    {
-                        var newXml = new XmlDocument();
-                        newXml.PreserveWhitespace = true;
-                        newXml.Load(goServer.MapPath("/" + gcProjectPath + ocNode.GetAttribute("appendFile")));
-
-                        ocNode.AppendChild(moPageXml.ImportNode(newXml.DocumentElement, true));
-                    }
-
-                }
-
-                string ContentActionXpath = "";
-                if (mnArtId > 0 & Strings.LCase(moConfig["ActionOnDetail"]) != "true")
-                {
-                    ContentActionXpath = "/Page/Contents/Content[@action!='' and @actionOnDetail='true'] | /Page/ContentDetail/Content[@action!=''] | /Page/ContentDetail/Content/Content[@action!=''] | /Page/Contents/Content[@action!='' and @id='" + mnArtId + "']";
-                }
-                else
-                {
-                    ContentActionXpath = "/Page/Contents/Content[@action!='']";
-                }
-
-
-                foreach (XmlElement currentOcNode2 in moPageXml.SelectNodes(ContentActionXpath))
-                {
-                    ocNode = currentOcNode2;
-                    string classPath = ocNode.GetAttribute("action");
-                    string assemblyName = ocNode.GetAttribute("assembly");
-                    string assemblyType = ocNode.GetAttribute("assemblyType");
-                    string providerName = ocNode.GetAttribute("providerName");
-                    string providerType = ocNode.GetAttribute("providerType");
-
-                    if (providerType == "")
-                    {
-                        providerType = "messaging";
-                    }
-                    string methodName = Strings.Right(classPath, Strings.Len(classPath) - classPath.LastIndexOf(".") - 1);
-
-                    classPath = Strings.Left(classPath, classPath.LastIndexOf("."));
-
-                    if (!string.IsNullOrEmpty(classPath))
-                    {
-                        try
-                        {
-                            Type calledType = null;
-
-                            if (!string.IsNullOrEmpty(assemblyName))
-                            {
-                                classPath = classPath + ", " + assemblyName;
-                            }
-                            // Dim oModules As New Protean.Cms.Membership.Modules
-                            if (!string.IsNullOrEmpty(providerName))
-                            {
-                                // case for external Providers
-                                Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/" + providerType + "Providers");
-                                Assembly assemblyInstance;
-
-                                if (moPrvConfig.Providers[providerName + "Local"] != null)
-                                {
-                                    if (!string.IsNullOrEmpty(moPrvConfig.Providers[providerName + "Local"].Parameters["path"]))
-                                    {
-                                        assemblyInstance = Assembly.LoadFrom(goServer.MapPath(moPrvConfig.Providers[providerName + "Local"].Parameters["path"]));
-                                        calledType = assemblyInstance.GetType(classPath, true);
-                                    }
-                                    else
-                                    {
-                                        assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName + "Local"].Type);
-                                        calledType = assemblyInstance.GetType(classPath, true);
-                                    }
-                                }
-                                else
-                                {
-                                    if (moPrvConfig.Providers[providerName] != null)
-                                    {
-                                        switch (moPrvConfig.Providers[providerName].Parameters["path"])
-                                        {
-                                            case var @case when @case == "":
-                                                {
-                                                    assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName].Type);
-                                                    calledType = assemblyInstance.GetType(classPath, true);
-                                                    break;
-                                                }
-                                            case "builtin":
-                                                {
-                                                    string prepProviderName; // = Replace(moPrvConfig.Providers(providerName).Type, ".", "+")
-                                                                             // prepProviderName = (New Regex("\+")).Replace(prepProviderName, ".", 1)
-                                                    prepProviderName = moPrvConfig.Providers[providerName].Type;
-                                                    calledType = Type.GetType(prepProviderName + "+" + classPath, true);
-                                                    break;
-                                                }
-
-                                            default:
-                                                {
-                                                    assemblyInstance = Assembly.LoadFrom(goServer.MapPath(moPrvConfig.Providers[providerName].Parameters["path"]));
-                                                    classPath = moPrvConfig.Providers[providerName].Parameters["classPrefix"] + classPath;
-                                                    calledType = assemblyInstance.GetType(classPath, true);
-                                                    break;
-                                                }
-                                        }
-                                    }
-
-
-                                }
-                            }
-                            else if (!string.IsNullOrEmpty(assemblyType))
-                            {
-                                // case for external DLL's
-                                var assemblyInstance = Assembly.Load(assemblyType);
-                                calledType = assemblyInstance.GetType(classPath, true);
-                            }
-                            else
-                            {
-                                // case for methods within EonicWeb Core DLL
-                                calledType = Type.GetType(classPath, true);
-                            }
-                            if (calledType != null)
-                            {
-
-                                var o = Activator.CreateInstance(calledType);
-
-                                var args = new object[2];
-                                args[0] = this;
-                                args[1] = ocNode;
-
-                                calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
-
-                                // Error Handling ?
-                                // Object Clearup ?
-                            }
-                            calledType = null;
-                        }
-
-                        catch (Exception ex)
-                        {
-                            // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo))
-                            sProcessInfo = classPath + "." + methodName + " not found";
-                            ocNode.InnerXml = "<Content type=\"error\"><div>" + HtmlEncode(sProcessInfo + ex.Message + ex.StackTrace) + "</div></Content>";
-                        }
-                    }
-
-                }
-
-                // Content Type : ContentGrabber
-                foreach (XmlElement currentOcNode3 in moPageXml.SelectNodes("/Page/Contents/Content[@display='grabber']"))
-                {
-                    ocNode = currentOcNode3;
-                    moDbHelper.getContentFromModuleGrabber(ref ocNode);
-                }
-
-                if (!gcBlockContentType.Contains("Product"))
-                {
-                    foreach (XmlElement currentOcNode4 in moPageXml.SelectNodes("/Page/Contents/Content[@display='group']"))
-                    {
-                        ocNode = currentOcNode4;
-                        moDbHelper.getContentFromProductGroup(ref ocNode);
-                    }
-                }
-                // Content Type : ContentGrabber
-                foreach (XmlElement currentOcNode5 in moPageXml.SelectNodes("/Page/Contents/Content[@type='ContentGrabber']"))
-                {
-                    ocNode = currentOcNode5;
-                    moDbHelper.getContentFromContentGrabber(ref ocNode);
-                }
-
-                // Content Type : Poll
-                if (moPageXml.SelectNodes("/Page/Contents/Content[@type='Poll']").Count > 0)
-                {
-                    ProcessPolls();
-                }
-
-
-
-                // Count Relations
-                string cContentIdsForRelatedCount = "";
-                foreach (XmlElement currentOcNode6 in moPageXml.SelectNodes("/Page/Contents/descendant-or-self::Content[@type='Tag' or @relatedCount='true']"))
-                {
-                    ocNode = currentOcNode6;
-                    cContentIdsForRelatedCount += ocNode.GetAttribute("id") + ",";
-                }
-                if (!string.IsNullOrEmpty(cContentIdsForRelatedCount))
-                {
-                    cContentIdsForRelatedCount = cContentIdsForRelatedCount.Remove(cContentIdsForRelatedCount.Length - 1);
-                    string sSql = "select Distinct COUNT(nContentParentid) as count, nContentChildid from tblContentRelation where nContentChildId in (" + cContentIdsForRelatedCount + ")  group by nContentChildid";
-                    // Dim oDr As SqlDataReader = moDbHelper.getDataReader(sSql)
-                    using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // Done by sonali on 13/7/2022
-                    {
-
-                        while (oDr.Read())
-                        {
-                            foreach (XmlElement currentOcNode7 in moPageXml.SelectNodes(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/Page/Contents/descendant-or-self::Content[@id='", oDr["nContentChildId"]), "']"))))
-                            {
-                                ocNode = currentOcNode7;
-                                ocNode.SetAttribute("relatedCount", Convert.ToString(oDr["count"]));
-                            }
-                        }
-                    }
-                }
-
-
-                // Content Type : xForm with ContentAction
-                if (!mbAdminMode)
-                {
-                    string formXpath = "/Page/Contents/Content[(@type='xform' and model/submission/@SOAPAction) or (@process='xform') or (@moduleType='xForm' and model/submission/@SOAPAction)]";
-                    if (mnArtId > 0)
-                    {
-                        // if the current contentDetail has child xform then that is all we process.
-                        if (moPageXml.SelectNodes("/Page/ContentDetail/descendant-or-self::Content[(@type='xform' and model/submission/@SOAPAction) or (@process='xform')]").Count > 0)
-                        {
-                            formXpath = "/Page/ContentDetail/descendant-or-self::Content[(@type='xform' and model/submission/@SOAPAction) or (@process='xform')]";
-                        }
-                    }
-
-                    foreach (XmlElement currentOcNode8 in moPageXml.SelectNodes(formXpath))
-                    {
-                        ocNode = currentOcNode8;
-                        // If oXform Is Nothing Then oXform = New xForm
-                        if (oXform is null)
-                            oXform = (Protean.xForm)getXform();
-
-                        oXform.moPageXML = moPageXml;
-                        oXform.load(ref ocNode, true);
-                        if (oXform.isSubmitted())
-                        {
-                            oXform.submit();
-                        }
-                        oXform.addValues();
-                        oXform = (Protean.xForm)null;
-                    }
-                    // just want to add submitted values but not hanlde submit
-                    formXpath = "/Page/Contents/Content[(@process='addValues')]";
-                    if (mnArtId > 0)
-                        formXpath = "/Page/ContentDetail/descendant-or-self::Content[(@process='addValues')]";
-                    foreach (XmlElement currentOcNode9 in moPageXml.SelectNodes(formXpath))
-                    {
-                        ocNode = currentOcNode9;
-                        if (oXform is null)
-                            oXform = (Protean.xForm)getXform();
-                        oXform.moPageXML = moPageXml;
-                        oXform.load(ref ocNode, true);
-                        if (oXform.isSubmitted())
-                        {
-                            oXform.updateInstanceFromRequest();
-                        }
-                        oXform.addValues();
-                        oXform = (Protean.xForm)null;
-                    }
-                }
-
-                BespokeActions();
-                PerfMon.Log("Web", "ContentActions - End");
-            }
-
-
-
-
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo));
-            }
-        }
-
-
-        /// <summary>
-        /// Use of this is for discussion, but it is my intention that this could contain a repository of actions
-        /// that are not necearrily triggered by Content, but rather by command; and yet could be accessible to different 
-        /// faculties of EonicWeb, such as Admin calls, Ajax calls and Content building calls.
-        /// </summary>
-        /// <remarks></remarks>
-        protected virtual void CommonActions()
-        {
-            try
-            {
-                // Integration calls - trying to use a similar methodology as above
-                // Commented out by adding False.
-                string integrationCommand = "";
-
-                if (moRequest.QueryString.Count > 0)
-                {
-                    integrationCommand = moRequest["integration"];
-                }
-
-                if (!string.IsNullOrEmpty(integrationCommand))
-                {
-
-
-                    // Directory integrations take a directory ID
-                    string requestedDirectoryId = moRequest["dirId"];
-                    long directoryId = (long)mnUserId;
-                    if (!string.IsNullOrEmpty(requestedDirectoryId) && Tools.Number.IsNumeric(requestedDirectoryId) && Convert.ToInt16(requestedDirectoryId) > 0)
-
-                    {
-                        directoryId = Convert.ToInt64(requestedDirectoryId);
-                    }
-
-                    if (directoryId > 0L)
-                    {
-                        // Invoke the integration method.
-                        object[] constructorArguments = new object[] { this, Convert.ToInt64(directoryId) };
-                        Invoke.InvokeObjectMethod("Protean.Integration.Directory." + integrationCommand, constructorArguments, null, this, "OnComponentError", "OnError");
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "CommonActions", ex, ""));
-
-            }
-        }
-
-
-        /// <summary>
-        /// To allow for bespoke content actions to be overloaded
-        /// </summary>
-        /// <remarks></remarks>
-        public virtual void BespokeActions()
-        {
-
-        }
-
-        /// <summary>
-        /// Executes Actions based on Specific Page Layouts.
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks></remarks>
-        public virtual string LayoutActions()
-        {
-            PerfMon.Log("Web", "LayoutActions");
-            string sProcessInfo = "";
-            bool bRunSearches = false;
-
-
-            try
-            {
-
-                switch (moPageXml.SelectSingleNode("/Page/@layout").Value ?? "")
-                {
-                    case "Search_Results":
-                    case "Search_Results_Products_Index":
-                    case "Search":
-                    case "Quick_Find":
-                        {
-                            if (!ibIndexMode)
-                            {
-                                bRunSearches = true;
-                            }
-
-                            break;
-                        }
-                    case "List_Quotes":
-                        {
-                            if (mnUserId > 0)
-                            {
-                                Cms.Quote oQuote;
-                                var argaWeb = this;
-                                oQuote = new Cms.Quote(ref argaWeb);
-                                XmlElement argoPageDetail = null;
-                                oQuote.ListOrders(("0" + moRequest["OrderId"]).ToString(), true, 0, oPageDetail: ref argoPageDetail);
-                                oQuote = (Cms.Quote)null;
-                            }
-
-                            break;
-                        }
-                    case "List_Orders":
-                        {
-                            if (mnUserId > 0)
-                            {
-                                Cms.Cart oCart;
-                                var argaWeb1 = this;
-                                oCart = new Cms.Cart(ref argaWeb1);
-                                XmlElement argoPageDetail1 = null;
-                                oCart.ListOrders(("0" + moRequest["OrderId"]).ToString(), true, 0, oPageDetail: ref argoPageDetail1);
-                                oCart = (Cms.Cart)null;
-                            }
-
-                            break;
-                        }
-                }
-
-                if ((gbCart | gbQuote) & moPageXml.SelectSingleNode("/Page/@layout").Value.Contains("Discounts_"))
-                {
-                    var argPageElmt = moPageXml.DocumentElement;
-                    moDiscount.getDiscountXML(ref argPageElmt);
-                }
-
-                // extra bit for searches
-                if (moPageXml.SelectSingleNode("/Page/@layout").Value.Contains("Search_Template"))
-                {
-                    bRunSearches = true;
-                }
-                // commented out by TS because this case is hit in v5 when using a module and this means it runs twice.
-                if (moPageXml.SelectSingleNode("/Page/Contents/Content[@action='Protean.Cms+Search+Modules.GetResults']") is null)
-                {
-                    if (moRequest.QueryString.Count > 0)
-                    {
-                        if (!string.IsNullOrEmpty(moRequest["searchMode"]))
-                        {
-                            bRunSearches = true;
-                        }
-                    }
-                }
-
-                if (bRunSearches)
-                {
-                    var argaWeb2 = this;
-                    AddSearch(ref argaWeb2);
-                }
-
-                // extra bit for user control panels
-                if (moPageXml.SelectSingleNode("/Page/@layout").Value.Contains("User_Control_Panel") | moPageXml.SelectSingleNode("/Page/@layout").Value.Contains("Internal_Feed"))
-                {
-                    string cContentTypes = moConfig["ControlPanelTypes"];
-                    if (cContentTypes != null & !string.IsNullOrEmpty(cContentTypes))
-                    {
-                        string[] oTypes = Strings.Split(cContentTypes, ",");
-                        int i;
-                        var loopTo = Information.UBound(oTypes);
-                        for (i = 0; i <= loopTo; i++)
-                        {
-                            // add all of those types of content to the pagecontent to the page
-                            var argoPageElmt = moPageXml.DocumentElement;
-                            GetContentXMLByType(ref argoPageElmt, oTypes[i]);
-                        }
-                    }
-                }
-
-                return "";
-            }
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "LayoutActions", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "LayoutActions", ex, sProcessInfo));
-                return "";
-            }
-
-        }
-
-
+       
         public void GetPageContentFromStoredProcedure(string SpName, Hashtable parameters, ref int nCount)
         {
 
@@ -5000,7 +4042,7 @@ namespace Protean
                 sSql = "SET ARITHABORT ON ";
                 //sSql = sSql + " SELECT  c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
 
-                sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, ";
+                sSql = sSql + " SELECT " + (distinct ? "DISTINCT " : "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, ";
                 sSql = sSql + "CAST(c." + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
 
                 // if distinct flag true and order by clause is also enabled then  required to bring all this column in select query too. 
@@ -5130,7 +4172,7 @@ namespace Protean
                     combinedWhereSQL = combinedWhereSQL + cFilterTarget;
                 }
 
-                if (Strings.Trim(combinedWhereSQL).StartsWith("and"))
+                if (combinedWhereSQL.Trim().StartsWith("and"))
                 {
                     combinedWhereSQL = combinedWhereSQL.Substring(4);
                 }
@@ -5258,7 +4300,7 @@ namespace Protean
                 }
 
 
-                sSql = Strings.Replace(sSql, "&lt;", "<");
+                sSql = sSql.Replace("&lt;", "<");
 
                 PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect:" + sSql);
 
@@ -5293,8 +4335,6 @@ namespace Protean
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageContentFromSelect", ex, sProcessInfo));
             }
         }
-
-
 
         public void GetPageContentFromSelectFilterPagination(ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, string sWhereSql, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string cAdminMode = "false", string cGroupBySql = "")
         {
@@ -5364,7 +4404,7 @@ namespace Protean
                 }
 
                 sSql = "SET ARITHABORT ON ";
-                sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
+                sSql = sSql + " SELECT " + (distinct ? "DISTINCT " : "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
                 sSql = sSql + "CAST(" + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
 
                 if (cAdditionalColumns != string.Empty)
@@ -5442,7 +4482,7 @@ namespace Protean
                     sWhereSql = " and " + sWhereSql;
 
                 string combinedWhereSQL = sPrimarySql + sMembershipSql + sFilterSql + sWhereSql;
-                if (Strings.Trim(combinedWhereSQL).StartsWith("and"))
+                if (combinedWhereSQL.Trim().StartsWith("and"))
                 {
                     combinedWhereSQL = combinedWhereSQL.Substring(4);
                 }
@@ -5533,7 +4573,7 @@ namespace Protean
                 sSql += " offset " + nStartPos + " rows fetch next " + nItemCount + " rows only";
 
 
-                sSql = Strings.Replace(sSql, "&lt;", "<");
+                sSql = sSql.Replace("&lt;", "<");
 
                 PerfMon.Log("Web", "GetPageContentFromSelect", "GetPageContentFromSelect:" + sSql);
 
@@ -5612,7 +4652,7 @@ namespace Protean
                     string providerName = filterDetails[1];
                     if (!string.IsNullOrEmpty(className))
                     {
-                        if (string.IsNullOrEmpty(providerName) | Strings.LCase(providerName) == "default")
+                        if (string.IsNullOrEmpty(providerName) | providerName?.ToLower() == "default")
                         {
                             providerName = "Protean.Providers.Filters." + className;
                             calledType = Type.GetType(providerName, true);
@@ -5638,7 +4678,7 @@ namespace Protean
                             }
                             else
                             {
-                                calledType = assemblyInstance.GetType(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], "."), className)), true);
+                                calledType = assemblyInstance.GetType(ourProvider.Parameters["rootClass"] + "." + className, true);
                             }
                         }
                         string methodname = "PostFilterContentUpdates";
@@ -5701,7 +4741,7 @@ namespace Protean
                 }
 
                 sSql = "SET ARITHABORT ON ";
-                sSql = Convert.ToString(sSql + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT ", Interaction.IIf(distinct, "DISTINCT ", "")), sTopSql), " c.nContentKey as id, cl.nStructId as locId,"));
+                sSql = sSql + "SELECT " + (distinct ? "DISTINCT " : "") + sTopSql + " c.nContentKey as id, cl.nStructId as locId,";
                 if (bPrimaryOnly)
                 {
                     sSql += " CL.nStructId as parId,";
@@ -5782,7 +4822,7 @@ namespace Protean
                 sSql = sSql + " where (" + sPrimarySql + sMembershipSql + sFilterSql + sWhereSql + ")";
                 if (!string.IsNullOrEmpty(cOrderBy))
                     sSql += " ORDER BY " + cOrderBy;
-                sSql = Strings.Replace(sSql, "&lt;", "<");
+                sSql = sSql.Replace("&lt;", "<");
 
                 if (pageNumber > 0L)
                 {
@@ -5820,108 +4860,6 @@ namespace Protean
             }
         }
 
-
-        public virtual string MembershipProcess()
-        {
-            PerfMon.Log("Web", "MembershipProcess");
-            string sProcessInfo = "";
-            string sReturnValue = string.Empty;
-            string cLogonCmd = string.Empty;
-            try
-            {
-
-                Cms argmyWeb = this;
-                return Convert.ToString(moMemProv.Activities.MembershipProcess(ref argmyWeb));
-
-            }
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "MembershipLogon", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "MembershipProcess", ex, sProcessInfo));
-                return null;
-            }
-        }
-
-
-
-        public virtual bool AlternativeAuthentication()
-        {
-
-
-
-            PerfMon.Log("Web", "AlternativeAuthentication");
-
-
-            string cProcessInfo = "";
-            // Dim bCheck As Boolean = False
-            // Dim cToken As String = ""
-            // Dim cKey As String = ""
-            // Dim cDecrypted As String = ""
-            // Dim nReturnId As Integer
-
-            try
-            {
-                Cms argmyWeb = this;
-                return Convert.ToBoolean(moMemProv.Activities.AlternativeAuthentication(ref argmyWeb));
-            }
-
-            // ' Look for the RC4 token
-            // If moRequest("token") <> "" And moConfig("AlternativeAuthenticationKey") <> "" Then
-
-            // cProcessInfo = "IP Address Checking"
-
-            // Dim cIPList As String = CStr(moConfig("AlternativeAuthenticationIPList"))
-
-            // If cIPList = "" OrElse Tools.Text.IsIPAddressInList(moRequest.UserHostAddress, cIPList) Then
-
-            // cProcessInfo = "Decrypting token"
-            // Dim oEnc As New Protean.Tools.Encryption.RC4()
-
-            // cToken = moRequest("token")
-            // cKey = moConfig("AlternativeAuthenticationKey")
-
-            // ' There are two accepted formats to receive:
-            // '  1. Email address
-            // '  2. User ID
-
-            // cDecrypted = Trim(Tools.Encryption.RC4.Decrypt(cToken, cKey))
-
-            // If Tools.Text.IsEmail(cDecrypted) Then
-
-            // ' Authentication is by way of email address
-            // cProcessInfo = "Email authenctication: Retrieving user for email: " & cDecrypted
-            // ' Get the user id based on the email address
-            // nReturnId = moDbHelper.GetUserIDFromEmail(cDecrypted)
-
-            // If nReturnId > 0 Then
-            // bCheck = True
-            // Me.mnUserId = nReturnId
-            // End If
-
-            // ElseIf IsNumeric(cDecrypted) AndAlso CInt(cDecrypted) > 0 Then
-
-            // ' Authentication is by way of user ID
-            // cProcessInfo = "User ID Authentication: " & cDecrypted
-            // ' Get the user id based on the email address
-            // bCheck = moDbHelper.IsValidUser(CInt(cDecrypted))
-            // If bCheck Then Me.mnUserId = CInt(cDecrypted)
-
-            // End If
-
-            // End If
-
-            // End If
-
-            // Return bCheck
-
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AlternativeAuthentication", ex, cProcessInfo));
-                return false;
-            }
-
-        }
 
         /// <summary>
         /// <para>This provides the facility to redirect a logged on user from PATH A to PATH B if they belong to a certain group/directory item.</para>
@@ -5993,140 +4931,6 @@ namespace Protean
 
         }
 
-        public virtual void LogOffProcess()
-        {
-            PerfMon.Log("Web", "LogOffProcess");
-            string cProcessInfo = "";
-
-            try
-            {
-
-                cProcessInfo = "Commit to Log";
-                if (gbSingleLoginSessionPerUser)
-                {
-                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.Logoff, (long)mnUserId, 0L);
-                    if (moRequest.Cookies["ewslock"] != null)
-                    {
-                        moResponse.Cookies["ewslock"].Expires = DateTime.Now.AddDays(-1);
-                    }
-                }
-                else
-                {
-                    moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Logoff, mnUserId, moSession.SessionID, DateTime.Now, 0, 0, "");
-                }
-
-
-                // Call this BEFORE clearing the user ID.
-                cProcessInfo = "Clear Site Stucture";
-                moDbHelper.clearStructureCacheUser();
-
-                // Clear the user ID.
-                mnUserId = 0;
-
-                // Clear the cart
-                if (moSession != null && gbCart)
-                {
-                    string cSql = "update tblCartOrder set cCartSessionId = 'OLD_' + cCartSessionId where (cCartSessionId = '" + moSession.SessionID + "' and cCartSessionId <> '')";
-                    moDbHelper.ExeProcessSql(cSql);
-                }
-
-                if (moSession != null)
-                {
-                    cProcessInfo = "Abandon Session";
-                    // AJG : Question - why does this not clear the Session ID?
-                    moSession.Abandon();
-                }
-
-                if (moConfig["RememberMeMode"] != "KeepCookieAfterLogoff")
-                {
-                    cProcessInfo = "Clear Cookies";
-                    moResponse.Cookies["RememberMeUserName"].Expires = DateTime.Now.AddDays(-1);
-                    moResponse.Cookies["RememberMeUserId"].Expires = DateTime.Now.AddDays(-1);
-                }
-            }
-
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "LogOffProcess", ex, cProcessInfo));
-            }
-
-        }
-
-        public virtual string UserEditProcess()
-        {
-            PerfMon.Log("Web", "UserEditProcess");
-            string sProcessInfo = "";
-            string sReturnValue = string.Empty;
-            try
-            {
-
-
-                return null;
-            }
-
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UserEditProcess", ex, sProcessInfo));
-                return null;
-            }
-        }
-
-        public virtual void logonRedirect(string cLogonCmd)
-        {
-            string sProcessInfo = "";
-
-            try
-            {
-
-                string sRedirectPath;
-
-                // don't redirect if in cart process
-                if (moRequest.QueryString["cartCmd"] != "Logon")
-                {
-
-                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["LogonRedirect"], "", false)))
-                    {
-                        sRedirectPath = Convert.ToString(moSession["LogonRedirect"]);
-                        moSession["LogonRedirect"] = "";
-                    }
-                    else
-                    {
-
-                        if (!string.IsNullOrEmpty(moConfig["LogonRedirectPath"]))
-                        {
-                            // sRedirectPath = mcOriginalURL & moConfig("LogonRedirectPath") & cLogonCmd
-                            // TS changed this remvoing mcOriginalURL because it breaks logon redirect "/" to go to root/
-                            sRedirectPath = moConfig["LogonRedirectPath"] + cLogonCmd;
-                        }
-                        else
-                        {
-                            sRedirectPath = mcOriginalURL + cLogonCmd;
-                        }
-
-                        if (goLangConfig != null)
-                        {
-                            sRedirectPath = mcPageLanguageUrlPrefix + sRedirectPath;
-                        }
-
-                    }
-                    if (sRedirectPath.Contains("token="))
-                    {
-
-                        sRedirectPath = Regex.Replace(sRedirectPath, "(token=.*?)&", "");
-                    }
-
-
-                    msRedirectOnEnd = sRedirectPath;
-                }
-            }
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "logonRedirect", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "logonRedirect", ex, sProcessInfo));
-            }
-        }
-
         /// <summary>
         /// <para>
         /// Check the request for certain parameters which if matched will create a 302 redirect
@@ -6181,7 +4985,7 @@ namespace Protean
 
                             // Try to find the product
                             long nArtId = Convert.ToInt64(moRequest["artid"]);
-                            string cSql = Convert.ToString(Operators.ConcatenateObject("SELECT cContentName FROM tblContent WHERE nContentKey = ", SqlFmt(nArtId.ToString())));
+                            string cSql = "SELECT cContentName FROM tblContent WHERE nContentKey = " + SqlFmt(nArtId.ToString());
                             string cName = Convert.ToString(moDbHelper.GetDataValue(cSql, CommandType.Text, null, ""));
 
 
@@ -6195,7 +4999,7 @@ namespace Protean
 
 
                                 // Iron out the spaces for paths
-                                cPath = Strings.Replace(cPath, " ", "-");
+                                cPath = cPath.Replace(" ", "-");
 
                                 // Construct the new path
                                 cPath = cPath + nArtId.ToString() + "-/" + cName;
@@ -6209,14 +5013,14 @@ namespace Protean
                             // Check the path - if hyphens is the preference then we need to analyse the path and rewrite it.
                             if (cPath.Contains("+") | cPath.Contains(" "))
                             {
-                                cPath = Strings.Replace(cPath, "+", "-");
-                                cPath = Strings.Replace(cPath, " ", "-");
+                                cPath = cPath.Replace("+", "-");
+                                cPath = cPath.Replace(" ", "-");
                                 bRedirect = true;
                             }
                         }
 
                         // Redirect
-                        if (Convert.ToBoolean(Operators.AndObject(bRedirect, Operators.ConditionalCompareObjectNotEqual(moSession["legacyRedirect"], "on", false))))
+                        if (bRedirect && moSession["legacyRedirect"]?.ToString() != "on")
                         {
                             // Stop recursive redirects
                             moSession["legacyRedirect"] = "on";
@@ -6469,7 +5273,7 @@ namespace Protean
                 int i;
                 bool bAppend = false;
 
-                var loopTo = Information.UBound(aVariables);
+                var loopTo = aVariables.Length - 1;
                 for (i = 0; i <= loopTo; i++)
                 {
                     if (moRequest.QueryString.Count > 0)
@@ -6477,7 +5281,7 @@ namespace Protean
                         if (!string.IsNullOrEmpty(moRequest["utm_" + aVariables[i]]))
                         {
                             var oCookie = new System.Web.HttpCookie("utm_" + aVariables[i], moRequest["utm_" + aVariables[i]]);
-                            oCookie.Expires = DateAndTime.DateAdd(DateInterval.Day, 14d, DateTime.Now);
+                            oCookie.Expires = DateTime.Now.AddDays(14);
                             moResponse.AppendCookie(oCookie);
                             // moSession("utm_" & aVariables(i)) = moRequest("utm_" & aVariables(i))
                         }
@@ -6543,9 +5347,9 @@ namespace Protean
                     }
                     // Please never add any setting here you do not want to be publicly accessible.
                     object s = "web.Cart;web.Membership;web.Search;web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;";
-                    s = Operators.AddObject(s, $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;web.ReCaptchaKeyV3;web.ReCaptchaVersion;");
-                    s = Operators.AddObject(s, "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;");
-                    s = Operators.ConcatenateObject(Operators.AddObject(s, moConfig["XmlSettings"]), ";");
+                    s = s + $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;web.ReCaptchaKeyV3;web.ReCaptchaVersion;";
+                    s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;";
+                    s = s + moConfig["XmlSettings"] + ";";
 
                     var match = Regex.Match(Convert.ToString(s), @"(?<Name>[^\.]*)\.(?<Value>[^;]*);?");
 
@@ -6620,3284 +5424,6 @@ namespace Protean
 
         }
 
-        public XmlElement GetUserXML(long nUserId = 0L)
-        {
-            PerfMon.Log("Web", "GetUserXML");
-            string sProcessInfo = "";
-            try
-            {
-                Cms argmyWeb = this;
-                return moMemProv.Activities.GetUserXML(ref argmyWeb, nUserId);
-            }
-
-            catch (Exception ex)
-            {
-
-                // returnException(msException, mcModuleName, "getUserXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetUserXml", ex, sProcessInfo));
-                return null;
-            }
-
-        }
-
-        public void RefreshUserXML()
-        {
-            PerfMon.Log("Web", "GetUserXML");
-            string sProcessInfo = "";
-            XmlElement oUserXml;
-            try
-            {
-                if (mnUserId != 0)
-                {
-                    oUserXml = (XmlElement)moPageXml.SelectSingleNode("/Page/User");
-                    if (oUserXml is null)
-                    {
-
-                        moPageXml.DocumentElement.AppendChild(moPageXml.ImportNode(GetUserXML((long)mnUserId), true));
-                    }
-                    // moPageXml.DocumentElement.AppendChild(GetUserXML(mnUserId))
-                    else
-                    {
-                        moPageXml.DocumentElement.ReplaceChild(GetUserXML((long)mnUserId), oUserXml);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "RefreshUserXML", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "RefreshUserXML", ex, sProcessInfo));
-            }
-
-        }
-
-        /// <summary>
-        ///    Gets the Structure XML, but doesn't add it to the page XML
-        /// </summary>
-        /// <param name="nUserId">User ID that you want to check for permissions on - if in Admin Mode, then if this is -1, no permissions will be checked, otherwise the permissions will be checked AND enumerated</param>
-        /// <param name="nRootId">The root ID of the Structure that you want to get</param>
-        /// <param name="nCloneContextId">If the root ID occurs within a cloned part of the structure, then give the cloned part's root node id</param>
-        /// <returns></returns>
-        /// <remarks></remarks>
-        public virtual XmlElement GetStructureXML(long nUserId = 0L, long nRootId = 0L, long nCloneContextId = 0L)
-        {
-
-            string cFunctionDef = "GetStructureXML([Long], [Long], [Long])";
-            PerfMon.Log("Web", cFunctionDef);
-
-            try
-            {
-
-                return GetStructureXML(nUserId, nRootId, nCloneContextId, "", false, false, true, false, false, "MenuItem", "Menu");
-            }
-
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, cFunctionDef, ex, ""));
-                return null;
-            }
-
-        }
-
-        /// <summary>
-        ///    Gets the Structure XML, and adds it to the page XML
-        /// </summary>
-        /// <param name="cMenuId">Adds an id attribute to the root node</param>
-        /// <param name="nUserId">User ID that you want to check for permissions on - if in Admin Mode, then if this is -1, no permissions will be checked, otherwise the permissions will be checked AND enumerated</param>
-        /// <param name="nRootId">The root ID of the Structure that you want to get</param>
-        /// <param name="bLockRoot">Adds a loced attribute to the root node</param>
-        /// <param name="nCloneContextId">If the root ID occurs within a cloned part of the structure, then give the cloned part's root node id</param>
-        /// <returns></returns>
-        /// <remarks></remarks>
-        public virtual XmlElement GetStructureXML(string cMenuId, long nUserId = 0L, long nRootId = 0L, bool bLockRoot = false, long nCloneContextId = 0L)
-        {
-
-            string cFunctionDef = "GetStructureXML(String, [Long], [Long], [Boolean], [Long])";
-            PerfMon.Log("Web", cFunctionDef);
-
-            try
-            {
-
-                return GetStructureXML(nUserId, nRootId, nCloneContextId, cMenuId, true, bLockRoot, true, false, false, "MenuItem", "Menu");
-            }
-
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, cFunctionDef, ex, ""));
-                return null;
-            }
-
-        }
-
-        public virtual XmlElement GetStructurePageXML(long nPageId, string cMenuItemNodeName, string cRootNodeName)
-        {
-
-            string cFunctionDef = "GetStructureXML(String, [Long], [Long], [Boolean], [Long])";
-            PerfMon.Log("Web", cFunctionDef);
-
-            string sSql;
-            DataSet oDs;
-            string sProcessInfo;
-            XmlElement oElmt = null;
-
-            try
-            {
-
-                sSql = "SELECT		" + " s.nStructKey as id, " + " s.nStructParId as parId, " + " s.cStructName as name, " + " s.cUrl as url, " + " s.cStructDescription as Description, " + " a.dPublishDate as publish, " + " a.dExpireDate as expire, " + " a.nStatus as status, " + " s.cStructForiegnRef as ref, " + " 'ADMIN' as access,	" + " s.cStructLayout as layout," + " s.nCloneStructId as clone," + " '' As accessSource," + " 0 As accessSourceId, " + " s.nVersionParId as vParId" + " FROM	tblContentStructure s" + " INNER JOIN  tblAudit a " + " ON s.nAuditId = a.nAuditKey" + " where(s.nVersionParId Is null Or s.nVersionParId = 0)" + " and s.nStructKey = " + nPageId;
-
-
-                // Get the dataset
-                oDs = moDbHelper.GetDataSet(sSql, cMenuItemNodeName, cRootNodeName);
-
-                // Add nestings
-                oDs.Relations.Add("rel01", oDs.Tables[0].Columns["id"], oDs.Tables[0].Columns["parId"], false);
-                oDs.Relations["rel01"].Nested = true;
-
-                if (oDs.Tables[0].Rows.Count > 0)
-                {
-
-                    // COLUMN MAPPING - STANDARD
-                    // =========================
-                    oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
-                    oDs.Tables[0].Columns[1].ColumnMapping = MappingType.Attribute;
-                    oDs.Tables[0].Columns[2].ColumnMapping = MappingType.Attribute;
-                    oDs.Tables[0].Columns[3].ColumnMapping = MappingType.Attribute;
-                    oDs.Tables[0].Columns["url"].ColumnMapping = MappingType.Attribute;
-                    if (mbAdminMode)
-                    {
-                        oDs.Tables[0].Columns["status"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["publish"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["expire"].ColumnMapping = MappingType.Attribute;
-                    }
-
-                    // COLUMN MAPPING - ACCESS
-                    // =========================
-                    oDs.Tables[0].Columns["access"].ColumnMapping = MappingType.Attribute;
-                    if (oDs.Tables[0].Columns.Contains("accessSource"))
-                    {
-                        oDs.Tables[0].Columns["accessSource"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["accessSourceId"].ColumnMapping = MappingType.Attribute;
-                    }
-
-                    if (oDs.Tables[0].Columns.Contains("vParId"))
-                    {
-                        oDs.Tables[0].Columns["vParId"].ColumnMapping = MappingType.Attribute;
-                    }
-
-                    if (oDs.Tables[0].Columns.Contains("ref"))
-                    {
-                        oDs.Tables[0].Columns["ref"].ColumnMapping = MappingType.Attribute;
-                    }
-
-                    // COLUMN MAPPING - CLONES
-                    // =========================
-                    if (oDs.Tables[0].Columns.Contains("clone"))
-                        oDs.Tables[0].Columns["clone"].ColumnMapping = MappingType.Attribute;
-
-
-                    // COVERT DATASET TO XML
-                    // =====================
-                    oElmt = moPageXml.CreateElement(cRootNodeName);
-
-
-                    sProcessInfo = "GetStructureXML-dsToXml";
-                    PerfMon.Log("Web", sProcessInfo);
-
-                    // TS added lines to avoid whitespace issues
-                    var oXml = new XmlDocument();
-                    oXml.LoadXml(oDs.GetXml());
-                    oXml.PreserveWhitespace = false;
-
-                    oElmt.InnerXml = oXml.DocumentElement.OuterXml;
-                    string sContent;
-                    // Convert any text to xml
-                    foreach (XmlElement oElmt2 in oElmt.SelectNodes("descendant-or-self::" + cMenuItemNodeName + "/Description"))
-                    {
-                        sContent = oElmt2.InnerText;
-                        if (!string.IsNullOrEmpty(sContent))
-                        {
-                            try
-                            {
-                                oElmt2.InnerXml = sContent;
-                            }
-                            catch
-                            {
-                                oElmt2.InnerXml = stdTools.tidyXhtmlFrag(sContent);
-                            }
-                        }
-                    }
-
-                }
-
-                return oElmt;
-            }
-
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, cFunctionDef, ex, ""));
-                return null;
-            }
-
-        }
-
-        /// <summary>
-        /// Gets the Structure XML
-        /// </summary>
-        /// <param name="nUserId">User ID that you want to check for permissions on - if in Admin Mode, then if this is -1, no permissions will be checked, otherwise the permissions will be checked AND enumerated</param>
-        /// <param name="nRootId">The root ID of the Structure that you want to get</param>
-        /// <param name="nCloneContextId">If the root ID occurs within a cloned part of the structure, then give the cloned part's root node id</param>
-        /// <param name="cMenuId">Adds an id attribute to the root node</param>
-        /// <param name="bAddMenuToPageXML">If True, this will add the elmt to the page XML</param>
-        /// <param name="bLockRoot">Adds a loced attribute to the root node</param>
-        /// <param name="bUseCache">Can be used to force use of the Cache</param>
-        /// <param name="bIncludeExpiredAndHidden">Include pages that are expired, yet to be published or hidden.</param>
-        /// <param name="bPruneEvenIfInAdminMode">By default in admin mode all pages even DENIED ones are returned.  If this value is True then regardless of the admin mode status DENIED pages will be removed.</param>
-        /// <param name="cMenuItemNodeName">Specifies the node name of each Page node.  Default should be "MenuItem".  Note - if not default, then caching will not be employed.</param>
-        /// <param name="cRootNodeName">Specifies the root node name.  Default should be "Menu".  Note - if not default, then caching will not be employed.</param>
-        /// <returns></returns>
-        /// <remarks></remarks>
-        public virtual XmlElement GetStructureXML(long nUserId, long nRootId, long nCloneContextId, string cMenuId, bool bAddMenuToPageXML, bool bLockRoot, bool bUseCache, bool bIncludeExpiredAndHidden, bool bPruneEvenIfInAdminMode, string cMenuItemNodeName, string cRootNodeName)
-        {
-            string cFunctionDef = "GetStructureXML(Long,Long,Long,String,Boolean,Boolean,Boolean,Boolean,Boolean,String,String)";
-            PerfMon.Log("Web", cFunctionDef);
-
-            DataSet oDs;
-            XmlElement oElmt = null;
-            XmlElement oClone = null;
-            int nCloneId = 0;
-            int nCloneParentId = 0;
-
-            int nTempRootId = 0;
-            XmlElement oMenuItem;
-
-            long nAuthUsers = gnAuthUsers;
-
-            string sContent;
-            string sSql;
-            string cCacheMode = "off";
-            bool bCacheXml = false;
-            string cFilePathModifier = "";
-            bool bAuth = true;
-
-            string sProcessInfo = Convert.ToString(string.IsNullOrEmpty("GetStructureXML"));
-            string cCacheType;
-
-            try
-            {
-
-                // INITIALISE VARIABLES
-                // =====================
-
-                // Node names
-                if (string.IsNullOrEmpty(cMenuItemNodeName))
-                    cMenuItemNodeName = "MenuItem";
-                if (string.IsNullOrEmpty(cRootNodeName))
-                    cRootNodeName = "Menu";
-                cCacheType = cRootNodeName + "/" + cMenuItemNodeName;
-
-                // Override the cache if we're not getting menu items
-                // If cMenuItemNodeName <> "MenuItem" And cRootNodeName <> "Menu" Then bUseCache = False
-
-                // Project Path modifier
-                if (moConfig["ProjectPath"] != null)
-                {
-                    cFilePathModifier = moConfig["ProjectPath"].TrimEnd('/').TrimStart('/');
-                    if (!string.IsNullOrEmpty(cFilePathModifier))
-                        cFilePathModifier = "/" + cFilePathModifier;
-                }
-
-                // Root Id
-                if (nRootId == 0L)
-                    nRootId = RootPageId;
-
-                // User Id
-                // If AdminMode and no user then set user to be -1 otherwise apply the userid
-                if (nUserId == 0L)
-                    nUserId = Convert.ToInt64(Interaction.IIf(mbAdminMode, (object)-1, (object)mnUserId));
-                if (nUserId == -1)
-                    bAuth = false;
-
-                // Set Non-Authenticated user permissions
-                // Don't forget to clear authenticated users if the user is not logged on.
-                if (gbMembership)
-                {
-                    if (nUserId == 0L | nUserId == gnNonAuthUsers)
-                    {
-                        nAuthUsers = 0L;
-                        if (nUserId == 0L & gnNonAuthUsers != 0)
-                        {
-                            nUserId = gnNonAuthUsers;
-                            bAuth = false;
-                        }
-                    }
-                }
-                else
-                {
-                    bAuth = false;
-                }
-
-                // CACHE MODE
-                // ===========
-                // Work out whether or not to use site structure caching
-                // Only check caching if user is logged on and is not admin mode, and caching has been turned on
-
-                // If we are indexing from SOAP we have no session object therefore we don't use cache
-                if (moSession is null)
-                    bUseCache = false;
-                // If we are in admin mode we don't use cache
-                // If mbAdminMode Then bUseCache = False
-
-                // Site caching can be turned on through a site request - this will only work for sites with membership
-                // OR if site caching is turned on and membership is off, then save a single site structure for all users (i.e. don;t use session)
-                if (bUseCache)
-                {
-                    sProcessInfo = "GetStructureXML-CheckCaching";
-                    PerfMon.Log("Web", sProcessInfo);
-
-                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["cacheMode"], "", false)))
-                    {
-                        cCacheMode = Convert.ToString(moSession["cacheMode"]);
-                    }
-                    else if (!string.IsNullOrEmpty(moConfig["SiteCache"]))
-                    {
-                        cCacheMode = Convert.ToString(Interaction.IIf(gbSiteCacheMode, "on", "off"));
-                    }
-
-                    // Check out of a caching override has been passed through
-                    if (!string.IsNullOrEmpty(moRequest["cacheMode"]))
-                    {
-                        cCacheMode = Strings.LCase(moRequest["cacheMode"]);
-                    }
-
-                    // Store the cache to the session
-                    moSession["cacheMode"] = cCacheMode;
-
-                    // If Cache is on then check for a cached strcture
-                    if (cCacheMode == "on")
-                    {
-
-                        var oCache = moPageXml.CreateElement(cRootNodeName);
-
-                        if (mbAdminMode & cCacheType == "Menu/MenuItem")
-                        {
-                            oCache.InnerXml = Convert.ToString(moCtx.Application["AdminStructureCache"]);
-                        }
-                        else
-                        {
-
-
-                            string cacheSearchCriteria = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE nCacheDirId = ", SqlFmt(nUserId.ToString())), " AND cCacheType='"), cCacheType), "'"));
-                            if (bAuth)
-                            {
-                                cacheSearchCriteria += " AND cCacheSessionID = '" + moSession.SessionID + "' AND DATEDIFF(hh,dCacheDate,GETDATE()) > 12";
-                            }
-                            sProcessInfo = "GetStructureXML-SelectFromCache";
-                            PerfMon.Log("Web", sProcessInfo);
-                            // Get the cached structure - returns empty string if no structure found.
-                            sSql = "SELECT TOP 1 cCacheStructure FROM dbo.tblXmlCache " + cacheSearchCriteria;
-
-                            sProcessInfo = "GetStructureXML-getCachefromDB-Start";
-                            PerfMon.Log("Web", sProcessInfo);
-
-                            moDbHelper.AddXMLValueToNode(sSql, ref oCache);
-
-                            sProcessInfo = "GetStructureXML-getCachefromDB-End";
-                            PerfMon.Log("Web", sProcessInfo);
-
-
-                        }
-
-                        if (cRootNodeName != "Menu")
-                        {
-                            foreach (XmlElement currentOElmt in oCache.SelectNodes("descendant-or-self::Menu"))
-                            {
-                                oElmt = currentOElmt;
-                                Tools.Xml.renameNode(ref oElmt, cRootNodeName);
-                            }
-                        }
-
-                        if (cMenuItemNodeName != "MenuItem")
-                        {
-                            foreach (XmlElement currentOElmt1 in oCache.SelectNodes("descendant-or-self::MenuItem"))
-                            {
-                                oElmt = currentOElmt1;
-                                Tools.Xml.renameNode(ref oElmt, cMenuItemNodeName);
-                            }
-                        }
-
-
-
-                        if (oCache.FirstChild != null)
-                        {
-                            bCacheXml = true;
-                            oElmt = oCache;
-                        }
-
-
-                    }
-
-                }
-
-                // If we don't have a cache to check then get a new structure
-                if (bCacheXml == false | cCacheMode == "off")
-                {
-
-                    // DATA CALL : GET STRUCTURE
-                    // =========================
-                    // 
-                    // This will return structure nodes, that will optionally have the following:
-                    // - checks for page level permissions (indicated by nUserId not being -1) - if these are returned they will need to cleaned up.
-                    // - enumerate who teh permissions have come from (indicated by nUserId not being -1 and badminMode being 1)
-                    // - exclude expired, not yet published and hidden pages if not in adminmode.
-
-                    // If preview mode is set to show hidden
-                    bool spoofAdminMode = mbAdminMode;
-                    if (mbPreviewHidden)
-                    {
-                        bIncludeExpiredAndHidden = true;
-                    }
-
-                    sSql = "EXEC getContentStructure_v2 @userId=" + nUserId + ", @bAdminMode=" + Convert.ToInt16(mbAdminMode) + ", @dateNow=" + sqlDate(mdDate) + ", @authUsersGrp = " + nAuthUsers + ", @bReturnDenied=1";
-
-                    sProcessInfo = "GetStructureXML-getContentStrcuture";
-                    PerfMon.Log("Web", sProcessInfo);
-
-                    if (bIncludeExpiredAndHidden)
-                        sSql += ",@bShowAll=1";
-
-                    // Get the dataset
-                    oDs = moDbHelper.GetDataSet(sSql, cMenuItemNodeName, cRootNodeName);
-
-                    // Add Page Version Info
-                    if (Features.ContainsKey("PageVersions"))
-                    {
-                        if (mbAdminMode & nUserId == -1)
-                        {
-                            // check we are returning strucutre for current user and not for another user such as in bespoke report (PDP for LMS system).
-                            sSql = "EXEC getAllPageVersions";
-                        }
-                        else
-                        {
-                            sSql = "EXEC getUserPageVersions @userId=" + nUserId + ", @dateNow=" + sqlDate(mdDate) + ", @authUsersGrp = " + nAuthUsers + ", @bReturnDenied=0, @bShowAll=0";
-                        }
-
-                        sProcessInfo = "GetStructureXML-getPageVersions";
-                        PerfMon.Log("Web", sProcessInfo);
-
-                        moDbHelper.addTableToDataSet(ref oDs, sSql, "PageVersion");
-                        oDs.Relations.Add("rel02", oDs.Tables[0].Columns["id"], oDs.Tables[1].Columns["vParId"], false);
-                        oDs.Relations["rel02"].Nested = true;
-
-                        if (oDs.Tables[1].Rows.Count > 0)
-                        {
-                            oDs.Tables[1].Columns["id"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[1].Columns["parId"].ColumnMapping = MappingType.Hidden;
-                            oDs.Tables[1].Columns["name"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[1].Columns["url"].ColumnMapping = MappingType.Attribute;
-                            // oDs.Tables(1).Columns("Description").ColumnMapping = Data.MappingType.SimpleContent
-                            oDs.Tables[1].Columns["publish"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[1].Columns["expire"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[1].Columns["status"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[1].Columns["access"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[1].Columns["layout"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[1].Columns["clone"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[1].Columns["vParId"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[1].Columns["lang"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[1].Columns["desc"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[1].Columns["verType"].ColumnMapping = MappingType.Attribute;
-                        }
-
-                    }
-
-                    // Add nestings
-                    oDs.Relations.Add("rel01", oDs.Tables[0].Columns["id"], oDs.Tables[0].Columns["parId"], false);
-                    oDs.Relations["rel01"].Nested = true;
-
-                    if (oDs.Tables[0].Rows.Count > 0)
-                    {
-
-                        // COLUMN MAPPING - STANDARD
-                        // =========================
-                        oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[1].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[2].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[3].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["url"].ColumnMapping = MappingType.Attribute;
-                        if (mbAdminMode)
-                        {
-                            oDs.Tables[0].Columns["status"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[0].Columns["publish"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[0].Columns["expire"].ColumnMapping = MappingType.Attribute;
-                        }
-
-                        // COLUMN MAPPING - ACCESS
-                        // =========================
-                        oDs.Tables[0].Columns["access"].ColumnMapping = MappingType.Attribute;
-                        if (oDs.Tables[0].Columns.Contains("accessSource"))
-                        {
-                            oDs.Tables[0].Columns["accessSource"].ColumnMapping = MappingType.Attribute;
-                            oDs.Tables[0].Columns["accessSourceId"].ColumnMapping = MappingType.Attribute;
-                        }
-
-                        if (oDs.Tables[0].Columns.Contains("vParId"))
-                        {
-                            oDs.Tables[0].Columns["vParId"].ColumnMapping = MappingType.Attribute;
-                        }
-
-                        if (oDs.Tables[0].Columns.Contains("ref"))
-                        {
-                            oDs.Tables[0].Columns["ref"].ColumnMapping = MappingType.Attribute;
-                        }
-
-                        // COLUMN MAPPING - CLONES
-                        // =========================
-                        if (oDs.Tables[0].Columns.Contains("clone"))
-                            oDs.Tables[0].Columns["clone"].ColumnMapping = MappingType.Attribute;
-
-
-                        // COVERT DATASET TO XML
-                        // =====================
-                        oElmt = moPageXml.CreateElement(cRootNodeName);
-
-                        sProcessInfo = "GetStructureXML-dsToXml";
-                        PerfMon.Log("Web", sProcessInfo);
-
-                        // TS added lines to avoid whitespace issues
-                        var oXml = new XmlDocument();
-                        oXml.LoadXml(oDs.GetXml());
-                        oXml.PreserveWhitespace = false;
-
-                        oElmt.InnerXml = oXml.DocumentElement.OuterXml;
-
-
-
-                        // MENU TIDY UP
-                        // ==================
-                        // 'Rename the VersionMenuNodes
-                        // If mbAdminMode And Features.ContainsKey("PageVersions") Then
-                        // sProcessInfo = "GetStructureXML-RenameVersions"
-                        // PerfMon.Log("Web", sProcessInfo)
-                        // Dim oVersionMenuItems As XmlNodeList = oElmt.SelectNodes(cRootNodeName & "/" & cMenuItemNodeName & "[@vParId!='']")
-                        // For Each oVerMenuItem As XmlElement In oVersionMenuItems
-                        // Tools.Xml.renameNode(oVerMenuItem, "PageVersion")
-                        // Next
-                        // End If
-
-                        // REMOVE THE ORPHANS
-                        // ==================
-                        // Because the SQL may not return DENIED pages, we need to check for orphaned items
-                        // Orphaned records are ones that have no parent menu node (because it wasn't returned by the SQL)
-                        // By default these will be returned to the root node, which will also include the root page node - which we don't want to delete.
-                        // The genuine root node will be node with a parId of 0 (possibly also including System Pages)
-
-                        sProcessInfo = "GetStructureXML-CleanOrphans";
-                        PerfMon.Log("Web", sProcessInfo);
-
-                        var oRootMenuItems = oElmt.SelectNodes(cRootNodeName + "/" + cMenuItemNodeName + "[@parId!=0]");
-                        foreach (XmlNode oRootMenuItem in oRootMenuItems)
-                            oRootMenuItem.ParentNode.RemoveChild(oRootMenuItem);
-
-
-
-                        // DETERMINE THE ROOT NODE ID
-                        // ==========================
-                        // We need to determine the root id
-                        // This allows us to not do unnecessary cloning
-                        // If a clonecontextnode has been passed, then we need to get that for now
-
-                        sProcessInfo = "GetStructureXML-GetIndicativeRootId";
-                        PerfMon.Log("Web", sProcessInfo);
-
-                        if (nCloneContextId > 0L)
-                        {
-                            nTempRootId = (int)nCloneContextId;
-                        }
-                        else if (nRootId > 0L)
-                        {
-                            nTempRootId = (int)nRootId;
-                        }
-                        else
-                        {
-                            nTempRootId = Convert.ToInt16(oElmt.FirstChild.FirstChild.Attributes["id"].Value);
-                        }
-
-
-
-                        // GET CLONED NODES
-                        // ==================
-                        // Note - we only want to find cloned nodes under the root id in question
-                        if (gbClone)
-                        {
-
-                            PerfMon.Log("Web", "GetStructureXML-cloneNodes");
-                            var cNodeSnapshot = new Hashtable();
-
-                            // GET CLONE SNAPSHOT
-                            // Why snapshot?  It stops cloned pages that also may have parent nodes cloned later changing through this process.
-                            foreach (XmlElement currentOMenuItem in oElmt.SelectNodes("descendant-or-self::" + cMenuItemNodeName + "[@id='" + nTempRootId + "']/descendant-or-self::" + cMenuItemNodeName + "[@clone and not(@clone=0)]"))
-                            {
-                                oMenuItem = currentOMenuItem;
-                                // Go and get the cloned node
-                                nCloneId = Convert.ToInt16(oMenuItem.GetAttribute("clone"));
-                                if (!(Tools.Xml.NodeState(ref oElmt, "descendant-or-self::" + cMenuItemNodeName + "[@id='" + nCloneId + "']", ref oClone) == Tools.Xml.XmlNodeState.NotInstantiated))
-                                {
-                                    if (oClone != null)
-                                    {
-                                        if (!cNodeSnapshot.ContainsKey(nCloneId))
-                                            cNodeSnapshot.Add(nCloneId, oClone.InnerXml);
-                                    }
-
-                                }
-                            }
-
-                            // ADD CLONE SNAPSHOTS TO MENU
-                            // Run through the nodes again, this time processing them 
-                            foreach (XmlElement currentOMenuItem1 in oElmt.SelectNodes("descendant-or-self::" + cMenuItemNodeName + "[@id='" + nTempRootId + "']/descendant-or-self::" + cMenuItemNodeName + "[@clone and not(@clone=0)]"))
-                            {
-                                oMenuItem = currentOMenuItem1;
-
-                                // Go and get the cloned node
-                                nCloneId = Convert.ToInt16(oMenuItem.GetAttribute("clone"));
-                                nCloneParentId = Convert.ToInt16(oMenuItem.GetAttribute("id"));
-                                if (!(Tools.Xml.NodeState(ref oElmt, "descendant-or-self::" + cMenuItemNodeName + "[@id='" + nCloneId + "']", "", "", XmlNodeState.IsEmpty, oClone, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) == Tools.Xml.XmlNodeState.NotInstantiated))
-                                {
-
-                                    oMenuItem.InnerXml = Convert.ToString(cNodeSnapshot[nCloneId]);
-
-                                    // Add the cloned flag to nodes and children
-                                    foreach (XmlElement oChild in oMenuItem.SelectNodes("descendant-or-self::" + cMenuItemNodeName))
-                                        oChild.SetAttribute("cloneparent", nCloneParentId.ToString());
-                                }
-                            }
-
-                        }
-
-
-                        // PROPOGATE THE PERMISSIONS AND PRUNE
-                        // ===================================
-                        sProcessInfo = "GetStructureXML-TidyMenunode";
-                        PerfMon.Log("Web", sProcessInfo);
-                        XmlElement argoMenuItem = (XmlElement)oElmt.FirstChild;
-                        TidyMenunode(ref argoMenuItem, "OPEN", "", bPruneEvenIfInAdminMode | !mbAdminMode, nUserId, cMenuItemNodeName, cRootNodeName);
-
-                        foreach (XmlElement currentOMenuItem2 in oElmt.SelectNodes("descendant-or-self::" + cMenuItemNodeName + " | descendant-or-self::PageVersion"))
-                        {
-                            oMenuItem = currentOMenuItem2;
-                            // For Each oMenuItem In oElmt.SelectNodes("descendant-or-self::*")
-                            XmlElement oDesc = (XmlElement)oMenuItem.SelectSingleNode("Description");
-                            if (oDesc != null)
-                            {
-
-                                // First try to convert the node into Xml
-                                sContent = oDesc.InnerText + "";
-                                try
-                                {
-                                    oDesc.InnerXml = sContent;
-                                }
-                                catch
-                                {
-                                    oDesc.InnerText = sContent;
-                                }
-
-                                // we have a historic error where some sites have 2 description nodes in some database
-                                // This should be data cleansed but for now we hack
-
-                                // Work through all the child nodes of Description and move them to the MenuItem
-                                foreach (XmlElement oDescChild in oDesc.SelectNodes("*[name()!='Description' or (name()='Description' and not(preceding-sibling::Description))]"))
-                                    // Tidy the node
-                                    // sContent = oDescChild.InnerText
-                                    // If sContent <> "" Then
-                                    // Try
-                                    // oDescChild.InnerXml = Protean.Tools.Xml.convertEntitiesToCodes(sContent)
-                                    // Catch
-                                    // PerfMon.Log("Web", "GetStructureXML-tidy")
-                                    // oDescChild.InnerXml = tidyXhtmlFrag(sContent)
-                                    // End Try
-                                    // End If
-
-                                    // Move the node
-                                    oMenuItem.InsertBefore(oDescChild.CloneNode(true), oDesc);
-
-                                // Remove the original oDesc
-                                oMenuItem.RemoveChild(oDesc);
-
-                            }
-
-                            // Remove the parId attribute
-                            oMenuItem.RemoveAttribute("parId");
-
-                        }
-
-                        if (bLockRoot)
-                        {
-                            // LOCK THE ROOT
-                            // ===============
-                            sProcessInfo = "GetStructureXML-lockRoot";
-                            PerfMon.Log("Web", sProcessInfo);
-                            XmlElement oMenuFirstChild = (XmlElement)oElmt.FirstChild;
-                            oMenuFirstChild.SetAttribute("Locked", Convert.ToString(true));
-                        }
-                    }
-
-                    else
-                    {
-
-                        // NO ROWS WERE FOUND - CREATE AN EMPTY Menu NODE
-                        // ===============================================
-                        oElmt = moPageXml.CreateElement(cRootNodeName);
-
-                    }
-
-                    // CACHING - ADD THE STRUCTURE TO THE CACHE
-                    // ========================================
-                    // Only if caching is on, user is logged on, and not in AdminMode.
-                    if (bUseCache & cCacheMode == "on")
-                    {
-                        sProcessInfo = "GetStructureXML-addCacheToStructure";
-                        PerfMon.Log("Web", sProcessInfo);
-                        // ts this was commented out I have restored 04/11/2022 please leave not to say why commented next time
-                        if (moRequest["reBundle"] != null)
-                        {
-                            moDbHelper.clearStructureCacheAll();
-                        }
-                        // only cache if MenuItem / Menu
-                        if (cMenuItemNodeName == "MenuItem" & cRootNodeName == "Menu")
-                        {
-                            if (mbAdminMode)
-                            {
-                                moCtx.Application["AdminStructureCache"] = oElmt.InnerXml;
-                            }
-                            else
-                            {
-                                XmlElement argStructureXml = (XmlElement)oElmt.FirstChild;
-                                moDbHelper.addStructureCache(bAuth, nUserId, ref cCacheType, ref argStructureXml);
-                            }
-                        }
-                        else
-                        {
-                            XmlElement argStructureXml1 = (XmlElement)oElmt.FirstChild;
-                            moDbHelper.addStructureCache(bAuth, nUserId, ref cCacheType, ref argStructureXml1);
-
-                        }
-
-
-                        // sSql = "INSERT INTO dbo.tblXmlCache (cCacheSessionID,nCacheDirId,cCacheStructure,cCacheType) " _
-                        // & "VALUES (" _
-                        // & "'" & IIf(bAuth, Eonic.SqlFmt(moSession.SessionID), "") & "'," _
-                        // & Eonic.SqlFmt(nUserId) & "," _
-                        // & "'" & Eonic.SqlFmt(oElmt.InnerXml) & "'," _
-                        // & "'" & cCacheType & "'" _
-                        // & ")"
-                        // moDbHelper.ExeProcessSql(sSql)
-
-                    }
-                }
-
-                // Now we need to do some page dependant processing
-
-                // MENU TIDY: XML TIDY
-                // ===================================
-                sProcessInfo = "GetStructureXML-txt2xml";
-                PerfMon.Log("Web", sProcessInfo);
-                string sUrl;
-                string cPageName;
-                string cCloneParent;
-                var oRe = new Regex("[^A-Z0-9]", RegexOptions.IgnoreCase);
-                XmlElement oPageVerElmts;
-
-                string DomainURL = mcRequestDomain;
-                string ExcludeFoldersFromPaths = Strings.LCase("" + moConfig["ExcludeFoldersFromPaths"]);
-                string[] foldersExcludedFromPaths = ExcludeFoldersFromPaths.Split(',');
-
-                foreach (XmlElement currentOMenuItem3 in oElmt.SelectNodes("descendant-or-self::" + cMenuItemNodeName))
-                {
-                    oMenuItem = currentOMenuItem3;
-                    string urlPrefix = "";
-                    XmlElement verNodeLoop = null;
-                    XmlElement verNode = null;
-
-                    // Determine Page Version
-                    if (Features.ContainsKey("PageVersions"))
-                    {
-                        if (!mbAdminMode | moRequest["ewCmd"] == "Normal" | moRequest["ewCmd"] == "EditContent")
-                        {
-
-                            // check for language version
-                            foreach (XmlElement currentVerNodeLoop in oMenuItem.SelectNodes("PageVersion[@lang='" + gcLang + "']"))
-                            {
-                                verNodeLoop = currentVerNodeLoop;
-                                verNode = verNodeLoop;
-                                urlPrefix = mcPageLanguageUrlPrefix;
-                            }
-
-                            // check for permission version
-                            foreach (XmlElement currentVerNodeLoop1 in oMenuItem.SelectNodes("PageVersion[@verType='1']"))
-                            {
-                                verNodeLoop = currentVerNodeLoop1;
-                                if (verNode is null)
-                                    verNode = verNodeLoop;
-                            }
-
-                            // update our pageId
-                            if (verNode != null)
-                            {
-                                // Case for if our version is also the root page
-                                if (nRootId == Convert.ToDouble(oMenuItem.GetAttribute("id")))
-                                {
-                                    nRootId = Convert.ToInt64(verNode.GetAttribute("id"));
-                                }
-
-                                // Case if we are on the current page then we reset the mnPageId so we pull in the right content
-                                if ((double)mnPageId == Convert.ToDouble(oMenuItem.GetAttribute("id")))
-                                {
-                                    // If (verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "") And verNode.GetAttribute("verType") <> 1 Then
-                                    // If (verNode.GetAttribute("lang") = gcLang Or gcLang = "" Or verNode.GetAttribute("lang") = "") Then
-                                    switch (Convert.ToInt16(verNode.GetAttribute("verType")))
-                                    {
-                                        case 1: // case for permission version
-                                            {
-                                                // Dim permLevel As dbHelper.PermissionLevel = moDbHelper.getPagePermissionLevel(verNode.GetAttribute("id"))
-                                                if (!mbAdminMode)
-                                                {
-                                                    mnPageId = Convert.ToInt16(verNode.GetAttribute("id"));
-                                                }
-
-                                                break;
-                                            }
-                                        case 3: // case for language version
-                                            {
-                                                if ((verNode.GetAttribute("lang") ?? "") == (gcLang ?? ""))
-                                                {
-                                                    mnPageId = Convert.ToInt16(verNode.GetAttribute("id"));
-                                                }
-
-                                                break;
-                                            }
-
-                                        default:
-                                            {
-                                                mnPageId = Convert.ToInt16(verNode.GetAttribute("id"));
-                                                break;
-                                            }
-                                    }
-                                }
-
-                                // create a version for the default we are replacing
-                                var newVerNode = moPageXml.CreateElement("PageVersion");
-                                newVerNode.SetAttribute("id", oMenuItem.GetAttribute("id"));
-                                newVerNode.SetAttribute("name", oMenuItem.GetAttribute("name"));
-                                newVerNode.SetAttribute("url", oMenuItem.GetAttribute("url"));
-                                newVerNode.SetAttribute("publish", oMenuItem.GetAttribute("publish"));
-                                newVerNode.SetAttribute("expire", oMenuItem.GetAttribute("expire"));
-                                newVerNode.SetAttribute("status", oMenuItem.GetAttribute("status"));
-                                newVerNode.SetAttribute("access", oMenuItem.GetAttribute("access"));
-                                newVerNode.SetAttribute("layout", oMenuItem.GetAttribute("layout"));
-                                string sInnerXml = string.Empty;
-                                foreach (XmlElement infoElmt in oMenuItem.SelectNodes("*[name()!='PageVersion' and name()!='MenuItem']"))
-                                    sInnerXml = sInnerXml + infoElmt.OuterXml;
-                                newVerNode.InnerXml = sInnerXml;
-                                sInnerXml = "";
-                                if (goLangConfig != null)
-                                {
-                                    newVerNode.SetAttribute("lang", goLangConfig.GetAttribute("code"));
-                                }
-
-                                newVerNode.SetAttribute("verType", "0");
-                                oMenuItem.AppendChild(newVerNode);
-
-                                // now replace the menuitem with the node we are on
-                                oMenuItem.SetAttribute("id", verNode.GetAttribute("id"));
-                                oMenuItem.SetAttribute("name", verNode.GetAttribute("name"));
-                                oMenuItem.SetAttribute("url", verNode.GetAttribute("url"));
-                                oMenuItem.SetAttribute("publish", verNode.GetAttribute("publish"));
-                                oMenuItem.SetAttribute("expire", verNode.GetAttribute("expire"));
-                                oMenuItem.SetAttribute("status", verNode.GetAttribute("status"));
-                                oMenuItem.SetAttribute("access", verNode.GetAttribute("access"));
-                                oMenuItem.SetAttribute("layout", verNode.GetAttribute("layout"));
-                                oMenuItem.SetAttribute("clone", verNode.GetAttribute("clone"));
-                                oMenuItem.SetAttribute("lang", verNode.GetAttribute("lang"));
-                                oMenuItem.SetAttribute("verDesc", verNode.GetAttribute("verDesc"));
-                                oMenuItem.SetAttribute("verType", verNode.GetAttribute("verType"));
-
-
-
-
-                                foreach (XmlElement currentOPageVerElmts in verNode.SelectNodes("*"))
-                                {
-                                    oPageVerElmts = currentOPageVerElmts;
-                                    string nodeName = oPageVerElmts.Name;
-                                    if (oMenuItem.SelectSingleNode(nodeName) != null)
-                                    {
-                                        oMenuItem.SelectSingleNode(nodeName).InnerXml = verNode.SelectSingleNode(nodeName).InnerXml;
-                                    }
-                                    else
-                                    {
-                                        oMenuItem.AppendChild(moPageXml.CreateElement(nodeName));
-                                        oMenuItem.SelectSingleNode(nodeName).InnerXml = verNode.SelectSingleNode(nodeName).InnerXml;
-                                    }
-                                }
-                                // If Not oMenuItem.SelectSingleNode("Description") Is Nothing Then
-                                // oMenuItem.SelectSingleNode("Description").InnerText = verNode.SelectSingleNode("Description").InnerText
-                                // Else
-                                // oMenuItem.AppendChild(moPageXml.CreateElement("Description"))
-                                // oMenuItem.SelectSingleNode("Description").InnerText = verNode.SelectSingleNode("Description").InnerText
-                                // End If
-                            }
-                        }
-                        else if (moRequest["ewCmd"] != "LocateContent" & moRequest["ewCmd"] != "MoveContent" & moRequest["ewCmd"] != "EditStructure")
-                        {
-                            foreach (XmlElement currentVerNode in oMenuItem.SelectNodes("PageVersion[@id=" + mnPageId + "]"))
-                            {
-                                verNode = currentVerNode;
-                                if (Convert.ToDouble(oMenuItem.GetAttribute("id")) == nRootId)
-                                {
-                                    // case for replacing homepage in admin
-                                    nRootId = Convert.ToInt64(verNode.GetAttribute("id"));
-                                }
-                                // update menu item with current page
-                                oMenuItem.SetAttribute("id", verNode.GetAttribute("id"));
-                                oMenuItem.SetAttribute("name", verNode.GetAttribute("name"));
-                                oMenuItem.SetAttribute("url", verNode.GetAttribute("url"));
-                                oMenuItem.SetAttribute("publish", verNode.GetAttribute("publish"));
-                                oMenuItem.SetAttribute("expire", verNode.GetAttribute("expire"));
-                                oMenuItem.SetAttribute("status", verNode.GetAttribute("status"));
-                                oMenuItem.SetAttribute("access", verNode.GetAttribute("access"));
-                                oMenuItem.SetAttribute("layout", verNode.GetAttribute("layout"));
-                                oMenuItem.SetAttribute("clone", Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(verNode.GetAttribute("clone")), "0", verNode.GetAttribute("clone"))));
-                                oMenuItem.SetAttribute("lang", verNode.GetAttribute("lang"));
-                                oMenuItem.SetAttribute("verDesc", verNode.GetAttribute("desc"));
-                                oMenuItem.SetAttribute("verType", verNode.GetAttribute("verType"));
-
-                                foreach (XmlElement currentOPageVerElmts1 in verNode.SelectNodes("*"))
-                                {
-                                    oPageVerElmts = currentOPageVerElmts1;
-                                    string nodeName = oPageVerElmts.Name;
-                                    if (oMenuItem.SelectSingleNode(nodeName) != null)
-                                    {
-                                        oMenuItem.SelectSingleNode(nodeName).InnerXml = verNode.SelectSingleNode(nodeName).InnerXml;
-                                    }
-                                    else
-                                    {
-                                        oMenuItem.AppendChild(moPageXml.CreateElement(nodeName));
-                                        oMenuItem.SelectSingleNode(nodeName).InnerXml = verNode.SelectSingleNode(nodeName).InnerXml;
-                                    }
-                                }
-                                // If Not oMenuItem.SelectSingleNode("Description") Is Nothing Then
-                                // oMenuItem.SelectSingleNode("Description").InnerText = verNode.SelectSingleNode("Description").InnerText
-                                // Else
-                                // oMenuItem.AppendChild(moPageXml.CreateElement("Description"))
-                                // oMenuItem.SelectSingleNode("Description").InnerText = verNode.SelectSingleNode("Description").InnerText
-                                // End If
-                            }
-                            verNode = null;
-
-                        }
-                    }
-
-                    if (goLangConfig != null)
-                    {
-
-                        if (verNode is null & goLangConfig.GetAttribute("localDefaults") != "off")
-                        {
-                            urlPrefix = mcPageLanguageUrlPrefix; // & cFilePathModifier
-                        }
-
-                    }
-
-
-
-                    // Only generate URLs for MneuItems that do not already have a url explicitly defined
-                    if (string.IsNullOrEmpty(oMenuItem.GetAttribute("url")))
-                    {
-
-                        // Start with the base path
-                        sUrl = moConfig["BasePath"] + urlPrefix + cFilePathModifier;
-
-                        if (moConfig["UsePageIdsForURLs"] == "on")
-                        {
-                            // Use the page ID instead of a Pretty URL
-                            sUrl = sUrl + "/?pgid=" + oMenuItem.GetAttribute("id");
-                        }
-                        else
-                        {
-                            // Get all the descendant menuitems and append the names onto the Url string
-                            foreach (XmlElement oDescendant in oMenuItem.SelectNodes("ancestor-or-self::" + cMenuItemNodeName + "[ancestor::MenuItem[@id=" + nRootId + "]]"))
-                            {
-                                if (!(oDescendant.ParentNode.Name == "Menu"))
-                                {
-                                    if (moConfig["PageURLFormat"] == "hyphens")
-                                    {
-                                        cPageName = oRe.Replace(oDescendant.GetAttribute("name"), "-");
-                                    }
-                                    else
-                                    {
-                                        cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"));
-                                    }
-
-                                    sUrl = sUrl + "/" + cPageName;
-
-                                }
-                            }
-                        }
-
-                        if (moConfig["TrailingSlash"] == "on")
-                        {
-                            sUrl = "/" + sUrl.Trim('/') + "/";
-                        }
-
-                        // Account for a root url
-                        if (string.IsNullOrEmpty(sUrl))
-                        {
-                            sUrl = "/";
-                        }
-
-                        if (sUrl == "//")
-                        {
-                            sUrl = "/";
-                        }
-
-                        if (sUrl == "/")
-                        {
-                            sUrl = DomainURL;
-                            if (moRequest.ServerVariables["SERVER_PORT"] != "80" & moRequest.ServerVariables["SERVER_PORT"] != "443")
-                            {
-                                sUrl = sUrl + ":" + moRequest.ServerVariables["SERVER_PORT"];
-                            }
-                        }
-                        if (moConfig["LowerCaseUrl"] == "on")
-                        {
-                            sUrl = sUrl.ToLower();
-                        }
-                        // for admin mode we tag the pgid on the end to be safe for duplicate pagenames with different permissions.
-                        if (mbAdminMode & string.IsNullOrEmpty(moConfig["pageExt"]) & moConfig["UsePageIdsForURLs"] != "on")
-
-
-                            sUrl = sUrl + "?pgid=" + oMenuItem.GetAttribute("id");
-
-
-
-                        if (moConfig["LowerCaseUrl"] == "on")
-                        {
-                            sUrl = sUrl.ToLower();
-                        }
-
-                        oMenuItem.SetAttribute("url", sUrl);
-
-                        // If oMenuItem.GetAttribute("id") = "609" Then
-                        // mbIgnorePath = mbIgnorePath
-                        // If
-
-                        if (!mbIgnorePath)
-                        {
-                            if (moRequest.QueryString.Count > 0)
-                            {
-                                if (moRequest["path"] != null)
-                                {
-                                    // If this matches the path requested then change the pageId
-                                    if (!string.IsNullOrEmpty(sUrl))
-                                    {
-                                        string PathToMatch = Strings.Replace(sUrl, DomainURL, "").ToLower();
-                                        string PathToMatch2 = "/" + gcLang + PathToMatch;
-                                        string PathToTest = moRequest["path"].ToLower().TrimEnd('/');
-                                        if ((PathToMatch ?? "") == (PathToTest ?? "") | (PathToMatch2 ?? "") == (PathToTest ?? ""))
-                                        {
-                                            if (oMenuItem.SelectSingleNode("ancestor-or-self::MenuItem[@id=" + nRootId + "]") != null)
-                                            {
-                                                // case for if newsletter has same page name as menu item
-                                                if (Features.ContainsKey("PageVersions"))
-                                                {
-                                                    // catch for page version
-                                                    if (oMenuItem.SelectSingleNode("PageVersion[@id='" + mnPageId + "']") is null)
-                                                    {
-                                                        mnPageId = Convert.ToInt16(oMenuItem.GetAttribute("id"));
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    mnPageId = Convert.ToInt16(oMenuItem.GetAttribute("id"));
-                                                }
-
-                                                if (mnUserId != 0 | mbAdminMode != true)
-                                                {
-                                                    // case for personalisation and admin TS 14/02/2021
-                                                    mnPageId = Convert.ToInt16(oMenuItem.GetAttribute("id"));
-                                                }
-                                                // If oMenuItem.GetAttribute("verType") = "3" Then
-                                                mnClonePageVersionId = mnPageId;
-                                                // this is used in clone mode to determine the page content in GetPageContent.
-                                                // End If
-                                                oMenuItem.SetAttribute("requestedPage", "1");
-                                            }
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        // set the URL for each language pageversion so we can link between
-
-                        // Address the context of the page
-                        if (gbClone)
-                        {
-                            cCloneParent = oMenuItem.GetAttribute("cloneparent");
-                            if (Tools.Number.IsNumeric(cCloneParent) && Convert.ToInt16(cCloneParent) > 0)
-                            {
-                                sUrl = Convert.ToString(sUrl + Interaction.IIf(sUrl.Contains("?"), "&", "?"));
-                                sUrl += "context=" + cCloneParent;
-                            }
-                        }
-
-                        foreach (XmlElement pvElmt in oMenuItem.SelectNodes("PageVersion"))
-                        {
-                            string pageLang = pvElmt.GetAttribute("lang");
-                            if (!string.IsNullOrEmpty(pageLang))
-                            {
-                                sUrl = "";
-                                foreach (XmlElement oDescendant in oMenuItem.SelectNodes("ancestor-or-self::" + cMenuItemNodeName))
-                                {
-                                    if (!(oDescendant.ParentNode.Name == "Menu"))
-                                    {
-                                        cPageName = null;
-                                        foreach (XmlElement parPvElmt in oDescendant.SelectNodes("PageVersion[@lang='" + pageLang + "']"))
-                                        {
-                                            if (moConfig["PageURLFormat"] == "hyphens")
-                                            {
-                                                cPageName = oRe.Replace(parPvElmt.GetAttribute("name"), "-");
-                                            }
-                                            else
-                                            {
-                                                cPageName = goServer.UrlEncode(parPvElmt.GetAttribute("name"));
-                                            }
-                                            // I know this means we get the last one but we should only have one anyway.
-                                        }
-                                        if (cPageName is null)
-                                        {
-                                            if (moConfig["PageURLFormat"] == "hyphens")
-                                            {
-                                                cPageName = oRe.Replace(oDescendant.GetAttribute("name"), "-");
-                                            }
-                                            else
-                                            {
-                                                cPageName = goServer.UrlEncode(oDescendant.GetAttribute("name"));
-                                            }
-                                        }
-                                        sUrl = sUrl + "/" + cPageName;
-                                        if (moConfig["LowerCaseUrl"] == "on")
-                                        {
-                                            sUrl = sUrl.ToLower();
-                                        }
-                                    }
-                                }
-
-                                string pvUrlPrefix = "";
-                                // Check Language by Domain
-                                if (goLangConfig != null)
-                                {
-                                    string httpStart;
-                                    if (moRequest.ServerVariables["SERVER_PORT_SECURE"] == "1")
-                                    {
-                                        httpStart = "https://";
-                                    }
-                                    else
-                                    {
-                                        httpStart = "http://";
-                                    }
-
-                                    if (goLangConfig.SelectSingleNode("Language[@code='" + pageLang + "']") != null)
-                                    {
-                                        foreach (XmlElement oLangElmt in goLangConfig.SelectNodes("Language[@code='" + pageLang + "']"))
-                                        {
-                                            switch (Strings.LCase(oLangElmt.GetAttribute("identMethod")) ?? "")
-                                            {
-                                                case "domain":
-                                                    {
-                                                        pvUrlPrefix = httpStart + oLangElmt.GetAttribute("identifier");
-                                                        break;
-                                                    }
-                                                case "path":
-                                                    {
-                                                        pvUrlPrefix = httpStart + goLangConfig.GetAttribute("defaultDomain") + "/" + oLangElmt.GetAttribute("identifier");
-                                                        break;
-                                                    }
-                                            }
-                                        }
-                                    }
-
-                                    if (string.IsNullOrEmpty(pvUrlPrefix)) {
-                                        if (string.IsNullOrEmpty(goLangConfig.GetAttribute("defaultDomain")))
-                                        {
-                                            pvUrlPrefix = "/";
-                                        }
-                                        else
-                                            pvUrlPrefix = httpStart + goLangConfig.GetAttribute("defaultDomain");
-                                    }
-
-                              
-                                       
-                                    pvElmt.SetAttribute("url", pvUrlPrefix + sUrl);
-
-                                }
-
-
-                            }
-
-
-                        }
-
-                        if ((double)mnPageId == Convert.ToDouble(oMenuItem.GetAttribute("id")))
-                        {
-                            mcPageURL = sUrl;
-                        }
-                    }
-                }
-
-
-
-                // GET THE ROOT NODE
-                // ==================
-                // get the Menu from the site root.
-                PerfMon.Log("Web", "GetStructureXML-rootnode");
-                if (nRootId > 0L)
-                {
-                    string cCloneModifier = "";
-                    if (nCloneContextId > 0L)
-                    {
-                        cCloneModifier = " and @cloneparent='" + nCloneContextId + "'";
-                    }
-
-                    XmlElement oRoot = (XmlElement)oElmt.SelectSingleNode("descendant-or-self::" + cMenuItemNodeName + "[@id='" + nRootId + "'" + cCloneModifier + "]");
-                    if (oRoot is null)
-                    {
-                    }
-                    // Return error for when root page id does not exist.
-                    // Dim cErrorMsg As String = "EonicWeb Config Error: The root page id does not exist, it may be hidden."
-                    // cErrorMsg += " Root Id: " & nRootId & ";"
-                    // cErrorMsg += " Top Level Id: " & RootPageId & ";"
-                    // cErrorMsg += " User Id: " & nUserId & ";"
-                    // cErrorMsg += " Clone Context Id: " & nCloneContextId & ";"
-                    // cErrorMsg += " Menu Name: " & cMenuId & ";"
-                    // Err.Raise(1001, "GetStructure", cErrorMsg)
-                    else
-                    {
-                        oElmt.InnerXml = oRoot.OuterXml;
-                    }
-                }
-                else
-                {
-                    oElmt.InnerXml = oElmt.FirstChild.FirstChild.OuterXml;
-                }
-
-                // MENU - ADD ID ATTRIBUTE
-                // ========================
-                if (!string.IsNullOrEmpty(cMenuId))
-                {
-                    oElmt.SetAttribute("id", cMenuId);
-                }
-
-                // MENU - ADD THE MENU TO THE PAGE XML
-                // ===================================
-                if (bAddMenuToPageXML && moPageXml.DocumentElement != null)
-                {
-                    sProcessInfo = "GetStructureXML-addMenuToPageXML";
-                    PerfMon.Log("Web", sProcessInfo);
-                    // Check if there's already a menu node.
-                    if (moPageXml.SelectSingleNode("/Page/" + cRootNodeName) is null)
-                    {
-                        // No menu node - add it to the pagexml
-                        moPageXml.DocumentElement.AppendChild(oElmt);
-                    }
-                    else
-                    {
-                        // Menu node found - add it after the last Menu node
-                        moPageXml.DocumentElement.InsertAfter(oElmt, moPageXml.SelectSingleNode("/Page/" + cRootNodeName + "[position()=last()]"));
-                    }
-                }
-
-                sProcessInfo = "GetStructureXML-End";
-                PerfMon.Log("Web", sProcessInfo);
-
-                return oElmt;
-            }
-
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, cFunctionDef, ex, sProcessInfo));
-                return null;
-            }
-
-        }
-
-
-        public virtual void AddContentCount(XmlElement oMenu, string SchemaType)
-        {
-            XmlElement oElmt;
-            string cSQL;
-            try
-            {
-                cSQL = "select COUNT(nContentKey) as count,nStructId from tblContentLocation cl" + " inner join tblContent c on c.nContentKey = cl.nContentId" + " inner join tblAudit a on c.nAuditId = a.nAuditKey" + " where c.cContentSchemaName = '" + Strings.Trim(SchemaType) + "' " + moConfig["MenuContentCountWhere"] + GetStandardFilterSQLForContent(true) + " group by nStructId";
-
-
-                using (var oDR = moDbHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
-                {
-                    while (oDR.Read())
-                    {
-                        oElmt = (XmlElement)oMenu.SelectSingleNode(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("descendant::MenuItem[@id='", oDR["nStructId"]), "']")));
-                        if (oElmt != null)
-                        {
-                            var newElmt = moPageXml.CreateElement("ContentCount");
-                            newElmt.SetAttribute("type", Strings.Trim(SchemaType));
-                            newElmt.SetAttribute("count", Convert.ToString(oDR["count"]));
-                            oElmt.AppendChild(newElmt);
-                        }
-
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddContentCount", ex, ""));
-            }
-
-        }
-
-        public virtual void AddContentBrief(XmlElement oMenu, string SchemaType)
-        {
-            XmlElement oRoot;
-            string parId;
-            XmlElement ParentMenuElmt;
-            try
-            {
-
-                oRoot = moPageXml.CreateElement("Contents");
-
-                int argnCount = 0;
-                GetMenuContentFromSelect("cContentSchemaName = '" + SchemaType + "'", ref argnCount, oContentsNode: ref oRoot, false, false, 0);
-
-                foreach (XmlElement oElmt in oRoot.SelectNodes("*"))
-                {
-                    parId = oElmt.GetAttribute("locId");
-                    ParentMenuElmt = (XmlElement)oMenu.SelectSingleNode("descendant-or-self::MenuItem[@id='" + parId + "']");
-                    if (ParentMenuElmt != null)
-                    {
-                        ParentMenuElmt.AppendChild(oElmt);
-                    }
-                }
-            }
-
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddContentCount", ex, ""));
-            }
-
-        }
-
-        /// <summary>
-        /// Takes a menu node, and removes the denied nodes
-        /// 
-        /// A note on how permissions are inherited.
-        /// If a page is OPEN, then it will inherit the permission.
-        /// If a page has a parent permission of DENIED then it will be denied.
-        /// </summary>
-        /// <param name="oMenuItem"></param>
-        /// <param name="cPerm"></param>
-        /// <param name="cPermSource"></param>
-        /// <param name="bPruneDenied"></param>
-        /// <remarks></remarks>
-        private void TidyMenunode(ref XmlElement oMenuItem, string cPerm, string cPermSource, bool bPruneDenied, long nUserId, string cMenuItemNodeName, string cRootNodeName)
-        {
-            string cCurrentPerm;
-            string cCurrentPermSource;
-            try
-            {
-                foreach (XmlElement oChild in oMenuItem.SelectNodes(cRootNodeName + " | " + cMenuItemNodeName))
-                {
-                    if (bPruneDenied && oChild.GetAttribute("access").Contains("DENIED"))
-                    {
-                        oMenuItem.RemoveChild(oChild);
-                    }
-                    else
-                    {
-                        // Work out the child permissions
-                        cCurrentPerm = cPerm;
-                        cCurrentPermSource = cPermSource;
-
-                        if (cCurrentPerm.Contains("DENIED") | oChild.GetAttribute("access").Contains("OPEN") & !cCurrentPerm.Contains("OPEN"))
-
-
-                        {
-
-                            // If parent is DENIED,
-                            // OR the child page is OPEN but the parent is not
-                            // THEN set the child page permission to be the INHERITED parent perm and the source.
-
-                            if (!cCurrentPerm.Contains("INHERITED"))
-                                cCurrentPerm = "INHERITED " + cCurrentPerm;
-                        }
-
-
-                        else
-                        {
-                            // ELSE set perm and source variables to the current ones
-                            cCurrentPerm = oChild.GetAttribute("access");
-
-                            if ((oChild.GetAttribute("accessSourceId") ?? "") == (nUserId.ToString() ?? ""))
-                            {
-                                cCurrentPermSource = "";
-                            }
-
-                            else
-                            {
-                                if (cCurrentPerm == "DENIED")
-                                    cCurrentPerm = "IMPLIED " + cCurrentPerm;
-                                cCurrentPermSource = oChild.GetAttribute("accessSource");
-                                if (!string.IsNullOrEmpty(cCurrentPermSource) & !cCurrentPerm.Contains("DENIED"))
-                                    cCurrentPerm += " by " + cCurrentPermSource;
-                            }
-
-                        }
-
-                        oChild.SetAttribute("access", cCurrentPerm);
-
-                        oChild.RemoveAttribute("accessSource");
-                        oChild.RemoveAttribute("accessSourceId");
-                        XmlElement xmloChild = oChild;
-                        TidyMenunode(ref xmloChild, cCurrentPerm, cCurrentPermSource, bPruneDenied, nUserId, cMenuItemNodeName, cRootNodeName);
-                    }
-                }
-            }
-
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "TidyMenunode", ex, ""));
-            }
-        }
-
-        public void addPageDetailLinksToStructure(string cContentTypes)
-        {
-            string cProcessInfo = "addPageDetailLinksToStructure";
-            string cIndexDetailSubTypes = "";
-            string[] IndexDetailSubTypes;
-            try
-            {
-
-                if (!string.IsNullOrEmpty(moConfig["SiteSearchIndexDetailSubTypes"]))
-                {
-                    cIndexDetailSubTypes = moConfig["SiteSearchIndexDetailSubTypes"];
-                }
-                IndexDetailSubTypes = Strings.Split(Strings.Replace(cIndexDetailSubTypes, " ", ""), ",");
-
-
-                XmlElement oMenuElmt = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Menu");
-                if (oMenuElmt is null)
-                    return;
-
-                string[] cContentTypesArray = cContentTypes.Split(',');
-                cContentTypes = "";
-                foreach (string cContentType in cContentTypesArray)
-                    cContentTypes += Tools.Database.SqlString(cContentType.Trim()) + ",";
-
-                cContentTypes = cContentTypes.TrimEnd(',');
-                var pageDict = new SortedDictionary<long, string>();
-                foreach (XmlElement MenuItem in oMenuElmt.SelectNodes("descendant-or-self::MenuItem"))
-                    pageDict.Add(Convert.ToInt64(MenuItem.GetAttribute("id")), MenuItem.GetAttribute("url"));
-
-                // Dim keys As List(Of Long) = pageDict.KeyCollection
-                // keys.Sort()
-
-                // AG 19-Jan-2010 - Replaced with above code to add protection against SQL Injections
-                // cContentTypes = cContentTypes.Replace(",", "','")
-                // cContentTypes = "'" & cContentTypes & "'"
-                // cContentTypes = cContentTypes.Replace("''", "'")
-
-
-                //string sProcessInfo = "addPageDetailLinksToStructure";
-                string cSQL = "SELECT tblContent.nContentKey, tblContent.cContentName, tblContentLocation.nStructId, tblAudit.dPublishDate, tblAudit.dUpdateDate, tblContent.cContentSchemaName" + " FROM tblContent INNER JOIN" + " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" + " tblContentLocation ON tblContent.nContentKey = tblContentLocation.nContentId" + " WHERE (tblContentLocation.bPrimary = 1) AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dPublishDate is null) AND " + " (tblAudit.dExpireDate >= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN (" + cContentTypes + ")) ";
-                string ContentIdsCSV = "";
-
-                using (var oDR = moDbHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
-                {
-
-                    var oRe = new Regex("[^A-Z0-9]", RegexOptions.IgnoreCase);
-
-                    while (oDR.Read())
-                    {
-                        string cURL = "";
-                        var oContElmt = moPageXml.CreateElement("MenuItem");
-                        long ContentId = Convert.ToInt64(oDR[0]);
-                        ContentIdsCSV = ContentIdsCSV + ContentId + ",";
-                        cURL = GetDetailURL(ContentId, oDR[5].ToString(), oDR[1].ToString(), "", Convert.ToInt64(oDR[2]), pageDict);
-
-                        #region old code
-                        //switch (moConfig["DetailPathType"] ?? "")
-                        //{
-                        //    case "ContentType/ContentName":
-                        //        {
-                        //            string[] prefixs = moConfig["DetailPrefix"].Split(',');
-                        //            string thisPrefix = "";
-                        //            string thisContentType = "";
-                        //            int i;
-                        //            var loopTo = prefixs.Length - 1;
-                        //            for (i = 0; i <= loopTo; i++)
-                        //            {
-                        //                thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
-                        //                thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
-                        //                if ((thisContentType ?? "") == (oDR[5].ToString() ?? ""))
-                        //                {
-                        //                    string ItemIdPath = "";
-                        //                    if (moConfig["addPathArtId"] == "on")
-                        //                    {
-                        //                        ItemIdPath = oDR[0] + "-/";
-                        //                    }
-                        //                    cURL = "/" + thisPrefix + "/" + ItemIdPath + oRe.Replace(oDR[1].ToString(), "-").Trim('-');
-                        //                    if (moConfig["DetailPathTrailingSlash"] == "on")
-                        //                    {
-                        //                        cURL = cURL + "/";
-                        //                    }
-                        //                    if (moConfig["LowerCaseUrl"] == "on")
-                        //                    {
-                        //                        cURL = cURL.ToLower();
-                        //                    }
-                        //                }
-                        //            }
-
-                        //            break;
-                        //        }
-
-                        //    default:
-                        //        {
-                        //            if (pageDict.ContainsKey(Convert.ToInt64(oDR[2])))
-                        //            {
-                        //                cURL = pageDict[Convert.ToInt64(oDR[2])];
-                        //                // If moConfig("LegacyRedirect") = "on" Then
-                        //                cURL += "/" + oDR[0].ToString() + "-/" + Tools.Text.CleanName(oDR[1].ToString(), false, true);
-                        //            }
-                        //            // Else
-                        //            // cURL &= "/Item" & oDR(0).ToString
-                        //            // End If
-                        //            else
-                        //            {
-                        //                cProcessInfo = "orphan Content";
-                        //            }
-
-                        //            break;
-                        //        }
-                        //}
-                        //if (moConfig["LowerCaseUrl"] == "on")
-                        //{
-                        //    cURL = cURL.ToLower();
-                        //}
-                        #endregion
-
-                        if (!string.IsNullOrEmpty(cURL))
-                        {
-                            oContElmt.SetAttribute("url", cURL);
-                            oContElmt.SetAttribute("name", oDR[1].ToString());
-                            oContElmt.SetAttribute("publish", Tools.Xml.XmlDate(oDR[3].ToString(), false));
-                            oContElmt.SetAttribute("update", Tools.Xml.XmlDate(oDR[4].ToString(), false));
-                            oMenuElmt.AppendChild(oContElmt);
-                        }
-
-                       
-
-                    }
-                    oDR.Close();
-
-                    ContentIdsCSV = ContentIdsCSV.TrimEnd(',');
-                    // we have sub products with there own pages which need to be indexed but they are not on the parent page
-                        if (cIndexDetailSubTypes != "")
-                        {
-                           foreach (string subType in IndexDetailSubTypes)
-                            {
-                               string cSQL2 = "SELECT tblContent.nContentKey, tblContent.cContentName, tblAudit.dPublishDate, tblAudit.dUpdateDate, tblContent.cContentSchemaName" + " FROM tblContent INNER JOIN" + " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" + " tblContentRelation ON tblContent.nContentKey = tblContentRelation.nContentChildId" + " WHERE tblContentRelation.nContentParentId IN (" + ContentIdsCSV + ") AND tblContent.nContentKey NOT IN (" + ContentIdsCSV + ") AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dPublishDate is null) AND " + " (tblAudit.dExpireDate >= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN ('" + cIndexDetailSubTypes + "')) ";
-                                using (SqlDataReader oDR2 = moDbHelper.getDataReaderDisposable(cSQL2))  // Done by nita on 6/7/22
-                            {
-                                while (oDR2.Read())
-                                {
-                                    string cURL2 = "";
-                                    var oContElmt2 = moPageXml.CreateElement("MenuItem");
-                                    cURL2 = GetDetailURL(Convert.ToInt64(oDR2[0]), oDR2[4].ToString(), oDR2[1].ToString(), "", 0, pageDict);
-                                    if (!string.IsNullOrEmpty(cURL2))
-                                    {
-                                        oContElmt2.SetAttribute("url", cURL2);
-                                        oContElmt2.SetAttribute("name", oDR2[1].ToString());
-                                        oContElmt2.SetAttribute("publish", Tools.Xml.XmlDate(oDR2[2].ToString(), false));
-                                        oContElmt2.SetAttribute("update", Tools.Xml.XmlDate(oDR2[3].ToString(), false));
-                                        oMenuElmt.AppendChild(oContElmt2);
-                                    }
-                                }
-                            }
-                        }
-                        }
-                }
-            }
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "addPageDetailLinksToStructure", ex, gcEwSiteXsl, "", gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "addPageDetailLinksToStructure", ex, cProcessInfo));
-            }
-        }
-
-
-        public virtual void AddContentXml(ref XmlElement oContentElmt)
-        {
-            PerfMon.Log("Web", "AddContentXml");
-            XmlElement oContents;
-            string sProcessInfo = "Add Content XML";
-
-            try
-            {
-                if (oContentElmt is null)
-                    return;
-                oContents = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
-                if (oContents is null)
-                {
-                    oContents = moPageXml.CreateElement("Contents");
-                    moPageXml.DocumentElement.AppendChild(oContents);
-                }
-
-                oContents.AppendChild(oContentElmt);
-            }
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "AddContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddContentXml", ex, sProcessInfo));
-            }
-
-        }
-
-        public void GetContentXml(ref XmlElement oPageElmt)
-        {
-            PerfMon.Log("Web", "GetContentXml");
-
-            string sNodeName = string.Empty;
-            string cXPathModifier = "";
-            string sContent = string.Empty;
-            string IsInTree = Convert.ToString(false);
-            string sProcessInfo = "building the Content XML";
-
-            try
-            {
-
-
-                if (!mbSystemPage)
-                {
-                    // Clone page adjustment
-                    if (gbClone)
-                    {
-
-                        if (mbIsClonePage)
-                        {
-                            // Is this a clone page that directly references its cloned page.
-                            cXPathModifier = " and @clone='" + mnClonePageId.ToString() + "'";
-                        }
-                        else if (mnCloneContextPageId > 0)
-                        {
-                            // Is this a child of a clone page
-                            cXPathModifier = " and @cloneparent='" + mnCloneContextPageId.ToString() + "'";
-                        }
-
-                        else if (mnClonePageVersionId > 0)
-                        {
-
-                            cXPathModifier = " and @requestedPage='1'";
-                        }
-                        // Page Version of a cloned page.
-
-                        else
-                        {
-                            // this is not a cloned page, make sure we don't accidentally look for the cloned pages.
-
-                            // this version works on clone language variations but wrong menu
-                            cXPathModifier = " and (((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0)) or (starts-with(@url,'" + mcPageLanguageUrlPrefix + mcPagePath + "') or starts-with(@url,'" + mcRequestDomain + mcPageLanguageUrlPrefix.Replace(mcRequestDomain, "") + mcPagePath + "')))";
-
-                            // cXPathModifier = " and (((not(@cloneparent) or @cloneparent=0) and (not(@clone) or @clone='' or @clone=0)) and contains(@url,'" & mcPageLanguageUrlPrefix & mcPagePath & "'))"
-                        }
-
-
-
-                    }
-
-                    // Check for blocked content
-
-
-                    gcBlockContentType = moDbHelper.GetPageBlockedContent((long)mnPageId);
-                    string parentXpath = "/Page/Menu/descendant-or-self::MenuItem[descendant-or-self::MenuItem[@id='" + mnPageId + "'" + cXPathModifier + "]]";
-
-                    oPageElmt.SetAttribute("blockedContent", Regex.Replace(gcBlockContentType, @"^[|\d]+", ""));
-
-                    // this is for load more steppers - we do not want any other content other than the one on the list
-                    // the page url looks like
-                    // /ourpage/?singleContentType=Product&startPos=10&rows=10
-
-                    if (!string.IsNullOrEmpty(moRequest["singleContentType"]))
-                    {
-                        // sql for content on page and permissions etc
-                        string sFilterSql = GetStandardFilterSQLForContent();
-                        sFilterSql = sFilterSql + " and nstructid=" + mnPageId;
-                        string cSort = "|ASC_cl.nDisplayOrder";
-                        switch (moRequest["sortby"] ?? "")
-                        {
-                            case "name":
-                                {
-                                    cSort = "|ASC_c.cContentName";
-                                    break;
-                                }
-
-                            default:
-                                {
-                                    cSort = "|ASC_cl.nDisplayOrder";
-                                    break;
-                                }
-                        }
-                        // Paging variables
-                        int nStart = 0;
-                        int nRows = 500;
-
-                        // Set the paging variables, if provided.
-                        if (moRequest["startPos"] != null && Tools.Number.IsNumeric(moRequest["startPos"]))
-                            nStart = Convert.ToInt16(moRequest["startPos"]);
-                        if (moRequest["rows"] != null && Tools.Number.IsNumeric(moRequest["rows"]))
-                            nRows = Convert.ToInt16(moRequest["rows"]);
-                        // In admin mode want active and hidden products separatly
-                        if (mbAdminMode)
-                        {
-                            if (moRequest["status"] != null && Tools.Number.IsNumeric(moRequest["status"]))
-                            {
-                                int nstatus = Convert.ToInt16(moRequest["status"]);
-                                if (nstatus == 0)
-                                {
-                                    sFilterSql = sFilterSql + " and nstructid=" + mnPageId + " and a.nStatus!=1";
-                                    nStart = 0;
-                                    nRows = Convert.ToInt16(moRequest["TotalCount"]);  // getting all hidden products in list
-                                }
-                                else
-                                {
-                                    sFilterSql = sFilterSql + " and nstructid=" + mnPageId + " and a.nStatus=" + nstatus;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            sFilterSql = sFilterSql + " and nstructid=" + mnPageId;
-                        }
-                        if (moSession["FilterWhereCondition"] != null && Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["FilterWhereCondition"], string.Empty, false)))
-                        {
-                            string whereSQL = Convert.ToString(moSession["FilterWhereCondition"]);
-                            string cAdditionalColumns = Convert.ToString(moSession["AdditionalColumns"]);
-                            string cAdditionalJoins = Convert.ToString(moSession["AdditionalJoins"]);
-                            string cOrderBySql = Convert.ToString(moSession["OrderBy"]);
-                            string cAdminMode = Convert.ToString(moSession["AdminMode"]);
-                            XmlElement argoPageDetail = null;
-                            int nCount = 0;
-                            string cGroupBySql = string.Empty;
-                            GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows, distinct: true, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns, cOrderBy: cOrderBySql, cAdminMode: cAdminMode, cGroupBySql: cGroupBySql);
-                        }
-                        else
-                        {
-                            var argoPageElmt = moPageXml.DocumentElement;
-                            XmlElement argoPageDetail1 = null;
-                            XmlElement argoContentModule = null;
-                            GetContentXMLByTypeAndOffset(ref argoPageElmt, moRequest["singleContentType"] + cSort, (long)nStart, (long)nRows, oPageDetail: ref argoPageDetail1, oContentModule: ref argoContentModule, sFilterSql);
-
-                        }
-                    }
-
-                    else
-                    {
-
-                        // Set nothing to Filter Pagination session
-                        if (moSession != null)
-                        {
-                            if (moSession["FilterWhereCondition"] != null)
-                            {
-                                moSession["FilterWhereCondition"] = (object)null;
-                                moSession["AdditionalColumns"] = null;
-                                moSession["AdditionalJoins"] = null;
-                                moSession["OrderBy"] = null;
-                                // moSession.Remove("FilterWhereCondition")
-                            }
-                        }
-
-
-                        // step through the tree from home to our current page
-                        foreach (XmlElement oElmt in oPageElmt.SelectNodes(parentXpath))
-                        {
-                            oElmt.SetAttribute("active", "1");
-                            long nPageId = Convert.ToInt64(oElmt.GetAttribute("id"));
-                            GetPageContentXml(nPageId);
-                            nPageId = default;
-                            IsInTree = Convert.ToString(true);
-                        }
-
-                        if (mbPreview & Convert.ToBoolean(IsInTree) == false)
-                        {
-                            GetPageContentXml((long)mnPageId);
-                        }
-
-                        if (Features.ContainsKey("PageVersions"))
-                        {
-                            if (Convert.ToBoolean(IsInTree) == false & mbAdminMode == true)
-                            {
-                                GetPageContentXml((long)mnPageId);
-                            }
-                        }
-                        if ((long)mnPageId == gnPageNotFoundId)
-                        {
-                            GetPageContentXml((long)mnPageId);
-                        }
-
-                        // get the first records in the case of a load more stepper.
-                        if (!string.IsNullOrEmpty(gcBlockContentType))
-                        {
-
-                            string[] cContentTypes = Strings.Split(gcBlockContentType, ",");
-                            int i;
-                            var loopTo = cContentTypes.Length - 1;
-                            for (i = 0; i <= loopTo; i++)
-                            {
-                                string[] cContentType = Strings.Split(cContentTypes[i], "|");
-
-                                string SingleContentType = cContentType[0];
-                                string ModuleId = cContentType[1];
-                                XmlElement ContentModule = (XmlElement)moPageXml.SelectSingleNode("/Page/Contents/Content[@id='" + ModuleId + "']");
-                                if (ContentModule != null)
-                                {
-                                    string cSort = "|ASC_cl.nDisplayOrder";
-                                    switch (ContentModule.GetAttribute("sortBy") ?? "")
-                                    {
-                                        case "name":
-                                            {
-                                                cSort = "|ASC_c.cContentName";
-                                                break;
-                                            }
-
-                                        default:
-                                            {
-                                                cSort = "|ASC_cl.nDisplayOrder";
-                                                break;
-                                            }
-                                    }
-                                    // Paging variables
-                                    int nStart = 0;
-                                    int nRows = 500;
-                                    nRows = Convert.ToInt16("0" + ContentModule.GetAttribute("stepCount"));
-                                    if (Convert.ToInt16("0" + ContentModule.GetAttribute("firstPageCount")) > 0)
-                                    {
-                                        nRows = 0;// Convert.ToInt16("0" + ContentModule.GetAttribute("firstPageCount"));
-                                    }
-                                    if (nRows > 0)
-                                    {
-                                        string sFilterSql = GetStandardFilterSQLForContent();
-                                        sFilterSql = sFilterSql + " and nstructid=" + mnPageId;
-                                        if (ContentModule.HasAttribute("TotalCount") == false)
-                                        {
-                                            ContentModule.SetAttribute("TotalCount", 0.ToString());
-                                        }
-                                        var argoPageElmt1 = moPageXml.DocumentElement;
-                                        XmlElement oPagedetail = null;
-                                        GetContentXMLByTypeAndOffset(ref argoPageElmt1, SingleContentType + cSort, (long)nStart, (long)nRows, ref oPagedetail, oContentModule: ref ContentModule, sFilterSql, bShowContentDetails: false);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    // if we are on a system page we only want the content on that page not parents.
-                    GetPageContentXml((long)mnPageId);
-                    oPageElmt.SetAttribute("systempage", "true");
-
-                }
-
-                // Check content versions
-                // If gbVersionControl Then CheckContentVersions()
-                // moved to GetPageXml because content may be added from module overloads or grabbers etc.
-
-
-                // Always ensure we have a content node
-                XmlElement oRoot = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
-                if (oRoot is null)
-                {
-                    oRoot = moPageXml.CreateElement("Contents");
-                    moPageXml.DocumentElement.AppendChild(oRoot);
-                }
-            }
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentXml", ex, sProcessInfo));
-            }
-
-        }
-
-        public virtual void GetPageContentXml(long nPageId)
-        {
-            PerfMon.Log("Web", "GetPageContentXml");
-            string sProcessInfo = "Getting the content from page " + nPageId;
-            string sSql = "";
-            string sFilterSql = "";
-            string sWhereSql = string.Empty;
-            string sSql2 = string.Empty;
-            XmlElement oRoot;
-            try
-            {
-
-                // Create the live filter
-                sFilterSql = GetStandardFilterSQLForContent();
-
-                oRoot = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
-                if (oRoot is null)
-                {
-                    oRoot = moPageXml.CreateElement("Contents");
-                    moPageXml.DocumentElement.AppendChild(oRoot);
-                }
-
-                string nCurrentPageId = nPageId.ToString();
-                // Adjust the page id if it's a cloned page.
-                if (Convert.ToDouble(nCurrentPageId) != (double)mnPageId)
-                {
-                    // we are only pulling in cascaded items
-                    sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
-                }
-                else
-                {
-                    // If we have an article id we only want to show cascaded content
-                    if (moConfig["ContentDetailShowOnlyCascaded"] != null)
-                    {
-                        if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0)
-                        {
-                            if (ibIndexMode)
-                            {
-                                //when we are indexing we want to be able to index the brief because we use this as the abstract.
-                                sFilterSql += " and ((CL.bCascade = 1 and CL.bPrimary = 1) or nContentKey = " + mnArtId + ") ";
-                            }
-                            else
-                            {
-                                sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
-                            }
-                        }
-                    }
-                    // we are pulling in located and native items but not cascaded
-                }
-
-                // Check if the page is a cloned page
-                // If it is, then we need to switch the page id.
-                if (gbClone)
-                {
-                    int nClonePage = moDbHelper.getClonePageID((int)nPageId);
-                    if (nClonePage > 0)
-                        nPageId = nClonePage;
-                }
-
-                // sSql = "select c.nContentKey as id, (select TOP 1 CL2.nStructId from tblContentLocation CL2 where CL2.nContentId=c.nContentKey and CL2.bPrimary = 1) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire from tblContent c inner join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey" & _
-
-                if (!string.IsNullOrEmpty(gcBlockContentType))
-                {
-
-                    string gcBlockContentTypeRemovedIds = Regex.Replace(gcBlockContentType, @"[|\d]+", "");
-
-                    sFilterSql = sFilterSql + " and c.cContentSchemaName NOT IN ('" + gcBlockContentTypeRemovedIds.Replace(",", "','") + "') ";
-                }
-                string cContentLimit = "";
-                if (!string.IsNullOrEmpty(moConfig["ContentLimit"]) & Tools.Number.IsNumeric(moConfig["ContentLimit"]))
-                {
-                    cContentLimit = " TOP " + moConfig["ContentLimit"] + " ";
-                }
-
-                sSql = "select " + cContentLimit + "c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c" + " inner join tblContentLocation CL on c.nContentKey = CL.nContentId" + " inner join tblAudit a on c.nAuditId = a.nAuditKey" + " where( CL.nStructId = " + nPageId;
-                sSql = sSql + sFilterSql + ") order by type, cl.nDisplayOrder";
-
-                var oDs = new DataSet();
-                oDs = moDbHelper.GetDataSet(sSql, "Content", "Contents");
-                PerfMon.Log("Web", "AddDataSetToContent - For Page ", sSql);
-                moDbHelper.AddDataSetToContent(ref oDs, ref oRoot, ref mdPageExpireDate, ref mdPageUpdateDate, Convert.ToInt64(nCurrentPageId), false, "");
-            }
-
-            // If gbCart Or gbQuote Then
-            // moDiscount.getAvailableDiscounts(oRoot)
-            // End If
-
-
-            // AddGroupsToContent(oRoot)
-
-
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "getPageContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetPagecontentXml", ex, sProcessInfo));
-            }
-
-        }
-
-        public void AddGroupsToContent(ref XmlElement oContentElmt)
-        {
-            // Adds ProductGroups to content nodes
-            PerfMon.Log("Web", "AddGroupsToContent-start");
-            try
-            {
-
-                // TS This is hammering performance on sites with lots of discount rules and doesn't seem to be used anywhere ?
-                // if this is requred we need only pull back categories for (products or other content names sold) that are on the current page seriously reducing the time required.
-
-                // build In statement
-
-                XmlElement oContElmt;
-                string InStatement = " tblCartCatProductRelations.nContentId IN(";
-                foreach (XmlElement currentOContElmt in oContentElmt.SelectNodes("Content"))
-                {
-                    oContElmt = currentOContElmt;
-                    InStatement = InStatement + oContElmt.GetAttribute("id") + ",";
-                }
-                InStatement = InStatement.Trim(',') + ")";
-
-                string cSQL = "SELECT tblCartProductCategories.nCatKey AS id, tblCartProductCategories.cCatSchemaName As type, tblCartProductCategories.nCatParentId As parent, " + " tblCartProductCategories.cCatName As name, tblCartProductCategories.cCatDescription As description, tblCartCatProductRelations.nContentId" + " FROM tblCartProductCategories INNER JOIN" + " tblAudit On tblCartProductCategories.nAuditId = tblAudit.nAuditKey INNER JOIN" + " tblCartCatProductRelations On tblCartProductCategories.nCatKey = tblCartCatProductRelations.nCatId";
-                if (!mbAdminMode)
-                {
-                    cSQL += " WHERE tblAudit.nStatus = 1 " + " And (tblAudit.dPublishDate Is null Or tblAudit.dPublishDate = 0 Or tblAudit.dPublishDate <= " + Tools.Database.SqlDate(DateTime.Now) + " )" + " And (tblAudit.dExpireDate Is null Or tblAudit.dExpireDate = 0 Or tblAudit.dExpireDate >= " + Tools.Database.SqlDate(DateTime.Now) + " )" + " And " + InStatement;
-                }
-                else
-                {
-                    cSQL += " where " + InStatement;
-                }
-                var oDS = new DataSet();
-                oDS = moDbHelper.GetDataSet(cSQL, "ContentGroup", "ContentGroups");
-
-                PerfMon.Log("Web", "AddGroupsToContent-startloop-" + oDS.Tables["ContentGroup"].Rows.Count);
-
-                foreach (DataRow oDR in oDS.Tables["ContentGroup"].Rows)
-                {
-
-                    foreach (XmlElement currentOContElmt1 in oContentElmt.SelectNodes(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Content[@id='", oDR["nContentId"]), "']"))))
-                    {
-                        oContElmt = currentOContElmt1;
-                        var oGroupElmt = oContentElmt.OwnerDocument.CreateElement("ContentGroup");
-                        oGroupElmt.SetAttribute("id", Convert.ToString(Operators.ConcatenateObject(oDR["id"], "")));
-                        oGroupElmt.SetAttribute("type", Convert.ToString(Operators.ConcatenateObject(oDR["type"], "")));
-                        oGroupElmt.SetAttribute("name", Convert.ToString(Operators.ConcatenateObject(oDR["name"], "")));
-                        oGroupElmt.SetAttribute("parent", Convert.ToString(Operators.ConcatenateObject(oDR["parent"], "")));
-                        oGroupElmt.InnerText = Convert.ToString(Operators.ConcatenateObject(oDR["description"], ""));
-                        oContElmt.AppendChild(oGroupElmt);
-                    }
-                }
-                PerfMon.Log("Web", "AddGroupsToContent-end");
-            }
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "AddGroupsToConent", ex, gcEwSiteXsl, "", gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddGroupsToContent", ex, ""));
-            }
-        }
-
-
-
-        public string GetContentUrl(long nContentId)
-        {
-            PerfMon.Log("Web", "GetContentUrl");
-            string sSql;
-            string sFilterSql;
-            string ContentName = "";
-            string[] ParentPages;
-            var PrimaryPageId = default(long);
-            string ContentURL = "/" + nContentId.ToString() + "-/";
-            string sProcessInfo = "Getting path for content id " + nContentId;
-            try
-            {
-                sFilterSql = GetStandardFilterSQLForContent();
-
-                sSql = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c" + " left outer join tblContentLocation CL on c.nContentKey = CL.nContentId and CL.bPrimary = 1" + " inner join tblAudit a on c.nAuditId = a.nAuditKey" + " where(c.nContentKey = " + nContentId + sFilterSql + ") order by type, cl.nDisplayOrder";
-
-                var oDs = new DataSet();
-                oDs = moDbHelper.GetDataSet(sSql, "Content", "Contents");
-
-                if (oDs.Tables.Count > 0 && oDs.Tables[0].Rows.Count > 0)
-                {
-
-                    foreach (DataRow oRow in oDs.Tables[0].Rows)
-                    {
-
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow["type"], "SKU", false)))
-                        {
-                            // get the id of the parent product
-
-                            sSql = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId ,cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c" + " inner join tblContentLocation CL on c.nContentKey = CL.nContentId" + " inner join tblAudit a on c.nAuditId = a.nAuditKey" + " inner join tblContentRelation cr on c.nContentKey = cr.nContentParentId" + " where( cr.nContentChildId = " + nContentId;
-                            sSql = sSql + sFilterSql + " and CL.bPrimary = 1) order by type, cl.nDisplayOrder";
-                            var oDs2 = new DataSet();
-                            oDs2 = moDbHelper.GetDataSet(sSql, "Content", "Contents");
-                            foreach (DataRow oRow2 in oDs2.Tables[0].Rows)
-                            {
-                                ContentName = Convert.ToString(oRow2["name"]);
-                                if (oRow2["parId"].ToString().Contains(","))
-                                {
-                                    ParentPages = oRow2["parId"].ToString().Split(',');
-                                    if (Convert.ToDouble(ParentPages[0]) > 0d)
-                                    {
-                                        PrimaryPageId = Convert.ToInt64(ParentPages[0]);
-                                    }
-                                }
-                                else if (Tools.Number.IsNumeric(oRow2["parId"]))
-                                {
-                                    PrimaryPageId = Convert.ToInt64(oRow2["parId"]);
-                                }
-                                ContentURL = "/" + Convert.ToString(oRow2["id"]) + "-/";
-                            }
-                        }
-
-                        else
-                        {
-
-                            ContentName = Convert.ToString(oRow["name"]);
-                            if (oRow["parId"].ToString().Contains(","))
-                            {
-                                ParentPages = oRow["parId"].ToString().Split(',');
-                                if (Convert.ToDouble(ParentPages[0]) > 0d)
-                                {
-                                    PrimaryPageId = Convert.ToInt64(ParentPages[0]);
-                                }
-                            }
-                            else if (Tools.Number.IsNumeric(oRow["parId"]))
-                            {
-                                PrimaryPageId = Convert.ToInt64(oRow["parId"]);
-                            }
-                        }
-
-                    }
-                }
-                if (PrimaryPageId > 0L)
-                {
-                    XmlElement pageMenuElmt = (XmlElement)moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id='" + PrimaryPageId + "']");
-                    if (pageMenuElmt != null)
-                    {
-                        ContentURL = pageMenuElmt.GetAttribute("url") + ContentURL;
-                    }
-                }
-                if (!string.IsNullOrEmpty(ContentName))
-                {
-                    ContentName = ContentName.Replace(" ", "-");
-                    ContentName = goServer.UrlEncode(ContentName);
-                    ContentURL = ContentURL + ContentName;
-                }
-
-
-                if (moConfig["LowerCaseUrl"] == "on")
-                {
-                    ContentURL = ContentURL.ToLower();
-                }
-                return ContentURL;
-            }
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentXml", ex, sProcessInfo));
-                return "";
-            }
-
-        }
-        /// <summary>
-        /// The purpose of this function is to check if the user should be seeing a Pending version of the content
-        /// as opposed to the live one.  If the user is an admin or has AddUpdate permissions then this should be the case
-        /// </summary>
-        /// <remarks></remarks>
-        protected void CheckContentVersions()
-        {
-            PerfMon.Log("Web", "CheckContentVersions");
-
-            string cProcessInfo = "";
-
-            DataSet oDs;
-            string cSql = "";
-            string cOwnerFilter = "";
-
-            XmlNodeList childNodes = null;
-            XmlElement oReplacement;
-
-            try
-            {
-
-                // We need to check two things
-                // - for content that hasn't been retrieved for this page, but is Pending (this will be in the content table)
-                // - for content that is on this page, but has a version on the Versions table called Pending.
-
-
-                var nPagePermission = moDbHelper.getPagePermissionLevel((long)mnPageId);
-
-                if (Cms.dbHelper.CanAddUpdate(nPagePermission) | mbAdminMode)
-                {
-
-                    var oTempNode = moPageXml.CreateElement("temp");
-
-                    // Now check if it's everything we're getting, or just what the user created.
-                    if (!mbAdminMode & nPagePermission == Cms.dbHelper.PermissionLevel.AddUpdateOwn | nPagePermission == Cms.dbHelper.PermissionLevel.AddUpdateOwnPublish)
-                    {
-                        // Put a filter in to limit checks to content we've added
-                        cOwnerFilter = " and @owner=" + mnUserId;
-                    }
-
-                    string filter = "[@id[number(.)=number(.)]" + cOwnerFilter + "]";
-
-                    string cCheckContentList = "";
-
-                    foreach (XmlElement oContent in moPageXml.SelectNodes("//Content" + filter))
-                    {
-
-                        // Add the id if it is not null or zero
-                        if (!string.IsNullOrEmpty(oContent.GetAttribute("id")) && Tools.Number.IsNumeric(oContent.GetAttribute("id")) && Convert.ToInt64(oContent.GetAttribute("id")) > 0L)
-
-                        {
-                            if (!string.IsNullOrEmpty(cCheckContentList))
-                                cCheckContentList += ",";
-                            cCheckContentList += oContent.GetAttribute("id");
-                        }
-
-                    }
-
-                    if (!string.IsNullOrEmpty(cCheckContentList))
-                    {
-                        // Get any content on the page that has a Status Pending Version
-                        cSql = "select c.nContentPrimaryId as id, " + "   dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, " + "   cContentForiegnRef as ref, cContentName as name, " + "   cContentSchemaName as type, " + "   cContentXmlBrief as content, " + "   a.nStatus as status, " + "   a.dpublishDate as publish, " + "   a.dExpireDate as expire, " + "   a.dUpdateDate as [update], " + "   c.nVersion as version, " + "   c.nContentVersionKey as versionid, " + "   a.nInsertDirId as owner " + " from tblContentVersions c " + "   inner join tblAudit a " + "   on c.nAuditId = a.nAuditKey " + " WHERE c.nContentPrimaryId IN (" + cCheckContentList + ")" + "   AND a.nStatus = " + ((int)Cms.dbHelper.Status.Pending).ToString() + " AND c.nVersion = (Select TOP 1 nVersion from tblContentVersions c2 where c.nContentPrimaryId = c2.nContentPrimaryId AND a.nStatus = " + ((int)Cms.dbHelper.Status.Pending).ToString() + " ORDER BY nVersion DESC)";
-
-                        oDs = moDbHelper.GetDataSet(cSql, "Content", "Contents");
-
-                        if (oDs.Tables.Count > 0 && oDs.Tables[0].Rows.Count > 0)
-                        {
-                            // If contentversion exists, replace the current node with this.
-
-                            oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
-
-                            if (oDs.Tables[0].Columns.Contains("parID"))
-                            {
-                                oDs.Tables[0].Columns["parId"].ColumnMapping = MappingType.Attribute;
-                            }
-
-                            // Added to handle the new relationship type
-                            if (oDs.Tables[0].Columns.Contains("rtype"))
-                            {
-                                oDs.Tables[0].Columns["rtype"].ColumnMapping = MappingType.Attribute;
-                            }
-
-                            {
-                                var withBlock = oDs.Tables[0];
-                                withBlock.Columns["ref"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["name"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["type"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["status"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["publish"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["expire"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["owner"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["update"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["version"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["versionid"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["content"].ColumnMapping = MappingType.SimpleContent;
-                            }
-
-                            oDs.EnforceConstraints = false;
-                            // convert to Xml Dom
-                            //var oXml = new XmlDataDocument(oDs);
-                            XmlDocument oXml = new XmlDocument();
-                            if (oDs.Tables[0].Rows.Count > 0)
-                            {
-                                oXml.LoadXml(oDs.GetXml());
-                            }
-                            oXml.PreserveWhitespace = false;
-
-                            foreach (XmlElement oReplaceContent in oXml.SelectNodes("/Contents/Content"))
-                            {
-
-                                XmlElement oContent = (XmlElement)moPageXml.SelectSingleNode("//Content[@id='" + oReplaceContent.GetAttribute("id") + "']");
-
-                                // Before we replace the node, move any child Content nodes (i.e. related content) out from it.
-                                childNodes = oContent.SelectNodes("Content");
-                                if (childNodes.Count > 0)
-                                {
-                                    foreach (XmlElement child in childNodes)
-                                    {
-                                        oContent.RemoveChild(child);
-                                        oTempNode.AppendChild(child);
-                                    }
-                                }
-
-                                // Replace the contentNode
-                                oReplacement = (XmlElement)moPageXml.ImportNode(oReplaceContent, true);
-                                DateTime argdExpireDate = DateTime.Parse("0001-01-01");
-                                DateTime argdUpdateDate = DateTime.Parse("0001-01-01");
-                                oReplacement = moDbHelper.SimpleTidyContentNode(ref oReplacement, dExpireDate: ref argdExpireDate, dUpdateDate: ref argdUpdateDate);
-                                oContent.ParentNode.ReplaceChild(oReplacement, oContent);
-
-                                // Move the related content back
-                                if (childNodes.Count > 0)
-                                {
-                                    foreach (XmlElement child in childNodes)
-                                    {
-                                        oTempNode.RemoveChild(child);
-                                        oReplacement.AppendChild(child);
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "CheckContentVersions", ex, cProcessInfo));
-            }
-
-        }
-
-        protected void CheckContentVersions_Replaced()
-        {
-            PerfMon.Log("Web", "CheckContentVersions");
-
-            string cProcessInfo = "";
-
-            DataSet oDs;
-            string cSql = "";
-            string cOwnerFilter = "";
-
-            XmlNodeList childNodes = null;
-            XmlElement oReplacement;
-
-            try
-            {
-
-                // We need to check two things
-                // - for content that hasn't been retrieved for this page, but is Pending (this will be in the content table)
-                // - for content that is on this page, but has a version on the Versions table called Pending.
-
-
-                var nPagePermission = moDbHelper.getPagePermissionLevel((long)mnPageId);
-
-                if (Cms.dbHelper.CanAddUpdate(nPagePermission) | mbAdminMode)
-                {
-
-                    var oTempNode = moPageXml.CreateElement("temp");
-
-                    // Now check if it's everything we're getting, or just what the user created.
-                    if (!mbAdminMode & nPagePermission == Cms.dbHelper.PermissionLevel.AddUpdateOwn | nPagePermission == Cms.dbHelper.PermissionLevel.AddUpdateOwnPublish)
-                    {
-
-                        // Put a filter in to limit checks to content we've added
-                        cOwnerFilter = " and @owner=" + mnUserId;
-
-                    }
-
-                    string filter = "[@id[number(.)=number(.)]" + cOwnerFilter + "]";
-
-
-
-                    // only search content that has an id which is numeric
-                    foreach (XmlElement oContent in moPageXml.SelectNodes("//Content" + filter))
-                    {
-
-                        // Search for pending versions of the content
-
-                        cSql = "select TOP 1 c.nContentPrimaryId as id, " + "   dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, " + "   cContentForiegnRef as ref, cContentName as name, " + "   cContentSchemaName as type, " + "   cContentXmlBrief as content, " + "   a.nStatus as status, " + "   a.dpublishDate as publish, " + "   a.dExpireDate as expire, " + "   a.dUpdateDate as [update], " + "   c.nVersion as version, " + "   c.nContentVersionKey as versionid, " + "   a.nInsertDirId as owner " + " from tblContentVersions c " + "   inner join tblAudit a " + "     on c.nAuditId = a.nAuditKey " + " WHERE c.nContentPrimaryId = " + oContent.GetAttribute("id") + "   AND a.nStatus = " + ((int)Cms.dbHelper.Status.Pending).ToString() + " ORDER BY c.nVersion DESC ";
-
-                        oDs = moDbHelper.GetDataSet(cSql, "Content", "Contents");
-
-                        if (oDs.Tables.Count > 0 && oDs.Tables[0].Rows.Count > 0)
-                        {
-                            // If contentversion exists, replace the current node with this.
-
-
-                            oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
-
-                            if (oDs.Tables[0].Columns.Contains("parID"))
-                            {
-                                oDs.Tables[0].Columns["parId"].ColumnMapping = MappingType.Attribute;
-                            }
-
-                            // Added to handle the new relationship type
-                            if (oDs.Tables[0].Columns.Contains("rtype"))
-                            {
-                                oDs.Tables[0].Columns["rtype"].ColumnMapping = MappingType.Attribute;
-                            }
-
-                            {
-                                var withBlock = oDs.Tables[0];
-                                withBlock.Columns["ref"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["name"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["type"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["status"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["publish"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["expire"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["owner"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["update"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["version"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["versionid"].ColumnMapping = MappingType.Attribute;
-                                withBlock.Columns["content"].ColumnMapping = MappingType.SimpleContent;
-                            }
-
-                            oDs.EnforceConstraints = false;
-                            // convert to Xml Dom
-                            //var oXml = new XmlDataDocument(oDs);
-                            XmlDocument oXml = new XmlDocument();
-                            if (oDs.Tables[0].Rows.Count > 0)
-                            {
-                                oXml.LoadXml(oDs.GetXml());
-                            }
-                            oXml.PreserveWhitespace = false;
-
-
-                            // Before we replace the node, move any child Content nodes (i.e. related content) out from it.
-                            childNodes = oContent.SelectNodes("Content");
-                            if (childNodes.Count > 0)
-                            {
-                                foreach (XmlElement child in childNodes)
-                                {
-                                    oContent.RemoveChild(child);
-                                    oTempNode.AppendChild(child);
-                                }
-                            }
-
-                            // Replace the contentNode
-                            oReplacement = (XmlElement)moPageXml.ImportNode(oXml.SelectSingleNode("/Contents/Content"), true);
-                            DateTime argdExpireDate = DateTime.Parse("0001-01-01");
-                            DateTime argdUpdateDate = DateTime.Parse("0001-01-01");
-                            oReplacement = moDbHelper.SimpleTidyContentNode(ref oReplacement, dExpireDate: ref argdExpireDate, dUpdateDate: ref argdUpdateDate);
-                            oContent.ParentNode.ReplaceChild(oReplacement, oContent);
-
-                            // Move the related content back
-                            if (childNodes.Count > 0)
-                            {
-                                foreach (XmlElement child in childNodes)
-                                {
-                                    oTempNode.RemoveChild(child);
-                                    oReplacement.AppendChild(child);
-                                }
-                            }
-                        }
-
-
-                    }
-
-
-                }
-            }
-
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "CheckContentVersions", ex, cProcessInfo));
-            }
-
-        }
-
-
-        public void GetErrorXml(ref XmlElement oPageElmt)
-        {
-            PerfMon.Log("Web", "GetErrorXml");
-            XmlElement oRoot;
-            XmlElement oElmt;
-            string sFilterSql = string.Empty;
-            string sSql2 = string.Empty;
-            string sNodeName = string.Empty;
-            string sContent = string.Empty;
-            string sErrorModule = "";
-            string sErrorHTML = string.Empty;
-            string strMessageHtml = "";
-            string strMessageText = "";
-
-            string sProcessInfo = "building the Content XML";
-
-            try
-            {
-
-                oRoot = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
-                if (oRoot is null)
-                {
-                    oRoot = moPageXml.CreateElement("Contents");
-                    moPageXml.DocumentElement.AppendChild(oRoot);
-                }
-
-                oPageElmt.SetAttribute("systempage", "true");
-
-                oElmt = moPageXml.CreateElement("Content");
-                oElmt.SetAttribute("type", "Error");
-                oElmt.SetAttribute("name", mnProteanCMSError.ToString());
-                switch (mnProteanCMSError)
-                {
-                    case 1005L:
-                        {
-                            strMessageText = "Page Not Found";
-                            strMessageHtml = "<div><h2>Page Not Found</h2>" + "</div>";
-                            gnResponseCode = 404L;
-                            sErrorModule = "BuildPageXml";
-                            bPageCache = false;
-                            break;
-                        }
-                    case 1006L:
-                        {
-                            strMessageText = "Access Denied";
-                            strMessageHtml = "<div><h2>Access Denied</h2>" + "</div>";
-                            // gnResponseCode = 401
-                            sErrorModule = "BuildPageXml";
-
-                            bPageCache = false;
-                            break;
-                        }
-                    case 1007L:
-                        {
-                            strMessageText = "File Not Found";
-                            strMessageHtml = "<div><h2>File Not Found</h2>" + "</div>";
-                            // gnResponseCode = 404
-                            sErrorModule = "Get Document";
-
-                            bPageCache = false;
-                            break;
-                        }
-
-                    case 1008L:
-                        {
-                            strMessageText = "Invalid Licence";
-                            strMessageHtml = "<div><h2>Please get a valid ProteanCMS Licence</h2>" + "</div>";
-                            sErrorModule = "BuildPageXml";
-
-                            bPageCache = false;
-                            break;
-                        }
-                }
-
-                if (gbDebug)
-                {
-                    try
-                    {
-                        Information.Err().Raise((int)mnProteanCMSError, sErrorModule, strMessageText);
-                    }
-                    catch (Exception)
-                    {
-                        oPageElmt.SetAttribute("layout", "Error");
-                        oElmt.InnerXml = strMessageHtml;
-                    }
-                }
-                else
-                {
-                    oPageElmt.SetAttribute("layout", "Error");
-                    oElmt.InnerXml = strMessageHtml;
-                }
-
-                oRoot.AppendChild(oElmt);
-                oPageElmt.AppendChild(oRoot);
-            }
-
-
-
-            catch (Exception ex)
-            {
-
-                // returnException(msException, mcModuleName, "GetErrorXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetErrorXml", ex, sProcessInfo));
-            }
-
-        }
-
-        public void GetContentXMLByType(ref XmlElement oPageElmt, string cContentType, string sqlFilter = "", string fullSQL = "")
-        {
-            PerfMon.Log("Web", "GetContentXMLByType");
-            // <add key="ControlPanelTypes" value="Event,Document|Top_10|DESC_Publish"/>
-            try
-            {
-                string[] oTypeCriteria = Strings.Split(cContentType, "|");
-                string cTop = "";
-                string cOrderDirection = "";
-                string oOrderField = "";
-                string strContentType = "";
-
-                int i;
-                var loopTo = Information.UBound(oTypeCriteria);
-                for (i = 0; i <= loopTo; i++)
-                {
-                    if (oTypeCriteria[i].Contains("Top_"))
-                    {
-                        cTop = Strings.Split(oTypeCriteria[i], "_")[1];
-                        if (!Tools.Number.IsNumeric(cTop))
-                            cTop = "";
-                    }
-                    else if (oTypeCriteria[i].Contains("ASC_"))
-                    {
-                        cOrderDirection = "";
-                        oOrderField = Strings.Split(oTypeCriteria[i], "_")[1];
-                    }
-                    else if (oTypeCriteria[i].Contains("DESC_"))
-                    {
-                        cOrderDirection = "DESC";
-                        oOrderField = Strings.Split(oTypeCriteria[i], "_")[1];
-                    }
-                    else
-                    {
-                        // its the field name
-                        strContentType = oTypeCriteria[i];
-                    }
-                }
-
-                string cSQL = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c left outer join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey" + " where (cContentSchemaName = '" + strContentType + "') ";
-                if (!string.IsNullOrEmpty(sqlFilter))
-                {
-                    cSQL += sqlFilter;
-                }
-                cSQL += GetStandardFilterSQLForContent();
-
-                if (!string.IsNullOrEmpty(oOrderField))
-                {
-                    cSQL += " ORDER BY " + oOrderField + " " + cOrderDirection;
-                }
-
-                if (!string.IsNullOrEmpty(fullSQL))
-                {
-                    cSQL = fullSQL;
-                }
-
-                var oDS = moDbHelper.GetDataSet(cSQL, "Content1", "Contents");
-                var oDT = new DataTable();
-                oDT = oDS.Tables["Content1"].Copy();
-                oDT.Rows.Clear();
-                oDT.TableName = "Content";
-                oDS.Tables.Add(oDT);
-                int nMax = 0;
-                string cDoneIds = ",";
-                string ochkStr = "";
-                if (Tools.Number.IsNumeric(cTop))
-                    nMax = Convert.ToInt16(cTop);
-                foreach (DataRow oDR in oDS.Tables["Content1"].Rows)
-                {
-                    if (oDS.Tables["Content"].Rows.Count < nMax | nMax == 0)
-                    {
-                        if (Convert.ToBoolean(Operators.AndObject(Tools.Number.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
-                        {
-                            ochkStr = moDbHelper.checkPagePermission(Convert.ToInt64(oDR["parId"])).ToString();
-                            if (Tools.Number.IsNumeric(ochkStr))
-                            {
-                                if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(Convert.ToInt16(ochkStr), oDR["parId"], false), !cDoneIds.Contains(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(",", oDR["id"]), ","))))))
-                                {
-                                    oDS.Tables["Content"].ImportRow(oDR);
-                                    cDoneIds = Convert.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
-                                }
-                            }
-                        }
-                        else if (mbAdminMode) // if in adminmode get everything regardless
-                        {
-                            oDS.Tables["Content"].ImportRow(oDR);
-                            cDoneIds = Convert.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
-                        }
-
-                    }
-                }
-                oDS.Tables.Remove(oDS.Tables["Content1"]);
-                XmlElement oRoot;
-                oRoot = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
-                if (oRoot is null)
-                {
-                    oRoot = moPageXml.CreateElement("Contents");
-                    moPageXml.DocumentElement.AppendChild(oRoot);
-                }
-                moDbHelper.AddDataSetToContent(ref oDS, ref oRoot, ref mdPageExpireDate, ref mdPageUpdateDate, (long)mnPageId, false, "");
-            }
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, "", gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentXMLByType", ex, ""));
-            }
-        }
-
-        public void GetContentXMLByTypeAndOffset(ref XmlElement oPageElmt, string cContentType, long nStartPos, long nItemCount, ref XmlElement oPageDetail, ref XmlElement oContentModule, string sqlFilter = "", string fullSQL = "", bool bShowContentDetails = true)
-        {
-            PerfMon.Log("Web", "GetContentXMLByTypeAndOffset");
-            // <add key="ControlPanelTypes" value="Event,Document|Top_10|DESC_Publish"/>
-            try
-            {
-                string[] oTypeCriteria = Strings.Split(cContentType, "|");
-                string cTop = "";
-                string cOrderDirection = "";
-                string oOrderField = "";
-                string strContentType = "";
-
-                int i;
-                var loopTo = Information.UBound(oTypeCriteria);
-                for (i = 0; i <= loopTo; i++)
-                {
-                    if (oTypeCriteria[i].Contains("Top_"))
-                    {
-                        cTop = Strings.Split(oTypeCriteria[i], "_")[1];
-                        if (!Tools.Number.IsNumeric(cTop))
-                            cTop = "";
-                    }
-                    else if (oTypeCriteria[i].Contains("ASC_"))
-                    {
-                        cOrderDirection = "";
-                        oOrderField = Strings.Split(oTypeCriteria[i], "_")[1];
-                    }
-                    else if (oTypeCriteria[i].Contains("DESC_"))
-                    {
-                        cOrderDirection = "DESC";
-                        oOrderField = Strings.Split(oTypeCriteria[i], "_")[1];
-                    }
-                    else
-                    {
-                        // its the field name
-                        strContentType = oTypeCriteria[i];
-                    }
-                }
-
-
-                if (nStartPos < 0L)
-                    nStartPos = 0L;
-                if (nItemCount < 1L)
-                    nItemCount = 1000L;
-
-
-                // Quick call to get the total number of records
-                string cSQL = "select count(*) from tblContent c left outer join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey" + " where (cContentSchemaName = '" + strContentType + "') ";
-                if (!string.IsNullOrEmpty(sqlFilter))
-                {
-                    cSQL += sqlFilter;
-                }
-                long nTotal = Convert.ToInt64(moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
-
-                if (nTotal > 0L)
-                {
-                    cSQL = "select c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, CL.cPosition as position from tblContent c left outer join tblContentLocation CL on c.nContentKey = CL.nContentId inner join tblAudit a on c.nAuditId = a.nAuditKey" + " where (cContentSchemaName = '" + strContentType + "') ";
-
-                    if (!string.IsNullOrEmpty(sqlFilter))
-                    {
-                        cSQL += sqlFilter;
-                    }
-                    cSQL += GetStandardFilterSQLForContent();
-
-                    if (!string.IsNullOrEmpty(oOrderField))
-                    {
-                        cSQL += " ORDER BY " + oOrderField + " " + cOrderDirection;
-                    }
-
-                    if (!string.IsNullOrEmpty(fullSQL))
-                    {
-                        cSQL = fullSQL;
-                    }
-
-                    cSQL += " offset " + nStartPos + " rows fetch next " + nItemCount + " rows only";
-
-                    var oDS = moDbHelper.GetDataSet(cSQL, "Content1", "Contents");
-                    var oDT = new DataTable();
-                    oDT = oDS.Tables["Content1"].Copy();
-                    oDT.Rows.Clear();
-                    oDT.TableName = "Content";
-                    oDS.Tables.Add(oDT);
-                    int nMax = 0;
-                    string cDoneIds = ",";
-                    string ochkStr = "";
-                    if (Tools.Number.IsNumeric(cTop))
-                        nMax = Convert.ToInt16(cTop);
-                    foreach (DataRow oDR in oDS.Tables["Content1"].Rows)
-                    {
-                        if (oDS.Tables["Content"].Rows.Count < nMax | nMax == 0)
-                        {
-                            if (Convert.ToBoolean(Operators.AndObject(Tools.Number.IsNumeric(oDR["parId"]), !oDR["parId"].ToString().Contains(","))))
-                            {
-                                ochkStr = moDbHelper.checkPagePermission(Convert.ToInt64(oDR["parId"])).ToString();
-                                if (Tools.Number.IsNumeric(ochkStr))
-                                {
-                                    if (Convert.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(Convert.ToInt16(ochkStr), oDR["parId"], false), !cDoneIds.Contains(Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(",", oDR["id"]), ","))))))
-                                    {
-                                        oDS.Tables["Content"].ImportRow(oDR);
-                                        cDoneIds = Convert.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
-                                    }
-                                }
-                            }
-                            else if (mbAdminMode) // if in adminmode get everything regardless
-                            {
-                                oDS.Tables["Content"].ImportRow(oDR);
-                                cDoneIds = Convert.ToString(cDoneIds + Operators.ConcatenateObject(oDR["id"], ","));
-                            }
-
-                        }
-                    }
-                    oDS.Tables.Remove(oDS.Tables["Content1"]);
-                    XmlElement oRoot;
-                    oRoot = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Contents");
-                    if (oRoot is null)
-                    {
-                        oRoot = moPageXml.CreateElement("Contents");
-                        moPageXml.DocumentElement.AppendChild(oRoot);
-                    }
-                    moDbHelper.AddDataSetToContent(ref oDS, ref oRoot, ref mdPageExpireDate, ref mdPageUpdateDate, (long)mnPageId, false, "");
-                    if (bShowContentDetails)
-                    {
-                        // Get the content Detail element
-                        XmlElement oContentDetails;
-                        if (oPageDetail is null)
-                        {
-                            oContentDetails = (XmlElement)moPageXml.SelectSingleNode("Page/ContentDetail");
-                            if (oContentDetails is null)
-                            {
-                                oContentDetails = moPageXml.CreateElement("ContentDetail");
-                                if (!string.IsNullOrEmpty(moPageXml.InnerXml))
-                                {
-                                    moPageXml.FirstChild.AppendChild(oContentDetails);
-                                }
-                                else
-                                {
-                                    oPageDetail.AppendChild(oContentDetails);
-                                }
-
-                            }
-                        }
-                        else
-                        {
-                            oContentDetails = oPageDetail;
-                        }
-
-                        oContentDetails.SetAttribute("start", nStartPos.ToString());
-                        oContentDetails.SetAttribute("total", nTotal.ToString());
-                        oContentDetails.SetAttribute("rows", nItemCount.ToString());
-                    }
-
-                    if (oContentModule != null)
-                    {
-                        if (oContentModule.HasAttribute("TotalCount"))
-                        {
-                            oContentModule.SetAttribute("TotalCount", nTotal.ToString());
-                        }
-                    }
-
-                }
-            }
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "getContentXml", ex, gcEwSiteXsl, "", gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentXMLByTypeAndOffset", ex, ""));
-            }
-        }
-
-        public XmlElement BuildPageContentDetailXml(XmlElement oPageElmt = null, long nArtId = 0L, bool disableRedirect = false, bool bCheckAccessToContentLocation = false, long nVersionId = 0L, bool bIgnoreContentStatus = false)
-        {
-            PerfMon.Log("Web", "BuildPageContentDetailXml");
-            XmlElement oRoot;
-            XmlElement oElmt;
-            XmlElement retElmt = null;
-            string sProcessInfo = "BuildContentDetailXml";
-            if (nArtId > 0L)
-            {
-                mnArtId = (int)nArtId;
-            }
-            if (mnArtId == 0L)
-            {
-                return null;
-            }
-            try
-            {
-                if (moContentDetail is null)
-                {
-
-                    // If requested, we need to make sure that the content we are looking for doesn't belong to a page
-                    // that the user is not allowed to access.
-                    // We can review the current menu structure xml instead of calling the super slow permissions functions.
-
-                    // Check for historic events special case
-                    if (moPageXml.SelectSingleNode("Page/Contents/Content[@action='Protean.Cms+Content+Modules.ListHistoricEvents']") != null)
-                    {
-                        bAllowExpired = true;
-                    }
-
-                    // Use the consolidated GetContentDetailXml method which handles:
-                    // - Access location checking
-                    // - SQL query building (including version support)
-                    // - DataSet processing
-                    // - XML conversion
-                    DateTime? contentUpdateDate;
-                    oElmt = moDbHelper.GetContentDetailXml(
-                        mnArtId,
-                        bIgnoreContentStatus,  // noFilter
-                        nVersionId,
-                        bIgnoreContentStatus,
-                        bCheckAccessToContentLocation,
-                        true,  // bIncludeLocations
-                        out contentUpdateDate);
-
-                    if (contentUpdateDate.HasValue)
-                    {
-                        mdPageUpdateDate = contentUpdateDate.Value;
-                    }
-
-                    if (oElmt != null)
-                    {
-                        // Create the ContentDetail wrapper and import the content element
-                        oRoot = moPageXml.CreateElement("ContentDetail");
-                        var importedElmt = (XmlElement)moPageXml.ImportNode(oElmt, true);
-                        oRoot.AppendChild(importedElmt);
-                        oElmt = importedElmt;
-
-                        // Apply page-level processing
-                        XmlElement argoContentElmt = oElmt;
-                        moDbHelper.addRelatedContent(ref argoContentElmt, mnArtId, mbAdminMode);
-                        if (!string.IsNullOrEmpty(moConfig["ShowOwnerOnDetail"]))
-                        {
-                            string cContentType = oElmt.GetAttribute("type");
-                            if (moConfig["ShowOwnerOnDetail"].Contains(cContentType))
-                            {
-                                long nOwner = Convert.ToInt64("0" + oElmt.GetAttribute("owner"));
-                                if (nOwner > 0L)
-                                {
-                                    oElmt.AppendChild(GetUserXML(nOwner));
-                                }
-                            }
-                        }
-
-                        // If gbCart Or gbQuote Then
-                        // moDiscount.getAvailableDiscounts(oRoot)
-                        // End If
-
-                        XmlElement contentElmt = (XmlElement)oRoot.SelectSingleNode("Content");
-                        if (nVersionId > 0L)
-                        {
-                            contentElmt.SetAttribute("previewKey", Tools.Encryption.RC4.Encrypt(nVersionId.ToString(), moConfig["SharedKey"]));
-                        }
-                        XmlElement argoContentElmt1 = oRoot;  // oRoot IS the ContentDetail element
-                        AddGroupsToContent(ref argoContentElmt1);
-                        if (oPageElmt != null)
-                        {
-                            var oContentDetail = contentElmt;
-                            if (oContentDetail != null && !string.IsNullOrEmpty(oContentDetail.InnerXml.Trim()))
-                            {
-                                // If we can find a content detail Content node, 
-                                // AND it contains some InnerXml, then YAY.
-                                oPageElmt.AppendChild(oRoot.CloneNode(true));
-                            }
-                            else
-                            {
-                                // OTHERWISE if there is nothing in the detail we get the brief instead.
-                                GetContentBriefXml(oPageElmt, nArtId);
-                            }
-                        }
-                        retElmt = (XmlElement)oRoot.FirstChild;
-
-                        if (mbAdminMode == false & Strings.LCase(moConfig["RedirectToDescriptiveContentURLs"]) == "true")
-                        {
-                            string SafeURLName = Tools.Text.CleanName(contentElmt.GetAttribute("name"), false, true);
-                            string myOrigURL;
-                            string myQueryString = "";
-                            if (mcOriginalURL.Contains("?"))
-                            {
-                                myOrigURL = mcOriginalURL.Substring(0, mcOriginalURL.IndexOf("?"));
-                                myQueryString = mcOriginalURL.Substring(mcOriginalURL.LastIndexOf("?"));
-                            }
-                            else
-                            {
-                                myOrigURL = mcOriginalURL;
-                            }
-
-                            if ((myOrigURL ?? "") != (mcPageURL + "/" + mnArtId + "-/" + SafeURLName ?? ""))
-                            {
-                                // we redirect perminently
-                                mbRedirectPerm = Convert.ToString(true);
-                                msRedirectOnEnd = mcPageURL + "/" + mnArtId + "-/" + SafeURLName + myQueryString;
-                            }
-                        }
-                        
-                        // MEMORY FIX: Clear previous moContentDetail reference to allow GC
-                        moContentDetail = null;
-                        moContentDetail = (XmlElement)oRoot.FirstChild;
-
-                        // Add single item shipping costs for JSON-LD
-                        string ProductTypes = moConfig["ProductTypes"];
-                        if (string.IsNullOrEmpty(ProductTypes))
-                            ProductTypes = defaultProductTypes;
-                        if (ProductTypes.Contains(contentElmt.GetAttribute("type")) & moCart != null)
-                        {
-                            try
-                            {
-                                var oShippingElmt = moPageXml.CreateElement("ShippingCosts");
-                                string cDestinationCountry = moCart.moCartConfig["DefaultDeliveryCountry"];
-                                double nPrice = 0d;
-                                if (contentElmt.SelectSingleNode("Prices/Price[@type='sale']") != null)
-                                {
-                                    nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText);
-                                }
-
-                                if (nPrice == 0d)
-                                {
-                                    if (contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") != null)
-                                    {
-                                        nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText);
-                                    }
-                                }
-                                double nWeight = 0d;
-                                if (contentElmt.SelectSingleNode("ShippingWeight") != null)
-                                {
-                                    nWeight = Convert.ToDouble("0" + contentElmt.SelectSingleNode("ShippingWeight").InnerText);
-                                }
-                                var dsShippingOption = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1L, nWeight, mnArtId);
-                                if (dsShippingOption != null)
-                                {
-                                    oShippingElmt.InnerXml = Strings.Replace(dsShippingOption.GetXml(), "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
-                                }
-                                contentElmt.AppendChild(oShippingElmt);
-                            }
-                            catch (Exception)
-                            {
-                            }
-                        }
-
-                        return moContentDetail;
-                    }
-                    else
-                    {
-                        sProcessInfo = "no content to add - we redirect";
-                        // this content is not found either page not found or re-direct home.
-                        if (!disableRedirect)
-                        {
-                            // put this in to prevent a redirect if we are calling this from somewhere strange.
-                            if (gnPageNotFoundId > 1L)
-                            {
-                                mnPageId = (int)gnPageNotFoundId;
-                                mnArtId = 0;
-                                moPageXml = new XmlDocument();
-                                BuildPageXML();
-                                moResponse.StatusCode = 404;
-                            }
-                            else
-                            {
-                                msRedirectOnEnd = moConfig["BaseUrl"];
-                                moResponse.StatusCode = 404;
-                            }
-                        }
-                        // Just a page no detail requested
-                        return null;
-                    }
-                }
-
-                else
-                {
-                    sProcessInfo = "content exists adding content";
-                    oRoot = moContentDetail.OwnerDocument.CreateElement("ContentDetail");
-                    oRoot.AppendChild(moContentDetail);
-                    if (oPageElmt != null)
-                    {
-                        oPageElmt.AppendChild(oRoot);
-                    }
-                    AddGroupsToContent(ref oRoot);
-                    retElmt = moContentDetail;
-                    moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentDetailViewed, mnUserId, SessionID, DateTime.Now, mnArtId, 0, "");
-                    return moContentDetail;
-                }
-            }
-            catch (Exception ex)
-            {
-              
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "BuildPageContentDetailXml", ex, sProcessInfo));
-                return null;
-            }
-            //sSql = null;
-        }
-
-
-        public XmlElement GetContentBriefXml(XmlElement oPageElmt = null, long nArtId = 0L)
-        {
-            PerfMon.Log("Web", "GetContentBriefXml");
-            XmlElement oRoot;
-            XmlElement oElmt;
-            XmlElement retElmt = null;
-            string sContent;
-            string sSql;
-            string sProcessInfo = "GetContentBriefXml";
-            var oDs = new DataSet();
-            string sFilterSql = "";
-            bool bLoadAsXml;
-            XmlComment oComment;
-            if (nArtId > 0L)
-            {
-                mnArtId = (int)nArtId;
-            }
-            try
-            {
-                if (moContentDetail is null)
-                {
-                    if (mnArtId > 0)
-                    {
-                        sProcessInfo = "loading content" + mnArtId;
-                        sFilterSql += GetStandardFilterSQLForContent();
-                        oRoot = moPageXml.CreateElement("ContentDetail");
-                        sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status " + "from tblContent c inner join tblAudit a on c.nAuditId = a.nAuditKey  where c.nContentKey = " + mnArtId + sFilterSql;
-                        oDs = moDbHelper.GetDataSet(sSql, "Content", "ContentDetail");
-                        oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["ref"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["name"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["type"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["publish"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["expire"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["update"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["parId"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["owner"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["status"].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns["content"].ColumnMapping = MappingType.SimpleContent;
-
-                        oRoot.InnerXml = Strings.Replace(oDs.GetXml(), "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
-                        foreach (XmlNode oNode in oRoot.SelectNodes("/ContentDetail/Content"))
-                        {
-                            oElmt = (XmlElement)oNode;
-                            sContent = oElmt.InnerText;
-                            if (Information.IsDate(oElmt.GetAttribute("update")))
-                                mdPageUpdateDate = Convert.ToDateTime(oElmt.GetAttribute("update"));
-
-                            // Try to convert the InnerText to InnerXml
-                            // Also if the innerxml has Content as a first node, then get the innerxml of the content node.
-                            try
-                            {
-                                oElmt.InnerXml = sContent;
-                                bLoadAsXml = true;
-                            }
-
-                            catch (Exception)
-                            {
-                                // If the load failed, then flag it in the Content node and return the InnerText as a Comment
-                                oComment = oRoot.OwnerDocument.CreateComment(oElmt.InnerText);
-                                oElmt.SetAttribute("xmlerror", "getContentBriefXml");
-                                oElmt.InnerXml = "";
-                                oElmt.AppendChild(oComment);
-                                oComment = null;
-                                bLoadAsXml = false;
-                            }
-
-                            if (bLoadAsXml)
-                            {
-
-                                // Successfully converted to XML.
-                                // Now check if the node imported is a Content node - if so get rid of the Content node
-                                var oFirst = Tools.Xml.firstElement(ref oElmt);
-                                if (oFirst.LocalName == "Content")
-                                {
-                                    oElmt.InnerXml = oFirst.InnerXml;
-                                }
-
-                                XmlElement argoContentElmt = (XmlElement)oNode;
-                                moDbHelper.addRelatedContent(ref argoContentElmt, mnArtId, mbAdminMode);
-                                //oNode = argoContentElmt;
-
-                            }
-
-                        }
-
-                        // If gbCart Or gbQuote Then
-                        // moDiscount.getAvailableDiscounts(oRoot)
-                        // End If
-
-                        if (oPageElmt != null)
-                        {
-                            oPageElmt.AppendChild(oRoot.FirstChild);
-                        }
-                        // AddGroupsToContent(oRoot)
-                        retElmt = (XmlElement)oRoot.FirstChild;
-                        return (XmlElement)oRoot.FirstChild;
-                    }
-                    else
-                    {
-                        sProcessInfo = "no content to add";
-                    }
-                }
-                else
-                {
-                    sProcessInfo = "content exists adding content";
-                    oRoot = moPageXml.CreateElement("ContentDetail");
-                    oRoot.AppendChild(moContentDetail);
-                    if (oPageElmt != null)
-                    {
-                        oPageElmt.AppendChild(oRoot);
-                    }
-                    // AddGroupsToContent(oRoot)
-                    retElmt = moContentDetail;
-                    moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentDetailViewed, mnUserId, SessionID, DateTime.Now, mnArtId, 0, "");
-                    return moContentDetail;
-                }
-
-                return retElmt;
-            }
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentBriefXml", ex, sProcessInfo));
-                return null;
-            }
-
-        }
-
-        /// <summary>
-        /// This attempts to construct the standard SQL filter for getting LIVE content
-        /// If version control is on it will also assess the page permissions, 
-        /// and if appropriate, it will get content that is not LIVe but, say, PENDING.
-        /// This method delegates to the dbHelper's consolidated implementation.
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks></remarks>
-        public string GetStandardFilterSQLForContent(bool bPrecedingAND = true)
-        {
-            PerfMon.Log("Web", "GetStandardFilterSQLForContent");
-
-            try
-            {
-                // Determine expire at end of day setting from config
-                bool expireAtEndOfDay = Strings.LCase(moConfig["ExpireAtEndOfDay"]) == "on";
-
-                // Delegate to the dbHelper's consolidated implementation with all context values
-                string sFilterSQL = moDbHelper.GetStandardFilterSQLForContent(
-                    bPrecedingAND,
-                    mbAdminMode,
-                    mnUserPagePermission,
-                    mbPreviewHidden,
-                    bAllowExpired,
-                    mdDate,
-                    expireAtEndOfDay);
-
-                PerfMon.Log("Web", "GetStandardFilterSQLForContent-END");
-                return sFilterSQL;
-            }
-            catch (Exception ex)
-            {
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetStandardFilterSQLForContent", ex, ""));
-                return "";
-            }
-        }
-
-
-        public void AddBreadCrumb(string cPath, string cDisplayName)
-        {
-            PerfMon.Log("Web", "AddBreadCrumb");
-            XmlNode oNode;
-            XmlElement oElmt;
-            XmlElement oElmt2;
-
-            string sProcessInfo = Convert.ToString(string.IsNullOrEmpty("adding Link to Breadcrumb"));
-
-            try
-            {
-                oNode = moPageXml.DocumentElement.SelectSingleNode("Breadcrumb");
-                if (oNode is null)
-                {
-                    oElmt = moPageXml.CreateElement("Breadcrumb");
-                    moPageXml.DocumentElement.AppendChild(oElmt);
-                }
-                else
-                {
-                    oElmt = (XmlElement)oNode;
-                }
-                oElmt2 = moPageXml.CreateElement("Link");
-                oElmt2.SetAttribute("name", cDisplayName);
-                oElmt2.SetAttribute("url", cPath);
-                oElmt.AppendChild(oElmt2);
-            }
-
-            catch (Exception ex)
-            {
-                // returnException(msException, mcModuleName, "AddBreadCrumb", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddBreadCrumb", ex, sProcessInfo));
-            }
-        }
 
         public void returnDocumentFromItem(ref System.Web.HttpContext ctx)
         {
@@ -10062,7 +5588,7 @@ namespace Protean
 
                             bool allowAccess = true;
 
-                            if (Strings.LCase(moConfig["SecureDownloads"]) == "on")
+                            if (moConfig["SecureDownloads"]?.ToLower() == "on")
                             {
                                 XmlElement oPageElmt;
                                 if (moPageXml.DocumentElement is null)
@@ -10098,7 +5624,8 @@ namespace Protean
                                     // lets clear up the file name
                                     // check for paths both local and virtual
                                     strFileName = Tools.Text.filenameFromPath(strFilePath);
-                                    FileExt = Strings.Mid(strFileName, Strings.InStrRev(strFileName, ".") + 1);
+                                    int dotIndex = strFilePath.LastIndexOf(".");
+                                    FileExt = dotIndex >= 0 ? strFileName.Substring(dotIndex + 1) : "";
                                     strFileType = Tools.FileHelper.GetMIMEType(FileExt);
 
                                     var fso = new FileInfo(strFilePath);
@@ -10177,7 +5704,8 @@ namespace Protean
                                             moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.DocumentDownloaded, mnUserId, moSession.SessionID, DateTime.Now, mnPageId, 0, "ERROR NOT FOUND:" + strFileName);
                                         }
 
-                                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moCtx.Application["PageNotFoundId"], RootPageId, false)))
+                                        if (moCtx.Application["PageNotFoundId"] != null && 
+                                            !moCtx.Application["PageNotFoundId"].Equals(RootPageId))
                                         {
                                             moCtx.ApplicationInstance.CompleteRequest();
                                             Redirect404(NotFoundPagePath);
@@ -10186,7 +5714,7 @@ namespace Protean
                                         {
                                             // Kept for follow up window, however does this send original mail out?
                                             sProcessInfo = "File Not Found:" + strFilePath;
-                                            Information.Err().Raise(1007, Description: "ProteanCMS Error: " + sProcessInfo);
+                                            throw new Exception("ProteanCMS Error: " + sProcessInfo);
                                         }
 
 
@@ -10352,7 +5880,7 @@ namespace Protean
 
                         foreach (var fi in files)
                         {
-                            string cExt = Strings.LCase(fi.Extension);
+                            string cExt = fi.Extension.ToLower();
                             switch (cExt ?? "")
                             {
                                 case ".otf":
@@ -10381,11 +5909,11 @@ namespace Protean
                     ctx.Response.AddHeader("Connection", "keep-alive");
                     if (ctx.Request.QueryString["mode"] == "open")
                     {
-                        ctx.Response.AddHeader("Content-Disposition", "filename=" + Strings.Replace(strFileName, ",", ""));
+                        ctx.Response.AddHeader("Content-Disposition", "filename=" + strFileName.Replace(",", ""));
                     }
                     else
                     {
-                        ctx.Response.AddHeader("Content-Disposition", "attachment; filename=" + Strings.Replace(strFileName, ",", ""));
+                        ctx.Response.AddHeader("Content-Disposition", "attachment; filename=" + strFileName.Replace(",", ""));
                     }
                     ctx.Response.AddHeader("Content-Length", strFileSize);
                     // ctx.Response.Charset = "UTF-8"
@@ -10528,7 +6056,7 @@ namespace Protean
         {
             PerfMon.Log("Web", "GetParId");
             string cProcessInfo = string.Empty;
-            string[] oParents = Strings.Split(nParids, ",");
+            string[] oParents = nParids.Split(',');
             try
             {
 
@@ -10554,15 +6082,15 @@ namespace Protean
         {
             // PerfMon.Log("Web", "GetParId")
             string cProcessInfo = string.Empty;
-            string[] oParents = Strings.Split(nParids, ",");
-            string sFilteredParents = "";
-            string cXPath = "";
-            int i;
-            try
-            {
+            string[] oParents = nParids.Split(',');
+                string sFilteredParents = "";
+                string cXPath = "";
+                int i;
+                try
+                {
 
-                var loopTo = Information.UBound(oParents);
-                for (i = 0; i <= loopTo; i++)
+                    var loopTo = oParents.Length - 1;
+                    for (i = 0; i <= loopTo; i++)
                 {
                     // We are only interested parIds in the current site tree
                     if (oMenu.SelectSingleNode("descendant-or-self::MenuItem[@id='" + oParents[i] + "']") != null)
@@ -10585,7 +6113,7 @@ namespace Protean
                 else
                 {
                     string[] oFilteredParents;
-                    oFilteredParents = Strings.Split(sFilteredParents.Remove(sFilteredParents.LastIndexOf(","), 1), ",");
+                    oFilteredParents = sFilteredParents.Remove(sFilteredParents.LastIndexOf(","), 1).Split(',');
 
                     if (oFilteredParents.Length == 1)
                     {
@@ -10600,7 +6128,7 @@ namespace Protean
 
                         int nLowestStep = 99999;
                         var nNewPage = default(int);
-                        var loopTo1 = Information.UBound(oSteps);
+                        var loopTo1 = oSteps.Length - 1;
                         for (i = 0; i <= loopTo1; i++)
                         {
                             if (oSteps[i] < nLowestStep)
@@ -10643,10 +6171,10 @@ namespace Protean
                 foreach (XmlElement currentOChild in oElmt.SelectNodes(cXpath))
                 {
                     oChild = currentOChild;
-                    Array.Resize(ref oIDs, Information.UBound(oIDs) + 1);
-                    Array.Resize(ref oSteps, Information.UBound(oSteps) + 1);
-                    oIDs[Information.UBound(oIDs)] = Convert.ToInt16(oChild.GetAttribute("id"));
-                    oSteps[Information.UBound(oSteps)] = nStep;
+                    Array.Resize(ref oIDs, oIDs.Length);
+                    Array.Resize(ref oSteps, oSteps.Length);
+                    oIDs[oIDs.Length - 1] = Convert.ToInt16(oChild.GetAttribute("id"));
+                    oSteps[oSteps.Length - 1] = nStep;
                 }
                 foreach (XmlElement currentOChild1 in oElmt.SelectNodes("MenuItem"))
                 {
@@ -10672,13 +6200,13 @@ namespace Protean
                 nStep += 1;
                 // check parent
                 int i;
-                var loopTo = Information.UBound(oParents);
+                var loopTo = oParents.Length - 1;
                 for (i = 0; i <= loopTo; i++)
                 {
                     if ((oParentElmt.GetAttribute("id") ?? "") == (oParents[i] ?? ""))
                     {
-                        oIDs[Information.UBound(oIDs)] = Convert.ToInt16(oParentElmt.GetAttribute("id"));
-                        oSteps[Information.UBound(oSteps)] = nStep;
+                        oIDs[oIDs.Length - 1] = Convert.ToInt16(oParentElmt.GetAttribute("id"));
+                        oSteps[oSteps.Length - 1] = nStep;
                     }
                 }
                 // now check its grandparents children?
@@ -10763,7 +6291,7 @@ namespace Protean
                 try
                 {
                     string xmlAllowedIPList = moConfig["XmlAllowedIPList"];
-                    return Convert.ToBoolean(Interaction.IIf(string.IsNullOrEmpty(xmlAllowedIPList), (object)mbOutputXml, IsCurrentIPAddressInList(xmlAllowedIPList)));
+                    return string.IsNullOrEmpty(xmlAllowedIPList) ? mbOutputXml : IsCurrentIPAddressInList(xmlAllowedIPList);
                 }
                 catch (Exception ex)
                 {
@@ -10826,7 +6354,7 @@ namespace Protean
 
                     foreach (XmlElement oElmt in goLangConfig.SelectNodes("Language"))
                     {
-                        switch (Strings.LCase(oElmt.GetAttribute("identMethod")) ?? "")
+                        switch (oElmt.GetAttribute("identMethod")?.ToLower() ?? "")
                         {
                             case "domain":
                                 {
@@ -10953,7 +6481,7 @@ namespace Protean
                         mcPreferredLanguage = moRequest.Cookies["language"].Value.ToString();
                     }
 
-                    moPageXml.DocumentElement.SetAttribute("translang", Convert.ToString(Interaction.IIf(string.IsNullOrEmpty(mcPreferredLanguage), mcPageLanguage, mcPreferredLanguage)));
+                    moPageXml.DocumentElement.SetAttribute("translang", string.IsNullOrEmpty(mcPreferredLanguage) ? mcPageLanguage : mcPreferredLanguage);
                 }
 
                 if (!string.IsNullOrEmpty(mcPageLanguage))
@@ -11092,7 +6620,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                returnException(ref msException, mcModuleName, "ProcessContentForLanguage", ex, "", "", gbDebug);
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessPageXMLForLanguage", ex, ""));
             }
         }
 
@@ -11359,10 +6887,15 @@ namespace Protean
                 }
                 else
                 {
-                    filename = Strings.Left(cUrl.Substring(cUrl.LastIndexOf("/") + 1), 240);
+                    filename = cUrl.Substring(cUrl.LastIndexOf("/") + 1);
+                    if (filename.Length > 240)
+                        filename = filename.Substring(0, 240);
                     if (cUrl.LastIndexOf("/") > 0)
                     {
-                        filepath = Strings.Left(cUrl.Substring(0, cUrl.LastIndexOf("/")), 240) + "";
+                        filepath = cUrl.Substring(0, cUrl.LastIndexOf("/"));
+                        if (filepath.Length > 240)
+                            filepath = filepath.Substring(0, 240);
+                        filepath += "";
                     }
                 }
 
@@ -11374,8 +6907,8 @@ namespace Protean
 
                 // Tidy up the filename
                 filename = Tools.FileHelper.ReplaceIllegalChars(filename);
-                filename = Strings.Replace(filename, @"\", "-");
-                filepath = Strings.Replace(filepath, "/", @"\") + "";
+                filename = filename.Replace(@"\", "-");
+                filepath = filepath.Replace("/", @"\") + "";
                 if (filepath.StartsWith(@"\") & mcPageCacheFolder.EndsWith(@"\"))
                 {
                     filepath.Remove(0, 1);
@@ -11386,12 +6919,17 @@ namespace Protean
                 string cleanfilename = goServer.UrlDecode(filename);
 
                 // Limit the file length to 255
-                string Extension = Strings.Right(cleanfilename, cleanfilename.Length - Strings.InStr(cleanfilename, "."));
-                cleanfilename = Strings.Left(cleanfilename, Strings.InStr(cleanfilename, ".") - 1);
+                int dotIndex = cleanfilename.IndexOf(".");
+                string Extension = "";
+                if (dotIndex >= 0)
+                {
+                    Extension = cleanfilename.Substring(dotIndex + 1);
+                    cleanfilename = cleanfilename.Substring(0, dotIndex);
+                }
                 short FilenameLength = (short)(255 - Extension.Length);
                 if (cleanfilename.Length > FilenameLength)
                 {
-                    cleanfilename = Strings.Left(cleanfilename, FilenameLength);
+                    cleanfilename = cleanfilename.Substring(0, FilenameLength);
                 }
 
                 string FullFilePath = mcPageCacheFolder + filepath + @"\" + goServer.UrlDecode(cleanfilename + "." + Extension);
@@ -11431,13 +6969,13 @@ namespace Protean
                         }
                         else
                         {
-                            cProcessInfo += "<Error>File Locked: " + filepath + " - " + sError + "</Error>" + Constants.vbCrLf;
+                            cProcessInfo += "<Error>File Locked: " + filepath + " - " + sError + "</Error>" + Environment.NewLine;
                             sError = cProcessInfo;
                         }
                     }
                     else
                     {
-                        cProcessInfo += "<Error>Directory Not Exists: " + filepath + " - " + sError + "</Error>" + Constants.vbCrLf;
+                        cProcessInfo += "<Error>Directory Not Exists: " + filepath + " - " + sError + "</Error>" + Environment.NewLine;
                         sError = cProcessInfo;
                     }
 
@@ -11450,7 +6988,7 @@ namespace Protean
 
                 else
                 {
-                    cProcessInfo += "<Error>Create Path: " + filepath + " - " + sError + "</Error>" + Constants.vbCrLf;
+                    cProcessInfo += "<Error>Create Path: " + filepath + " - " + sError + "</Error>" + Environment.NewLine;
                     sError = cProcessInfo;
                 }
                 if (sError != "1")
@@ -11574,7 +7112,7 @@ namespace Protean
                 sProcessInfo = "ClearPageCache-Start";
                 PerfMon.Log("Web", sProcessInfo);
               
-                if(Strings.LCase(moConfig["PageCache"]) == "on" && rootDir.Exists)
+                if(moConfig["PageCache"]?.ToLower() == "on" && rootDir.Exists)
                 {       
                     //spGetParentPagesForCache
                     sSql = "EXEC spGetParentPagesForCache @nContentkey=" + ContentId + "";
@@ -11686,7 +7224,7 @@ namespace Protean
                         string AppVarName = dir.FullName;
                         AppVarName = AppVarName.Substring(goServer.MapPath("/" + moConfig["ProjectPath"] + bundlePath).Length);
                         AppVarName = AppVarName.Replace(@"\", "/");
-                        AppVarName = Strings.LCase(bundlePath + "/" + AppVarName.Trim('/'));
+                        AppVarName = (bundlePath + "/" + AppVarName.Trim('/')).ToLower();
 
                         // check exists before we remove
                         if (moCtx.Application.Get(AppVarName) != null)

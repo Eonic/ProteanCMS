@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
@@ -445,8 +443,8 @@ namespace Protean.Providers
                                 }
                                 else
                                 {
-                                    Array.Resize(ref nDelIDs, Information.UBound(nDelIDs) + 1 + 1);
-                                    nDelIDs[Information.UBound(nDelIDs)] = Convert.ToInt16(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                    Array.Resize(ref nDelIDs, nDelIDs.Length + 1);
+                                    nDelIDs[nDelIDs.Length - 1] = Convert.ToInt16(oDiscountItemTest.GetAttribute("nDiscountKey"));
                                 }
                             }
                         }
@@ -470,7 +468,7 @@ namespace Protean.Providers
                     if (!(nDelIDs[0] == 0))
                     {
                         int nIX;
-                        var loopTo = Information.UBound(nDelIDs);
+                        var loopTo = nDelIDs.Length - 1;
                         for (nIX = 0; nIX <= loopTo; nIX++)
                         {
                             foreach (XmlElement nDelElmt in oCartXML.SelectNodes("descendant-or-self::DiscountItem[@nDiscountKey=" + nDelIDs[nIX] + "] | descendant-or-self::Discount[@nDiscountKey=" + nDelIDs[nIX] + "]"))

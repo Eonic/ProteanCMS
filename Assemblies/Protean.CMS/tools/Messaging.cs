@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using PreMailer.Net;
+﻿using PreMailer.Net;
 using Protean.Providers.Messaging;
 using System;
 using System.Collections;
@@ -8,12 +6,13 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
-using static Protean.stdTools;
 using static Protean.Env;
+using static Protean.stdTools;
 
 namespace Protean
 {
@@ -41,7 +40,7 @@ namespace Protean
         public bool sendAsync = false;
 
         // private string msAttachmentPath = "";
-        private Collection Attachments;
+        private System.Collections.ObjectModel.Collection<object> Attachments;
         private static bool mailSent = false;
 
         private string _language = "";
@@ -92,9 +91,9 @@ namespace Protean
             {
 
                 var oAtt = new Attachment(contentStream, name);
-                if (Attachments is null)
+                if (Attachments == null)
                 {
-                    Attachments = new Collection();
+                    Attachments = new System.Collections.ObjectModel.Collection<object>();
                 }
                 Attachments.Add(oAtt);
             }
@@ -117,7 +116,7 @@ namespace Protean
                 var oAtt = new Attachment(contentStream, name, "application/pdf");
                 if (Attachments is null)
                 {
-                    Attachments = new Collection();
+                    Attachments = new System.Collections.ObjectModel.Collection<object>();
                 }
                 Attachments.Add(oAtt);
             }
@@ -150,7 +149,7 @@ namespace Protean
 
                     if (Attachments is null)
                     {
-                        Attachments = new Collection();
+                        Attachments = new System.Collections.ObjectModel.Collection<object>();
                     }
                     Attachments.Add(oAtt);
 
@@ -182,7 +181,7 @@ namespace Protean
                 var oAtt = new Attachment(contentStream, name, contenttype);
                 if (Attachments is null)
                 {
-                    Attachments = new Collection();
+                    Attachments = new System.Collections.ObjectModel.Collection<object>();
                 }
                 Attachments.Add(oAtt);
             }
@@ -243,7 +242,7 @@ namespace Protean
                             var oAtt = new Attachment(strFilePath);
                             if (Attachments is null)
                             {
-                                Attachments = new Collection();
+                                Attachments = new System.Collections.ObjectModel.Collection<object>();
                             }
                             Attachments.Add(oAtt);
                         }
@@ -508,7 +507,7 @@ namespace Protean
                 sWriter = null;
 
                 // is there's no HTML, set is as plain text
-                int nHtmlPos = Strings.InStr(Strings.LCase(messagePlainText), "<html");
+                int nHtmlPos = messagePlainText.LastIndexOf("<html", messagePlainText.Length - 1);
                 if (nHtmlPos <= 0)
                 {
                     mbIsBodyHtml = false;
@@ -524,7 +523,7 @@ namespace Protean
                         XmlElement oElmt2 = (XmlElement)oEmailXmlDoc.SelectSingleNode("html/head/title");
                         if (!string.IsNullOrEmpty(oElmt2.InnerText))
                         {
-                            SubjectLine = Strings.Trim(oElmt2.InnerText);
+                            SubjectLine = oElmt2.InnerText.Trim();
                         }
                     }
                 }
@@ -566,14 +565,14 @@ namespace Protean
 
                     var mailSender = new MailAddress(serverSenderEmail, serverSenderEmailName);
 
-                    if (Strings.LCase(goConfig["overrideFromEmail"]) == "on")
+                    if ((goConfig["overrideFromEmail"]).ToLower() == "on")
                     {
                         oMailn.From = mailSender;
                     }
                     // Don't add the sender if it's the same address as the from
                     else if (!Equals(mailSender, adFrom))
                     {
-                        if (Strings.LCase(goConfig["EnableReplyTo"]) == "on")
+                        if (goConfig["EnableReplyTo"]?.ToLower() == "on")
                         {
                             oMailn.ReplyToList.Add(adFrom);
                             oMailn.From = mailSender;
@@ -616,7 +615,7 @@ namespace Protean
                     // using multiple addresses here
                     if (recipientEmail.Contains(cSeperator))
                     {
-                        string[] oTos = Strings.Split(recipientEmail, cSeperator);
+                        string[] oTos = recipientEmail.Split(new string[] { cSeperator }, StringSplitOptions.None);
                         int i;
                         var loopTo = oTos.Length - 1;
                         for (i = 0; i <= loopTo; i++)
@@ -651,7 +650,7 @@ namespace Protean
                     {
                         if (ccRecipient.Contains(cSeperator))
                         {
-                            string[] oTos = Strings.Split(ccRecipient, cSeperator);
+                            string[] oTos = ccRecipient.Split(new string[] { cSeperator }, StringSplitOptions.None);
                             int i;
 
                             var loopTo1 = oTos.Length - 1;
@@ -688,7 +687,7 @@ namespace Protean
                     {
                         if (bccRecipient.Contains(cSeperator))
                         {
-                            string[] oTos = Strings.Split(bccRecipient, cSeperator);
+                            string[] oTos = bccRecipient.Split(new string[] { cSeperator }, StringSplitOptions.None);
                             int i;
                             var loopTo2 = oTos.Length - 1;
                             for (i = 0; i <= loopTo2; i++)
@@ -740,7 +739,6 @@ namespace Protean
                             {
                                 return failureMessage + ": Email address provided is invalid";
                             }
-
                         default:
                             {
                                 return failureMessage + ": Email addresses provided are invalid";
@@ -802,7 +800,7 @@ namespace Protean
                         oMailn.Headers.Set("Content-Type", "text/plain");
                         // moCtx.Response.ContentType = "text/plain"
 
-                        if (Strings.InStr(Strings.LCase(messageHtml), "<html") > 0)
+                        if (messageHtml.LastIndexOf("<html", messageHtml.Length - 1) > 0)
                         {
                             var htmlView = AlternateView.CreateAlternateViewFromString(messageHtml, new System.Net.Mime.ContentType("text/html; charset=UTF-8"));
                             oMailn.AlternateViews.Add(htmlView);
@@ -876,13 +874,13 @@ namespace Protean
                                 oSmtpn.Credentials = new System.Net.NetworkCredential(goConfig["MailServerUsername"], goConfig["MailServerPassword"].Replace("&lt;", "<").Replace("&gt;", "<"), goConfig["MailServerUsernameDomain"]);
                                 // oSmtpn.Credentials = New System.Net.NetworkCredential(goConfig("MailServerUsername"), goConfig("MailServerPassword"))
                             }
-                            if (Strings.LCase(goConfig["MailServerSSL"]) == "on")
+                            if ((goConfig["MailServerSSL"]).ToLower() == "on")
                             {
                                 System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
                                 oSmtpn.EnableSsl = true;
                                 oSmtpn.DeliveryMethod = SmtpDeliveryMethod.Network;
                             }
-                            if (Strings.LCase(goConfig["MailServerSSL"]) == "off")
+                            if ((goConfig["MailServerSSL"]).ToLower() == "off")
                             {
                                 System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
                                 oSmtpn.EnableSsl = false;
@@ -985,7 +983,7 @@ namespace Protean
                         }
                     }
 
-                    if (Strings.LCase(goConfig["LogEmail"]) == "on")
+                    if ((goConfig["LogEmail"]).ToLower() == "on")
                     {
                         try
                         {
@@ -1008,7 +1006,7 @@ namespace Protean
                             }
                             // Trim out multiple whitespace - saves space
                             var oRE = new Regex(@"(\s)\s+"); // Pattern looks for a whitespace character followed by one or more whitespace chars
-                            cActivityDetail = Strings.Trim(oRE.Replace(cActivityDetail, " ")); // Replaces the whole lot with a space
+                            cActivityDetail = oRE.Replace(cActivityDetail, " ").Trim();
 
                             int mnUserId = 0;
                             if (goSession != null)
@@ -1033,7 +1031,7 @@ namespace Protean
                                 SessionId = goSession.SessionID;
                             }
 
-                            if (odbHelper.checkTableColumnExists("tblEmailActivityLog", "cActivityXml") & Strings.LCase(goConfig["LogEmailXml"]) != "off")
+                            if (odbHelper.checkTableColumnExists("tblEmailActivityLog", "cActivityXml") & (goConfig["LogEmailXml"]).ToLower() != "off")
                             {
                                 string activitySchema = "Default";
                                 if (string.IsNullOrEmpty(oBodyXML.GetAttribute("id")))
@@ -1253,15 +1251,13 @@ namespace Protean
                         cPickupLocation = goConfig["PickupLocation"];
                 }
 
-                string[] recipientIdsSplit = Strings.Split(recipientIds, ",");
+                string[] recipientIdsSplit = recipientIds.Split(new string[] { "," }, StringSplitOptions.None);
 
                 // Are these both needed?
                 if (recipientIdsSplit != null)
                 {
-                    if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(recipientIdsSplit.GetValue(0), "", false))) // Empty Check
+                    if (!string.IsNullOrEmpty(recipientIdsSplit.GetValue(0)?.ToString()))
                     {
-
-
                         cProcessInfo = "IDs Detected, Initialising DBHelper";
 
                         // Get a Database Helper
@@ -1455,7 +1451,7 @@ namespace Protean
                             var oAtt = new Attachment(cXmlPath);
                             if (Attachments is null)
                             {
-                                Attachments = new Collection();
+                                Attachments = new System.Collections.ObjectModel.Collection<object>();
                             }
                             Attachments.Add(oAtt);
                             // PerfMon.Log("Messaging", "emailerWithXmlAttachment - Delete Xml File")
@@ -1713,7 +1709,7 @@ namespace Protean
                         oSmtpn.UseDefaultCredentials = false;
                         oSmtpn.Credentials = new System.Net.NetworkCredential(goConfig["MailServerUsername"], goConfig["MailServerPassword"].Replace("&lt;", "<").Replace("&gt;", "<"), goConfig["MailServerUsernameDomain"]);
                     }
-                    if (Strings.LCase(goConfig["MailServerSSL"]) == "on")
+                    if ((goConfig["MailServerSSL"]).ToLower() == "on")
                     {
                         System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
                         oSmtpn.EnableSsl = true;
@@ -1725,7 +1721,7 @@ namespace Protean
                     oEmail = new MailMessage();
                     oEmail.IsBodyHtml = true;
 
-                    if (Strings.LCase(goConfig["overrideFromEmail"]) == "on")
+                    if ((goConfig["overrideFromEmail"]).ToLower() == "on")
                     {
                         oEmail.From = new MailAddress(goConfig["ServerSenderEmail"], cFromName);
                     }
@@ -1830,7 +1826,7 @@ namespace Protean
                         XmlElement oElmt2 = (XmlElement)oXml.SelectSingleNode("html/head/title");
                         if (!string.IsNullOrEmpty(oElmt2.InnerText))
                         {
-                            cSubject = Strings.Trim(oElmt2.InnerText);
+                            cSubject = (oElmt2.InnerText).ToLower();
                             emailStructure.Add("Subject", cSubject);
                         }
                     }
@@ -1875,8 +1871,7 @@ namespace Protean
                 }
                 // lower case the xml so that we can compare properely
                 var oXML = new XmlDocument();
-                oXML.InnerXml = Strings.LCase(Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<"));
-
+                oXML.InnerXml = oDS.GetXml().Replace("&gt;", ">").Replace("&lt;", "<").ToLowerInvariant();
 
                 // now cycle through the users
                 foreach (XmlElement oElmt in oXML.DocumentElement.SelectNodes("users"))
@@ -2059,7 +2054,7 @@ namespace Protean
         public StreamReader RdStrm;
         public string Data;
         public byte[] szData;
-        public string CRLF = Constants.vbCrLf; // "\r\n"
+        public string CRLF = Environment.NewLine;
 
         public void ReadMail(string cServer, string cUser, string cPassword)
         {
@@ -2078,7 +2073,7 @@ namespace Protean
                     var oMsgXML = CreateMailXML(Message, i);
                     oXML[i - 1] = ConvertToMail(oMsgXML);
                     var oElmt = oXML[i - 1].Full;
-                    Debug.WriteLine(Information.UBound(oXML));
+                    Debug.WriteLine(oXML.Length - 1);
                 }
                 Disconnect();
             }
@@ -2121,7 +2116,7 @@ namespace Protean
                 NetStrm.Write(szData, 0, szData.Length);
 
                 string[] tmpArray;
-                tmpArray = Strings.Split(RdStrm.ReadLine(), " ");
+                tmpArray = RdStrm.ReadLine().Split(' ');
                 string numMess = tmpArray[1];
                 return Convert.ToInt16(numMess).ToString();
             }
@@ -2146,12 +2141,13 @@ namespace Protean
                 NetStrm.Write(szData, 0, szData.Length);
 
                 szTemp = RdStrm.ReadLine();
-                if (!(Strings.Left(szTemp, 0) == "-"))
+                if (!szTemp.StartsWith("-"))
                 {
-                    while (!(szTemp == "."))
+                    while (szTemp != ".")
                     {
-                        if (!(Strings.Left(szTemp, 0) == "+"))
+                        if (!szTemp.StartsWith("+"))
                             Message += szTemp + CRLF;
+
                         szTemp = RdStrm.ReadLine();
                     }
                 }
@@ -2196,10 +2192,10 @@ namespace Protean
             string cCurrent = string.Empty;
             try
             {
-                cMessage = Strings.Replace(cMessage, "+OK", "");
-                cMessage = Strings.Replace(cMessage, ";" + Constants.vbCrLf, ";");
-                cMessage = Strings.Replace(cMessage, Constants.vbTab, "");
-                cMessage = Strings.Replace(cMessage, ">," + Constants.vbCrLf + "<", ">,<");
+                cMessage = cMessage.Replace("+OK", "");
+                cMessage = cMessage.Replace(";" + Environment.NewLine, ";");
+                cMessage = cMessage.Replace("\t", "");
+                cMessage = cMessage.Replace(">," + Environment.NewLine + "<", ">,<");
                 string cSplitStr = "";
                 bool bMessageStarted = false;
                 // bool bMessageFinished = false;
@@ -2207,16 +2203,16 @@ namespace Protean
                 oXML.AppendChild(oXML.CreateElement("MailMessage"));
                 var oMessageElement = oXML.CreateElement("Message");
 
-                string[] oItems = Strings.Split(cMessage, Constants.vbCrLf);
+                string[] oItems = cMessage.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
                 int i;
-                var loopTo = Information.UBound(oItems);
+                int loopTo = oItems.Length - 1;
                 for (i = 0; i <= loopTo; i++)
                 {
-                    string cCleanLine = Strings.Trim(oItems[i]);
+                    string cCleanLine = oItems[i].Trim();
                     if (cCleanLine.Contains(": "))
                     {
-                        string[] oItemSplit = Strings.Split(oItems[i], ": ");
-                        if (Information.UBound(oItemSplit) == 1)
+                        string[] oItemSplit = oItems[i].Split(new[] { ": " }, StringSplitOptions.None);
+                        if (oItemSplit.Length - 1 == 1)
                         {
                             if (!AddMailElement(oXML.DocumentElement, oItemSplit[0], oItemSplit[1]))
                             {
@@ -2244,9 +2240,9 @@ namespace Protean
                     {
                         if (oXML.DocumentElement.LastChild.InnerText.Contains(";boundary="))
                         {
-                            int nStart = Strings.InStr(oXML.DocumentElement.LastChild.InnerText, ";boundary=") + 10;
-                            cSplitStr = Strings.Right(oXML.DocumentElement.LastChild.InnerText, oXML.DocumentElement.LastChild.InnerText.Length - nStart);
-                            cSplitStr = Strings.Left(cSplitStr, cSplitStr.Length - 1);
+                            int nStart = oXML.DocumentElement.LastChild.InnerText.IndexOf(";boundary=", StringComparison.Ordinal) + 10;
+                            cSplitStr = oXML.DocumentElement.LastChild.InnerText.Substring(nStart);
+                            cSplitStr = cSplitStr.Substring(0, cSplitStr.Length - 1);
                         }
                     }
 
@@ -2276,8 +2272,8 @@ namespace Protean
             {
                 if (string.IsNullOrEmpty(oItemValue) | oItemValue == ".")
                     return true;
-                var oElmt = oParent.OwnerDocument.CreateElement(Strings.Trim(oItemName));
-                oElmt.InnerText = Strings.Trim(oItemValue);
+                var oElmt = oParent.OwnerDocument.CreateElement(oItemName.Trim());
+                oElmt.InnerText = oItemValue.Trim();
                 oParent.AppendChild(oElmt);
                 return true;
             }
@@ -2311,21 +2307,23 @@ namespace Protean
                 oEmail.Body = RawXML.DocumentElement.SelectSingleNode("Message").InnerText;
                 oEmail.AddAddress(XMLEmail.ToType.From, oEmail.ConvertTextAddress(RawXML.DocumentElement.SelectSingleNode("From").InnerText));
                 int i;
-                string[] oAdds = Strings.Split(RawXML.DocumentElement.SelectSingleNode("To").InnerText, ",");
-                var loopTo = Information.UBound(oAdds);
+                string[] oAdds = RawXML.DocumentElement.SelectSingleNode("To").InnerText.Split(',');
+                int loopTo = oAdds.Length - 1;
                 for (i = 0; i <= loopTo; i++)
                     oEmail.AddAddress(XMLEmail.ToType.To, oEmail.ConvertTextAddress(oAdds[i]));
                 if (RawXML.DocumentElement.SelectSingleNode("Cc") != null)
                 {
-                    oAdds = Strings.Split(RawXML.DocumentElement.SelectSingleNode("Cc").InnerText, ",");
-                    var loopTo1 = Information.UBound(oAdds);
+                    oAdds = RawXML.DocumentElement.SelectSingleNode("Cc").InnerText.Split(',');
+                    int loopTo1 = oAdds.Length - 1;
+
                     for (i = 0; i <= loopTo1; i++)
                         oEmail.AddAddress(XMLEmail.ToType.CC, oEmail.ConvertTextAddress(oAdds[i]));
                 }
                 if (RawXML.DocumentElement.SelectSingleNode("Bcc") != null)
                 {
-                    oAdds = Strings.Split(RawXML.DocumentElement.SelectSingleNode("Bcc").InnerText, ",");
-                    var loopTo2 = Information.UBound(oAdds);
+                    oAdds = RawXML.DocumentElement.SelectSingleNode("Bcc").InnerText.Split(',');
+                    int loopTo2 = oAdds.Length - 1;
+
                     for (i = 0; i <= loopTo2; i++)
                         oEmail.AddAddress(XMLEmail.ToType.BCC, oEmail.ConvertTextAddress(oAdds[i]));
                 }
@@ -2486,19 +2484,22 @@ namespace Protean
             try
             {
                 // "Barry Rushton" <barryr@eonic.co.uk>
-                string cName = "";
-                if (cTextAddress.Contains(Convert.ToString('"')))
+                string cName = "";               
+                if (cTextAddress.Contains('"'))
                 {
-                    cName = Strings.Right(cTextAddress, cTextAddress.Length - Strings.InStr(cTextAddress, Convert.ToString('"')));
-                    if (!string.IsNullOrEmpty(cName))
-                        cName = Strings.Left(cName, Strings.InStr(cName, Convert.ToString('"')) - 1);
+                    cName = cTextAddress.Substring(cTextAddress.IndexOf('"') + 1);
+                    int endQuote = cName.IndexOf('"');
+                    if (endQuote >= 0)
+                        cName = cName.Substring(0, endQuote);
                 }
-                string cAddress;
-                cAddress = Strings.Right(cTextAddress, cTextAddress.Length - Strings.InStr(cTextAddress, "<"));
-                if (!string.IsNullOrEmpty(cAddress))
-                    cAddress = Strings.Left(cAddress, Strings.InStr(cAddress, ">") - 1);
 
-                return new MailAddress(Strings.Trim(cAddress), Strings.Trim(cName));
+                string cAddress = cTextAddress.Substring(cTextAddress.IndexOf('<') + 1);
+                int endAngle = cAddress.IndexOf('>');
+                if (endAngle >= 0)
+                    cAddress = cAddress.Substring(0, endAngle);
+
+                return new MailAddress(cAddress.Trim(), cName.Trim());
+
             }
             catch (Exception)
             {

@@ -1347,8 +1347,13 @@ namespace Protean
                     }
                         return savedFile;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    if (gbDebug)
+                    {
+                        return ex.Message;
+                    }
+
                     return "";
                 }
             }
@@ -1783,14 +1788,17 @@ namespace Protean
                             {
                                 using (var bitmap = SKBitmap.Decode(goServer.MapPath(cVirtualPath)))
                                 {
-                                    using (var image = SKImage.FromBitmap(bitmap))
-                                    using (var data = image.Encode(SKEncodedImageFormat.Webp, WebPQuality))
-                                    using (var saveImageStream = File.OpenWrite(goServer.MapPath(webpFileName)))
+                                    if (bitmap != null)
                                     {
-                                        data.SaveTo(saveImageStream);
+                                        using (var image = SKImage.FromBitmap(bitmap))
+                                        using (var data = image.Encode(SKEncodedImageFormat.Webp, WebPQuality))
+                                        using (var saveImageStream = File.OpenWrite(goServer.MapPath(webpFileName)))
+                                        {
+                                            data.SaveTo(saveImageStream);
+                                        }
                                     }
                                 }
-                            }
+                             }
                         }
                         return webpFileName;
                     }
@@ -1973,7 +1981,7 @@ namespace Protean
                     // PerfMon.Log("xmlTools", "ResizeImage - End")
                     if ((myWeb.moConfig["Debug"]).ToLower() == "on")
                     {
-                        stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
+                        stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, myWeb.moCtx, vstrFurtherInfo: cProcessInfo);
                         return awaitingImgPath + "?Error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
                     }
                     else
@@ -2219,9 +2227,9 @@ namespace Protean
 
                     string[] QueryArr = Query.Split('.');
                     Query1 = QueryArr[0];
-                    if (QueryArr.Length > 0)
-                        Query2 = QueryArr[1];
                     if (QueryArr.Length > 1)
+                        Query2 = QueryArr[1];
+                    if (QueryArr.Length > 2)
                         Query3 = QueryArr[2];
                     var oXfrms = new Cms.xForm(ref myWeb.msException);
                     oXfrms.moPageXML = myWeb.moPageXml;

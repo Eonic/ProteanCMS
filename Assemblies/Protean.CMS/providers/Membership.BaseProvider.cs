@@ -272,8 +272,14 @@ namespace Protean.Providers
                         Protean.Providers.Authentication.ReturnProvider oAuthProv = new Protean.Providers.Authentication.ReturnProvider();
                         IEnumerable<IauthenticaitonProvider> oAuthProviders = oAuthProv.Get(ref myWeb);
 
+                        if (string.IsNullOrWhiteSpace(FormName))
+                        {
+                            FormName = "UserLogon";
+                        }
 
-                        base.NewFrm("UserLogon");
+                        base.NewFrm(FormName);
+
+                        //base.NewFrm("UserLogon");
 
                         if (mbAdminMode && myWeb.mnUserId == 0)
                             goto BuildForm;
@@ -925,22 +931,21 @@ namespace Protean.Providers
                                 {
                                     if (areEmailAddressesAllowed == true)
                                     {
-                                    cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirEmail = '" + cUsername.ToLower() + "'";
+                                        cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirEmail = '" + cUsername.ToLower() + "'";
+                                    }
+                                    else
+                                    {
+                                        cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirXml like '%<Email>" + cUsername.ToLower() + "</Email>%'";
+                                    }
+                                }
+                                else if (areEmailAddressesAllowed == true)
+                                {
+                                    cSQL = "SELECT nDirKey, cDirEmail FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + cUsername.ToLower() + "'";
                                 }
                                 else
                                 {
-                                    cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirXml like '%<Email>" + cUsername.ToLower() + "</Email>%'";
+                                    cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + cUsername.ToLower() + "'";
                                 }
-                            }
-                            else if (areEmailAddressesAllowed == true)
-                            {
-                                cSQL = "SELECT nDirKey, cDirEmail FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + cUsername.ToLower() + "'";
-                            }
-                            else
-                            {
-                                cSQL = "SELECT nDirKey FROM tblDirectory WHERE cDirSchema = 'User' and cDirName = '" + cUsername.ToLower() + "'";
-
-                            }
 
                                 dsUsers = myWeb.moDbHelper.GetDataSet(cSQL, "tblTemp");
                                 nNumberOfUsers = dsUsers.Tables[0].Rows.Count;
@@ -2050,7 +2055,7 @@ namespace Protean.Providers
                             myWeb.mnUserId = 0;
                             return myWeb.mnUserId;
                         }
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(moSession["nUserId"], 0, false)))
+                        if (moSession["nUserId"] != null && Convert.ToInt64(moSession["nUserId"]) != 0)
                         {
                             myWeb.mnUserId = Convert.ToInt64(moSession["nUserId"]);
                         }
@@ -2132,7 +2137,7 @@ namespace Protean.Providers
                                 }
                             }
                         }
-                        else if (moSession["nUserId"] == null || (long?)moSession["nUserId"] == 0)
+                        else if (moSession["nUserId"] == null || myWeb.SessionUserId == 0)
                         {
                             // this will get set on close
                             if (Tools.Number.IsNumeric(moSession["PreviewUser"]))
@@ -2154,13 +2159,13 @@ namespace Protean.Providers
                                 nCartUserId = Convert.ToInt64(moDbHelper.GetDataValue("SELECT nCartUserDirId FROM tblCartOrder o where o.cCartSchemaName='Order' and o.cCartSessionId = '" + SqlFmt(moRequest["refSessionId"]) + "'", default, default, 0));
                             }
 
-                        if (nCartUserId != (long?)moSession["nUserId"])
+                        if (nCartUserId != myWeb.SessionUserId)
                             {
                                 mnUserId = 0;
                             }
                             else
                             {
-                                mnUserId = Convert.ToInt16(moSession["nUserId"]);
+                                mnUserId = myWeb.SessionUserId;
                             }
                         }
                         else
@@ -2219,11 +2224,11 @@ namespace Protean.Providers
                     {
                         if (moSession["nUserId"] != null)
                         {
-                            if ((int?)moSession["nUserId"] == 0)
+                            if (myWeb.SessionUserId == 0)
                             {
                                 moSession["nUserId"] = mnUserId;
                             }
-                            else if ((int?)moSession["nUserId"] != mnUserId && string.IsNullOrEmpty(Convert.ToString(moSession["PreviewUser"])))
+                            else if (myWeb.SessionUserId != mnUserId && string.IsNullOrEmpty(Convert.ToString(moSession["PreviewUser"])))
                             {
                                 // reset to a different value
                                 moSession["nUserId"] = mnUserId;
@@ -2379,7 +2384,7 @@ namespace Protean.Providers
                             }
 
                         }
-                        if (!(myWeb.moConfig["SecureMembershipAddress"] == ""))
+                        if (!string.IsNullOrEmpty(myWeb.moConfig["SecureMembershipAddress"]))
                         {
 
                             var oMembership = new Cms.Membership(ref myWeb);
@@ -2468,7 +2473,7 @@ namespace Protean.Providers
                         {
 
                             XmlElement oXfmElmt;
-                            switch ((moConfig["MembershipEncryption"] ?? "").ToLower())
+                            switch ((moConfig["MembershipEncryption"] ?? "").ToLowerInvariant())
                             {
                                 case "md5salt":
                                 case "md5":
@@ -2663,7 +2668,7 @@ namespace Protean.Providers
                         }
 
                         // Site Redirection Process
-                        if (!string.IsNullOrEmpty(moConfig["SiteGroupRedirection"]) & mnUserId != 0)
+                        if (!string.IsNullOrEmpty(moConfig["SiteGroupRedirection"]) && mnUserId != 0)
                         {
                             myWeb.SiteRedirection();
                         }

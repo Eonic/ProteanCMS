@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Xml;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Protean
 {

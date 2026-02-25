@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Protean.Providers.DiscountRule;
+﻿using Protean.Providers.DiscountRule;
 using System;
 using System.Collections;
 using System.Data;
@@ -69,7 +67,7 @@ namespace Protean
 
                         if (myWeb.HasSession)
                         {
-                            if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["mcCurrency"], "", false)))
+                            if (string.IsNullOrEmpty(Convert.ToString(myWeb.moSession["mcCurrency"])))
                             {
                                 // NB 19th Feb 2010 - Caused Consultant Portal to fall over here without these
                                 // additional checks?
@@ -81,7 +79,7 @@ namespace Protean
                                     }
                                 }
                             }
-                            if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["mcCurrency"], "", false)))
+                            if (string.IsNullOrEmpty(Convert.ToString(myWeb.moSession["mcCurrency"])))
                                 myWeb.moSession["mcCurrency"] = "GBP";
 
                             mcCurrency = Convert.ToString(myWeb.moSession["mcCurrency"]);
@@ -89,14 +87,15 @@ namespace Protean
 
                         if (moCartConfig != null)
                         {
-                            mbRoundUp = Strings.LCase(moCartConfig["Roundup"]) == "yes" | Strings.LCase(moCartConfig["Roundup"]) == "on";
-                            mbRoundDown = Convert.ToBoolean(Interaction.IIf(Strings.LCase(moCartConfig["Roundup"]) == "down", true, false));
+                            mbRoundUp = string.Equals(Convert.ToString(moCartConfig["Roundup"]), "yes", StringComparison.OrdinalIgnoreCase)
+          || string.Equals(Convert.ToString(moCartConfig["Roundup"]), "on", StringComparison.OrdinalIgnoreCase);
+                            mbRoundDown = string.Equals(Convert.ToString(moCartConfig["Roundup"]), "down", StringComparison.OrdinalIgnoreCase);
                             mcPriceModOrder = moCartConfig["PriceModOrder"];
                             mcUnitModOrder = moCartConfig["UnitModOrder"];
                         }
 
-                        bIsCartOn = Strings.LCase(moConfig["Cart"]) == "on";
-                        bIsQuoteOn = Strings.LCase(moConfig["Quote"]) == "on";
+                        bIsCartOn = string.Equals(Convert.ToString(moConfig["Cart"]), "on", StringComparison.OrdinalIgnoreCase);
+                        bIsQuoteOn = string.Equals(Convert.ToString(moConfig["Quote"]), "on", StringComparison.OrdinalIgnoreCase);
 
                         mcModuleName = "Eonic.Discount";
                         myWeb.PerfMon.Log("Discount", "New-End");
@@ -121,12 +120,12 @@ namespace Protean
                         mbRoundUp = myCart.mbRoundup;
                         mbRoundDown = myCart.mbRoundDown;
 
-                        if (Strings.LCase(moConfig["Cart"]) == "on")
+                        if (Convert.ToString(moConfig["Cart"]).ToLower() == "on")
                         {
                             bIsCartOn = true;
                         }
 
-                        if (Strings.LCase(moConfig["Quote"]) == "on")
+                        if (Convert.ToString(moConfig["Quote"]).ToLower() == "on")
                         {
                             bIsQuoteOn = true;
                         }
@@ -508,7 +507,7 @@ namespace Protean
                                 string[] cPriceModifiers = new string[] { "Basic_Money", "Basic_Percent", "Break_Product" };
 
                                 if (!string.IsNullOrEmpty(mcPriceModOrder))
-                                    cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
+                                    cPriceModifiers = mcPriceModOrder.Split(',');
                                 int nPriceCount = 0;
                                 ApplicableProviderType.ApplyDiscount(ref oFinalDiscounts, ref nPriceCount, mbRoundUp, ref myCart, cPriceModifiers, ref nPromocodeApplyFlag, ref oCartXML);
 
@@ -752,8 +751,8 @@ namespace Protean
                                         }
                                         else
                                         {
-                                            Array.Resize(ref nDelIDs, Information.UBound(nDelIDs) + 1 + 1);
-                                            nDelIDs[Information.UBound(nDelIDs)] = Convert.ToInt16(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                            Array.Resize(ref nDelIDs, nDelIDs.Length + 1);
+                                            nDelIDs[nDelIDs.Length - 1] = Convert.ToInt16(oDiscountItemTest.GetAttribute("nDiscountKey"));
                                         }
                                     }
 
@@ -790,11 +789,15 @@ namespace Protean
                         if (!(nDelIDs[0] == 0))
                         {
                             int nIX;
-                            var loopTo = Information.UBound(nDelIDs);
+                            var loopTo = nDelIDs.Length - 1;
                             for (nIX = 0; nIX <= loopTo; nIX++)
                             {
-                                foreach (XmlElement nDelElmt in oCartXML.SelectNodes("descendant-or-self::DiscountItem[@nDiscountKey=" + nDelIDs[nIX] + "] | descendant-or-self::Discount[@nDiscountKey=" + nDelIDs[nIX] + "]"))
+                                foreach (XmlElement nDelElmt in oCartXML.SelectNodes(
+                                    "descendant-or-self::DiscountItem[@nDiscountKey=" + nDelIDs[nIX] + "] | " +
+                                    "descendant-or-self::Discount[@nDiscountKey=" + nDelIDs[nIX] + "]"))
+                                {
                                     nDelElmt.ParentNode.RemoveChild(nDelElmt);
+                                }
                             }
                         }
 
@@ -986,7 +989,7 @@ namespace Protean
                                     oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
                                     if (moConfig["eShippingMethodId"] != null & moConfig["DefaultShippingMethodId"] != null)
                                     {
-                                        if (Operators.ConditionalCompareObjectEqual(oDs.Tables[0].Rows[0]["nShippingMethodId"], moConfig["eShippingMethodId"], false))
+                                        if (Equals(oDs.Tables[0].Rows[0]["nShippingMethodId"], moConfig["eShippingMethodId"]))
                                         {
                                             myCart.updateGCgetValidShippingOptionsDS(moConfig["DefaultShippingMethodId"]);
                                         }
@@ -1216,9 +1219,11 @@ namespace Protean
                                 // here we go through and find the biggest discount
                                 if (oPriceBreakElmt != null)
                                 {
-                                    if (Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceElmt.GetAttribute("Total"), false) <= 0 & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceBreakElmt.GetAttribute("nDiscountMinPrice"), false) > 0)
-
+                                    if (string.Compare(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceElmt.GetAttribute("Total"), StringComparison.OrdinalIgnoreCase) <= 0 &&
+     string.Compare(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceBreakElmt.GetAttribute("nDiscountMinPrice"), StringComparison.OrdinalIgnoreCase) > 0)
+                                    {
                                         oPriceBreakElmt = oTmpLoop;
+                                    }
                                 }
                                 else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinPrice")) & Tools.Number.IsNumeric(oPriceElmt.GetAttribute("Total")))
                                 {
@@ -1230,12 +1235,20 @@ namespace Protean
 
                                 if (oQuantityBreakElmt != null)
                                 {
-                                    if (Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), false) <= 0 & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oQuantityBreakElmt.GetAttribute("nDiscountMinQuantity"), false) > 0)
-
+                                    if (string.Compare(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), StringComparison.OrdinalIgnoreCase) <= 0 &&
+    string.Compare(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oQuantityBreakElmt.GetAttribute("nDiscountMinQuantity"), StringComparison.OrdinalIgnoreCase) > 0)
+                                    {
                                         oQuantityBreakElmt = oTmpLoop;
+                                    }
                                 }
-                                else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinQuantity")) & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), false) <= 0)
+                                else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinQuantity")) &&
+          string.Compare(oTmpLoop.GetAttribute("nDiscountMinQuantity"),
+                         oPriceElmt.GetAttribute("Units"),
+                         StringComparison.OrdinalIgnoreCase) <= 0)
+                                {
                                     oQuantityBreakElmt = oTmpLoop;
+                                }
+
                             }
 
                             // which is going to be the bigger discount
@@ -1453,7 +1466,7 @@ namespace Protean
                                         nQtotal = (int)Math.Round(nQtotal + Convert.ToDouble(preceedingItems.GetAttribute("quantity")));
                                 }
 
-                                nTotalQOff = (int)Math.Round(Convert.ToDouble(Strings.Split((nQtotal / (double)nQX).ToString(), ".")[0]) * (nQX - nQY));
+                                nTotalQOff = (int)Math.Round(Math.Floor(nQtotal / (double)nQX) * (nQX - nQY));
                                 if (nTotalQOff > 0)
                                 {
                                     var oDiscount = oDiscountXML.CreateElement("DiscountItem");
@@ -1508,8 +1521,7 @@ namespace Protean
                         // now we have all the keys we can go though them and get the information we need
                         if (cIDs == ",")
                             return;
-                        cIDs = Strings.Right(cIDs, cIDs.Length - 1);
-                        cIDs = Strings.Left(cIDs, cIDs.Length - 1);
+                        cIDs = cIDs.Substring(1, cIDs.Length - 2);
                         string[] oIDs = cIDs.Split(',');
 
                         int nMinItems = 1;
@@ -1520,8 +1532,7 @@ namespace Protean
                         int nI;
 
                         // Step through each individual discount rule
-                        var loopTo = Information.UBound(oIDs);
-                        for (nI = 0; nI <= loopTo; nI++)
+                        for (nI = 0; nI < oIDs.Length; nI++)
                         {
                             //decimal nCheapestPrice = 0m; // records the cheapest price
                             //XmlElement oCheapestItem = null; // records the cheapest item
@@ -1604,8 +1615,7 @@ namespace Protean
 
                                 decimal nLastPrice = 0m;
 
-                                var loopTo1 = Information.UBound(aPriceArray);
-                                for (i = 0; i <= loopTo1; i++)
+                                for (i = 0; i < aPriceArray.Length; i++)
                                 {
                                     // step through prices cheapest first
                                     if (aPriceArray[i] > (double)nLastPrice & aPriceArray[i] <= (double)nDiscountMaxPrice & itemsToDiscount > 0)
@@ -1721,12 +1731,11 @@ namespace Protean
                         }
                         if (cIDs == ",")
                             return;
-                        cIDs = Strings.Right(cIDs, cIDs.Length - 1);
-                        cIDs = Strings.Left(cIDs, cIDs.Length - 1);
-                        string[] oIds = Strings.Split(cIDs, ",");
+                        cIDs = cIDs.Substring(1); // Remove first character
+                        cIDs = cIDs.Substring(0, cIDs.Length - 1); // Remove last character
+                        string[] oIds = cIDs.Split(','); // Split by comma
                         int i = 0;
-                        var loopTo = Information.UBound(oIds);
-                        for (i = 0; i <= loopTo; i++)
+                        for (i = 0; i < oIds.Length; i++)
                         {
                             foreach (XmlElement currentODiscount1 in oDiscountXML.SelectNodes("descendant-or-self::Discount[@nDiscountKey=" + oIds[i] + "]"))
                             {
@@ -1823,10 +1832,8 @@ namespace Protean
                     {
                         if (!(cPromotionalDiscounts == ","))
                         {
-                            string[] oIdArr = Strings.Split(cPromotionalDiscounts, ",");
-                            int i;
-                            var loopTo = Information.UBound(oIdArr);
-                            for (i = 0; i <= loopTo; i++)
+                            string[] oIdArr = cPromotionalDiscounts.Split(',');
+                            for (int i = 0; i < oIdArr.Length; i++)
                             {
                                 if (!string.IsNullOrEmpty(oIdArr[i]))
                                 {
@@ -1837,10 +1844,8 @@ namespace Protean
 
                         if (!(cVouchersUsed == ","))
                         {
-                            string[] oIdArr = Strings.Split(cVouchersUsed, ",");
-                            int i;
-                            var loopTo1 = Information.UBound(oIdArr);
-                            for (i = 0; i <= loopTo1; i++)
+                            string[] oIdArr = cVouchersUsed.Split(',');
+                            for (int i = 0; i < oIdArr.Length; i++)
                             {
                                 if (!string.IsNullOrEmpty(oIdArr[i]))
                                 {
@@ -1896,7 +1901,7 @@ namespace Protean
                         {
                             sSql = "select * from tblCartOrder where nCartOrderKey=" + myCart.mnCartId;
                             oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                            sXmlContent = Convert.ToString(Operators.ConcatenateObject(oDs.Tables[0].Rows[0]["cCartXml"], ""));
+                            sXmlContent = oDs.Tables[0].Rows[0]["cCartXml"]?.ToString() ?? "";
                             docOrder.LoadXml(sXmlContent);
                             // Dim OrderPaymentStatus As String = docOrder.SelectSingleNode("Order").Attributes("status").Value
                             double orderTotal = Convert.ToDouble(docOrder.SelectSingleNode("Order").Attributes["total"].Value);
@@ -1972,12 +1977,7 @@ namespace Protean
                                 foreach (DataRow discountRow in oDsDiscounts.Tables["Discount"].Rows)
                                 {
                                     // Wrap Additional XML
-                                    string additionalInfo = Convert.ToString(
-                                        Operators.AddObject(
-                                            Operators.AddObject("<additionalXml>", discountRow["cAdditionalXML"]),
-                                            "</additionalXml>"
-                                        )
-                                    );
+                                    string additionalInfo = "<additionalXml>" + (discountRow["cAdditionalXML"]?.ToString() ?? "") + "</additionalXml>";
 
                                     doc.LoadXml(additionalInfo);
 
@@ -2068,7 +2068,7 @@ namespace Protean
                             {
 
                                 // load existing notes from Cart
-                                sXmlContent = Convert.ToString(Operators.ConcatenateObject(oRow["cClientNotes"], ""));
+                                sXmlContent = oRow["cClientNotes"]?.ToString() ?? "";
                                 if (string.IsNullOrEmpty(sXmlContent))
                                 {
                                     sXmlContent = "<Notes><PromotionalCode/></Notes>";
@@ -2333,7 +2333,7 @@ namespace Protean
 
                                 myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startGetDatasetXml");
 
-                                oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
+                                oXML.InnerXml = oDS.GetXml().Replace("&gt;", ">").Replace("&lt;", "<");
                             }
 
                             myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-endGetDatasetXml");
@@ -2393,12 +2393,11 @@ namespace Protean
 
                                 string[] cPriceModifiers = new string[] { "Basic_Money", "Basic_Percent", "Cheapest_Free" };
                                 if (!string.IsNullOrEmpty(mcPriceModOrder))
-                                    cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
-                                int nI;
+                                    cPriceModifiers = mcPriceModOrder.Split(',');
+                               
                                 //int nPriceCount = 0;
                                 // this counts where we are on the prices, shows the order we done them in
-                                var loopTo = Information.UBound(cPriceModifiers);
-                                for (nI = 0; nI <= loopTo; nI++)
+                                for (int nI = 0; nI < cPriceModifiers.Length; nI++)
                                 {
                                     switch (cPriceModifiers[nI] ?? "")
                                     {
@@ -2486,7 +2485,7 @@ namespace Protean
                             oDC.ColumnMapping = MappingType.Attribute;
                         oDS.Tables["Discount"].Columns["cAdditionalXML"].ColumnMapping = MappingType.SimpleContent;
 
-                        oDiscounts.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
+                        oDiscounts.InnerXml = oDS.GetXml().Replace("&gt;", ">").Replace("&lt;", "<");
                         oDiscounts = (XmlElement)oDiscounts.FirstChild;
                         // now the contents
 
@@ -2588,7 +2587,7 @@ namespace Protean
                 }
 
                 // update packaging from giftbox to standard when removing promocode
-                public void UpdatePackagingforRemovePromoCode(int CartId, string sPromoCode)
+                public void UpdatePackagingforRemovePromoCode(long CartId, string sPromoCode)
                 {
                     try
                     {
@@ -2645,8 +2644,8 @@ namespace Protean
                             if (!string.IsNullOrEmpty(mcGroups))
                             {
                                 string sGroups = mcGroups;
-                                sGroups = Strings.Replace(sGroups, " ", "_");
-                                cGroupXPath = "[self::" + Strings.Replace(sGroups, ",", " or self::") + "]";
+                                sGroups = sGroups.Replace(" ", "_");
+                                cGroupXPath = "[self::" + sGroups.Replace(",", " or self::") + "]";
                                 // Get the prices
                                 oPrices = oProd.SelectNodes("Content/Prices/*" + cGroupXPath);
                                 if (oDefaultPrice != null)
@@ -2718,17 +2717,22 @@ namespace Protean
                             cGroups += "default,all,Standard,standard";
                         else
                             cGroups += ",default,all,Standard,standard";
-                        cGroups = " and ( contains(@validGroup,'" + Strings.Replace(cGroups, ",", "') or contains(@validGroup,'");
+                        cGroups = " and ( contains(@validGroup,'" + cGroups.Replace(",", "') or contains(@validGroup,'") + "')";
                         cGroups += "') or not(@validGroup) or @validGroup='')";
 
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["mcCurrency"], "", false)))
+                        if (string.IsNullOrEmpty(myWeb.moSession["mcCurrency"] as string))
                         {
                             myWeb.moSession["mcCurrency"] = moCartConfig["currency"];
                         }
-                        if (Convert.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["mcCurrency"], "", false)))
-                            myWeb.moSession["mcCurrency"] = "GBP";
 
-                        string cxpath = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Content/Prices/Price[(@currency='", myWeb.moSession["mcCurrency"]), "') "), cGroups), " ][1]"));
+                        if (string.IsNullOrEmpty(myWeb.moSession["mcCurrency"] as string))
+                        {
+                            myWeb.moSession["mcCurrency"] = "GBP";
+                        }
+
+                        string cxpath = "Content/Prices/Price[(@currency='"
+                 + (myWeb.moSession["mcCurrency"]?.ToString() ?? "")
+                 + "') " + cGroups + " ][1]";
 
                         XmlElement oThePrice = (XmlElement)oDefaultPrice;
                         double nPrice = 0.0d;
@@ -2784,7 +2788,7 @@ namespace Protean
                         else
                             cGroups += ",default,all,Standard,standard";
                         string cGroupsXp;
-                        cGroupsXp = " and ( contains(@validGroup,'" + Strings.Replace(cGroups, ",", "') or contains(@validGroup,'");
+                        cGroupsXp = " and ( contains(@validGroup,'" + cGroups.Replace(",", "') or contains(@validGroup,'") + "')";
                         cGroupsXp += "') or not(@validGroup) or @validGroup='')";
 
                         cGroupsXp = "";
@@ -2860,8 +2864,10 @@ namespace Protean
                             if (oDs.Tables["Groups"].Rows.Count > 0)
                             {
                                 foreach (DataRow oDr in oDs.Tables["Groups"].Rows)
-                                    cReturn = Convert.ToString(Operators.ConcatenateObject(cReturn + ",", oDr["cDirName"]));
-                                cReturn = Strings.Mid(cReturn, 2);
+                                {
+                                    cReturn += "," + (oDr["cDirName"]?.ToString() ?? "");
+                                }
+                                cReturn = cReturn.Length > 1 ? cReturn.Substring(1) : "";
                             }
                         }
                         myWeb.PerfMon.Log("Discount", "getGroupsByName-end");
