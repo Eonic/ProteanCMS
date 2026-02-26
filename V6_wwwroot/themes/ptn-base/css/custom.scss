@@ -55,6 +55,14 @@ body {
 .v-align-center {
     align-self: center;
 }
+.module-FormattedText.v-align-center {
+    align-self: center;
+    justify-content: center;
+
+    .FormattedText {
+        flex-grow: unset !important;
+    }
+}
 
 //BREAKOUT BOXES
 .FormattedText .alignleft {
@@ -278,6 +286,10 @@ h1, h2, h3, h4 {
     *:last-child:not(button) {
         margin-bottom: 0;
     }
+
+    .btn {
+        margin:0 5px;
+    }
 }
 
 .banner-caption-inner {
@@ -298,7 +310,7 @@ h1, h2, h3, h4 {
     }
 }
 
-.btn-outline-light,
+
 .btn-custom {
     text-transform: uppercase;
     padding: 0.6rem 1.6rem;
@@ -424,13 +436,20 @@ section {
 .section-center {
     padding: 0;
 
-    > .fullwidthContainer,
-    .bg-content-center {
+    > .fullwidthContainer {
         height: 100%;
+
+        > .container {
+            height: 100%;
+        }
     }
 
+   
+        display: flex;
+        justify-content: stretch;
+    
+
     > .container {
-        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -477,7 +496,7 @@ section:not(.bg-light) .bg-light {
 @mixin section-contrast($color: $dark) {
     color: color-contrast($color);
 
-    a,
+    a:not(.btn),
     .title a {
         color: color-contrast($color);
     }

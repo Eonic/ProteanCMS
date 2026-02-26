@@ -66,6 +66,7 @@ $focus-ring-opacity: .25 !default;
 $focus-ring-color: rgba($primary, $focus-ring-opacity) !default;
 $focus-ring-offset: 5px;
 
+$input-focus-border-color: $focus-ring-color;
 /*################### NAVIGATION #####################*/
 $navbar-light-color: $body-color;
 $nav-link-hover-color: $primary;
