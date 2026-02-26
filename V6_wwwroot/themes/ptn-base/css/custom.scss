@@ -55,6 +55,14 @@ body {
 .v-align-center {
     align-self: center;
 }
+.module-FormattedText.v-align-center {
+    align-self: center;
+    justify-content: center;
+
+    .FormattedText {
+        flex-grow: unset !important;
+    }
+}
 
 //BREAKOUT BOXES
 .FormattedText .alignleft {
