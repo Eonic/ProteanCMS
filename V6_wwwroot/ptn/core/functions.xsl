@@ -4254,7 +4254,16 @@
                 <img src="{DisplayName/@uploadIcon}" alt="icon"/>
               </span>
             </xsl:if>
-            <xsl:apply-templates select="." mode="getDisplayName"/>
+            <xsl:choose>
+              <xsl:when test="$span='true'">
+                <span>
+                  <xsl:apply-templates select="." mode="getDisplayName"/>
+                </span>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="." mode="getDisplayName"/>
+              </xsl:otherwise>
+            </xsl:choose>
           </button>
         </xsl:when>
         <xsl:otherwise>
