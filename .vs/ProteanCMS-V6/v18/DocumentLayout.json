@@ -1,12 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\HostingSpaces\\ProteanCMS\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|d:\\hostingspaces\\proteancms\\assemblies\\protean.cms\\features\\cart\\quote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\features\\cart\\quote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 1,
@@ -14,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 73,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -303,23 +298,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{6d4078d1-5951-4ed1-ac0e-0a8099c1cce5}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Quote.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\features\\cart\\Quote.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\features\\cart\\Quote.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\features\\cart\\Quote.cs",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\features\\cart\\Quote.cs",
-              "ViewState": "AgIAAMkDAAAAAAAAAAAuwGMBAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-23T07:46:12.434Z",
-              "EditorCaption": ""
             }
           ]
         },
