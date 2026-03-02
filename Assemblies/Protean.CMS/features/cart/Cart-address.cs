@@ -255,7 +255,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -271,7 +271,7 @@ namespace Protean
                 {
                     if (mbEwMembership == true & myWeb.mnUserId != 0)
                     {
-                        if ((moCartConfig["UsePreviousAddress"]).ToLower() == "on")
+                        if (moCartConfig["UsePreviousAddress"]?.ToLower() == "on")
                         {
 
                             sSql = "select nContactKey, cContactType, nAuditKey from tblCartContact inner join tblAudit a on nAuditId = a.nAuditKey where nContactCartId = 0 and nContactDirId =" + myWeb.mnUserId.ToString();
@@ -323,7 +323,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                     return false;
                 }
 
@@ -916,7 +916,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "contactXform", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "contactXform", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -1400,7 +1400,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "pickContactXform", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "pickContactXform", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                     return (Cms.xForm)null;
                 }
 
@@ -1458,7 +1458,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "setCurrentBillingAddress", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "setCurrentBillingAddress", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                     return default;
                 }
             }
@@ -1542,7 +1542,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "useAddressesOnCart", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "useAddressesOnCart", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -1637,7 +1637,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateExistingUserAddress", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateExistingUserAddress", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
                 finally
                 {

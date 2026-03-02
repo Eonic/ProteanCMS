@@ -765,7 +765,7 @@ namespace Protean
         public static string exceptionReport(Exception oException, string sComponent, string sInfo, System.Web.HttpContext httpContext = null)
         {
             string cReport;
-            string cSV;
+            //string cSV;
             string cAssembly = "";
             
             // Use abstracted context
