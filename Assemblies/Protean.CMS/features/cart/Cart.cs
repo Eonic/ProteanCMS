@@ -7073,7 +7073,7 @@ namespace Protean
 
 
             // creating the duplicate order from old order
-            public string CreateDuplicateOrder(XmlDocument oldCartxml, int nOrderId, string cMethodName, string cNewAuthNumber)
+            public string CreateDuplicateOrder(XmlDocument oldCartxml, long nOrderId, string cMethodName, string cNewAuthNumber)
             {
                 try
                 {

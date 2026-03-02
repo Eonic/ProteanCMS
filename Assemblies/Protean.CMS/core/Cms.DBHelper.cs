@@ -14216,7 +14216,7 @@ namespace Protean
                 }
             }
 
-            public void SaveCartStatus(int CartId, int StatusId)
+            public void SaveCartStatus(long CartId, int StatusId)
             {
                 try
                 {
