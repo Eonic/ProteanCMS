@@ -62,14 +62,14 @@ namespace Protean
                             if (goConfig["cssFramework"] == "bs5")
                             {
                                 string ModulePath = GetModuleFormPath(moRequest["cModuleType"]);
-                                int argnReturnId = 0;
+                                long argnReturnId = 0;
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
                                 xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
                             }
                             else
                             {
-                                int argnReturnId1 = 0;
+                                long argnReturnId1 = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
                                 xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
@@ -110,7 +110,7 @@ namespace Protean
                                     if (goConfig["cssFramework"] == "bs5")
                                     {
                                         string ModulePath = GetModuleFormPath(moRequest["cModuleType"]);
-                                        int argnReturnId2 = 0;
+                                        long argnReturnId2 = 0;
                                         string argzcReturnSchema2 = "";
                                         string argAlternateFormName2 = "";
                                         xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
@@ -118,7 +118,7 @@ namespace Protean
 
                                     else
                                     {
-                                        int argnReturnId3 = 0;
+                                        long argnReturnId3 = 0;
                                         string argzcReturnSchema3 = "";
                                         string argAlternateFormName3 = "";
                                         xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
@@ -855,13 +855,13 @@ namespace Protean
                 // End Function
                 public virtual XmlElement xFrmEditContent(long id = 0L, string cContentSchemaName = "", long pgid = 0L, string cContentName = "", bool bCopy = false)
                 {
-                    int unusedReturnId = 0;
+                    long unusedReturnId = 0;
                     string unusedReturnSchema = "";
                     string unusedAlternateFormName = "";
                     return xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy, ref unusedReturnId, ref unusedReturnSchema, ref unusedAlternateFormName);
                 }
 
-                public virtual XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref int nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L)
+                public virtual XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref long nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L)
                 {
                     XmlElement oFrmElmt;
                     // Dim oGrp1Elmt As XmlElement
@@ -1329,7 +1329,7 @@ namespace Protean
 
                                     if (updatedVersionId != null && !updatedVersionId.Equals(id))
                                     {
-                                        nReturnId = Convert.ToInt16(updatedVersionId);
+                                        nReturnId = Convert.ToInt64(updatedVersionId);
                                     }
                                     else
                                     {
