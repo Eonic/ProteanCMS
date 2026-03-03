@@ -4305,8 +4305,8 @@
       </xsl:choose>
       <xsl:if test="$mobileDD='true'">
         <span class="mobile-dd-control">
-          <i class="fa fa-angle-down"> </i>
-          <i class="fa fa-angle-up"> </i>
+          <i class="fa fa-angle-down">&#160;</i>
+          <i class="fa fa-angle-up">&#160;</i>
         </span>
       </xsl:if>
       <ul class="dropdown-menu" aria-labelledby="mainNavDD{@id}">
@@ -5490,7 +5490,7 @@
             </xsl:variable>
             <li class="page-item previous">
               <a class="page-link" href="{$origURL}">
-                <i class="fa-solid fa-chevron-left"> </i> Back
+                <i class="fa-solid fa-chevron-left">&#160;</i> Back
               </a>
             </li>
           </xsl:when>
@@ -5498,14 +5498,14 @@
           <xsl:when test="$startPos &gt; ($noPerPage - 1)">
             <li class="page-item previous">
               <a class="page-link" href="{$thisURL}={$startPos - $noPerPage}">
-                <i class="fa-solid fa-chevron-left"> </i> Back
+                <i class="fa-solid fa-chevron-left">&#160;</i> Back
               </a>
             </li>
           </xsl:when>
           <xsl:otherwise>
             <li class="page-item previous disabled">
               <span class="page-link" href="#">
-                <i class="fa-solid fa-chevron-left"> </i> Back
+                <i class="fa-solid fa-chevron-left">&#160;</i> Back
               </span>
             </li>
           </xsl:otherwise>
@@ -5534,7 +5534,7 @@
           <xsl:when test="$totalCount &gt; ($startPos +$noPerPage)">
             <li class="page-item next">
               <a class="page-link" href="{$thisURL}={$startPos+$noPerPage}">
-                Next <i class="fa-solid fa-chevron-right"> </i>
+                Next <i class="fa-solid fa-chevron-right">&#160;</i>
               </a>
             </li>
           </xsl:when>
@@ -5542,7 +5542,7 @@
             <li class="page-item next disabled">
               <span class="page-link">
                 Next <span class="pager-arrow">
-                  <i class="fa-solid fa-chevron-right"> </i>
+                  <i class="fa-solid fa-chevron-right">&#160;</i>
                 </span>
               </span>
             </li>

@@ -526,7 +526,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -1097,7 +1097,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "InitializeVariables", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -1199,7 +1199,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -1293,7 +1293,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "checkButtons", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "checkButtons", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -1328,7 +1328,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", "CreateCartElement", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, myWeb.moCtx, "", "CreateCartElement", gbDebug);
                     return null;
                 }
 
@@ -2200,7 +2200,7 @@ namespace Protean
                     // do nothing
                     else
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -2226,7 +2226,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddCartElement", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddCartElement", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -2269,7 +2269,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddBehavior", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddBehavior", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -2416,7 +2416,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "purchaseActions", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -2454,7 +2454,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "RemoveDeliveryOption", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "RemoveDeliveryOption", ex, myWeb.moCtx, "", "", gbDebug);
                 }
             }
 
@@ -2490,7 +2490,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCartSummary", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -2504,7 +2504,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, myWeb.moCtx, "", "", gbDebug);
                 }
             }
 
@@ -3545,7 +3545,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -3603,7 +3603,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetWalletDetails", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetWalletDetails", ex, myWeb.moCtx, "", "", gbDebug);
                     return false;
                 }
 
@@ -3695,23 +3695,23 @@ namespace Protean
                             vatAmt = (double)(Round(shipCost * (mnTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown) + Round(vatAmt, bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown));
                         }
 
-                        oCartElmt.SetAttribute("totalNet", total + shipCost.ToString("F2", CultureInfo.CurrentCulture));
+                        oCartElmt.SetAttribute("totalNet", (total + shipCost).ToString("F2", CultureInfo.CurrentCulture));
                         oCartElmt.SetAttribute("vatRate", mnTaxRate.ToString());
                         oCartElmt.SetAttribute("shippingType", ShipMethodId + "");
                         oCartElmt.SetAttribute("shippingCost", shipCost.ToString("F2", CultureInfo.CurrentCulture));
                         oCartElmt.SetAttribute("vatAmt", vatAmt.ToString("F2", CultureInfo.CurrentCulture));
-                        oCartElmt.SetAttribute("total", total + shipCost + vatAmt.ToString("F2", CultureInfo.CurrentCulture));
+                        oCartElmt.SetAttribute("total", (total + shipCost + vatAmt).ToString("F2", CultureInfo.CurrentCulture));
                         oCartElmt.SetAttribute("currency", mcCurrencyCode);
                         oCartElmt.SetAttribute("currencySymbol", mcCurrencySymbol);
                     }
                     else
                     {
-                        oCartElmt.SetAttribute("totalNet", total + shipCost.ToString("F2", CultureInfo.CurrentCulture));
+                        oCartElmt.SetAttribute("totalNet", (total + shipCost).ToString("F2", CultureInfo.CurrentCulture));
                         oCartElmt.SetAttribute("vatRate", 0.0d.ToString());
                         oCartElmt.SetAttribute("shippingType", ShipMethodId + "");
                         oCartElmt.SetAttribute("shippingCost", shipCost.ToString("F2", CultureInfo.CurrentCulture));
                         oCartElmt.SetAttribute("vatAmt", 0.0d.ToString());
-                        oCartElmt.SetAttribute("total", total + shipCost.ToString("N2"));
+                        oCartElmt.SetAttribute("total", (total + shipCost).ToString("F2", CultureInfo.CurrentCulture));
                         oCartElmt.SetAttribute("currency", mcCurrencyCode);
                         oCartElmt.SetAttribute("currencySymbol", mcCurrencySymbol);
                     }
@@ -3721,7 +3721,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateTotals", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateTotals", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
                 return default;
@@ -3748,7 +3748,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getShippingDetailXml", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getShippingDetailXml", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -3777,7 +3777,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductPricesByXml", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductPricesByXml", ex, myWeb.moCtx, "", "", gbDebug);
                 }
 
                 return default;
@@ -3821,7 +3821,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductTaxRate", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductTaxRate", ex, myWeb.moCtx, "", "", gbDebug);
                     return (double)default;
                 }
             }
@@ -7073,7 +7073,7 @@ namespace Protean
 
 
             // creating the duplicate order from old order
-            public string CreateDuplicateOrder(XmlDocument oldCartxml, int nOrderId, string cMethodName, string cNewAuthNumber)
+            public string CreateDuplicateOrder(XmlDocument oldCartxml, long nOrderId, string cMethodName, string cNewAuthNumber)
             {
                 try
                 {

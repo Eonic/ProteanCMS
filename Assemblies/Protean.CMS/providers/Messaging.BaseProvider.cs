@@ -50,7 +50,7 @@ namespace Protean.Providers
 
             XmlElement xFrmAddModule(long pgid, string position);
 
-            XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref int nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L);
+            XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref long nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L);
 
             XmlElement xFrmAdminOptOut();
 
@@ -442,14 +442,14 @@ namespace Protean.Providers
                             if (goConfig["cssFramework"] == "bs5")
                             {
                                 string ModulePath = GetMailModuleFormPath(moRequest["cModuleType"]);
-                                int argnReturnId = 0;
+                                long argnReturnId = 0;
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
                                 xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
                             }
                             else
                             {
-                                int argnReturnId1 = 0;
+                                long argnReturnId1 = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
                                 xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, position, false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
@@ -492,7 +492,7 @@ namespace Protean.Providers
                                     if (goConfig["cssFramework"] == "bs5")
                                     {
                                         string ModulePath = GetModuleFormPath(moRequest["cModuleType"]);
-                                        int argnReturnId2 = 0;
+                                        long argnReturnId2 = 0;
                                         string argzcReturnSchema2 = "";
                                         string argAlternateFormName2 = "";
                                         xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
@@ -520,7 +520,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public new XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref int nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L) {
+                public new XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref long nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L) {
                     base.cModuleName = mcModuleName;
                     return base.xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy, ref nReturnId, ref zcReturnSchema, ref AlternateFormName, nVersionId);
                 }
@@ -814,8 +814,7 @@ namespace Protean.Providers
                                     bLoadStructure = true;
                                     if (!Tools.Number.IsNumeric(cVersionKey))
                                         cVersionKey = "0";
-                                    int nContentId;
-                                    nContentId = 0;
+                                    long nContentId = 0;
                                     string zcreturn = "";
                                     string AlernateForm = "";
 

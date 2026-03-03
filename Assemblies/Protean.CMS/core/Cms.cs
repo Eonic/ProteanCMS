@@ -3565,7 +3565,7 @@ namespace Protean
                                     case "Edit":
                                         {
                                             XmlElement xFrmContent;
-                                            int argnReturnId = (int)nContentId;
+                                            long argnReturnId = (int)nContentId;
                                             var tmp = moRequest;
                                             string argAlternateFormName = tmp["formName"];
                                             string zcReturnSchema = null;
