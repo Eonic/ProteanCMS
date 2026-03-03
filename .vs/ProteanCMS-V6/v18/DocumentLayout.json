@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "D:\\HostingSpaces\\ProteanCMS\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|d:\\hostingspaces\\proteancms\\v6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
-      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|d:\\hostingspaces\\proteancms\\v6_wwwroot\\ptn\\core\\layouts.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\ptn\\core\\layouts.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\protean.cms\\features\\cart\\quote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\features\\cart\\quote.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|d:\\hostingspaces\\proteancms\\v6_wwwroot\\ptn\\core\\modules\\genericmodule.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\ptn\\core\\modules\\genericmodule.xml||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 72,
+          "SelectedChildIndex": 80,
           "Children": [
             {
               "$type": "Bookmark",
@@ -294,10 +294,6 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Bookmark",
               "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
             },
             {
@@ -306,32 +302,73 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+              "Name": "ST:0:0:{6d4078d1-5951-4ed1-ac0e-0a8099c1cce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:134:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "header-nav.scss",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss",
-              "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss",
-              "RelativeToolTip": "V6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss",
-              "ViewState": "AgIAADADAAAAAAAAAAAewDIDAAAMAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002663|",
-              "WhenOpened": "2026-02-26T09:06:39.809Z",
+              "Title": "layouts.xsl",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\layouts.xsl",
+              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\layouts.xsl",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\layouts.xsl",
+              "RelativeToolTip": "V6_wwwroot\\ptn\\core\\layouts.xsl",
+              "ViewState": "AgIAAOwBAAAAAAAAAAAiwAQCAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
+              "WhenOpened": "2026-03-03T08:43:58.431Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Quote.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\features\\cart\\Quote.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\features\\cart\\Quote.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\features\\cart\\Quote.cs",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\features\\cart\\Quote.cs",
-              "ViewState": "AgIAAGMBAAAAAAAAAAAAAGMBAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-26T09:07:39.857Z"
+              "Title": "genericmodule.xml",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\modules\\genericmodule.xml",
+              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\modules\\genericmodule.xml",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\modules\\genericmodule.xml",
+              "RelativeToolTip": "V6_wwwroot\\ptn\\core\\modules\\genericmodule.xml",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003576|",
+              "WhenOpened": "2026-03-03T08:38:05.372Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             }
           ]
         },
@@ -339,6 +376,10 @@
           "DockedHeight": 200,
           "SelectedChildIndex": -1,
           "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
@@ -366,10 +407,16 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{a80febb4-e7e0-4147-b476-21aaf2453969}"
-            },
+            }
+          ]
+        },
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
             {
               "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+              "Name": "ST:0:0:{9a7cebbb-dc5c-4986-bc49-962da46aa506}"
             }
           ]
         }
