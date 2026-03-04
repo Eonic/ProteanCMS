@@ -768,7 +768,7 @@ namespace Protean
                         }
                         else
                         {
-                            mnCartId = myWeb.moSession["CartId"] as long? ?? 0;
+                            mnCartId = Convert.ToInt64(myWeb.moSession["CartId"]) as long? ?? 0;
                         }
 
                         if (myWeb.moRequest["refSessionId"] != null)
