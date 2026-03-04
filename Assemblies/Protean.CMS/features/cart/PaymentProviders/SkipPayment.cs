@@ -285,7 +285,8 @@ namespace Protean.Providers
 
                 public XmlElement GetWalletPaymentDetails(XmlElement opElemt)
                 {
-                    throw new NotImplementedException();
+                    //throw new NotImplementedException();
+                    return null;
                 }
 
                 public object ProcessGooglePayPayment(ref Cms myWeb, ref Cms.Cart oCart, ref XmlElement oOrder, string googlePayToken)

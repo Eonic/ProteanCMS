@@ -9248,7 +9248,7 @@ namespace Protean
                     // Close the VALUES clause
                     cSQL += ")";
 
-                    return Convert.ToInt16(GetIdInsertSql(cSQL));
+                    return Convert.ToInt32(GetIdInsertSql(cSQL));
                 }
 
                 catch (Exception ex)

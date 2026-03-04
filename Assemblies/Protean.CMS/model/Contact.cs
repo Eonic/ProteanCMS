@@ -34,7 +34,7 @@ namespace Protean
             {
                 public Contact() { }
 
-                public Contact(int nContactKey, int nContactDirId, int nContactCartId, string cContactType, string cContactName, string cContactCompany, string cContactAddress, string cContactCity, string cContactState, string cContactZip, string cContactCountry, string cContactTel, string cContactFax, string cContactEmail, string cContactLocationSummary, string cContactXml, int nAuditId, string cContactForiegnRef, double nLat, double nLong, string cContactForeignRef, string cContactAddress2, string cContactFirstName, string cContactLastName, string cContactTitle)
+                public Contact(int nContactKey, int nContactDirId, long nContactCartId, string cContactType, string cContactName, string cContactCompany, string cContactAddress, string cContactCity, string cContactState, string cContactZip, string cContactCountry, string cContactTel, string cContactFax, string cContactEmail, string cContactLocationSummary, string cContactXml, int nAuditId, string cContactForiegnRef, double nLat, double nLong, string cContactForeignRef, string cContactAddress2, string cContactFirstName, string cContactLastName, string cContactTitle)
                 {
                     this.nContactKey = nContactKey;
                     this.nContactDirId = nContactDirId;

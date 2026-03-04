@@ -4688,7 +4688,7 @@ namespace Protean
                 var oDS = new DataSet();
                 DataRow oDR1; // Parent Rows
                               // Child Rows
-                long nItemID = 0; // ID of the cart item record
+                int nItemID = 0; // ID of the cart item record
                 int nCountExOptions; // number of matching options in the old cart item
                 string cProcessInfo = "";
                 int NoOptions; // the number of options for the item
@@ -4935,7 +4935,7 @@ namespace Protean
                                 oElmt = (XmlElement)argoNode19;
                                 ProductXmlElmt.InnerXml = oProdXml.DocumentElement.OuterXml;
 
-                                nItemID = Convert.ToInt64(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement));
+                                nItemID = Convert.ToInt32(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement));
 
                                 // Options
                                 if (oProdOptions != null)
@@ -6729,7 +6729,7 @@ namespace Protean
                 }
             }
 
-            public void AddProductOption(long nCartItemId, string cOptionName, double nOptionCost)
+            public void AddProductOption(int nCartItemId, string cOptionName, double nOptionCost)
             {
 
                 try
