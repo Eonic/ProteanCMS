@@ -98,7 +98,7 @@ namespace Protean
             private string promocodeFromExternalRef = "";
             public string mcPersistCart = "";
             public string mcPagePath;
-            public int mnPaymentId = 0; // to be populated by payment prvoider to pass to subscriptions
+            public long mnPaymentId = 0; // to be populated by payment prvoider to pass to subscriptions
 
             public bool bFullCartOption;
             public bool mbAddItemWithNoPrice; // Switch to allow enquiries of items with no price
@@ -4691,7 +4691,7 @@ namespace Protean
                 var oDS = new DataSet();
                 DataRow oDR1; // Parent Rows
                               // Child Rows
-                int nItemID = 0; // ID of the cart item record
+                long nItemID = 0; // ID of the cart item record
                 int nCountExOptions; // number of matching options in the old cart item
                 string cProcessInfo = "";
                 int NoOptions; // the number of options for the item
@@ -4774,13 +4774,13 @@ namespace Protean
                                             // if they are all the same then we have the correct record so it is an update
                                             if (nCountExOptions == oProdOptions.Length - 1 && NoOptions == oProdOptions.Length - 1)
                                             {
-                                                nItemID = Convert.ToInt16(oDR1["NCartItemKey"]); // ok, got the bugger
+                                                nItemID = Convert.ToInt64(oDR1["NCartItemKey"]); // ok, got the bugger
                                                 break; // exit the loop otherwise we might go through some other ones
                                             }
                                         }
 
                                         else if (NoOptions == 0)
-                                            nItemID = Convert.ToInt16(oDR1["NCartItemKey"]);
+                                            nItemID = Convert.ToInt64(oDR1["NCartItemKey"]);
                                     }
                                 }
                             }
@@ -6732,7 +6732,7 @@ namespace Protean
                 }
             }
 
-            public void AddProductOption(int nCartItemId, string cOptionName, double nOptionCost)
+            public void AddProductOption(long nCartItemId, string cOptionName, double nOptionCost)
             {
 
                 try

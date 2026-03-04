@@ -14031,7 +14031,7 @@ namespace Protean
                 }
             }
 
-            public int savePayment(long CartId, long nUserId, string cProviderName, string cProviderRef, string cMethodName, XmlElement oDetailXML, DateTime dExpire, bool bUserSaved, double nAmountPaid, string paymentType = "full")
+            public long savePayment(long CartId, long nUserId, string cProviderName, string cProviderRef, string cMethodName, XmlElement oDetailXML, DateTime dExpire, bool bUserSaved, double nAmountPaid, string paymentType = "full")
             {
                 string cSQL = "";
                 string cRes = "";
@@ -14106,7 +14106,7 @@ namespace Protean
 
                     // addNewTextNode("dPayMthdExpire", oElmt, xmlDate(dExpire))
 
-                    int nPaymentId;
+                    long nPaymentId;
                     oInstance.AppendChild(oElmt);
                     if (!(nPaymentMethodKey > 0L))
                     {
@@ -14115,11 +14115,11 @@ namespace Protean
                         XmlNode argoNode5 = oElmt;
                         addNewTextNode("nAuditId", ref argoNode5, nAudit.ToString());
                         oElmt = (XmlElement)argoNode5;
-                        nPaymentId = Convert.ToInt16(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
+                        nPaymentId = Convert.ToInt64(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
                     }
                     else
                     {
-                        nPaymentId = Convert.ToInt16(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
+                        nPaymentId = Convert.ToInt64(setObjectInstance(objectTypes.CartPaymentMethod, oInstance, nPaymentMethodKey));
                         cSQL = "Select nAuditId from tblCartPaymentMethod where nPayMthdKey = " + nPaymentId;
                         int nAuditId = Convert.ToInt16(ExeProcessSqlScalar(cSQL));
                         oInstance.RemoveAll();
@@ -14203,7 +14203,7 @@ namespace Protean
                 }
             }
 
-            public void CartPaymentMethod(long CartId, int PaymentId)
+            public void CartPaymentMethod(long CartId, long PaymentId)
             {
                 try
                 {
