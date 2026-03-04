@@ -4935,7 +4935,7 @@ namespace Protean
                                 oElmt = (XmlElement)argoNode19;
                                 ProductXmlElmt.InnerXml = oProdXml.DocumentElement.OuterXml;
 
-                                nItemID = Convert.ToInt16(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement));
+                                nItemID = Convert.ToInt32(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement));
 
                                 // Options
                                 if (oProdOptions != null)
@@ -7073,7 +7073,7 @@ namespace Protean
 
 
             // creating the duplicate order from old order
-            public string CreateDuplicateOrder(XmlDocument oldCartxml, int nOrderId, string cMethodName, string cNewAuthNumber)
+            public string CreateDuplicateOrder(XmlDocument oldCartxml, long nOrderId, string cMethodName, string cNewAuthNumber)
             {
                 try
                 {
