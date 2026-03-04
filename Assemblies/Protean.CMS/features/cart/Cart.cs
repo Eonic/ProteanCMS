@@ -746,12 +746,12 @@ namespace Protean
                         }
                         if (myWeb.moRequest.Form["cartId"] != null)
                         {
-                            if ((myWeb.moSession["CartId"] as int?) != 0)
+                            if ((myWeb.moSession["CartId"] as long?) != 0)
                             {
                                 string CurrentCartId = myWeb.moRequest.Form["cartId"];
                                 if ((CurrentCartId ?? "") != (myWeb.moSession["CartId"].ToString() ?? ""))
                                 {
-                                    myWeb.moSession["CartId"] = (object)int.Parse(CurrentCartId);
+                                    myWeb.moSession["CartId"] = Convert.ToString(CurrentCartId);
                                     mcReEstablishSession = "true";
                                 }
                             }
@@ -768,7 +768,7 @@ namespace Protean
                         }
                         else
                         {
-                            mnCartId = myWeb.moSession["CartId"] as int? ?? 0;
+                            mnCartId = myWeb.moSession["CartId"] as long? ?? 0;
                         }
 
                         if (myWeb.moRequest["refSessionId"] != null)
@@ -874,7 +874,7 @@ namespace Protean
                             string cSessionFromSessionCookie = "";
                             if (mcPersistCart == "on")
                             {
-                                string cSessionCookieName = "ewSession" + myWeb.mnUserId.ToString();
+                                string cSessionCookieName = "ewSession_" + myWeb.moSession.SessionID;
                                 if (myWeb.moRequest.Cookies[cSessionCookieName] is null)
                                 {
                                     writeSessionCookie();
@@ -1107,8 +1107,9 @@ namespace Protean
                 // writes the session cookie to persist the cart
                 if (mcPersistCart == "on")
                 {
-                    // make or update the session cookie
-                    var cookieEwSession = new System.Web.HttpCookie("ewSession" + myWeb.mnUserId.ToString());
+                    // Use session ID instead of user ID for cookie name
+                    string cookieName = "ewSession_" + myWeb.moSession.SessionID;
+                    var cookieEwSession = new System.Web.HttpCookie(cookieName);
                     cookieEwSession.Value = mcSessionId.ToString();
                     cookieEwSession.Expires = DateTime.Now.AddMonths(1);
                     myWeb.moResponse.Cookies.Add(cookieEwSession);
@@ -1118,7 +1119,7 @@ namespace Protean
             private void clearSessionCookie()
             {
 
-                string cSessionCookieName = "ewSession" + myWeb.mnUserId.ToString();
+                string cSessionCookieName = "ewSession_" + myWeb.moSession.SessionID;
 
                 if (myWeb.moResponse.Cookies[cSessionCookieName] != null)
                 {
@@ -1157,7 +1158,9 @@ namespace Protean
                         }
                         else
                         {
-                            myWeb.moSession["CartId"] = mnCartId.ToString();
+                            if (mnCartId > 0) {
+                                myWeb.moSession["CartId"] = mnCartId.ToString();
+                            }
                         }
                         // oResponse.Cookies(mcSiteURL & "CartId").Domain = mcSiteURL
                         // oSession("nCartOrderId") = mnCartId    '   session attribute holds Cart ID
