@@ -82,7 +82,7 @@ namespace Protean
                 }
 
                 public int nContactKey;
-                public int nContactDirId;
+                public long nContactDirId;
                 public long nContactCartId;
                 public string cContactType;
                 public string cContactName;

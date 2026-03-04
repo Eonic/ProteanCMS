@@ -187,7 +187,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteCarrier", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteCarrier", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -348,7 +348,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditShippingLocation", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditShippingLocation", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
