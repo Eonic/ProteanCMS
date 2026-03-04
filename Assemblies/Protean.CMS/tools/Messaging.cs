@@ -565,7 +565,7 @@ namespace Protean
 
                     var mailSender = new MailAddress(serverSenderEmail, serverSenderEmailName);
 
-                    if ((goConfig["overrideFromEmail"]).ToLower() == "on")
+                    if (goConfig["overrideFromEmail"]?.ToLower() == "on")
                     {
                         oMailn.From = mailSender;
                     }
