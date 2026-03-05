@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\HostingSpaces\\ProteanCMS\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|d:\\hostingspaces\\proteancms\\assemblies\\protean.cms\\tools\\xform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\tools\\xform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|d:\\hostingspaces\\proteancms\\v6_wwwroot\\ptn\\core\\layouts.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
       "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\ptn\\core\\layouts.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
@@ -347,6 +351,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "xForm.cs",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\tools\\xForm.cs",
+              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\tools\\xForm.cs",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\tools\\xForm.cs",
+              "RelativeToolTip": "Assemblies\\Protean.CMS\\tools\\xForm.cs",
+              "ViewState": "AgIAANQEAAAAAAAAAAAUwN8EAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-04T07:32:59.295Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "layouts.xsl",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\layouts.xsl",
               "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\layouts.xsl",
@@ -359,7 +376,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "genericmodule.xml",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\modules\\genericmodule.xml",
               "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\modules\\genericmodule.xml",

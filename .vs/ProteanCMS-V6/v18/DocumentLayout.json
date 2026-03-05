@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "D:\\HostingSpaces\\ProteanCMS\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|d:\\hostingspaces\\proteancms\\v6_wwwroot\\protean.web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\protean.web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|d:\\hostingspaces\\proteancms\\assemblies\\protean.cms\\tools\\xform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\tools\\xform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -22,7 +26,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 81,
+          "SelectedChildIndex": 82,
           "Children": [
             {
               "$type": "Bookmark",
@@ -338,6 +342,10 @@
             },
             {
               "$type": "Bookmark",
+              "Name": "ST:0:0:{6d4078d1-5951-4ed1-ac0e-0a8099c1cce5}"
+            },
+            {
+              "$type": "Bookmark",
               "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
@@ -351,6 +359,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
+              "Title": "protean.web.config",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\protean.web.config",
+              "RelativeDocumentMoniker": "V6_wwwroot\\protean.web.config",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\protean.web.config",
+              "RelativeToolTip": "V6_wwwroot\\protean.web.config",
+              "ViewState": "AgIAACoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-03-04T17:52:30.49Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "xForm.cs",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\tools\\xForm.cs",
               "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\tools\\xForm.cs",
@@ -363,7 +384,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "layouts.xsl",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\layouts.xsl",
               "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\layouts.xsl",
@@ -376,7 +397,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "genericmodule.xml",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\modules\\genericmodule.xml",
               "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\modules\\genericmodule.xml",
