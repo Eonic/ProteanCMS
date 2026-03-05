@@ -98,7 +98,7 @@ namespace Protean
             private string promocodeFromExternalRef = "";
             public string mcPersistCart = "";
             public string mcPagePath;
-            public int mnPaymentId = 0; // to be populated by payment prvoider to pass to subscriptions
+            public long mnPaymentId = 0; // to be populated by payment prvoider to pass to subscriptions
 
             public bool bFullCartOption;
             public bool mbAddItemWithNoPrice; // Switch to allow enquiries of items with no price
@@ -746,12 +746,12 @@ namespace Protean
                         }
                         if (myWeb.moRequest.Form["cartId"] != null)
                         {
-                            if ((myWeb.moSession["CartId"] as int?) != 0)
+                            if ((myWeb.moSession["CartId"] as long?) != 0)
                             {
                                 string CurrentCartId = myWeb.moRequest.Form["cartId"];
                                 if ((CurrentCartId ?? "") != (myWeb.moSession["CartId"].ToString() ?? ""))
                                 {
-                                    myWeb.moSession["CartId"] = (object)int.Parse(CurrentCartId);
+                                    myWeb.moSession["CartId"] = Convert.ToString(CurrentCartId);
                                     mcReEstablishSession = "true";
                                 }
                             }
@@ -768,7 +768,7 @@ namespace Protean
                         }
                         else
                         {
-                            mnCartId = myWeb.moSession["CartId"] as int? ?? 0;
+                            mnCartId = Convert.ToInt64(myWeb.moSession["CartId"]) as long? ?? 0;
                         }
 
                         if (myWeb.moRequest["refSessionId"] != null)
@@ -874,7 +874,7 @@ namespace Protean
                             string cSessionFromSessionCookie = "";
                             if (mcPersistCart == "on")
                             {
-                                string cSessionCookieName = "ewSession" + myWeb.mnUserId.ToString();
+                                string cSessionCookieName = "ewSession_" + myWeb.moSession.SessionID;
                                 if (myWeb.moRequest.Cookies[cSessionCookieName] is null)
                                 {
                                     writeSessionCookie();
@@ -1107,8 +1107,9 @@ namespace Protean
                 // writes the session cookie to persist the cart
                 if (mcPersistCart == "on")
                 {
-                    // make or update the session cookie
-                    var cookieEwSession = new System.Web.HttpCookie("ewSession" + myWeb.mnUserId.ToString());
+                    // Use session ID instead of user ID for cookie name
+                    string cookieName = "ewSession_" + myWeb.moSession.SessionID;
+                    var cookieEwSession = new System.Web.HttpCookie(cookieName);
                     cookieEwSession.Value = mcSessionId.ToString();
                     cookieEwSession.Expires = DateTime.Now.AddMonths(1);
                     myWeb.moResponse.Cookies.Add(cookieEwSession);
@@ -1118,7 +1119,7 @@ namespace Protean
             private void clearSessionCookie()
             {
 
-                string cSessionCookieName = "ewSession" + myWeb.mnUserId.ToString();
+                string cSessionCookieName = "ewSession_" + myWeb.moSession.SessionID;
 
                 if (myWeb.moResponse.Cookies[cSessionCookieName] != null)
                 {
@@ -1157,7 +1158,9 @@ namespace Protean
                         }
                         else
                         {
-                            myWeb.moSession["CartId"] = mnCartId.ToString();
+                            if (mnCartId > 0) {
+                                myWeb.moSession["CartId"] = mnCartId.ToString();
+                            }
                         }
                         // oResponse.Cookies(mcSiteURL & "CartId").Domain = mcSiteURL
                         // oSession("nCartOrderId") = mnCartId    '   session attribute holds Cart ID
@@ -4688,7 +4691,7 @@ namespace Protean
                 var oDS = new DataSet();
                 DataRow oDR1; // Parent Rows
                               // Child Rows
-                int nItemID = 0; // ID of the cart item record
+                long nItemID = 0; // ID of the cart item record
                 int nCountExOptions; // number of matching options in the old cart item
                 string cProcessInfo = "";
                 int NoOptions; // the number of options for the item
@@ -4771,13 +4774,13 @@ namespace Protean
                                             // if they are all the same then we have the correct record so it is an update
                                             if (nCountExOptions == oProdOptions.Length - 1 && NoOptions == oProdOptions.Length - 1)
                                             {
-                                                nItemID = Convert.ToInt16(oDR1["NCartItemKey"]); // ok, got the bugger
+                                                nItemID = Convert.ToInt64(oDR1["NCartItemKey"]); // ok, got the bugger
                                                 break; // exit the loop otherwise we might go through some other ones
                                             }
                                         }
 
                                         else if (NoOptions == 0)
-                                            nItemID = Convert.ToInt16(oDR1["NCartItemKey"]);
+                                            nItemID = Convert.ToInt64(oDR1["NCartItemKey"]);
                                     }
                                 }
                             }
@@ -6729,7 +6732,7 @@ namespace Protean
                 }
             }
 
-            public void AddProductOption(int nCartItemId, string cOptionName, double nOptionCost)
+            public void AddProductOption(long nCartItemId, string cOptionName, double nOptionCost)
             {
 
                 try

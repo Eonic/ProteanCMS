@@ -1707,7 +1707,7 @@ namespace Protean
                     return default;
                 }
 
-                public virtual void AddUserSubscriptions(long nCartId, long nSubUserId, ref XmlElement oCartXml, int nPaymentMethodId = 0)
+                public virtual void AddUserSubscriptions(long nCartId, long nSubUserId, ref XmlElement oCartXml, long nPaymentMethodId = 0)
                 {
 
                     string cLastSubXml = "";
@@ -1871,7 +1871,7 @@ namespace Protean
 
                 }
 
-                public void AddUserSubscription(int nSubscriptionID, long nSubUserId, int nPaymentMethodId = 0, XmlElement cartItemXml = null, long nCartId = default)
+                public void AddUserSubscription(int nSubscriptionID, long nSubUserId, long nPaymentMethodId = 0, XmlElement cartItemXml = null, long nCartId = default)
                 {
                     try
                     {
@@ -2046,7 +2046,7 @@ namespace Protean
                     }
                 }
 
-                public void AddSubscription(int nid, XmlElement oSubDetailElmt, DateTime dStart, DateTime dFinish, long nSubUserId, int nPaymentMethodId = 0, long nCartId = 0L)
+                public void AddSubscription(int nid, XmlElement oSubDetailElmt, DateTime dStart, DateTime dFinish, long nSubUserId, long nPaymentMethodId = 0, long nCartId = 0L)
                 {
                     try
                     {
