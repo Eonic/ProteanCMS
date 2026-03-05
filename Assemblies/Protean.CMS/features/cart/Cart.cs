@@ -3925,7 +3925,7 @@ namespace Protean
                                             }
                                         }
                                     }
-                                    else if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText) & Convert.ToInt64(oPNode.InnerText) != 0L)
+                                    else if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText) & Convert.ToDouble(oPNode.InnerText) != 0L)
                                     {
                                         oThePrice = oPNode;
                                     }
