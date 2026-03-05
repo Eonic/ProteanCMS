@@ -3928,7 +3928,7 @@ namespace Protean
                                             }
                                         }
                                     }
-                                    else if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText) & Convert.ToInt64(oPNode.InnerText) != 0L)
+                                    else if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText) & Convert.ToDouble(oPNode.InnerText) != 0L)
                                     {
                                         oThePrice = oPNode;
                                     }
@@ -4471,9 +4471,9 @@ namespace Protean
                                 oLocations[nLocKey] = arrLoc;
 
                                 arrLoc = null;
-
+                                string target = (sTarget ?? "").Trim();
                                 // if (Convert.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameShort"]) is DBNull, "", (oDr["cLocationNameShort"])), Strings.LCase(Strings.Trim(sTarget)), false), Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameFull"]) is DBNull, "", (oDr["cLocationNameFull"])), Strings.LCase(Strings.Trim(sTarget)), false))))
-                                if (oDr["cLocationNameShort"].ToString() == sTarget.Trim() || oDr["cLocationNameFull"].ToString() == sTarget.Trim())
+                                if (oDr["cLocationNameShort"].ToString() == target || oDr["cLocationNameFull"].ToString() == target)
                                 {
                                     nTargetId = Convert.ToInt16(oDr["nLocationKey"]);
                                 }
@@ -6358,7 +6358,7 @@ namespace Protean
                 }
             }
 
-            public bool DeleteCart(int nOrderID)
+            public bool DeleteCart(long nOrderID)
             {
                 myWeb.PerfMon.Log("Cart", "DeleteCart");
                 if (myWeb.mnUserId == 0)
