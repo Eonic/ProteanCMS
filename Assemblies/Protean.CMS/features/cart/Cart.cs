@@ -3079,7 +3079,7 @@ namespace Protean
                         foreach (DataRow currentORow1 in oDs.Tables["Order"].Rows)
                         {
                             oRow = currentORow1;
-                            shipCost = Convert.ToDouble(oRow["nShippingCost"]?.ToString() ?? "0");
+                            shipCost = Convert.ToDouble(Convert.IsDBNull(oRow["nShippingCost"]) ? 0.0 : Convert.ToDouble(oRow["nShippingCost"]));
                             oCartElmt.SetAttribute("shippingType", oRow["nShippingMethodId"]?.ToString() ?? "");
                             oCartElmt.SetAttribute("shippingCost", shipCost.ToString());
                             oCartElmt.SetAttribute("shippingDesc", oRow["cShippingDesc"]?.ToString() ?? "");
@@ -6914,7 +6914,7 @@ namespace Protean
                         {
                             oItemList.Add(oItemList.Count, oRow["contentId"]);
                         }
-                        int parentId = Convert.ToInt16(moDBHelper.DBN2int(oRow["nParentId"]));
+                        long parentId = Convert.ToInt64(moDBHelper.DBN2int(oRow["nParentId"]));
                         if (parentId == 0)
                         {
                             long nTaxRate = 0L;
