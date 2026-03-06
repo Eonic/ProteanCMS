@@ -6914,7 +6914,7 @@ namespace Protean
                         {
                             oItemList.Add(oItemList.Count, oRow["contentId"]);
                         }
-                        int parentId = Convert.ToInt16(moDBHelper.DBN2int(oRow["nParentId"]));
+                        long parentId = Convert.ToInt64(moDBHelper.DBN2int(oRow["nParentId"]));
                         if (parentId == 0)
                         {
                             long nTaxRate = 0L;
