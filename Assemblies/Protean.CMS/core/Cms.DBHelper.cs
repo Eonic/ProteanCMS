@@ -2903,10 +2903,10 @@ namespace Protean
 
                                 using (SqlDataReader oDr = getDataReaderDisposable(sSql))
                                 {
-                                    var nCrtItmAdtId = default(int);
+                                    long nCrtItmAdtId = default(long);
                                     while (oDr.Read())
                                         // DeleteObject(objectTypes.Audit, oDr.GetValue(0))
-                                        nCrtItmAdtId = Convert.ToInt16(oDr.GetValue(0));
+                                        nCrtItmAdtId = Convert.ToInt64(oDr.GetValue(0));
                                     DeleteObject(objectTypes.Audit, nCrtItmAdtId);
                                 }
                                 // options
