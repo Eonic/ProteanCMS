@@ -10,7 +10,7 @@ namespace Protean
         public partial class Cart
         {
 
-            #region JSON Actions
+            #region Purchase Actions
 
             public class PurchaseAction
             {

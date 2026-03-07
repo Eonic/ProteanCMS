@@ -3026,7 +3026,7 @@ namespace Protean
             cSQL += nPrimaryId + ",";
             cSQL += nSecondaryId + ",";
             cSQL += Tools.Database.SqlDate(dDateTime, true) + ",";
-            cSQL += nEventType + ",";
+            cSQL += (int)nEventType + ",";
             cSQL += "'" + cDetail + "',";
             cSQL += "'" + cSessionId + "')";
             return Convert.ToInt32(myWeb.moDbHelper.GetIdInsertSql(cSQL));
@@ -3823,14 +3823,9 @@ namespace Protean
                     {
                         oSetup.AddResponse("Reading Brief File");
                         nFileLen = oFullFile.ContentLength;
-                        oByteFile = new byte[nFileLen + 1];
-                        var oBuffer = new byte[nFileLen + 1];
+                        oByteFile = new byte[nFileLen];
                         oFStream = oFullFile.InputStream;
-                        oFStream.Read(oBuffer, 0, nFileLen);
-                        int i;
-                        var loopTo = nFileLen - 1;
-                        for (i = 0; i <= loopTo; i++)
-                            oByteFile[i] = oBuffer[i];
+                        oFStream.Read(oByteFile, 0, nFileLen);
                         oFStream.Close();
                         // now make it a string
                         cFullXSLT = ByteToStr(oByteFile);
@@ -4140,21 +4135,10 @@ namespace Protean
             // to represent the file
             oSetup.AddResponse("Converting Bytes to String");
 
-            char[] oChars; // array of characters
-
-            var oDecoder = System.Text.Encoding.UTF8.GetDecoder(); // a decoder
-            string cResult = ""; // the final string
             try
             {
-                 oChars = new char[oDecoder.GetCharCount(oBytes, 0, oBytes.Length)];
-                oDecoder.GetChars(oBytes, 0, oBytes.Length, oChars, 0);
-
-                cResult = string.Concat(Convert.ToString(oChars));
-
-                // For nI = 0 To UBound(oChars) - 1 'read the chars into a string
-                // cResult &= oChars(nI)
-                // Next
-                return cResult;
+                // Simpler and more efficient approach
+                return System.Text.Encoding.UTF8.GetString(oBytes);
             }
             catch (Exception ex)
             {
