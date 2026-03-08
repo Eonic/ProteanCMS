@@ -2896,24 +2896,23 @@
 	</xsl:template>
 
 	<xsl:template match="Item" mode="product-description">
-		<xsl:if test="productDetail/IssueCodes/code">
-			<div class="card">
-				<div class="card-body">
+		<xsl:if test="productDetail/Ticket">
+			<br/>
+			<br/>
+			<div class="alert alert-primary">
 				<strong>Issued Codes:</strong>
 				<xsl:text> </xsl:text>
-				<xsl:for-each select="productDetail/IssueCodes/code">
+				<xsl:for-each select="productDetail/Ticket">
 					<xsl:value-of select="@name"/>
+					<xsl:text> - </xsl:text>
+					<xsl:value-of select="@code"/>
 					<xsl:if test="position()!=last()">
-						,<xsl:text> </xsl:text>
+						<xsl:text>, </xsl:text>
 					</xsl:if>
 				</xsl:for-each>
-
-				</div>
 			</div>
 		</xsl:if>
-
 	</xsl:template>
-
 </xsl:stylesheet>
 
 
