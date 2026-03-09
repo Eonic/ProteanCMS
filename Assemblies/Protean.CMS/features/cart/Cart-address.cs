@@ -1326,7 +1326,7 @@ namespace Protean
                         // 1. It has addresses in it
                         // 2. There is no request to Add
 
-                        else if (oXform.moXformElmt.InnerXml.ToString().Contains("addNewAddress") & !!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
+                        else if ((oXform.moXformElmt.InnerXml.ToString().Contains("addNewAddress") || oXform.moXformElmt.InnerXml.ToString().Contains("useBilling")) & !!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
                         {
                             oReturnForm = oXform;
                         }
@@ -1644,9 +1644,6 @@ namespace Protean
                     oTempCXform = (Cms.xForm)null;
                 }
             }
-
-
-
         }
     }
 }
