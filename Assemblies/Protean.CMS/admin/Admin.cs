@@ -2419,7 +2419,7 @@ namespace Protean
                                 object sSql = "Select nContactKey from tblCartContact where cContactType = " + $"'{myWeb.moRequest["contacttype"]} Address' and nContactCartid=" + myWeb.moRequest["orderid"];
                                 string sContactKey = myWeb.moDbHelper.ExeProcessSqlScalar(Convert.ToString(sSql));
 
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt16("0" + sContactKey)));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact(Convert.ToInt64("0" + sContactKey)));
                                 if (moAdXfm.valid)
                                 {
                                     //get cart shouldupdat the cartXml.
@@ -3014,7 +3014,7 @@ namespace Protean
                                 }
                                 myWeb.mnUserId = Convert.ToInt16(myWeb.moSession["PreviewUser"]);
 
-                                if (Convert.ToInt16("0" + myWeb.moRequest["CartId"]) > 0)
+                                if (Convert.ToInt64("0" + myWeb.moRequest["CartId"]) > 0)
                                 {
                                     myWeb.moSession["CartId"] = myWeb.moRequest["CartId"];
 
