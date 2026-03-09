@@ -1593,19 +1593,10 @@
 					<xsl:value-of select="productDetail/SubscriptionPrices/Price[@type='sale']/@suffix"/>
 				</p>
 			</xsl:if>
+			<xsl:apply-templates select="." mode="product-description"/>
 		</div>
 		<!-- ################################# Line Options Info ################################# -->
-		<xsl:if test="Item">
-			<span class="optionList">
-				<xsl:for-each select="Item">
-					<xsl:value-of select="Name"/>
-					<xsl:apply-templates select="option" mode="optionDetail"/>
-					<xsl:if test="not(position()=last())">
-						<xsl:text> / </xsl:text>
-					</xsl:if>
-				</xsl:for-each>
-			</span>
-		</xsl:if>
+		
 		<!-- ################################# Line Discount Info ################################# -->
 		<xsl:if test="Discount">
 			<xsl:for-each select="DiscountPrice/DiscountPriceLine[@UnitSaving &gt; 0]">
@@ -1812,6 +1803,7 @@
 				</xsl:if>
 			</div>
 		</xsl:if>
+
 	</xsl:template>
 
 
@@ -2515,6 +2507,46 @@
 							<xsl:with-param name="showImg" select="$showImg"/>
 						</xsl:apply-templates>
 					</div>
+						<xsl:for-each select="Item">
+							<div class="clearfix cart-item">
+								<div class="cart-thumbnail" style="width:150px;">									
+									<xsl:text> </xsl:text>
+								</div>
+								<div class="cart-desc">
+									<xsl:value-of select="Name"/>
+									<xsl:apply-templates select="option" mode="optionDetail"/>
+								</div>
+								<div class="quantity">
+									x <xsl:value-of select="@quantity"/>
+									<xsl:if test="$editQty='true'">
+										<div class="delete">
+											<a href="{$parentURL}?cartCmd=Remove&amp;id={@id}" title="click here to remove this item from the list" class="delete-link">
+												<span>Remove</span>
+											</a>
+										</div>
+									</xsl:if>
+									<xsl:text> </xsl:text>
+								</div>
+								<div class="cart-prices">
+									<div class="lineTotal">
+										<xsl:choose>
+											<xsl:when test="@itemTotal">
+												<xsl:apply-templates select="/Page" mode="formatPrice">
+													<xsl:with-param name="price" select="@itemTotal"/>
+													<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+												</xsl:apply-templates>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:apply-templates select="/Page" mode="formatPrice">
+													<xsl:with-param name="price" select="(@price +(sum(*/@price)))* @quantity"/>
+													<xsl:with-param name="currency" select="/Page/Cart/@currencySymbol"/>
+												</xsl:apply-templates>
+											</xsl:otherwise>
+										</xsl:choose>
+									</div>
+								</div>
+							</div>
+						</xsl:for-each>					
 				</xsl:for-each>
 			</div>
 		</xsl:if>
@@ -2863,6 +2895,24 @@
 	    </xsl:if>
 	</xsl:template>
 
+	<xsl:template match="Item" mode="product-description">
+		<xsl:if test="productDetail/Ticket">
+			<br/>
+			<br/>
+			<div class="alert alert-primary">
+				<strong>Issued Codes:</strong>
+				<xsl:text> </xsl:text>
+				<xsl:for-each select="productDetail/Ticket">
+					<xsl:value-of select="@name"/>
+					<xsl:text> - </xsl:text>
+					<xsl:value-of select="@code"/>
+					<xsl:if test="position()!=last()">
+						<xsl:text>, </xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+			</div>
+		</xsl:if>
+	</xsl:template>
 </xsl:stylesheet>
 
 

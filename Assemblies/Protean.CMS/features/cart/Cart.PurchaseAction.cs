@@ -10,7 +10,7 @@ namespace Protean
         public partial class Cart
         {
 
-            #region JSON Actions
+            #region Purchase Actions
 
             public class PurchaseAction
             {
@@ -45,17 +45,29 @@ namespace Protean
                         {
                             foreach (XmlNode codeNode in oCartItemProductDetailXml.SelectNodes("IssueCodes/code"))
                             {
+                                // if additional codes are defined in product options
+                                int extraCodes = 0;
                                 XmlElement codeElmt = (XmlElement)codeNode;
-
+                                foreach (XmlNode optionNode in oCartItemProductDetailXml.ParentNode.SelectNodes("Item"))
+                                {
+                                    XmlNode extraCodesNode = optionNode.SelectSingleNode("productDetail/option/@extraCodes");
+                                    if (extraCodesNode != null && !string.IsNullOrEmpty(extraCodesNode.Value))
+                                    {
+                                        if (short.TryParse(extraCodesNode.Value, out short parsedValue))
+                                        {
+                                            extraCodes = extraCodes + parsedValue;
+                                        }
+                                    }
+                                }
+                                //Add Codes to the order based on product settings
                                 short CodeSetId = (short)Convert.ToInt16("0" + codeElmt.GetAttribute("codeBank"));
-                                short Quantity = (short)(Convert.ToInt16(cartItem.GetAttribute("quantity")) + Convert.ToInt16(codeElmt.GetAttribute("noOfCodes")));
-                                string SetName = cartItem.GetAttribute("name");
+                                short Quantity = (short)(Convert.ToInt16(cartItem.GetAttribute("quantity")) + Convert.ToInt16(codeElmt.GetAttribute("noOfCodes")) + extraCodes);
+                                string SetName = codeElmt.GetAttribute("name");
                                 AddCode(ref oCartItemProductDetailXml, CartItemId, CodeSetId, Quantity, SetName);
                             }
                         }
                         else
                         {
-
                             short CodeSetId = (short)Convert.ToInt16("0" + oCartItemProductDetailXml.GetAttribute("codeBank"));
                             short Quantity = (short)Convert.ToInt16(cartItem.GetAttribute("quantity"));
                             AddCode(ref oCartItemProductDetailXml, CartItemId, CodeSetId, Quantity, "");
@@ -87,7 +99,7 @@ namespace Protean
                                 string Code = myWeb.moDbHelper.IssueCode((int)CodeSetId, (int)CartItemId, false, (XmlElement)null);
                                 var TicketElement = ProductXml.OwnerDocument.CreateElement("Ticket");
                                 TicketElement.SetAttribute("code", Code);
-                                TicketElement.SetAttribute("code", codeName);
+                                TicketElement.SetAttribute("name", codeName);
                                 ProductXml.AppendChild(TicketElement);
                             }
                         }
