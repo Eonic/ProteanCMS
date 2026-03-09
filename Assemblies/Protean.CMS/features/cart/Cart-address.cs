@@ -953,7 +953,7 @@ namespace Protean
                     // Changed this so it gets any
 
                     // Check if updated primiary billing address, (TS added order by reverse order added)
-                    cSql = "select * from tblCartContact where nContactDirId = " + myWeb.mnUserId.ToString() + " and nContactCartId = 0 and (cContactType = 'Billing Address' or cContactType = 'Delivery Address')  order by cContactType ASC, nContactKey DESC";
+                    cSql = "select * from tblCartContact where nContactDirId = " + myWeb.mnUserId.ToString() + " and nContactCartId = 0 and (cContactType like 'Billing Address' or cContactType like 'Delivery Address')  order by cContactType ASC, nContactKey DESC";
                     oDs = moDBHelper.GetDataSet(cSql, "tblCartContact");
                     foreach (DataRow currentODr in oDs.Tables["tblCartContact"].Rows)
                     {
@@ -1120,7 +1120,7 @@ namespace Protean
                             if (billingAddId == null || !billingAddId.Equals(oDr["nContactKey"]))
                             {
                                 oXform.addSubmit(ref oAddressGrp, "editAddress", "Edit", "cartDeleditAddress" + oDr["nContactKey"].ToString(), "btn-default edit", "fa-pencil");
-                                oXform.addSubmit(ref oAddressGrp, "removeAddress", "Del", submitPrefix + "deleteAddress" + oDr["nContactKey"].ToString(), "btn-default delete", "fa-trash-o");
+                                oXform.addSubmit(ref oAddressGrp, "removeAddress", "Del", submitPrefix + "deleteAddress" + oDr["nContactKey"].ToString(), "btn-default delete", "fa-solid fa-trash");
                             }
                             else
                             {
@@ -1130,7 +1130,7 @@ namespace Protean
 
                             if (!"Billing Address".Equals(oDr["cContactType"]?.ToString()))
                             {
-                                oXform.addSubmit(ref oAddressGrp, Convert.ToString(oDr["nContactKey"]), "Use as Billing", submitPrefix + "useBilling" + oDr["nContactKey"].ToString(), "setAsBilling");
+                                oXform.addSubmit(ref oAddressGrp, Convert.ToString(oDr["nContactKey"]), "Use as Billing", submitPrefix + "useBilling" + oDr["nContactKey"].ToString(), "btn-default setAsBilling", "fa-solid fa-credit-card");
                             }
                             else
                             {
@@ -1326,7 +1326,7 @@ namespace Protean
                         // 1. It has addresses in it
                         // 2. There is no request to Add
 
-                        else if ((oXform.moXformElmt.InnerXml.ToString().Contains("addNewAddress") || oXform.moXformElmt.InnerXml.ToString().Contains("useBilling")) & !!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
+                        else if (oXform.moXformElmt.InnerXml.ToString().Contains("addNewAddress") & !!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
                         {
                             oReturnForm = oXform;
                         }
@@ -1436,12 +1436,12 @@ namespace Protean
 
                         foreach (DataRow oDr in oDS.Tables["tblCartContact"].Rows)
                         {
-                            if (ContactId == Convert.ToDouble("0"))
+                            if (ContactId == 0L)
                             {
                                 // gets the top one
                                 ContactId = Convert.ToInt64(oDr["nContactKey"]);
                             }
-                            if (!oDr["nContactKey"].Equals(ContactId))
+                            if (Convert.ToInt64(oDr["nContactKey"]) != ContactId)
                             {
                                 moDBHelper.ExeProcessSql("update tblCartContact set cContactType='Previous Billing Address' where nContactKey=" + oDr["nContactKey"].ToString());
                             }
@@ -1479,7 +1479,7 @@ namespace Protean
                     string savedDeliveryAuditId = "";
                     foreach (DataRow odr in oDs.Tables["tblCartContact"].Rows)
                     {
-                        if (!odr["cContactType"].Equals("Billing Address"))
+                        if (odr["cContactType"].ToString() == "Billing Address")
                         {
                             if (!string.IsNullOrEmpty(savedBillingId))
                             {
@@ -1492,7 +1492,7 @@ namespace Protean
                                 savedBillingAuditId = Convert.ToString(odr["nAuditKey"]);
                             }
                         }
-                        if (!odr["cContactType"].Equals("Delivery Address"))
+                        if (odr["cContactType"].ToString() == "Delivery Address")
                         {
                             if (!string.IsNullOrEmpty(savedDeliveryId))
                             {
