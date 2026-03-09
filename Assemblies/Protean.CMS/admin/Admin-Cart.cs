@@ -310,7 +310,7 @@ namespace Protean
                         oPageDetail.AppendChild(moAdXfm.xFrmCartActivity());
                         if (moAdXfm.valid)
                         {
-                            oPageDetail.AppendChild(oCart.CartReports(Convert.ToDateTime(moAdXfm.Instance.FirstChild.SelectSingleNode("dBegin").InnerText), Convert.ToDateTime(moAdXfm.Instance.FirstChild.SelectSingleNode("dEnd").InnerText), Convert.ToInt16(moAdXfm.Instance.FirstChild.SelectSingleNode("bSplit").InnerText), moAdXfm.Instance.FirstChild.SelectSingleNode("cProductType").InnerText, Convert.ToInt16(moAdXfm.Instance.FirstChild.SelectSingleNode("nProductId").InnerText), moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText, moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText, moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText));
+                            oPageDetail.AppendChild(oCart.CartReports(Convert.ToDateTime(moAdXfm.Instance.FirstChild.SelectSingleNode("dBegin").InnerText), Convert.ToDateTime(moAdXfm.Instance.FirstChild.SelectSingleNode("dEnd").InnerText), Convert.ToInt16(moAdXfm.Instance.FirstChild.SelectSingleNode("bSplit").InnerText), moAdXfm.Instance.FirstChild.SelectSingleNode("cProductType").InnerText, Convert.ToInt32(moAdXfm.Instance.FirstChild.SelectSingleNode("nProductId").InnerText), moAdXfm.Instance.FirstChild.SelectSingleNode("cCurrencySymbol").InnerText, moAdXfm.Instance.FirstChild.SelectSingleNode("nOrderStatus").InnerText, moAdXfm.Instance.FirstChild.SelectSingleNode("cOrderType").InnerText));
                         }
                         sAdminLayout = "CartActivity";
                     }
