@@ -1573,7 +1573,7 @@ namespace Protean
 
                 PerfMonLog("dbHelper", "getPageIdFromPath");
 
-                string[] aPath;
+                string[] aPath = null;
                 string sPath;
 
                 string sSql;
@@ -1886,7 +1886,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    int argnStep = aPath.Length - 1;
+                                    int argnStep = (aPath == null || aPath.Length <= 1) ? -1 : aPath.Length - 1;
                                     if (recurseUpPathArray(Convert.ToInt16(oRow["nStructParId"]), ref aPath, ref argnStep) == true)
                                     {
                                         if (bCheckPermissions)
