@@ -3079,7 +3079,7 @@ namespace Protean
                         foreach (DataRow currentORow1 in oDs.Tables["Order"].Rows)
                         {
                             oRow = currentORow1;
-                            shipCost = Convert.ToDouble(oRow["nShippingCost"]?.ToString() ?? "0");
+                            shipCost = Convert.ToDouble(Convert.IsDBNull(oRow["nShippingCost"]) ? 0.0 : Convert.ToDouble(oRow["nShippingCost"]));
                             oCartElmt.SetAttribute("shippingType", oRow["nShippingMethodId"]?.ToString() ?? "");
                             oCartElmt.SetAttribute("shippingCost", shipCost.ToString());
                             oCartElmt.SetAttribute("shippingDesc", oRow["cShippingDesc"]?.ToString() ?? "");
@@ -4471,9 +4471,9 @@ namespace Protean
                                 oLocations[nLocKey] = arrLoc;
 
                                 arrLoc = null;
-
+                                string target = (sTarget ?? "").Trim();
                                 // if (Convert.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameShort"]) is DBNull, "", (oDr["cLocationNameShort"])), Strings.LCase(Strings.Trim(sTarget)), false), Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameFull"]) is DBNull, "", (oDr["cLocationNameFull"])), Strings.LCase(Strings.Trim(sTarget)), false))))
-                                if (oDr["cLocationNameShort"].ToString() == sTarget.Trim() || oDr["cLocationNameFull"].ToString() == sTarget.Trim())
+                                if (oDr["cLocationNameShort"].ToString() == target || oDr["cLocationNameFull"].ToString() == target)
                                 {
                                     nTargetId = Convert.ToInt16(oDr["nLocationKey"]);
                                 }
@@ -5015,6 +5015,9 @@ namespace Protean
                                             addNewTextNode("nItemId", ref oElmt, nProductId.ToString());
                                             addNewTextNode("cItemURL", ref oElmt, myWeb.mcOriginalURL);
                                             addNewTextNode("cItemName", ref oElmt, cOptName);
+                                            XmlElement oItemXml = oElmt.OwnerDocument.CreateElement("xItemXml");
+                                            oItemXml.InnerXml = oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]").OuterXml;
+                                            oElmt.AppendChild(oItemXml);
                                             if (bTextOption)
                                             {
                                                 // save the option index as -1 for text option
@@ -5035,7 +5038,7 @@ namespace Protean
                                             }
                                             addNewTextNode("nShpCat", ref oElmt, (-1).ToString());
                                             addNewTextNode("nTaxRate", ref oElmt, 0.ToString());
-                                            addNewTextNode("nQuantity", ref oElmt, 1.ToString());
+                                            addNewTextNode("nQuantity", ref oElmt, nQuantity.ToString());
                                             addNewTextNode("nWeight", ref oElmt, 0.ToString());
                                             addNewTextNode("nParentId", ref oElmt, nItemID.ToString());
                                             moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
@@ -5689,17 +5692,9 @@ namespace Protean
                         oRow = currentORow;
                         if (!(oRow.RowState == DataRowState.Deleted))
                         {
-                            bNullParentId = false;
-                            if (ReferenceEquals(oRow["nParentId"], DBNull.Value))
-                            {
-                                bNullParentId = true;
-                            }
-                            else if (Convert.ToInt32(oRow["nParentId"]) == 0)
-                            {
-                                bNullParentId = true;
-                            }
-                            if (bNullParentId) // for options
-                            {
+
+                            if (ReferenceEquals(oRow["nParentId"], DBNull.Value) || Convert.ToInt32(oRow["nParentId"]) == 0)
+                            {    
                                 nItemCount = nItemCount + 1;
                                 // First check if the quantity is numeric (if not ignore it)
                                 string key = "itemId-" + oRow["nCartItemKey"];
@@ -5723,7 +5718,30 @@ namespace Protean
                                     }
                                 }
 
+
                             } // for options
+                            else {
+                                // ensure any product options keep the same quantity as parent.
+                                string parkey = "itemId-" + oRow["nParentId"];
+                                if (Tools.Number.IsNumeric(myWeb.moRequest[parkey]))
+                                {
+                                    short qty = Convert.ToInt16(myWeb.moRequest[parkey]);
+
+                                    if (qty > 0)
+                                    {
+                                        oRow["nQuantity"] = qty;
+                                    }
+                                    else
+                                    {
+                                        DataRow[] oCRows = oRow.GetChildRows("Rel1");
+                                        for (int nDels = 0; nDels <= oCRows.GetUpperBound(0); nDels++)
+                                            oCRows[nDels].Delete();
+
+                                        oRow.Delete();
+                                        nItemCount--;
+                                    }
+                                }
+                            }
                         }
                     }
                     moDBHelper.updateDataset(ref oDs, "Item");
@@ -6358,7 +6376,7 @@ namespace Protean
                 }
             }
 
-            public bool DeleteCart(int nOrderID)
+            public bool DeleteCart(long nOrderID)
             {
                 myWeb.PerfMon.Log("Cart", "DeleteCart");
                 if (myWeb.mnUserId == 0)
@@ -6914,7 +6932,7 @@ namespace Protean
                         {
                             oItemList.Add(oItemList.Count, oRow["contentId"]);
                         }
-                        int parentId = Convert.ToInt16(moDBHelper.DBN2int(oRow["nParentId"]));
+                        long parentId = Convert.ToInt64(moDBHelper.DBN2int(oRow["nParentId"]));
                         if (parentId == 0)
                         {
                             long nTaxRate = 0L;

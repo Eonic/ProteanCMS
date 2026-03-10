@@ -600,7 +600,7 @@ namespace Protean
                 string nDiff = "";
                 try
                 {
-                    nDiff = Tools.Text.DateDiff(datePart, date1String, date2String).ToString();
+                    nDiff = Tools.Text.DateDiff( date1String, date2String, datePart).ToString();
                     return nDiff;
                 }
                 catch (Exception)

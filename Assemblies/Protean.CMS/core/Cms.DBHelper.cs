@@ -1573,7 +1573,7 @@ namespace Protean
 
                 PerfMonLog("dbHelper", "getPageIdFromPath");
 
-                string[] aPath;
+                string[] aPath = null;
                 string sPath;
 
                 string sSql;
@@ -1886,7 +1886,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    int argnStep = aPath.Length - 1;
+                                    int argnStep = (aPath == null || aPath.Length <= 1) ? -1 : aPath.Length - 1;
                                     if (recurseUpPathArray(Convert.ToInt16(oRow["nStructParId"]), ref aPath, ref argnStep) == true)
                                     {
                                         if (bCheckPermissions)
@@ -2903,10 +2903,10 @@ namespace Protean
 
                                 using (SqlDataReader oDr = getDataReaderDisposable(sSql))
                                 {
-                                    var nCrtItmAdtId = default(int);
+                                    long nCrtItmAdtId = default(long);
                                     while (oDr.Read())
                                         // DeleteObject(objectTypes.Audit, oDr.GetValue(0))
-                                        nCrtItmAdtId = Convert.ToInt16(oDr.GetValue(0));
+                                        nCrtItmAdtId = Convert.ToInt64(oDr.GetValue(0));
                                     DeleteObject(objectTypes.Audit, nCrtItmAdtId);
                                 }
                                 // options

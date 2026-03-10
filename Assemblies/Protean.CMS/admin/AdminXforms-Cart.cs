@@ -793,7 +793,7 @@ namespace Protean
                     XmlElement oGrp1Elmt;
                     XmlElement oGrp2Elmt;
                     string cProcessInfo = "";
-                    long nStatus;
+                    int nStatus;
 
                     XmlElement tempElement;
 
@@ -808,7 +808,7 @@ namespace Protean
                         base.submission("Update" + cSchemaName, "", "post", "form_check(this)");
 
                         base.Instance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartOrder, nOrderId);
-                        nStatus = Convert.ToInt64(base.Instance.SelectSingleNode("tblCartOrder/nCartStatus").InnerText);
+                        nStatus = Convert.ToInt16(base.Instance.SelectSingleNode("tblCartOrder/nCartStatus").InnerText);
 
                         // Add a note for shipped status goRequest("nStatus")
                         string shippedStatus = "Shipped";
@@ -816,7 +816,7 @@ namespace Protean
                         bool sendEmailOnShipped = false;
                         if (moCartConfig != null)
                             customerShippedTemplate = moCartConfig["CustomerEmailShippedTemplatePath"];
-                        if (!string.IsNullOrEmpty(customerShippedTemplate) && nStatus != 9L && File.Exists(goServer.MapPath(customerShippedTemplate)))
+                        if (!string.IsNullOrEmpty(customerShippedTemplate) && nStatus != 9 && File.Exists(goServer.MapPath(customerShippedTemplate)))
 
                         {
                             sendEmailOnShipped = true;
@@ -831,25 +831,34 @@ namespace Protean
                         }
 
                         // update the status if we have submitted it allready
-                        if (!string.IsNullOrEmpty(goRequest["nStatus"]))
-                            nStatus = Convert.ToInt16(goRequest["nStatus"]);
+                        if (!string.IsNullOrEmpty(goRequest["nStatus"])) {
+                            if (goRequest["nStatus"] == "9.1")
+                            {
+                                nStatus = 9;
+                            }
+                            else {
+
+                                nStatus = Convert.ToInt16(goRequest["nStatus"]);
+                            }
+                        }
+                         
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Update" + cSchemaName, "", "");
                         oGrp1Elmt = base.addGroup(ref oFrmElmt, "Status", "", cSchemaName + " Status");
                         oSelElmt = base.addSelect1(ref oGrp1Elmt, "nStatus", true, "Status", "", Protean.xForm.ApperanceTypes.Full);
                         switch (nStatus)
                         {
-                            case 0L:
-                            case 1L:
-                            case 2L:
-                            case 3L:
-                            case 4L:
-                            case 5L: // new
+                            case 0:
+                            case 1:
+                            case 2:
+                            case 3:
+                            case 4:
+                            case 5: // new
                                 {
                                     base.addOption(ref oSelElmt, "Abandoned", 11.ToString());
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
-                            case 6L: // Completed
+                            case 6: // Completed
                                 {
                                     base.addOption(ref oSelElmt, "Awaiting Payment", 13.ToString(), false, "Awaiting_Payment");
                                     base.addOption(ref oSelElmt, "New Sale", 6.ToString(), false, "New Sale");
@@ -859,27 +868,27 @@ namespace Protean
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
-                            case 7L: // Refunded
+                            case 7: // Refunded
                                 {
                                     base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString());
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
-                            case 8L: // Failed
+                            case 8: // Failed
                                 {
                                     base.addOption(ref oSelElmt, "Abandoned", 11.ToString());
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
-                            case 9L: // Shipped
+                            case 9: // Shipped
                                 {
                                     base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString());
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString());
                                     break;
                                 }
-                            case 10L: // Deposit Paid
+                            case 10: // Deposit Paid
                                 {
                                     base.addOption(ref oSelElmt, "Deposit Paid", 10.ToString());
                                     base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
@@ -888,7 +897,7 @@ namespace Protean
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
-                            case 13L: // Awaiting Payment
+                            case 13: // Awaiting Payment
                                 {
                                     base.addOption(ref oSelElmt, "Awaiting Payment", 13.ToString());
                                     base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
@@ -898,7 +907,7 @@ namespace Protean
                                     base.addOption(ref oSelElmt, "Delete", 12.ToString());
                                     break;
                                 }
-                            case 17L: // In Progress
+                            case 17: // In Progress
                                 {
                                     base.addOption(ref oSelElmt, "Awaiting Payment", 13.ToString(), false, "Awaiting_Payment");
                                     base.addOption(ref oSelElmt, "New Sale", 6.ToString(), false, "New Sale");
@@ -913,7 +922,7 @@ namespace Protean
                         XmlElement argoBindParent = null;
                         base.addBind("nStatus", "tblCartOrder/nCartStatus", oBindParent: ref argoBindParent, "true()");
 
-                        if (nStatus == 6L | myWeb.moRequest["nStatus"] == "9" | nStatus == 17L)
+                        if (nStatus == 6 | myWeb.moRequest["nStatus"] == "9" | nStatus == 17)
                         {
                             // Add carrier information
                             XmlElement argoInsertBeforeNode = null;

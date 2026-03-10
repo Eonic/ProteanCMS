@@ -561,7 +561,9 @@ namespace Protean
 
                             if (oGrpElmt.SelectSingleNode("*[@ref='confirmterms']") is null)
                             {
-                                oOptXform.addSelect(ref oGrpElmt, "confirmterms", false, "&#160;", "", Protean.xForm.ApperanceTypes.Full);
+
+                                // do not put &#160; in here to fix           >>>>>>>>>>>>\/ , it must be fixed in XSLT.
+                                oOptXform.addSelect(ref oGrpElmt, "confirmterms", false, " ", "", Protean.xForm.ApperanceTypes.Full);
                                 XmlElement argoSelectNode2 = (XmlElement)oGrpElmt.LastChild;
                                 oOptXform.addOption(ref argoSelectNode2, "I agree to the Terms and Conditions", "Agree");
                             }
