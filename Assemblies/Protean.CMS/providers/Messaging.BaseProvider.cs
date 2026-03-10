@@ -524,7 +524,7 @@ namespace Protean.Providers
 
                 public new XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref int nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L) {
                     base.cModuleName = mcModuleName;
-                    return base.xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy, ref nReturnId, ref zcReturnSchema, ref AlternateFormName, nVersionId);
+                    return base.xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy,  nReturnId,  zcReturnSchema,  AlternateFormName, nVersionId);
                 }
 
 

@@ -8264,6 +8264,13 @@ namespace Protean
                                         XmlElement parentElmt = moDBHelper.GetContentDetailXml(nParentId, true);
                                         if (parentElmt != null)
                                         {
+                                           // ItemParent.InnerXml = parentElmt.OuterXml;
+                                            if(nPrice!=0)
+                                            {
+                                                //parentElmt.SetAttribute("overridePrice", "true");
+                                                //parentElmt.SelectSingleNode("/Content/Prices/Price[@type='sale']").InnerText = Convert.ToString(nPrice);
+                                                parentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText = Convert.ToString(nPrice);
+                                            }
                                             ItemParent.InnerXml = parentElmt.OuterXml;
                                         }
                                     }

@@ -187,7 +187,11 @@ namespace Protean
                                     {
                                         dProductOptionPrice = (double)item["productOptionPrice"];
                                     }
-
+                                    if (jObj.ContainsKey("overridePriceSession"))
+                                    {
+                                        myCart.myWeb.moSession["overridePriceSession"] = (string)jObj["overridePriceSession"];
+                                    }
+                                   
                                     myCart.AddItem((long)item["contentId"], (long)item["qty"], null, sProductName, cProductPrice, "", bUnique, sOverideURL, false, sProductOptionName, dProductOptionPrice);
 
                                 }
