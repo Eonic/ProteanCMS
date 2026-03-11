@@ -50,7 +50,7 @@ namespace Protean.Providers
 
             XmlElement xFrmAddModule(long pgid, string position);
 
-            XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref long nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L);
+            XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy,  long nReturnId,  string zcReturnSchema,  string AlternateFormName, long nVersionId = 0L);
 
             XmlElement xFrmAdminOptOut();
 
@@ -445,14 +445,14 @@ namespace Protean.Providers
                                 long argnReturnId = 0;
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
-                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
+                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId:  argnReturnId, zcReturnSchema:  argzcReturnSchema, AlternateFormName:  argAlternateFormName);
                             }
                             else
                             {
                                 long argnReturnId1 = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
-                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, position, false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
+                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, position, false, nReturnId:  argnReturnId1, zcReturnSchema:  argzcReturnSchema1, AlternateFormName:  argAlternateFormName1);
                             }
 
                          //   xFrmEditContent(0, "Module/" + moRequest["cModuleType"], pgid, position);
@@ -495,7 +495,7 @@ namespace Protean.Providers
                                         long argnReturnId2 = 0;
                                         string argzcReturnSchema2 = "";
                                         string argAlternateFormName2 = "";
-                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
+                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId:  argnReturnId2, zcReturnSchema:  argzcReturnSchema2, AlternateFormName:  argAlternateFormName2);
                                     }
 
                                     else { 
@@ -520,9 +520,9 @@ namespace Protean.Providers
                     }
                 }
 
-                public new XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref long nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L) {
+                public new XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy,  long nReturnId,  string zcReturnSchema,  string AlternateFormName, long nVersionId = 0L) {
                     base.cModuleName = mcModuleName;
-                    return base.xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy, ref nReturnId, ref zcReturnSchema, ref AlternateFormName, nVersionId);
+                    return base.xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy,  nReturnId,  zcReturnSchema,  AlternateFormName, nVersionId);
                 }
 
 
@@ -820,7 +820,7 @@ namespace Protean.Providers
 
                                     string ModulePath = _oAdXfm.GetMailModuleFormPath(myWeb.moRequest["cModuleType"]);
 
-                                    oPageDetail.AppendChild(_oAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), ModulePath, Convert.ToInt64(myWeb.moRequest["pgid"]), "",false, ref nContentId,ref zcreturn,ref AlernateForm, Convert.ToInt64(cVersionKey)));
+                                    oPageDetail.AppendChild(_oAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), ModulePath, Convert.ToInt64(myWeb.moRequest["pgid"]), "",false,  nContentId, zcreturn, AlernateForm, Convert.ToInt64(cVersionKey)));
 
                                     if (moAdXfm.valid)
                                     {
