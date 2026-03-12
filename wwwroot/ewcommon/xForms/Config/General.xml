@@ -93,6 +93,7 @@
   	    <add key="MsGraphTennantId" value="" />
         <add key="MsGraphClientId" value="" />
 		<add key="MsGraphClientSecret" value="" />
+		  <add key="GoCertifyCompanyName" value="" />
 	  </web>
     </instance>
     <submission id="WebSettings" action="" method="post" event="form_check(this)" />
@@ -181,6 +182,7 @@
 	<bind id="MsGraphTennantId" nodeset="web/add[@key='MsGraphTennantId']/@value" required="false()" type="string" />
     <bind id="MsGraphClientId" nodeset="web/add[@key='MsGraphClientId']/@value" required="false()" type="string" />
     <bind id="MsGraphClientSecret" nodeset="web/add[@key='MsGraphClientSecret']/@value" required="false()" type="string" />
+	  <bind id="ewGoCertifyCompanyName" nodeset="web/add[@key='GoCertifyCompanyName']/@value" required="false()" type="string" />
   </model>
   <group ref="WebSettings">
     <label>Web Settings</label>
@@ -402,6 +404,9 @@
       <input bind="ewFeedOptimiseID">
         <label>Feed Optimise ID</label>
       </input>
+		<input bind="ewGoCertifyCompanyName">
+			<label>GoCertify Company Name</label>
+		</input>
     </group>
     <group ref="Paths" class="inline">
       <label>Default Paths</label>
