@@ -1121,7 +1121,7 @@
       </xsl:if>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
         </div>
       </xsl:if>
       <xsl:if test="not(@position='header' or @position='footer' or (@position='column1' and $page/@layout='Modules_1_column'))">
@@ -1316,7 +1316,7 @@
       </xsl:if>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
         </div>
       </xsl:if>
       <xsl:apply-templates select="." mode="displayBrief"/>
@@ -1428,7 +1428,7 @@
       </xsl:attribute>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
         </div>
       </xsl:if>
       <xsl:if test="$title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
@@ -1451,7 +1451,7 @@
       <xsl:if test="not(@listGroup='true')">
         <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
           <div class="panel-image">
-            <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+            <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
           </div>
         </xsl:if>
         <div>
@@ -1585,7 +1585,7 @@
       </xsl:attribute>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
         </div>
       </xsl:if>
       <xsl:if test="$title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
@@ -1647,7 +1647,7 @@
       <xsl:if test="not(@listGroup='true')">
         <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
           <div class="panel-image">
-            <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+            <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
           </div>
         </xsl:if>
         <!--<xsl:if test="node()"> TS this hides donate button-->
@@ -1791,7 +1791,7 @@
       <xsl:if test="not(@listGroup='true')">
         <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_'">
           <div class="panel-image">
-            <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+            <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
           </div>
         </xsl:if>
         <div class="modal-body">
