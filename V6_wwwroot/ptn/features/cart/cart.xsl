@@ -2317,15 +2317,15 @@
 			
 			<div class="pickAddress">
 				<xsl:if test="tblCartContact/cContactTel/node()!=''">
-					<strong>Tel:</strong> <xsl:value-of select="tblCartContact/cContactTel/node()"/>
+					<strong>Tel:</strong>&#160;<xsl:value-of select="tblCartContact/cContactTel/node()"/>
 					<xsl:text> &#160;&#160;</xsl:text>
 				</xsl:if>
 				<xsl:if test="tblCartContact/cContactFax/node()!=''">
-					<strong>Fax:</strong> <xsl:value-of select="tblCartContact/cContactFax/node()"/>
+					<strong>Fax:</strong>&#160;<xsl:value-of select="tblCartContact/cContactFax/node()"/>
 					<xsl:text> &#160;&#160;</xsl:text>
 				</xsl:if>
 				<xsl:if test="tblCartContact/cContactEmail/node()!=''">
-					<strong>Email:</strong> <xsl:value-of select="tblCartContact/cContactEmail/node()"/>
+					<strong>Email:</strong>&#160;<xsl:value-of select="tblCartContact/cContactEmail/node()"/>
 				</xsl:if>
 			</div>
 			</xsl:if>

@@ -1146,7 +1146,7 @@ namespace Protean
 
                                 if (mbNoDeliveryAddress == false)
                                 {
-                                    oXform.addSubmit(ref oGrpElmt, Convert.ToString(oDr["nContactKey"]), "New Delivery Address", submitPrefix + "addDelivery" + oDr["nContactKey"].ToString(), "setAsBilling btn-success principle", "fa-plus");
+                                    oXform.addSubmit(ref oGrpElmt, Convert.ToString(oDr["nContactKey"]), "New Delivery Address", submitPrefix + "addDelivery" + oDr["nContactKey"].ToString(), "setAsBilling btn-custom principle", "fa-plus");
                                 }
 
                             }
