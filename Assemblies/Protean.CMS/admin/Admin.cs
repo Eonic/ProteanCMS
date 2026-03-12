@@ -2371,13 +2371,13 @@ namespace Protean
                                         providerPaymentReference = oDr.GetString(1);
                                     }
                                 }
-                                oPageDetail.AppendChild(moAdXfm.xFrmRefundOrder((long)Convert.ToInt16("0" + myWeb.moRequest["id"]), providerName, providerPaymentReference));
+                                oPageDetail.AppendChild(moAdXfm.xFrmRefundOrder((long)Convert.ToInt64("0" + myWeb.moRequest["id"]), providerName, providerPaymentReference));
                                 if (moAdXfm.valid)
                                 {
                                     string sSql = "select nCartStatus from tblCartOrder WHERE nCartOrderKey =" + myWeb.moRequest["id"];
                                     nStatus = Convert.ToInt64(myWeb.moDbHelper.ExeProcessSqlScalar(sSql));
                                     nStatus = (long)Cms.Cart.cartProcess.Refunded;
-                                    if (Convert.ToInt16(orderid) > 0)
+                                    if (Convert.ToInt64(orderid) > 0)
                                     {
                                         string sSqlquery = "update tblCartOrder set nCartStatus ='" + nStatus + "', cCartSessionId='" + stdTools.SqlFmt(myWeb.moSession.SessionID) + "'  where nCartOrderKey = " + orderid;
                                         myWeb.moDbHelper.ExeProcessSql(sSqlquery);
