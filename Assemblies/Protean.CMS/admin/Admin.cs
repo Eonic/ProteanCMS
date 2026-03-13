@@ -915,7 +915,12 @@ namespace Protean
                                     // we want to return here after editing
                                     if (!myWeb.mbSuppressLastPageOverrides)
                                     {
-                                        myWeb.moSession["lastPage"] = "/" + Cms.gcProjectPath + myWeb.mcPagePath.TrimStart('/') + "?ewCmd=Normal&pgid=" + myWeb.mnPageId; // 
+                                        //ensures if we are on an article page we are redirected to the article page
+                                        string artUrl = "";
+                                        if (myWeb.mnArtId > 0) {
+                                            artUrl = "&artid=" + myWeb.mnArtId.ToString();
+                                        }
+                                        myWeb.moSession["lastPage"] = "/" + Cms.gcProjectPath + myWeb.mcPagePath.TrimStart('/') + "?ewCmd=Normal&pgid=" + myWeb.mnPageId + artUrl; // 
                                     }
 
                                 }

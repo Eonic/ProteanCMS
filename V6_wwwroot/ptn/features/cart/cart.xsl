@@ -805,7 +805,7 @@
 								<xsl:when test="Item/productDetail[@type='Subscription']">
 									<br/>
 									<div class="alert alert-info">
-										For regular payments you need to create an account with us.
+										<xsl:call-template name="term5007" />
 									</div>
 								</xsl:when>
 								<xsl:otherwise>
