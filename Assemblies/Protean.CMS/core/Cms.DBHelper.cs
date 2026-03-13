@@ -11593,11 +11593,11 @@ namespace Protean
                         {
                             if (!string.IsNullOrEmpty(rType))
                             {
-                                insertContentRelation(Convert.ToInt16(nChilds[nIx]), nParentID.ToString(), false, rType);
+                                insertContentRelation(Convert.ToInt32(nChilds[nIx]), nParentID.ToString(), false, rType);
                             }
                             else
                             {
-                                insertContentRelation(Convert.ToInt16(nChilds[nIx]), nParentID.ToString(), false);
+                                insertContentRelation(Convert.ToInt32(nChilds[nIx]), nParentID.ToString(), false);
                             }
                         }
                     }

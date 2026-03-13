@@ -1349,7 +1349,7 @@ namespace Protean
                                     {
                                         bool b2Way = (moRequest["RelType"] == "2way" | moRequest["direction"] == "2Way") ? true : false;
                                         string sRelType = moRequest["relationType"];
-                                        moDbHelper.insertContentRelation(Convert.ToInt16(goSession["mcRelParent"]), nContentId.ToString(), b2Way, sRelType);
+                                        moDbHelper.insertContentRelation(Convert.ToInt32(goSession["mcRelParent"]), nContentId.ToString(), b2Way, sRelType);
                                     }
                                     // TS - Change 26/04/2016 We do not want added to the page if it is related.
 
