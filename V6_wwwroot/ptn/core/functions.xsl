@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
-	<xsl:import href="../core/localisation.xsl"/>
+  <xsl:import href="../core/localisation.xsl"/>
 
-	<xsl:strip-space elements="*"/>
-	<!-- localisation moved here because it contains templates used in functions, so you can load just functions in without compile error - moved from core.xsl -->
+  <xsl:strip-space elements="*"/>
+  <!-- localisation moved here because it contains templates used in functions, so you can load just functions in without compile error - moved from core.xsl -->
 
 
-	<!-- -->
+  <!-- -->
   <!-- ## GLOBAL VARIABLES ########################################################################   -->
   <!-- ## Variables for all EonicWeb XSLT   #######################################################   -->
 
@@ -2831,7 +2831,8 @@
 
   <xsl:template match="MenuItem" mode="breadcrumb">
     <xsl:param name="separator">&gt;</xsl:param>
-
+    <!--<xsl:param name="non-display-name" select="$non-display-name" />-->
+    <xsl:param name="non-display-name" >true</xsl:param>
     <!-- if not excluded from Nav -->
     <xsl:if test="not(DisplayName/@exclude='true')">
 
@@ -2848,6 +2849,7 @@
     <!-- Self calling template to get the next MenuItem -->
     <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="breadcrumb">
       <xsl:with-param name="separator" select="$separator"/>
+      <xsl:with-param name="non-display-name" select="$non-display-name" />
     </xsl:apply-templates>
 
     <!-- IF currentPage && In Content Detail -->
@@ -2881,6 +2883,7 @@
     <!-- Self calling template to get the next MenuItem -->
     <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="breadcrumb">
       <xsl:with-param name="separator" select="$separator"/>
+      <xsl:with-param name="non-display-name" select="$non-display-name" />
     </xsl:apply-templates>
 
     <!-- IF currentPage && In Content Detail -->
@@ -2894,16 +2897,21 @@
   </xsl:template>
 
   <xsl:template match="MenuItem" mode="breadcrumb">
+    <xsl:param name="non-display-name" select="$non-display-name" />
     <xsl:param name="separator"></xsl:param>
 
     <!-- if not excluded from Nav -->
     <xsl:if test="not(DisplayName/@exclude='true') and @name!='Information'">
-      <xsl:apply-templates select="." mode="breadcrumbLink"/>
+      <xsl:apply-templates select="." mode="breadcrumbLink">
+
+        <xsl:with-param name="non-display-name" select="$non-display-name"/>
+      </xsl:apply-templates>
     </xsl:if>
 
     <!-- Self calling template to get the next MenuItem -->
     <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="breadcrumb">
       <xsl:with-param name="separator" select="$separator"/>
+      <xsl:with-param name="non-display-name" select="$non-display-name"/>
     </xsl:apply-templates>
 
     <!-- IF currentPage && In Content Detail -->
@@ -2912,7 +2920,9 @@
         <xsl:value-of select="concat(' ', $separator, ' ')"/>
       </xsl:if>
       <li class="breadcrumb-item active">
-        <xsl:apply-templates select="//ContentDetail/Content" mode="getDisplayName"/>
+        <xsl:apply-templates select="//ContentDetail/Content" mode="getDisplayName">
+          <xsl:with-param name="non-display-name" select="$non-display-name"/>
+        </xsl:apply-templates>
       </li>
     </xsl:if>
 
@@ -2920,6 +2930,7 @@
 
   <xsl:template match="MenuItem" mode="breadcrumbLink">
     <xsl:param name="span" select="false()"/>
+    <xsl:param name="non-display-name" select="$non-display-name" />
     <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem" class="breadcrumb-item">
       <xsl:choose>
         <xsl:when test="self::MenuItem[@id=/Page/@id] and not(//ContentDetail)">
@@ -2948,7 +2959,10 @@
           </xsl:choose>
           <!-- output page name -->
           <span itemprop="name">
-            <xsl:apply-templates select="." mode="getDisplayName"/>
+            <xsl:apply-templates select="." mode="getDisplayName">
+
+              <xsl:with-param name="non-display-name" select="$non-display-name"/>
+            </xsl:apply-templates>
           </span>
           <meta itemprop="position" content="{count(parent::MenuItem)+1}">
             <xsl:text> </xsl:text>
@@ -2996,7 +3010,11 @@
             </xsl:choose>
             <!-- output page name -->
             <span itemprop="name">
-              <xsl:apply-templates select="." mode="getDisplayName"/>
+              <xsl:apply-templates select="." mode="getDisplayName">
+
+
+                <xsl:with-param name="non-display-name" select="$non-display-name"/>
+              </xsl:apply-templates>
             </span>
             <meta itemprop="position" content="{count(parent::MenuItem)+1}" >
               <xsl:text> </xsl:text>
@@ -3606,7 +3624,12 @@
   <!--   ################################################   Menu & Content display name  ##############################################   -->
   <!-- Display Name for a Page -->
   <xsl:template match="MenuItem | PageVersion" mode="getDisplayName">
+    <xsl:param name="non-display-name" />
+
     <xsl:choose>
+      <xsl:when test="$non-display-name='true'">
+        <xsl:value-of select="@name"/>
+      </xsl:when>
       <xsl:when test="DisplayName/node()='_'">
       </xsl:when>
       <xsl:when test="normalize-space(DisplayName/node())!=''">
@@ -3792,16 +3815,16 @@
               <xsl:call-template name="getSiteURL"/>!!
             </xsl:when>
             <xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="not($lang!='en-gb')">
-						<xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:apply-templates select="$menu/descendant-or-self::MenuItem/PageVersion[@id=$contentParId]/parent::MenuItem" mode="getHref"/>
-					</xsl:otherwise>
-				</xsl:choose>
+              <xsl:choose>
+                <xsl:when test="not($lang!='en-gb')">
+                  <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:apply-templates select="$menu/descendant-or-self::MenuItem/PageVersion[@id=$contentParId]/parent::MenuItem" mode="getHref"/>
+                </xsl:otherwise>
+              </xsl:choose>
 
-			</xsl:otherwise>
+            </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
@@ -3898,6 +3921,7 @@
   <xsl:template match="MenuItem" mode="menuLink">
     <xsl:param name="span" select="false()"/>
     <xsl:param name="class"/>
+    <xsl:param name="non-display-name"/>
     <a>
 
       <!-- get the href -->
@@ -3912,7 +3936,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      
+
       <xsl:if test="DisplayName/@externalNewWindow='true'">
         <xsl:attribute name="target">
           <xsl:text>_blank</xsl:text>
@@ -3989,23 +4013,29 @@
                 <img src="{DisplayName/@uploadIcon}" alt="icon"/>
               </span>
             </xsl:if>
-            <xsl:apply-templates select="." mode="getDisplayName"/>
+            <xsl:apply-templates select="." mode="getDisplayName">
+              <xsl:with-param name="non-display-name" select="$non-display-name"/>
+            </xsl:apply-templates>
           </span>
         </xsl:when>
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="$span">
               <span>
-                <xsl:apply-templates select="." mode="getDisplayName"/>
+                <xsl:apply-templates select="." mode="getDisplayName">
+                  <xsl:with-param name="non-display-name" select="$non-display-name"/>
+                </xsl:apply-templates>
               </span>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:apply-templates select="." mode="getDisplayName"/>
+              <xsl:apply-templates select="." mode="getDisplayName">
+                <xsl:with-param name="non-display-name" select="$non-display-name"/>
+              </xsl:apply-templates>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
-    
+
     </a>
 
   </xsl:template>
@@ -4137,6 +4167,7 @@
     <xsl:param name="level2"/>
     <xsl:param name="level3"/>
     <xsl:param name="menu-back"/>
+    <xsl:param name="featured"/>
     <xsl:variable name="level-checker">2</xsl:variable>
     <xsl:variable name="liClass">
       <xsl:text>nav-item </xsl:text>
@@ -4377,6 +4408,7 @@
           <xsl:with-param name="level3" select="$level3"/>
           <xsl:with-param name="menu-back" select="$menu-back"/>
           <xsl:with-param name="level-checker" select="$level-checker + 1"/>
+          <xsl:with-param name="featured" select="$featured"/>
         </xsl:apply-templates>
         <xsl:if test="$menu-back='end'">
           <li class="xs-only nav-item menu-back">
@@ -4577,6 +4609,7 @@
     <xsl:param name="level3"/>
     <xsl:param name="menu-back"/>
     <xsl:param name="level-checker"/>
+    <xsl:param name="featured"/>
     <li>
       <xsl:attribute name="class">
         <xsl:value-of select="$li-class"/>
@@ -4814,72 +4847,75 @@
             </xsl:when>
             <xsl:otherwise>
               <a class="btn btn-custom {$class}">
-				  <xsl:if test="$tabindex!=''">
-                    <xsl:attribute name="tabindex">
-                      <xsl:value-of select="$tabindex"/>
-                      <xsl:text> </xsl:text>
+                <xsl:if test="$tabindex!=''">
+                  <xsl:attribute name="tabindex">
+                    <xsl:value-of select="$tabindex"/>
+                    <xsl:text> </xsl:text>
+                  </xsl:attribute>
+                </xsl:if>
+                <xsl:choose>
+                  <xsl:when test="$numbertest = 'number'">
+                    <xsl:variable name="pageId" select="@link"/>
+                    <xsl:attribute name="href">
+                      <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
                     </xsl:attribute>
-                  </xsl:if> <xsl:choose>
-                    <xsl:when test="$numbertest = 'number'">
-                      <xsl:variable name="pageId" select="@link"/>
-                      <xsl:attribute name="href">
-                        <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
-                      </xsl:attribute>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:choose>
-                        <xsl:when test="contains($link,'#')">
-                          <xsl:attribute name="class">
-                            <xsl:text>btn btn-custom scroll-to-anchor </xsl:text>
-                            <xsl:value-of select="class"/>
-                          </xsl:attribute>
-                          <xsl:attribute name="href">
-                            <xsl:value-of select="$link"/>
-                          </xsl:attribute>
-                        </xsl:when>
-                        <xsl:when test="(contains($link,'http') or contains($link,'tel:'))">
-                          <xsl:attribute name="href">
-                            <xsl:value-of select="$link"/>
-                          </xsl:attribute>
-                          <xsl:attribute name="rel">external</xsl:attribute>
-                          <xsl:attribute name="target">
-                            <xsl:value-of select="$linkWindow"/>
-                          </xsl:attribute>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <xsl:attribute name="href">
-                            <xsl:text>http://</xsl:text>
-                            <xsl:value-of select="$link"/>
-                          </xsl:attribute>
-                          <xsl:attribute name="rel">external</xsl:attribute>
-                          <xsl:attribute name="target">
-                            <xsl:value-of select="$linkWindow"/>
-                          </xsl:attribute>
-                        </xsl:otherwise>
-                      </xsl:choose>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:choose>
+                      <xsl:when test="contains($link,'#')">
+                        <xsl:attribute name="class">
+                          <xsl:text>btn btn-custom scroll-to-anchor </xsl:text>
+                          <xsl:value-of select="class"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$link"/>
+                        </xsl:attribute>
+                      </xsl:when>
+                      <xsl:when test="(contains($link,'http') or contains($link,'tel:'))">
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$link"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="rel">external</xsl:attribute>
+                        <xsl:attribute name="target">
+                          <xsl:value-of select="$linkWindow"/>
+                        </xsl:attribute>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:attribute name="href">
+                          <xsl:text>http://</xsl:text>
+                          <xsl:value-of select="$link"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="rel">external</xsl:attribute>
+                        <xsl:attribute name="target">
+                          <xsl:value-of select="$linkWindow"/>
+                        </xsl:attribute>
+                      </xsl:otherwise>
+                    </xsl:choose>
 
-                    </xsl:otherwise>
-                  </xsl:choose><xsl:if test="$stretchLink='true'">
-                    <xsl:attribute name="class">
-                      <xsl:if test="not($accessibleText='true')">btn btn-custom </xsl:if>
-                      <xsl:text> stretched-link</xsl:text>
-                    </xsl:attribute>
-                    <xsl:if test="$stretchLink='true'"></xsl:if>
-                    <span class="visually-hidden">
-                      <xsl:value-of select="@linkText"/>
-                    </span>
-                  </xsl:if>    <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
-                    <xsl:attribute name="onclick">
-                      <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-                      <xsl:value-of select="$link"/>
-                      <xsl:text>');</xsl:text>
-                    </xsl:attribute>
-                  </xsl:if>
+                  </xsl:otherwise>
+                </xsl:choose>
+                <xsl:if test="$stretchLink='true'">
+                  <xsl:attribute name="class">
+                    <xsl:if test="not($accessibleText='true')">btn btn-custom </xsl:if>
+                    <xsl:text> stretched-link</xsl:text>
+                  </xsl:attribute>
+                  <xsl:if test="$stretchLink='true'"></xsl:if>
+                  <span class="visually-hidden">
+                    <xsl:value-of select="@linkText"/>
+                  </span>
+                </xsl:if>
+                <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+                  <xsl:attribute name="onclick">
+                    <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                    <xsl:value-of select="$link"/>
+                    <xsl:text>');</xsl:text>
+                  </xsl:attribute>
+                </xsl:if>
                 <span>
-              
-                 
-                  
-              
+
+
+
+
                   <xsl:if test="not(@accessibleText='true')">
                     <xsl:value-of select="@linkText"/>
                   </xsl:if>
@@ -6264,14 +6300,14 @@
   <xsl:template match="Content[@type='Module']" mode="moduleTitle">
     <xsl:variable name="title">
       <span>
-		  <xsl:choose>
-			  <xsl:when test="Content[@lang!='']">
-				  <xsl:value-of select="Content[@lang=$lang]/@title"/> 
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <xsl:value-of select="@title"/>
-			  </xsl:otherwise>
-		  </xsl:choose>
+        <xsl:choose>
+          <xsl:when test="Content[@lang!='']">
+            <xsl:value-of select="Content[@lang=$lang]/@title"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="@title"/>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:text> </xsl:text>
       </span>
     </xsl:variable>
@@ -9245,7 +9281,7 @@
           </xsl:when>
           <xsl:otherwise>
             <span class="rrpPrice">
-				<xsl:call-template name="formatPrice">
+              <xsl:call-template name="formatPrice">
                 <xsl:with-param name="price" select="$rrp"/>
                 <xsl:with-param name="currency" select="$page/Cart/@currencySymbol"/>
               </xsl:call-template>
@@ -10487,11 +10523,11 @@
 
   </xsl:template>
 
-	<xsl:template name="GetLatLong">
-		<xsl:param name="address"/>
-		<xsl:if test="$address!=''">
-			<xsl:value-of select="ew:GetLatLong($address)"/>
-		</xsl:if>
-	</xsl:template>
+  <xsl:template name="GetLatLong">
+    <xsl:param name="address"/>
+    <xsl:if test="$address!=''">
+      <xsl:value-of select="ew:GetLatLong($address)"/>
+    </xsl:if>
+  </xsl:template>
 
 </xsl:stylesheet>

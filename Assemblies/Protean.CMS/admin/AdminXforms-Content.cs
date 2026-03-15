@@ -65,14 +65,14 @@ namespace Protean
                                 long argnReturnId = 0;
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
-                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
+                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: argnReturnId, zcReturnSchema:  argzcReturnSchema, AlternateFormName:  argAlternateFormName);
                             }
                             else
                             {
                                 long argnReturnId1 = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
-                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
+                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: argnReturnId1, zcReturnSchema:  argzcReturnSchema1, AlternateFormName:  argAlternateFormName1);
                             }
 
 
@@ -113,7 +113,7 @@ namespace Protean
                                         long argnReturnId2 = 0;
                                         string argzcReturnSchema2 = "";
                                         string argAlternateFormName2 = "";
-                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
+                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: argnReturnId2, zcReturnSchema:   argzcReturnSchema2, AlternateFormName: argAlternateFormName2);
                                     }
 
                                     else
@@ -121,7 +121,7 @@ namespace Protean
                                         long argnReturnId3 = 0;
                                         string argzcReturnSchema3 = "";
                                         string argAlternateFormName3 = "";
-                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
+                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: argnReturnId3, zcReturnSchema: argzcReturnSchema3, AlternateFormName:  argAlternateFormName3);
                                     }
                                 }
                             }
@@ -858,10 +858,10 @@ namespace Protean
                     long unusedReturnId = 0;
                     string unusedReturnSchema = "";
                     string unusedAlternateFormName = "";
-                    return xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy, ref unusedReturnId, ref unusedReturnSchema, ref unusedAlternateFormName);
+                    return xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy,  unusedReturnId,  unusedReturnSchema,  unusedAlternateFormName);
                 }
 
-                public virtual XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref long nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L)
+                public virtual XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy,  long nReturnId,  string zcReturnSchema,  string AlternateFormName, long nVersionId = 0L)
                 {
                     XmlElement oFrmElmt;
                     // Dim oGrp1Elmt As XmlElement
@@ -1349,7 +1349,7 @@ namespace Protean
                                     {
                                         bool b2Way = (moRequest["RelType"] == "2way" | moRequest["direction"] == "2Way") ? true : false;
                                         string sRelType = moRequest["relationType"];
-                                        moDbHelper.insertContentRelation(Convert.ToInt16(goSession["mcRelParent"]), nContentId.ToString(), b2Way, sRelType);
+                                        moDbHelper.insertContentRelation(Convert.ToInt32(goSession["mcRelParent"]), nContentId.ToString(), b2Way, sRelType);
                                     }
                                     // TS - Change 26/04/2016 We do not want added to the page if it is related.
 

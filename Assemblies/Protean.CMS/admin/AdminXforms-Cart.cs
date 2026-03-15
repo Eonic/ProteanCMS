@@ -1422,7 +1422,7 @@ namespace Protean
 
                                     if (!string.IsNullOrEmpty(cTmp))
                                         cTmp = cTmp.Substring(0, cTmp.Length - 1);
-                                    oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, Convert.ToInt16(nParId), bIgnoreParID ? 0 : Convert.ToInt16(nParId), cTmp.Split(','), bIncRelated));
+                                    oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, Convert.ToInt32(nParId), bIgnoreParID ? 0 : Convert.ToInt32(nParId), cTmp.Split(','), bIncRelated));
 
                                 }
                             }

@@ -3569,7 +3569,7 @@ namespace Protean
                                             var tmp = moRequest;
                                             string argAlternateFormName = tmp["formName"];
                                             string zcReturnSchema = null;
-                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId: ref argnReturnId, ref zcReturnSchema, AlternateFormName: ref argAlternateFormName, nVersionId: Convert.ToInt64("0" + moRequest["verId"]));
+                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId:  argnReturnId,  zcReturnSchema, AlternateFormName:  argAlternateFormName, nVersionId: Convert.ToInt64("0" + moRequest["verId"]));
                                             nContentId = argnReturnId;
                                             if (moAdXfm.valid)
                                             {
@@ -5347,7 +5347,7 @@ namespace Protean
                     }
                     // Please never add any setting here you do not want to be publicly accessible.
                     object s = "web.Cart;web.Membership;web.Search;web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;";
-                    s = s + $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;web.ReCaptchaKeyV3;web.ReCaptchaVersion;";
+                    s = s + $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;web.ReCaptchaKeyV3;web.ReCaptchaVersion;web.GoCertifyCompanyName;";
                     s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;";
                     s = s + moConfig["XmlSettings"] + ";";
 

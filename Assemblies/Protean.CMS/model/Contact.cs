@@ -81,7 +81,7 @@ namespace Protean
                     this.cContactForeignRef = cContactForeignRef;
                 }
 
-                public int nContactKey;
+                public long nContactKey;
                 public long nContactDirId;
                 public long nContactCartId;
                 public string cContactType;

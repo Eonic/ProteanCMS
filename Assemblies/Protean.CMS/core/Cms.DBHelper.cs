@@ -1573,7 +1573,7 @@ namespace Protean
 
                 PerfMonLog("dbHelper", "getPageIdFromPath");
 
-                string[] aPath;
+                string[] aPath = null;
                 string sPath;
 
                 string sSql;
@@ -1886,7 +1886,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    int argnStep = aPath.Length - 1;
+                                    int argnStep = (aPath == null || aPath.Length <= 1) ? -1 : aPath.Length - 2;
                                     if (recurseUpPathArray(Convert.ToInt16(oRow["nStructParId"]), ref aPath, ref argnStep) == true)
                                     {
                                         if (bCheckPermissions)
@@ -11593,11 +11593,11 @@ namespace Protean
                         {
                             if (!string.IsNullOrEmpty(rType))
                             {
-                                insertContentRelation(Convert.ToInt16(nChilds[nIx]), nParentID.ToString(), false, rType);
+                                insertContentRelation(Convert.ToInt32(nChilds[nIx]), nParentID.ToString(), false, rType);
                             }
                             else
                             {
-                                insertContentRelation(Convert.ToInt16(nChilds[nIx]), nParentID.ToString(), false);
+                                insertContentRelation(Convert.ToInt32(nChilds[nIx]), nParentID.ToString(), false);
                             }
                         }
                     }
@@ -14823,8 +14823,8 @@ namespace Protean
                     {
                         contact.nContactKey = (int)myWeb.moDbHelper.getObjectByRef(objectTypes.CartContact, contact.cContactForiegnRef, "");
                     }
-                    sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactAddress2] = '" + Tools.Database.SqlFmt(contact.cContactAddress2) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
-                    //sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'"+ ", [cContactFirstName] = '" + Tools.Database.SqlFmt(contact.cContactFirstName) + "'" + ", [cContactLastName] = '" + Tools.Database.SqlFmt(contact.cContactLastName) + "'" + ", [cContactEmail] = '" + Tools.Database.SqlFmt(contact.cContactEmail) + "'"+ ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
+                    //sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'" + ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactAddress2] = '" + Tools.Database.SqlFmt(contact.cContactAddress2) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
+                    sSql = "UPDATE [dbo].[tblCartContact]" + "SET [cContactName] = '" + Tools.Database.SqlFmt(contact.cContactName) + "'"+ ", [cContactFirstName] = '" + Tools.Database.SqlFmt(contact.cContactFirstName) + "'" + ", [cContactLastName] = '" + Tools.Database.SqlFmt(contact.cContactLastName) + "'" + ", [cContactEmail] = '" + Tools.Database.SqlFmt(contact.cContactEmail) + "'"+ ", [cContactAddress] = '" + Tools.Database.SqlFmt(contact.cContactAddress) + "'" + ", [cContactCity] = '" + Tools.Database.SqlFmt(contact.cContactCity) + "'" + ", [cContactState] = '" + Tools.Database.SqlFmt(contact.cContactState) + "'" + ", [cContactZip] = '" + Tools.Database.SqlFmt(contact.cContactZip) + "'" + ", [cContactCountry] = '" + Tools.Database.SqlFmt(contact.cContactCountry) + "'" + ", [cContactTel] = '" + Tools.Database.SqlFmt(contact.cContactTel) + "'" + ", [cContactFax] = '" + Tools.Database.SqlFmt(contact.cContactFax) + "'" + ", [cContactXml] = '<Content><LocationSummary>" + Tools.Database.SqlFmt(contact.cContactLocationSummary) + "</LocationSummary></Content>'" + "WHERE [nContactKey] = " + contact.nContactKey;
 
                     ExeProcessSql(sSql);
                     return true;
