@@ -6024,7 +6024,15 @@ namespace Protean
 
                                 break;
                             }
-
+                        case "ISOa2":
+                            {                              
+                                sSql = "SELECT DISTINCT cLocationNameShort as name, cLocationISOa2 as value FROM tblCartShippingLocations WHERE nLocationType = 2 ORDER BY cLocationNameShort"; 
+                                using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
+                                {
+                                    oXform.addOptionsFromSqlDataReader(oCountriesDropDown, oDr);
+                                }
+                                break;
+                            }
                         default:
                             {
                                 // Not restricted by delivery address - add all countries.

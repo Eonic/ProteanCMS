@@ -2375,6 +2375,12 @@ namespace Protean
                                 oCart.populateCountriesDropDown(ref oXfrms, ref SelectElmt, "", true);
                                 break;
                             }
+                        case "CountriesISOa2":
+                            {
+                                var oCart = new Cms.Cart(ref myWeb);
+                                oCart.populateCountriesDropDown(ref oXfrms, ref SelectElmt, "ISOa2");
+                                break;
+                            }
                         case "Currency":
                             {
                                 XmlNode moPaymentCfg;
