@@ -18,6 +18,7 @@ namespace Protean.Tools
         private SKBitmap oImg; // the base image
         private SKBitmap oSourceImg; // the base image
         private SKCanvas oCanvas;
+        
         public event OnErrorEventHandler OnError;
 
         public delegate void OnErrorEventHandler(object sender, Protean.Tools.Errors.ErrorEventArgs e);
@@ -29,6 +30,8 @@ namespace Protean.Tools
         private int nMaxWidthCrop = 0;
 
         public string TinifyKey = "";
+
+        public string CopyrightText = null;
 
         public SKBitmap Image1
         {
@@ -705,6 +708,9 @@ namespace Protean.Tools
                     {
                         data.SaveTo(stream);
                     }
+                    if (CopyrightText != null && CopyrightText != "") { 
+                        AddCopyrightMetadata(szFileName);
+                    }
 
                     // Compress if needed
                     var imgFile = new FileInfo(szFileName);
@@ -1113,9 +1119,9 @@ namespace Protean.Tools
                         foreach (int size in sizes)
                         {
                             font = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold), size);
-                            float textWidth = paint.MeasureText(_WatermarkText);
+                            float textWidth = font.MeasureText(_WatermarkText);
 
-                            if (textWidth < phWidth * 0.66)
+                            if (textWidth < phWidth * 0.50)
                             {
                                 break;
                             }
@@ -1123,7 +1129,7 @@ namespace Protean.Tools
 
                         // Calculate position (bottom center)
                         int yPixelsFromBottom = (int)(phHeight * 0.05);
-                        float textWidth2 = paint.MeasureText(_WatermarkText);
+                        float textWidth2 = font.MeasureText(_WatermarkText);
                         float xCenterOfImg = (phWidth - textWidth2) / 2f;
                         float yPosFromBottom = phHeight - yPixelsFromBottom;
 
@@ -1202,10 +1208,10 @@ namespace Protean.Tools
 
                         foreach (int size in sizes)
                         {
-                            font = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold), size);
-                            float textWidth = paint.MeasureText(_WatermarkText);
+                            font = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Italic), size);
+                            float textWidth = font.MeasureText(_WatermarkText);
 
-                            if (textWidth < phWidth * 0.66)
+                            if (textWidth < phWidth * 0.35)
                             {
                                 break;
                             }
@@ -1213,16 +1219,16 @@ namespace Protean.Tools
 
                         // Calculate position
                         int yPixelsFromBottom = (int)(phHeight * 0.05);
-                        float textWidth2 = paint.MeasureText(_WatermarkText);
+                        float textWidth2 = font.MeasureText(_WatermarkText);
                         float xCenterOfImg = (phWidth - textWidth2) / 2f;
                         float yPosFromBottom = phHeight - yPixelsFromBottom;
 
                         // Draw shadow
-                        paint.Color = new SKColor(0, 0, 0, 153);
-                        canvas.DrawText(_WatermarkText, xCenterOfImg + 1, yPosFromBottom + 1, font, paint);
+                        //paint.Color = new SKColor(0, 0, 0, 153);
+                        //canvas.DrawText(_WatermarkText, xCenterOfImg + 1, yPosFromBottom + 1, font, paint);
 
                         // Draw text
-                        paint.Color = new SKColor(255, 255, 255, 153);
+                        paint.Color = new SKColor(255, 255, 255, 125);
                         canvas.DrawText(_WatermarkText, xCenterOfImg, yPosFromBottom, font, paint);
 
                         font.Dispose();
@@ -1268,7 +1274,7 @@ namespace Protean.Tools
                         new ArgumentNullException(nameof(oImgParam), "Image parameter is null"), ""));
                     return oImgParam;
                 }
-                
+
                 int phWidth = oImgParam.Width;
                 int phHeight = oImgParam.Height;
 
@@ -1293,9 +1299,9 @@ namespace Protean.Tools
                         foreach (int size in sizes)
                         {
                             font = new SKFont(SKTypeface.FromFamilyName("Arial", SKFontStyle.Bold), size);
-                            float textWidth = paint.MeasureText(_WatermarkText);
+                            float textWidth = font.MeasureText(_WatermarkText);
 
-                            if (textWidth < phWidth * 0.66)
+                            if (textWidth < phWidth * 0.50)
                             {
                                 break;
                             }
@@ -1303,16 +1309,16 @@ namespace Protean.Tools
 
                         // Calculate position
                         int yPixelsFromBottom = (int)(phHeight * 0.05);
-                        float textWidth2 = paint.MeasureText(_WatermarkText);
+                        float textWidth2 = font.MeasureText(_WatermarkText);
                         float xCenterOfImg = (phWidth - textWidth2) / 2f;
                         float yPosFromBottom = phHeight - yPixelsFromBottom;
 
                         // Draw shadow
-                        paint.Color = new SKColor(0, 0, 0, 153);
-                        canvas.DrawText(_WatermarkText, xCenterOfImg + 1, yPosFromBottom + 1, font, paint);
+                      //  paint.Color = new SKColor(0, 0, 0, 153);
+                      //  canvas.DrawText(_WatermarkText, xCenterOfImg + 1, yPosFromBottom + 1, font, paint);
 
                         // Draw text
-                        paint.Color = new SKColor(255, 255, 255, 153);
+                        paint.Color = new SKColor(255, 255, 255, 175);
                         canvas.DrawText(_WatermarkText, xCenterOfImg, yPosFromBottom, font, paint);
 
                         font.Dispose();
@@ -1348,6 +1354,36 @@ namespace Protean.Tools
 
         //private string[] _RandomFontFamily_ff = default;
 
+
+        private void AddCopyrightMetadata(string filePath)
+        {
+            try
+            {
+                using (var image = new ImageMagick.MagickImage(filePath))
+                {
+                    // Add copyright to EXIF data
+                    var profile = image.GetExifProfile();
+                    if (profile == null)
+                    {
+                        profile = new ImageMagick.ExifProfile();
+                        image.SetProfile(profile);
+                    }
+
+                    // Set copyright in EXIF
+                    profile.SetValue(ImageMagick.ExifTag.Copyright, CopyrightText);
+
+                    // Also set in general image attributes
+                    image.SetAttribute("Copyright", CopyrightText);
+
+                    // Save the modified image
+                    image.Write(filePath);
+                }
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddCopyrightMetadata", ex, ""));
+            }
+        }
         #endregion
 
     }

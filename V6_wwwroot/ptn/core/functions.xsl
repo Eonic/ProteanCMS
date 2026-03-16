@@ -6576,8 +6576,11 @@
     <xsl:param name="forceResize"/>
     <xsl:param name="class"/>
     <xsl:param name="style"/>
+	<xsl:param name="watermarktext"/>
+	<xsl:param name="copyright"/>
 
-    <xsl:variable name="src">
+
+	  <xsl:variable name="src">
       <xsl:choose>
         <!-- IF Thumbnail use that -->
         <xsl:when test="Images/img[@class='thumbnail']/@src!=''">
@@ -6703,6 +6706,8 @@
         <xsl:with-param name="forceResize" select="$forceResize"/>
         <xsl:with-param name="class" select="$class"/>
         <xsl:with-param name="style" select="$style"/>
+		  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+		  <xsl:with-param name="copyright" select="$copyright"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
@@ -6727,6 +6732,8 @@
     <xsl:param name="forceResize"/>
     <xsl:param name="class"/>
     <xsl:param name="style"/>
+	<xsl:param name="watermarktext"/>
+	<xsl:param name="copyright"/>
     <xsl:param name="imageUrl"/>
     <xsl:param name="altText"/>
     <!-- IF SO THAT we don't get empty tags if NO IMAGE -->
@@ -6798,6 +6805,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6828,6 +6837,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6854,6 +6865,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6880,6 +6893,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6906,6 +6921,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6932,6 +6949,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6958,6 +6977,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6984,6 +7005,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7010,6 +7033,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7036,6 +7061,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7062,6 +7089,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7088,6 +7117,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7114,6 +7145,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7335,6 +7368,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7365,6 +7400,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7391,6 +7428,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7417,6 +7456,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7443,6 +7484,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7469,6 +7512,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7495,6 +7540,8 @@
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
             <xsl:variable name="image">
@@ -9688,6 +9735,8 @@
     <xsl:param name="crop" select="false()"/>
     <xsl:param name="no-stretch" select="true()"/>
     <xsl:param name="forceResize"/>
+	<xsl:param name="watermarktext"/>
+	<xsl:param name="copyright"/>
 
     <xsl:variable name="max-width-calc">
       <xsl:choose>
@@ -9723,10 +9772,10 @@
       </xsl:choose-->
     <xsl:choose>
       <xsl:when test="$forceResize">
-        <xsl:value-of select="ew:ResizeImage2($path,$max-width-calc,$max-height-calc,$file-prefix,$file-suffix,$quality,$no-stretch,$crop,1)"/>
+        <xsl:value-of select="ew:ResizeImage2($path,$max-width-calc,$max-height-calc,$file-prefix,$file-suffix,$quality,$no-stretch,$crop,1,$watermarktext,$copyright)"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="ew:ResizeImage($path,$max-width-calc,$max-height-calc,$file-prefix,$file-suffix,$quality,$no-stretch,$crop)"/>
+        <xsl:value-of select="ew:ResizeImage($path,$max-width-calc,$max-height-calc,$file-prefix,$file-suffix,$quality,$no-stretch,$crop,$watermarktext,$copyright)"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

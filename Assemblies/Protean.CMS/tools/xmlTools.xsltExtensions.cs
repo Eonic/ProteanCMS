@@ -1576,7 +1576,7 @@ namespace Protean
                 string newFilepath = string.Empty;
                 try
                 {
-                    return ResizeImage2(cVirtualPath, maxWidth, maxHeight, sPrefix, sSuffix, nCompression, noStretch, isCrop, false);
+                    return ResizeImage2(cVirtualPath, maxWidth, maxHeight, sPrefix, sSuffix, nCompression, noStretch, isCrop, false, null, null);
                 }
                 catch (Exception ex)
                 {
@@ -1584,7 +1584,21 @@ namespace Protean
                 }
             }
 
-            public string ResizeImage2(string cVirtualPath, long maxWidth, long maxHeight, string sPrefix, string sSuffix, int nCompression, bool noStretch, bool isCrop, bool forceCheck)
+            public string ResizeImage(string cVirtualPath, long maxWidth, long maxHeight, string sPrefix, string sSuffix, int nCompression, bool noStretch, bool isCrop, string WatermarkText, string copyright)
+            {
+                string newFilepath = string.Empty;
+                try
+                {
+                    return ResizeImage2(cVirtualPath, maxWidth, maxHeight, sPrefix, sSuffix, nCompression, noStretch, isCrop, false, WatermarkText, copyright);
+                }
+                catch (Exception ex)
+                {
+                    return "Error - " + ex.Message;
+                }
+            }
+
+
+            public string ResizeImage2(string cVirtualPath, long maxWidth, long maxHeight, string sPrefix, string sSuffix, int nCompression, bool noStretch, bool isCrop, bool forceCheck, string WatermarkText, string copyright)
             {
                 string newFilepath = "";
                 string cProcessInfo = "Resizing - " + cVirtualPath;
@@ -1701,9 +1715,14 @@ namespace Protean
                                         oImage.NoStretch = noStretch;
                                         oImage.IsCrop = isCrop;
                                         oImage.SetMaxSize((int)maxWidth, (int)maxHeight);
-
+                                        if (copyright != null && copyright != "")
+                                        {
+                                            oImage.CopyrightText = copyright;
+                                        }
+                                        if (WatermarkText != null && WatermarkText != "") {
+                                            oImage.AddWatermark(WatermarkText, "");
+                                        }                                        
                                         oImage.Save(goServer.MapPath(newFilepath), nCompression, cCheckServerPath);
-
                                         var imgFile = new FileInfo(goServer.MapPath(newFilepath));
                                         var ptnImg = new Tools.Image("");
                                         ptnImg.TinifyKey = moConfig["TinifyKey"];
