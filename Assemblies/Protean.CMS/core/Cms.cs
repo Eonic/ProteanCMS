@@ -3576,7 +3576,7 @@ namespace Protean
                                                 // if we have a parent releationship lets add it
                                                 if (!string.IsNullOrEmpty(moRequest["contentParId"]))
                                                 {
-                                                    moDbHelper.insertContentRelation(Convert.ToInt16(moRequest["contentParId"]), nContentId.ToString(), moRequest["2way"] == "true");
+                                                    moDbHelper.insertContentRelation(Convert.ToInt32(moRequest["contentParId"]), nContentId.ToString(), moRequest["2way"] == "true");
                                                 }
                                                 // simply output the content detail XML
                                                 // As this is content that we must've been able to get,
