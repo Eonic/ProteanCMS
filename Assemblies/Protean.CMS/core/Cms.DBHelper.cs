@@ -11549,7 +11549,7 @@ namespace Protean
                             cSQl = $"Select nContentRelationKey from tblContentRelation where nContentParentId = {nParentID} and nContentChildId = {nChilds[nIx]}";
                         }
 
-                        int nID = Convert.ToInt16(ExeProcessSqlScalar(cSQl));
+                        int nID = Convert.ToInt32(ExeProcessSqlScalar(cSQl));
                         if (nID > 0)
                         {
                             nIDs += nID + ",";
