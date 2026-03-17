@@ -123,7 +123,7 @@ namespace Protean
                                 {
                                     apiLog.cPayLoad = SqlFmt(apiLog.cPayLoad);
                                 }
-                                sSql = String.Format("INSERT INTO [dbo].[tblAPILog] ([nUserId],[dRequestDateTime],[cRequestedUrl],[cMethodName],[cPayLoad],[cRequestType],[cSourceIP],[cUserAgent],[cResponseData],[cResponseType]) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", apiLog.nUserId, apiLog.dRequestDateTime, apiLog.cRequestedUrl, apiLog.cMethodName, apiLog.cPayLoad, apiLog.cRequestType, apiLog.cSourceIP, apiLog.cUserAgent, apiLog.cResponseData, apiLog.cResponseType);
+                                sSql = String.Format("INSERT INTO [dbo].[tblAPILog] ([nUserId],[dRequestDateTime],[cRequestedUrl],[cMethodName],[cPayLoad],[cRequestType],[cSourceIP],[cUserAgent],[cResponseData],[cResponseType]) VALUES ('{0}','{1}','{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}')", apiLog.nUserId, apiLog.dRequestDateTime.ToString("yyyy-MM-dd HH:mm:ss"), apiLog.cRequestedUrl, apiLog.cMethodName, apiLog.cPayLoad, apiLog.cRequestType, apiLog.cSourceIP, apiLog.cUserAgent, apiLog.cResponseData, apiLog.cResponseType);
 
                                 nId = myDbh.GetIdInsertSql(sSql);
 
