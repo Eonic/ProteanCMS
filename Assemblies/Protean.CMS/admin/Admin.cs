@@ -2405,7 +2405,7 @@ namespace Protean
                             {
 
                                 sAdminLayout = "EditUserContact";
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt16("0" + myWeb.moRequest["parid"]), Convert.ToInt16("0" + myWeb.moRequest["id"])));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt32("0" + myWeb.moRequest["parid"]), Convert.ToInt32("0" + myWeb.moRequest["id"])));
                                 if (moAdXfm.valid)
                                 {
                                     oPageDetail.RemoveAll();
@@ -3233,7 +3233,7 @@ namespace Protean
                                     long nDiscountType = Convert.ToInt64(Tools.Number.IsNumeric(myWeb.moRequest.Form["newDiscountType"]) ? myWeb.moRequest.Form["newDiscountType"] : (object)0);
                                     nDiscountType = Convert.ToInt64(Tools.Number.IsNumeric(myWeb.moRequest.Form["nDiscountCat"]) ? myWeb.moRequest.Form["nDiscountCat"] : (object)nDiscountType);
 
-                                    oPageDetail.AppendChild(moAdXfm.xFrmDiscountRule(Convert.ToInt16(Tools.Number.IsNumeric(myWeb.moRequest.QueryString["DiscId"]) ? myWeb.moRequest.QueryString["DiscId"] : (object)0), (int)nDiscountType));
+                                    oPageDetail.AppendChild(moAdXfm.xFrmDiscountRule(Convert.ToInt32(Tools.Number.IsNumeric(myWeb.moRequest.QueryString["DiscId"]) ? myWeb.moRequest.QueryString["DiscId"] : (object)0), (int)nDiscountType));
 
                                     if (moAdXfm.valid)
                                     {
