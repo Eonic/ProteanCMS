@@ -1971,12 +1971,12 @@ namespace Protean
                         for (int i = 0, loopTo = artid.Length - 1; i <= loopTo; i++)
                         {
                             sContentName = moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Convert.ToInt64(artid[i]));
-                            sContentSchemaName = moDbHelper.getContentType(Convert.ToInt16(artid[i]));
+                            sContentSchemaName = moDbHelper.getContentType(Convert.ToInt32(artid[i]));
                             bulkContentName = encodeAllHTML(sContentName);
                             //XmlNode argoNode1 = oFrmElmt;
                             base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, bulkContentName, false, "item-deleted");
                             // oFrmElmt = (XmlElement)argoNode1;
-                            oFrmElmt.LastChild.InnerXml = moDbHelper.getContentBrief(Convert.ToInt16(artid[i]));
+                            oFrmElmt.LastChild.InnerXml = moDbHelper.getContentBrief(Convert.ToInt32(artid[i]));
                             if (sContentSchemaName == "xFormQuiz")
                             {
                                 //XmlNode argoNode2 = oFrmElmt;
@@ -2001,7 +2001,7 @@ namespace Protean
                                 for (int i = 0, loopTo1 = artid.Length - 1; i <= loopTo1; i++)
                                 {
                                     sContentName = moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Convert.ToInt64(artid[i]));
-                                    sContentSchemaName = moDbHelper.getContentType(Convert.ToInt16(artid[i]));
+                                    sContentSchemaName = moDbHelper.getContentType(Convert.ToInt32(artid[i]));
                                     moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, Convert.ToInt64(artid[i]));
                                 }
                             }

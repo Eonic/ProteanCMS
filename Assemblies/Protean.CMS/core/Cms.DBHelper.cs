@@ -11478,11 +11478,11 @@ namespace Protean
                         {
                             if (string.IsNullOrEmpty(rType))
                             {
-                                insertContentRelation(Convert.ToInt16(goRequest.Form.Get("id")), cOValue, myWeb.moRequest["RelType"] == "1way" ? false : true );
+                                insertContentRelation(Convert.ToInt32(goRequest.Form.Get("id")), cOValue, myWeb.moRequest["RelType"] == "1way" ? false : true );
                             }
                             else
                             {
-                                insertContentRelation( Convert.ToInt16(goRequest.Form.Get("id")), cOValue, myWeb.moRequest["RelType"] == "1way" ? false : true,  rType);
+                                insertContentRelation( Convert.ToInt32(goRequest.Form.Get("id")), cOValue, myWeb.moRequest["RelType"] == "1way" ? false : true,  rType);
                             }
 
                         }

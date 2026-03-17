@@ -245,7 +245,7 @@ namespace Protean
                                         }
                                         else
                                         {
-                                            nParId = Convert.ToInt16(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance));
+                                            nParId = Convert.ToInt32(moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Content, base.Instance));
                                             moDbHelper.setContentLocation((long)pgid, (long)nParId, true, bCascade);
                                             if (goSession["mcRelAction"]?.ToString() == "Add" || goSession["mcRelAction"]?.ToString() == "Find")
                                             {
