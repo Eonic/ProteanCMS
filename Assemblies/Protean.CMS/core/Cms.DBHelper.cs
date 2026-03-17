@@ -6443,7 +6443,7 @@ namespace Protean
                         foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
                         {
                             XmlElement xmloContentElmt = oContentElmt;
-                            addRelatedContent(ref xmloContentElmt, Convert.ToInt16(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                            addRelatedContent(ref xmloContentElmt, Convert.ToInt32(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
                         }
                     }
                 }
