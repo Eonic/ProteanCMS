@@ -2405,7 +2405,7 @@ namespace Protean
                             {
 
                                 sAdminLayout = "EditUserContact";
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt16("0" + myWeb.moRequest["parid"]), Convert.ToInt16("0" + myWeb.moRequest["id"])));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt32("0" + myWeb.moRequest["parid"]), Convert.ToInt32("0" + myWeb.moRequest["id"])));
                                 if (moAdXfm.valid)
                                 {
                                     oPageDetail.RemoveAll();
