@@ -1,0 +1,28 @@
+<Discount>
+	<nDiscountKey>2116</nDiscountKey>
+	<nDiscountForeignRef/>
+	<cDiscountName>Tammy 20pc off</cDiscountName>
+	<cDiscountCode>TAMMY20</cDiscountCode>
+	<nDiscountCat>1</nDiscountCat>
+	<bDiscountIsPercent>1</bDiscountIsPercent>
+	<nDiscountValue>20</nDiscountValue>
+	<nDiscountMinPrice></nDiscountMinPrice>
+	<nDiscountMinQuantity></nDiscountMinQuantity>
+	<cAdditionalXML>
+		<cDescription />
+		<cTerms />
+		<Images>
+			<img src="" width="" height="" class="thumbnail" alt="" />
+			<img src="" width="" height="" class="display" alt="" />
+			<img src="" width="" height="" class="detail" alt="" />
+		</Images>
+		<bFreeGiftBox></bFreeGiftBox>
+		<bApplyToOrder></bApplyToOrder>
+		<cFreeShippingMethods></cFreeShippingMethods>
+		<nMinimumOrderValue>5</nMinimumOrderValue>
+		<nMaximumOrderValue>250</nMaximumOrderValue>
+		<nDiscountMaxPrice></nDiscountMaxPrice>
+	</cAdditionalXML>
+	<cDiscountUserCode>TAMMY20</cDiscountUserCode>
+	<nDiscountCodeType>1</nDiscountCodeType>
+</Discount>

@@ -1,13 +1,13 @@
 <Discount>
-	<nDiscountKey>34186</nDiscountKey>
+	<nDiscountKey>416</nDiscountKey>
 	<nDiscountForeignRef/>
-	<cDiscountName>Test Group Break</cDiscountName>
-	<cDiscountCode>TESTGROUP</cDiscountCode>
-	<nDiscountCat>5</nDiscountCat>
-	<bDiscountIsPercent>0</bDiscountIsPercent>
-	<nDiscountValue>10</nDiscountValue>
-	<nDiscountMinPrice>100</nDiscountMinPrice>
-	<nDiscountMinQuantity>2</nDiscountMinQuantity>
+	<cDiscountName>Defense Services 15%</cDiscountName>
+	<cDiscountCode>ITBDD15</cDiscountCode>
+	<nDiscountCat>1</nDiscountCat>
+	<bDiscountIsPercent>1</bDiscountIsPercent>
+	<nDiscountValue>15</nDiscountValue>
+	<nDiscountMinPrice></nDiscountMinPrice>
+	<nDiscountMinQuantity></nDiscountMinQuantity>
 	<cAdditionalXML>
 		<cDescription />
 		<cTerms />
@@ -20,9 +20,9 @@
 		<bApplyToOrder></bApplyToOrder>
 		<cFreeShippingMethods></cFreeShippingMethods>
 		<nMinimumOrderValue></nMinimumOrderValue>
-		<nMaximumOrderValue></nMaximumOrderValue>
+		<nMaximumOrderValue>250</nMaximumOrderValue>
 		<nDiscountMaxPrice></nDiscountMaxPrice>
 	</cAdditionalXML>
-	<cDiscountUserCode>TESTGROUP</cDiscountUserCode>
+	<cDiscountUserCode>ITBDD15</cDiscountUserCode>
 	<nDiscountCodeType>1</nDiscountCodeType>
 </Discount>

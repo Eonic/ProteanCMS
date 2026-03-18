@@ -521,7 +521,15 @@ namespace Protean
                                     {
                                         oCartXML.SetAttribute("showDiscountCodeBox", "true");
                                     }
-                                    double Total = Convert.ToDouble(oCartXML.SelectSingleNode("/Order/Item/@itemTotal")?.Value);
+                                    //for multiple items in cart, that time need sum of all item total to update order total in cart xml after discount applied.
+                                    double Total = 0;
+                                    var itemNodes = oCartXML.SelectNodes("/Order/Item");
+                                    foreach (XmlNode item in itemNodes)
+                                    {
+                                        double itemTotal = 0;
+                                        double.TryParse(item.Attributes["itemTotal"]?.Value, out itemTotal);
+                                        Total += itemTotal;
+                                    }
                                     myCart.updateTotals(ref oCartXML, Total, Convert.ToDouble(oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value), oCartXML.SelectSingleNode("/Order/@shippingType")?.Value);
                                 }
                             }
