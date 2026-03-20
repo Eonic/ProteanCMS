@@ -439,12 +439,12 @@ namespace Protean.Providers
                             {
                                 if (nDelIDs[0] == 0)
                                 {
-                                    nDelIDs[0] = Convert.ToInt16(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                    nDelIDs[0] = Convert.ToInt32(oDiscountItemTest.GetAttribute("nDiscountKey"));
                                 }
                                 else
                                 {
                                     Array.Resize(ref nDelIDs, nDelIDs.Length + 1);
-                                    nDelIDs[nDelIDs.Length - 1] = Convert.ToInt16(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                    nDelIDs[nDelIDs.Length - 1] = Convert.ToInt32(oDiscountItemTest.GetAttribute("nDiscountKey"));
                                 }
                             }
                         }
