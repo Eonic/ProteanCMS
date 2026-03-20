@@ -48,6 +48,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBrief" >
           <xsl:with-param name="sortBy" select="@sortBy"/>
+          <xsl:with-param name="linked" select="@linkArticle"/>
           <xsl:with-param name="showThumbnail" select="@showThumbnails"/>
           <xsl:with-param name="heading" select="$heading"/>
           <xsl:with-param name="title" select="@title"/>
@@ -57,7 +58,9 @@
         <div class="listItem list-group-item">
           <div class="lIinner">
             <a class="docLink zipicon" href="{$appPath}ptn/tools/download.ashx?docId={$idsList}&amp;filename=myzip.zip&amp;xPath=/Content/Path">
-              <xsl:call-template name="term2074" />
+              <span>
+                <xsl:call-template name="term2074" />
+              </span>
             </a>
           </div>
         </div>
@@ -78,6 +81,11 @@
     <xsl:param name="showThumbnail"/>
     <xsl:param name="heading"/>
     <xsl:param name="title"/>
+    <xsl:param name="crop"/>
+    <xsl:param name="class"/>
+    <xsl:param name="parentId"/>
+    <xsl:param name="linked"/>
+    <xsl:param name="itemLayout"/>
     <!-- documentBrief -->
     <xsl:variable name="parentURL">
       <xsl:apply-templates select="self::Content" mode="getHref">
@@ -96,12 +104,36 @@
         </xsl:otherwise>
       </xsl:choose>
     </xsl:variable>
-    <div class="listItem documents">
+    <xsl:variable name="classValues">
+      <xsl:text>listItem documents </xsl:text>
+      <xsl:if test="$linked='true'">
+        <xsl:text> linked-listItem </xsl:text>
+      </xsl:if>
+      <xsl:if test="$itemLayout='wide'">
+        <xsl:text> wide-item </xsl:text>
+      </xsl:if>
+      <xsl:value-of select="$class"/>
+      <xsl:text> </xsl:text>
+      <xsl:apply-templates select="." mode="themeModuleClassExtrasListItem">
+        <xsl:with-param name="parentId" select="$parentId"/>
+      </xsl:apply-templates>
+    </xsl:variable>
+    <xsl:variable name="cropSetting">
+      <xsl:choose>
+        <xsl:when test="$crop='true'">
+          <xsl:value-of select="true()"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="false()"/>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <div class="{$classValues}">
       <xsl:apply-templates select="." mode="inlinePopupOptions">
         <xsl:with-param name="class" select="'listItem documents'"/>
         <xsl:with-param name="sortBy" select="$sortBy"/>
       </xsl:apply-templates>
-      <div class="lIinner">
+      <div class="lIinner position-relative">
         <xsl:if test="$showThumbnail='true'">
           <xsl:apply-templates select="." mode="displayThumbnail"/>
         </xsl:if>
@@ -251,46 +283,54 @@
           </xsl:if>
           <p class="link">
             <a rel="external" class="docLink {substring-after(Path,'.')}icon">
-              <xsl:attribute name="href">
+            
+                <xsl:attribute name="href">
+                  <xsl:choose>
+                    <xsl:when test="contains(Path,'http://')">
+                      <xsl:value-of select="Path/node()"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:value-of select="$appPath"/>
+                      <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
+                      <xsl:value-of select="@id"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </xsl:attribute>
+                <xsl:attribute name="class">
+                  <xsl:text>docLink </xsl:text>
+                  <xsl:value-of select="substring-after(Path,'.')"/>
+                  <xsl:text>icon stretched-link</xsl:text>
+                </xsl:attribute>
+                <xsl:if test="$GoogleAnalyticsUniversalID!=''">
+                  <xsl:attribute name="onclick">
+                    <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                    <xsl:value-of select="Title/node()"/>
+                    <xsl:text>');</xsl:text>
+                  </xsl:attribute>
+                </xsl:if>
+				<span>
                 <xsl:choose>
                   <xsl:when test="contains(Path,'http://')">
+                    <xsl:attribute name="title">
+                      <!-- click here to view this document -->
+                      <xsl:call-template name="term2027a" />
+                    </xsl:attribute>
                     <xsl:value-of select="Path/node()"/>
                   </xsl:when>
                   <xsl:otherwise>
-                    <xsl:value-of select="$appPath"/>
-                    <xsl:text>ptn/tools/download.ashx?docId=</xsl:text>
-                    <xsl:value-of select="@id"/>
+                    <xsl:attribute name="title">
+                      <!-- click here to download a copy of this document -->
+                      <xsl:call-template name="term2027" />
+                    </xsl:attribute>
+                    <!--Download-->
+                    <xsl:call-template name="term2028" />
+                    <xsl:text>&#160;</xsl:text>
+                    <xsl:call-template name="getFileTypeName">
+                      <xsl:with-param name="extension" select="concat('.',substring-after(Path,'.'))"/>
+                    </xsl:call-template>
                   </xsl:otherwise>
                 </xsl:choose>
-              </xsl:attribute>
-              <xsl:if test="$GoogleAnalyticsUniversalID!=''">
-                <xsl:attribute name="onclick">
-                  <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-                  <xsl:value-of select="Title/node()"/>
-                  <xsl:text>');</xsl:text>
-                </xsl:attribute>
-              </xsl:if>
-              <xsl:choose>
-                <xsl:when test="contains(Path,'http://')">
-                  <xsl:attribute name="title">
-                    <!-- click here to view this document -->
-                    <xsl:call-template name="term2027a" />
-                  </xsl:attribute>
-                  <xsl:value-of select="Path/node()"/>
-                </xsl:when>
-                <xsl:otherwise>
-                  <xsl:attribute name="title">
-                    <!-- click here to download a copy of this document -->
-                    <xsl:call-template name="term2027" />
-                  </xsl:attribute>
-                  <!--Download-->
-                  <xsl:call-template name="term2028" />
-                  <xsl:text>&#160;</xsl:text>
-                  <xsl:call-template name="getFileTypeName">
-                    <xsl:with-param name="extension" select="concat('.',substring-after(Path,'.'))"/>
-                  </xsl:call-template>
-                </xsl:otherwise>
-              </xsl:choose>
+              </span>
             </a>
           </p>
         </div>

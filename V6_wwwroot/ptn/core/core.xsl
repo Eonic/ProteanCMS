@@ -3,7 +3,6 @@
 
   <xsl:import href="../core/functions.xsl"/>
   <xsl:import href="../core/xforms.xsl"/>
-  <xsl:import href="../core/localisation.xsl"/>
   <xsl:import href="../core/layouts.xsl"/>
   <xsl:import href="../core/modules/modules.xsl"/>
   

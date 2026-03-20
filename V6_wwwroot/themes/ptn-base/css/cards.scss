@@ -35,6 +35,10 @@
 
     .card.bg-primary {
         @include card-contrast($primary);
+
+        input, textarea {
+            border:0;
+        }
     }
 
     .card.bg-secondary {
@@ -117,6 +121,13 @@
             @include media-breakpoint-down(lg) {
                 padding: 0 $card-spacer-x-xs $card-spacer-y-xs;
             }
+        }
+    }
+
+    div[class*='border-'] {
+        .btn-custom {
+            background: $btn-color;
+            color:color-contrast($btn-color);
         }
     }
 

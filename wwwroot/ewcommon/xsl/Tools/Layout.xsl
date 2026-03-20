@@ -1082,7 +1082,7 @@
           </xsl:otherwise>
         </xsl:choose>
         <br />
-        <a class=""  href="{$siteURL}{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
+        <a class=""  href="{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
           View basket&#160;<i class="fa fa-chevron-right">&#160;</i>
         </a>
       </div>

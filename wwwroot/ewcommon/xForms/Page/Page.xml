@@ -60,6 +60,8 @@
         <bind id="cIcon" nodeset="@icon" required="false()" type="string"/>
         <bind id="uploadIcon" nodeset="@uploadIcon" required="false()" type="string" />
         <bind id="bParalaxLoad" nodeset="@paralaxLoad" required="false()" type="string" />
+        <bind id="ModalID" nodeset="@ModalID" required="false()" type="string"/>
+
       </bind>
       <bind id="cStructDescription" nodeset="Description" required="false()" type="string"/>
       <bind id="thumbnail" nodeset="Images/img[@class='thumbnail']" required="false()" type="xml-replace"/>
@@ -269,7 +271,18 @@
             </p>
             <p>Links for this page will open up another URL in a new window</p>
           </help>
-          </item>        
+          </item>
+          <item>
+            <label>Pop up box</label>
+            <value>popUp</value>
+            <toggle case="cLinkType_3" event="DOMActivate"/>
+            <help class="inline">
+              <p>
+                <strong>Pop up box</strong>
+              </p>
+              <p>Links to a box that pops up within the page, if available</p>
+            </help>
+          </item>
         </select1>
         <switch class="disable">
           <case id="cLinkType_1">
@@ -280,6 +293,11 @@
           <case id="cLinkType_2">
             <input bind="cUrl" class="long">
               <label>URL</label>
+            </input>
+          </case>
+          <case id="cLinkType_3">
+            <input bind="ModalID" class="long">
+              <label>ID</label>
             </input>
           </case>
         </switch>

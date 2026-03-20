@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -1192,6 +1193,18 @@ namespace Protean.Tools
                 sString = sString.Replace(((char)0).ToString(), ((char)32).ToString());
                 sString = sString.Replace(((char)8).ToString(), ((char)32).ToString());
                 sString = sString.Replace(((char)20).ToString(), ((char)32).ToString());
+
+                sString = sString.Replace("&amp;lsquo;", "&#8216;");
+                sString = sString.Replace("&amp;rsquo;", "&#8217;");
+                sString = sString.Replace("&amp;ldquo;", "&#8220;");
+                sString = sString.Replace("&amp;rdquo;", "&#8221;");
+                sString = sString.Replace("&amp;quot;", "&#34;");
+                sString = sString.Replace("&amp;deg;", "&#176;");
+                sString = sString.Replace("&amp;pound;", "&#163;");
+
+
+                sString = sString.Replace("&amp;amp;", "&#38;");
+                sString = sString.Replace("&amp;nbsp;", "&#160;");
                 sString = sString.Replace("&nbsp;", "&#160;");
                 sString = sString.Replace("¢", "&#162;");
                 sString = sString.Replace("£", "&#163;");
@@ -1226,6 +1239,13 @@ namespace Protean.Tools
                 sString = sString.Replace("≥", "&#8805;");
                 sString = sString.Replace("≠", "&#8800;");
 
+
+                sString = sString.Replace("�", "&#8211;");
+                
+
+                ConvertEmojiToEntities(sString);
+               
+
                 return sString == null ? "" : sString;
             }
             catch (Exception ex)
@@ -1234,6 +1254,29 @@ namespace Protean.Tools
                 return "";
             }
         }
+
+        public static string ConvertEmojiToEntities(string input)
+        {
+            var builder = new StringBuilder();
+
+            foreach (var ch in input)
+            {
+                int codePoint = char.ConvertToUtf32(input, input.IndexOf(ch));
+
+                // Emoji range: above basic ASCII/Unicode characters
+                if (codePoint > 127)
+                {
+                    builder.Append("&#" + codePoint + ";");
+                }
+                else
+                {
+                    builder.Append(ch);
+                }
+            }
+
+            return builder.ToString();
+        }
+
 
         public static string XmlDate(object dDate, bool bIncludeTime = false)
         {

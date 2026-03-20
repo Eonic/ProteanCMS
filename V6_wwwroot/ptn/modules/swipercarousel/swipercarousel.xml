@@ -10,7 +10,7 @@
         <cContentName/>
         <cContentSchemaName>Module</cContentSchemaName>
         <cContentXmlBrief>
-          <Content moduleType="SwiperCarousel" contentType="SwiperSlide" interval="5000" height="400" speed="400" box="" title="" link="" linkType="internal" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="related" rss="false" position="" commentPlatform="none" fbCommentsWidth="500"/>
+          <Content moduleType="SwiperCarousel" contentType="SwiperSlide" interval="5000" height="400" speed="400" box="" title="" link="" linkType="internal" sortBy="publish" order="descending" cols="1" stepBy="" stepCount="0" display="related" rss="false" position="" commentPlatform="none" fbCommentsWidth="500" heading="h2"/>
         </cContentXmlBrief>
         <cContentXmlDetail/>
         <nAuditId/>
@@ -62,6 +62,7 @@
       <bind id="grabberItems" nodeset="@grabberItems" required="false()" type="string"/>
       <bind id="grabberItterate" nodeset="@grabberItterate" required="false()" type="string"/>
       <bind id="autoplay" nodeset="@autoplay" required="false()" type="string"/>
+      <bind id="title-vis" nodeset="@title-vis" required="false()" type="string"/>
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
@@ -76,11 +77,29 @@
           <span>Content</span>
         </label>
         <group>
-          <input bind="cModuleTitle" class="long">
-            <label>Title or name</label>
-          </input>
-          <group class="row">
 
+          <group class="row row-2-col">
+            <group class="col">
+              <input bind="cModuleTitle" class="long">
+                <label>Title or name</label>
+              </input>
+            </group>
+            <group class="col">
+              <select1 appearance="full" bind="title-vis" class="short inline-items">
+                <label>Title Visibility</label>
+                <item>
+                  <label>Visible to all</label>
+                  <value>true</value>
+                </item>
+                <item>
+                  <label>Hidden (visible only to screen readers)</label>
+                  <value>false</value>
+                </item>
+              </select1>
+            </group>
+          </group>
+          
+          <group class="row">
             <group class="col-lg-4">
               <select1 appearance="full" bind="autoplay" class="short inline-items">
                 <label>Auto Play</label>

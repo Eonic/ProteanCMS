@@ -211,7 +211,14 @@ namespace Protean.Tools
                 if (nCompression < 1)
                     nCompression = 1;
                 // saves with compression and formatting
-                return SaveJPGWithCompressionSetting(oImg, cPath, nCompression, serverPath);
+                if (oImg != null)
+                {
+                    return SaveJPGWithCompressionSetting(oImg, cPath, nCompression, serverPath);
+                }
+                else {
+                    return false;
+                }
+                
             }
             catch (Exception ex)
             {

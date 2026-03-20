@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using Microsoft.VisualBasic.CompilerServices;
+using Protean.Providers.DiscountRule;
+using System;
 using System.Collections;
 using System.Data;
 using System.Runtime.InteropServices;
 using System.Web.Configuration;
 using System.Xml;
-using Lucene.Net.Support;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 namespace Protean
@@ -16,7 +16,7 @@ namespace Protean
     {
         public partial class Cart
         {
-            public class Discount
+            public class Discount : IDisposable
             {
 
                 private System.Collections.Specialized.NameValueCollection moCartConfig;
@@ -46,6 +46,15 @@ namespace Protean
                     SingleCode = 1, // was "12N"
                     UseOnce = 2, // was "121"
                     MultiCode = 3 // to be implemented later using tblCode
+                }
+                //This constructor is added for testing purpose
+                public Discount()
+                {
+                    mcCurrency = "GBP";
+                    mbRoundUp = true;
+                    mbRoundDown = false;
+                    mcPriceModOrder = "Basic_Money,Basic_Percent,Break_Product";
+                    mcUnitModOrder = "";
                 }
 
                 public Discount(ref Cms aWeb)
@@ -128,7 +137,7 @@ namespace Protean
                             mcUnitModOrder = moCartConfig["UnitModOrder"];
                         }
 
-                        mcModuleName = "Eonic.Discount";
+                        mcModuleName = "Protean.Discount";
                         myWeb.PerfMon.Log("Discount", "New-End");
                     }
 
@@ -145,24 +154,17 @@ namespace Protean
                     myWeb.PerfMon.Log("Discount", "CheckDiscounts");
                     if (!bIsCartOn & !bIsQuoteOn)
                         return 0m;
-                    DataSet oDsDiscounts;
-                    // Dim cSQL As String
-                    // Dim sUserSql As String
-                    var strSQL = new System.Text.StringBuilder();
-                    // Dim oDr As DataRow
-
+                    DataSet oDsDiscounts = new DataSet();                    
+                    var strSQL = new System.Text.StringBuilder();                  
                     var DiscountApplyDate = DateTime.Now;
                     // TS we should add logic here to get the invoiceDate from the xml if it exists. then we can apply historic discounts by refreshing the cartxml.
-
-                   // string[] sSQLArr = null;
-                    int nCount;
+                   
+                   
                     double dDisountAmount = 0d;
-                    string validateShippingGroup = string.Empty;
-                    //string oDiscountMessageNew = "The promo code you have provided is invalid for this transaction";
+                    string validateShippingGroup = string.Empty;                   
 
                     try
                     {
-
                         // get cart contentIds
                         var strItemIds = new System.Text.StringBuilder();
                         foreach (XmlElement xmlCartItem in oCartXML.SelectNodes("Item"))
@@ -186,18 +188,16 @@ namespace Protean
                                 }
                             }
                         }
-                        if (moCartConfig["CheckCartForDiscountToRequestDiscountCode"] != null) {
-                        if (moCartConfig["CheckCartForDiscountToRequestDiscountCode"].ToLower() == "on") {
-                            bDefaultPromoCode = true;
-                        } }
-
-
-
+                        if (moCartConfig["CheckCartForDiscountToRequestDiscountCode"] != null)
+                        {
+                            if (moCartConfig["CheckCartForDiscountToRequestDiscountCode"].ToLower() == "on")
+                            {
+                                bDefaultPromoCode = true;
+                            }
+                        }
                         if (!string.IsNullOrEmpty(cCartItemIds) & (bDefaultPromoCode | !string.IsNullOrEmpty(cPromoCodeUserEntered)))
                         {
-
                             string cUserGroupIds = getUserGroupIDs(); // get the user groups
-
 
                             // 'comment----------
                             // ' we selecting all discounts applicable to all Items of the cart.
@@ -213,16 +213,14 @@ namespace Protean
                                 DiscountApplyDate = Conversions.ToDate(oCartXML.Attributes["InvoiceDateTime"].Value);
                             }
 
-
-
-
-
-
                             cCartItemIds = cCartItemIds.Remove(cCartItemIds.Length - 1);
                             if (myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "bAllProductExcludeGroups"))
                             {
                                 // ' call stored procedure else existing code.
                                 // ' Passing parameter: cPromoCodeUserEntered,DiscountApplyDate,cUserGroupIds,nCartId
+                                // ' This returns all of the discount methods that are relevant for the user, the user group, and
+                                //   the product groups and the Date Range for the items in the shopping cart.
+                                // ' It does not check specific quanity / amount rules for the current cart these discounts need to be filtered out later.
                                 var param = new Hashtable();
                                 param.Add("PromoCodeEntered", cPromoCodeUserEntered);
                                 param.Add("UserGroupIds", cUserGroupIds);
@@ -230,58 +228,8 @@ namespace Protean
                                 param.Add("CartOrderDate", DiscountApplyDate);
                                 oDsDiscounts = myWeb.moDbHelper.GetDataSet("spCheckDiscounts", "Discount", "Discounts", false, param, CommandType.StoredProcedure);
                             }
-
                             else
-                            {
-
-
-                                // get the SQL together
-                                strSQL.Append("SELECT tblCartDiscountRules.nDiscountKey, tblCartDiscountRules.nDiscountForeignRef, tblCartDiscountRules.cDiscountName, ");
-                                strSQL.Append("tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ");
-                                strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue, ");
-                                strSQL.Append("tblCartDiscountRules.nDiscountMinPrice, tblCartDiscountRules.nDiscountMinQuantity, ");
-                                strSQL.Append(" tblCartDiscountRules.nDiscountCat, tblCartDiscountRules.cAdditionalXML, tblCartDiscountRules.nAuditId, ");
-                                strSQL.Append("tblCartCatProductRelations.nContentId, ");
-                                strSQL.Append("tblCartDiscountRules.nDiscountCodeType, ");
-                                strSQL.Append("tblCartDiscountRules.cDiscountUserCode, ");
-                                strSQL.Append("ci.nCartItemKey ");
-                                if (!string.IsNullOrEmpty(cPromoCodeUserEntered))
-                                {
-                                    strSQL.Append(", dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" + cPromoCodeUserEntered + "') as [CodeUsedId] ");
-                                }
-                                strSQL.Append("FROM tblCartCatProductRelations ");
-                                strSQL.Append("INNER JOIN tblCartDiscountProdCatRelations ON tblCartCatProductRelations.nCatId = tblCartDiscountProdCatRelations.nProductCatId ");
-                                strSQL.Append("INNER JOIN tblCartDiscountRules ");
-                                strSQL.Append("INNER JOIN tblCartDiscountDirRelations ON tblCartDiscountRules.nDiscountKey = tblCartDiscountDirRelations.nDiscountId ");
-                                strSQL.Append("INNER JOIN tblAudit ON tblCartDiscountRules.nAuditId = tblAudit.nAuditKey ON tblCartDiscountProdCatRelations.nDiscountId = tblCartDiscountRules.nDiscountKey ");
-                                strSQL.Append("INNER JOIN tblCartItem ci ON ci.nItemId = tblCartCatProductRelations.nContentId and ci.nCartOrderId = " + myCart.mnCartId);
-                                strSQL.Append("WHERE (tblAudit.nStatus = 1) ");
-                                strSQL.Append("AND (tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate >= " + sqlDate(DiscountApplyDate) + ")  ");
-                                strSQL.Append("AND (tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " + sqlDate(DiscountApplyDate) + ") ");
-                                strSQL.Append("AND (tblCartDiscountDirRelations.nDirId IN (" + cUserGroupIds + ")) ");
-
-                                if (myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountDirRelations", "nPermLevel"))
-                                {
-                                    // code to exclude denied discounts
-                                    strSQL.Append("AND (SELECT COUNT(dr2.nDiscountDirRelationKey) from tblCartDiscountDirRelations dr2" + " WHERE dr2.nDirId IN (" + cUserGroupIds + ")" + " AND nDiscountKey = dr2.nDiscountId" + " AND  dr2.nPermLevel = 0 ) = 0 ");
-                                }
-
-
-                                strSQL.Append("AND (tblCartCatProductRelations.nContentId IN (" + cCartItemIds + ")) ");
-
-
-                                // If LCase(myCart.mcCartCmd) = "discounts" Or LCase(myCart.mcCartCmd) = "notes" Then
-                                // return all
-                                if (!string.IsNullOrEmpty(cPromoCodeUserEntered))
-                                {
-                                    strSQL.Append("AND ((tblCartDiscountRules.cDiscountUserCode = '" + cPromoCodeUserEntered + "' and  tblCartDiscountRules.nDiscountCodeType IN (1,2))");
-                                    strSQL.Append("OR (tblCartDiscountRules.nDiscountCodeType = 3  and dbo.fxn_checkDiscountCode(tblCartDiscountRules.nDiscountKey, '" + cPromoCodeUserEntered + "') > 0))");
-                                }
-
-
-                                myWeb.PerfMon.Log("Discount", "CheckDiscounts - StartQuery");
-                                oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString(), "Discount", "Discounts");
-                                myWeb.PerfMon.Log("Discount", "CheckDiscounts - EndQuery");
+                            {                               
                             }
 
                             // TS: Add a union in here to add discount rule applied at an order level.
@@ -290,128 +238,79 @@ namespace Protean
                             // If promocode applied to added product in cart, and if user tried to add another product in cart, that time it will validate if total is crossing limit or not.
                             // if total crossed more or less than defined range then it will remove promocode for the user.
 
+                            var oDiscountMessage = oCartXML.OwnerDocument.CreateElement("DiscountMessage");
+                            
+                            if (oDsDiscounts != null && oDsDiscounts.Tables["Discount"].Rows.Count > 0 && oDsDiscounts.Tables.Contains("Discount"))
+                            {
+                                //Code to check nUseCount against nUseLimit
+                                bool hasUseCountColumn = myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseCount");
+                                bool hasUseLimitColumn = myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseLimit");
 
+                                // get order date from cart xml
+                                DateTime? orderDate = null; 
+                                string cartId = oCartXML.GetAttribute("cartId");
+                                if (!string.IsNullOrEmpty(cartId))
+                                {
+                                    // ✅ Get order insert date from tblAudit (through tblCartOrder)
+                                    string sql = @"SELECT a.dInsertDate FROM tblCartOrder cto INNER JOIN tblAudit a ON cto.nAuditId = a.nAuditKey WHERE cto.nCartOrderKey = " + cartId;
+                                    orderDate =Convert.ToDateTime(myWeb.moDbHelper.GetDataValue(sql));                                   
+                                }
+                                for (int i = oDsDiscounts.Tables["Discount"].Rows.Count - 1; i >= 0; i--)
+                                {
+                                    DataRow dr = oDsDiscounts.Tables["Discount"].Rows[i];
+                                    int useCount = 0; int useLimit = 0;                                  
+
+                                    if (hasUseCountColumn && dr["nUseCount"] != DBNull.Value)
+                                        useCount = Convert.ToInt32(dr["nUseCount"]);
+
+                                    if (hasUseLimitColumn && dr["nUseLimit"] != DBNull.Value)
+                                        useLimit = Convert.ToInt32(dr["nUseLimit"]);
+
+                                    // Remove if discount has reached its limit
+                                    if (useLimit > 0 && useCount >= useLimit)
+                                    {
+                                        bool allowPromoUse = false;
+                                        // Allow if promo code applied yeasterday and try to proceed order today.
+                                        if (orderDate.HasValue)
+                                        {
+                                            TimeSpan diff = DateTime.Now - orderDate.Value;
+                                            if (diff.TotalMinutes >= 5)
+                                            {
+                                                allowPromoUse = true;
+                                            }
+                                        }
+                                        if (!allowPromoUse)
+                                        {
+                                            // Remove this promo from the dataset
+                                            oDsDiscounts.Tables["Discount"].Rows.Remove(dr);
+                                            oDiscountMessage.InnerXml = "<span class=\"msg-1030\">The promo code you have provided has already been used the maximum number of times.</span>";
+                                            oCartXML.AppendChild(oDiscountMessage);
+                                        }
+                                    }
+                                }
+                            }
+
+                            // TS: Move to new CheckDiscounts                            
                             if (oDsDiscounts != null)
                             {
                                 if (oDsDiscounts.Tables["Discount"].Rows.Count > 0)
                                 {
-
-                                    if (!string.IsNullOrEmpty(cPromoCodeUserEntered))
+                                    XmlDocument oXmlDiscounts = new XmlDocument();
+                                    oXmlDiscounts.LoadXml(oDsDiscounts.GetXml());
+                                    oDiscountMessage = CheckDiscounts(oXmlDiscounts.DocumentElement, ref oCartXML, ref cPromoCodeUserEntered, myCart);
+                                    // check if DiscountMessage has any child nodes (means error message exists)
+                                    if (oDiscountMessage != null && oDiscountMessage.SelectSingleNode("span") != null)
                                     {
-                                        int nMinQuantity = Conversions.ToInteger(Operators.AddObject("0", oDsDiscounts.Tables["Discount"].Rows[0]["nDiscountMinQuantity"]));
-                                        double dMinPrice = Conversions.ToInteger(Operators.AddObject("0", oDsDiscounts.Tables["Discount"].Rows[0]["nDiscountMinPrice"]));
-                                        double dMaxPrice = 0d;
-                                        string additionalInfo = Conversions.ToString(Operators.AddObject(Operators.AddObject("<additionalXml>", oDsDiscounts.Tables["Discount"].Rows[0]["cAdditionalXML"]), "</additionalXml>"));
-                                        bool validateAddedDiscount = true;
-                                        double totalAmount = 0d;
-                                        bool bApplyToTotal = false;
-                                        var docAdditionalXMl = new XmlDocument();
-                                        short iCount = 0;
-                                        short iDiscount = (short)oDsDiscounts.Tables["Discount"].Rows.Count;
-                                        DataRow drDiscount;
-                                        short nValidProductCount = 0;
-                                        short bDiscountIsPercent = (short)Conversions.ToInteger(Operators.AddObject("0", oDsDiscounts.Tables["Discount"].Rows[0]["bDiscountIsPercent"]));
-
-                                        docAdditionalXMl.LoadXml(additionalInfo);
-                                        // check promocode is for total amount or not
-                                        if (docAdditionalXMl.InnerXml.Contains("bApplyToOrder"))
-                                        {
-                                            if (string.IsNullOrEmpty(docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText))
-                                            {
-                                                bApplyToTotal = false;
-                                            }
-                                            else
-                                            {
-                                                bApplyToTotal = Convert.ToBoolean(docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText);
-                                            }
-                                        }
-                                        // check if maximum price for individual is set
-                                        if (docAdditionalXMl.InnerXml.Contains("nDiscountMaxPrice"))
-                                        {
-                                            dMaxPrice = Conversions.ToDouble("0" + docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText);
-                                        }
-
-                                        // Add New code for checking promocode has free shipping options
-                                        if (docAdditionalXMl.InnerXml.Contains("cFreeShippingMethods"))
-                                        {
-                                            if (!string.IsNullOrEmpty(docAdditionalXMl.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText))
-                                            {
-                                                oCartXML.SetAttribute("NonDiscountedShippingCost", "0" + "");
-                                            }
-                                        }
-
-                                        if (bDiscountIsPercent != default(short))
-                                        {
-                                            oCartXML.SetAttribute("bDiscountIsPercent", bDiscountIsPercent + "");
-                                        }
-                                        double nItemCost = 0d;
-                                        if (oDsCart.Tables["Item"].Rows.Count > 0)
-                                        {
-
-                                            if (oDsDiscounts.Tables["Discount"].Rows.Count < nMinQuantity)
-                                            {
-                                                validateAddedDiscount = false;
-                                            }
-                                            else
-                                            {
-                                                foreach (DataRow drItem in oDsCart.Tables["Item"].Rows)
-                                                {
-
-                                                    if (Operators.ConditionalCompareObjectEqual(drItem["nParentId"], 0, false))
-                                                    {
-                                                        nItemCost = Conversions.ToDouble(Operators.MultiplyObject(drItem["price"], drItem["quantity"]));
-                                                        totalAmount = totalAmount + nItemCost;
-
-                                                        if (dMaxPrice != 0d)
-                                                        {
-                                                            if (nItemCost >= dMinPrice & nItemCost <= dMaxPrice)
-                                                            {
-                                                                nValidProductCount = (short)(nValidProductCount + 1);
-                                                            }
-                                                            else
-                                                            {
-                                                                var loopTo = (short)(iDiscount - 1);
-                                                                for (iCount = 0; iCount <= loopTo; iCount++) // looping inside discount row for valid items else remove it from the list
-                                                                {
-                                                                    if (iCount < iDiscount)
-                                                                    {
-                                                                        drDiscount = oDsDiscounts.Tables["Discount"].Rows[iCount];
-                                                                        if (Operators.ConditionalCompareObjectEqual(drDiscount["nCartItemKey"], drItem["id"], false))
-                                                                        {
-                                                                            oDsDiscounts.Tables["Discount"].Rows.RemoveAt(iCount);
-                                                                            iDiscount = (short)(iDiscount - 1);
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-
-                                                }
-                                            }
-
-                                        }
-
-                                        if (nValidProductCount < nMinQuantity) // check quantity is valid for total items in cart
-                                        {
-                                            validateAddedDiscount = false;
-                                        }
-
-
-                                        // validate discount if it is on total
-                                        if (bApplyToTotal)
-                                        {
-                                            if (validateAddedDiscount)
-                                            {
-                                                validateAddedDiscount = ValidateDiscount(totalAmount, additionalInfo);
-                                            }
-                                        }
-                                        if (validateAddedDiscount == false)
-                                        {
-                                            RemoveDiscountCode();
-                                            oDsDiscounts = null;
-                                        }
+                                        return 0m; // exit early because discount is invalid
                                     }
+                                    Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
+                                    IdiscountRuleProvider oDisProvider = oDiscRuleProv.Get();
+                                    // put all db funtions in it                                  
+                                    decimal nTotalSaved = oDisProvider.FinalCartUpdateDB(ref oCartXML, ref myWeb, mbRoundUp, ref myCart); 
+
+                                    if (!bFullCart)
+                                        oCartXML.InnerXml = "";
+                                    return nTotalSaved;
                                 }
                                 else
                                 {
@@ -421,20 +320,16 @@ namespace Protean
                                         oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString());
                                         oItemElmt.SetAttribute("unitSaving", 0.ToString());
                                         oItemElmt.SetAttribute("itemSaving", 0.ToString());
-                                        oItemElmt.SetAttribute("discount", 0.ToString());
+                                        oItemElmt.SetAttribute("discount", 0m.ToString("0.00"));
                                         oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("price")) * Conversions.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
-
                                     }
                                     oDsDiscounts = null;
                                 }
                             }
-
-
-                            if (oDsDiscounts is null)
+                            else
                             {
                                 if (!string.IsNullOrEmpty(cPromoCodeUserEntered))
-                                {
-                                    var oDiscountMessage = oCartXML.OwnerDocument.CreateElement("DiscountMessage");
+                                {                                    
                                     oDiscountMessage.InnerXml = "<span class=\"msg-1030\">The code you have provided is invalid for this transaction</span>";
                                     oCartXML.AppendChild(oDiscountMessage);
                                     // If promociode appiled and then it is inactive then also remove from cart also
@@ -442,233 +337,13 @@ namespace Protean
                                 }
                                 return 0m;
                             }
-                            else
-                            {
-                                foreach (DataColumn oDc in oDsDiscounts.Tables["Discount"].Columns)
-                                {
-                                    if (!(oDc.ColumnName == "cAdditionalXML"))
-                                        oDc.ColumnMapping = MappingType.Attribute;
-                                }
-                                oDsDiscounts.Tables["Discount"].Columns["cAdditionalXML"].ColumnMapping = MappingType.SimpleContent;
-                                // add a copy of the cart items table
-                                // ------------------------------------------------------------------------------------
-                                if (!bFullCart)
-                                {
-                                    // If just a summary then cart xml does not have the items
-                                    // add to Cart XML
-                                    if (oDsCart.Tables["Item"].Rows.Count > 0)
-                                    {
-                                        // cart items
-                                        oDsCart.Tables[0].Columns["nDiscountKey"].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns["nDiscountForeignRef"].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns[2].ColumnMapping = MappingType.Attribute;
-                                        // oDsCart.Tables(0).Columns(3).ColumnMapping = Data.MappingType.Attribute
-                                        oDsCart.Tables[0].Columns[4].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns[5].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns[6].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns[7].ColumnMapping = MappingType.Attribute;
-                                        oDsCart.Tables[0].Columns[8].ColumnMapping = MappingType.Attribute;
-
-                                        if (oDsCart.Tables[0].Columns["CodeUsedId"] != null)
-                                        {
-                                            oDsCart.Tables[0].Columns["CodeUsedId"].ColumnMapping = MappingType.Attribute;
-                                        }
-
-                                        // cart contacts
-
-                                        //XmlDataDocument oXml;
-                                        //oXml = new XmlDataDocument(oDsCart);
-                                        XmlDocument oXml = new XmlDocument();
-                                        if (oDsCart.Tables[0].Rows.Count>0)
-                                        {
-                                            oXml.LoadXml(oDsCart.GetXml());
-                                        }                                       
-                                        oDsCart.EnforceConstraints = false;
-
-                                        oCartXML.InnerXml = oXml.FirstChild.InnerXml;
-                                    }
-                                }
-                                // ------------------------------------------------------------------------------------
-
-                                // remove product's children as they mess with the discounts
-                                oDsDiscounts.Tables.Add(oDsCart.Tables["Item"].Copy());
-                                bool bDataTableChanged = false;
-                                foreach (DataRow drItem in oDsDiscounts.Tables["Item"].Rows)
-                                {
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(drItem["nParentId"], 0, false)))
-                                    {
-                                        drItem.Delete();
-                                        bDataTableChanged = true;
-                                    }
-                                }
-                                if (bDataTableChanged)
-                                {
-                                    oDsDiscounts.Tables["Item"].AcceptChanges();
-                                }
-
-                                // relate them
-                                oDsDiscounts.Relations.Add("ItemDiscount", oDsDiscounts.Tables["Item"].Columns["id"], oDsDiscounts.Tables["Discount"].Columns["nCartItemKey"], false);
-                                oDsDiscounts.Relations["ItemDiscount"].Nested = true;
-                                // now make it into an xml document
-                                var oDXML = new XmlDocument();
-                                string cXML = Strings.Replace(Strings.Replace(oDsDiscounts.GetXml(), "&gt;", ">"), "&lt;", "<");
-                                oDXML.InnerXml = cXML;
-                                oDXML.PreserveWhitespace = false;
-
-                                // now need to make sure there are no duplicates where multi groups exists
-                                XmlElement oItemElmt;
-                                foreach (XmlElement currentOItemElmt in oDXML.SelectNodes("Discounts/Item"))
-                                {
-                                    oItemElmt = currentOItemElmt;
-                                    int[] nDiscConts = new int[] { 0 };
-                                    string cDiscConts = ",";
-                                    foreach (XmlElement oDupElmt in oItemElmt.SelectNodes("Discount"))
-                                    {
-
-                                        if (cDiscConts.Contains("," + oDupElmt.GetAttribute("nDiscountKey") + ","))
-                                        {
-                                            oItemElmt.RemoveChild(oDupElmt);
-                                        }
-                                        else
-                                        {
-                                            cDiscConts += oDupElmt.GetAttribute("nDiscountKey") + ",";
-                                        }
-
-                                    }
-                                }
-
-                                // Itterate through those that have a cDiscountUserCode
-                                foreach (XmlElement currentOItemElmt1 in oDXML.SelectNodes("Discounts/Item/Discount[@cDiscountUserCode!='' or @nDiscountCodeType='3']"))
-                                {
-                                    oItemElmt = currentOItemElmt1;
-                                    bHasPromotionalDiscounts = true;
-
-                                    string cDiscountUserCode = oItemElmt.GetAttribute("cDiscountUserCode").ToLower();
-                                    promoCodeType nDiscountCodeType = (promoCodeType)Conversions.ToInteger(oItemElmt.GetAttribute("nDiscountCodeType").ToLower());
-
-                                    if (nDiscountCodeType == promoCodeType.MultiCode)
-                                    {
-                                        if (string.IsNullOrEmpty(cPromoCodeUserEntered))
-                                        {
-                                            oItemElmt.ParentNode.RemoveChild(oItemElmt);
-                                        }
-                                        else
-                                        {
-                                            // do nothing we will process this rule because it matches the incoming query which contains the code.
-                                        }
-                                    }
-                                    else if (!((cDiscountUserCode ?? "") == (cPromoCodeUserEntered.ToLower() ?? "")))
-                                    {
-                                        oItemElmt.ParentNode.RemoveChild(oItemElmt);
-                                    }
-                                    else if (nDiscountCodeType == promoCodeType.UseOnce)
-                                    {
-                                        if (!cPromotionalDiscounts.Contains("," + oItemElmt.GetAttribute("nDiscountKey") + ","))
-                                        {
-                                            cPromotionalDiscounts += oItemElmt.GetAttribute("nDiscountKey") + ",";
-                                        }
-                                    }
-
-                                }
-
-                                foreach (XmlElement currentOItemElmt2 in oDXML.SelectNodes("Discounts/Item/Discount[@CodeUsedId!='']"))
-                                {
-                                    oItemElmt = currentOItemElmt2;
-
-                                    cVouchersUsed += oItemElmt.GetAttribute("CodeUsedId") + ",";
-
-                                }
-
-                                // Price Modifiers
-                                string[] cPriceModifiers = new string[] { "Basic_Money", "Basic_Percent", "Break_Product" };
-
-                                if (!string.IsNullOrEmpty(mcPriceModOrder))
-                                    cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
-                                string strcFreeShippingMethods = "";
-                                string strbFreeGiftBox = "";
-
-                                if (oDsDiscounts != null)
-                                {
-                                    strcFreeShippingMethods = "";
-                                    var doc = new XmlDocument();
-                                    bool ProductGroups = Conversions.ToBoolean(1);
-
-                                    if (!string.IsNullOrEmpty(cPromoCodeUserEntered))
-                                    {
-                                        // getting productgroups value
-                                        strSQL.Clear();
-                                        strSQL.Append("Select cAdditionalXML From tblCartDiscountRules Where cDiscountUserCode = '" + cPromoCodeUserEntered + "'");
-
-                                        oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString(), "Discount", "Discounts");
-                                        if (oDsDiscounts.Tables["Discount"].Rows.Count > 0)
-                                        {
-                                            string additionalInfo = Conversions.ToString(Operators.AddObject(Operators.AddObject("<additionalXml>", oDsDiscounts.Tables["Discount"].Rows[0]["cAdditionalXML"]), "</additionalXml>"));
-                                            doc.LoadXml(additionalInfo);
-
-                                            if (doc.InnerXml.Contains("cFreeShippingMethods"))
-                                            {
-                                                if (!string.IsNullOrEmpty(doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText))
-                                                {
-                                                    strcFreeShippingMethods = doc.SelectSingleNode("additionalXml").SelectSingleNode("cFreeShippingMethods").InnerText;
-                                                    // Initializing the attribute NonDiscountedShippingCost which will get update once promocode applied
-                                                    oCartXML.SetAttribute("NonDiscountedShippingCost", "0");
-                                                    oCartXML.SetAttribute("freeShippingMethods", strcFreeShippingMethods);
-                                                }
-                                            }
-                                            if (doc.InnerXml.Contains("bFreeGiftBox"))
-                                            {
-                                                strbFreeGiftBox = doc.SelectSingleNode("additionalXml").SelectSingleNode("bFreeGiftBox").InnerText;
-                                                // If strbFreeGiftBox = "True" Then
-                                                // oCartXML.SetAttribute("bFreeGiftBox", strbFreeGiftBox)
-                                                // End If
-                                            }
-                                        }
-
-                                    }
-
-                                }
-
-
-                                int nPriceCount = 0; // this counts where we are on the prices, shows the order we done them in
-                                var loopTo1 = Information.UBound(cPriceModifiers);
-                                for (nCount = 0; nCount <= loopTo1; nCount++)
-                                {
-                                    switch (cPriceModifiers[nCount] ?? "")
-                                    {
-                                        case "Basic_Money":
-                                            {
-                                                Discount_Basic_Money(ref oDXML, ref nPriceCount, ref strcFreeShippingMethods, ref strbFreeGiftBox);
-                                                break;
-                                            }
-                                        case "Basic_Percent":
-                                            {
-                                                Discount_Basic_Percent(ref oDXML, ref nPriceCount, ref strcFreeShippingMethods);
-                                                break;
-                                            }
-                                        case "Break_Product":
-                                            {
-                                                Discount_Break_Product(ref oDXML, ref nPriceCount);
-                                                break;
-                                            }
-                                    }
-                                }
-                                // these  need to be ordered since they are dependant
-                                // on each other
-                                Discount_XForPriceY(ref oDXML, ref nPriceCount);
-                                Discount_CheapestDiscount(ref oDXML, ref nPriceCount);
-                                Discount_Break_Group(ref oDXML, ref nPriceCount);
-                                decimal nTotalSaved = Discount_ApplyToCart(ref oCartXML, oDXML);
-
-                                if (!bFullCart)
-                                    oCartXML.InnerXml = "";
-
-                                return nTotalSaved;
-                            }
+                           
                         }
+                        // TS: END Move to new CheckDiscounts, below code is else part for if CartItemIds is empty or PromoCodeUserEntered is empty
+
                         // 'code to validate exchange functionality
                         else if (string.IsNullOrEmpty(cCartItemIds) & !string.IsNullOrEmpty(cPromoCodeUserEntered))
                         {
-
                             strSQL.Append(" SELECT tblCartDiscountRules.cDiscountCode, tblCartDiscountRules.bDiscountIsPercent, ");
                             strSQL.Append("tblCartDiscountRules.nDiscountCompoundBehaviour, tblCartDiscountRules.nDiscountValue from tblCartDiscountRules where cDiscountCode='" + cPromoCodeUserEntered + "'");
                             // oDsDiscounts = myWeb.moDbHelper.GetDataSet(strSQL.ToString, "Discount", "Discounts")
@@ -691,20 +366,171 @@ namespace Protean
                                 oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString());
                                 oItemElmt.SetAttribute("unitSaving", 0.ToString());
                                 oItemElmt.SetAttribute("itemSaving", 0.ToString());
-                                oItemElmt.SetAttribute("discount", 0.ToString());
+                                oItemElmt.SetAttribute("discount", 0m.ToString("0.00"));
                                 oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("price")) * Conversions.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
 
                             }
                             return 0m;
+                        }                        
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckDiscounts", ex, "", "", gbDebug);
+                    }
+                    finally
+                    {
+                    }
+                    return default;
+                } 
 
+                public XmlElement CheckDiscounts(XmlElement oXmlDiscounts, ref XmlElement oCartXML, ref string AppliedCode, Cart myCart)
+                {
+                    try {
+                        bool isApplicable = false;
+                        int ProviderType = 0;
+                        int nPromocodeApplyFlag = 0;
+                        //ProviderType = Convert.ToInt32(discountNode.SelectSingleNode("nDiscountCodeType")?.InnerText ?? "0");
+                        Protean.Providers.DiscountRule.ReturnProvider oDiscRuleProv = new Protean.Providers.DiscountRule.ReturnProvider();
+                        IdiscountRuleProvider oDisProvider = oDiscRuleProv.Get();
 
+                        // Loop through the oDiscountXml to get the provider Type and run checkApplicable
+                        // Create a fresh XML doc for final output
+                        XmlDocument oFinalDiscounts = new XmlDocument();
+                        XmlElement root = oFinalDiscounts.CreateElement("Discounts");
+                        oFinalDiscounts.AppendChild(root);
+                        XmlNodeList discountNodes = oXmlDiscounts.SelectNodes("//Discount");
+                        foreach (XmlNode discountNode in discountNodes)
+                        {                           
+                            if (oDisProvider != null)
+                            {
+                                isApplicable = oDisProvider.CheckDiscountApplicable(discountNode, ref oCartXML, out ProviderType);
+                                if (isApplicable)
+                                {                                    
+                                    // Append discount to oCartXML
+                                    oDisProvider.UpdateCartXMLwithDiscounts(discountNode, oCartXML, ref oFinalDiscounts);                                   
+                                }
+                                else
+                                {
+                                    discountNode.ParentNode.RemoveChild(discountNode); // remove invalid discounts
+                                }
+                            }                            
                         }
 
-                       // oDsDiscounts.Dispose();
-                        //oDsDiscounts = null;
-                      //  myWeb.moDbHelper.CloseConnection();
-                    }
+                        // Check if FinalDiscounts XML has no discount nodes
+                        if (oFinalDiscounts == null || oFinalDiscounts.SelectNodes("/Discounts/Item").Count == 0)
+                        {                          
+                            var oDiscountMessage = oCartXML.OwnerDocument.CreateElement("DiscountMessage");
+                            // oDiscountMessage.InnerXml = "<span class=\"msg-1030\">The code you have provided is invalid for this transaction</span>";
+                            oDiscountMessage.InnerXml = "";
+                            oCartXML.AppendChild(oDiscountMessage);
 
+                            // remove invalid code from cart
+                            RemoveDiscountCode();
+                            foreach (XmlElement oItemElmt in oCartXML.SelectNodes("Item"))
+                            {
+                                // later sites are dependant on these values
+                                oItemElmt.SetAttribute("originalPrice", Round(oItemElmt.GetAttribute("price"), bForceRoundup: mbRoundUp).ToString());
+                                oItemElmt.SetAttribute("unitSaving", 0.ToString());
+                                oItemElmt.SetAttribute("itemSaving", 0.ToString());
+                                oItemElmt.SetAttribute("discount", 0m.ToString("0.00"));
+                                oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("price")) * Conversions.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
+                            }
+                            return oDiscountMessage;  // return cart early, no discount applied
+                        }
+                        else
+                        {
+                            // If we have a valid discount code, we can apply it to the cart
+                            // Based on providerType 1,2,3... get the actual provider
+                            IdiscountRuleProvider ApplicableProviderType = oDiscRuleProv.Get(ProviderType);
+                            if (ApplicableProviderType != null)
+                            {
+                                // now need to make sure there are no discounts that have been applied more than once.
+                                // revisit for optimization - nita
+                                foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item"))
+                                {
+
+                                    int[] nDiscConts = new int[] { 0 };
+                                    string cDiscConts = ",";
+                                    foreach (XmlElement oDupElmt in oItemElmt.SelectNodes("Discount"))
+                                    {
+                                        if (cDiscConts.Contains("," + oDupElmt.GetAttribute("nDiscountKey") + ","))
+                                        {
+                                            oItemElmt.RemoveChild(oDupElmt);
+                                        }
+                                        else
+                                        {
+                                            cDiscConts += oDupElmt.GetAttribute("nDiscountKey") + ",";
+                                        }
+                                    }
+                                }
+
+                                // Itterate through those that have a cDiscountUserCode and store them to global variables
+                                // so we can deactivate the codes on completed order.
+                                foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item/Discount[@cDiscountUserCode!='' or @nDiscountCodeType='3']"))
+                                {
+
+                                    bHasPromotionalDiscounts = true;
+                                    string cDiscountUserCode = oItemElmt.GetAttribute("cDiscountUserCode").ToLower();
+                                    promoCodeType nDiscountCodeType = (promoCodeType)Conversions.ToInteger(oItemElmt.GetAttribute("nDiscountCodeType").ToLower());
+
+                                    if (nDiscountCodeType == promoCodeType.MultiCode)
+                                    {
+                                        // if the code is empty then we remove the rule, otherwise we will process it.
+                                        if (string.IsNullOrEmpty(AppliedCode))
+                                        {
+                                            oItemElmt.ParentNode.RemoveChild(oItemElmt);
+                                        }
+                                        else
+                                        {
+                                            // do nothing we will process this rule because it matches the incoming query which contains the code.
+                                        }
+                                    }
+                                    //else if (!((cDiscountUserCode ?? "") == (AppliedCode.ToLower() ?? "")))
+                                    //{
+                                    //    oItemElmt.ParentNode.RemoveChild(oItemElmt);
+                                    //}
+                                    else if (nDiscountCodeType == promoCodeType.UseOnce)
+                                    {
+                                        if (!cPromotionalDiscounts.Contains("," + oItemElmt.GetAttribute("nDiscountKey") + ","))
+                                        {
+                                            cPromotionalDiscounts += oItemElmt.GetAttribute("nDiscountKey") + ",";
+                                        }
+                                    }
+                                }
+
+                                foreach (XmlElement oItemElmt in oFinalDiscounts.SelectNodes("/Discounts/Item/Discount[@CodeUsedId!='']"))
+                                {
+                                    cVouchersUsed += oItemElmt.GetAttribute("CodeUsedId") + ",";
+                                }
+
+                                // Look through the oDiscountXml to apply each discount rule by providerType
+                                // Price Modifiers
+                                string[] cPriceModifiers = new string[] { "Basic_Money", "Basic_Percent", "Break_Product" };
+
+                                if (!string.IsNullOrEmpty(mcPriceModOrder))
+                                    cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
+                                int nPriceCount = 0;
+                                ApplicableProviderType.ApplyDiscount(ref oFinalDiscounts, ref nPriceCount, mbRoundUp, ref myCart, cPriceModifiers, ref nPromocodeApplyFlag, ref oCartXML);
+
+                                // move this to CheckDiscounts 
+                                oDisProvider.FinalUpdateCartXMLwithDiscounts(ref oCartXML, oFinalDiscounts, mbRoundUp);
+
+                                // update the cart xml- added condition for test cases only
+                                if (oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value != "" && oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value != null)
+                                {
+                                    if (bHasPromotionalDiscounts)
+                                    {
+                                        oCartXML.SetAttribute("showDiscountCodeBox", "true");
+                                    }
+                                    double Total = Convert.ToDouble(oCartXML.SelectSingleNode("/Order/Item/@itemTotal")?.Value);
+                                    myCart.updateTotals(ref oCartXML, Total, Convert.ToDouble(oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value), oCartXML.SelectSingleNode("/Order/@shippingType")?.Value);
+                                }
+                            }
+                        }                      
+                        
+                        //updated CartXML with Discounts Applied.
+                        return oCartXML;
+                    }
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref myWeb.msException, mcModuleName, "CheckDiscounts", ex, "", "", gbDebug);
@@ -717,6 +543,38 @@ namespace Protean
                     return default;
                 }
 
+                public virtual void RecordDiscountUsage(ref XmlElement oCartElmt)
+                {
+                    string sDiscoutCode = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText;
+                    int discountKey = 0;
+                    XmlNode discountNode = oCartElmt.SelectSingleNode("//Discount");
+                    if (discountNode != null && discountNode.Attributes["nDiscountKey"] != null)
+                    {
+                        discountKey = Convert.ToInt32(discountNode.Attributes["nDiscountKey"].Value);
+                    }
+                    if (myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode"))
+                    {
+                        if (myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseLimit"))
+                        {
+                            DataSet oDS = new DataSet();
+                            if (myWeb.moDbHelper.checkDBObjectExists("spRecordDiscountUsage", Tools.Database.objectTypes.StoredProcedure))
+                            {
+                                var param = new Hashtable();
+                                param.Add("OrderId", myCart.mnCartId);
+                                param.Add("PromoCode", sDiscoutCode);
+                                param.Add("DiscountId", discountKey);
+                                oDS = myWeb.moDbHelper.GetDataSet("spRecordDiscountUsage", "Discount", "Discount", false, param, CommandType.StoredProcedure);
+                            }
+                        }
+                        else
+                        {
+                            string sSql = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values (";
+                            sSql += myCart.mnCartId + ",'";
+                            sSql += sDiscoutCode + "')";
+                            myWeb.moDbHelper.ExeProcessSql(sSql);
+                        }
+                    }
+                }
 
                 private string getUserEnteredPromoCode(ref XmlElement xmlNotes, ref XmlElement xmlCart)
                 {
@@ -1687,7 +1545,7 @@ namespace Protean
                             foreach (XmlElement currentOItemLoop in oDiscXml.SelectNodes("Discounts/Item[Discount/@nDiscountKey=" + oIDs[nI] + "]"))
                             {
                                 oItemLoop = currentOItemLoop;
-                               // bool bAllowedDiscount = false;
+                                // bool bAllowedDiscount = false;
                                 // Dim nCurrentUnitPrice As Decimal = oItemLoop.GetAttribute("price")
 
                                 // NB 16/02/2010
@@ -2020,10 +1878,12 @@ namespace Protean
                     string cUserGroupIds = getUserGroupIDs(); // get the user groups
                     try
                     {
-                        if (myCart.mnProcessId > 4)
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                        if (myCart.mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
+                        
                         else if (myCart.mnCartId > 0)
                         {
                             sSql = "select * from tblCartOrder where nCartOrderKey=" + myCart.mnCartId;
@@ -2079,82 +1939,120 @@ namespace Protean
                             }
                             else
                             {
-                                string additionalInfo = Conversions.ToString(Operators.AddObject(Operators.AddObject("<additionalXml>", oDsDiscounts.Tables["Discount"].Rows[0]["cAdditionalXML"]), "</additionalXml>"));
-                                doc.LoadXml(additionalInfo);
+                                //Code to check nUseCount against nUseLimit if UseOnce is true
 
-                                if (doc.InnerXml.Contains("nMinimumOrderValue"))
-                                {
-                                    minimumOrderTotal = Conversions.ToDouble("0" + doc.SelectSingleNode("additionalXml").SelectSingleNode("nMinimumOrderValue").InnerText);
-                                }
-                                if (doc.InnerXml.Contains("nMaximumOrderValue"))
-                                {
-                                    maximumOrderTotal = Conversions.ToDouble("0" + doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText);
-                                }
-                                if (doc.InnerXml.Contains("nDiscountMaxPrice"))
-                                {
-                                    dMaxPrice = Conversions.ToDouble("0" + doc.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText);
-                                }
+                                bool hasUseCountColumn = myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseCount");
+                                bool hasUseLimitColumn = myWeb.moDbHelper.checkTableColumnExists("tblCartDiscountRules", "nUseLimit");                                
 
-                                if (doc.InnerXml.Contains("bApplyToOrder"))
+                                foreach (DataRow discountRow in oDsDiscounts.Tables["Discount"].Rows)
                                 {
-                                    if (string.IsNullOrEmpty(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText))
+                                    int useCount = 0; int useLimit = 0;
+                                    if (hasUseCountColumn && discountRow["nUseCount"] != DBNull.Value)
+                                        useCount = Convert.ToInt32(discountRow["nUseCount"]);
+                                    if (hasUseLimitColumn && discountRow["nUseLimit"] != DBNull.Value)
+                                        useLimit = Convert.ToInt32(discountRow["nUseLimit"]);
+                                    if (useLimit > 0 && useCount >= useLimit)
                                     {
-                                        applyToTotal = false;
+                                        // This discount cannot be applied, skip it
+                                        return "The promo code you have provided has already been used the maximum number of times.";
                                     }
-                                    else
+                                }                                
+
+                                //Add new code modifications for multiple discounts with different types like different price range.
+                                bool validPromoFound = false;
+
+                                foreach (DataRow discountRow in oDsDiscounts.Tables["Discount"].Rows)
+                                {
+                                    // Wrap Additional XML
+                                    string additionalInfo = Conversions.ToString(
+                                        Operators.AddObject(
+                                            Operators.AddObject("<additionalXml>", discountRow["cAdditionalXML"]),
+                                            "</additionalXml>"
+                                        )
+                                    );
+
+                                    doc.LoadXml(additionalInfo);
+
+                                    // Initialize variables for each promo code
+
+                                    // Parse XML values safely
+                                    XmlNode nodeMin = doc.SelectSingleNode("additionalXml/nMinimumOrderValue");
+                                    if (nodeMin != null && !string.IsNullOrWhiteSpace(nodeMin.InnerText))
                                     {
-                                        applyToTotal = Convert.ToBoolean(doc.SelectSingleNode("additionalXml").SelectSingleNode("bApplyToOrder").InnerText);
+                                        minimumOrderTotal = Conversions.ToDouble("0" + nodeMin.InnerText);
                                     }
 
-                                    if (maximumOrderTotal != 0d)
+                                    XmlNode nodeMax = doc.SelectSingleNode("additionalXml/nMaximumOrderValue");
+                                    if (nodeMax != null && !string.IsNullOrWhiteSpace(nodeMax.InnerText))
                                     {
-                                        if (!(orderTotal >= minimumOrderTotal & orderTotal <= maximumOrderTotal))
-                                        {
-                                            oDsDiscounts.Clear();
-                                            oDsDiscounts = null;
-                                            return oDiscountMessage;
-                                        }
+                                        maximumOrderTotal = Conversions.ToDouble("0" + nodeMax.InnerText);
                                     }
+
+                                    XmlNode nodeMaxPrice = doc.SelectSingleNode("additionalXml/nDiscountMaxPrice");
+                                    if (nodeMaxPrice != null && !string.IsNullOrWhiteSpace(nodeMaxPrice.InnerText))
+                                    {
+                                        dMaxPrice = Conversions.ToDouble("0" + nodeMaxPrice.InnerText);
+                                    }
+
+                                    XmlNode nodeApply = doc.SelectSingleNode("additionalXml/bApplyToOrder");
+                                    if (nodeApply != null && !string.IsNullOrWhiteSpace(nodeApply.InnerText))
+                                    {
+                                        applyToTotal = Convert.ToBoolean(nodeApply.InnerText);
+                                    }
+
+                                    // If applyToTotal is true, validate order total
                                     if (applyToTotal)
                                     {
                                         if (maximumOrderTotal != 0d)
                                         {
-                                            if (!(orderTotal >= minimumOrderTotal & orderTotal <= maximumOrderTotal))
+                                            if (!(orderTotal >= minimumOrderTotal && orderTotal <= maximumOrderTotal))
                                             {
-                                                oDsDiscounts.Clear();
-                                                oDsDiscounts = null;
-                                                return oDiscountMessage;
+                                                continue; // Order total not in range
                                             }
                                         }
-
                                     }
 
-                                    // check maximum item price value set or not
-                                    if (dMaxPrice != 0d)
+                                    // If applyToTotal is false, validate items only
+                                    if (!applyToTotal)
                                     {
-                                        // validate quantity of cart as individual item not total quantity of item purchased
-                                        nDiscountQuantity = Conversions.ToInteger(Operators.ConcatenateObject("0", oDsDiscounts.Tables["Discount"].Rows[0]["nDiscountMinQuantity"]));
-                                        dMinPrice = Conversions.ToDouble(Operators.ConcatenateObject("0", oDsDiscounts.Tables["Discount"].Rows[0]["nDiscountMinPrice"]));
+                                        if (dMaxPrice != 0d)
+                                        {
+                                            nDiscountQuantity = Conversions.ToInteger("0" + discountRow["nDiscountMinQuantity"]);
+                                            dMinPrice = Conversions.ToDouble("0" + discountRow["nDiscountMinPrice"]);
 
-                                        foreach (XmlNode item in docOrder.SelectNodes("Order/Item"))
-                                        {
-                                            itemCost = Conversions.ToDouble(item.Attributes["itemTotal"].Value);
-                                            if (itemCost >= dMinPrice & itemCost <= dMaxPrice)
+                                            nCount = 0;
+                                            foreach (XmlNode item in docOrder.SelectNodes("Order/Item"))
                                             {
-                                                nCount = nCount + 1;
+                                                itemCost = Conversions.ToDouble(item.Attributes["itemTotal"].Value);
+                                                if (itemCost >= dMinPrice && itemCost <= dMaxPrice)
+                                                {
+                                                    nCount++;
+                                                }
                                             }
-                                        }
-                                        if (nCount < nDiscountQuantity)
-                                        {
-                                            oDsDiscounts.Clear();
-                                            oDsDiscounts = null;
-                                            return oDiscountMessage;
+
+                                            if (nCount < nDiscountQuantity)
+                                            {
+                                                continue; // Not enough qualifying items
+                                            }
                                         }
                                     }
 
+                                    //If all checks pass, promo is valid
+                                    validPromoFound = true;
                                 }
+
+                                // Final cleanup
                                 oDsDiscounts.Clear();
                                 oDsDiscounts = null;
+
+                                // Return message if no promo applied
+                                if (!validPromoFound)
+                                {
+                                    return oDiscountMessage;
+                                }
+
+                                // End Code Modifications
+
                             }
                             // myCart.moCartXml
 
@@ -2636,7 +2534,8 @@ namespace Protean
                     string sPromoCode = "";
                     try
                     {
-                        if (myCart.mnProcessId > 4)
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                        if (myCart.mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -2652,9 +2551,11 @@ namespace Protean
 
                                 foreach (DataRow oRow in oDs.Tables["Order"].Rows)
                                 {
-                                    xmlDoc.LoadXml(Conversions.ToString(oRow["cClientNotes"]));
-                                    xmlNotes = (XmlElement)xmlDoc.SelectSingleNode("Notes/PromotionalCode");
-
+                                    if (oRow["cClientNotes"] != DBNull.Value && !string.IsNullOrEmpty(oRow["cClientNotes"].ToString()))
+                                    {
+                                        xmlDoc.LoadXml(Conversions.ToString(oRow["cClientNotes"]));
+                                        xmlNotes = (XmlElement)xmlDoc.SelectSingleNode("Notes/PromotionalCode");
+                                    }
                                     oRow["cClientNotes"] = null;
                                 }
                                 myWeb.moDbHelper.updateDataset(ref oDs, "Order", true);
@@ -2967,9 +2868,79 @@ namespace Protean
 
                 #endregion
 
+                #region IDisposable Implementation
+
+                private bool disposedValue = false; // To detect redundant calls
+
+                // IDisposable
+                protected virtual void Dispose(bool disposing)
+                {
+                    if (!disposedValue)
+                    {
+                        if (disposing)
+                        {
+                            try
+                            {
+                                // ====================
+                                // NULL OUT REFERENCES (NOT OWNED - DO NOT DISPOSE)
+                                // ====================
+
+                                // myWeb is owned by parent/caller, just clear reference
+                                myWeb = null;
+
+                                // myCart is owned by parent/caller, just clear reference
+                                myCart = null;
+
+                                // Configuration references (owned by parent)
+                                moCartConfig = null;
+                                moConfig = null;
+
+                                // Clear string collections
+                                cPromotionalDiscounts = ",";
+                                cVouchersUsed = ",";
+                                mcGroups = null;
+                                mcCurrency = null;
+                                mcPriceModOrder = null;
+                                mcUnitModOrder = null;
+
+                                // Reset flags
+                                bHasPromotionalDiscounts = false;
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log disposal errors but don't throw
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error in Discount.Dispose: {ex.Message}");
+                            }
+                        }
+
+                        // Free unmanaged resources (if any)
+
+                        disposedValue = true;
+                    }
+                }
+
+                // Public Dispose method
+                public void Dispose()
+                {
+                    Dispose(true);
+                    GC.SuppressFinalize(this);
+                }
+
+                // Helper method to prevent use after disposal
+                protected void ThrowIfDisposed()
+                {
+                    if (disposedValue)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                }
+
+                #endregion
 
                 ~Discount()
                 {
+                    Dispose(false);
                 }
             }
         }

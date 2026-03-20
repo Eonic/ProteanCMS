@@ -403,7 +403,65 @@
       <xsl:otherwise>This information must be valid</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
+	<!-- 1036 login in using only google or microsoft -->
+	<xsl:template match="span[@class='msg-1036']" mode="term">
+		<xsl:choose>
+			<xsl:when test="$lang='de'">
+				Anmeldung fehlgeschlagen. Bitte verwenden Sie Ihr <xsl:value-of select="span[@class='AuthName']/node()"/> Konto, um sich anzumelden.
+			</xsl:when>
+			<xsl:when test="$lang='en-pr'">
+				Login failed. Please use your <xsl:value-of select="span[@class='AuthName']/node()"/> account to sign in.
+			</xsl:when>
+			<xsl:when test="$lang='es'">
+				Error de inicio de sesión. Utilice su cuenta <xsl:value-of select="span[@class='AuthName']/node()"/> para iniciar sesión.
+			</xsl:when>
+			<xsl:when test="$lang='fi'">
+				Kirjautuminen epäonnistui. Käytä <xsl:value-of select="span[@class='AuthName']/node()"/> -tiliäsi kirjautuaksesi sisään.
+			</xsl:when>
+			<xsl:when test="$lang='fr'">
+				Échec de la connexion. Veuillez utiliser votre compte <xsl:value-of select="span[@class='AuthName']/node()"/> pour vous connecter.
+			</xsl:when>
+			<xsl:when test="$lang='it'">
+				Accesso non riuscito. Utilizza il tuo account <xsl:value-of select="span[@class='AuthName']/node()"/> per accedere.
+			</xsl:when>
+			<xsl:when test="$lang='nl'">
+				Aanmelden mislukt. Gebruik uw <xsl:value-of select="span[@class='AuthName']/node()"/> account om in te loggen.
+			</xsl:when>
+			<xsl:otherwise>
+				Login failed. Please use your <xsl:value-of select="span[@class='AuthName']/node()"/> account to sign in.
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>	
+	
+  <xsl:template match="span[@class='msg-1037']" mode="term">
+	  <xsl:choose>
+		  <xsl:when test="$lang='de'">
+			  Benutzer <xsl:value-of select="span[@class='UserName']/node()"/> ist nicht berechtigt, auf diese Seite zuzugreifen. Bitte wenden Sie sich an den Administrator der Website.
+		  </xsl:when>
+		  <xsl:when test="$lang='en-pr'">
+			  The user <xsl:value-of select="span[@class='UserName']/node()"/> is not authorised to access this site. Please contact the site admin.
+		  </xsl:when>
+		  <xsl:when test="$lang='es'">
+			  El usuario <xsl:value-of select="span[@class='UserName']/node()"/> no está autorizado para acceder a este sitio. Por favor, contacte al administrador del sitio.
+		  </xsl:when>
+		  <xsl:when test="$lang='fi'">
+			  Käyttäjällä <xsl:value-of select="span[@class='UserName']/node()"/> ei ole oikeuksia sivustolle. Ota yhteyttä ylläpitäjään.
+		  </xsl:when>
+		  <xsl:when test="$lang='fr'">
+			  L'utilisateur <xsl:value-of select="span[@class='UserName']/node()"/> n'est pas autorisé à accéder à ce site. Veuillez contacter l'administrateur du site.
+		  </xsl:when>
+		  <xsl:when test="$lang='it'">
+			  L'utente <xsl:value-of select="span[@class='UserName']/node()"/> non è autorizzato ad accedere a questo sito. Contattare l'amministratore.
+		  </xsl:when>
+		  <xsl:when test="$lang='nl'">
+			  Gebruiker <xsl:value-of select="span[@class='UserName']/node()"/> heeft geen toegang tot deze site. Neem contact op met de sitebeheerder.
+		  </xsl:when>
+		  <xsl:otherwise>
+			  The user <xsl:value-of select="span[@class='UserName']/node()"/> is not authorised to access this site. Please see the site administrator.
+		  </xsl:otherwise>
+	  </xsl:choose>
+  </xsl:template>
 
   <!-- 1021 This username already exists in <membership>. Please select another. -->
   <xsl:template name="term1021">

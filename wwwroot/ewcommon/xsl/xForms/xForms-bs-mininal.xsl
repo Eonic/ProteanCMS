@@ -2,7 +2,6 @@
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
 
 	<xsl:template match="Page" mode="xform_control_scripts">
-
 		<xsl:if test="descendant-or-self::instance">
 			<!--################################################ modal for alert-->
 			<div class="modal fade" id="xFrmAlertModal" role="dialog" style ="padding-top:15%!important">
@@ -11,7 +10,7 @@
 						<div class="modal-body">
 							<i id="errorIcon" class="fa fa-exclamation-triangle" aria-hidden="true">&#160;</i>
 							<xsl:text disable-output-escaping="yes">&amp;</xsl:text>nbsp;
-							<button type="button" class="close" data-dismiss="modal">
+							<button type="button" class="close" data-dismiss="modal"  aria-label="close">
 								<i class="fa fa-times">&#160;</i>
 							</button>
 							<span id="errorMessage">&#160;</span>
@@ -64,12 +63,14 @@
 	<!-- ========================== XFORM ========================== -->
 	<!-- -->
 	<xsl:template match="div" mode="xform">
-		<xsl:if test="./@class">
+		<!--<xsl:if test="./@class">
 			<xsl:attribute name="class">
 				<xsl:value-of select="./@class"/>
 			</xsl:attribute>
-		</xsl:if>
+		</xsl:if>-->
+		
 		<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+		
 	</xsl:template>
 
 	<!-- -->
@@ -112,6 +113,11 @@
 			<xsl:if test="descendant::upload">
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 			</xsl:if>
+			<xsl:for-each select="model/submission/@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
+			</xsl:for-each>
 
 			<!--<xsl:copy-of select="/" />-->
 			<!--xsl:apply-templates select="self::Content" mode="tinyMCEinit"/-->
@@ -127,6 +133,9 @@
 							<xsl:call-template name="msg_required"/>
 						</span>
 					</xsl:if>
+					
+					
+					
 					<xsl:apply-templates select="submit" mode="xform"/>
 
 				</p>
@@ -161,6 +170,10 @@
 					</xsl:for-each>
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="alert">
+				<h1>alert!</h1>
+			</xsl:if>
+
 			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
 			<xsl:apply-templates select="input | secret | select | select1 | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
 			<xsl:if test="count(submit) &gt; 0">
@@ -184,6 +197,7 @@
 									</label>
 								</xsl:if>
 							</xsl:if>
+														
 							<!-- For xFormQuiz change how these buttons work -->
 							<xsl:apply-templates select="submit" mode="xform"/>
 							<!-- Terminus needed for CHROME ! -->
@@ -928,6 +942,12 @@
 					<xsl:value-of select="@data-pleasewaitdetail"/>
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="@icon-left!=''">
+				<i class="{@icon-left} iconleft">
+					<xsl:text> </xsl:text>
+				</i>
+				<xsl:text> </xsl:text>
+			</xsl:if>
 			<xsl:if test="not(contains($class,'icon-right'))">
 				<i class="fa {$icon} fa-white">
 					<xsl:text> </xsl:text>
@@ -941,6 +961,8 @@
 					<xsl:text> </xsl:text>
 				</i>
 			</xsl:if>
+
+			
 		</button>
 	</xsl:template>
 
@@ -1175,7 +1197,13 @@
 		<xsl:variable name="value">
 			<xsl:apply-templates select="." mode="xform_value"/>
 		</xsl:variable>
-		<input type="hidden" name="{$ref}" id="{$ref}" value="{$value}"/>
+		<input type="hidden" name="{$ref}" id="{$ref}" value="{$value}">
+			<xsl:for-each select="@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
+			</xsl:for-each>
+		</input>
 	</xsl:template>
 
   <xsl:template match="input[contains(@class,'configValue')]" mode="xform">
@@ -1248,13 +1276,10 @@
 					<xsl:attribute name="class">textbox form-control</xsl:attribute>
 				</xsl:otherwise>
 			</xsl:choose>
-			<xsl:for-each select="@*">
-				<xsl:variable name="nodename" select="name()"/>
-				<xsl:if test="starts-with($nodename,'data-fv')">
-					<xsl:attribute name="{name()}">
-						<xsl:value-of select="." />
-					</xsl:attribute>
-				</xsl:if>
+			<xsl:for-each select="@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
 			</xsl:for-each>
 			<xsl:choose>
 				<xsl:when test="$value!=''">
@@ -2426,6 +2451,14 @@
 					<xsl:value-of select="@onChange"/>
 				</xsl:attribute>
 			</xsl:if>
+
+			<xsl:for-each select="@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
+			</xsl:for-each>
+			
+			
 			<xsl:if test="not(contains(@class,'keep_empty'))">
 				<option value="">
 					<xsl:apply-templates select="." mode="getInlineHint"/>
@@ -2863,6 +2896,11 @@
 					<xsl:value-of select="@size"/>
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:for-each select="@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
+			</xsl:for-each>
 
 			<option value="">
 				<xsl:variable name="label_low" select="translate(label,'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz')"/>
@@ -4051,6 +4089,12 @@
 					<xsl:value-of select="@data-pleasewaitdetail"/>
 				</xsl:attribute>
 			</xsl:if>
+			<xsl:if test="@icon-left!=''">
+				<i class="fa {@icon-left} fa-white">
+					<xsl:text> </xsl:text>
+				</i>
+				<xsl:text> </xsl:text>
+			</xsl:if>
 			<xsl:if test="not(contains($class,'icon-right'))">
 				<i class="fa {$icon} fa-white">
 					<xsl:text> </xsl:text>
@@ -4069,7 +4113,7 @@
 	<!-- ========================== CONTROL : INPUT HIDDEN ========================== -->
 	<!-- -->
 
-	<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform">
+	<!--<xsl:template match="input[contains(@class,'recaptcha')]" mode="xform">
 		<xsl:variable name="ref">
 			<xsl:apply-templates select="." mode="getRefOrBind"/>
 		</xsl:variable>
@@ -4083,6 +4127,11 @@
 			</xsl:call-template>
 		</xsl:variable>
 		<div class="g-recaptcha" data-sitekey="{$key}">
+			<xsl:for-each select="@*[starts-with(name(),'data-')]">
+				<xsl:attribute name="{name()}">
+					<xsl:value-of select="."/>
+				</xsl:attribute>
+			</xsl:for-each>
 			<xsl:text> </xsl:text>
 		</div>
 	</xsl:template>
@@ -4091,7 +4140,110 @@
 		<script src="https://www.google.com/recaptcha/api.js" async="" defer="">
 			<xsl:text> </xsl:text>
 		</script>
+	</xsl:template>-->
+	
+	<!--ReCaptchaV3 and ReCaptchaV2 template Handles rendering of the hidden field + JS -->
+   <xsl:template match="input[contains(@class,'recaptcha')]" mode="xform">
+        <!-- Get reCAPTCHA settings -->	
+		<xsl:variable name="recaptchaVersion">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaVersion'"/>
+			</xsl:call-template>
+		</xsl:variable>
+	   <xsl:variable name="recaptchaKey">
+		  <xsl:choose>
+			<xsl:when test="contains($recaptchaVersion, 'v3')">
+			  <xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaKeyV3'"/>
+			  </xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+			  <xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
+			  </xsl:call-template>
+			</xsl:otherwise>
+		  </xsl:choose>
+		</xsl:variable>
+        <!-- Conditional rendering -->
+		<xsl:choose>
+			<!-- Version 3 -->
+			<xsl:when test="contains($recaptchaVersion, 'v3')">
+				<input type="hidden" name="g-recaptcha-response" id="recaptcha-token" class="recaptcha" />
+			</xsl:when>
+
+			<!-- Version 2 -->
+			<xsl:otherwise>
+				<div class="g-recaptcha" data-sitekey="{$recaptchaKey}">
+					<xsl:for-each select="@*[starts-with(name(),'data-')]">
+						<xsl:attribute name="{name()}">
+							<xsl:value-of select="."/>
+						</xsl:attribute>
+					</xsl:for-each>
+					<xsl:text> </xsl:text>
+				</div>				
+			</xsl:otherwise>
+		</xsl:choose>
 	</xsl:template>
+	
+   <xsl:template match="input[contains(@class,'recaptcha')]" mode="xform_control_script">		
+		<xsl:variable name="recaptchaVersion">
+			<xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaVersion'"/>
+			</xsl:call-template>
+		</xsl:variable>
+	   
+	   <xsl:variable name="recaptchaKey">
+		  <xsl:choose>
+			<xsl:when test="contains($recaptchaVersion, 'v3')">
+			  <xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaKeyV3'"/>
+			  </xsl:call-template>
+			</xsl:when>
+			<xsl:otherwise>
+			  <xsl:call-template name="getXmlSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'ReCaptchaKey'"/>
+			  </xsl:call-template>
+			</xsl:otherwise>
+		  </xsl:choose>
+		</xsl:variable>
+
+		<xsl:choose>
+			<!-- reCAPTCHA v3 -->
+			<xsl:when test="contains($recaptchaVersion, 'v3')">				
+				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}">
+					<xsl:text> </xsl:text>
+				</script>
+				<script>
+					var hiddenInput = document.getElementById('recaptcha-token');
+					var form = hiddenInput.closest('form');
+					form.addEventListener('submit', function(e) {
+						e.preventDefault();
+						grecaptcha.ready(function() {
+							grecaptcha.execute('<xsl:value-of select="$recaptchaKey"/>', { action: 'submit' })
+								.then(function(token) {
+									hiddenInput.value = token;
+									form.submit();
+								});
+						});
+					});
+				</script>
+			</xsl:when>
+			<!-- reCAPTCHA v2 -->
+			<xsl:otherwise>
+				<script src="https://www.google.com/recaptcha/api.js" async="" defer="">
+					<xsl:text> </xsl:text>
+				</script>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
 
 	<xsl:template match="input[contains(@class,'telephone')]" mode="xform_control">
 		<xsl:variable name="label_low">
@@ -4158,7 +4310,7 @@
 				const telinput = document.querySelector("#<xsl:value-of select="$ref"/>-temp");
 
 				window.intlTelInput(telinput, {
-				initialCountry: "auto",
+				initialCountry: "gb",
 				preferredCountries: ["gb"],
 				separateDialCode: true,
 				utilsScript: "/ewcommon/js/intlTelInput/js/utils.js",

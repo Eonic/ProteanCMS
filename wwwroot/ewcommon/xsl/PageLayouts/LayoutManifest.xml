@@ -16,9 +16,11 @@
   <ContentTypes>
     <ContentTypeGroup name="Text/HTML">
       <ContentType type="Module" name="Module">A block of content</ContentType>
-      <ContentType type="FormattedText" name="Formatted Text">Plain text that can be formatted into HTML using a simple word processor interface</ContentType>
-      <ContentType type="PlainText" name="Plain Text">Plain unformatted text</ContentType>
+      <ContentType type="FormattedText" name="Formatted Text">Plain text that can be formatted into HTML using a simple word processor interface</ContentType>      
+	  <ContentType type="PlainText" formPath="/xforms/Content/PlainText" name="Plain Text" >Plain unformatted text</ContentType>
+	  <ContentType type="MetaData" formPath="/xforms/Content/MetaData" name="Meta Data" >Meta Data</ContentType>
       <ContentType type="Image" name="Image">An Image to display</ContentType>
+		<ContentType type="Tag" name="Tag">Tag or Category</ContentType>
     </ContentTypeGroup>
     <ContentTypeGroup name="Media">
       <ContentType type="Document" name="Document">A Document for visitors to download</ContentType>
@@ -167,5 +169,6 @@
   <FilterTypes>
 	  <Filter type="PageFilter" formPath="Filter/PageFilter" name="Page Filter" >Page Filter</Filter>
 	  <Filter type="PriceFilter" formPath="Filter/PriceFilter" name="Price Filter" >Price Filter</Filter>
-  </FilterTypes>
+	  <Filter type="PriceBandFilter" formPath="Filter/PriceBandFilter" name="PriceBand Filter" >PriceBand Filter</Filter>
+  </FilterTypes>	
 </PageLayouts>

@@ -63,3 +63,157 @@
     }
 }
 
+// 1/5 column
+.col-xs-5th {
+    width: 20%;
+}
+
+.col-sm-5th {
+    @include media-breakpoint-up(sm) {
+        width: 20%;
+    }
+}
+
+.col-md-5th {
+    @include media-breakpoint-up(md) {
+        width: 20%;
+    }
+}
+
+.col-lg-5th {
+    @include media-breakpoint-up(lg) {
+        width: 20%;
+    }
+}
+
+.col-xl-5th {
+    @include media-breakpoint-up(xl) {
+        width: 20%;
+    }
+}
+
+.col-xxl-5th {
+    @include media-breakpoint-up(xxl) {
+        width: 20%;
+    }
+}
+// 2/5 column
+.col-2-5th {
+    width: 40%;
+}
+
+.col-xs-2-5th {
+    @include media-breakpoint-only(xs) {
+        width: 40%;
+    }
+}
+
+.col-sm-2-5th {
+    @include media-breakpoint-only(sm) {
+        width: 40%;
+    }
+}
+
+.col-md-2-5th {
+    @include media-breakpoint-only(md) {
+        width: 40%;
+    }
+}
+
+.col-lg-2-5th {
+    @include media-breakpoint-only(lg) {
+        width: 40%;
+    }
+}
+
+.col-xl-2-5th {
+    @include media-breakpoint-only(xl) {
+        width: 40%;
+    }
+}
+
+.col-xxl-2-5th {
+    @include media-breakpoint-only(xxl) {
+        width: 40%;
+    }
+}
+// 3/5 column
+.col-3-5th {
+    width: 60%;
+}
+
+.col-xs-3-5th {
+    @include media-breakpoint-only(xs) {
+        width: 60%;
+    }
+}
+
+.col-sm-3-5th {
+    @include media-breakpoint-only(sm) {
+        width: 60%;
+    }
+}
+
+.col-md-3-5th {
+    @include media-breakpoint-only(md) {
+        width: 60%;
+    }
+}
+
+.col-lg-3-5th {
+    @include media-breakpoint-only(lg) {
+        width: 60%;
+    }
+}
+
+.col-xl-3-5th {
+    @include media-breakpoint-only(xl) {
+        width: 60%;
+    }
+}
+
+.col-xxl-3-5th {
+    @include media-breakpoint-only(xxl) {
+        width: 60%;
+    }
+}
+// 4/5 column
+.col-4-5th {
+    width: 80%;
+}
+
+.col-xs-4-5th {
+    @include media-breakpoint-only(xs) {
+        width: 80%;
+    }
+}
+
+.col-sm-4-5th {
+    @include media-breakpoint-only(sm) {
+        width: 80%;
+    }
+}
+
+.col-md-4-5th {
+    @include media-breakpoint-only(md) {
+        width: 80%;
+    }
+}
+
+.col-lg-4-5th {
+    @include media-breakpoint-only(lg) {
+        width: 80%;
+    }
+}
+
+.col-xl-4-5th {
+    @include media-breakpoint-only(xl) {
+        width: 80%;
+    }
+}
+
+.col-xxl-4-5th {
+    @include media-breakpoint-only(xxl) {
+        width: 80%;
+    }
+}

@@ -6,7 +6,6 @@ using Org.BouncyCastle.Crypto.Parameters;
 using System;
 using System.Configuration;
 using System.IO;
-using System.Management;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -113,14 +112,42 @@ namespace Protean.Tools
                             break;
                         }
                     case "sha2_512":
+                    case "sha2_512_salt":
 
-                        //TS - Untested.
-                        Byte[] inputBytes = Encoding.UTF8.GetBytes(OriginalString);
-                        SHA512 shaM = new SHA512Managed();
-                        Byte[] hashedBytes = shaM.ComputeHash(inputBytes);
-                        //cResult = BitConverter.ToString(hashedBytes);
-                        cResult = Convert.ToBase64String(hashedBytes);
+                        using (SHA512 sha512 = SHA512.Create())
+                        {
+                            byte[] hashBytes = sha512.ComputeHash(Encoding.Unicode.GetBytes(OriginalString));
+                            cResult = Convert.ToBase64String(hashBytes);
+
+                            //StringBuilder sb = new StringBuilder(128);
+                            //foreach (byte b in hashBytes)
+                            //{
+                            //    sb.Append(b.ToString("x2")); // Lowercase hexadecimal
+                            //}
+                            //cResult =  sb.ToString();
+                            //sb = null;
+                        }
+
                         break;
+                    case "sha2_256_hex":
+
+                        using (SHA256 sha256 = SHA256.Create())
+                        {
+                            byte[] hashBytes = sha256.ComputeHash(Encoding.Unicode.GetBytes(OriginalString));
+                            cResult = BitConverter.ToString(hashBytes).Replace("-", "").ToUpper();
+
+                            //StringBuilder sb = new StringBuilder(128);
+                            //foreach (byte b in hashBytes)
+                            //{
+                            //    sb.Append(b.ToString("x2")); // Lowercase hexadecimal
+                            //}
+                            //cResult =  sb.ToString();
+                            //sb = null;
+                        }
+
+                        break;
+
+                        
 
                     default:
                         {
@@ -365,6 +392,7 @@ namespace Protean.Tools
             }
             catch (Exception ex)
             {
+                strResult = ex.Message;
                 strResult = "Error. Input Data is not base64 encoded.";
                 return strResult;
             }

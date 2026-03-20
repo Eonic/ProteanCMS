@@ -1,12 +1,21 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
+using System.Net.Http;
+using System.Net.PeerToPeer;
+using System.Security.Authentication;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using Alphaleonis.Win32.Network;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
+using static Protean.Cms;
 using static Protean.stdTools;
+using Protean.Tools;
 
 namespace Protean
 {
@@ -14,18 +23,22 @@ namespace Protean
     public partial class Cms
     {
 
+        private System.Collections.Specialized.NameValueCollection goConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+
+
         public partial class Admin
         {
 
 
+
             #region JSON Actions
 
-            public class JSONActions : Protean.rest.JsonActions
+            public class JSONActions : Protean.rest.JSONActions
             {
 
-                public event OnErrorEventHandler OnError;
+                //public event OnErrorEventHandler OnError;
 
-                public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+                //public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Cms.Admin.JSONActions";
                 private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
                 private Cms myWeb;
@@ -35,11 +48,11 @@ namespace Protean
                 public Admin.Redirects moAdminRedirect;
                 public System.Collections.Specialized.NameValueCollection goConfig;
                 public System.Web.HttpContext moCtx;
+                public bool impersonationMode = false;
 
 
 
-
-                public JSONActions()
+                public JSONActions(Cms.dbHelper.utils.APILog apiLog)
                 {
                     //string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
@@ -51,7 +64,7 @@ namespace Protean
                     moAdminXfm = (Admin.AdminXforms)myWeb.getAdminXform();
                     goConfig = myWeb.moConfig;
                     moCtx = myWeb.moCtx;
-
+                    this.apiLog = apiLog;
                 }
 
                 public void Open(XmlDocument oPageXml)
@@ -78,7 +91,7 @@ namespace Protean
                     try
                     {
 
-                        if (this.ValidateAPICall(ref myWeb, "Administrator"))
+                        if (this.ValidateAPICall("Administrator"))
                         {
 
                             if (inputJson["objType"] != null)
@@ -97,7 +110,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "Query", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "Query", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -108,7 +121,7 @@ namespace Protean
                     {
                         string count = "0";
                         bool bIsAuthorized = false;
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, "Administrator");
+                        bIsAuthorized = this.ValidateAPICall("Administrator");
                         if (bIsAuthorized)
                         {
 
@@ -123,7 +136,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "Query", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "Query", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -148,7 +161,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "LoadUrlsForPagination", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "LoadUrlsForPagination", ex, ""));
                         return ex.Message;
                     }
 
@@ -185,7 +198,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddNewUrl", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "AddNewUrl", ex, ""));
                         return ex.Message;
                     }
 
@@ -222,7 +235,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "SearchUrl", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "SearchUrl", ex, ""));
                         return ex.Message;
                     }
 
@@ -266,11 +279,11 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "SaveUrls", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "SaveUrls", ex, ""));
                         return ex.Message;
                     }
 
-                   // return JsonResult;
+                    // return JsonResult;
                 }
 
                 public string DeleteUrls(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
@@ -303,7 +316,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteUrls", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteUrls", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -331,7 +344,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "IsUrlPresent", ex, ""));
+                        RaiseOnError(   new Tools.Errors.ErrorEventArgs(mcModuleName, "IsUrlPresent", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -354,7 +367,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetTotalNumberOfUrls", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetTotalNumberOfUrls", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -382,7 +395,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetTotalNumberOfSearchUrls", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetTotalNumberOfSearchUrls", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -418,7 +431,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "LoadAllUrls", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "LoadAllUrls", ex, ""));
                         return ex.Message;
                     }
 
@@ -446,7 +459,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "IsParentPage", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "IsParentPage", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -506,7 +519,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -521,7 +534,7 @@ namespace Protean
                         if (objservices.CheckUserIP())
                         {
                             bool bIsAuthorized = false;
-                            bIsAuthorized = this.ValidateAPICall(ref myWeb, "Administrator");
+                            bIsAuthorized = this.ValidateAPICall("Administrator");
                             if (bIsAuthorized)
                             {
                                 var objAdmin = new Admin();
@@ -542,7 +555,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "IsParentPage", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "IsParentPage", ex, ""));
                         return ex.Message;
                     }
 
@@ -573,7 +586,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -619,7 +632,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -686,7 +699,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ReplaceRegularExpression", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -720,10 +733,65 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "RedirectPage", ex, ""));
                         return ex.Message;
                     }
                 }
+                public string RunPowershellOperations(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject inputJson)
+                {
+                    System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
+                    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
+
+                    string cPS1FileName = "";
+                    string result = "";
+                    string powershellFilePath = "";
+
+                    
+                    Tools.Security.Impersonate oImp = null;
+                    oImp = new Tools.Security.Impersonate();
+
+                    bool impersonationMode = false;
+                    if (!string.IsNullOrEmpty(goConfig["AdminAcct"]) && goConfig["AdminGroup"] != "AzureWebApp")
+                    {
+                        impersonationMode = true;
+                    }
+
+                    try
+                    {
+                        if (impersonationMode)
+                        {
+                            if (myApi.mbAdminMode)
+                            {
+                                if (inputJson != null)
+                                {
+                                    if (inputJson["PS1FilePath"] != null && !string.IsNullOrEmpty(inputJson["PS1FilePath"].ToString()))
+                                    {
+                                        cPS1FileName = inputJson["PS1FilePath"].ToString();
+
+                                        if (!string.IsNullOrEmpty(goConfig["PS1FilePath"]))
+                                        {
+                                            powershellFilePath = goConfig["PS1FilePath"];
+                                        }
+                                        PowerShellHelper powershellHelper = new PowerShellHelper(powershellFilePath);
+                                        if (File.Exists(powershellFilePath + cPS1FileName))
+                                        {
+                                            result = powershellHelper.GitCommandExecution(cPS1FileName);
+                                           
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        result = $"Error during Git operation: {ex.Message}";
+                    }
+
+                    return result;
+                }
+
+
             }
             #endregion
 

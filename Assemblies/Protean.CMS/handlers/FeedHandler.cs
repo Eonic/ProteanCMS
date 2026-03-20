@@ -14,6 +14,8 @@ using static Protean.stdTools;
 using Protean.Tools;
 using Protean.Tools.Integration.Twitter;
 using static Protean.Cms.dbImport;
+using AngleSharp.Io;
+using System.Web.UI.WebControls;
 
 namespace Protean
 {
@@ -23,6 +25,7 @@ namespace Protean
     {
 
         public string cFeedURL; // placeholder values so we dont have to keep parsing them to all the subs
+        public string cFeedData;
         public string cXSLTransformPath;
         public int nHostPageID;
         public SaveMode nSave;
@@ -74,7 +77,7 @@ namespace Protean
                 nSave = (SaveMode)nSaveMode;
                 FeedItemNode = cItemNodeName;
                 oResultElmt = oResultRecorderElmt;
-                TotalsElmt = Xml.addElement(ref oResultElmt, "Totals");
+                TotalsElmt = Protean.Tools.Xml.addElement(ref oResultElmt, "Totals");
                 _updateExistingItems = true;
                 _counters = new CounterCollection();
                 InitialiseCounters();
@@ -209,7 +212,7 @@ namespace Protean
 
             string instanceNodeName = FeedItemNode;
             XElement origInstance = null;
-            //long ProcessedQty = 0L;
+            long ProcessedQty = 0L;
             long completeCount = 0L;
             long failedCount = 0L;
             //long startNo = 0L;
@@ -237,7 +240,10 @@ namespace Protean
 
                     logId = oDBH.logActivity(Cms.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage + " Started using " + cXSLTransformPath);
 
-                    string cDeleteTempTableName = "tmp-" + cFeedURL.Substring(cFeedURL.LastIndexOf("/") + 1).Replace(".xml", "").Replace(".ashx", "");
+                    string cDeleteTempTableName = FeedItemNode;
+                    if (cFeedURL != null) {
+                        cDeleteTempTableName = "tmp-" + cFeedURL.Substring(cFeedURL.LastIndexOf("/") + 1).Replace(".xml", "").Replace(".ashx", "");
+                    }
                     var eventsDoneEvt = new System.Threading.ManualResetEvent(false);
                     Cms.dbImport Tasks = new Cms.dbImport(oDBH.oConn.ConnectionString, 0);
                     int workerThreads = 0;
@@ -267,128 +273,246 @@ namespace Protean
                     oDBH.updateActivity(logId, cDeleteTempTableName + " Streaming Start x Objects");
                     // is the feed XML
 
-                    var wrequest = WebRequest.Create(cFeedURL);
-                    wrequest.Timeout = -1;
-                    using (var response = wrequest.GetResponse())
+                    XmlReader reader = null;
+                    WebRequest wrequest = null;
+                    WebResponse response = null;
+
+                    if (cFeedURL == null)
                     {
-                        using (var reader = XmlReader.Create(response.GetResponseStream()))
+                        reader = XmlReader.Create(new StringReader(cFeedData));
+                    }
+                    else
+                    {
+
+                        wrequest = WebRequest.Create(cFeedURL);
+                        wrequest.Timeout = -1;
+                        response = wrequest.GetResponse();
+                        reader = XmlReader.Create(response.GetResponseStream());
+                    }
+
+                    //XElement name = null;
+                    // XElement item = null;
+                    string sDoc = "";
+                    string sDocBefore = "";
+                    reader.MoveToContent();
+
+
+                    while (reader.Read())
+                    {
+                        // Only process element nodes named <instance>
+                        if (reader.NodeType == XmlNodeType.Element && reader.Name == instanceNodeName)
                         {
-                            //XElement name = null;
-                           // XElement item = null;
-                            string sDoc = "";
-                            string sDocBefore = "";
-                            reader.MoveToContent();
-                            while (!reader.EOF)
+                          //  XElement origInstance = null;
+
+                            try
                             {
-                                if (reader.NodeType == XmlNodeType.Element && (reader.Name ?? "") != (instanceNodeName ?? ""))
-                                {
-                                    reader.ReadToFollowing(instanceNodeName);
-                                }
-                                else if (!reader.EOF & reader.NodeType != XmlNodeType.EndElement)
-                                {
-                                    try
-                                    {
-                                        origInstance = XNode.ReadFrom(reader) as XElement;
-                                    }
-                                    catch (Exception)
-                                    {
-                                        // reader.Read()
-                                        reader.ReadToFollowing(instanceNodeName);
-                                        // reader.MoveToContent()
-
-                                        processInfo = "error at " + completeCount;
-                                    }
-
-                                    if (!(origInstance == null))
-                                    {
-                                        TextWriter oWriter = new StringWriter();
-                                        var xWriter = XmlWriter.Create(oWriter, settings);
-                                        try
-                                        {
-
-                                            var xreader = origInstance.CreateReader();
-                                            xreader.MoveToContent();
-                                            oTransform.Process(xreader,ref xWriter);
-
-                                            sDoc = oWriter.ToString();
-
-                                            sDocBefore = sDoc;
-                                            // sDoc = Regex.Replace(sDoc, "&gt;", ">")
-                                            // sDoc = Regex.Replace(sDoc, "&lt;", "<")
-                                            sDoc = Xml.convertEntitiesToCodesFast(sDoc);
-                                            string filename;
-                                            var xDoc = new XmlDocument();
-                                            if (string.IsNullOrEmpty(sDoc))
-                                            {
-                                                failedCount = failedCount + 1L;
-                                            }
-                                            else
-                                            {
-                                                xDoc.LoadXml(sDoc);
-                                                foreach (XmlElement oInstance in xDoc.DocumentElement.SelectNodes("descendant-or-self::instance"))
-                                                {
-                                                    ImportStateObj stateObj = new Cms.dbImport.ImportStateObj();
-                                                    stateObj.oInstance = oInstance;
-                                                    stateObj.LogId = logId;
-                                                    stateObj.FeedRef = cFeedURL;
-                                                    stateObj.CompleteCount = completeCount;
-                                                    stateObj.totalInstances = 0;
-                                                    stateObj.bSkipExisting = false;
-                                                    stateObj.bResetLocations = true;
-                                                    stateObj.nResetLocationIfHere = 0;
-                                                    stateObj.bOrphan = false;
-                                                    stateObj.bDeleteNonEntries = false;
-                                                    stateObj.cDeleteTempTableName = cDeleteTempTableName;
-                                                    stateObj.moTransform = oTransform;
-
-                                                    // If oInstance.NextSibling Is Nothing Then
-                                                    // cProcessInfo = "Is Last"
-                                                    // eventsDoneEvt.Set()
-                                                    // End If
-                                                    System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(Tasks.ImportSingleObject), stateObj);
-                                                    stateObj = default;
-                                                    completeCount = completeCount + 1L;
-                                                }
-
-                                                if (Strings.LCase(oConfig["Debug"]) == "on")
-                                                {
-                                                    if (xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]") is null)
-                                                    {
-                                                        filename = "ImportStreamFile";
-                                                    }
-                                                    else
-                                                    {
-                                                        filename = xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]").InnerText.Replace("/", "-");
-                                                    }
-                                                    xDoc.Save(debugFolder + filename + ".xml");
-                                                }
-
-                                            }
-                                            xDoc = null;
-                                            origInstance = null;
-                                            oWriter = null;
-                                            xWriter = null;
-                                        }
-
-                                        catch (Exception ex2)
-                                        {
-                                            processInfo = sDoc;
-
-                                            AddExternalMessage(ex2.ToString() + ex2.StackTrace.ToString() + " DOC {" + sDocBefore + "} EndDoc");
-                                            bResult = false;
-                                            // AddExternalError(ex2)
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    reader.Read();
-                                }
+                                // Read the current <instance> element into an XElement
+                                origInstance = XNode.ReadFrom(reader) as XElement;
+                                ProcessedQty++;
                             }
-                            eventsDoneEvt.Set();
+                            catch (XmlException xmlEx)
+                            {
+                                oDBH.logActivity(Cms.dbHelper.ActivityType.ContentImport, 0, 0, 0, $"XML parsing error at item {completeCount}: {xmlEx.Message}" + " FAILED");
+                                continue; // Skip to next node
+                            }
+                            catch (Exception ex)
+                            {
+                                oDBH.logActivity(Cms.dbHelper.ActivityType.ContentImport, 0, 0, 0, $"XML parsing error at item {completeCount}: {ex.Message}" + " FAILED");
+                                continue;
+                            }
+
+                            if (origInstance == null)
+                            {
+                                continue; // Skip if parsing failed
+                            }
+
+                            // Transform and process the instance
+                            try
+                            {
+                                TextWriter oWriter = new StringWriter();
+                                var xWriter = XmlWriter.Create(oWriter, settings);
+                                var xreader = origInstance.CreateReader();
+                                xreader.MoveToContent();
+                                oTransform.Process(xreader, ref xWriter);
+                                sDoc = oWriter.ToString();
+                            }
+                            catch (Exception ex)
+                            {
+                                failedCount++;
+                                continue;
+                            }
+
+                            XmlDocument xDoc = new XmlDocument();
+                            try
+                            {
+                                sDoc = Protean.Tools.Xml.convertEntitiesToCodesFast(sDoc);
+                                xDoc.LoadXml(sDoc);
+                            }
+                            catch (Exception ex)
+                            {
+                                oDBH.logActivity(Cms.dbHelper.ActivityType.ContentImport, 0, 0, 0, $"Failed to load transformed XML at item {completeCount}: {ex.Message}" + " FAILED");
+                                failedCount++;
+                                continue;
+                            }
+
+                            foreach (XmlElement oInstance in xDoc.DocumentElement.SelectNodes("descendant-or-self::instance"))
+                            {
+                               // var localTransform = new Protean.XmlHelper.Transform
+                               // {
+                               //     Compiled = oTransform.Compiled,
+                               //     XslFilePath = oTransform.XslFilePath
+                               // };
+
+                                ImportStateObj stateObj = new Cms.dbImport.ImportStateObj
+                                {
+                                    oInstance = oInstance,
+                                    LogId = logId,
+                                    FeedRef = cFeedURL,
+                                    CompleteCount = completeCount,
+                                    totalInstances = 0,
+                                    bSkipExisting = false,
+                                    bResetLocations = true,
+                                    nResetLocationIfHere = 0,
+                                    bOrphan = false,
+                                    bDeleteNonEntries = false,
+                                    cDeleteTempTableName = cDeleteTempTableName,
+                                    moTransform = oTransform //localTransform
+                                };
+
+                                System.Threading.ThreadPool.QueueUserWorkItem(
+                                new System.Threading.WaitCallback(Tasks.ImportSingleObject),
+                                stateObj
+                                );
+
+                                completeCount++;
+                            }
                         }
                     }
-                    ReturnMessage = cDeleteTempTableName + " " + completeCount + " Items Queued For Import";
+
+
+
+                    //while (!reader.EOF)
+                    //{
+                    //    if (reader.NodeType == XmlNodeType.Element && (reader.Name ?? "") != (instanceNodeName ?? ""))
+                    //    {
+                    //        reader.ReadToFollowing(instanceNodeName);
+                    //    }
+                    //    else if (!reader.EOF & reader.NodeType != XmlNodeType.EndElement)
+                    //    {
+                    //        try
+                    //        {
+                    //            origInstance = XNode.ReadFrom(reader) as XElement;
+                    //        }
+                    //        catch (Exception)
+                    //        {
+                    //            // reader.Read()
+                    //            reader.ReadToFollowing(instanceNodeName);
+                    //            // reader.MoveToContent()
+
+                    //            processInfo = "error at " + completeCount;
+                    //        }
+
+                    //        if (!(origInstance == null))
+                    //        {
+                    //            TextWriter oWriter = new StringWriter();
+                    //            var xWriter = XmlWriter.Create(oWriter, settings);
+                    //            try
+                    //            {
+
+                    //                var xreader = origInstance.CreateReader();
+                    //                xreader.MoveToContent();
+                    //                oTransform.Process(xreader, ref xWriter);
+
+                    //                sDoc = oWriter.ToString();
+
+                    //                sDocBefore = sDoc;
+                    //                // sDoc = Regex.Replace(sDoc, "&gt;", ">")
+                    //                // sDoc = Regex.Replace(sDoc, "&lt;", "<")
+                    //                sDoc = Protean.Tools.Xml.convertEntitiesToCodesFast(sDoc);
+                    //                string filename;
+                    //                var xDoc = new XmlDocument();
+                    //                if (string.IsNullOrEmpty(sDoc))
+                    //                {
+                    //                    failedCount = failedCount + 1L;
+                    //                }
+                    //                else
+                    //                {
+                    //                    xDoc.LoadXml(sDoc);
+                    //                    foreach (XmlElement oInstance in xDoc.DocumentElement.SelectNodes("descendant-or-self::instance"))
+                    //                    {
+                    //                        ImportStateObj stateObj = new Cms.dbImport.ImportStateObj();
+                    //                        stateObj.oInstance = oInstance;
+                    //                        stateObj.LogId = logId;
+                    //                        stateObj.FeedRef = cFeedURL;
+                    //                        stateObj.CompleteCount = completeCount;
+                    //                        stateObj.totalInstances = 0;
+                    //                        stateObj.bSkipExisting = false;
+                    //                        stateObj.bResetLocations = true;
+                    //                        stateObj.nResetLocationIfHere = 0;
+                    //                        stateObj.bOrphan = false;
+                    //                        stateObj.bDeleteNonEntries = false;
+                    //                        stateObj.cDeleteTempTableName = cDeleteTempTableName;
+                    //                        stateObj.moTransform = oTransform;
+
+                    //                        // If oInstance.NextSibling Is Nothing Then
+                    //                        // cProcessInfo = "Is Last"
+                    //                        // eventsDoneEvt.Set()
+                    //                        // End If
+                    //                        System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback(Tasks.ImportSingleObject), stateObj);
+                    //                        stateObj = default;
+                    //                        completeCount = completeCount + 1L;
+                    //                    }
+
+                    //                    if (Strings.LCase(oConfig["Debug"]) == "on")
+                    //                    {
+                    //                        if (xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]") is null)
+                    //                        {
+                    //                            filename = "ImportStreamFile";
+                    //                        }
+                    //                        else
+                    //                        {
+                    //                            filename = xDoc.DocumentElement.SelectSingleNode("descendant-or-self::cContentForiegnRef[1]").InnerText.Replace("/", "-");
+                    //                        }
+                    //                        xDoc.Save(debugFolder + filename + ".xml");
+                    //                    }
+
+                    //                }
+                    //                xDoc = null;
+                    //                origInstance = null;
+                    //                oWriter = null;
+                    //                xWriter = null;
+                    //            }
+
+                    //            catch (Exception ex2)
+                    //            {
+                    //                processInfo = sDoc;
+
+                    //                AddExternalMessage(ex2.ToString() + ex2.StackTrace.ToString() + " DOC {" + sDocBefore + "} EndDoc");
+                    //                bResult = false;
+                    //                // AddExternalError(ex2)
+                    //            }
+
+                    //        }
+                    //        else
+                    //        {
+                    //            reader.ReadToFollowing(instanceNodeName);
+
+                    //            //reader.Read();
+                    //        }
+                    //    }
+                    //   // else {
+                    //        //force read to end
+                    //   //     reader.Read();
+                    //   // }
+                    //    eventsDoneEvt.Set();
+
+                    //}
+
+                    reader = null;
+                    wrequest = null;
+                    response = null;
+
+                    ReturnMessage = cDeleteTempTableName + " " + completeCount + " Items Queued For Import, " + ProcessedQty + " Streamed";
                     oDBH.logActivity(Cms.dbHelper.ActivityType.ContentImport, 0, 0, 0, ReturnMessage + " Queued");
 
                     oDBH.myWeb.ClearPageCache();
@@ -413,6 +537,9 @@ namespace Protean
                 }
                 AddExternalError(ex);
                 return null;
+            }
+            finally {
+                //
             }
         }
 

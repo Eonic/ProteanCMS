@@ -264,6 +264,18 @@
     </body>
   </xsl:template>
 
+
+	<xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
+		<xsl:choose>
+			<xsl:when test="$page/Settings/add[@key='web.proteanProductName']/@value!=''">
+				<xsl:call-template name="proteanAdminSystemName"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<img src="/ptn/admin/skin/protean-admin-black-logon.png" alt="ProteanCMS" width="320px" height="57px"/>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
   <xsl:template match="Page[@layout='Logon']" mode="Admin">
     <div class="adminTemplate container" id="template_Logon">
 		<span class="text-light logo-text login-logo">
@@ -271,45 +283,28 @@
 			<strong>protean</strong>CMS
 		</span>
 		<div class="card">
-			<div class="card-header">
-				<h5>Sign in</h5>
-			</div>
 			<div class="card-body">
 				<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
-				<xsl:apply-templates select="ContentDetail/Content[contains(@type,'xFormQuiz')]" mode="edit"/>
 			</div>
 		</div>
     </div>
   </xsl:template>
 
-  <xsl:template match="submit[ancestor::Content[@name='UserLogon'] and ancestor::Page/@adminMode='true']" mode="xform">
-    <xsl:variable name="class">
-      <xsl:text>adminButton</xsl:text>
-      <xsl:if test="@class!=''">
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="@class"/>
-      </xsl:if>
-    </xsl:variable>
-    <a href="{$appPath}?ewCmd=LogOff" class="btn btn-outline-primary">
-      <i class="fa fa-reply">
-        <xsl:text> </xsl:text>
-      </i> Back to Site
-    </a>
-
-    <button type="submit" name="{@submission}" value="{label/node()}" class="btn btn-primary float-end"  onclick="disableButton(this);">
-      Sign In<xsl:text> </xsl:text>
-		&#160;<i class="fa-solid fa-right-to-bracket">&#160;</i>
-
-    </button>
-
-    <!--a href="/?ewCmd=PasswordReminder" class="text-muted">
-        <i class="fa fa-chevron-right">
-          <xsl:text> </xsl:text>
-        </i>
-        Password Reminder
-      </a-->
-  </xsl:template>
-
+	<xsl:template match="div[@class='footer-override']" mode="xform">
+	
+		<div>	<xsl:if test="./@class">
+			<xsl:attribute name="class">
+				<xsl:value-of select="./@class"/>
+			</xsl:attribute>
+		</xsl:if>
+			<br/>
+			<a href="{$appPath}?ewCmd=LogOff" >
+				<i class="fa fa-reply">
+					<xsl:text> </xsl:text>
+				</i> Back to Site
+			</a>
+		</div>
+	</xsl:template>
 
   <xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
 
@@ -808,14 +803,7 @@
                 </div>
               </div>
               <div class="col-lg-4">
-                <div class="card card-default matchHeight">
-                  <div class="card-header">
-                    <h4 >Performance Tips</h4>
-                  </div>
-                  <div class="card-body">
-                    <p>Have you checked Google Analytics recently ?</p>
-                  </div>
-                </div>
+				  <xsl:apply-templates select="." mode="dash-col2"/>               
               </div>
               <div class="col-lg-4">
                 <div class="card card-default">
@@ -1043,6 +1031,17 @@
     </section>
   </xsl:template>
 
+	<xsl:template match="Page" mode="dash-col2">
+	<div class="card card-default matchHeight">
+		<div class="card-header">
+			<h4 >Performance Tips</h4>
+		</div>
+		<div class="card-body">
+			<p>Have you checked Google Analytics recently ?</p>
+		</div>
+	</div>
+	</xsl:template>
+
 	<xsl:template match="Module" mode="admin-module">
 		unknown module Type
 	</xsl:template>
@@ -1122,7 +1121,76 @@
       </div>
     </div>
   </xsl:template>
-  <!-- -->
+
+	<!-- -->
+	<xsl:template match="Page[@layout='UserContent']" mode="Admin">
+		<div class="container-fluid" id="tpltAdvancedMode">
+			<div class="row">
+
+				<div class="col-md-3">
+			
+				  <xsl:apply-templates select="ContentDetail/User" mode="user-card"/>
+					
+				</div>
+				<div class="col-md-9">
+						<div class="panel-group" id="accordion">
+							<xsl:for-each select="/Page/ContentDetail/UserContent/Content">
+								<xsl:variable name="previousType" select="./preceding-sibling::Content[1]/@type"/>														
+								<xsl:if test="@type!=$previousType or not($previousType)">
+								   <xsl:apply-templates select="/" mode="ListUserByContentType">
+								        <xsl:with-param name="contentType" select="@type"/>
+							        </xsl:apply-templates>
+								</xsl:if>
+							</xsl:for-each>
+						
+						</div>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
+	<!-- -->
+	<xsl:template match="/" mode="ListUserByContentType">
+		<xsl:param name="contentType"/>
+		<div class="card card-default">
+			<div class="card-header">
+				<xsl:if test="$contentType!='Module'">
+					<div class="float-end">
+						<xsl:apply-templates select="/Page" mode="inlinePopupAdd">
+							<xsl:with-param name="type">
+								<xsl:value-of select="$contentType"/>
+							</xsl:with-param>
+							<xsl:with-param name="text">Add New</xsl:with-param>
+							<xsl:with-param name="name">
+								<xsl:text>New </xsl:text>
+								<xsl:value-of select="$contentType"/>
+							</xsl:with-param>
+						</xsl:apply-templates>
+					</div>
+				</xsl:if>
+				<h6 >
+					<a class="accordion-toggle" data-bs-toggle="collapse" data-parent="#accordion" href="#collapse{$contentType}">
+						<i class="fa fa-chevron-down">
+							<xsl:text> </xsl:text>
+						</i>
+						<span>
+							<xsl:text> </xsl:text><xsl:value-of select="$contentType"/> (<xsl:value-of select="count(Page/ContentDetail/UserContent/Content[@type=$contentType])"/>)
+						</span>
+					</a>
+				</h6>
+			</div>
+			<div id="collapse{$contentType}" class="panel-collapse collapse">
+				<table class="table table-mobile-cards-1col">
+					<xsl:apply-templates select="Page/ContentDetail/UserContent/Content[@type=$contentType]" mode="UserContent">
+						<xsl:with-param name="contentType" select="$contentType"/>
+					</xsl:apply-templates>
+				</table>
+			</div>
+		</div>
+	</xsl:template>
+
+
+
+	<!-- -->
   <xsl:template match="/" mode="siteMenuKey">
 
   </xsl:template>
@@ -1617,7 +1685,78 @@
     </tr>
   </xsl:template>
 
-  <xsl:template match="Page" mode="inlinePopupAdd">
+
+	<xsl:template match="Content" mode="UserContent">
+		<xsl:param name="contentType"/>
+		<tr>
+			<td class="status">
+				<xsl:apply-templates select="." mode="status_legend"/>
+			</td>
+			<td class="name">
+				<xsl:choose>
+					<xsl:when test="$contentType='Module'">
+						<b>
+							<xsl:value-of select="@title" />
+							<xsl:if test="@title=''">No Title</xsl:if>
+						</b>
+						&#160;-&#160;<xsl:value-of select="@moduleType" />&#160;-&#160;<xsl:value-of select="@position" />
+					</xsl:when>
+					<xsl:when test="@name!=''">
+						<b>
+							<xsl:if test="@ParentName">
+								<xsl:value-of select="@ParentName" />
+								<xsl:text> - </xsl:text>
+							</xsl:if>							
+							<xsl:value-of select="@name" />
+						</b>
+					</xsl:when>
+					<xsl:when test="@type='Module'">
+						<p>
+							<xsl:apply-templates select="." mode="getSynopsis" />
+						</p>
+					</xsl:when>
+				</xsl:choose>
+				<br/>
+				<small>
+					<xsl:if test="@publish!=''">
+						<span class="publishedOn">
+							<b>Published: </b>
+							<xsl:call-template name="DD_Mon_YYYY">
+								<xsl:with-param name="date" select="@publish"/>
+							</xsl:call-template>
+						</span>&#160;
+					</xsl:if>
+					<xsl:if test="@expire!=''">
+						<span class="expiresOn">
+							<xsl:text> / </xsl:text>
+							<b>Expires:</b>
+							<xsl:call-template name="DD_Mon_YYYY">
+								<xsl:with-param name="date" select="@expire"/>
+							</xsl:call-template>
+						</span>&#160;
+					</xsl:if>
+					<xsl:if test="@update!=''">
+						<span class="update">
+							<b>Last Updated: </b>
+							<xsl:call-template name="DD_Mon_YYYY">
+								<xsl:with-param name="date" select="@update"/>
+							</xsl:call-template>
+						</span>
+					</xsl:if>
+				</small>
+			</td>
+			<td class="optionsButton">
+				<a href="{$appPath}?ewCmd=EditContent&amp;pgid=0&amp;id={@id}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+					<i class="fa fa-pen fa-white">
+						<xsl:text> </xsl:text>
+					</i><xsl:text> </xsl:text>Edit
+				</a>
+				<xsl:text> </xsl:text>
+			</td>
+		</tr>
+	</xsl:template>
+
+	<xsl:template match="Page" mode="inlinePopupAdd">
     <xsl:param name="type"/>
     <xsl:param name="text"/>
     <xsl:param name="name"/>
@@ -2332,7 +2471,7 @@
             <xsl:otherwise>
               <xsl:apply-templates select="." mode="status_legend"/>
               <span class="pageName">
-                <xsl:value-of select="$displayName"/>
+				  <xsl:apply-templates select="." mode="getDisplayName" />
               </span>
             </xsl:otherwise>
           </xsl:choose>
@@ -2689,13 +2828,14 @@
             </i>
             <span class="pageName">
               &#160;
-              <xsl:value-of select="@name"/>
+				<xsl:apply-templates select="." mode="getDisplayName" />
             </span>
           </xsl:when>
           <xsl:otherwise>
             <xsl:apply-templates select="." mode="status_legend"/>
             <span class="pageName">
-              <xsl:value-of select="@name"/>
+
+				<xsl:apply-templates select="." mode="getDisplayName" />
             </span>
           </xsl:otherwise>
         </xsl:choose>
@@ -3795,12 +3935,17 @@
             <xsl:with-param name="name">ogimage</xsl:with-param>
             <xsl:with-param name="type">MetaData</xsl:with-param>
           </xsl:call-template>
-          <xsl:call-template name="editNamedContent">
+			<xsl:call-template name="editNamedContent">
+				<xsl:with-param name="desc">OpenGraph Image Fallback</xsl:with-param>
+				<xsl:with-param name="name">ogimage-fallback</xsl:with-param>
+				<xsl:with-param name="type">MetaData</xsl:with-param>
+			</xsl:call-template>
+          <!--xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">OpenGraph Image Secure URL</xsl:with-param>
             <xsl:with-param name="name">ogimagesecure</xsl:with-param>
             <xsl:with-param name="type">MetaData</xsl:with-param>
           </xsl:call-template>
-          <!-- xsl:call-template name="editNamedContent">
+          < xsl:call-template name="editNamedContent">
             <xsl:with-param name="desc">OpenGraph Site Name</xsl:with-param>
             <xsl:with-param name="name">ogsite_name</xsl:with-param>
             <xsl:with-param name="type">MetaData</xsl:with-param>
@@ -4939,6 +5084,11 @@ $(document).ready(function () {
                 <xsl:text> </xsl:text>
               </i> Edit Permissions
             </a>
+			  <a href="{$appPath}?ewCmd=EditPageRights&amp;pgid={@id}" class="btn btn-primary btn-xs" title="Click here to edit this page">
+				  <i class="fa fa-lock">
+					  <xsl:text> </xsl:text>
+				  </i> Edit Rights
+			  </a>
           </td>
         </tr>
       </table>
@@ -5248,6 +5398,11 @@ $(document).ready(function () {
               <xsl:text> </xsl:text>Activity
             </a>
           </xsl:if>
+			<a href="{$appPath}?ewCmd=ListUserContent&amp;dirId={@id}" class="btn btn-sm btn-outline-primary">
+				<i class="fa fa-comment fa-white">
+					<xsl:text> </xsl:text>
+				</i><xsl:text> </xsl:text>User Comments
+			</a>
           <xsl:choose>
             <xsl:when test="Status='0'">
               <a href="{$appPath}?ewCmd=DeleteDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-sm btn-outline-danger">
@@ -5272,43 +5427,8 @@ $(document).ready(function () {
         </h3>-->
         <div class="row">
           <div class="col-lg-4">
-            <div class="card">
-              <div class="card-header">
-                <h4>User</h4>
-              </div>
-              <div class="card-body">
-                <h4>
-                  <xsl:value-of select="FirstName"/>
-                  <xsl:text> </xsl:text>
-                  <xsl:value-of select="LastName"/>
-                </h4>
-                <a href="mailto:{Email/node()}">
-                  <xsl:value-of select="Email"/>
-                </a>
-                <br/>
-                <xsl:if test="Position/node()!=''">
-                  <h3>
-                    <xsl:value-of select="Position"/>
-                  </h3>
-                  <br/>
-                </xsl:if>
-                <xsl:if test="Company">
-                  <xsl:choose>
-                    <xsl:when test="count(Company[@id!=''])=1">Company:</xsl:when>
-                    <xsl:otherwise>Companies:</xsl:otherwise>
-                  </xsl:choose>
-                  <xsl:text> </xsl:text>
-                  <xsl:apply-templates select="Company[@id!='']" mode="dirProfileLink"/>
-                </xsl:if>
-                <xsl:if test="Group">
-                  Groups:<br/>
-                  <xsl:for-each select="Group">
-                    <xsl:apply-templates select="." mode="dirProfileLink"/>
-                    <xsl:text>, </xsl:text>
-                  </xsl:for-each>
-                </xsl:if>
-              </div>
-            </div>
+			  <xsl:apply-templates select="." mode="user-card"/>
+           
           </div>
           <div class="col-lg-8">
             <div class="row">
@@ -5427,6 +5547,46 @@ $(document).ready(function () {
       </div>
     </xsl:for-each>
   </xsl:template>
+	
+	<xsl:template match="User" mode="user-card">
+		<div class="card">
+			<div class="card-header">
+				<h4>User</h4>
+			</div>
+			<div class="card-body">
+				<h4>
+					<xsl:value-of select="FirstName"/>
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="LastName"/>
+				</h4>
+				<a href="mailto:{Email/node()}">
+					<xsl:value-of select="Email"/>
+				</a>
+				<br/>
+				<xsl:if test="Position/node()!=''">
+					<h3>
+						<xsl:value-of select="Position"/>
+					</h3>
+					<br/>
+				</xsl:if>
+				<xsl:if test="Company">
+					<xsl:choose>
+						<xsl:when test="count(Company[@id!=''])=1">Company:</xsl:when>
+						<xsl:otherwise>Companies:</xsl:otherwise>
+					</xsl:choose>
+					<xsl:text> </xsl:text>
+					<xsl:apply-templates select="Company[@id!='']" mode="dirProfileLink"/>
+				</xsl:if>
+				<xsl:if test="Group">
+					Groups:<br/>
+					<xsl:for-each select="Group">
+						<xsl:apply-templates select="." mode="dirProfileLink"/>
+						<xsl:text>, </xsl:text>
+					</xsl:for-each>
+				</xsl:if>
+			</div>
+		</div>
+		</xsl:template>
 
   <xsl:template match="*" mode="dirProfileLink">
     <a href="?ewCmd=Profile&amp;DirType={name()}&amp;id={@id}">
@@ -6173,6 +6333,11 @@ $(document).ready(function () {
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Edit
             </a>&#160;
+			            <a href="{$appPath}?ewCmd=MaintainRelations&amp;type=Role&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+            <i class="fa fa-cog fa-white">
+              <xsl:text> </xsl:text>
+            </i><xsl:text> </xsl:text>Roles
+          </a>&#160;
             <a href="{$appPath}?ewCmd=DirMemberships&amp;type=Group&amp;id={@id}&amp;childTypes=User" class="btn btn-xs btn-primary">
               <i class="fa fa-users fa-white">
                 <xsl:text> </xsl:text>
@@ -6221,7 +6386,8 @@ $(document).ready(function () {
     <xsl:if test="position() > $startPos and position() &lt;= ($startPos + $noOnPage)">
       <tr onmouseover="this.className='rowOver'" onmouseout="this.className=''">
         <xsl:apply-templates select="*" mode="reportCell"/>
-        <td>
+		
+        <td>  <span class="edit-option-links-blue">
           <a href="{$appPath}?ewCmd=EditRole&amp;DirType=Role&amp;id={@id}" class="btn btn-xs btn-primary">
             <i class="fa fa-pencil fa-white">
               <xsl:text> </xsl:text>
@@ -6247,12 +6413,13 @@ $(document).ready(function () {
             </xsl:when>
             <xsl:otherwise>
               <a href="{$appPath}?ewCmd=HideDirItem&amp;DirType=Role&amp;id={@id}" class="btn btn-xs btn-danger">
-                <i class="fa fa-trash-o fa-white">
-                  <xsl:text> </xsl:text>
-                </i><xsl:text> </xsl:text>Disable
+				  <i class="fa fa-ban fa-white">
+					  <xsl:text> </xsl:text>
+				  </i><xsl:text> </xsl:text>Disable
               </a>
             </xsl:otherwise>
           </xsl:choose>
+			</span>
         </td>
       </tr>
     </xsl:if>
@@ -6388,6 +6555,7 @@ $(document).ready(function () {
 
   <xsl:template match="Contact" mode="AdminListContact">
     <xsl:variable name="dirid" select="/Page/Request/QueryString/Item[@name='id']"/>
+	  <xsl:if test="nContactKey!=''">
     <div class="col-md-6">
       <div class="card card-default">
         <div class="card-header">
@@ -6468,6 +6636,7 @@ $(document).ready(function () {
         </table>
       </div>
     </div>
+	  </xsl:if>
   </xsl:template>
   <!-- -->
 
@@ -6479,6 +6648,54 @@ $(document).ready(function () {
 
   <!--   ##################  List Orders  ##############################   -->
   <!-- -->
+	<xsl:template name="getStatusTitle">
+		<xsl:param name="statusId"/>
+		<xsl:choose>
+			<xsl:when test="$statusId='0'">New</xsl:when>
+			<xsl:when test="$statusId='1'">Items Added</xsl:when>
+			<xsl:when test="$statusId='2'">Billing Address Added</xsl:when>
+			<xsl:when test="$statusId='3'">Delivery Address Added</xsl:when>
+			<xsl:when test="$statusId='4'">Confirmed</xsl:when>
+			<xsl:when test="$statusId='5'">Pass for Payment</xsl:when>
+			<xsl:when test="$statusId='6'">New Sale</xsl:when>
+			<xsl:when test="$statusId='7'">Refunded</xsl:when>
+			<xsl:when test="$statusId='8'">Failed</xsl:when>
+			<xsl:when test="$statusId='9'">Shipped</xsl:when>
+			<xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
+			<xsl:when test="$statusId='11'">Abandoned</xsl:when>
+			<xsl:when test="$statusId='12'">Deleted</xsl:when>
+			<xsl:when test="$statusId='13'">AwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='14'">Settlement Initiated</xsl:when>
+			<xsl:when test="$statusId='15'">Skip Address</xsl:when>
+			<xsl:when test="$statusId='16'">Archived</xsl:when>
+			<xsl:when test="$statusId='17'">In Progress</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+
+	<xsl:template name="getStatusCmd">
+		<xsl:param name="statusId"/>
+		<xsl:choose>
+			<xsl:when test="$statusId='0'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='1'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='2'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='3'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='4'">OrdersSaved</xsl:when>
+			<xsl:when test="$statusId='5'">OrdersAwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='6'">Orders</xsl:when>
+			<xsl:when test="$statusId='7'">OrdersRefunded</xsl:when>
+			<xsl:when test="$statusId='8'">OrdersFailed</xsl:when>
+			<xsl:when test="$statusId='9'">OrdersShipped</xsl:when>
+			<xsl:when test="$statusId='10'">OrdersDeposit</xsl:when>
+			<xsl:when test="$statusId='11'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='12'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='13'">OrdersAwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='14'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='15'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='16'">OrdersHistory</xsl:when>
+			<xsl:when test="$statusId='17'">OrdersInProgress</xsl:when>
+		</xsl:choose>
+	</xsl:template>
+	
   <xsl:template match="Page[@layout='Orders']" mode="Admin">
     <xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>
     <xsl:variable name="itemCount" select="'100'"/>
@@ -6488,17 +6705,19 @@ $(document).ready(function () {
       <xsl:call-template name="getQString"/>
     </xsl:variable>
     <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']"/>
-    <xsl:variable name="title">
-      <xsl:choose>
-        <xsl:when test="@ewCmd='Orders'">New Sales</xsl:when>
-        <xsl:when test="@ewCmd='OrdersInProgress'">In Progress</xsl:when>
-        <xsl:when test="@ewCmd='OrdersAwaitingPayment'">Awaiting Payment</xsl:when>
-        <xsl:when test="@ewCmd='OrdersShipped'">Shipped</xsl:when>
-        <xsl:when test="@ewCmd='OrdersFailed'">Failed Transactions</xsl:when>
-        <xsl:when test="@ewCmd='OrdersDeposit'">Deposit Paid</xsl:when>
-        <xsl:when test="@ewCmd='OrdersHistory'">Full Order History</xsl:when>
-      </xsl:choose>
+
+	  <xsl:variable name="statusId" select="ContentDetail/Content[@type='order']/@statusId"/>
+	<!--<xsl:variable name="statusId" select="/Page/ContentDetail/Content/model/instance/tblCartOrder/nCartStatus"/>-->
+    <xsl:variable name="backTitle">
+		<xsl:call-template name="getStatusTitle">
+			<xsl:with-param name="statusId" select="$statusId"/>
+		</xsl:call-template>     
     </xsl:variable>
+	  <xsl:variable name="backCmd">
+		  <xsl:call-template name="getStatusCmd">
+			<xsl:with-param name="statusId" select="$statusId"/>
+		</xsl:call-template>		 
+	  </xsl:variable>
     <div>
       <xsl:choose>
         <xsl:when test="ContentDetail/Content[@type='order'] and not(/Page/Request/QueryString/Item[@name='ewCmd2'])">
@@ -6526,7 +6745,7 @@ $(document).ready(function () {
                   <xsl:with-param name="itemTotal" select="$total"/>
                   <xsl:with-param name="startPos" select="$startPos"/>
                   <xsl:with-param name="path" select="$queryString"/>
-                  <xsl:with-param name="itemName" select="$title"/>
+                  <xsl:with-param name="itemName" select="$backTitle"/>
                 </xsl:apply-templates>
               </div>
               <!--<h3>
@@ -6563,7 +6782,7 @@ $(document).ready(function () {
                 <xsl:with-param name="itemTotal" select="$total"/>
                 <xsl:with-param name="startPos" select="$startPos"/>
                 <xsl:with-param name="path" select="$queryString"/>
-                <xsl:with-param name="itemName" select="$title"/>
+                <xsl:with-param name="itemName" select="$backTitle"/>
               </xsl:apply-templates>
             </div>
           </div>
@@ -6571,12 +6790,11 @@ $(document).ready(function () {
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd2']">
-              <a href="{$appPath}?ewCmd={$ewCmd}&amp;startPos={$startPos}" class="btn btn-sm btn-outline-primary padded-btn">
-                <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$title"/>
+              <a href="{$appPath}?ewCmd={$backCmd}&amp;startPos={$startPos}" class="btn btn-sm btn-outline-primary padded-btn">
+                <i class="fa fa-chevron-left">&#160;</i>&#160;Back to <xsl:value-of select="$backTitle"/>
               </a>
               <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
               <xsl:variable name="currency" select="ContentDetail/Content[@type='order']/@currencySymbol"/>
-              <xsl:variable name="statusId" select="ContentDetail/Content[@type='order']/@statusId"/>
               <xsl:variable name="orderId" select="ContentDetail/Content[@type='order']/@id"/>
               <xsl:variable name="orderDate" select="ContentDetail/Content[@type='order']/@created"/>
               <xsl:for-each select="ContentDetail/Content[@type='order']/Order">
@@ -6592,7 +6810,7 @@ $(document).ready(function () {
               <div class="container-fluid">
                 <div class="alert alert-danger">
                   <h4 class="text-center">
-                    No <xsl:value-of select="$title"/> Found
+                    No <xsl:value-of select="$backTitle"/> Found
                   </h4>
                 </div>
               </div>
@@ -6608,13 +6826,23 @@ $(document).ready(function () {
   <xsl:template match="Content[@type='order']" mode="ListOrders">
     <xsl:variable name="startPos" select="number(concat(0,/Page/Request/QueryString/Item[@name='startPos']))"/>
     <xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']"/>
+	  <xsl:variable name="backTitle">
+		  <xsl:call-template name="getStatusTitle">
+			  <xsl:with-param name="statusId" select="@statusId"/>
+		  </xsl:call-template>
+	  </xsl:variable>
+	  <xsl:variable name="backCmd">
+		  <xsl:call-template name="getStatusCmd">
+			  <xsl:with-param name="statusId" select="@statusId"/>
+		  </xsl:call-template>
+	  </xsl:variable>
     <tr>
       <td>
         <span class="xs-only">Order Id: </span>
         <xsl:value-of select="@id"/>
       </td>
       <td>
-        <xsl:value-of select="@statusId"/> - 	<xsl:choose>
+        [<xsl:value-of select="@statusId"/>]&#160;<xsl:choose>
           <xsl:when test="@statusId='0'">New</xsl:when>
           <xsl:when test="@statusId='1'">Items Added</xsl:when>
           <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
@@ -6629,6 +6857,10 @@ $(document).ready(function () {
           <xsl:when test="@statusId='11'">Abandoned</xsl:when>
           <xsl:when test="@statusId='12'">Deleted</xsl:when>
           <xsl:when test="@statusId='13'">Awaiting Payment</xsl:when>
+			<xsl:when test="@statusId='14'">Settlement Initiated</xsl:when>
+			<xsl:when test="@statusId='15'">Skip Address</xsl:when>
+			<xsl:when test="@statusId='16'">Archived</xsl:when>
+			<xsl:when test="@statusId='17'">In Progress</xsl:when>
         </xsl:choose>
       </td>
       <td>
@@ -6679,13 +6911,13 @@ $(document).ready(function () {
       </td>
       <td>
         <div class="btn-group-spaced">
-          <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
+          <a href="{$appPath}?ewCmd={$backCmd}&amp;ewCmd2=Display&amp;id={@id}" class="btn btn-sm btn-outline-primary">
             <i class="fa fa-eye">
               <xsl:text> </xsl:text>
             </i><xsl:text> </xsl:text>view order
           </a>
           <xsl:if test="@statusId=6">
-            <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
+            <a href="{$appPath}?ewCmd={$backCmd}&amp;ewCmd2=Print&amp;id={@id}" target="_new" class="btn btn-sm btn-outline-primary">
               <i class="fa fa-print">
                 <xsl:text> </xsl:text>
               </i>
@@ -6746,7 +6978,7 @@ $(document).ready(function () {
                     <xsl:value-of select="@id"/>
                   </td>
                   <td>
-                    <xsl:value-of select="@statusId"/> - 	<xsl:choose>
+                    [<xsl:value-of select="@statusId"/>]<xsl:choose>
                       <xsl:when test="@statusId='0'">New</xsl:when>
                       <xsl:when test="@statusId='1'">Items Added</xsl:when>
                       <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
@@ -6759,6 +6991,12 @@ $(document).ready(function () {
                       <xsl:when test="@statusId='9'">Shipped</xsl:when>
                       <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
                       <xsl:when test="@statusId='11'">Abandoned</xsl:when>
+						<xsl:when test="@statusId='12'">Deleted</xsl:when>
+						<xsl:when test="@statusId='13'">AwaitingPayment</xsl:when>
+						<xsl:when test="@statusId='14'">Settlement Initiated</xsl:when>
+						<xsl:when test="@statusId='15'">Skip Address</xsl:when>
+						<xsl:when test="@statusId='16'">Archived</xsl:when>
+						<xsl:when test="@statusId='17'">In Progress</xsl:when>
                     </xsl:choose>
                   </td>
                   <td>
@@ -7366,9 +7604,7 @@ $(document).ready(function () {
           <xsl:when test="$editQty!='true'">&#160;</xsl:when>
           <xsl:otherwise>
             <a href="{$parentURL}?cartCmd=Remove&amp;id={@id}" title="click here to remove this item from the list">
-              <!--BJR - This either doesnt work or is wrong so i have changed it for the moment to work-->
-              <!--<img src="{$secureURL}/ewCommon/images/icons/trash.gif" alt="delete icon - click here to remove this item from the list"/>-->
-              <img src="/ewCommon/images/icons/delete.png" width="20" height="20" alt="delete icon - click here to remove this item from the list"/>
+               <img src="/ewCommon/images/icons/delete.png" width="20" height="20" alt="delete icon - click here to remove this item from the list"/>
             </a>
           </xsl:otherwise>
         </xsl:choose>
@@ -7599,6 +7835,13 @@ $(document).ready(function () {
           <xsl:when test="$statusId='9'">Shipped</xsl:when>
           <xsl:when test="$statusId='10'">Deposit Paid</xsl:when>
           <xsl:when test="$statusId='11'">Abandoned</xsl:when>
+
+			<xsl:when test="$statusId='12'">Deleted</xsl:when>
+			<xsl:when test="$statusId='13'">AwaitingPayment</xsl:when>
+			<xsl:when test="$statusId='14'">Settlement Initiated</xsl:when>
+			<xsl:when test="$statusId='15'">Skip Address</xsl:when>
+			<xsl:when test="$statusId='16'">Archived</xsl:when>
+			<xsl:when test="$statusId='17'">In Progress</xsl:when>
         </xsl:choose> Quote<xsl:choose>
           <xsl:when test="@cmd='Add' or @cmd='Cart'"> - Contents</xsl:when>
           <xsl:when test="@cmd='Billing'"> - Enter the billing address</xsl:when>
@@ -10648,8 +10891,8 @@ $(document).ready(function () {
 
       <td >
         <span class="edit-option-links-blue">
-          <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-primary" title="Edit this new code set">View/Add Codes</a>
-          <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-primary" title="Edit this new code set">Code Memberships</a>
+          <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}" class="btn btn-primary" title="Edit this new code set">View/Generate Codes</a>
+         <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-primary" title="Edit this new code set">Code Memberships</a>
         </span>
       </td>
     </tr>
@@ -10750,13 +10993,23 @@ $(document).ready(function () {
           <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodes" class="btn btn-primary btn-xs" title="Generate Codes">
             <i class="fa fa-plus">
               <xsl:text> </xsl:text>
-            </i> View/Add Codes
+            </i> View/Generate Codes
           </a>
+			<a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ImportCodes" class="btn btn-primary btn-xs" title="Import Codes">
+				<i class="fa fa-file-import">
+					<xsl:text> </xsl:text>
+				</i> Import Codes
+			</a>
           <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;id={@nCodeKey}&amp;subCmd=ManageCodeGroups" class="btn btn-primary btn-xs" title="Edit this new code set">
             <i class="fa fa-users">
               <xsl:text> </xsl:text>
             </i> Code Memberships
           </a>
+			<a href="{$appPath}?ewCmd=MemberCodes&amp;subCmd=DeleteCodeGroup&amp;id={@nCodeKey}" class="btn btn-danger btn-sm ">
+				<i class="fa fa-trash-alt fa-white">
+					<xsl:text> </xsl:text>
+				</i>
+			</a>
         </span>
       </td>
     </tr>
@@ -11780,7 +12033,7 @@ $(document).ready(function () {
             </xsl:if>-->
               </xsl:for-each>
               <td align="right">
-                <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
+                <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={Order_Id/node()}" class="view adminButton">view order</a>
               </td>
             </tr>
           </span>
@@ -11911,7 +12164,7 @@ $(document).ready(function () {
           </a>
         </td>
         <td align="right">
-          <a href="{$appPath}?ewCmd={$ewCmd}&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
+          <a href="{$appPath}?ewCmd=Orders&amp;ewCmd2=Display&amp;id={ancestor::Item/Order_Id/node()}" class="view adminButton">view order</a>
         </td>
       </tr>
     </span>
@@ -12970,7 +13223,7 @@ $(document).ready(function () {
 						<p class="btn-group headerButtons">
 							<xsl:if test="ContentDetail/Content[@type='xform']">
 								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
-									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to Filter Index List
 								</a>
 							</xsl:if>
 						</p>
@@ -13090,7 +13343,7 @@ $(document).ready(function () {
 						<p class="btn-group headerButtons">
 							<xsl:if test="ContentDetail/Content[@type='xform']">
 								<a href="{$appPath}?ewCmd=FilterIndex&amp;pgid={/Page/@id}" class="btn btn-default" title="Back to FilterIndexes">
-									<i class="fa fa-caret-left">&#160; </i>&#160;Back to FilterIndexex List
+									<i class="fa fa-caret-left">&#160; </i>&#160;Back to Filter Index List
 								</a>
 							</xsl:if>
 						</p>

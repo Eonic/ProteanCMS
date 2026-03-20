@@ -15,7 +15,7 @@
         <cContentName/>
         <cContentSchemaName>Tag</cContentSchemaName>
         <cContentXmlBrief>
-          <Content showRelated="NewsArticle">
+          <Content showRelated="NewsArticle,Event,Product">
             <Name/>
           </Content>
         </cContentXmlBrief>

@@ -208,6 +208,55 @@
 		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
 	</xsl:template>
 
+
+	<xsl:template match="Content[ancestor::Page[@adminMode='true'] and @name='UserLogon']" mode="xform">
+		<form method="{model/submission/@method}" action="">
+			<xsl:attribute name="class">
+				<xsl:text>ewXform panel panel-default</xsl:text>
+				<xsl:if test="model/submission/@class!=''">
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="model/submission/@class"/>
+				</xsl:if>
+			</xsl:attribute>
+			<xsl:if test="not(contains(model/submission/@action,'.asmx'))">
+				<xsl:attribute name="action">
+					<xsl:value-of select="model/submission/@action"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@id!=''">
+				<xsl:attribute name="id">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+				<xsl:attribute name="name">
+					<xsl:value-of select="model/submission/@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="model/submission/@event!=''">
+				<xsl:attribute name="onsubmit">
+					<xsl:value-of select="model/submission/@event"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="descendant::upload">
+				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
+			</xsl:if>
+
+			<xsl:for-each select="group">
+				<div class="panel-body">
+					<xsl:apply-templates select="label" mode="legend"/>
+<p>Welcome back, please sign in to your account</p>
+					<xsl:apply-templates select="parent::*/alert" mode="xform"/>
+					<xsl:apply-templates select="group | repeat | input | secret | select | select1 | range | textarea | upload | hint | help | alert | div | submit" mode="xform"/>
+
+
+
+				</div>
+				
+			</xsl:for-each>
+		</form>
+		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
+	</xsl:template>
+	
+
 	<xsl:template match="group[(contains(@class,'2col') or contains(@class,'2Col')) and ancestor::Page[@adminMode='true']]" mode="xform">
 		<xsl:if test="label and not(parent::Content)">
 			<div class="panel-heading">

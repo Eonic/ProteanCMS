@@ -31,8 +31,12 @@ body {
     //padding-bottom: 2rem;
 
     @media(min-width:2000px) {
-        max-width: 2000px;
+        width: 2000px;
         margin: 0 auto;
+
+        .navbar-fixed-top {
+            width: 2000px;
+        }
     }
 
     .navbar-fixed-top {
@@ -50,6 +54,14 @@ body {
 
 .v-align-center {
     align-self: center;
+}
+.module-FormattedText.v-align-center {
+    align-self: center;
+    justify-content: center;
+
+    .FormattedText {
+        flex-grow: unset !important;
+    }
 }
 
 //BREAKOUT BOXES
@@ -211,7 +223,14 @@ a {
     //text-decoration: none;
     text-underline-offset: 0.2rem;
     text-decoration-thickness: 0px;
-    text-decoration-color: rgba($link-color,0.4)
+    text-decoration-color: rgba($link-color,0.4);
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 $focus-ring-width $focus-ring-color;
+        display: inline-block;
+        border-radius: 3px;
+    }
 }
 
 strong, b {
@@ -237,8 +256,13 @@ h1, h2, h3, h4 {
     color: $headings-color;
 }
 
+.title {
+    font-weight: $headings-font-weight;
+}
+
 .center-block,
-.center-block-footer {
+.center-block-footer,
+.center-nobox-footer {
     text-align: center;
 }
 
@@ -262,6 +286,10 @@ h1, h2, h3, h4 {
     *:last-child:not(button) {
         margin-bottom: 0;
     }
+
+    .btn {
+        margin:0 5px;
+    }
 }
 
 .banner-caption-inner {
@@ -282,7 +310,7 @@ h1, h2, h3, h4 {
     }
 }
 
-.btn-outline-light,
+
 .btn-custom {
     text-transform: uppercase;
     padding: 0.6rem 1.6rem;
@@ -408,13 +436,20 @@ section {
 .section-center {
     padding: 0;
 
-    > .fullwidthContainer,
-    .bg-content-center {
+    > .fullwidthContainer {
         height: 100%;
+
+        > .container {
+            height: 100%;
+        }
     }
 
+   
+        display: flex;
+        justify-content: stretch;
+    
+
     > .container {
-        height: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -461,10 +496,16 @@ section:not(.bg-light) .bg-light {
 @mixin section-contrast($color: $dark) {
     color: color-contrast($color);
 
+    a:not(.btn),
+    .title a {
+        color: color-contrast($color);
+    }
+
     h1, h2, h3, h4, h5, h6 {
         color: color-contrast($color);
 
-        a {
+        a,
+        .title a {
             color: color-contrast($color);
         }
     }
@@ -492,6 +533,10 @@ section:not(.bg-light) .bg-light {
 
     .swiper-button-prev, .swiper-button-next {
         color: color-contrast($color);
+    }
+
+    a:focus-visible {
+        box-shadow: 0 0 0 $focus-ring-width rgba(color-contrast($color), $focus-ring-opacity);
     }
 }
 
@@ -527,6 +572,7 @@ section.bg-video-wrapper {
     video.bg-video {
         height: 100%;
         object-fit: cover;
+        width: auto;
     }
 
     > .container {
@@ -791,6 +837,10 @@ section.stretchBG {
     padding-top: 3rem;
 }
 /*############### LIST ITEMS #################*/
+.listItem .title {
+    font-size: 1.5rem;
+}
+
 .date,
 .dtstamp {
     font-size: 0.75rem;
@@ -823,7 +873,7 @@ section.stretchBG {
 }
 
 @mixin boxed-listItem {
-    padding: $listItem-padding;
+    //padding: $listItem-padding;
     //border: 1px solid $grey;
     border-radius: $border-radius;
     // height: 100%;
@@ -831,6 +881,9 @@ section.stretchBG {
     flex-direction: column;
     background: $light;
     color: $body-color;
+    margin-bottom: 0;
+   // height: calc(100% - ($grid-gutter-height / 2));
+   height:100%;
 
     .btn-custom {
         @extend .#{$btn-list-style};
@@ -845,18 +898,28 @@ section.stretchBG {
     }
 
     *:nth-last-child(2) {
-        flex-grow: 2;
+        //   flex-grow: 2;
     }
 
-    .list-image-link,
-    .list-image-span {
-        margin-top: -$listItem-padding;
+    .list-image-link, .list-image-span {
+        /* margin-top: -$listItem-padding;
         margin-left: -$listItem-padding;
         margin-right: -$listItem-padding;
-        margin-bottom: $listItem-padding;
+        margin-bottom: $listItem-padding;*/
+        margin-bottom: 0;
 
         img.thumbnail {
             margin-bottom: 0;
+        }
+    }
+
+    .media-inner {
+        padding: $listItem-padding;
+        height: auto;
+        flex-grow: 2;
+
+        *:nth-last-child(2) {
+            flex-grow: 2;
         }
     }
 }
@@ -893,14 +956,15 @@ section.stretchBG {
     }
 }
 
+
 div[class$="List"] {
     //@include listItem-spacing;
     .list-image-link {
-        overflow: hidden;
+       // overflow: hidden;
     }
 
     .btn-custom {
-        margin-top: 1rem;
+       // margin-top: 1rem;
         border-color: $btn-list-btn;
     }
     /*.btn-custom {
@@ -921,7 +985,7 @@ div[class$="List"] {
     }*/
 }
 
-.ContactList {
+/*.ContactList {
     .lIinner {
         max-width: 496px;
         margin: 0 auto;
@@ -946,7 +1010,7 @@ div[class$="List"] {
             line-height: 1;
         }
     }
-}
+}*/
 
 @mixin testimonial1 {
     @include unboxed-listItem;
@@ -1010,9 +1074,18 @@ div[class$="List"] {
     }
 }
 
-.nobox .listItem .lIinner,
-.relatedcontent .listItem .lIinner {
-    // @include boxed-listItem;
+.nobox .listItem,
+.relatedcontent .listItem {
+    margin-top: 0;
+    margin-bottom: var(--bs-gutter-x);
+
+    .lIinner {
+        @include boxed-listItem;
+
+        .entryFooter {
+            margin-top: 1rem;
+        }
+    }
 }
 
 .TestimonialList .listItem .lIinner {
@@ -1165,7 +1238,7 @@ div[class$="List"] {
     }
 
     .media-inner {
-        padding: 1.5rem 0;
+        //padding: 1.5rem 0;
 
         .entryFooter {
             padding-top: 1rem;

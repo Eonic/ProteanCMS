@@ -25,7 +25,7 @@
       /*GENERAL STYLES*/
       .emailContentWrapper{padding:20px 0 0;}
       .Mail,
-      #emailContent{background:#ECECEC}
+      #emailContent{background:#ffffff}
       .Mail a{color:<xsl:value-of select="$mainColour"/>;text-decoration:none}
       .cleanLink a,
       a .cleanLink{
@@ -52,16 +52,17 @@
       margin:0;
       }
       .Mail h2{
-      font-size:18px;
+      font-size:22px;
       margin:0;
       }
+      .Mail h3{
+      font-size:18px;
+      }
       .Mail h2.title{
-      font-size:22px;
       padding:0 0 15px;
       }
       .Mail h3.title{
       padding:0 0 15px;
-      font-size:18px;
       }
 
       /*BUTTONS*/
@@ -119,7 +120,7 @@
       /*HEADER*/
       #emailHeader{
       margin-bottom:0;
-      border-bottom:4px solid <xsl:value-of select="$mainColour"/>;
+      
       }
       #emailHeader td{
       background:#ffffff;

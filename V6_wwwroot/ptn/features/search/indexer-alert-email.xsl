@@ -37,7 +37,7 @@
 			<body>
 				<div id="mainTable">
 					<div id="mainLayout">
-						<h1>EonicWeb Website Indexer Alert</h1>
+						<h1>ProteanCMS Indexer Report</h1>
 
 						<h3>The Index details are as follows:</h3>
 						<table cellspacing="0" id="indexerSummary">

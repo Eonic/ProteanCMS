@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml"  xmlns:ew="urn:ew">
-
-	<xsl:template name="eonicwebProductName">
+   <xsl:template name="eonicwebProductName">
     <xsl:choose>
       <xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
         <xsl:value-of select="$page/Settings/add[@key='web.eonicwebProductName']/@value"/>
@@ -578,7 +577,7 @@
             <xsl:text> </xsl:text>
           </li>
 
-        </ul>
+        </ul>			
         </div>
         <!-- /.navbar-collapse -->
 
@@ -1003,7 +1002,7 @@
           <xsl:text> </xsl:text>
         </i>
         <span>
-          <xsl:value-of select="@name"/>
+         <xsl:value-of select="@name"/>
         </span>
       </a>
     </xsl:if>

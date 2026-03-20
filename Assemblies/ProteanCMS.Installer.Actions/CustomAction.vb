@@ -2,15 +2,15 @@
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.39.0"
+    Public Shared ewAssemblyVersion As String = "6.1.53.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.1.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
-    Public Shared bundleSassAssemblyVersion As String = "1.14.2.0"
-    Public Shared DartSassHostAssemblyVersion As String = "1.1.0.0"
+    Public Shared bundleSassAssemblyVersion As String = "1.15.5.0"
+    Public Shared DartSassHostAssemblyVersion As String = "1.1.1.0"
     Public Shared jsSwitcherAssemblyVersion As String = "3.24.1.0"
-    Public Shared jsSwitcherV8AssemblyVersion As String = "3.24.2.0"
-    Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.23.2.0"
+    Public Shared jsSwitcherV8AssemblyVersion As String = "3.29.1.0"
+    Public Shared jsSwitcherV8NativeWinx64AssemblyVersion As String = "3.29.0.0"
     Public Shared WebGreaseAssemblyVersion As String = "1.6.5135.21930"
     Public Shared AdvancedStringBuilderVersion As String = "0.1.1.0"
     Public Shared JsonAssemblyVersion As String = "13.0.3.0" '"8.0.1.19229""
@@ -25,32 +25,38 @@ Public Class CustomActions
     Public Shared CreateSendAssemblyVersion As String = "4.2.2.0"
     Public Shared TidyHTML5ManagedAssemblyVersion As String = "1.1.5.0"
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
-    Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.4.5.0"
+    Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.5.0.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "14.5.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "14.5.0.0"
+    Public Shared MagickNETCoreAssemblyVersion As String = "14.9.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "14.9.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
-    Public Shared SystemBuffersVersion As String = "4.0.4.0"
-    Public Shared SystemMemoryVersion As String = "4.0.2.0"
-    Public Shared DocumentFormatOpenXmlVersion As String = "3.2.0.0"
-    Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.1.0"
+    Public Shared SystemBuffersVersion As String = "4.0.5.0"
+    Public Shared SystemMemoryVersion As String = "4.0.5.0"
+    Public Shared DocumentFormatOpenXmlVersion As String = "3.3.0.0"
+    Public Shared SystemRuntimeCompilerServicesUnsafeVersion As String = "6.0.3.0"
     Public Shared MicrosoftWebInfrastructureVersion As String = "2.0.0.0"
-    Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.0.1"
-    Public Shared SystemTextJsonVersion As String = "9.0.0.0"
-    Public Shared MicrosoftBclAsyncInterfacesVersion As String = "9.0.0.2"
-    Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.2"
-    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.0.0"
-    Public Shared SystemNumericsVectorsVersion As String = "4.1.5.0"
-    Public Shared AngleSharpVersion As String = "1.2.0.0"
-    Public Shared PreMailerVersion As String = "2.6.0.0"
+    Public Shared SystemThreadingTasksExtensionsVersion As String = "4.2.4.0"
+
+    Public Shared SystemTextJsonVersion As String = "9.0.0.10"
+    Public Shared MicrosoftBclAsyncInterfacesVersion As String = "9.0.0.10"
+    Public Shared SystemTextEncodingsWebVersion As String = "9.0.0.10"
+    Public Shared SystemIOPipelines As String = "9.0.0.10"
+    Public Shared SystemTextEncodingCodePagesAssemblyVersion As String = "9.0.0.10"
+    Public Shared SystemConfigurationManager As String = "9.0.0.10"
+
+    Public Shared SystemNumericsVectorsVersion As String = "4.1.6.0"
+    Public Shared AngleSharpVersion As String = "1.3.0.0"
+    Public Shared PreMailerVersion As String = "2.7.2.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
-    Public Shared iTextSharpVersion As String = "3.7.1.0"
-    Public Shared SkiaSharpVersion As String = "3.116.0.0"
+    Public Shared iTextSharpVersion As String = "3.7.4.0"
+    Public Shared SkiaSharpVersion As String = "3.119.0.0"
     Public Shared BouncyCastleCrypto As String = "2.0.0.0"
-    Public Shared SystemIOPipelines As String = "9.0.0.2"
     Public Shared SystemDataSQLClient As String = "4.6.2.0" 'lib version 4.8.6
     Public Shared SystemDrawingCommon As String = "9.0.0.0"
+    Public Shared MicrosoftIdentityClientVersion As String = "4.78.0.0"
+    Public Shared MicrosoftIdentityModelAbstractionsVersion As String = "8.14.0.0"
+    Public Shared SelectHtmlToPDF As String = "25.2.0.0"
     '  Public Shared SystemWebAdaptors As String = "2.0.0.0"
 
 
@@ -60,7 +66,7 @@ Public Class CustomActions
     <CustomAction()>
     Public Shared Function LoadGuide(ByVal session As Session) As ActionResult
         session.Log("Begin CustomAction1")
-        System.Diagnostics.Process.Start("http://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS")
+        System.Diagnostics.Process.Start("https://www.proteancms.com/Documentation?page=ProteanCMS%20Wiki%20Home")
         Return ActionResult.Success
     End Function
 
@@ -69,13 +75,13 @@ Public Class CustomActions
 
         Try
 
-            System.Diagnostics.Process.Start("http://www.ProteanCMS.com/Support/Web-Designers-Guide/UnInstalling-ProteanCMS")
+            System.Diagnostics.Process.Start("https://www.proteancms.com/Documentation?page=ProteanCMS%20Wiki%20Home")
 
             Return ActionResult.Success
 
         Catch ex As Exception
             Dim errorstr As String = ex.InnerException.StackTrace
-            System.Diagnostics.Process.Start("http://www.ProteanCMS.com/Support/Web-Designers-Guide/UnInstalling-ProteanCMS")
+            System.Diagnostics.Process.Start("https://www.proteancms.com/Documentation?page=ProteanCMS%20Wiki%20Home")
             Return ActionResult.Failure
         End Try
     End Function
@@ -239,7 +245,7 @@ Public Class CustomActions
                     ' UpdateAssemblyRef(oAssembliesSect, "Google.Protobuf, Version=" & GoogleProtoBufAssemblyVersion & ", Culture=neutral, PublicKeyToken=a7d26565bac4d604")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET.Core, Version=" & MagickNETCoreAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET-Q8-x64, Version=" & MagickNETAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
-                    UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    '  UpdateAssemblyRef(oAssembliesSect, "System.Buffers, Version=" & SystemBuffersVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Memory, Version=" & SystemMemoryVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
                     UpdateAssemblyRef(oAssembliesSect, "Microsoft.Web.Infrastructure, Version=" & MicrosoftWebInfrastructureVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
@@ -251,15 +257,17 @@ Public Class CustomActions
 
                     UpdateAssemblyRef(oAssembliesSect, "QRCoder, Version=" & QRCoderVersion & ", Culture=neutral, PublicKeyToken=c4ed5b9ae8358a28")
                     UpdateAssemblyRef(oAssembliesSect, "System.Runtime.CompilerServices.Unsafe, Version=" & SystemRuntimeCompilerServicesUnsafeVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
-                    UpdateAssemblyRef(oAssembliesSect, "System.Threading.Tasks.Extensions, Version=" & SystemThreadingTasksExtensionsVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    '   UpdateAssemblyRef(oAssembliesSect, "System.Threading.Tasks.Extensions, Version=" & SystemThreadingTasksExtensionsVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Text.Json, Version=" & SystemTextJsonVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "Select.HtmlToPDF, Version=" & SelectHtmlToPDF & ", Culture=neutral, PublicKeyToken=e0ae9f6e27a97018")
+
                     UpdateAssemblyRef(oAssembliesSect, "Microsoft.Bcl.AsyncInterfaces, Version=" & MicrosoftBclAsyncInterfacesVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
                     UpdateAssemblyRef(oAssembliesSect, "System.Text.Encodings.Web, Version=" & SystemTextEncodingsWebVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "System.Text.Encoding.CodePages, Version=" & SystemTextEncodingCodePagesAssemblyVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
                     UpdateAssemblyRef(oAssembliesSect, "System.Numerics.Vectors, Version=" & SystemNumericsVectorsVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 
                     UpdateAssemblyRef(oAssembliesSect, "iTextSharp.LGPLv2.Core, Version=" & iTextSharpVersion & ", Culture=neutral, PublicKeyToken=51d712e21b66ad36")
                     UpdateAssemblyRef(oAssembliesSect, "SkiaSharp, Version=" & SkiaSharpVersion & ", Culture=neutral, PublicKeyToken=0738eb9f132ed756")
-
                     UpdateAssemblyRef(oAssembliesSect, "BouncyCastle.Cryptography, Version=" & BouncyCastleCrypto & ", Culture=neutral, PublicKeyToken=072edcf4a5328938")
                     UpdateAssemblyRef(oAssembliesSect, "System.Data.SqlClient, Version=" & SystemDataSQLClient & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
                     UpdateAssemblyRef(oAssembliesSect, "System.IO.Pipelines, Version=" & SystemIOPipelines & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
@@ -270,7 +278,15 @@ Public Class CustomActions
 
 
 
-                    ' UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=8fb06cb64d019a17")
+                    UpdateAssemblyRef(oAssembliesSect, "DocumentFormat.OpenXml.Framework, Version=" & DocumentFormatOpenXmlVersion & ", Culture=neutral, PublicKeyToken=8fb06cb64d019a17")
+                    UpdateAssemblyRef(oAssembliesSect, "Microsoft.Identity.Client, Version=" & MicrosoftIdentityClientVersion & ", Culture=neutral, PublicKeyToken=0a613f4dd989e8ae")
+                    UpdateAssemblyRef(oAssembliesSect, "Microsoft.IdentityModel.Abstractions, Version=" & MicrosoftIdentityModelAbstractionsVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
+                    UpdateAssemblyRef(oAssembliesSect, "Select.HtmlToPDF, Version=" & SelectHtmlToPDF & ", Culture=neutral, PublicKeyToken=e0ae9f6e27a97018")
+                    UpdateAssemblyRef(oAssembliesSect, "System.Configuration.ConfigurationManager, Version=" & SystemConfigurationManager & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+
+                    UpdateAssemblyRef(oAssembliesSect, "netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+
 
                     'TS: These are not required and forces the CMS to load so cannot be overiden by newer version
                     '  UpdateAssemblyRef(oAssembliesSect, "ProteanCms, Version=" & ewAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
@@ -575,7 +591,8 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "System.Runtime.CompilerServices.Unsafe", "b03f5f7f11d50a3a", SystemRuntimeCompilerServicesUnsafeVersion)
 
             UpdateDependantAssembly(oSectXml, "System.Threading.Tasks.Extensions", "cc7b13ffcd2ddd51", SystemThreadingTasksExtensionsVersion)
-            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", SystemTextJsonVersion)
+            'Very specific as seems to break Visual Studio
+            UpdateDependantAssembly(oSectXml, "System.Text.Json", "cc7b13ffcd2ddd51", "4.0.1.2", "4.0.1.2", SystemTextJsonVersion)
             UpdateDependantAssembly(oSectXml, "Microsoft.Bcl.AsyncInterfaces", "cc7b13ffcd2ddd51", MicrosoftBclAsyncInterfacesVersion)
             UpdateDependantAssembly(oSectXml, "System.Text.Encodings.Web", "cc7b13ffcd2ddd51", SystemTextEncodingsWebVersion)
             UpdateDependantAssembly(oSectXml, "System.Numerics.Vectors", "b03f5f7f11d50a3a", SystemNumericsVectorsVersion)
@@ -589,6 +606,13 @@ Public Class CustomActions
 
             UpdateDependantAssembly(oSectXml, "QRCoder", "c4ed5b9ae8358a28", QRCoderVersion)
             UpdateDependantAssembly(oSectXml, "System.Drawing.Common", "cc7b13ffcd2ddd51", SystemDrawingCommon)
+            UpdateDependantAssembly(oSectXml, "DocumentFormat.OpenXml", "8fb06cb64d019a17", DocumentFormatOpenXmlVersion)
+            UpdateDependantAssembly(oSectXml, "DocumentFormat.OpenXml.Framework", "8fb06cb64d019a17", DocumentFormatOpenXmlVersion)
+            UpdateDependantAssembly(oSectXml, "Microsoft.Identity.Client", "0a613f4dd989e8ae", MicrosoftIdentityClientVersion)
+            UpdateDependantAssembly(oSectXml, "Microsoft.IdentityModel.Abstractions", "31bf3856ad364e35", MicrosoftIdentityModelAbstractionsVersion)
+            UpdateDependantAssembly(oSectXml, "Select.HtmlToPDF", "e0ae9f6e27a97018", SelectHtmlToPDF)
+            UpdateDependantAssembly(oSectXml, "System.Configuration.ConfigurationManager", "cc7b13ffcd2ddd51", SystemConfigurationManager)
+
 
 
             Dim BindingElmt As XmlElement = oSectXml.DocumentElement.SelectSingleNode("assemblyBinding")

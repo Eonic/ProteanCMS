@@ -1,5 +1,6 @@
 var redirectAPIUrl = '/ewapi/Cms.Admin/RedirectPage';
 var IsParentPageAPI = '/ewapi/Cms.Admin/IsParentPage';
+var UpdateContentValue = '/ewapi/Cms.Content/UpdateContentValue';
 var checkiFrameLoaded;
 
 $(document).ready(function () {
@@ -177,6 +178,12 @@ $(document).ready(function () {
     $('#tpltEditStructure #MenuTree').ajaxtreeview({
         loadPath: treeviewPath,
         ajaxCmd: 'GetStructureNode',
+        hide: true
+    });
+
+    $('#tpltSEOReport #MenuTree').ajaxtreeview({
+        loadPath: treeviewPath,
+        ajaxCmd: 'GetSEOReport',
         hide: true
     });
 
@@ -2162,5 +2169,101 @@ function SaveFileName(isOverwrite) {
             $('#files .item-image .panel').prepareLibImages();
         }
     });
+}
+
+function editTitle(pagetitleId, metadescId, menuid) {   
+    $("#title-input-" + pagetitleId).removeClass('hidden');
+    $("#title-display-" + pagetitleId).addClass('hidden');
+    $("#description-input-" + metadescId).removeClass('hidden');
+    $("#MetaDescription-display-" + metadescId).addClass('hidden');   
+    $("#Edit-btn-" + menuid).addClass('hidden');
+    $("#save-btn-" + menuid).removeClass('hidden');
+    //$("#pagename-input-" + menuid).removeClass('hidden');
+    //$("#cPageName-" + menuid).addClass('hidden');
+    //$("#displayname-input-" + menuid).removeClass('hidden');
+    //$("#cDisplayName-" + menuid).addClass('hidden');
+    if (pagetitleId == 0 || metadescId == 0) {
+        $("#title-input-" + menuid).removeClass('hidden');
+        $("#description-input-" + menuid).removeClass('hidden');
+    }
+}
+
+function buildInputJson({ contentId, contentType, contentName, value, pageId, position, mode }) {
+    let values = [];
+
+    if (mode === 1) {
+        values.push({ xpath: "Content", value: value, mode: mode });
+    }
+    else if (mode === 2) {
+        values.push({ xpath: "", value: value, mode: mode });
+    }
+    else if (mode === 3) {
+        values.push({xpath: "Content", value: value, mode: mode });
+    }
+    return {
+        contentId: contentId, contentType: contentType, ContentName: contentName, pageId: pageId, position: position, values: values };
+}
+
+function saveTitle(pagetitleId, metadescId, menuid, mode = 3) {
+    var pagetitle = $("#title-input-" + pagetitleId).val();
+    var metadescription = $("#description-input-" + metadescId).val();
+    var pageId = menuid;
+    var position = "header";
+    if (pagetitleId == 0 || metadescId == 0) {
+        pagetitle = $("#title-input-" + menuid).val();
+        metadescription = $("#description-input-" + menuid).val();
+    }
+    var PageTitleInputJson = buildInputJson({
+        contentId: pagetitleId,
+        contentType: "PlainText",
+        contentName: "PageTitle",
+        value: pagetitle,
+        pageId: pageId,
+        position: position,
+        relatedParent: null,
+        relationType:null,
+        mode: mode        
+    });
+
+    var MetaDescriptionInputJson = buildInputJson({
+        contentId: metadescId,
+        contentType: "MetaData",
+        contentName: "MetaDescription",
+        value: metadescription,
+        pageId: pageId,
+        position: position,
+        relatedParent: null,
+        relationType: null,
+        mode: mode
+    });
+
+    axios.post(UpdateContentValue, PageTitleInputJson).then(function (response) {       
+        if (response.data.id > 0) {            
+            $("#title-display-" + pagetitleId).text(pagetitle);
+            $("#title-input-" + pagetitleId).addClass('hidden');
+            $("#title-display-" + pagetitleId).removeClass('hidden');
+            if (pagetitleId == 0 || metadescId == 0) {
+                $("#title-input-" + menuid).addClass('hidden'); 
+                $("#title-display-" + menuid).removeClass('hidden');
+                $("#title-display-" + menuid).text(pagetitle);
+            }
+        }
+    });
+
+    axios.post(UpdateContentValue, MetaDescriptionInputJson).then(function (response) {      
+        if (response.data.id > 0) {            
+            $("#MetaDescription-display-" + metadescId).text(metadescription);
+            $("#description-input-" + metadescId).addClass('hidden');
+            $("#MetaDescription-display-" + metadescId).removeClass('hidden');
+            if (pagetitleId == 0 || metadescId == 0) {               
+                $("#description-input-" + menuid).addClass('hidden');
+                $("#MetaDescription-display-" + menuid).removeClass('hidden');
+                $("#MetaDescription-display-" + menuid).text(metadescription);
+            }
+        }
+    });
+
+    $("#Edit-btn-" + menuid).removeClass('hidden');
+    $("#save-btn-" + menuid).addClass('hidden');
 }
 

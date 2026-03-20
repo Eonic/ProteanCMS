@@ -119,8 +119,10 @@ namespace Protean
                             switch (Strings.LCase(myWeb.moConfig["MembershipEncryption"]) ?? "")
                             {
                                 case "md5":
+                                case "md5_salt":
                                 case "sha1":
                                 case "sha256":
+                                case "sha2_512_salt":
                                     {
                                         oXfmElmt = (XmlElement)oAdXfm.xFrmResetAccount();
                                         break;
@@ -373,7 +375,7 @@ namespace Protean
                                 }
 
                                 // ok if the user is valid we then need to handle what happens next.
-                                if (Conversions.ToBoolean(oAdXfm.valid))
+                                if (Conversions.ToBoolean(oAdXfm.valid) && oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText != "")
                                 {
                                     myWeb.mnUserId = Conversions.ToInteger(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
                                     var oMembership = new Membership(ref myWeb);
@@ -386,11 +388,16 @@ namespace Protean
                                                 bRedirect = false;
                                                 // say thanks for registering and update the form
                                                 // hide the current form
-                                                XmlElement oFrmGrp = (XmlElement)oAdXfm.moXformElmt.SelectSingleNode("group");
-                                                oFrmGrp.SetAttribute("class", "hidden");
+                                                foreach (XmlNode grpNode in oAdXfm.moXformElmt.SelectNodes("group|button|submit")){
+                                                    XmlElement grpElmt = (XmlElement)grpNode;
+                                                    grpElmt.SetAttribute("class", "hidden");
+                                                }
+
+                                               // XmlElement oFrmGrp = (XmlElement)oAdXfm.moXformElmt.SelectSingleNode("group");
+                                               // oFrmGrp.SetAttribute("class", "hidden");
                                                 // create a new note
                                                 XmlElement frmElmt = oAdXfm.moXformElmt;
-                                                XmlElement oFrmGrp2 = (XmlElement)oAdXfm.addGroup(ref frmElmt, "validateByEmail");
+                                                XmlElement oFrmGrp2 = (XmlElement)oAdXfm.addGroup(ref frmElmt,"validateByEmail");
                                                 oAdXfm.addNote(ref oFrmGrp2, Protean.xForm.noteTypes.Hint, "<span class=\"msg-1029\">Thanks for registering you have been sent an email with a link you must click to activate your account</span>", true);
                                                 myWeb.mnUserId = 0;
                                                 
@@ -460,7 +467,7 @@ namespace Protean
                                 {
                                     // refresh the site strucutre with new userId
                                     myWeb.mnUserId = (int)mnUserId;
-                                    myWeb.GetStructureXML("Site");
+                                    myWeb.GetStructureXML("Site", mnUserId);
                                     XmlElement oElmt = (XmlElement)myWeb.moPageXml.SelectSingleNode("/Page/Menu/descendant-or-self::MenuItem[@id = '" + redirectId + "']");
                                     string redirectPath = myWeb.mcOriginalURL;
                                     if (oElmt is null)
@@ -507,6 +514,7 @@ namespace Protean
                                 case "md5":
                                 case "sha1":
                                 case "sha256":
+                                case "sha2_512_salt":
                                     {
                                         if (myWeb.moRequest["ewCmd"] == "AR-MOD")
                                         {

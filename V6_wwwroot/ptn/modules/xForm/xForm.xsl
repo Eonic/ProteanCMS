@@ -21,11 +21,12 @@
 			</xsl:otherwise>
 		</xsl:choose>
 		<xsl:if test="/Page/@adminMode">
-			<div class="sentMessage">
+			<div class="sentMessage text-white card bg-success">
+				<div class="card-body sentMessage">
 				<xsl:choose>
 					<xsl:when test="Content[@type='FormattedText']">
 						<xsl:apply-templates select="Content[@type='FormattedText']" mode="inlinePopupOptions">
-							<xsl:with-param name="class" select="'sentMessage'"/>
+							<xsl:with-param name="class" select="'card-body sentMessage'"/>
 						</xsl:apply-templates>
 						<em>[submission message]</em>
 						<xsl:apply-templates select="Content[@type='FormattedText']" mode="displayBrief"/>
@@ -43,22 +44,28 @@
 					</xsl:otherwise>
 				</xsl:choose>
 			</div>
+			</div>
 		</xsl:if>
 	</xsl:template>
 
 	<!-- Email Sent Message -->
 	<xsl:template match="Content" mode="mailformSentMessage">
+		
 		<xsl:choose>
 			<!-- WHEN RELATED SENT MESSAGE -->
 			<xsl:when test="Content[@type='FormattedText']">
-				<div class="sentMessage">
+				<div class="sentMessage text-white card bg-success">
+					<div class="card-body sentMessage">
 					<xsl:apply-templates select="Content[@type='FormattedText']/node()" mode="cleanXhtml" />
+				</div>
 				</div>
 			</xsl:when>
 			<!-- WHEN SENT MESSAGE ON PAGE -->
 			<xsl:when test="/Page/Contents/Content[@name = 'sentMessage' and (@type='FormattedText' or @type='Image')]">
-				<div class="sentMessage">
+				<div class="sentMessage text-white card bg-success">
+					<div class="card-body sentMessage">
 					<xsl:apply-templates select="/Page/Contents/Content[@name = 'sentMessage' and (@type='FormattedText' or @type='Image')]" mode="displayBrief"/>
+				</div>
 				</div>
 			</xsl:when>
 			<!-- OTHERWISE SHOW FORM -->

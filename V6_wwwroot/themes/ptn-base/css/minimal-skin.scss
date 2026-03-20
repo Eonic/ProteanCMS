@@ -24,48 +24,6 @@ h2.layout-title,
 .intro-banner-inner:after {
     margin-top: 1.7rem;
 }
-.main-nav {
-    @include media-breakpoint-up($nav-breakpoint) {
-        .nav-link {
-            padding: $nav-padding-y 0 !important;
-            margin: 0 $nav-padding-x;
-            position: relative;
-
-            &:before {
-                content: "";
-                position: absolute;
-                display: block;
-                width: 100%;
-                height: 2px;
-                bottom: 0;
-                left: 0;
-                background-color: $nav-link-hover-color;
-                transform: scaleX(0);
-                transition: transform 0.3s ease;
-            }
-
-            &:hover::before {
-                transform: scaleX(1);
-            }
-
-            &.active, &.on {
-                border-bottom: 2px solid $nav-link-hover-color;
-                padding-bottom: $nav-padding-y - 2px !important;
-
-                &:hover::before {
-                    transform: scaleX(0);
-                }
-            }
-        }
-    }
-}
-
-.header-menu-below .main-nav {
-    @include media-breakpoint-up($nav-breakpoint) {
-        border-top: 1px solid $grey;
-        //border-bottom: 1px solid $grey;
-    }
-}
 
 .author {
     border-bottom: 1px solid $grey;

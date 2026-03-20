@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Web.Configuration;
-using System.Xml;
-using Microsoft.VisualBasic;
+﻿using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Providers.Payment;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Web;
+using System.Web.Configuration;
+using System.Xml;
 using static Protean.Tools.Xml;
 
 namespace Protean
@@ -28,26 +29,26 @@ namespace Protean
                 public string Value { get; set; }
             }
 
-            public class JSONActions : Protean.rest.JsonActions
+            public class JSONActions : Protean.rest.JSONActions
             {
 
-                public event OnErrorEventHandler OnError;
+                //public event OnErrorEventHandler OnError;
 
-                public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+              //  public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Cart.JSONActions";
                 private const string cContactType = "Venue";
-                private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
+                private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 private Cms myWeb;
                 private Cart myCart;
 
-
-                public JSONActions()
+                public JSONActions(Cms.dbHelper.utils.APILog ApiLog)
                 {
-                   // string ctest = "this constructor is being hit"; // for testing
+                    // string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
                     myWeb.InitializeVariables();
                     myWeb.Open();
                     myCart = new Cart(ref myWeb);
+                    this.apiLog = ApiLog;
 
                 }
 
@@ -86,7 +87,7 @@ namespace Protean
                         // Dim CartXml As XmlElement = myWeb.moCart.CreateCartElement(myWeb.moPageXml)
                         // myCart.GetCart(CartXml.FirstChild)
                         string cShipOptKey = "0";
-                        
+
 
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
@@ -106,12 +107,12 @@ namespace Protean
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue");
                         // persist cart
                         myCart.close();
-                        return jsonString;                       
+                        return jsonString;
                     }
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -141,11 +142,13 @@ namespace Protean
                             }
                             myCart.mnProcessId = (short)1;
                         }
-                        if ((int)myCart.mnProcessId > 4)
+                        var cBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(cBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
-
                         else
                         {
                             if (jObj["Item"] != null)
@@ -184,7 +187,11 @@ namespace Protean
                                     {
                                         dProductOptionPrice = (double)item["productOptionPrice"];
                                     }
-
+                                    if (jObj.ContainsKey("overridePriceSession"))
+                                    {
+                                        myCart.myWeb.moSession["overridePriceSession"] = (string)jObj["overridePriceSession"];
+                                    }
+                                   
                                     myCart.AddItem((long)item["contentId"], (long)item["qty"], null, sProductName, cProductPrice, "", bUnique, sOverideURL, false, sProductOptionName, dProductOptionPrice);
 
                                 }
@@ -206,7 +213,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
 
@@ -216,7 +223,9 @@ namespace Protean
                 {
                     try
                     {
-                        if ((int)myCart.mnProcessId > 4)
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -260,7 +269,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
 
@@ -333,7 +342,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
 
@@ -415,7 +424,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetShippingOptions", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetShippingOptions", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -447,7 +456,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdatedCartShippingOptions", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdatedCartShippingOptions", ex, ""));
                         return ex.Message;
                     }
 
@@ -455,7 +464,9 @@ namespace Protean
 
                 public string UpdateDeliveryOptionByCountry(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    if ((int)myCart.mnProcessId > 4)
+                    string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                    if ((int)myCart.mnProcessId > 4 &&
+                        !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(mcBlockCartUpdate))
                     {
                         return "";
                     }
@@ -513,7 +524,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -538,7 +549,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
+                        RaiseOnError(   new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
                         return ex.Message;
                     }
                     //return JsonConvert.ToString(nId);
@@ -550,7 +561,7 @@ namespace Protean
                     try
                     {
                         int supplierId = (int)jObj["supplierId"];
-                        var contact = jObj["venue"].ToObject<modal.Contact>();
+                        var contact = jObj["venue"].ToObject<model.Contact>();
                         contact.cContactType = cContactType;
                         contact.cContactForeignRef = string.Format("SUP-{0}", supplierId);
 
@@ -558,7 +569,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddContact", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "AddContact", ex, ""));
                         return ex.Message;
                     }
                     return JsonConvert.ToString(nId);
@@ -576,28 +587,29 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteContact", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteContact", ex, ""));
                         return ex.Message;
                     }
                     return JsonConvert.ToString(isSuccess);
                 }
 
-                public string AddProductOption(ref Protean.rest myApi, ref JObject jObj)
+                public string AddProductOption(Protean.rest myApi, JObject jObj)
                 {
                     string jsonString = string.Empty;
 
                     try
                     {
+                       
 
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
                         // myCart.GetCart(CartXml.FirstChild)
 
                         // add product option
-                        myCart.AddProductOption(ref jObj);
+                        myCart.AddProductOption(jObj);
                         // myCart.UpdatePackagingANdDeliveryType()
                         // myCart.GetCart(CartXml.FirstChild)   //Comment out this extra called method because this code already added in UpdatePackagingDeliveryOptions method - change on 5th jan 23
                         /// persist cart
-                        myCart.close();
+                        //myCart.close();
 
                         // CartXml = updateCartforJSON(CartXml)
 
@@ -637,8 +649,10 @@ namespace Protean
                     string strMessage = string.Empty;
                     try
                     {
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
 
-                        if ((int)myCart.mnProcessId > 4)
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -683,7 +697,10 @@ namespace Protean
                     string jsonString = string.Empty;
                     try
                     {
-                        if ((int)myCart.mnProcessId > 4)
+                        var cBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(cBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -749,7 +766,7 @@ namespace Protean
                 {
                     try
                     {
-                        var contact = new Cms.modal.Contact();
+                        var contact = new Cms.model.Contact();
                         int nId;
                         if (jObj != null)
                         {
@@ -901,7 +918,7 @@ namespace Protean
 
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
                         myCart.GetCart(ref argoCartElmt);
-                        myCart.purchaseActions(ref CartXml);
+                        myCart.purchaseActions(CartXml);
                         // persist cart
                         myCart.close();
                         CartXml = updateCartforJSON(CartXml);
@@ -1050,7 +1067,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "SaveToSellerNotes", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "SaveToSellerNotes", ex, ""));
                         return Conversions.ToBoolean(ex.Message);
                     }
                 }
@@ -1093,7 +1110,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "PopulateCounty", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "PopulateCounty", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -1156,7 +1173,7 @@ namespace Protean
 
                         bool bIsAuthorized = false;
                         var validGroup = Interaction.IIf(jObj["validGroup"] != null, (string)jObj["validGroup"], "");
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(validGroup));
+                        bIsAuthorized = this.ValidateAPICall(Conversions.ToString(validGroup));
 
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
@@ -1166,7 +1183,7 @@ namespace Protean
                         oCart.moPageXml = myWeb.moPageXml;
 
                         var nProviderReference = Interaction.IIf(jObj["nProviderReference"] != null, (long)jObj["nProviderReference"], 0);
-                        decimal nAmount =Convert.ToDecimal(Interaction.IIf(jObj["nAmount"] != null, (decimal)jObj["nAmount"], "0"));
+                        decimal nAmount = Convert.ToDecimal(Interaction.IIf(jObj["nAmount"] != null, (decimal)jObj["nAmount"], "0"));
                         var cProviderName = Interaction.IIf(jObj["sProviderName"] != null, (string)jObj["sProviderName"], "");
                         object cRefundPaymentReceipt = "";
                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
@@ -1191,7 +1208,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""));
+                        RaiseOnError(   new Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""));
                         return "Error"; // ex.Message
                     }
 
@@ -1210,7 +1227,7 @@ namespace Protean
                         string josResult = "";
                         bool bIsAuthorized = false;
                         var validGroup = Interaction.IIf(jObj["validGroup"] != null, (string)jObj["validGroup"], "");
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(validGroup));
+                        bIsAuthorized = this.ValidateAPICall(Conversions.ToString(validGroup));
 
                         // If bIsAuthorized = False Then Return "Error -Authorization Failed"
 
@@ -1230,7 +1247,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateOrderWithPaymentResponse", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateOrderWithPaymentResponse", ex, ""));
                         return "Error"; // ex.Message
                     }
 
@@ -1247,8 +1264,8 @@ namespace Protean
                     try
                     {
                         bool bIsAuthorized = false;
-                        string cValidGroup = (jObj["validGroup"] != null)? (string)jObj["validGroup"] : "";
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
+                        string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
+                        bIsAuthorized = this.ValidateAPICall(Conversions.ToString(cValidGroup));
 
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
@@ -1256,20 +1273,20 @@ namespace Protean
                         var oCart = new Cart(ref myWeb);
                         oCart.moPageXml = myWeb.moPageXml;
 
-                        string cProviderName = (jObj["sProviderName"] != null) ? jObj["sProviderName"].ToString(): "";
-                        string nOrderId = (jObj["orderId"] != null) ? jObj["orderId"].ToString(): "0";
-                        decimal nAmount = (jObj["amount"] != null) ? Convert.ToDecimal(jObj["amount"]): 0;
-                        string cCardNumber = (jObj["cardNumber"] != null) ? jObj["cardNumber"].ToString(): "";
-                        string cCV2 = (jObj["cV2"] != null) ? jObj["cV2"].ToString(): "";
+                        string cProviderName = (jObj["sProviderName"] != null) ? jObj["sProviderName"].ToString() : "";
+                        string nOrderId = (jObj["orderId"] != null) ? jObj["orderId"].ToString() : "0";
+                        decimal nAmount = (jObj["amount"] != null) ? Convert.ToDecimal(jObj["amount"]) : 0;
+                        string cCardNumber = (jObj["cardNumber"] != null) ? jObj["cardNumber"].ToString() : "";
+                        string cCV2 = (jObj["cV2"] != null) ? jObj["cV2"].ToString() : "";
                         string dExpiryDate = (jObj["expiryDate"] != null) ? jObj["expiryDate"].ToString() : "";
                         string dStartDate = (jObj["startDate"] != null) ? jObj["startDate"].ToString() : "";
-                        string cCardHolderName = (jObj["cardHolderName"] != null) ? jObj["cardHolderName"].ToString(): "";
-                        string cAddress1 = (jObj["address1"] != null) ? jObj["address1"].ToString(): "";
-                        string cAddress2 = (jObj["address2"] != null) ? jObj["address2"].ToString(): "";
-                        string cTown = (jObj["town"] != null) ? jObj["town"].ToString(): "";
-                        string cPostCode = (jObj["postCode"] != null) ? jObj["postCode"].ToString(): "";
-                        string cCountry = (jObj["country"] != null) ? jObj["country"].ToString(): "";
-                        string cCounty = (jObj["county"] != null)? jObj["county"].ToString(): "";
+                        string cCardHolderName = (jObj["cardHolderName"] != null) ? jObj["cardHolderName"].ToString() : "";
+                        string cAddress1 = (jObj["address1"] != null) ? jObj["address1"].ToString() : "";
+                        string cAddress2 = (jObj["address2"] != null) ? jObj["address2"].ToString() : "";
+                        string cTown = (jObj["town"] != null) ? jObj["town"].ToString() : "";
+                        string cPostCode = (jObj["postCode"] != null) ? jObj["postCode"].ToString() : "";
+                        string cCountry = (jObj["country"] != null) ? jObj["country"].ToString() : "";
+                        string cCounty = (jObj["county"] != null) ? jObj["county"].ToString() : "";
 
                         string cPaymentReceipt = "";
                         string josResult = "";
@@ -1292,15 +1309,48 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
+                        RaiseOnError(   new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
                         return "Error"; // ex.Message
                     }
 
                 }
+                /// <summary>
+                ///Anonymize GDPR
+                /// </summary>
+                /// <param name="myApi"></param>
+                /// <param name="jObj"></param>
+                /// <returns></returns>
+                public string AnonymizeGDPRData(ref Protean.rest myApi, ref JObject jObj)
+                {
+                    try
+                    {
+                        string josResult = "";
+                        bool bIsAuthorized = false;
+                        string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
+                        bIsAuthorized = this.ValidateAPICall(Conversions.ToString(cValidGroup));
+                        if (bIsAuthorized == false)
+                            return "Error -Authorization Failed";
+                        if(jObj["cEmailAddress"] != null && jObj["cEmailAddress"].ToString()!="")
+                        {
+                            var cEmailAddress = jObj["cEmailAddress"].ToString();
+                            josResult = myCart.GDPRAnonomize(cEmailAddress);
+                        }
+                       
+                        return josResult;
+                    }
+                    catch (Exception ex)
+                    {
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "AnonymizeGDPRData", ex, ""));
+                        return "Error"; // ex.Message
+                    }
 
+                }
                 #endregion
 
+                
+
             }
+           
 
             #endregion
         }

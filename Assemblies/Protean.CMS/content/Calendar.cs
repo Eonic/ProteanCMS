@@ -11,7 +11,7 @@ namespace Protean
     public partial class Cms
     {
 
-        public class Calendar
+        public class Calendar : IDisposable
         {
 
             #region    Error Handling
@@ -26,6 +26,7 @@ namespace Protean
             #endregion
 
             #region    Declarations
+            private bool disposedValue = false; // To detect redundant calls
 
             private const string mcModuleName = "Eonic.Calendar";
             private System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
@@ -530,6 +531,7 @@ namespace Protean
 
                         moCalendar.add(ref oContentNode, cGetMonth, bSDateAsToday, cSDateinMonths, cContentTypes);
 
+                        moCalendar?.Dispose();
                         moCalendar = null;
                         //sProcessInfo = "End Calendar";
                     }
@@ -540,6 +542,82 @@ namespace Protean
                     }
                 }
             }
+
+            #region IDisposable Implementation
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        try
+                        {
+                            // ====================
+                            // 1. UNSUBSCRIBE EVENT HANDLERS
+                            // ====================
+                            if (OnError != null)
+                            {
+                                foreach (var handler in OnError.GetInvocationList())
+                                {
+                                    OnError -= (OnErrorEventHandler)handler;
+                                }
+                            }
+
+                            // ====================
+                            // 2. CLEAR REFERENCES (NOT OWNED - DO NOT DISPOSE)
+                            // ====================
+
+                            // Parent reference - owned by parent Cms object
+                            myWeb = null;
+
+                            // Database helper - owned by parent
+                            moDB = null;
+
+                            // XML document - owned by parent
+                            moPageXml = null;
+
+                            // Context - owned by parent
+                            moCtx = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log disposal errors but don't throw
+                            System.Diagnostics.Debug.WriteLine(
+                                $"Error in Calendar.Dispose: {ex.Message}");
+                        }
+                    }
+
+                    // Free unmanaged resources (if any)
+                    // No unmanaged resources to free
+
+                    disposedValue = true;
+                }
+            }
+
+            // Finalizer
+            ~Calendar()
+            {
+                Dispose(false);
+            }
+
+            // Public Dispose method
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            // Helper method to prevent use after disposal
+            protected void ThrowIfDisposed()
+            {
+                if (disposedValue)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+            }
+
+            #endregion
         }
 
     }

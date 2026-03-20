@@ -24,7 +24,7 @@
         </th>
         <td>
           <font face="verdana" size="2">
-            <xsl:value-of select="FirstName/node()"/>&#160;<xsl:value-of select="LastName/node()"/>
+            <xsl:value-of select="User/FirstName/node()"/>&#160;<xsl:value-of select="User/LastName/node()"/>
           </font>
         </td>
       </tr>
@@ -34,7 +34,7 @@
 			</th>
 			<td>
 				<font face="verdana" size="2">
-					<xsl:value-of select="Email/node()"/>
+					<xsl:value-of select="User/Email/node()"/>
 				</font>
 			</td>
 		</tr>

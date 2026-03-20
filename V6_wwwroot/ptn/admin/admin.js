@@ -9,11 +9,13 @@
     Array.prototype.slice.call(forms)
         .forEach(function (form) {
             form.addEventListener('submit', function (event) {
+                if (skipValidation = false) { 
                 if (!form.checkValidity()) {
                     event.preventDefault()
                     event.stopPropagation()
                 }
-                form.classList.add('was-validated')
+                    form.classList.add('was-validated')
+                }
             }, false)
         })
 })()
@@ -378,12 +380,22 @@ $(document).ready(function () {
 
 });
 
+// Skip validation for auth logon.
+$(document).ready(function () {
+
+    // Detect click on AuthProvider button
+    $('[name="AuthProvider"]').on('click', function () {
+        skipValidation = true;
+    });
+});
+
+
 function preparePickImageModal(CurrentModalPath) {
     var treeviewPath = getAdminAjaxTreeViewPath();
     var currentModal = $(CurrentModalPath);
     var multiple = "";
 
-    if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
+     if ($('#template_FileSystem #MenuTree').data('multiple') == 1) {
        multiple = "&multiple=true"        
     };
         //activateTreeview
@@ -407,23 +419,8 @@ function preparePickImageModal(CurrentModalPath) {
                 return currentModal.prev('.popoverContent').html();
         }
     });
-    currentModal.find("a[data-bs-toggle!='popover']").click(function (ev) {
-        
-        ev.preventDefault();
-            currentModal.find('.modal-dialog').addClass('loading')
-            currentModal.find('.modal-content div').html('<div><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
-        var target = $(this).attr("href");
-        // load the url and call this again on success
-        if (target != '#') {
-        
-            currentModal.find(".modal-content div").load(target, function () {
-                currentModal.find('.modal-dialog').removeClass('loading')
-                preparePickImageModal(CurrentModalPath)
-                currentModal.find('.lazy').lazy();
-                primeFileUpload();
-            });
-        };
-    });
+
+    currentModal.find("a[data-bs-toggle!='popover']").off("click").openInModal();
 
     $("#SelectAll").click(function (ev) {
         ev.preventDefault();
@@ -446,7 +443,7 @@ function preparePickImageModal(CurrentModalPath) {
                 dataType: 'html',
                 success: function (msg) {
                     //$(this).find('.modal-dialog').removeClass('loading')
-                    currentModal.find(".modal-content div").html(msg);
+                    currentModal.find(".modal-content div").first().html(msg);
                     currentModal.trigger('loaded');
                 }
             });
@@ -455,6 +452,7 @@ function preparePickImageModal(CurrentModalPath) {
 
 
 function prepareAjaxModals() {
+
     $('a[data-bs-toggle="modal"]').off('click');
     $('a[data-bs-toggle="modal"]').on('click', function (e) {
         e.preventDefault();
@@ -464,6 +462,35 @@ function prepareAjaxModals() {
         content.load(link.attr("href"));
     });
 }
+
+(function ($) {
+    $.fn.openInModal = function () {
+        var currentModal = this.closest('.modal')
+        this.click(function (ev) {
+            ev.preventDefault();
+            currentModal.find('.modal-dialog').addClass('loading')
+            currentModal.find('.modal-content div').html('<div><p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading ...</h4></p></div>');
+            var target = $(this).attr("href");
+            // load the url and call this again on success
+            if (target != '#') {
+                currentModal.find(".modal-content div").first().load(target, function () {
+                    currentModal.find('.modal-dialog').removeClass('loading')
+                    currentModal.find('.lazy').lazy({
+                        visibleOnly: true,
+                        delay: 500,
+                        effect: 'fadeIn'
+                    });
+                    primeFileUpload();
+                });
+            };
+        });
+    };
+}(jQuery));
+
+
+
+
+
 
 function resetAjaxModal(ref) {
     $(ref).find('.modal-body').html('<p class="text-center"><h4><i class="fa fa-cog fa-spin fa-2x fa-fw"> </i> Loading...</h4></p>');

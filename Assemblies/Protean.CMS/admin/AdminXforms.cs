@@ -8,9 +8,11 @@
 // $Copyright:   Copyright (c) 2002 - 2022 Eonic Digital LLP.
 // ***********************************************************************
 
-using Microsoft.Ajax.Utilities;
+
 using Microsoft.VisualBasic;
 using Microsoft.VisualBasic.CompilerServices;
+
+using Protean.Providers.CDN;
 using Protean.Providers.Membership;
 using Protean.Providers.Payment;
 using Protean.Tools;
@@ -19,27 +21,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Configuration;
-using System.Configuration.Provider;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+//using System.Text.Json.Nodes;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms;
 using static Protean.stdTools;
 using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
 using static System.Web.HttpUtility;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json.Nodes;
-using System.Web;
-using Newtonsoft.Json.Linq;
-using System.Windows.Documents;
-using Protean.Providers.CDN;
 
 namespace Protean
 {
@@ -48,10 +44,10 @@ namespace Protean
     {
         public partial class Admin
         {
-            public class AdminXforms : xForm
+            public class AdminXforms : xForm, IDisposable
             {
 
-                private const string mcModuleName = "ewcommon.AdminXForms";
+                public string _moduleName = "Cms.Admin.AdminXForms";
                 // Private Const gbDebug As Boolean = True
                 public Cms.dbHelper moDbHelper;
                 public NameValueCollection goConfig; // = WebConfigurationManager.GetWebApplicationSection("protean/web")
@@ -59,16 +55,28 @@ namespace Protean
                 public System.Web.HttpRequest moRequest;
                 public Tools.Security.Impersonate moImp = null;
                 public string ReportExportPath = "/ewcommon/tools/export.ashx?ewCmd=CartDownload";
-                List<string> sImageUrlslist = new List<string>();                
+                List<string> sImageUrlslist = new List<string>();
 
                 // Error Handling hasn't been formally set up for AdminXforms so this is just for method invocation found in xfrmEditContent
                 public new event OnErrorEventHandler OnError;
 
                 public new delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs err);
 
+                public string cModuleName
+                {
+                    get
+                    {
+                        return _moduleName;
+                    }
+                    set
+                    {
+                        _moduleName = value;
+                    }
+                }
+
                 private void _OnError(object sender, Tools.Errors.ErrorEventArgs err)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, _moduleName, err.ProcedureName, err.Exception, "", err.AddtionalInformation, gbDebug);
                 }
 
 
@@ -92,7 +100,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "New", ex, "", "", gbDebug);
                     }
 
                     OnError += _OnError;
@@ -108,7 +116,7 @@ namespace Protean
                 {
                     try
                     {
-                        if (Conversions.ToBoolean(myWeb.impersonationMode))
+                        if (Convert.ToBoolean(myWeb.impersonationMode))
                         {
                             moImp = new Tools.Security.Impersonate();
                             return moImp.ImpersonateValidUser(goConfig["AdminAcct"], goConfig["AdminDomain"], goConfig["AdminPassword"], cInGroup: goConfig["AdminGroup"]);
@@ -154,7 +162,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Open", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "Open", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -224,7 +232,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -247,7 +255,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -362,7 +370,7 @@ namespace Protean
                 // Return MyBase.moXformElmt
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "xFrmUserLogon", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function
@@ -388,7 +396,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmPasswordReminder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmPasswordReminder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -411,7 +419,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmActivateAccount", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmActivateAccount", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -434,7 +442,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmResetAccount", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -458,7 +466,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -483,7 +491,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmConfirmPassword", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -641,7 +649,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUserIntegrations", ex, "", processInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmUserIntegrations", ex, "", processInfo, gbDebug);
                         return null;
                     }
 
@@ -884,7 +892,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -985,14 +993,14 @@ namespace Protean
                                         var oNewCfgXml = new XmlDocument();
                                         oNewCfgXml.LoadXml(base.Instance.InnerXml);
                                         // save as web.config in the root
-                                        oNewCfgXml.Save(goServer.MapPath(@"\" + Strings.Replace(oCgfSectPath, "/", ".") + ".config"));
+                                        oNewCfgXml.Save(goServer.MapPath(@"\" + oCgfSectPath.Replace("/", ".") + ".config"));
                                         var oMainCfgXml = new XmlDocument();
                                         // update the the web.config to include new file
                                         cProcessInfo = "loading file:" + goServer.MapPath("/web.config");
                                         oMainCfgXml.Load(goServer.MapPath("/web.config"));
                                         XmlElement oElmtEonic = (XmlElement)oMainCfgXml.SelectSingleNode("configuration/protean");
                                         var oNewElmt = oMainCfgXml.CreateElement(oCgfSectName);
-                                        oNewElmt.SetAttribute("configSource", Strings.Replace(oCgfSectPath, "/", ".") + ".config");
+                                        oNewElmt.SetAttribute("configSource", oCgfSectPath.Replace("/", ".") + ".config");
                                         oElmtEonic.AppendChild(oNewElmt);
                                         oMainCfgXml.Save(goServer.MapPath("/web.config"));
                                         myWeb.msRedirectOnEnd = "/";
@@ -1000,7 +1008,7 @@ namespace Protean
                                     else
                                     {
                                         // check not read only
-                                        var oFileInfo = new FileInfo(goServer.MapPath(@"\" + Strings.Replace(oCgfSectPath, "/", ".") + ".config"));
+                                        var oFileInfo = new FileInfo(goServer.MapPath(@"\" + oCgfSectPath.Replace("/", ".") + ".config"));
                                         oFileInfo.IsReadOnly = false;
 
                                         oCgfSect.SectionInformation.RestartOnExternalChanges = false;
@@ -1023,7 +1031,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1285,7 +1293,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1489,7 +1497,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmWebConfig", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1619,7 +1627,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSelectTheme", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmSelectTheme", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -1667,7 +1675,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "EnumberateThemeOptions", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "EnumberateThemeOptions", ex, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -2009,7 +2017,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2055,7 +2063,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "PageValidation", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "PageValidation", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -2226,7 +2234,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditPage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2433,7 +2441,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCopyPageVersion", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCopyPageVersion", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2662,7 +2670,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2805,7 +2813,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2830,14 +2838,14 @@ namespace Protean
                                 int argnReturnId = 0;
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
-                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
+                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId:  argnReturnId, zcReturnSchema:  argzcReturnSchema, AlternateFormName:  argAlternateFormName);
                             }
                             else
                             {
                                 int argnReturnId1 = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
-                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
+                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId:  argnReturnId1, zcReturnSchema:  argzcReturnSchema1, AlternateFormName:  argAlternateFormName1);
                             }
 
 
@@ -2878,7 +2886,7 @@ namespace Protean
                                         int argnReturnId2 = 0;
                                         string argzcReturnSchema2 = "";
                                         string argAlternateFormName2 = "";
-                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
+                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId:  argnReturnId2, zcReturnSchema:  argzcReturnSchema2, AlternateFormName:  argAlternateFormName2);
                                     }
 
                                     else
@@ -2886,7 +2894,7 @@ namespace Protean
                                         int argnReturnId3 = 0;
                                         string argzcReturnSchema3 = "";
                                         string argAlternateFormName3 = "";
-                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId3, zcReturnSchema: ref argzcReturnSchema3, AlternateFormName: ref argAlternateFormName3);
+                                        xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, moRequest["cPosition"], false, nReturnId:  argnReturnId3, zcReturnSchema:  argzcReturnSchema3, AlternateFormName:  argAlternateFormName3);
                                     }
                                 }
                             }
@@ -2898,18 +2906,22 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
 
-                protected string GetContentFormPath(string SchemaName)
+                public string GetContentFormPath(string SchemaName)
                 {
                     string cProcessInfo = "";
                     try
                     {
-
-                        var oManifest = GetSiteManifest();
+                        string cssFramework = string.Empty;
+                        if (goConfig["cssFramework"] != null)
+                        {
+                            cssFramework = goConfig["cssFramework"];
+                        }
+                        var oManifest = GetSiteManifest(cssFramework);
                         XmlElement thisModule = (XmlElement)oManifest.SelectSingleNode("descendant-or-self::ContentType[@type='" + SchemaName + "']");
                         if (thisModule is null)
                         {
@@ -2922,7 +2934,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2946,7 +2958,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -2970,7 +2982,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -3061,10 +3073,100 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
+
+
+                public string GetMailModuleFormPath(string SchemaName)
+                {
+                    string cProcessInfo = "";
+                    try
+                    {
+
+                        var oManifest = GetMailManifest();
+                        XmlElement thisModule = (XmlElement)oManifest.SelectSingleNode("descendant-or-self::Module[@type='" + SchemaName + "']");
+                        if (thisModule is null)
+                        {
+                            return SchemaName;
+                        }
+                        else
+                        {
+                            return thisModule.GetAttribute("formPath");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "GetContentFormPath", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
+
+
+                public XmlDocument GetMailManifest(string sFramework = "bs5")
+                {
+                    string cProcessInfo = "";
+
+                    XmlDocument ManifestDoc = null;
+                    try
+                    {
+                        switch (sFramework ?? "")
+                        {
+                            case "bs5":
+                                {
+
+                                    object PathPrefix = @"ptn\";
+
+                                    EnumberateManifest(ref ManifestDoc, "/" + Cms.gcProjectPath + PathPrefix + @"features/mailer/modules", "manifest.xml");
+
+                                    var rootFolder = new DirectoryInfo(myWeb.goServer.MapPath("/" + Cms.gcProjectPath + PathPrefix + @"features/mailer/modules"));
+                                    DirectoryInfo fld;
+                                    foreach (var currentFld in rootFolder.GetDirectories())
+                                    {
+                                        fld = currentFld;
+                                        EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), @"modules\"), fld.Name)), "manifest.xml");
+
+                                    }
+                                    if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
+                                    {
+                                        EnumberateManifest(ref ManifestDoc, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "manifest.xml");
+                                    }
+
+                                    // new local modules
+                                    rootFolder = new DirectoryInfo(myWeb.goServer.MapPath("/" + Cms.gcProjectPath + "/modules"));
+                                    if (rootFolder.Exists)
+                                    {
+                                        foreach (var currentFld1 in rootFolder.GetDirectories())
+                                        {
+                                            fld = currentFld1;
+                                            EnumberateManifest(ref ManifestDoc, "/" + Cms.gcProjectPath + @"\modules\" + fld.Name, "manifest.xml");
+                                        }
+                                    }
+
+                                    break;
+                                }
+                            default:
+                                {
+                                    object PathPrefix = @"ewcommon\";
+                                    EnumberateManifest(ref ManifestDoc, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("/" + Cms.gcProjectPath, PathPrefix), "xsl/PageLayouts")), "LayoutManifest.xml");
+                                    if (!string.IsNullOrEmpty(myWeb.moConfig["ClientCommonFolder"]))
+                                    {
+                                        EnumberateManifest(ref ManifestDoc, myWeb.moConfig["ClientCommonFolder"] + @"\xsl", "layoutManifest.xml");
+                                    }
+                                    EnumberateManifest(ref ManifestDoc, "/xsl", "layoutManifest.xml");
+                                    break;
+                                }
+                        }
+                        return ManifestDoc;
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
+
 
                 public void EnumberateManifest(ref XmlDocument ManifestDoc, string filepath, string manifestFilename = "LayoutManifest.xml")
                 {
@@ -3095,11 +3197,18 @@ namespace Protean
                                 foreach (XmlElement currentOContentType in ManifestDoc.SelectNodes("/PageLayouts/ContentTypes/ContentTypeGroup/ContentType"))
                                 {
                                     oContentType = currentOContentType;
-                                    object formPath = oContentType.GetAttribute("formPath");
+                                    string formPath = oContentType.GetAttribute("formPath");
                                     // If formPath.contains("/") Then
                                     // formPath = formPath.Split("/")(1)
                                     // End If
-                                    oContentType.SetAttribute("formPath", Conversions.ToString(Operators.ConcatenateObject(filepath.Replace("/ptn", "") + "/", formPath)));
+                                    if (!string.IsNullOrEmpty(formPath))
+                                    {
+                                        // do nothing, just checked here if formPath attribute is present and not blank
+                                    }
+                                    else
+                                    {
+                                        oContentType.SetAttribute("formPath", Conversions.ToString(Operators.ConcatenateObject(filepath.Replace("/ptn", "") + "/", formPath)));
+                                    }
                                 }
                                 foreach (XmlElement currentOModuleType in ManifestDoc.SelectNodes("/PageLayouts/ModuleTypes/ModuleGroup/Module"))
                                 {
@@ -3218,7 +3327,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -3318,7 +3427,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -3421,7 +3530,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                     }
                 }
 
@@ -3510,7 +3619,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "EnumberateManifestOptions", ex, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -3522,10 +3631,10 @@ namespace Protean
                     int unusedReturnId = 0;
                     string unusedReturnSchema = "";
                     string unusedAlternateFormName = "";
-                    return xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy, ref unusedReturnId, ref unusedReturnSchema, ref unusedAlternateFormName);
+                    return xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy,  unusedReturnId,  unusedReturnSchema,  unusedAlternateFormName);
                 }
 
-                public virtual XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref int nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L)
+                public virtual XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy,  long nReturnId,  string zcReturnSchema,  string AlternateFormName, long nVersionId = 0L)
                 {
                     XmlElement oFrmElmt;
                     // Dim oGrp1Elmt As XmlElement
@@ -3548,6 +3657,18 @@ namespace Protean
                     {
 
                         var integrationHelper = new Integration.Directory.Helper(ref myWeb);
+                        // if product
+                        string sProductTypes = "Product,SKU,Ticket";
+                        if (myWeb.Features.ContainsKey("Subscriptions"))
+                        {
+                            sProductTypes = sProductTypes + ",Subscription";
+                        }
+                        if (!string.IsNullOrEmpty(myWeb.moConfig["ProductTypes"]))
+                        {
+                            sProductTypes = myWeb.moConfig["ProductTypes"];
+                        }
+                        sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
+
 
                         if (id > 0L)
                         {
@@ -3604,16 +3725,6 @@ namespace Protean
                             moDbHelper.getLocationsByContentId(id, ref argContentNode);
 
                             // Add ProductCategories
-                            string sProductTypes = "Product,SKU,Ticket";
-                            if (myWeb.Features.ContainsKey("Subscriptions"))
-                            {
-                                sProductTypes = sProductTypes + ",Subscription";
-                            }
-                            if (!string.IsNullOrEmpty(myWeb.moConfig["ProductTypes"]))
-                            {
-                                sProductTypes = myWeb.moConfig["ProductTypes"];
-                            }
-                            sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
                             if (sProductTypes.Contains(cContentSchemaName + ",") & id > 0L)
                             {
                                 if (moDbHelper.checkDBObjectExists("sp_GetProductGroups"))
@@ -3664,7 +3775,20 @@ namespace Protean
                         {
                             if (goConfig["cssFramework"] == "bs5")
                             {
-                                cXformPath = GetModuleFormPath(cModuleType);
+                                if (_moduleName.Contains("Providers.Messaging"))
+                                {
+
+                                    cXformPath = GetMailModuleFormPath(cModuleType);
+
+                                }
+                                else
+                                {
+
+                                    cXformPath = GetModuleFormPath(cModuleType);
+
+                                }
+
+
                             }
                             else if (!cXformPath.EndsWith("/" + cModuleType))
                             {
@@ -3800,17 +3924,7 @@ namespace Protean
                         {
 
                             XmlElement myInstance = base.Instance;
-                            // if product
-                            string sProductTypes = "Product,SKU,Ticket";
-                            if (myWeb.Features.ContainsKey("Subscriptions"))
-                            {
-                                sProductTypes = sProductTypes + ",Subscription";
-                            }
-                            if (!string.IsNullOrEmpty(myWeb.moConfig["ProductTypes"]))
-                            {
-                                sProductTypes = myWeb.moConfig["ProductTypes"];
-                            }
-                            sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
+
                             if (sProductTypes.Contains(cContentSchemaName + ","))
                             {
                                 AddPageSpecs(ref myWeb.mnPageId, ref myInstance);
@@ -3926,6 +4040,14 @@ namespace Protean
                                     {
                                         bCascade = true;
                                     }
+                                }
+
+                                sProductTypes = sProductTypes.Trim().TrimEnd(',') + ",";
+                                if (sProductTypes.Contains(cContentSchemaName + ","))
+                                {
+                                    XmlElement thisInstance = base.Instance;
+                                    DelEmptySpecs(ref thisInstance);
+                                    base.Instance = thisInstance;
                                 }
 
                                 if (id > 0L)
@@ -4215,7 +4337,7 @@ namespace Protean
 
                                         catch (Exception)
                                         {
-                                            // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo))
+                                            // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(_moduleName, "ContentActions", ex, sProcessInfo))
                                             cProcessInfo = assemblyName + "." + contentEditAction + " not found";
 
                                         }
@@ -4269,7 +4391,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditContent", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditContent", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4501,7 +4623,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", "", gbDebug);
                         return default;
                     }
                 }
@@ -4529,9 +4651,13 @@ namespace Protean
                                 {
                                     SpecElmt.InnerText = "";
                                     XmlElement existingSpec = (XmlElement)Instance.SelectSingleNode($"descendant-or-self::Spec[@name='{name}']");
-                                    if (existingSpec != null)
+                                    if (existingSpec != null && existingSpec.InnerText != "")
                                     {
                                         SpecElmt.InnerText = existingSpec.InnerText;
+                                    }
+                                    else
+                                    {
+                                        SpecElmt.SetAttribute("noDel", "true");
                                     }
                                     SpecsElmt.AppendChild(SpecElmt);
                                 }
@@ -4544,6 +4670,22 @@ namespace Protean
                         }
                     }
                 }
+
+                public void DelEmptySpecs(ref XmlElement Instance)
+                {
+                    // removes empty specs from the instance
+                    if (Instance.SelectSingleNode("descendant-or-self::Specs") != null)
+                    {
+                        foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs"))
+                        {
+                            if (InstanceSpecs.InnerXml == "")
+                            {
+                                InstanceSpecs.ParentNode.RemoveChild(InstanceSpecs);
+                            }
+                        }
+                    }
+                }
+
 
                 public XmlElement xFrmDeleteContent(long artid)
                 {
@@ -4607,7 +4749,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4690,7 +4832,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4773,7 +4915,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteFolder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteFolder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -4871,19 +5013,19 @@ namespace Protean
                                 {
                                     DeleteAllInstancesOfOrigianlFile(cPath, cName, oFs);
                                     //Add method for deleteing images from cache
-                                    if(sImageUrlslist.Count != 0)
+                                    if (sImageUrlslist.Count != 0)
                                     {
-                                        string result = "Cached";                                      
-                                        string[] myString = sImageUrlslist.ToArray();                                       
+                                        string result = "Cached";
+                                        string[] myString = sImageUrlslist.ToArray();
                                         Protean.Providers.CDN.ReturnProvider oCdnProv = new Protean.Providers.CDN.ReturnProvider();
                                         ICDNProvider oCDNProvider = oCdnProv.Get(ref myWeb);
-                                        if(oCDNProvider!=null)
+                                        if (oCDNProvider != null)
                                         {
                                             result = Conversions.ToString(oCDNProvider.AdminXforms.PurgeImageCacheAsync(myString, ref myWeb));
-                                        }                                     
-                                        
+                                        }
+
                                         //DeleteFileFromCache(myString);
-                                    }                                    
+                                    }
                                 }
                             }
 
@@ -4902,13 +5044,13 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
 
                 private void DeleteAllInstancesOfOrigianlFile(string filePath, string fileName, Protean.fsHelper oFs)
-                {                    
+                {
                     filePath = filePath.Contains(oFs.mcStartFolder) ? filePath : oFs.mcStartFolder + filePath;
                     var subFolders = System.IO.Directory.GetDirectories(filePath, "~*");
                     try
@@ -4917,14 +5059,14 @@ namespace Protean
                         {
                             foreach (var sFolder in subFolders)
                             {
-                               DeleteAllInstancesOfOrigianlFile(sFolder, fileName, oFs);
+                                DeleteAllInstancesOfOrigianlFile(sFolder, fileName, oFs);
                             }
                         }
                         DeleteFiles(filePath, fileName, oFs);
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "TryDeleteAllInstancesOfOrigianlFile", ex, "", "TryDeleteAllInstancesOfOrigianlFile", gbDebug);                        
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "TryDeleteAllInstancesOfOrigianlFile", ex, "", "TryDeleteAllInstancesOfOrigianlFile", gbDebug);
                     }
                 }
 
@@ -4935,21 +5077,21 @@ namespace Protean
                     var filesToDelete = System.IO.Directory.GetFiles(directoryPath, "*" + fileName);
                     string FilesToDeleteFromCache = string.Empty;
                     bool bFileExists = true;
-                    if(moCartConfig["SiteURL"]!=null && myWeb.moConfig["ImageRootPath"]!=null && myWeb.moConfig["EnableWebP"]!= null)
-                    {                   
+                    if (moCartConfig["SiteURL"] != null && myWeb.moConfig["ImageRootPath"] != null && myWeb.moConfig["EnableWebP"] != null)
+                    {
                         string WebPath = moCartConfig["SiteURL"]; // used it from web.config and cart.config
                         for (int i = 0; i < filesToDelete.Length; i++)
                         {
                             oFs.DeleteFile(filesToDelete[i]);
                             bFileExists = File.Exists(filesToDelete[i]);
-                            if(bFileExists)
+                            if (bFileExists)
                             {
                                 FilesToDeleteFromCache = filesToDelete[i].Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
                                 FilesToDeleteFromCache = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + FilesToDeleteFromCache;
                                 sImageUrlslist.Add(FilesToDeleteFromCache);
                             }
-                          
-                            if(Strings.LCase(myWeb.moConfig["EnableWebP"])=="on")
+
+                            if (Strings.LCase(myWeb.moConfig["EnableWebP"]) == "on")
                             {
                                 string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filesToDelete[i]);
                                 string newFilePath = Path.Combine(directoryPath, fileNameWithoutExtension + ".webp");
@@ -4959,13 +5101,13 @@ namespace Protean
                                     oFs.DeleteFile(newFilePath);
                                     newFilePath = newFilePath.Replace(oFs.mcStartFolder, "").Replace(@"\", "/");
                                     newFilePath = WebPath + myWeb.moConfig["ImageRootPath"].Replace("/", "") + newFilePath;
-                                    sImageUrlslist.Add(newFilePath);                                
+                                    sImageUrlslist.Add(newFilePath);
                                 }
-                            }                       
+                            }
                         }
                     }
-                    oFs.DeleteFile(originalFileNameFull);                    
-                } 
+                    oFs.DeleteFile(originalFileNameFull);
+                }
 
                 public XmlElement xFrmMoveFile(string cPath, string cName, Protean.fsHelper.LibraryType nType)
                 {
@@ -5092,7 +5234,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMoveFile", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMoveFile", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5152,7 +5294,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5224,7 +5366,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmAddFolder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmAddFolder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5300,7 +5442,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUpload", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmUpload", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5377,7 +5519,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMultiUpload", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMultiUpload", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5468,7 +5610,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmPickImage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmPickImage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5526,7 +5668,7 @@ namespace Protean
                 // Return MyBase.moXformElmt
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function
@@ -5622,7 +5764,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditImage", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditImage", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5671,7 +5813,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditDirectoryItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5808,7 +5950,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCopyGroupMembers", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCopyGroupMembers", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -5834,11 +5976,14 @@ namespace Protean
                                 cXformName = cDirectorySchemaName;
 
                             // ok lets load in an xform from the file location.
-
-                            if (!base.load("/xforms/directory/" + cXformName + ".xml", myWeb.maCommonFolders))
+                            string formPath = "/xforms/directory/" + cXformName + ".xml";
+                            if (myWeb.moConfig["cssFramework"] == "bs5")
+                            {
+                                formPath = "/features/membership/" + cXformName + ".xml";
+                            }
+                            if (!base.load(formPath, myWeb.maCommonFolders))
                             {
                                 // load a default content xform if no alternative.
-
                             }
 
                             base.Instance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Directory, id);
@@ -5889,9 +6034,15 @@ namespace Protean
                             oRoleRights = (XmlElement)base.Instance.SelectSingleNode("tblDirectory/cDirXml/Role/AdminRights");
                             XmlElement oSelElmt;
                             XmlElement oGrpRoot = (XmlElement)moXformElmt.SelectSingleNode("group[@class='2Col']/group[2]");
+                            if (myWeb.moConfig["cssFramework"] == "bs5")
+                            {
+                                oGrpRoot = (XmlElement)moXformElmt.SelectSingleNode("descendant-or-self::group[@class='admin-rights-block']");
+                            }
                             if (oGrpRoot is null)
                                 oGrpRoot = moXformElmt;
+
                             var oGrp = base.addGroup(ref oGrpRoot, "adminRights", "adminRights", "Admin Rights");
+
                             XmlElement oGrp2;
                             XmlElement oGrp3;
                             XmlElement oGrp4;
@@ -5993,7 +6144,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditRole", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6017,7 +6168,7 @@ namespace Protean
                         // load the directory item to be deleted
                         moDbHelper.moPageXml = moPageXML;
 
-                        base.NewFrm("EditSelect");
+                        base.NewFrm("DeleteDirectory");
 
                         // Lets get the object
                         oElmt = moPageXML.CreateElement("sType");
@@ -6078,8 +6229,8 @@ namespace Protean
 
 
 
-                        base.submission("EditInput", "", "post");
-                        oFrmElmt = base.addGroup(ref base.moXformElmt, "DeleteDir", "", "Delete " + sType);
+                        base.submission("delete-form", "", "post");
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "", "delete-form", "Delete " + sType);
 
                         //XmlNode argoNode = oFrmElmt;
                         base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this " + sType + " " + encodeAllHTML(oElmt.GetAttribute("name")), false, "alert-danger");
@@ -6198,7 +6349,7 @@ namespace Protean
 
                         }
 
-                        base.addSubmit(ref oFrmElmt, "", "Delete " + sType);
+                        base.addSubmit(ref oFrmElmt, "delete-form", "Delete " + sType);
 
                         if (base.isSubmitted())
                         {
@@ -6428,7 +6579,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6501,7 +6652,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteDeliveryMethod", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteDeliveryMethod", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6574,7 +6725,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteCarrier", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteCarrier", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6646,7 +6797,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteShippingLocation", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteShippingLocation", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6810,7 +6961,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -6976,7 +7127,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmPageRights", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmPageRights", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7090,7 +7241,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUserMemberships", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmUserMemberships", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7292,7 +7443,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDirMemberships", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDirMemberships", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7381,7 +7532,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditShippingLocation", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditShippingLocation", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7573,7 +7724,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDeliveryMethod", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditDeliveryMethod", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7650,7 +7801,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditCarrier", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditCarrier", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7739,7 +7890,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -7812,7 +7963,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditPaymentProvider", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8034,7 +8185,8 @@ namespace Protean
                             string replaceWith = " ";
                             string removedBreaks = convertEntitiesToCodes(aSellerNotes[snCount]).Replace("\r\n", replaceWith).Replace("\n", replaceWith).Replace("\r", replaceWith).Replace("\\n", replaceWith);
                             cSellerNotesHtml = cSellerNotesHtml + "<li>" + removedBreaks + "</li>";
-                        };
+                        }
+                        ;
                         tempElement.InnerXml = cSellerNotesHtml + "</ul>";
 
                         string argsClass = "";
@@ -8207,7 +8359,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmUpdateOrder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8327,7 +8479,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmRefundOrder", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8345,8 +8497,8 @@ namespace Protean
                     {
                         string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Conversions.ToLong(nParentID)));
 
-                        base.NewFrm("FindRelatedContent");                      
-                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";                        
+                        base.NewFrm("FindRelatedContent");
+                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
 
                         // MyBase.submission("AddRelated", "?ewCmd=RelateSearch&Type=Document&xml=x", "post", "form_check(this)")
                         base.submission("AddRelated", "", "post", "form_check(this)");
@@ -8396,7 +8548,7 @@ namespace Protean
                             }
                             cNameString += oMenuElmt.SelectSingleNode("cStructName").InnerText;
                             base.addOption(ref oSelElmt1, cNameString, oMenuElmt.SelectSingleNode("nStructKey").InnerText);
-                               
+
                         }
                         XmlElement argoBindParent4 = null;
                         base.addBind("cSection", "cSection", oBindParent: ref argoBindParent4, "true()");
@@ -8435,7 +8587,7 @@ namespace Protean
                                 bool bChilds = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nSearchChildren").InnerText == "1", true, false));
                                 string cExpression = base.Instance.SelectSingleNode("cSearch").InnerText;
                                 bool bIncRelated = Conversions.ToBoolean(Interaction.IIf(base.Instance.SelectSingleNode("nIncludeRelated").InnerText == "1", true, false));
-                               
+
                                 string sSQL = "Select " + cSelectField + " From " + cTableName + " WHERE " + cFilterField + " = " + nParId;
                                 using (var oDre = moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                                 {
@@ -8455,20 +8607,20 @@ namespace Protean
                         {
                             if (myWeb.moRequest["pgid"] != null)
                             {
-                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>"+ myWeb.moRequest["pgid"].ToString() + "</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
+                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>" + myWeb.moRequest["pgid"].ToString() + "</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
                             }
                             else
                             {
                                 base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>0</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
                             }
-                                
+
                             base.addValues();
                         }
                         return base.moXformElmt;
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8600,7 +8752,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8687,7 +8839,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmProductGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmProductGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8728,7 +8880,7 @@ namespace Protean
                         if (!base.load(DiscountFormPath + cTypePath, myWeb.maCommonFolders))
                         {
                             // not allot we can do really except try defaults
-                            if (!base.load(DiscountFormPath+"DiscountRule.xml", myWeb.maCommonFolders))
+                            if (!base.load(DiscountFormPath + "DiscountRule.xml", myWeb.maCommonFolders))
                             {
                                 // not allot we can do really 
                             }
@@ -8757,7 +8909,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDiscountRule", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8838,7 +8990,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -8959,7 +9111,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDiscountDirRelations", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDiscountDirRelations", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9105,7 +9257,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmShippingDirRelations", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmShippingDirRelations", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9247,7 +9399,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmProductShippingGroupRelations", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmProductShippingGroupRelations", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9314,7 +9466,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditDirectoryContact", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditDirectoryContact", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9376,7 +9528,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9449,7 +9601,7 @@ namespace Protean
                 // Return MyBase.moXformElmt
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function
@@ -9543,7 +9695,7 @@ namespace Protean
                 // Return MyBase.moXformElmt
 
                 // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug)
+                // returnException(myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug)
                 // Return Nothing
                 // End Try
                 // End Function
@@ -9637,7 +9789,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9647,7 +9799,7 @@ namespace Protean
                     string cProcessInfo = "";
                     try
                     {
-                        var dbh = new Cms.dbHelper(ref myWeb);
+                        var dbh = new Cms.dbHelper( myWeb);
                         dbh.ResetConnection(sSchedCon);
 
                         base.NewFrm("EditScheduleItem");
@@ -9721,7 +9873,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -9738,7 +9890,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "MenuSelect", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "MenuSelect", ex, "", "", gbDebug);
                     }
                 }
                 public void MenuReiterate(XmlElement oMenuItem, ref XmlElement oSelect, int nDepth)
@@ -9756,7 +9908,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "MenuReiterate", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "MenuReiterate", ex, "", "", gbDebug);
                     }
                 }
 
@@ -9813,7 +9965,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "cInitialFolder", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "cInitialFolder", ex, "", "", gbDebug);
                     }
                 }
                 #endregion
@@ -9907,7 +10059,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFeedItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmFeedItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10037,7 +10189,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10127,6 +10279,7 @@ namespace Protean
                                 if (RenewResponse == "Success")
                                 {
                                     base.valid = true;
+                                    return base.moXformElmt;
                                 }
                                 else
                                 {
@@ -10134,16 +10287,16 @@ namespace Protean
                                     base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, RenewResponse);
                                     //oFrmElmt = (XmlElement)argoNode1;
                                     base.valid = false;
+
                                 }
 
-                                return base.moXformElmt;
                             }
                         }
                         return base.moXformElmt;
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10216,7 +10369,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmSchedulerItem", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10274,7 +10427,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
                         return null;
                     }
                 }
@@ -10324,7 +10477,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmConfirmCancelSubscription", ex, "", bDebug: gbDebug);
                         return null;
                     }
                 }
@@ -10515,7 +10668,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmWebSettings", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10603,7 +10756,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmFindRelated", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10717,7 +10870,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmLocateContent", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmLocateContent", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -10803,7 +10956,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCartActivity", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -10920,7 +11073,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivity", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCartActivity", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11009,7 +11162,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivityDrillDown", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCartActivityDrillDown", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11096,7 +11249,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmCartActivityPeriod", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmCartActivityPeriod", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11147,7 +11300,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMemberVisits", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMemberVisits", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11256,7 +11409,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMemberCodeset", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMemberCodeset", ex, "", "", gbDebug);
                         return null;
                     }
                 }
@@ -11419,11 +11572,105 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmMemberCodeGenerator", ex, "", "", gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMemberCodeGenerator", ex, "", "", gbDebug);
                         return null;
                     }
                 }
 
+                public XmlElement xFrmImportCodes(int nParentCodeKey, string cFormName = "CodeGenerator")
+                {
+                    XmlElement oElmt = null;
+                    XmlElement oParentInstance = null;
+                    XmlElement oInstanceRoot = null;
+                    XmlElement oFrmElmt;
+                    //string cCodeGroups = "";
+                    //string cCodeXForm = "";
+
+                    try
+                    {
+                        // Build the form
+                        base.NewFrm("ImportCodes");
+                        base.submission("Import Codes", "", "post", "form_check(this)");
+                        base.Instance.InnerXml = "<ImportCodes/>";
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "Import Comma Separated Codes", "", "Please copy and paste the codes below separated by commas");
+                        Int16 rows = 20;
+                        Int16 cols = 80;
+                        string ClassName = "";
+                        base.addTextArea(ref oFrmElmt, "ImportCodes", true, "Import Codes", ClassName, rows, cols);
+
+                        XmlElement argoBindParent1 = null;
+                        base.addBind("ImportCodes", "ImportCodes", oBindParent: ref argoBindParent1, "true()");
+
+                        base.addSubmit(ref oFrmElmt, "", "Import", "ewSubmit");
+
+                        // Add the parent code id
+                        XmlElement ImportCodes = (XmlElement)base.Instance.SelectSingleNode("ImportCodes");
+
+                        ImportCodes.SetAttribute("groupId", nParentCodeKey.ToString());
+
+                        // Update the label
+                        if (Xml.NodeState(ref base.moXformElmt, "group/label", "", "", XmlNodeState.IsEmpty, oElmt, returnAsXml: "", returnAsText: "", bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
+                        {
+                            //    oElmt.InnerText += " for " + oParentInstance.SelectSingleNode("tblCodes/cCodeName").InnerText;
+                        }
+
+
+                        if (base.isSubmitted())
+                        {
+                            base.updateInstanceFromRequest();
+                            base.validate();
+
+                            if (base.valid)
+                            {
+                                // Generate the Codes
+                                oInstanceRoot = (XmlElement)base.Instance.SelectSingleNode("ImportCodes");
+
+
+
+                                string[] oCodes = oInstanceRoot.InnerText.Split(',');
+                                int nNoCodes = oCodes.Count();
+                                // Add the codes to the database
+                                int nAdded = 0;
+                                int nSkipped = 0;
+                                for (int i = 0, loopTo1 = oCodes.Length - 1; i <= loopTo1; i++)
+                                {
+                                    if (!string.IsNullOrEmpty(oCodes[i]))
+                                    {
+                                        if (Convert.ToInt32(myWeb.moDbHelper.GetDataValue("SELECT nCodeKey FROM tblCodes WHERE cCode ='" + oCodes[i] + "'")) > 0)
+                                        {
+                                            nSkipped += 1;
+                                        }
+                                        else
+                                        {
+                                            string codeInstance = "<tblCodes>\r\n\t\t\t\t<nCodeKey />\r\n\t\t\t\t<cCodeName />\r\n\t\t\t\t<nCodeType>1</nCodeType>\r\n\t\t\t\t<nCodeParentId />\r\n\t\t\t\t<cCodeGroups />\r\n\t\t\t\t<cCode />\r\n\t\t\t\t<nUseId />\r\n\t\t\t\t<dUseDate />\r\n\t\t\t\t</tblCodes>";
+                                            XmlElement newInstance = base.moPageXML.CreateElement("instance");
+                                            newInstance.InnerXml = codeInstance;
+
+                                            newInstance.SelectSingleNode("tblCodes/cCode").InnerText = oCodes[i];
+                                            newInstance.SelectSingleNode("tblCodes/nCodeParentId").InnerText = oInstanceRoot.GetAttribute("groupId");
+
+                                            int nSubId = Conversions.ToInteger(myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Codes, newInstance));
+                                            nAdded += 1;
+                                        }
+                                    }
+                                }
+                                var argoNode = base.moXformElmt.SelectSingleNode("group");
+                                base.addNote(ref argoNode, Protean.xForm.noteTypes.Help, nAdded + " Codes Added, " + nSkipped + " Codes Skipped (Duplicates)", true);
+                            }
+
+                        }
+
+
+                        base.addValues();
+                        return base.moXformElmt;
+                    }
+
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmMemberCodeGenerator", ex, "", "", gbDebug);
+                        return null;
+                    }
+                }
                 public XmlElement xFrmVoucherCode(int nCodeId)
                 {
 
@@ -11462,7 +11709,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmVoucherCode", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmVoucherCode", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11612,7 +11859,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "addInput", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "addInput", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11689,7 +11936,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmStartIndex", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmStartIndex", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -11732,10 +11979,137 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmGetReport", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmGetReport", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
+
+                public XmlElement GetAllMenuMetaDetails()
+                {
+                    string cProcessInfo = "";
+                    try
+                    {
+                        // get menu
+                        var oMenuElmt = myWeb.GetStructureXML("Site");
+                        oMenuElmt = myWeb.moDbHelper.GetMenuMetaTitleDescriptionDetailsXml(oMenuElmt);
+                        return oMenuElmt;
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "GetAllMenuMetaDetails", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
+
+                public XmlElement GetAllHiddenProducts(int page, int pageSize)
+                {
+                    try
+                    {
+                        DataTable dt = myWeb.moDbHelper.GetAllHiddenProducts();
+                        if (!dt.Columns.Contains("ProductUrl"))
+                        {
+                            dt.Columns.Add("ProductUrl", typeof(string));
+                        }
+                        // Load rewriteMaps.config
+                        HashSet<string> mapUrls = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+                        string mapPath = myWeb.goServer.MapPath("/rewriteMaps.config");
+                        if (File.Exists(mapPath))
+                        {
+                            XmlDocument mapDoc = new XmlDocument();
+                            mapDoc.Load(mapPath);
+
+                            foreach (XmlNode n in mapDoc.SelectNodes("//add[@key]"))
+                            {
+                                string key = n.Attributes["key"]?.Value?.Trim();
+                                string val = n.Attributes["value"]?.Value?.Trim();
+
+                                if (!string.IsNullOrEmpty(key))
+                                    mapUrls.Add(key.Trim('/').ToLower());
+
+                                if (!string.IsNullOrEmpty(val))
+                                    mapUrls.Add(val.Trim('/').ToLower());
+                            }
+                        }
+
+                        // Filter rows
+                        List<DataRow> result = new List<DataRow>();
+                        string[] prefixs = goConfig["DetailPrefix"].Split(',');
+                        string thisPrefix = "";
+                        var loopTo = prefixs.Length - 1;
+                        thisPrefix = prefixs[0].Substring(0, prefixs[0].IndexOf("/"));
+                        foreach (DataRow row in dt.Rows)
+                        {
+
+                            string sContentName = (row["cContentName"]?.ToString() ?? "").Trim().ToLower();
+                            string sProductUrl = "";
+
+                            sProductUrl = "/" + thisPrefix + "/" + sContentName.Replace(" ", "-");
+
+                            row["ProductUrl"] = sProductUrl;
+
+                            if (string.IsNullOrWhiteSpace(sProductUrl))
+                                continue;
+
+                            string normalized = sProductUrl.Trim('/');
+
+                            if (!mapUrls.Contains(normalized))
+                                result.Add(row);
+                        }
+
+                        int total = result.Count;
+                        int startIndex = (page - 1) * pageSize;
+                        int endIndex = Math.Min(startIndex + pageSize, total);
+
+                        // Create XML
+                        XmlDocument xmlDoc = new XmlDocument();
+                        XmlElement root = xmlDoc.CreateElement("Products");
+                        xmlDoc.AppendChild(root);
+
+                        // Params
+                        XmlElement paramsNode = xmlDoc.CreateElement("Params");
+                        root.AppendChild(paramsNode);
+
+                        XmlElement p1 = xmlDoc.CreateElement("Param");
+                        p1.SetAttribute("name", "Page");
+                        p1.SetAttribute("value", page.ToString());
+                        paramsNode.AppendChild(p1);
+
+                        XmlElement p2 = xmlDoc.CreateElement("Param");
+                        p2.SetAttribute("name", "PageSize");
+                        p2.SetAttribute("value", pageSize.ToString());
+                        paramsNode.AppendChild(p2);
+
+                        XmlElement totalNode = xmlDoc.CreateElement("Param");
+                        totalNode.SetAttribute("name", "Total");
+                        totalNode.SetAttribute("value", total.ToString());
+                        paramsNode.AppendChild(totalNode);
+
+                        for (int i = startIndex; i < endIndex; i++)
+                        {
+                            DataRow row = result[i];
+
+                            XmlElement item = xmlDoc.CreateElement("Product");
+
+                            foreach (DataColumn col in row.Table.Columns)
+                            {
+                                XmlElement node = xmlDoc.CreateElement(col.ColumnName);
+                                node.InnerText = row[col]?.ToString() ?? "";
+                                item.AppendChild(node);
+                            }
+
+                            root.AppendChild(item);
+                        }
+
+                        return root;
+                    }
+                    catch (Exception ex)
+                    {
+                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetAllHiddenProducts", ex, ""));
+                        return null;
+                    }
+                }
+
 
                 public XmlElement xFrmLookup(int nLookupId, string Category = "", long ParentId = 0L)
                 {
@@ -11857,7 +12231,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12002,7 +12376,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmIndexes", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmIndexes", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12082,7 +12456,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmLookup", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12095,7 +12469,7 @@ namespace Protean
                 {
 
                     #region  Declarations
-                    private string mcModuleName = "xFormContentLocations";
+                    private string _moduleName = "xFormContentLocations";
 
 
                     // Declarations
@@ -12115,7 +12489,7 @@ namespace Protean
                     #region  Initialisation
                     public xFormContentLocations(long ContentId, ref Cms.xForm Form)
                     {
-                        // myWeb.PerfMon.Log(mcModuleName, "New")
+                        // myWeb.PerfMon.Log(_moduleName, "New")
                         try
                         {
                             // Set variables
@@ -12127,39 +12501,39 @@ namespace Protean
 
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref Form.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug);
+                            stdTools.returnException(ref Form.myWeb.msException, _moduleName, "New", ex, "", "", gbDebug);
                         }
                     }
                     #endregion
                     #region  Public Methods
                     public void Refresh()
                     {
-                        // myWeb.PerfMon.Log(mcModuleName, "Refresh")
+                        // myWeb.PerfMon.Log(_moduleName, "Refresh")
                         try
                         {
                             _selects = _form.RootGroup.SelectNodes(_selectsXPath);
                         }
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref _form.myWeb.msException, mcModuleName, "Refresh", ex, "", "", gbDebug);
+                            stdTools.returnException(ref _form.myWeb.msException, _moduleName, "Refresh", ex, "", "", gbDebug);
                         }
                     }
                     public bool IsActive()
                     {
-                        // myWeb.PerfMon.Log(mcModuleName, "IsActive")
+                        // myWeb.PerfMon.Log(_moduleName, "IsActive")
                         try
                         {
                             return _selects.Count > 0;
                         }
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref _form.myWeb.msException, mcModuleName, "IsActive", ex, "", "", gbDebug);
+                            stdTools.returnException(ref _form.myWeb.msException, _moduleName, "IsActive", ex, "", "", gbDebug);
                             return false;
                         }
                     }
                     public void ProcessSelects()
                     {
-                        // myWeb.PerfMon.Log(mcModuleName, "ProcessSelects")
+                        // myWeb.PerfMon.Log(_moduleName, "ProcessSelects")
 
                         long menuId;
                         XmlElement bind;
@@ -12360,7 +12734,7 @@ namespace Protean
 
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref _form.myWeb.msException, mcModuleName, "ProcessSelects", ex, "", "", gbDebug);
+                            stdTools.returnException(ref _form.myWeb.msException, _moduleName, "ProcessSelects", ex, "", "", gbDebug);
 
                         }
                     }
@@ -12368,7 +12742,7 @@ namespace Protean
 
                     public void ProcessRequest(long ContentId)
                     {
-                        // myWeb.PerfMon.Log(mcModuleName, "ProcessRequest")
+                        // myWeb.PerfMon.Log(_moduleName, "ProcessRequest")
 
                         string InclusionList = "";
                         string ScopeList = "";
@@ -12406,7 +12780,7 @@ namespace Protean
 
                         catch (Exception ex)
                         {
-                            stdTools.returnException(ref _form.myWeb.msException, mcModuleName, "ProcessRequest", ex, "", "", gbDebug);
+                            stdTools.returnException(ref _form.myWeb.msException, _moduleName, "ProcessRequest", ex, "", "", gbDebug);
 
                         }
                     }
@@ -12418,7 +12792,7 @@ namespace Protean
                     {
 
                         #region  Declarations
-                        private string mcModuleName = "xFormContentLocationsSelect";
+                        private string _moduleName = "xFormContentLocationsSelect";
 
                         private XmlElement _selectItem;
                         private long _rootId;
@@ -12442,7 +12816,7 @@ namespace Protean
                             }
                             catch (Exception)
                             {
-                                // returnException(Form.myWeb.msException, mcModuleName, "New", ex, "", "", gbDebug)
+                                // returnException(Form.myWeb.msException, _moduleName, "New", ex, "", "", gbDebug)
                             }
                         }
 
@@ -12550,7 +12924,7 @@ namespace Protean
 
                             catch (Exception)
                             {
-                                // returnException(myWeb.msException, mcModuleName, "getPropertyFromClass", ex, "", "", gbDebug)
+                                // returnException(myWeb.msException, _moduleName, "getPropertyFromClass", ex, "", "", gbDebug)
                                 return "";
                             }
 
@@ -12685,7 +13059,7 @@ namespace Protean
                     catch (Exception ex)
                     {
                         myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12780,12 +13154,12 @@ namespace Protean
                     catch (Exception ex)
                     {
                         myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
 
-                public XmlElement xFrmAlertEmail(string messageType, XmlElement PayloadData, string xFormPath, string subject, string senderName, string senderEmail, string recipientName, string recipientEmail, string ccName, string ccEmail, string bccName, string bccEmail, string emailContentXsltPath, Boolean autosend)
+                public XmlElement xFrmAlertEmail(string messageType, XmlElement PayloadData, string xFormPath, string subject, string senderName, string senderEmail, string recipientName, string recipientEmail, string ccName, string ccEmail, string bccName, string bccEmail, string emailContentXsltPath, Boolean autosend, long subjectId = 0)
                 {
                     string cProcessInfo = "";
                     object FormTitle = "AlertEmail User";
@@ -12806,6 +13180,7 @@ namespace Protean
                         payloadXml.InnerXml = PayloadData.OuterXml;
 
                         base.Instance.SetAttribute("messageType", messageType);
+                        base.Instance.SetAttribute("subjectId", subjectId.ToString());
 
                         base.Instance.SelectSingleNode("emailer/recipientEmail").InnerText = recipientEmail;
                         base.Instance.SelectSingleNode("emailer/recipientName").InnerText = recipientName;
@@ -12833,8 +13208,12 @@ namespace Protean
 
                         if (base.isSubmitted() || autosend)
                         {
-                            // MyBase.updateInstanceFromRequest()
-                            base.validate();
+                            if (!autosend) {
+                                //this was commented out so does not update this breaks why was this done?
+                                //If autosend there is not request to update from
+                                base.updateInstanceFromRequest();
+                            }
+                                                  base.validate();
                             if (base.valid)
                             {
                                 NameValueCollection moMailConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
@@ -12877,7 +13256,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmAlertEmail", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmAlertEmail", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
@@ -12910,7 +13289,7 @@ namespace Protean
                         }
                         else
                         {
-                            stdTools.returnException(ref myWeb.msException, mcModuleName, "TransformEmailContent", ex, "", "", gbDebug);
+                            stdTools.returnException(ref myWeb.msException, _moduleName, "TransformEmailContent", ex, "", "", gbDebug);
                             return null;
                         }
                     }
@@ -13033,11 +13412,127 @@ namespace Protean
                     catch (Exception ex)
                     {
                         myWeb.moSession[InstanceSessionName.ToString()] = (object)null;
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmEditUserSubscription", ex, "", cProcessInfo, gbDebug);
                         return null;
                     }
                 }
 
+                #region IDisposable Implementation
+
+                private bool disposedValue = false; // To detect redundant calls
+
+                protected virtual void Dispose(bool disposing)
+                {
+                    if (!disposedValue)
+                    {
+                        if (disposing)
+                        {
+                            try
+                            {
+                                // ====================
+                                // 1. UNSUBSCRIBE EVENT HANDLERS
+                                // ====================
+                                if (OnError != null)
+                                {
+                                    foreach (var handler in OnError.GetInvocationList())
+                                    {
+                                        OnError -= (OnErrorEventHandler)handler;
+                                    }
+                                }
+
+                                // ====================
+                                // 2. DISPOSE MANAGED RESOURCES
+                                // ====================
+
+                                // Impersonation object
+                                if (moImp != null)
+                                {
+                                    try
+                                    {
+                                        moImp.UndoImpersonation();
+                                        moImp = null;
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        System.Diagnostics.Debug.WriteLine(
+                                            $"Error disposing moImp: {ex.Message}");
+                                    }
+                                }
+
+                                // ====================
+                                // 3. CLEAR COLLECTIONS
+                                // ====================
+                                if (sImageUrlslist != null)
+                                {
+                                    sImageUrlslist.Clear();
+                                    sImageUrlslist = null;
+                                }
+
+                                // ====================
+                                // 4. NULL OUT LARGE OBJECTS
+                                // ====================
+
+                                // XML Documents (inherited from xForm)
+                                moPageXML = null;
+                                moXformElmt = null;
+                                model = null;
+                                result = null;
+
+                                // ====================
+                                // 5. CLEAR REFERENCES (NOT OWNED - DO NOT DISPOSE)
+                                // ====================
+
+                                // Parent references - owned by parent Cms object
+                                myWeb = null;
+                                moDbHelper = null;
+                                goConfig = null;
+                                moRequest = null;
+
+                                // Context references (owned by parent)
+                                moCtx = null;
+                                goApp = null;
+                                goRequest = null;
+                                goResponse = null;
+                                goSession = null;
+                                goServer = null;
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log disposal errors but don't throw
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error in AdminXforms.Dispose: {ex.Message}");
+                            }
+                        }
+
+                        // Free unmanaged resources (if any)
+
+                        disposedValue = true;
+                    }
+                }
+
+                // Finalizer
+                ~AdminXforms()
+                {
+                    Dispose(false);
+                }
+
+                // Public Dispose method
+                public void Dispose()
+                {
+                    Dispose(true);
+                    GC.SuppressFinalize(this);
+                }
+
+                // Helper method to prevent use after disposal
+                protected void ThrowIfDisposed()
+                {
+                    if (disposedValue)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                }
+
+                #endregion
 
             }
 
@@ -13071,1282 +13566,9 @@ namespace Protean
             /// <item>I also think instantiating the object without a content id will not work.  I'm not sure if it actually should be possible.</item>
             /// </list>
             /// </remarks>
-            public class XFormEditor : Protean.xForm
-            {
+      
 
-                private const string mcModuleName = "Protean.Cms.Admin.XFormEditor";
-                public const string FORMPATH = "/xforms/content";
 
-                private XmlElement _masterInstance;
-                protected Protean.xForm _masterXform;
-                private System.Web.HttpRequest _request;
-                protected string _schema = "generic";
-                public Cms myWeb;
-
-                public XFormEditor(ref Cms aWeb, long contentId = 0L) : base(ref aWeb.msException)
-                {
-
-                    // Set the Web context variables
-                    myWeb = aWeb;
-                    _request = myWeb.moRequest;
-                    moPageXML = myWeb.moPageXml;
-
-                    // Create the form
-                    CreateMasterForm(contentId);
-
-                }
-
-                public XmlElement MasterInstance
-                {
-                    get
-                    {
-                        return _masterInstance;
-                    }
-                }
-
-
-                public bool Ready
-                {
-                    get
-                    {
-                        try
-                        {
-                            return _masterXform != null;
-                        }
-                        catch (Exception)
-                        {
-                            return false;
-                        }
-                    }
-                }
-
-                public string ContentSchema
-                {
-                    get
-                    {
-                        return _schema;
-                    }
-                }
-
-                protected virtual string[] schemaPreferenceList
-                {
-                    get
-                    {
-                        var schemaList = new string[3];
-                        schemaList[0] = _schema;
-                        schemaList[1] = "generic";
-                        return schemaList;
-                    }
-                }
-
-                protected void CreateMasterForm(long contentId = 0L)
-                {
-                    try
-                    {
-                        _masterXform = new Protean.xForm(ref myWeb.msException);
-                        _masterXform.moPageXML = moPageXML;
-                        _masterInstance = moPageXML.CreateElement("instance");
-
-                        // If content id has been set, then get the instance
-                        if (contentId > 0L)
-                        {
-                            _masterInstance.InnerXml = myWeb.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Content, contentId);
-                            var argoNode = _masterInstance.SelectSingleNode("descendant-or-self::cContentXmlDetail/Content");
-                            _masterXform.load(ref argoNode);
-                            _schema = _masterInstance.SelectSingleNode("descendant-or-self::cContentSchemaName").InnerText;
-                        }
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "CreateMasterForm", ex, "", "", gbDebug);
-                    }
-                }
-
-                protected bool loadControlForm(string controlType)
-                {
-                    //bool success = false;
-                    try
-                    {
-
-                        foreach (string schemaType in schemaPreferenceList)
-                        {
-
-                            if (load(FORMPATH + "/" + schemaType + "." + controlType + ".xml", myWeb.maCommonFolders))
-                            {
-                                //success = true;
-                                break;
-                            }
-
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "loadForm", ex, "", "", gbDebug);
-                        return false;
-                    }
-
-                    return default;
-
-                }
-
-
-                /// <summary>
-                /// This function returns an xForm to update the form being edited
-                /// </summary>
-                /// <param name="cRef">The Ref or Bind of the form element to be edited</param>
-                /// <param name="cParRef">The Ref or Bind of the form element under which the new element will be inserted</param>
-                /// <returns></returns>
-                /// <remarks></remarks>
-
-                public virtual XmlElement xFrmEditXFormGroup(string cRef, string cParRef = "")
-                {
-
-                    XmlElement oElmt;
-                    string cProcessInfo = "cRef = " + cRef + ", ParRef=" + cParRef;
-                    string cMode;
-                    string newRef;
-
-                    try
-                    {
-                        // Set the update mode
-                        cMode = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(cRef), "Add", "Edit"));
-
-                        // Create the form that we're going to populate for updating this xform control
-                        NewFrm("EditGroup");
-
-                        // Load in the form from a file
-                        loadControlForm("group");
-
-                        // load a default content xform if no alternative.
-                        if (!string.IsNullOrEmpty(cRef))
-                        {
-                            oElmt = (XmlElement)_masterXform.moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                            LoadInstanceFromInnerXml(oElmt.OuterXml);
-                        }
-
-                        if (isSubmitted())
-                        {
-                            updateInstanceFromRequest();
-                            validate();
-                            if (valid)
-                            {
-                                if (!string.IsNullOrEmpty(cRef))
-                                {
-                                    // drop the instance back into the full xform
-                                    var oNode = _masterXform.moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                                    oNode.ParentNode.ReplaceChild(Instance.FirstChild, oNode);
-                                }
-                                else
-                                {
-                                    // add new
-                                    var oNode = _masterXform.moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" + cParRef + "' or @bind='" + cParRef + "']");
-                                    newRef = _masterXform.getNewRef(goRequest["cRef"]);
-                                    oElmt = (XmlElement)Instance.FirstChild;
-                                    oElmt.SetAttribute("ref", newRef);
-                                    oNode.AppendChild(Instance.FirstChild);
-                                }
-                            }
-                            else
-                            {
-                                addValues();
-                            }
-                        }
-                        else
-                        {
-                            addValues();
-                        }
-
-                        return moXformElmt;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug);
-                        return null;
-                    }
-                }
-
-
-                public virtual XmlElement xFrmDeleteElement(string cRef, string cPosIndex)
-                {
-
-                    XmlElement oFrmElmt;
-                    XmlNode oNode;
-                    string cProcessInfo = "cRef = " + cRef + ", cPosIndex=" + cPosIndex;
-
-                    try
-                    {
-
-                        // Generate the Delete form within the component
-
-                        // Indentify the node by ref and position, if given.
-                        if (!string.IsNullOrEmpty(cPosIndex))
-                        {
-                            oNode = _masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']/item[" + cPosIndex + "]");
-                        }
-                        else
-                        {
-                            oNode = _masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                        }
-
-                        // Create the form
-                        NewFrm("EditSelect");
-                        submission("EditInput", "", "post");
-                        oFrmElmt = addGroup(ref moXformElmt, "EditGroup", "", "Delete Element");
-                        //XmlNode argoNode = oFrmElmt;
-                        addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this element - \"" + oNode.SelectSingleNode("label").InnerText + "\"");
-                        //oFrmElmt = (XmlElement)argoNode;
-                        addSubmit(ref oFrmElmt, "", "Delete Element");
-                        LoadInstanceFromInnerXml("<delete/>");
-
-                        // Handle the submission
-                        if (isSubmitted())
-                        {
-                            updateInstanceFromRequest();
-                            validate();
-                            if (valid)
-                            {
-
-                                // Delete the node and/or bind
-                                deleteElementAction(ref oNode, cRef, cPosIndex);
-                            }
-
-                            else
-                            {
-                                addValues();
-                            }
-                        }
-                        else
-                        {
-                            addValues();
-                        }
-
-                        return moXformElmt;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmDeleteElement", ex, "", cProcessInfo, gbDebug);
-                        return null;
-                    }
-                }
-
-                /// <summary>
-                /// Deletes nodes that relate to the element / item.
-                /// Problem we face is that we don't know what to delete from the instance, 
-                /// so we will assume that the instance node we're loooking for has a matching @ref attribute.
-                /// If it's an item we will also assume that the @ref node has children that have a child node of value which
-                /// matches the value of the item being deleted.
-                /// </summary>
-                /// <param name="ref"></param>
-                /// <param name="position"></param>
-                /// <remarks></remarks>
-                protected virtual void deleteElementAction(ref XmlNode node, string @ref, string position = "")
-                {
-                    string processInfo = "";
-                    string value = "";
-                    XmlNode node2;
-                    try
-                    {
-
-                        // If we're deleting an item, then we don't need to remove the bind, but we do need to remove the item
-                        if (!string.IsNullOrEmpty(position))
-                        {
-                            // remove related node's item
-                            value = node.SelectSingleNode("value").InnerText;
-                            node2 = _masterXform.Instance.SelectSingleNode("//*[@ref='" + @ref + "']");
-                            if (node2.SelectSingleNode("*[value/node()='" + value + "']") != null)
-                            {
-                                // remove existing node
-                                node2.RemoveChild(node2.SelectSingleNode("*[value/node()='" + value + "']"));
-                            }
-                        }
-                        else
-                        {
-                            // remove related node
-                            node2 = _masterXform.Instance.SelectSingleNode("//*[@ref='" + @ref + "']");
-                            if (node2 != null)
-                            {
-                                node2.ParentNode.RemoveChild(node2);
-                            }
-
-                            // remove bind
-                            if (_masterXform.model.SelectSingleNode("descendant-or-self::bind[@id='" + @ref + "']") != null)
-                            {
-                                node2 = _masterXform.model.SelectSingleNode("descendant-or-self::bind[@id='" + @ref + "']");
-                                node2.ParentNode.RemoveChild(node2);
-                            }
-
-                        }
-
-                        // remove the element itself
-                        node.ParentNode.RemoveChild(node);
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "deleteElementAction", ex, "", processInfo, gbDebug);
-                    }
-                }
-
-                public void moveElement(long nContentId, string cRef, string ewCmd, long nItemIndex = 0L)
-                {
-
-                    XmlElement oElmt;
-
-                    string cProcessInfo = "nContentId = " + nContentId + ",cRef = " + cRef + ",ewCmd = " + ewCmd + ", nItemIndex=" + nItemIndex;
-
-                    try
-                    {
-                        if (nItemIndex == 0L)
-                        {
-                            oElmt = (XmlElement)_masterXform.moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                        }
-                        else
-                        {
-                            oElmt = (XmlElement)_masterXform.moXformElmt.SelectSingleNode("descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']/item[" + nItemIndex + "]");
-                        }
-                        switch (ewCmd ?? "")
-                        {
-                            case "MoveTop":
-                            case "MoveItemTop":
-                                {
-                                    oElmt.ParentNode.InsertBefore(oElmt.CloneNode(true), oElmt.ParentNode.FirstChild);
-                                    oElmt.ParentNode.RemoveChild(oElmt);
-                                    break;
-                                }
-                            case "MoveUp":
-                            case "MoveItemUp":
-                                {
-                                    oElmt.ParentNode.InsertBefore(oElmt.CloneNode(true), oElmt.PreviousSibling);
-                                    oElmt.ParentNode.RemoveChild(oElmt);
-                                    break;
-                                }
-                            case "MoveDown":
-                            case "MoveItemDown":
-                                {
-                                    oElmt.ParentNode.InsertAfter(oElmt.CloneNode(true), oElmt.NextSibling);
-                                    oElmt.ParentNode.RemoveChild(oElmt);
-                                    break;
-                                }
-                            case "MoveBottom":
-                            case "MoveItemBottom":
-                                {
-                                    oElmt.ParentNode.AppendChild(oElmt.CloneNode(true));
-                                    oElmt.ParentNode.RemoveChild(oElmt);
-                                    break;
-                                }
-                            case "DeleteItem":
-                                {
-                                    oElmt.ParentNode.RemoveChild(oElmt);
-                                    break;
-                                }
-                        }
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "moveElement", ex, "", cProcessInfo, gbDebug);
-                    }
-
-                }
-
-                public virtual XmlElement xFrmEditXFormItem(string cRef, long nItemIndex)
-                {
-
-                    XmlElement oElmt = null;
-                    XmlNode oNode;
-                    string sValue;
-
-                    var nCount = default(long);
-
-                    string cProcessInfo = "cRef = " + cRef + ", nItemIndex=" + nItemIndex;
-
-                    try
-                    {
-                        // load the xform to be edited
-
-                        if (nItemIndex != 0L)
-                        {
-                            oElmt = (XmlElement)_masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']/item[" + nItemIndex + "]");
-                        }
-
-                        // Create the form that we're going to populate for updating this xform control
-                        NewFrm("EditSelect");
-
-                        // Load in the form from a file
-                        loadControlForm("item");
-
-                        // set the instance from the item loaded from the xform
-                        if (nItemIndex != 0L)
-                        {
-
-                            Instance.AppendChild(oElmt.CloneNode(true));
-
-                            // add weighting and correct flag to the item node from answer
-                            oElmt = (XmlElement)Instance.FirstChild;
-                            sValue = oElmt.SelectSingleNode("value").InnerText;
-                        }
-
-                        else
-                        {
-
-                            // Multi choice, auto indexing
-                            foreach (XmlNode currentONode in _masterXform.moXformElmt.SelectNodes("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']/item"))
-                            {
-                                oNode = currentONode;
-                                if (Conversions.ToInteger(oNode.SelectSingleNode("value").InnerText) > nCount)
-                                {
-                                    nCount = Conversions.ToInteger(oNode.SelectSingleNode("value").InnerText);
-                                }
-                            }
-                            LoadInstanceFromInnerXml("<item><label/><value>" + (nCount + 1L) + "</value></item>");
-                        }
-
-                        if (isSubmitted())
-                        {
-                            updateInstanceFromRequest();
-                            validate();
-                            if (valid)
-                            {
-
-                                sValue = Instance.SelectSingleNode("item/value").InnerText;
-
-                                if (nItemIndex != 0L)
-                                {
-                                    // drop the instance back into the full xform
-                                    oNode = _masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']/item[" + nItemIndex + "]");
-                                    oNode.ParentNode.ReplaceChild(Instance.FirstChild, oNode);
-                                }
-                                else
-                                {
-                                    // add new
-                                    oNode = _masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                                    oNode.AppendChild(Instance.FirstChild);
-                                }
-                                oNode = null;
-                            }
-                            else
-                            {
-                                addValues();
-                            }
-                        }
-                        else
-                        {
-                            addValues();
-                        }
-
-                        return moXformElmt;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormItem", ex, "", cProcessInfo, gbDebug);
-                        return null;
-                    }
-                }
-
-                public virtual XmlElement xFrmEditXFormInput(string cRef, string cParRef = "", string cElementType = "")
-                {
-
-                    XmlElement oElmt;
-                    //string cBind = "";
-                    XmlNode oNode;
-                    string newRef;
-                    string cProcessInfo = "";
-
-                    try
-                    {
-
-                        // Determine the node we're looking at
-                        if (!string.IsNullOrEmpty(cRef))
-                        {
-                            oElmt = (XmlElement)_masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                            cElementType = oElmt.Name;
-                        }
-
-                        // Load in the form
-                        switch (cElementType ?? "")
-                        {
-                            case "select1":
-                                {
-
-                                    // Create a new form
-                                    NewFrm("EditSelect");
-
-                                    // Load in the form from a file
-                                    loadControlForm("select1");
-                                    break;
-                                }
-
-                            case "select":
-                                {
-
-                                    // Create a new form
-                                    NewFrm("EditSelect");
-
-                                    // Load in the form from a file
-                                    loadControlForm("select");
-                                    break;
-                                }
-
-                            case "input":
-                                {
-
-                                    // Create a new form
-                                    NewFrm("EditSelect");
-
-                                    // Load in the form from a file
-                                    loadControlForm("input");
-                                    break;
-                                }
-
-                            case "textarea":
-                                {
-
-                                    // Create a new form
-                                    NewFrm("EditSelect");
-
-                                    // Load in the form from a file
-                                    loadControlForm("textarea");
-                                    break;
-                                }
-
-                        }
-
-                        // Load existing data
-                        if (!string.IsNullOrEmpty(cRef))
-                        {
-                            oElmt = (XmlElement)_masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                            LoadInstanceFromInnerXml(oElmt.OuterXml);
-                        }
-
-
-                        if (isSubmitted())
-                        {
-                            updateInstanceFromRequest();
-                            validate();
-
-                            if (valid)
-                            {
-
-                                if (string.IsNullOrEmpty(cRef))
-                                {
-                                    newRef = _masterXform.getNewRef("control");
-                                }
-                                else
-                                {
-                                    newRef = cRef;
-                                }
-
-                                oElmt = null;
-
-                                // remove anything unnessesary before save
-                                switch (cElementType ?? "")
-                                {
-                                    case "select1":
-                                    case "select":
-                                        {
-                                            // remove any empty item nodes
-                                            foreach (XmlNode currentONode in Instance.FirstChild.SelectNodes("item"))
-                                            {
-                                                oNode = currentONode;
-                                                if (oNode.FirstChild is null)
-                                                {
-                                                    oNode.ParentNode.RemoveChild(oNode);
-                                                }
-                                                else if (string.IsNullOrEmpty(oNode.FirstChild.InnerText))
-                                                {
-                                                    oNode.ParentNode.RemoveChild(oNode);
-                                                }
-                                            }
-
-                                            break;
-                                        }
-                                }
-
-                                // drop the instance back into the full xform
-                                if (!string.IsNullOrEmpty(cRef))
-                                {
-                                    // replace existing
-                                    oNode = _masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cRef + "' or @bind='" + cRef + "']");
-                                    oNode.ParentNode.ReplaceChild(Instance.FirstChild, oNode);
-                                }
-                                else
-                                {
-                                    // add new
-                                    oNode = _masterXform.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" + cParRef + "' or @bind='" + cParRef + "']");
-                                    oElmt = (XmlElement)Instance.FirstChild;
-
-                                    // TODO: XFormEditor (Generic) how do we identify the node xpath to create the bind.
-                                    // This is just for the EonicWeb Generic xformeditor function
-                                    // not for anything overridden like EonicLMS
-
-                                    // cBind = "whatgoeshere[@ref='" & newRef & "']"
-                                    // oElmt.SetAttribute("bind", newRef)
-                                    // _masterXform.addBind(newRef, cBind)
-
-                                    oNode.AppendChild(Instance.FirstChild);
-                                }
-                            }
-
-                            else
-                            {
-                                addValues();
-                            }
-                        }
-                        else
-                        {
-                            addValues();
-                        }
-
-                        return moXformElmt;
-                    }
-
-                    catch (Exception ex)
-                    {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "xFrmEditXFormInput", ex, "", cProcessInfo, gbDebug);
-                        return null;
-                    }
-                }
-
-
-
-
-
-
-
-
-                // Public Overridable Function xFrmEditXFormInput(ByVal cRef As String, Optional ByVal cParRef As String = "", Optional ByVal cElementType As String = "") As XmlElement
-                // Dim oFrmElmt As XmlElement
-                // Dim oRpt1Elmt As XmlElement
-                // Dim oSelElmt As XmlElement
-
-                // Dim oElmt As XmlElement
-                // Dim oElmt1 As XmlElement
-                // Dim oElmt2 As XmlElement
-                // Dim oElmt3 As XmlElement
-                // Dim oElmt4 As XmlElement
-                // Dim nCount As Long
-                // Dim sValidAnswers As String = ""
-
-                // Dim nAnswerCount As Long
-                // Dim cReqd As String
-                // Dim cBind As String = ""
-
-                // Dim oNode As XmlNode
-
-                // Dim i As Integer
-
-                // Dim newRef As String
-
-                // Dim cProcessInfo As String = ""
-
-                // Try
-
-                // If cRef <> "" Then
-                // oElmt = moXForm2Edit.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" & cRef & "' or @bind='" & cRef & "']")
-                // cElementType = oElmt.Name
-                // nAnswerCount = oElmt.SelectNodes("item").Count + 1
-                // Else
-                // nAnswerCount = 4
-                // End If
-
-                // Select Case cElementType
-                // Case "select1"
-
-                // Me.NewFrm("EditSelect")
-
-                // Me.submission("EditInput", "", "post", "return form_check(this)")
-
-                // oFrmElmt = Me.addGroup(Me.moXformElmt, "EditSelect1", "", "Edit Select1")
-
-                // Me.addInput(oFrmElmt, "ref", True, "Question Ref", "hidden")
-                // Me.addBind("ref", "select1/@ref", "true()")
-
-                // Me.addTextArea(oFrmElmt, "cName", True, "Question", "xhtml")
-                // Me.addBind("cName", "select1/label", "true()")
-
-                // Me.addTextArea(oFrmElmt, "cDesc", True, "Further Details", "xhtml")
-                // Me.addBind("cDesc", "select1/div[@class='description']", "false()")
-
-                // Me.addTextArea(oFrmElmt, "cRecRead", True, "Recommended Reading", "xhtml")
-                // Me.addBind("cRecRead", "select1/div[@class='recRead']", "false()")
-
-                // oSelElmt = Me.addSelect1(oFrmElmt, "cAppearance", True, "Appearance", "", ApperanceTypes.Minimal)
-                // Me.addOption(oSelElmt, "Radio Buttons", "full")
-                // Me.addOption(oSelElmt, "Dropdown Selector", "minimal")
-                // Me.addBind("cAppearance", "select1/@appearance", "true()")
-
-                // For i = 1 To nAnswerCount
-                // oRpt1Elmt = Me.addGroup(oFrmElmt, "Answer " & i, "horizontal", "Answer " & i)
-                // Me.addTextArea(oRpt1Elmt, "A" & i, True, "Answer", "xhtml answerEditor")
-                // If i = nAnswerCount Then
-                // cReqd = "false()"
-                // Else
-                // cReqd = "true()"
-                // End If
-                // Me.addBind("A" & i, "select1/item[" & i & "]/label", cReqd)
-
-                // oSelElmt = Me.addSelect1(oRpt1Elmt, "ATick", True, "Correct ", "", ApperanceTypes.Full)
-                // Me.addOption(oSelElmt, "", i)
-                // Next
-                // Me.addBind("ATick", "select1/@correctIndex", "false()")
-
-                // Me.addRange(oFrmElmt, "AWeighting", True, "Weighting", "0", "100", "10", "short")
-
-                // Me.addBind("AWeighting", "select1/@weighting", "true()")
-
-                // Me.addSubmit(oFrmElmt, "", "Save Group")
-
-                // Case "select"
-
-                // Me.NewFrm("EditSelect")
-
-                // Me.submission("EditInput", "", "post", "return form_check(this)")
-
-                // oFrmElmt = Me.addGroup(Me.moXformElmt, "EditSelect", "", "Edit Select")
-
-                // Me.addInput(oFrmElmt, "ref", True, "Question Ref", "hidden")
-                // Me.addBind("ref", "select/@ref", "true()")
-
-                // Me.addTextArea(oFrmElmt, "cName", True, "Question", "xhtml")
-                // Me.addBind("cName", "select/label", "true()")
-
-                // Me.addTextArea(oFrmElmt, "cDesc", True, "Further Details", "xhtml")
-                // Me.addBind("cDesc", "select/div[@class='description']", "false()")
-
-                // Me.addTextArea(oFrmElmt, "cRecRead", True, "Recommended Reading", "xhtml")
-                // Me.addBind("cRecRead", "select/div[@class='recRead']", "false()")
-
-                // oSelElmt = Me.addSelect1(oFrmElmt, "cAppearance", True, "Appearance", "", ApperanceTypes.Minimal)
-                // Me.addOption(oSelElmt, "CheckBoxes", "full")
-                // Me.addOption(oSelElmt, "Dropdown Selector", "minimal")
-                // Me.addBind("cAppearance", "select/@appearance", "true()")
-
-                // For i = 1 To nAnswerCount
-                // oRpt1Elmt = Me.addGroup(oFrmElmt, "Answer " & i, "horizontal", "Answer " & i)
-                // Me.addTextArea(oRpt1Elmt, "A" & i, True, "Answer", "xhtml answerEditor")
-                // Me.addBind("A" & i, "select/item[" & i & "]/label", "false()")
-
-                // oSelElmt = Me.addSelect(oRpt1Elmt, "A" & i & "Tick", True, "Correct ", "", ApperanceTypes.Full)
-                // Me.addOption(oSelElmt, "", "true")
-                // Me.addBind("A" & i & "Tick", "select/item[" & i & "]/@correct", "false()")
-
-                // Me.addRange(oRpt1Elmt, "A" & i & "Weighting", True, "Weighting", "0", "100", "10", "short")
-
-                // Me.addBind("A" & i & "Weighting", "select/item[" & i & "]/@weighting", "false()")
-                // Next
-
-                // Me.addSubmit(oFrmElmt, "", "Save Group")
-
-                // Case "input"
-
-                // Me.NewFrm("EditSelect")
-
-                // Me.submission("EditInput", "", "post", "return form_check(this)")
-
-                // oFrmElmt = Me.addGroup(Me.moXformElmt, "EditInput", "", "Edit Input")
-
-                // '  Me.addInput(oFrmElmt, "ref", True, "Question Ref", "hidden")
-                // ' Me.addBind("ref", "input/@ref", "true()")
-
-                // Me.addTextArea(oFrmElmt, "cName", True, "Question", "xhtml")
-                // Me.addBind("cName", "input/label", "true()")
-
-                // Me.addTextArea(oFrmElmt, "cDesc", True, "Further Details", "xhtml")
-                // Me.addBind("cDesc", "input/div[@class='description']", "false()")
-
-                // Me.addTextArea(oFrmElmt, "cRecRead", True, "Recommended Reading", "xhtml")
-                // Me.addBind("cRecRead", "input/div[@class='recRead']", "false()")
-
-                // Me.addInput(oFrmElmt, "cAnswers", True, "Valid Answers")
-                // Me.addBind("cAnswers", "input/@validAnswers", "false()")
-                // Me.addNote("cAnswers", xForm.noteTypes.Hint, "Comma separated list of valid answers")
-
-                // Me.addRange(oFrmElmt, "cWeighting", True, "Weighting", "0", "100", "10")
-                // Me.addBind("cWeighting", "input/@weighting", "true()")
-
-                // Me.addSubmit(oFrmElmt, "", "Save Group")
-
-                // Case "textarea"
-
-                // Me.NewFrm("EditSelect")
-
-                // Me.submission("EditInput", "", "post", "return form_check(this)")
-
-                // oFrmElmt = Me.addGroup(Me.moXformElmt, "EditInput", "", "Edit Comprehension Question")
-
-                // Me.addTextArea(oFrmElmt, "cName", True, "Question", "xhtml")
-                // Me.addBind("cName", "textarea/label", "true()")
-
-                // Me.addTextArea(oFrmElmt, "cDesc", True, "Further Details", "xhtml")
-                // Me.addBind("cDesc", "textarea/div[@class='description']", "false()")
-
-                // Me.addTextArea(oFrmElmt, "cRecRead", True, "Recommended Reading", "xhtml")
-                // Me.addBind("cRecRead", "textarea/div[@class='recRead']", "false()")
-
-                // Me.addSubmit(oFrmElmt, "", "Save Group")
-
-                // End Select
-
-                // ' load a default content xform if no alternative.
-
-                // If cRef <> "" Then
-                // oElmt = moXForm2Edit.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" & cRef & "' or @bind='" & cRef & "']")
-                // Select Case cElementType
-                // Case "select1"
-                // 'step through the answers in the question were editing
-                // i = 1
-                // Dim bResult As Boolean = False
-                // For Each oElmt2 In oElmt.SelectNodes("item")
-
-                // 'get the answer value
-                // Dim sVal As String = oElmt2.SelectSingleNode("value").InnerText
-                // 'see if that value is in score of the answers fot that question
-                // If Not moXForm2Edit.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']/score[value/node()='" & sVal & "']") Is Nothing Then
-                // oElmt.SetAttribute("correctIndex", i)
-                // oElmt3 = moXForm2Edit.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']/score[value/node()='" & sVal & "']")
-                // oElmt.SetAttribute("weighting", oElmt3.GetAttribute("weighting"))
-                // bResult = True
-                // End If
-                // i = i + 1
-
-                // Next
-                // If Not bResult Then ' add in the empties
-                // oElmt.SetAttribute("correctIndex", "")
-                // oElmt.SetAttribute("weighting", "")
-                // End If
-                // Case "select"
-                // 'step through the answers in the question were editing
-                // For Each oElmt2 In oElmt.SelectNodes("item")
-                // 'get the answer value
-                // Dim sVal As String = oElmt2.SelectSingleNode("value").InnerText
-                // 'see if that value is in score of the answers fot that question
-                // If Not moXForm2Edit.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']/score[value/node()='" & sVal & "']") Is Nothing Then
-                // oElmt2.SetAttribute("correct", "true")
-                // oElmt3 = moXForm2Edit.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']/score[value/node()='" & sVal & "']")
-                // oElmt2.SetAttribute("weighting", oElmt3.GetAttribute("weighting"))
-                // Else
-                // oElmt2.SetAttribute("correct", "false")
-                // oElmt2.SetAttribute("weighting", "")
-                // End If
-                // Next
-                // Case "input"
-                // For Each oElmt2 In moXForm2Edit.Instance.SelectNodes("results/answers/answer[@ref='" & cRef & "']/score/value")
-                // If sValidAnswers = "" Then
-                // sValidAnswers = oElmt2.InnerText
-                // Else
-                // sValidAnswers = sValidAnswers & ", " & oElmt2.InnerText
-                // End If
-                // Next
-                // oElmt.SetAttribute("validAnswers", sValidAnswers)
-                // oElmt.SetAttribute("weighting", moXForm2Edit.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']/score/@weighting").Value)
-                // End Select
-
-                // Me.Instance.AppendChild(oElmt.CloneNode(True))
-
-                // Else
-                // Select Case cElementType
-                // Case "select1"
-                // Me.Instance.InnerXml = "<select1 bind="""" appearance="""" correctIndex="""" weighting=""""><label/><div class=""description""/><div class=""recRead""/></select1>"
-                // Case "select"
-                // Me.Instance.InnerXml = "<select bind="""" appearance=""""><label/><div class=""description""/><div class=""recRead""/></select>"
-                // Case "input"
-                // Me.Instance.InnerXml = "<input bind="""" validAnswers="""" weighting=""""><label/><div class=""description""/><div class=""recRead""/></input>"
-                // Case "textarea"
-                // Me.Instance.InnerXml = "<textarea bind="""" rows=""20"" class=""textarea_compquiz""><label/><div class=""description""/><div class=""recRead""/></textarea>"
-
-                // End Select
-                // End If
-
-                // Select Case cElementType
-                // Case "select1", "select"
-                // 'ensure we have the right number of blank item nodes to update.
-                // For i = 1 To nAnswerCount
-                // If Me.Instance.FirstChild.SelectSingleNode("item[" & i & "]") Is Nothing Then
-                // 'populate new nodes with values
-                // For Each oNode In Me.Instance.FirstChild.SelectNodes("item")
-                // If CInt(oNode.SelectSingleNode("value").InnerText) > nCount Then
-                // nCount = CInt(oNode.SelectSingleNode("value").InnerText)
-                // End If
-                // Next
-                // oElmt1 = Me.addOption(Me.Instance.FirstChild, "", nCount + 1)
-                // If cElementType = "select" Then
-                // oElmt1.SetAttribute("correct", "")
-                // oElmt1.SetAttribute("weighting", "")
-                // End If
-                // End If
-                // Next
-
-                // End Select
-
-                // If Me.isSubmitted Then
-                // Me.updateInstanceFromRequest()
-                // Me.validate()
-
-                // If Me.valid Then
-
-                // If cRef = "" Then
-                // newRef = moXForm2Edit.getNewRef("Q")
-                // Else
-                // newRef = cRef
-                // End If
-
-                // oElmt = Nothing
-
-                // 'Update the Answer Node
-                // Select Case cElementType
-                // Case "select1"
-                // 'Code to update single answer node
-                // 'get the correctIndex and find the value
-                // oElmt2 = Me.Instance.SelectSingleNode("select1")
-                // If oElmt2.GetAttribute("correctIndex") <> "" Then
-                // Dim nCorIdx As Integer = oElmt2.GetAttribute("correctIndex")
-
-                // If Not Me.Instance.SelectSingleNode("select1/item[" & nCorIdx & "]") Is Nothing Then
-                // oElmt3 = Me.Instance.SelectSingleNode("select1/item[" & nCorIdx & "]")
-                // oElmt4 = oElmt3.SelectSingleNode("value")
-                // oElmt = addAnswerElmt(moXForm2Edit, newRef, oElmt2.GetAttribute("weighting"), oElmt4.InnerText, True)
-                // End If
-                // End If
-
-                // Case "select"
-                // 'Code to update any answer nodes required
-                // 'remove any existing answernodes
-                // clearAnswerScores(moXForm2Edit, newRef)
-                // 'step through the answers in the select instance to find valid correct ones
-                // For Each oElmt2 In Me.Instance.SelectNodes("select/item")
-                // If oElmt2.GetAttribute("correct") = "true" Then
-                // oElmt3 = oElmt2.SelectSingleNode("value")
-                // oElmt = addAnswerElmt(moXForm2Edit, newRef, oElmt2.GetAttribute("weighting"), oElmt3.InnerText)
-                // End If
-                // Next
-                // Case "input"
-                // 'Code to update answer node
-                // oElmt = addAnswerElmt(moXForm2Edit, newRef, moRequest("cWeighting"), "", True)
-                // If moRequest("cAnswers") <> "" Then
-                // Dim aCorrect() As String = Split(moRequest("cAnswers"), ",")
-                // For i = 0 To UBound(aCorrect)
-                // addCorrectAnswer(oElmt, Trim(aCorrect(i)))
-                // Next
-                // End If
-                // Case "textarea"
-                // 'Code to update answer node
-                // oElmt = addAnswerElmt(moXForm2Edit, newRef, moRequest("cWeighting"), "", True, cElementType)
-                // End Select
-
-
-                // 'remove anything unnessesary before save
-                // Select Case cElementType
-                // Case "select1", "select"
-                // 'remove any empty item nodes
-                // For Each oNode In Me.Instance.FirstChild.SelectNodes("item")
-                // If oNode.FirstChild Is Nothing Then
-                // oNode.ParentNode.RemoveChild(oNode)
-                // Else
-                // If oNode.FirstChild.InnerText = "" Then
-                // oNode.ParentNode.RemoveChild(oNode)
-                // End If
-                // End If
-                // If cElementType = "select" Then
-                // oElmt2 = oNode
-                // oElmt2.RemoveAttribute("correct")
-                // oElmt2.RemoveAttribute("weighting")
-                // oElmt2 = Nothing
-                // End If
-                // Next
-                // If cElementType = "select" Then
-                // oElmt2 = Me.Instance.FirstChild
-                // oElmt2.RemoveAttribute("correctIndex")
-                // oElmt2.RemoveAttribute("weighting")
-                // oElmt2 = Nothing
-                // End If
-
-                // Case "input"
-                // 'remove validAnswers Attrib
-                // oElmt = Me.Instance.FirstChild
-                // oElmt.RemoveAttribute("validAnswers")
-
-                // End Select
-
-                // 'drop the instance back into the full xform
-                // If cRef <> "" Then
-                // 'replace existing
-                // oNode = moXForm2Edit.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" & cRef & "' or @bind='" & cRef & "']")
-                // oNode.ParentNode.ReplaceChild(Me.Instance.FirstChild, oNode)
-                // Else
-                // 'add new
-                // oNode = moXForm2Edit.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" & cParRef & "' or @bind='" & cParRef & "']")
-                // oElmt = Me.Instance.FirstChild()
-
-                // 'everything is bound to a single answer node
-                // Select Case cElementType
-                // Case "textarea"
-                // cBind = "results/answers/answer[@ref='" & newRef & "']/given"
-                // Case Else
-                // cBind = "results/answers/answer[@ref='" & newRef & "']/@given"
-                // End Select
-                // oElmt.SetAttribute("bind", newRef)
-                // moXForm2Edit.addBind(newRef, cBind)
-
-                // oNode.AppendChild(Me.Instance.FirstChild())
-                // End If
-
-                // Else
-                // Me.addValues()
-                // End If
-                // Else
-                // Me.addValues()
-                // End If
-
-                // Return Me.moXformElmt
-
-                // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
-                // Return Nothing
-                // End Try
-                // End Function
-
-
-                // Public Overridable Function xFrmEditXFormItem(ByVal cRef As String, ByVal nItemIndex As Long) As XmlElement
-                // Dim oFrmElmt As XmlElement
-                // Dim oSelElmt As XmlElement
-
-                // Dim oElmt As XmlElement = Nothing
-
-                // Dim oNode As XmlNode
-
-                // Dim sQuestionType As String
-                // Dim sValue As String
-
-                // Dim nCount As Long
-
-                // Dim cProcessInfo As String = ""
-
-                // Try
-                // 'load the xform to be edited
-
-                // If nItemIndex <> 0 Then
-                // oElmt = moXForm2Edit.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" & cRef & "' or @bind='" & cRef & "']/item[" & nItemIndex & "]")
-                // End If
-
-                // 'What Q type are we editing...?
-                // sQuestionType = moXForm2Edit.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" & cRef & "' or @bind='" & cRef & "']").Name
-
-
-                // Me.NewFrm("EditSelect")
-
-                // Me.submission("EditInput", "", "post", "return form_check(this)")
-                // oFrmElmt = Me.addGroup(Me.moXformElmt, "EditGroup", "", "Edit Answer")
-
-                // Me.addTextArea(oFrmElmt, "cName", True, "Answer", "xhtml answerEditor")
-                // Me.addBind("cName", "item/label", "true()")
-
-                // oSelElmt = Me.addSelect(oFrmElmt, "bCorrect", True, "Correct Answer", "", ApperanceTypes.Full)
-                // Me.addOption(oSelElmt, "Correct", "true")
-                // Me.addBind("bCorrect", "item/@correct", "false()")
-
-                // Me.addRange(oFrmElmt, "cWeighting", True, "Weighting", "0", "100", "5")
-                // Me.addBind("cWeighting", "item/@weighting", "false()")
-
-                // Me.addSubmit(oFrmElmt, "", "Save Answer")
-
-                // ' set the instance from the item loaded from the xform
-                // If nItemIndex <> 0 Then
-                // Me.Instance.AppendChild(oElmt.CloneNode(True))
-                // ' add weighting and correct flag to the item node from answer
-                // oElmt = Me.Instance.FirstChild
-
-                // sValue = oElmt.SelectSingleNode("value").InnerText
-
-                // If moXForm2Edit.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']/score[value/node()='" & sValue & "']") Is Nothing Then
-                // oElmt.SetAttribute("correct", "false")
-                // oElmt.SetAttribute("weighting", "")
-                // Else
-                // oElmt.SetAttribute("correct", "true")
-                // oElmt.SetAttribute("weighting", moXForm2Edit.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']/score[value/node()='" & sValue & "']/@weighting").Value)
-                // End If
-
-                // Else
-                // For Each oNode In moXForm2Edit.moXformElmt.SelectNodes("group/descendant-or-self::*[@ref='" & cRef & "' or @bind='" & cRef & "']/item")
-                // If CInt(oNode.SelectSingleNode("value").InnerText) > nCount Then
-                // nCount = CInt(oNode.SelectSingleNode("value").InnerText)
-                // End If
-                // Next
-                // Me.Instance.InnerXml = "<item><label/><value>" & nCount + 1 & "</value></item>"
-                // End If
-
-                // If Me.isSubmitted Then
-                // Me.updateInstanceFromRequest()
-                // Me.validate()
-                // If Me.valid Then
-                // 'remove the weighting and correct attribs
-                // Me.Instance.RemoveAttribute("correct")
-                // Me.Instance.RemoveAttribute("weighting")
-
-                // sValue = Me.Instance.SelectSingleNode("item/value").InnerText
-
-                // If nItemIndex <> 0 Then
-                // 'drop the instance back into the full xform
-                // oNode = moXForm2Edit.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" & cRef & "' or @bind='" & cRef & "']/item[" & nItemIndex & "]")
-                // oNode.ParentNode.ReplaceChild(Me.Instance.FirstChild, oNode)
-                // Else
-                // 'add new
-                // oNode = moXForm2Edit.moXformElmt.SelectSingleNode("group/descendant-or-self::*[@ref='" & cRef & "' or @bind='" & cRef & "']")
-                // oNode.AppendChild(Me.Instance.FirstChild)
-                // End If
-                // oNode = Nothing
-
-                // If moRequest("bCorrect") = "true" Then
-                // Select Case sQuestionType
-                // Case "select1"
-                // oElmt = addAnswerElmt(moXForm2Edit, cRef, moRequest("cWeighting"), sValue, True)
-                // Case Else
-                // oElmt = addAnswerElmt(moXForm2Edit, cRef, moRequest("cWeighting"), sValue, False)
-                // End Select
-
-                // Else
-                // 'if we are a select (multi choice) we need to remove the score node if exists.
-                // oNode = moXForm2Edit.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']")
-                // Select Case sQuestionType
-                // Case "select"
-                // If Not oNode.SelectSingleNode("score[value/node()='" & sValue & "']") Is Nothing Then
-                // 'remove existing node
-                // oNode.RemoveChild(oNode.SelectSingleNode("score[value/node()='" & sValue & "']"))
-
-                // End If
-                // End Select
-                // End If
-                // Else
-                // Me.addValues()
-                // End If
-                // Else
-                // Me.addValues()
-                // End If
-
-                // Return Me.moXformElmt
-
-                // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "xFrmEditXFormGroup", ex, "", cProcessInfo, gbDebug)
-                // Return Nothing
-                // End Try
-                // End Function
-
-                // Private Function addAnswerElmt(ByRef oxFrm As Protean.xForm, ByVal cRef As String, ByVal cWeighting As String, Optional ByVal cValue As String = "", Optional ByVal bSingleAnswer As Boolean = False, Optional ByVal cElementType As String = "") As XmlElement
-
-                // Dim oElmt As XmlElement
-                // Dim oElmt2 As XmlElement
-                // Dim oElmt3 As XmlElement
-
-                // Dim oNode As XmlNode
-
-
-                // Dim cProcessInfo As String = ""
-                // Try
-                // If oxFrm.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']") Is Nothing Then
-
-                // oElmt = oxFrm.moPageXML.CreateElement("answer")
-                // oElmt.SetAttribute("ref", cRef)
-                // Select Case cElementType
-                // Case "textarea"
-                // addNewTextNode("given", oElmt)
-                // Case Else
-                // oElmt.SetAttribute("given", "")
-                // End Select
-                // oElmt.SetAttribute("mark", "")
-                // Else
-                // oElmt = oxFrm.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']").CloneNode(True)
-                // If bSingleAnswer Then
-                // 'remove existing score
-                // For Each oNode In oElmt.SelectNodes("score")
-                // oNode.ParentNode.RemoveChild(oNode)
-                // Next
-                // End If
-                // End If
-                // If Not oElmt.SelectSingleNode("score[value/node()='" & cValue & "']") Is Nothing Then
-                // 'score exists update the weighting
-                // oElmt2 = oElmt.SelectSingleNode("score[value/node()='" & cValue & "']")
-                // oElmt2.SetAttribute("weighting", cWeighting)
-                // Else
-                // oElmt2 = oxFrm.moPageXML.CreateElement("score")
-                // oElmt2.SetAttribute("weighting", cWeighting)
-                // If cValue <> "" Then
-                // oElmt3 = oxFrm.moPageXML.CreateElement("value")
-                // oElmt3.InnerText = cValue
-                // oElmt2.AppendChild(oElmt3)
-                // End If
-                // oElmt.AppendChild(oElmt2)
-                // End If
-
-                // If oxFrm.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']") Is Nothing Then
-                // 'Create a new one
-                // oNode = oxFrm.Instance.SelectSingleNode("results/answers")
-                // oNode.AppendChild(oElmt)
-                // Else
-                // 'replace existing
-                // oNode = oxFrm.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']")
-                // 'replace the whole lot
-                // oNode.ParentNode.ReplaceChild(oElmt, oNode)
-                // End If
-
-                // Return oElmt
-
-                // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "addAnswerNode", ex, "", cProcessInfo, gbDebug)
-                // Return Nothing
-                // End Try
-                // End Function
-
-                // Private Sub clearAnswerScores(ByRef oxFrm As Protean.xForm, ByVal cRef As String)
-
-                // Dim oElmt As XmlElement
-
-                // Dim oNode As XmlNode
-
-
-                // Dim cProcessInfo As String = ""
-                // Try
-                // If Not oxFrm.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']") Is Nothing Then
-                // oElmt = oxFrm.Instance.SelectSingleNode("results/answers/answer[@ref='" & cRef & "']")
-                // For Each oNode In oElmt.SelectNodes("score")
-                // oNode.ParentNode.RemoveChild(oNode)
-                // Next
-                // End If
-
-                // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "clearAnswerScores", ex, "", cProcessInfo, gbDebug)
-                // End Try
-                // End Sub
-
-                // Private Function addCorrectAnswer(ByRef oElmt As XmlElement, ByVal cValue As String) As XmlElement
-
-                // Dim oElmt3 As XmlElement
-
-                // Dim cProcessInfo As String = ""
-                // Try
-
-                // oElmt3 = oElmt.OwnerDocument.CreateElement("value")
-                // oElmt3.InnerText = cValue
-                // oElmt.FirstChild.AppendChild(oElmt3)
-
-                // Return oElmt
-                // Catch ex As Exception
-                // returnException(myWeb.msException, mcModuleName, "addCorrectAnswer", ex, "", cProcessInfo, gbDebug)
-                // Return Nothing
-                // End Try
-                // End Function
-
-
-            }
-
-
-
-
-            ~Admin()
-            {
-            }
         }
     }
 }

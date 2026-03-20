@@ -535,7 +535,7 @@
       <xsl:when test="$lang='tr'">gerekli alanlar </xsl:when>
       <xsl:when test="$lang='he-il'">שדות חובה </xsl:when>
     
-      <xsl:otherwise>required input</xsl:otherwise>
+      <xsl:otherwise>indicates required fields</xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
@@ -1904,8 +1904,66 @@
 	</xsl:template>
 
 
+	<xsl:template name="term2119">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>Other spoils</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Related Products</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
-  <!-- ################################################################################################ -->
+	<xsl:template name="term2120">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>bells'n whisles</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Features</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+    <xsl:template name="term2121">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>bells'n whisles</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Specification</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
+	<xsl:template name="term2122">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>bells'n whisles</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Enquire Now</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
+		<xsl:template name="term2123">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>bells'n whisles</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Download Product Specification</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
+
+
+
+	<!-- ################################################################################################ -->
   <!-- ProteanCMS Cart Template phrases -->
   <!-- 3000+ -->
   <!-- ################################################################################################ -->
@@ -3130,6 +3188,17 @@
 		</xsl:choose>
 	</xsl:template>
 
+	<xsl:template name="term3095">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>Out of Stock</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Out of Stock</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
   <!-- ################################################################################################ -->
   <!-- ProteanCMS Membership Template phrases -->
   <!-- 4000+ -->
@@ -3791,6 +3860,10 @@
     </xsl:choose>
   </xsl:template>
 
+	<xsl:template match="span[@class='term4052']" mode="term">
+		<xsl:call-template name="term4052" />
+	</xsl:template>
+	
   <xsl:template name="term4052">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">

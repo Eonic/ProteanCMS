@@ -1,0 +1,359 @@
+﻿<Order cartId="873671" session="rcfodkxpkn0zpl5islzcdgw2" statusId="1" status="Unknown Process ID" itemCount="1" weight="0" orderType="" complete="True" shippingType="65" shippingCost="3.95" shippingDesc="First Class (Royal Mail)-" ReceiptType="0" totalNet="103.95" vatRate="0" vatAmt="0" total="103.95" currency="" currencySymbol="£" errorMsg="0">
+	<Item id="2511468" contentId="54679" ref="UKBTAN" url="/experiences/tandem-bungee-jump/" price="100.0000" taxRate="0" quantity="1" shippingLevel="-1" weight="0" parId="" originalPrice="100.00" unitSaving="0" itemSaving="0" discount="0" itemTotal="100">
+		<Name>Tandem Bungee Jump for Two</Name>
+		<productDetail overridePrice="" sMostpopular="" sBestSeller="" lowMargin="" type="SKU">
+			<Name>Tandem Bungee Jump for Two</Name>
+			<StockCode classification="O02" eVoucherOnly="">UKBTAN</StockCode>
+			<Prices>
+				<Price currency="GBP" validGroup="all" type="rrp">130</Price>
+				<Price currency="GBP" validGroup="all" type="sale" vatAmt="83.33" zeroRatedAmt="">100</Price>
+			</Prices>
+			<Stock />
+			<MinQuantity>1</MinQuantity>
+			<MaxQuantity>1</MaxQuantity>
+			<Restrictions minAge="" maxAge="" minWeight="" maxWeight="" minHeight="" maxHeight="" />
+			<Duration />
+			<InsuranceType />
+			<VatType>1</VatType>
+			<LocationDescription />
+			<Supplier setting="" />
+			<HTRTitle>Nationwide Tandem Bungee Jump</HTRTitle>
+			<HTRDescription>for Two People</HTRDescription>
+			<HTRSummary />
+			<HTRExperience>
+				<ul>
+					<li>Team up with partner and take the ultimate test of nerves</li>
+					<li>You and a friend will be safely harnessed together before launching yourselves from a 160ft platform</li>
+					<li>Full safety briefing from a trained instructor</li>
+					<li>Jump from a choice of UK venues</li>
+					<li>Please allow around two hours on site for this experience</li>
+				</ul>
+			</HTRExperience>
+			<HTRAvailability>
+				<ul>
+					<li>Jumps take place at a site near Windsor at least once a month throughout the year</li>
+					<li>Selected dates are also available in other locations across the UK</li>
+				</ul>
+			</HTRAvailability>
+			<HTRRequirements>
+				<ul>
+					<li>Minimum age is 14</li>
+					<li>Under 16s will require a parent or guardian's permission and signature</li>
+					<li>Customers 50 years and above should seek medical advice prior to their event to ensure there is no medical reason for them not to participate</li>
+					<li>Maximum weight limit is 19 stone</li>
+					<li>There are no height restrictions</li>
+					<li>Waist harnesses fit waist size of 40cm (15.7 inches) to 125cm (49.2 inches)</li>
+					<li>If you are not in good health you should NOT jump</li>
+					<li>If you have any of the following conditions you should seek medical advice before jumping; high blood pressure, heart condition, suffer from dizziness or epilepsy, damage to neck, back, spinal column, legs or eyes, asthma, pregnancy.</li>
+					<li>If you suffer from any of the above but have been given a doctors certificate, you will be requested to sign a non standard waiver</li>
+					<li>Alcohol - if you appear intoxicated you cannot jump</li>
+					<li>Please inform the operator if you are taking any form of medication</li>
+					<li>Glasses and hard contact lenses cannot be worn</li>
+					<li>Boots may need to be removed when jumping</li>
+				</ul>
+				<div>
+					<strong>Accessibility</strong>
+				</div>
+				<div>
+					<ul>
+						<li>Individuals with additional needs or requirements CAN JUMP!</li>
+						<li>If you find it difficult to participate in able-bodied activities but still want to be challenged and push your limits, Bungee jumping may be perfect</li>
+						<li>Please check with our customer services team to discuss individual requirements</li>
+					</ul>
+				</div>
+			</HTRRequirements>
+			<HTRSpectatorFacilities>
+				<ul>
+					<li>Spectators are welcome to come along and watch the action</li>
+				</ul>
+			</HTRSpectatorFacilities>
+			<HTRNotes>
+				<div>We hope you have an enjoyable and memorable experience. If we can be of any further assistance please do not hesitate to call Into the Blue customer services on 01959 578100.</div>
+			</HTRNotes>
+			<HTRDoc />
+			<BookingDetails>
+				<p>
+					In order to book your experience please visit <a href="https://ukbungee.co.uk/find-an-event">https://ukbungee.co.uk/find-an-event</a>, click I want to redeem a voucher, please choose Into The Blue, enter your 10 digit Into The Blue voucher with the voucher expiry date. You will then be able to choose your date and book your experience.
+				</p>
+				<p>
+					Alternatively you are able to email <a href="mailto:info@ukbungee.co.uk">info@ukbungee.co.uk</a> with your name, voucher number, which experience and which date and location is of preference. 
+				</p>
+				<p>The more notice you are able to give, the more likely you are to be able to secure the date you want. You will need to take your voucher with you on the day. Please note that once you have booked your date, you are subject to the terms and conditions of the operator, including cancellation.</p>
+			</BookingDetails>
+			<Experience>
+				<p>
+					<span>At some point during the next 12 months the two of you will do a tandem bungee, accelerating from 0-60 in under two seconds as the earth rushes towards you! After a safety briefing and being weighed to get the Bungee rope length correct, it's time to proceed to the bungee cage where you are securely attached to each other.</span>
+				</p>
+			</Experience>
+			<ExperienceDetail>
+				<p>
+					<span>The cage will then be slowly raised to around 160ft, your hearts pounding as the ground becomes a distant memory. Then it's time to jump. Adrenaline pumping, your jumpmaster will shout: 'Three'two'one'BUNGEE!' as you then launch yourselves from the platform and plummet towards the ground! You're sure to be filled with a euphoric sense of achievement and sharing this jump with someone else, you truly will have an unforgettable experience!</span>
+				</p>
+			</ExperienceDetail>
+			<Location>
+				<ul>
+					<li>
+						<b>
+							Belfast<span> </span>
+						</b>Queens Quay
+					</li>
+					<li>
+						<strong>
+							Birmingham<span> </span>
+						</strong> Cliff Lakes Waterpark
+					</li>
+					<li>
+						<strong>
+							Brighton<span> </span>
+						</strong> Marina
+					</li>
+					<li>
+						<strong>
+							Bristol<span> </span>
+						</strong>  The Lloyds Amphitheatre
+					</li>
+					<li>
+						<strong>
+							Cambridge<span> </span>
+						</strong> Priory Lakes
+					</li>
+					<li>
+						<strong>
+							Glasgow<span> </span>
+						</strong> Riverside Museum
+					</li>
+					<li>
+						<strong>
+							Manchester<span> </span>
+						</strong> Salford Quays
+					</li>
+					<li>
+						<b>Manchester </b>Tatton Park
+					</li>
+					<li>
+						<strong>
+							Windsor<span> </span>
+						</strong> Bray Lake Watersports
+					</li>
+				</ul>
+			</Location>
+			<AnythingToKnow>
+				<ul>
+					<li>Video footage, photographs and T-shirts of your jump are available to purchase with prices starting from £15</li>
+					<li>The Berkshire venue has a lakeside cafe serving drinks and snacks</li>
+				</ul>
+			</AnythingToKnow>
+			<HTRMenu />
+			<Notes />
+			<Validity validUntilDate="">12m</Validity>
+			<Locations>
+				<Location long="-1.3871138" lat="53.4188957" postcode="S60 1DX" />
+				<Location long="-1.6954377" lat="52.5822442" postcode="B78 2DL" />
+				<Location long="-0.1023206" lat="50.8134556" postcode="BN2 5UU" />
+				<Location long="-2.5996293" lat="51.4484707" postcode="BS1 5DB" />
+				<Location long="-4.3062062" lat="55.865103" postcode="G3 8RS" />
+				<Location long="-2.2939551" lat="53.4709435" postcode="M50 3SQ" />
+				<Location long="-0.6889773" lat="51.4998852" postcode="SL6 2EB" />
+				<Location long="-2.3683674" lat="53.3228917" postcode="WA16 6QN" />
+			</Locations>
+			<ParentProduct>
+				<Content id="2502" ref="PROD-597" parId="789" name="Tandem Bungee Jump" type="Product" publish="2007-01-30T10:04:34+05:30" update="2025-04-03T22:50:54+05:30" owner="1" status="1" SkuOptions="None" action="IntoTheBlue.Web.Modules.ProductDetail" assemblyType="IntoTheBlue.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" metaTitle="Share a Bungee Jump | Tandem Bungee Jump Activity" metaKeywords="" metaDescription="Nationwide tandem bungee jump activity throughout the UK. Thrill sharing at it's best! Buy someone this unique and original gift experience voucher now!" noIndex="" ratingAvg="" ratingCount="" product-layout="">
+					<Name category="">Tandem Bungee Jump</Name>
+					<StockCode gtin="" mpn="" />
+					<Manufacturer />
+					<Options>
+						<OptGroup type="Options1" selectType="DropDown">
+							<option />
+							<option />
+							<option />
+						</OptGroup>
+						<OptGroup type="Options2" selectType="DropDown">
+							<option />
+							<option />
+							<option />
+						</OptGroup>
+					</Options>
+					<Prices>
+						<Price currency="GBP" type="sale" validGroup="all" suffix="">100</Price>
+						<Price currency="GBP" type="rrp" validGroup="all" suffix="" />
+					</Prices>
+					<ShippingWeight unit="" />
+					<Stock />
+					<Images>0 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E)   at TidyManaged.Interop.PInvoke.tidyCreate()     at TidyManaged.Document.FromString(String htmlString)     at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 14640 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E)   at TidyManaged.Interop.PInvoke.tidyCreate()     at TidyManaged.Document.FromString(String htmlString)     at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 14640 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E)   at TidyManaged.Interop.PInvoke.tidyCreate()     at TidyManaged.Document.FromString(String htmlString)     at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 14640 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E)   at TidyManaged.Interop.PInvoke.tidyCreate()     at TidyManaged.Document.FromString(String htmlString)     at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 14640 - Unable to load DLL 'tidy.dll': The specified module could not be found. (Exception from HRESULT: 0x8007007E)   at TidyManaged.Interop.PInvoke.tidyCreate()     at TidyManaged.Document.FromString(String htmlString)     at Protean.stdTools.tidyXhtmlFrag(String shtml, Boolean bReturnNumbericEntities, Boolean bEncloseText, String removeTags) in D:\nita_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\tools\stdTools.cs:line 1464</Images>
+					<ShowBanner />
+					<ShortDescription hubDescriptionTitle="">
+						<div>
+							<p>It's a proper Skyfall - hold your breath and dream about the moment - with a friend or loved one. And remember, this is definitely NOT the end, my friend! The fabulous thing about a tandem jump is that you can share a great moment and a sensational thrill with the jump partner of your choice. Who will decide when to leap? Will you react the same way? What can you say on the way down? Will you be eyes wide open or wide shut as you rebound back skywards when the elastic bungee rope springs into action?</p>
+							<p>Once you have finally reached the ground, you will be filled with a euphoric sense of excitement and accomplishment. Sharing this jump with someone else, you truly will have an unforgettable experience as a daredevil duo.</p>
+							<p>Before you can take your tandem bungee, you will start off with a full safety briefing. You will then both be carefully weighed to ensure that the right length of bungee rope is used. Then it's time to proceed to the bungee platform where you are securely strapped on to each other and to the bungee cable.</p>
+							<p>Once you are inside the cage, the instructor will make the final safety checks and the crane will slowly raise the platform to 160ft. Both hearts will be pounding as the ground becomes a distant memory and the wide panorama opens out around you. Then it's time for the easy bit - look down if you dare, but it's all about just going for it and jumping. Adrenaline pumping, you launch yourselves from the edge of the aerial platform and away you go as clinging on tightly to each other towards the ground.</p>
+							<p>
+								As this special jump is for pairs, we think it's makes a fabulous surprise present for your other half, or maybe a gift for a couple you know. And as for venues, there are tandem jumps laid on around the country. One thing's for sure, if you wanting to do a tandem jump to mark a certain occasion or even pop <em>that</em> question, it doesn't get much more whacky than this!
+							</p>
+						</div>
+					</ShortDescription>
+					<Summary uspBulletPoint="">
+						<div>
+							• Launch yourselves from a 160ft platform<br /> • The jump partner of your choice<br /> • Venues are available across the UK<br /> • Take the ultimate test of nerves
+						</div>
+					</Summary>
+					<Body order="2" whatCanIExpectTitle="">
+						<div>
+							<p>It's a proper Skyfall - hold your breath and dream about the moment - with a friend or loved one. And remember, this is definitely NOT the end, my friend! The fabulous thing about a tandem jump is that you can share a great moment and a sensational thrill with the jump partner of your choice. Who will decide when to leap? Will you react the same way? What can you say on the way down? Will you be eyes wide open or wide shut as you rebound back skywards when the elastic bungee rope springs into action?</p>
+							<p>Once you have finally reached the ground, you will be filled with a euphoric sense of excitement and accomplishment. Sharing this jump with someone else, you truly will have an unforgettable experience as a daredevil duo.</p>
+							<p>Before you can take your tandem bungee, you will start off with a full safety briefing. You will then both be carefully weighed to ensure that the right length of bungee rope is used. Then it's time to proceed to the bungee platform where you are securely strapped on to each other and to the bungee cable.</p>
+							<p>Once you are inside the cage, the instructor will make the final safety checks and the crane will slowly raise the platform to 160ft. Both hearts will be pounding as the ground becomes a distant memory and the wide panorama opens out around you. Then it's time for the easy bit - look down if you dare, but it's all about just going for it and jumping. Adrenaline pumping, you launch yourselves from the edge of the aerial platform and away you go as clinging on tightly to each other towards the ground.</p>
+							<p>
+								As this special jump is for pairs, we think it's makes a fabulous surprise present for your other half, or maybe a gift for a couple you know. And as for venues, there are tandem jumps laid on around the country. One thing's for sure, if you wanting to do a tandem jump to mark a certain occasion or even pop <em>that</em> question, it doesn't get much more whacky than this!
+							</p>
+						</div>
+					</Body>
+					<WhatsIncluded order="1" whatsIncludedTitle="">
+						<ul>
+							<li>Team up with partner and take the ultimate test of nerves</li>
+							<li>You and a friend will be safely harnessed together before launching yourselves from a 160ft platform</li>
+							<li>Full safety briefing from a trained instructor</li>
+							<li>Jump from a choice of UK venues</li>
+							<li>Please allow around two hours on site for this experience</li>
+						</ul>
+						<p>
+							<br /> A crazy yet unforgettable experience but there's more <a href="/adventure-gifts/extreme-sports/bungee-jumping/" class="contentlink"> bungee jumps</a> here, just in case you develop a 'passion' for it!
+						</p>
+					</WhatsIncluded>
+					<WhenAvailable order="3" whenIsItAvailableTitle="">
+						<ul>
+							<li>Jumps take place at a site near Windsor at least once a month throughout the year</li>
+							<li>Selected dates are also available in other locations across the UK</li>
+						</ul>
+					</WhenAvailable>
+					<LocationMap order="4" lat="54.5837" long="-1.2301" shortDescription="Nationwide Venues" locationShortDescriptionTitle="" locationDetailsTitle="">
+						<p>
+							<em>Vouchers are valid for any of the locations listed.</em>
+							<br />
+							<em>Choose your preferred location when registering your voucher after purchase.</em>
+						</p>
+						<ul>
+							<li>
+								<b>
+									Belfast<span> </span>
+								</b>Queens Quay
+							</li>
+							<li>
+								<strong>
+									Birmingham<span> </span>
+								</strong> Cliff Lakes Waterpark
+							</li>
+							<li>
+								<strong>
+									Brighton<span> </span>
+								</strong> Marina
+							</li>
+							<li>
+								<strong>
+									Bristol<span> </span>
+								</strong>  The Lloyds Amphitheatre
+							</li>
+							<li>
+								<strong>
+									Cambridge<span> </span>
+								</strong> Priory Lakes
+							</li>
+							<li>
+								<strong>
+									Glasgow<span> </span>
+								</strong> Riverside Museum
+							</li>
+							<li>
+								<strong>
+									Manchester<span> </span>
+								</strong> Salford Quays
+							</li>
+							<li>
+								<b>Manchester </b>Tatton Park
+							</li>
+							<li>
+								<strong>
+									Windsor<span> </span>
+								</strong> Bray Lake Watersports
+							</li>
+						</ul>
+					</LocationMap>
+					<Suitable order="5" suitableForTitle="">
+						<ul>
+							<li>Minimum age is 14</li>
+							<li>Under 16s will require a parent or guardian's permission and signature</li>
+							<li>Customers 50 years and above should seek medical advice prior to their event to ensure there is no medical reason for them not to participate</li>
+							<li>Maximum weight limit is 19 stone</li>
+							<li>There are no height restrictions</li>
+							<li>Waist harnesses fit waist size of 40cm (15.7 inches) to 125cm (49.2 inches)</li>
+							<li>If you are not in good health you should NOT jump</li>
+							<li>If you have any of the following conditions you should seek medical advice before jumping; high blood pressure, heart condition, suffer from dizziness or epilepsy, damage to neck, back, spinal column, legs or eyes, asthma, pregnancy.</li>
+							<li>If you suffer from any of the above but have been given a doctors certificate, you will be requested to sign a non standard waiver</li>
+							<li>Alcohol - if you appear intoxicated you cannot jump</li>
+							<li>Please inform the operator if you are taking any form of medication</li>
+							<li>Glasses and hard contact lenses cannot be worn</li>
+							<li>Boots may need to be removed when jumping</li>
+						</ul>
+						<div>
+							<strong>Accessibility</strong>
+						</div>
+						<div>
+							<ul>
+								<li>Individuals with additional needs or requirements CAN JUMP!</li>
+								<li>If you find it difficult to participate in able-bodied activities but still want to be challenged and push your limits, Bungee jumping may be perfect</li>
+								<li>Please check with our customer services team to discuss individual requirements</li>
+							</ul>
+						</div>
+					</Suitable>
+					<Spectators order="6" spectatorsTitle="">
+						<ul>
+							<li>Spectators are welcome to come along and watch the action</li>
+						</ul>
+					</Spectators>
+					<AnythingElse order="7" anythingelseTitle="">
+						<ul>
+							<li>Video footage, photographs and T-shirts of your jump are available to purchase with prices starting from £15</li>
+							<li>The Berkshire venue has a lakeside cafe serving drinks and snacks</li>
+						</ul>
+					</AnythingElse>
+					<Menu order="8" menuTitle="" />
+					<SpecificationDocument />
+					<Keywords />
+					<KeywordsSearch />
+					<NotSearch>pregnancy</NotSearch>
+					<Classification />
+					<SuitableAges>14</SuitableAges>
+					<Sticker color="Green">Save £30</Sticker>
+					<Canonical />
+					<SearchAlt>Tandem Bungee Jump Activity</SearchAlt>
+					<SearchTitle>Tandem Bungee Jump</SearchTitle>
+					<SearchContent>Your tandem bungee jumping experience, available at various locations...</SearchContent>
+					<SearchLinkText />
+					<Sticker color="None" />
+					<Restrictions minAge="14" maxAge="99" minWeight="0" maxWeight="120.6" minHeight="0" minGroupSize="1" maxGroupSize="1" maxHeight="250" />
+				</Content>
+			</ParentProduct>
+		</productDetail>
+		<nItemOptGrpIdx>0</nItemOptGrpIdx>
+		<nItemOptIdx>0</nItemOptIdx>
+		<nParentId>0</nParentId>
+		<contentType>SKU</contentType>
+		<ProductStatus>1</ProductStatus>
+		<nShippingGroup />
+		<nshippingType />
+		<Item id="2511469" contentId="0" ref="0" url="" unit="0" price="0.0000" taxRate="0" quantity="1" shippingLevel="-1" discount="0.0000" parId="4954">
+			<Name>Standard</Name>
+			<productDetail />
+			<nItemOptGrpIdx>0</nItemOptGrpIdx>
+			<nItemOptIdx>0</nItemOptIdx>
+			<nParentId>2511468</nParentId>
+			<nShippingGroup />
+			<nshippingType />
+		</Item>
+	</Item>
+	<Shipping>
+		<Name>First Class (Royal Mail)</Name>
+		<Carrier />
+		<DeliveryTime>Immediate</DeliveryTime>
+	</Shipping>
+</Order>

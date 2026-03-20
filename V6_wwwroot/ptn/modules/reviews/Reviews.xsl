@@ -174,7 +174,7 @@
 		</div>
 	</xsl:template>
   <!-- Review Brief -->
-  <xsl:template match="Content[@type='Reviews']" mode="displayBrief">
+  <xsl:template match="Content[@type='Reviews' or @type='Review']" mode="displayBrief">
     <xsl:param name="pos"/>
     <xsl:param name="class"/>
     <xsl:variable name="parId">

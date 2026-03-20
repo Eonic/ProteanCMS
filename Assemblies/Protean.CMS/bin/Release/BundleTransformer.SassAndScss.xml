@@ -66,6 +66,16 @@
             Gets or sets a flag for whether to allow the use of native minification
             </summary>
         </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.FatalDeprecations">
+            <summary>
+            Gets or sets a comma-separated list of deprecations to treat as fatal
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.FutureDeprecations">
+            <summary>
+            Gets or sets a comma-separated list of future deprecations to opt into early
+            </summary>
+        </member>
         <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.IncludePaths">
             <summary>
             Gets a list of include paths
@@ -84,6 +94,17 @@
         <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.LineFeedType">
             <summary>
             Gets or sets a line feed type
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.QuietDependencies">
+            <summary>
+            Gets or sets a flag for whether to silence compiler warnings from stylesheets loaded by using the
+            <see cref="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.IncludePaths"/> property
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.SilenceDeprecations">
+            <summary>
+            Gets or sets a comma-separated list of active deprecations to ignore
             </summary>
         </member>
         <member name="P:BundleTransformer.SassAndScss.Configuration.SassAndScssSettings.Severity">
@@ -219,6 +240,11 @@
             Name of output code type
             </summary>
         </member>
+        <member name="F:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.REPETITIVE_DEPRECATIONS_DESCRIPTION_END_PART">
+            <summary>
+            End part of repetitive deprecation warnings description
+            </summary>
+        </member>
         <member name="F:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator._createJsEngineInstance">
             <summary>
             Delegate that creates an instance of JS engine
@@ -227,6 +253,16 @@
         <member name="F:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator._virtualFileManager">
             <summary>
             Virtual file manager
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.FatalDeprecations">
+            <summary>
+            Gets or sets a comma-separated list of deprecations to treat as fatal
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.FutureDeprecations">
+            <summary>
+            Gets or sets a comma-separated list of future deprecations to opt into early
             </summary>
         </member>
         <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.IncludePaths">
@@ -247,6 +283,17 @@
         <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.LineFeedType">
             <summary>
             Gets or sets a line feed type
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.QuietDependencies">
+            <summary>
+            Gets or sets a flag for whether to silence compiler warnings from stylesheets loaded by using the
+            <see cref="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.IncludePaths"/> property
+            </summary>
+        </member>
+        <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.SilenceDeprecations">
+            <summary>
+            Gets or sets a comma-separated list of active deprecations to ignore
             </summary>
         </member>
         <member name="P:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.Severity">
@@ -290,6 +337,13 @@
             </summary>
             <param name="enableNativeMinification">Flag that indicating to use of native minification</param>
             <returns>Compilation options</returns>
+        </member>
+        <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.ParseDeprecations(System.String)">
+            <summary>
+            Parses a string representation of the deprecation list
+            </summary>
+            <param name="deprecationsString">String representation of the deprecation list</param>
+            <returns>List of deprecations</returns>
         </member>
         <member name="M:BundleTransformer.SassAndScss.Translators.SassAndScssTranslator.ConvertSeverityToWarningLevel(System.Int32)">
             <summary>

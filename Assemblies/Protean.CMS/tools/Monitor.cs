@@ -81,7 +81,7 @@ namespace Protean
             string cUrl = string.Empty;
 
             string cConStr;
-            var oDBh = new dbHelper(ref myWeb);
+            var oDBh = new dbHelper(myWeb);
             DataSet oDS;
             XmlDocument oMXML = new XmlDocument();
             var oElmt = oMXML.CreateElement("NoData");

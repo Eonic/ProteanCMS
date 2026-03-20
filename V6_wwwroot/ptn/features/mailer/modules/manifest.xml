@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ptn/features/mailer/modules/">
+	<LayoutGroup name="Modules">
+		<Layout name="Modules_1_column" >Devise your own 1 column page layouts with any content types.</Layout>
+		<Layout name="Modules_2_columns">Devise your own 2 column page layouts with any content types.</Layout>
+		<Layout name="Modules_2_columns_66_33">Devise your own 2 column page layouts with any content types.</Layout>
+		<Layout name="Modules_2_columns_33_66">Devise your own 2 column page layouts with any content types.</Layout>
+		<Layout name="Modules_2_columns_75_25">Devise your own 2 column page layouts with any content types.</Layout>
+		<Layout name="Modules_2_columns_25_75">Devise your own 2 column page layouts with any content types.</Layout>
+		<Layout name="Modules_3_columns">Devise your own 3 column page layouts with any content types.</Layout>
+		<Layout name="Modules_3_columns_50_25_25">Devise your own 3 column page layouts with any content types.</Layout>
+		<Layout name="Modules_3_columns_25_25_50">Devise your own 3 column page layouts with any content types.</Layout>
+		<Layout name="Modules_4_columns">Devise your own 4 column page layouts with any content types.</Layout>
+		<Layout name="Modules_Masonary">BETA - Flexible Flowing Block Layout.</Layout>
+	</LayoutGroup>
+	<ContentTypes>
+		<ContentTypeGroup name="Text/HTML">
+			<ContentType type="Module" formPath="generic/none" name="Module">&#160;</ContentType>
+			<ContentType type="FormattedText" formPath="generic/formattedtext" name="Formatted Text">Add text formatted into HTML</ContentType>
+			<ContentType type="PlainText" formPath="generic/plaintext" name="Plain Text">Plain unformatted text</ContentType>
+			<ContentType type="Image" formPath="generic/image" name="Image">Add an image</ContentType>
+			<ContentType type="Link" formPath="generic/link" name="Link">Add an link</ContentType>
+			<ContentType type="MetaData" formPath="generic/metadata" name="Module">&#160;</ContentType>			
+		</ContentTypeGroup>
+	</ContentTypes>
+	<ModuleTypes>
+		<ModuleGroup name="Basic Content" icon="fas fa-pencil-alt">
+			<Module type="FormattedText" formPath="formattedtext/formattedtext" icon="fas fa-align-right" name="Formatted Text"></Module>
+			<Module type="Image" formPath="image/image" icon="fas fa-image" name="Image"></Module>
+			</ModuleGroup>
+		<ModuleGroup name="Layout" icon="fas fa-columns">
+			<Module type="MultiColumn" formPath="columns/MultiColumn" name="Column Layouts" icon="icon-3-col">Range of layouts up to 6 columns, or set width of items to auto arrange</Module>
+		</ModuleGroup>
+    <ModuleGroup name="Content Lists" icon="fas fa-list">
+		<Module type="NewsList" formPath="news/news-list" icon="far fa-newspaper" name="News Articles List"></Module>
+	</ModuleGroup>
+	</ModuleTypes>
+</PageLayouts>

@@ -1,15 +1,15 @@
 # Protean CMS
-.Net / XSLT based Content Management System, with eCommerce and Membership facilities (formerly known as EonicWeb5)
+.Net / XSLT based Content Management System, with eCommerce and Membership facilities.
 
 ## Project Description
-Protean CMS is a extremely robust and flexible platform. Every aspect can be themed using XSLT, with a large range of content types Modules available out of the box, and a number of high quality themes ready to go. New Modules can easily be created using xForms and XSLT and .Net assemblies.
+Protean CMS is a extremely robust and flexible platform. Every aspect can be themed using XSLT, to provide maximum flexabilty. A large range of content types Modules available out of the box, and a number of high quality themes ready to go. New Modules can easily be created using xForms and XSLT and .Net assemblies.
 
 The CMS contains full eCommerce and user membership functionality.
 
 ## Background
-Developed over 14 years by leading web design company eonic.co.uk it has been used on hundreds of web projects and has the capacity to cope with almost any customer requirement.
+Developed over 20 years by leading web design company eonic.digital it has been used on hundreds of web projects and has the capacity to cope with almost any customer requirement.
 
-Until recently the project has been managed internally at Eonic and has only recently moved to GitHub, hence the lack of history found here.
+Initially the project was inhouse at Eonic Digital but was made opensource in 2020.
 
 ## List of Features
 https://www.proteancms.com/Why-ProteanCMS/Feature-list
@@ -52,7 +52,7 @@ Commercial hosting, consultancy and support is available for any new requirement
 
 ## Contributors
 
-Key contributors to the ProteanCMS are Web Development Experts based in Kent, Unitied Kingdom https://eonic.com
+Key contributors to the ProteanCMS are Web Development Experts based in Kent, Unitied Kingdom https://eonic.digital
 
 If you are interested in contributing to the project all developers are welcome.
 

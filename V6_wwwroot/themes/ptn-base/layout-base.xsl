@@ -333,26 +333,28 @@
     <xsl:apply-templates select="." mode="footer1">
       <xsl:with-param name="containerClass" select="$container"/>
     </xsl:apply-templates>
-    <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginTitle" aria-hidden="true">
-      <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="LoginTitle">Log in</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
-          </div>
-          <div class="modal-body">
-            <div id="Login">
-              <xsl:apply-templates select="/Page" mode="addModule">
-                <xsl:with-param name="text">Add Module</xsl:with-param>
-                <xsl:with-param name="position">Login</xsl:with-param>
-              </xsl:apply-templates>
+    <xsl:if test="$membership='on'">
+      <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginTitle" aria-hidden="true">
+        <div class="modal-dialog modal-md" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h2 class="modal-title" id="LoginTitle">Log in</h2>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+            </div>
+            <div class="modal-body">
+              <div id="Login">
+                <xsl:apply-templates select="/Page" mode="addModule">
+                  <xsl:with-param name="text">Add Module</xsl:with-param>
+                  <xsl:with-param name="position">Login</xsl:with-param>
+                </xsl:apply-templates>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </xsl:if>
 
-    <div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-labelledby="SearchTitle" aria-hidden="true">
+    <div class="modal fade" id="SearchModal" tabindex="-1" role="dialog" aria-label="Search Modal" aria-hidden="true">
       <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
           <div class="modal-body">

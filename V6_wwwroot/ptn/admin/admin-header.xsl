@@ -6,6 +6,7 @@
                   xmlns:v-for="http://example.com/xml/v-for" xmlns:v-slot="http://example.com/xml/v-slot"
                   xmlns:v-if="http://example.com/xml/v-if" xmlns:v-else="http://example.com/xml/v-else"
                   xmlns:v-model="http://example.com/xml/v-model">
+	
   <xsl:template match="AdminMenu">
     <xsl:variable name="contextCmd">
       <xsl:choose>
@@ -151,7 +152,7 @@
     </div>
     
     <xsl:if test="not(/Page[@ewCmd='Normal'])">
-      <xsl:apply-templates select="/" mode="adminBreadcrumb"/>
+	    <xsl:apply-templates select="/" mode="adminBreadcrumb"/>
     </xsl:if>
   </xsl:template>
 

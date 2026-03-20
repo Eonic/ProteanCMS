@@ -7,6 +7,7 @@
         //});
         // $(this).parents(".ptn-edit").addClass("active-admin-dd");
         $(this).parents(".ptn-edit").toggleClass("active-admin-dd");
+        $(this).parents(".module-containing-icon").toggleClass("active-admin-dd-wrapper");
     });
 
     $('div.module div.moduleDrag').closest('.module').draggable({

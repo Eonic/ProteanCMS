@@ -11,7 +11,7 @@ Public Class setupDefault : Implements IHttpHandler, IRequiresSessionState
 
         Dim oEw As Protean.Setup = New Protean.Setup()
 
-        If context.Request("xml") <> "" Then
+        If context.Request("ContentType") = "xml" Then
             oEw.mbOutputXml = True
         End If
 

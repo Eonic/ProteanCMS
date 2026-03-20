@@ -34,7 +34,7 @@
   <!-- -->
 
   <xsl:template match="Content[parent::cContentXmlBrief]" mode="writeNodes">
-    <Content showRelated="NewsArticle">
+    <Content showRelated="NewsArticle,Event,Product">
       <xsl:for-each select="*">
         <xsl:apply-templates select="." mode="writeNodes"/>
       </xsl:for-each>

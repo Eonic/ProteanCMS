@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content position="" moduleType="FormattedText" box="" title="" link="" screens="" linkType="internal" linkText="Read more" columns="4" icon-options="picker" />
+					<Content position="" moduleType="FormattedText" box="" title="" link="" screens="" linkType="internal" linkText="Read more" columns="4" icon-options="picker" heading="h2" />
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -53,15 +53,19 @@
 			<bind id="linkObject" nodeset="@linkObject" required="false()" type="string"/>
 			<bind id="cModuleLinkText" nodeset="@linkText" required="false()" type="string"/>
 			<bind id="heading" nodeset="@heading" required="false()" type="string"/>
+			<bind id="no-heading-content" nodeset="@no-heading-content" required="false()" type="string"/>
 			<bind id="icon-options" nodeset="@icon-options" required="false()" type="string"/>
 			<bind id="icon-class" nodeset="@icon-class" required="false()" type="string"/>
+      <bind id="icon-name" nodeset="@icon-name" required="false()" type="string"/>
 			<bind id="icon-weight" nodeset="@icon-weight" required="false()" type="string"/>
 			<bind id="icon-offset" nodeset="@icon-offset" required="false()" type="string"/>
 			<bind id="module-padding" nodeset="@module-padding" required="false()" type="string"/>
 			<bind id="title-margin" nodeset="@title-margin" required="false()" type="string"/>
       <bind id="class-name" nodeset="@class-name" required="false()" type="string"/>
       <bind id="custom-css" nodeset="@custom-css" required="false()" type="string"/>
-		</bind>
+      <bind id="gutter" nodeset="@gutter" required="false()" type="string"/>
+
+    </bind>
 		<bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
 		<bind nodeset="tblContent">
 			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
@@ -241,6 +245,41 @@
                 <input bind="module-padding" class="">
                   <label>Module Padding</label>
                 </input>
+                <group>
+                  <select1 bind="gutter">
+                    <label>
+                      Gutter width
+                    </label>
+                    <item>
+                      <label>0</label>
+                      <value>0</value>
+                    </item>
+                    <item>
+                      <label>1</label>
+                      <value>1</value>
+                    </item>
+                    <item>
+                      <label>2</label>
+                      <value>2</value>
+                    </item>
+                    <item>
+                      <label>3</label>
+                      <value>3</value>
+                    </item>
+                    <item>
+                      <label>4</label>
+                      <value>4</value>
+                    </item>
+                    <item>
+                      <label>5</label>
+                      <value>5</value>
+                    </item>
+                    <item>
+                      <label>6</label>
+                      <value>6</value>
+                    </item>
+                  </select1>
+                </group>
               </group>
 							
 
@@ -277,6 +316,9 @@
 										</input>
 									</case>
 								</switch>
+                <input bind="icon-name" class="">
+                  <label>Icon description for screen readers</label>
+                </input>
 								<select1 bind="cIcon-size" class="bs-only" appearance="minimal">
 									<label>Icon Size</label>
 									<item>
@@ -773,7 +815,7 @@
 					</group>
 					<group class="col-lg-4">
 						<select1 bind="heading" appearance="full" class="">
-							<label>Heading</label>
+							<label>Heading test</label>
 							<item>
 								<label>Heading 1</label>
 								<value>h1</value>
@@ -798,9 +840,17 @@
 								<label>Heading 6</label>
 								<value>h6</value>
 							</item>
-
+              <item>
+                <label>No Heading</label>
+                <value>span</value>
+              </item>
 						</select1>
-
+            <select bind="no-heading-content" appearance="full" class="multiline">
+              <item>
+                <label>No heading for content items</label>
+                <value>true</value>
+              </item>
+            </select>
 					</group>
 					<group class="col-lg-4">
 						<input bind="dPublishDate" class="calendar short">
@@ -829,6 +879,7 @@
             </textarea>
           </group>
 				</group>
+        
 				<group id="columns" class="inline-select">
 					<label>
 						Number of columns
@@ -1028,6 +1079,8 @@
 						</select1>
 					</group>
 				</group>
+
+        
 			</group>
 		</group>
 		<group>

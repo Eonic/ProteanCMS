@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PageLayouts imgPath="/ewcommon/images/pagelayouts">
+  <ModuleTypes>
+    <ModuleGroup name="Advanced Content" icon="fas fa-code">
+      <Module type="accessibilitystatement" formPath="accessibilitystatement" icon="far fa-file-invoice" name="Accessibility Statement"></Module>
+    </ModuleGroup>
+  </ModuleTypes>
+</PageLayouts>

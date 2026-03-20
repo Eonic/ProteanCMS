@@ -10,8 +10,11 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms;
+using static Protean.Cms.dbHelper;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using VB = Microsoft.VisualBasic;
@@ -23,13 +26,17 @@ namespace Protean
     public partial class Cms
     {
 
-        public partial class Cart
+        public partial class Cart : IDisposable
         {
             #region Declarations
 
 
             public System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
             public System.Collections.Specialized.NameValueCollection moConfig;
+
+            //XmlElement moPaymentCfg = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/payment");
+
+
             private System.Web.HttpServerUtility moServer;
 
             public XmlDocument moPageXml;
@@ -182,6 +189,7 @@ namespace Protean
             public bool mbQuitOnShowInvoice = true;
             private bool mbDepositOnly = false;
             public bool mbBlockCartCmd = false; // Used for reseting payment on subscripitions
+            public string mcBlockCartUpdate;
 
 
             public enum cartError
@@ -235,6 +243,8 @@ namespace Protean
                     cOrderNoPrefix = value;
                 }
             }
+
+         
             #endregion
 
             #region Classes
@@ -492,6 +502,15 @@ namespace Protean
 
 
             protected internal Cms myWeb;
+            //This constructor is added for testing purpose
+            public Cart()
+            {
+                mcCurrencySymbol = "£";
+                mcCurrency = "GBP";
+                mcCurrencyRef = "GBP";
+                if (string.IsNullOrEmpty(mcCurrency))
+                    mcCurrency = "GBP";
+            }
 
             public Cart(ref Cms aWeb)
             {
@@ -529,8 +548,8 @@ namespace Protean
                 string cartXmlFromDatabase = "";
                 mcOrderType = "Order";
                 cOrderReference = "";
-                mcModuleName = "Eonic.Cart";
-
+                mcModuleName = "Protean.Cart";
+                
                 string cProcessInfo = Conversions.ToString(string.IsNullOrEmpty("initialise variables"));
                 try
                 {
@@ -653,11 +672,13 @@ namespace Protean
                         }
 
                         mnTaxRate = Conversions.ToDouble(moCartConfig["TaxRate"]);
-                        if (myWeb.moSession["nTaxRate"] != null)
+                        if (myWeb.moSession != null)
                         {
-                            mnTaxRate = Conversions.ToDouble(Operators.ConcatenateObject("0", myWeb.moSession["nTaxRate"]));
+                            if (myWeb.moSession["nTaxRate"] != null)
+                            {
+                                mnTaxRate = Conversions.ToDouble("0" + myWeb.moSession["nTaxRate"] ?? "");
+                            }
                         }
-
                         if (!string.IsNullOrEmpty(myWeb.moRequest.Form["url"]))
                         {
                             myWeb.moSession["returnPage"] = myWeb.moRequest.Form["url"];
@@ -667,17 +688,25 @@ namespace Protean
                         {
                             myWeb.moSession["returnPage"] = myWeb.moRequest.QueryString["url"];
                         }
-
-                        mcReturnPage = Conversions.ToString(myWeb.moSession["returnPage"]);
-
-                        if (myWeb.moSession["nEwUserId"] != null)
+                        if (myWeb.moSession != null)
                         {
-                            mnEwUserId = Conversions.ToInteger(Operators.ConcatenateObject("0", myWeb.moSession["nEwUserId"]));
+                            mcReturnPage = Conversions.ToString(myWeb.moSession["returnPage"]);
+
+                            if (myWeb.moSession["nEwUserId"] != null)
+                            {
+                                mnEwUserId = Conversions.ToInteger(Operators.ConcatenateObject("0", myWeb.moSession["nEwUserId"]));
+                            }
+                            else
+                            {
+                                mnEwUserId = 0;
+                            }
                         }
                         else
                         {
                             mnEwUserId = 0;
                         }
+
+
 
                         if (myWeb.mnUserId > 0 & mnEwUserId == 0)
                             mnEwUserId = myWeb.mnUserId;
@@ -737,12 +766,12 @@ namespace Protean
                             mnProcessError = (short)Conversions.ToInteger(myWeb.moRequest.QueryString["cartErr"]);
 
                         if (mbBlockCartCmd == false)
-                        { 
-                        mcCartCmd = myWeb.moRequest.QueryString["cartCmd"];
-                        if (string.IsNullOrEmpty(mcCartCmd))
                         {
-                            mcCartCmd = myWeb.moRequest.Form["cartCmd"];
-                        }
+                            mcCartCmd = myWeb.moRequest.QueryString["cartCmd"];
+                            if (string.IsNullOrEmpty(mcCartCmd))
+                            {
+                                mcCartCmd = myWeb.moRequest.Form["cartCmd"];
+                            }
                         }
                         mcPaymentMethod = Conversions.ToString(myWeb.moSession["mcPaymentMethod"]);
                         mmcOrderType = Conversions.ToString(myWeb.moSession["mmcOrderType"]);
@@ -1047,7 +1076,6 @@ namespace Protean
             }
 
 
-
             public void writeSessionCookie()
             {
                 // writes the session cookie to persist the cart
@@ -1077,19 +1105,6 @@ namespace Protean
                 }
             }
 
-            public void close()
-            {
-                myWeb.PerfMon.Log("Cart", "close");
-                string cProcessInfo = "";
-                try
-                {
-                    PersistVariables();
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
-                }
-            }
 
             public virtual void PersistVariables()
             {
@@ -1293,7 +1308,106 @@ namespace Protean
 
             }
 
+            public void CompleteOrder(XmlDocument oCartXML, ref XmlElement oContentElmt, ref XmlElement oElmt)
+            {
+                string cProcessInfo = "Cart.CompleteOrder";
+                try
+                {
 
+                    oContentElmt = (XmlElement)CreateCartElement(oCartXML);
+                    oElmt = (XmlElement)oContentElmt.FirstChild;
+                    PersistVariables();
+
+                    if (oElmt.FirstChild is null)
+                    {
+                        GetCart(ref oElmt);
+                    }
+
+                    if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
+                    {
+
+                        if (moCartConfig["StockControl"] == "on")
+                        {
+                            UpdateStockLevels(ref oElmt);
+                        }
+                        UpdateGiftListLevels();
+                        addDateAndRef(ref oElmt);
+                        if (myWeb.mnUserId > 0)
+                        {
+                            var userXml = myWeb.moDbHelper.GetUserXML((long)myWeb.mnUserId, false);
+                            if (userXml != null)
+                            {
+                                XmlElement cartElement = (XmlElement)oContentElmt.SelectSingleNode("Cart");
+                                if (cartElement != null)
+                                {
+                                    cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, true));
+                                }
+                            }
+                        }
+
+                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["Settlement"], "true", false)))
+                        {
+                            // modifiy the cartXml in line with settlement
+                            if (mnProcessId == (int)cartProcess.DepositPaid)
+                            {
+                                mnProcessId = (short)cartProcess.Complete;
+
+                            }
+                            myWeb.moSession["Settlement"] = (object)null;
+                        }
+
+
+
+                        if (mnProcessId == (int)cartProcess.DepositPaid)
+                        {
+                            AddToLists("Deposit", ref oContentElmt);
+                        }
+                        else
+                        {
+                            AddToLists("Invoice", ref oContentElmt);
+                        }
+
+                        purchaseActions(oContentElmt);
+                        // update the cart if purchase actions have changed it
+                        // GetCart(oElmt)
+                        // done for ammerdown as we have removed a product.
+
+
+
+                        if (myWeb.mnUserId > 0)
+                        {
+                            if (moSubscription != null)
+                            {
+                                moSubscription.AddUserSubscriptions(mnCartId, myWeb.mnUserId, ref oContentElmt, mnPaymentId);
+                            }
+                        }
+
+                        if (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] != null)
+                        {
+                            if ((oElmt.GetAttribute("statusId") ?? "") != (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] ?? ""))
+                            {
+                                emailReceipts(ref oContentElmt);
+                            }
+                        }
+                        else
+                        {
+                            emailReceipts(ref oContentElmt);
+                        }
+
+
+                        moDiscount.DisablePromotionalDiscounts();
+
+                    }
+
+
+
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, " CompleteOrder", ex, "", cProcessInfo, gbDebug);
+                   
+                }
+            }
 
             public virtual void apply()
             {
@@ -1563,6 +1677,15 @@ namespace Protean
 
                                 // info to display the cart
                                 GetCart(ref oElmt);
+                                if (Convert.ToString(oElmt.Attributes["statusId"].Value) == "6")
+                                {
+                                    mnProcessId = 6;
+                                   // addDateAndRef(ref oElmt);
+                                   // purchaseActions(oContentElmt,true);
+                                    mcCartCmd = "ShowInvoice";
+                                    goto processFlow;
+                                }
+                                GetWalletDetails(ref oElmt);
                                 break;
                             }
 
@@ -1883,19 +2006,32 @@ namespace Protean
                         case "EnterPaymentDetails":
                         case "SubmitPaymentDetails": // confirm order and submit for payment
                             {
+                                GetCart(ref oElmt);
+                               
+                                if (Convert.ToString(oElmt.Attributes["statusId"].Value) == cartProcess.Complete.ToString())
+                                {
+                                    mnProcessId = (short)cartProcess.Complete;
+                                  //  purchaseActions(oContentElmt, true);
+                                    mcCartCmd = "ShowInvoice";
+                                    goto processFlow;
+                                }
+
                                 mnProcessId = 5;
+
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["PaymentMethod"]))
                                 {
                                     mcPaymentMethod = myWeb.moRequest["PaymentMethod"];
                                 }
-                                if (oElmt.FirstChild is null)
-                                {
-                                    GetCart(ref oElmt);
-                                }
+
+                                //if (oElmt.FirstChild is null)
+                                //{
+                                //    GetCart(ref oElmt);
+                                //}
 
                                 // Add the date and reference to the cart
-
+                               
                                 addDateAndRef(ref oElmt);
+
 
                                 if (mcPaymentMethod == "No Charge")
                                 {
@@ -1988,97 +2124,28 @@ namespace Protean
                                 }
                                 else
                                 {
+                                    GetCart(ref oElmt);
 
-                                    PersistVariables();
-
-                                    if (oElmt.FirstChild is null)
+                                    if (oElmt != null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
                                     {
-                                        GetCart(ref oElmt);
+                                        CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
                                     }
-
-                                    if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
+                                    else
                                     {
-
-                                        if (moCartConfig["StockControl"] == "on")
+                                        if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
                                         {
-                                            UpdateStockLevels(ref oElmt);
+
+                                            addDateAndRef(ref oElmt);
+                                           // purchaseActions(oContentElmt);
                                         }
-                                        UpdateGiftListLevels();
-                                        addDateAndRef(ref oElmt);
-                                        if (myWeb.mnUserId > 0)
-                                        {
-                                            var userXml = myWeb.moDbHelper.GetUserXML((long)myWeb.mnUserId, false);
-                                            if (userXml != null)
-                                            {
-                                                XmlElement cartElement = (XmlElement)oContentElmt.SelectSingleNode("Cart");
-                                                if (cartElement != null)
-                                                {
-                                                    cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, true));
-                                                }
-                                            }
-                                        }
-
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["Settlement"], "true", false)))
-                                        {
-                                            // modifiy the cartXml in line with settlement
-                                            if (mnProcessId == (int)cartProcess.DepositPaid)
-                                            {
-                                                mnProcessId = (short)cartProcess.Complete;
-
-                                            }
-                                            myWeb.moSession["Settlement"] = (object)null;
-                                        }
-
-
-
-                                        if (mnProcessId == (int)cartProcess.DepositPaid)
-                                        {
-                                            AddToLists("Deposit", ref oContentElmt);
-                                        }
-                                        else
-                                        {
-                                            AddToLists("Invoice", ref oContentElmt);
-                                        }
-
-                                        purchaseActions(ref oContentElmt);
-                                        // update the cart if purchase actions have changed it
-                                        // GetCart(oElmt)
-                                        // done for ammerdown as we have removed a product.
-
-
-
-                                        if (myWeb.mnUserId > 0)
-                                        {
-                                            if (moSubscription != null)
-                                            {
-                                                moSubscription.AddUserSubscriptions(mnCartId, myWeb.mnUserId, ref oContentElmt, mnPaymentId);
-                                            }
-                                        }
-
-                                        if (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] != null)
-                                        {
-                                            if ((oElmt.GetAttribute("statusId") ?? "") != (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] ?? ""))
-                                            {
-                                                emailReceipts(ref oContentElmt);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            emailReceipts(ref oContentElmt);
-                                        }
-
-
-                                        moDiscount.DisablePromotionalDiscounts();
-
                                     }
-
 
 
                                     if (mbQuitOnShowInvoice)
                                     {
                                         EndSession();
                                     }
-
+                                   
                                 }
 
                                 break;
@@ -2484,7 +2551,7 @@ namespace Protean
                 }
             }
 
-            public virtual void purchaseActions(ref XmlElement oCartElmt)
+            public virtual void purchaseActions( XmlElement oCartElmt)
             {
                 myWeb.PerfMon.Log("Cart", "purchaseActions");
                 // Dim sMessageResponse As String
@@ -2514,7 +2581,9 @@ namespace Protean
                             args = new object[2];
                             args[0] = myWeb;
                             args[1] = oCartElmt;
+                          
                         }
+                       
                         else
                         {
                             args[0] = oCartElmt;
@@ -2522,20 +2591,9 @@ namespace Protean
 
                         if (oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode") != null)
                         {
-
-                            string sDiscoutCode = oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode").InnerText;
-                            if (myWeb.moDbHelper.checkTableColumnExists("tblSingleUsePromoCode", "PromoCode"))
-                            {
-                                string sSql = "Insert into tblSingleUsePromoCode (OrderId, PromoCode) values (";
-                                sSql += mnCartId + ",'";
-                                sSql += sDiscoutCode + "')";
-
-
-                                moDBHelper.ExeProcessSql(sSql);
-                            }
+                            moDiscount.RecordDiscountUsage(ref oCartElmt);
                         }
                         calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
-
                     }
 
 
@@ -2585,9 +2643,12 @@ namespace Protean
                                 var o = Activator.CreateInstance(calledType);
 
                                 var args = new object[2];
-                                args[0] = myWeb;
-                                args[1] = ocNode;
-
+                              
+                                {
+                                    args[0] = myWeb;
+                                    args[1] = ocNode;
+                                }
+                               
                                 calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
                             }
 
@@ -2643,12 +2704,26 @@ namespace Protean
                             Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                             IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
                             string xsltPath = string.Empty;
+                            bool bOptOut = false;
                             if (string.IsNullOrEmpty(Email))
-                                Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
+                                if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email") != null)
+                                {
+                                    Email = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText;
+                                }
                             if (string.IsNullOrEmpty(Name))
-                                Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
+                                if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName") != null)
+                                {
+                                    Name = oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
+                                }
+
                             if (valDict is null)
                                 valDict = new Dictionary<string, string>();
+
+                            if (oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut") != null)
+                            {
+                                bOptOut = Convert.ToBoolean(oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut").InnerText);
+                            }
+
                             foreach (XmlAttribute Attribute in oCartElmt.Attributes)
                             {
                                 if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
@@ -2672,12 +2747,12 @@ namespace Protean
                                     {
                                         ListId = moMailConfig["InvoiceList"];
                                         xsltPath = moMailConfig["GetDictionaryForInvoiceListXsl"];
-                                        if (!string.IsNullOrEmpty(moMailConfig["QuoteList"]))
+                                        if (!string.IsNullOrEmpty(moMailConfig["InvoiceList"]))
                                         {
                                             // if we have invoiced the customer we don't want to send them quote reminders
                                             if (oMessaging.Activities != null)
                                             {
-                                                oMessaging.Activities.RemoveFromList(moMailConfig["QuoteList"], Email);
+                                                oMessaging.Activities.RemoveFromList(moMailConfig["InvoiceList"], Email);
                                             }
                                         }
 
@@ -2720,7 +2795,11 @@ namespace Protean
                                 }
                                 if (oMessaging.Activities != null)
                                 {
-                                    oMessaging.Activities.AddToList(ListId, firstName, Email, valDict);
+                                    if (!bOptOut)
+                                    {
+                                        oMessaging.Activities.AddToList(ListId, firstName, Email, valDict);
+
+                                    }
                                 }
                             }
 
@@ -3205,6 +3284,17 @@ namespace Protean
                         oCartElmt.SetAttribute("weight", weight.ToString());
                         oCartElmt.SetAttribute("orderType", mmcOrderType + "");
 
+                         mcBlockCartUpdate = GetBlockCartUpdatesConfig();
+
+                        if (!string.IsNullOrEmpty(mcBlockCartUpdate)
+                            && mcBlockCartUpdate.Trim().ToLower() == "on")
+                        {
+                            oCartElmt.SetAttribute("BlockCartUpdate", "on");
+                        }
+                        else
+                        {
+                            oCartElmt.SetAttribute("BlockCartUpdate", "off");
+                        }
                         if (nStatusId == 6L)
                         {
                             oCartElmt.SetAttribute("complete", "True");
@@ -3409,12 +3499,12 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(oCartElmt.GetAttribute("bDiscountIsPercent")))
                                 {
-                                    shipCost = -1;                                    
+                                    shipCost = -1;
                                 }
 
                                 // Default Shipping Country.
                                 string cDestinationCountry = moCartConfig["DefaultCountry"];
-                                
+
                                 string cDestinationPostalCode = "";
                                 if (oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") != null)
                                 {
@@ -3439,7 +3529,7 @@ namespace Protean
                                             if (lowestShipCost == 0)
                                             {
                                                 lowestShipCost = shipCost;
-                                            }                                          
+                                            }
 
                                             bool bCollection = false;
                                             if (!(oRowSO["bCollection"] is DBNull))
@@ -3489,7 +3579,7 @@ namespace Protean
                                                 else if (IsPromocodeValid = true & Convert.ToString(oRowSO["NonDiscountedShippingCost"]) != "0")
                                                 {
                                                     if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
-                                                    {                                                        
+                                                    {
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                         oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
@@ -3498,7 +3588,7 @@ namespace Protean
                                                         if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oRowSO["NonDiscountedShippingCost"], "0", false)))
                                                         {
                                                             oCartElmt.SetAttribute("NonDiscountedShippingCost", Conversions.ToString(Operators.ConcatenateObject(oRowSO["NonDiscountedShippingCost"], "")));
-                                                        }                                                       
+                                                        }
                                                     }
                                                 }
                                             }
@@ -3521,13 +3611,13 @@ namespace Protean
                                     shipCost = lowestShipCost;
                                     //code added for delivery promocode if it is applied then price set to 0 for selected delivery option.
                                     //condition for ITB
-                                    if(oCartElmt.GetAttribute("freeShippingMethods") != "" && oCartElmt.GetAttribute("freeShippingMethods")!=null)
+                                    if (oCartElmt.GetAttribute("freeShippingMethods") != "" && oCartElmt.GetAttribute("freeShippingMethods") != null)
                                     {
                                         if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
                                         {
                                             shipCost = 0;
                                         }
-                                    }                                    
+                                    }
                                 }
 
                                 if (shipCost == -1)
@@ -3651,7 +3741,7 @@ namespace Protean
                                 }
                             }
 
-                            // Add Any Client Notes
+                            // Add Any Client Notes                          
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
@@ -3778,8 +3868,14 @@ namespace Protean
                         moSubscription.UpdateSubscriptionsTotals(ref oCartElmt);
                     }
 
-
                     mnCartId = (int)oldCartId;
+
+                    if (myWeb.moRequest["refresh"] == "true")
+                    {
+                        mnCartId = nCartIdUse;
+                    }
+
+                    //mnCartId = (int)oldCartId;
                     SaveCartXML(oCartElmt);
                     // mnCartId = nCartIdUse
 
@@ -3813,6 +3909,62 @@ namespace Protean
                 catch (Exception ex)
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug);
+                }
+
+            }
+
+            //this is a method to display wallet buttons on cart screen.
+            //input parameter is CartElement which will have values in 
+            //node with 'Wallets/Wallet with attributes to it
+            // which will be used to get data for rendering button with paymentdetails on cartprocess.xsl
+
+            public bool GetWalletDetails(ref XmlElement oCartElmt)
+
+            {
+                try
+                {
+
+
+                    decimal nPaymentAmount = Conversions.ToDecimal("0" + oCartElmt.GetAttribute("total"));
+                    if (nPaymentAmount <= 0)
+                    {
+                        return false;
+                    }
+
+
+                    Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
+
+                    XmlElement xElmtPaymentProvider = oEwProv.GetValidPaymentProviders();
+
+                    if (xElmtPaymentProvider != null)
+                    {
+
+                        foreach (XmlElement opElmt in xElmtPaymentProvider)
+                        {
+                            //if (opElmt.GetAttribute("name") == "Pay360")
+                            //{
+                            //    // Pay360 Google Pay is NOT a wallet provider
+                            //    // It is just a payment method inside Pay360
+                            //    continue; // Skip wallet logic entirely
+                            //}
+                            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
+                            XmlElement oWallets = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
+                            //just check if wallets object is empty.
+                            if (oWallets.InnerXml != string.Empty)
+                            {
+                                oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oWallets, true));
+                            }
+                        }
+
+                    }
+                    return true;
+
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetWalletDetails", ex, "", "", gbDebug);
+                    return false;
                 }
 
             }
@@ -5423,12 +5575,27 @@ namespace Protean
                                         }
                                     }
                                 }
-
-                                if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
+                                if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail") != null)
                                 {
-                                    moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
+                                    if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nOptOutKey"))
+                                    {
+                                        if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut") != null)
+                                        {
+                                            sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
+                                            string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
+                                            moDBHelper.AddOptOutEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
+                                        {
+                                            moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
+
+                                        }
+                                    }
                                 }
-                               
                             }
 
                             else
@@ -5436,8 +5603,6 @@ namespace Protean
                                 // Throw an error to indicate that the user has timed out
                                 mnProcessError = 4;
                             }
-
-
                             if (!string.IsNullOrEmpty(myWeb.moRequest["cContactOpt-In"]))
                             {
                                 this.AddToLists("Newsletter", ref moCartXml, myWeb.moRequest["cContactName"], myWeb.moRequest["cContactEmail"]);
@@ -5532,10 +5697,22 @@ namespace Protean
                             else
                             {
                                 // we are editing a billing address and want to ensure we dont get a double form.
-                                if (mcBillingAddressXform.Contains("BillingAndDeliveryAddress.xml"))
+                                if (myWeb.bs5)
                                 {
-                                    mcBillingAddressXform = mcBillingAddressXform.Replace("BillingAndDeliveryAddress.xml", "BillingAddress.xml");
+                                    if (mcBillingAddressXform.Contains("both-addresses.xml"))
+                                    {
+                                        mcBillingAddressXform = mcBillingAddressXform.Replace("both-addresses.xml", "billing-address.xml");
+                                    }
                                 }
+                                else
+                                {
+                                    if (mcBillingAddressXform.Contains("BillingAndDeliveryAddress.xml"))
+                                    {
+                                        mcBillingAddressXform = mcBillingAddressXform.Replace("BillingAndDeliveryAddress.xml", "BillingAddress.xml");
+                                    }
+                                }
+
+
                                 // ensure we hit this next time through...
                                 cCmdAction = "Billing";
                                 contactFormCmd2 = Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "editAddress", oDr["nContactKey"]));
@@ -5850,7 +6027,7 @@ namespace Protean
                         // 1. It has addresses in it
                         // 2. There is no request to Add
 
-                        else if (oXform.moXformElmt.SelectSingleNode("/model/instance").HasChildNodes & !!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
+                        else if (oXform.moXformElmt.InnerXml.ToString().Contains("addNewAddress") & !!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
                         {
                             oReturnForm = oXform;
                         }
@@ -7111,8 +7288,13 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
-                                    nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+
+                                    // Calculate any shipping cost overage
+                                    nShippingCost = Conversions.ToDouble(Strings.FormatNumber(Conversions.ToDouble(oRow["nShippingTotal"]), 2, TriState.True, TriState.False, TriState.False));
+                                    double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
+                                    double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
+                                    double overageWeightMax = Conversions.ToDouble(oRow["nShipOptWeightMax"]);
+                                    nShippingCost = calcShippingCost(nShippingCost, overageUnit, overageRate, nWeight, overageWeightMax);
 
                                     oOptXform.addInput(ref oGrpElmt, "nShipOptKey", false, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"])), "hidden");
                                     oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = Conversions.ToString(oRow["nShipOptKey"]);
@@ -7390,7 +7572,7 @@ namespace Protean
 
                             if (oGrpElmt.SelectSingleNode("*[@ref='terms']") is null)
                             {
-                                string argsClass1 = "readonly terms-and-condiditons";
+                                string argsClass1 = "readonly terms-and-conditons";
                                 int argnRows1 = 0;
                                 int argnCols1 = 0;
                                 oOptXform.addTextArea(ref oGrpElmt, "terms", false, cTermsTitle, ref argsClass1, nRows: ref argnRows1, nCols: ref argnCols1);
@@ -7904,8 +8086,10 @@ namespace Protean
 
                     if (nQuantity < itemLimit)
                     {
+                        
+                        mcBlockCartUpdate = GetBlockCartUpdatesConfig();
 
-                        if (mnProcessId < 5)
+                        if (mnProcessId < 5 || string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             oDS = moDBHelper.getDataSetForUpdate(cSQL, "CartItems", "Cart");
                             oDS.EnforceConstraints = false;
@@ -7917,6 +8101,12 @@ namespace Protean
                             {
 
                                 UniqueProduct = Convert.ToBoolean(myWeb.moRequest["UniqueProduct"]);
+
+                            }
+                            if (myWeb.moRequest["overideUrl"] != null)
+                            {
+
+                                overideUrl = Convert.ToString(myWeb.moRequest["overideUrl"]);
 
                             }
 
@@ -8074,6 +8264,13 @@ namespace Protean
                                         XmlElement parentElmt = moDBHelper.GetContentDetailXml(nParentId, true);
                                         if (parentElmt != null)
                                         {
+                                           // ItemParent.InnerXml = parentElmt.OuterXml;
+                                            if(nPrice!=0)
+                                            {
+                                                //parentElmt.SetAttribute("overridePrice", "true");
+                                                //parentElmt.SelectSingleNode("/Content/Prices/Price[@type='sale']").InnerText = Convert.ToString(nPrice);
+                                                parentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText = Convert.ToString(nPrice);
+                                            }
                                             ItemParent.InnerXml = parentElmt.OuterXml;
                                         }
                                     }
@@ -8432,11 +8629,17 @@ namespace Protean
                                             if (Information.IsNumeric(myWeb.moRequest.Form.Get("donationAmount")))
                                             {
                                                 string CartItemName = "Donation";
+                                                string CartItemXml = "";
                                                 if (!string.IsNullOrEmpty(myWeb.moRequest.Form.Get("donationName")))
                                                 {
                                                     CartItemName = myWeb.moRequest.Form.Get("donationName");
                                                 }
-                                                if (!AddItem(nProductKey, nQuantity, oOptions, CartItemName, Conversions.ToDouble(myWeb.moRequest.Form.Get("donationAmount"))))
+                                                if (!string.IsNullOrEmpty(myWeb.moRequest.Form.Get("donationMessage")))
+                                                {
+                                                    CartItemXml = "<donation><message>" + myWeb.moRequest.Form.Get("donationMessage") + "</message></donation>";
+                                                }
+
+                                                if (!AddItem(nProductKey, nQuantity, oOptions, CartItemName, Conversions.ToDouble(myWeb.moRequest.Form.Get("donationAmount")), CartItemXml))
                                                 {
                                                     qtyAdded = 0;
                                                 }
@@ -8478,7 +8681,10 @@ namespace Protean
 
             public int RemoveItem(long nItemId = 0L, long nContentId = 0L)
             {
-                if (mnProcessId > 4)
+
+                mcBlockCartUpdate = GetBlockCartUpdatesConfig();
+
+                if (mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                 {
                     return 1;
                 }
@@ -9795,7 +10001,7 @@ namespace Protean
                 var oDs = new DataSet();
                 string cSQL;
                 string cWhereSQL = "";
-
+                string cProcessInfo = "";
                 // Paging variables
                 int nStart = 0;
                 int nRows = 100;
@@ -9905,7 +10111,18 @@ namespace Protean
                                     // Get stored CartXML
                                     if (Conversions.ToBoolean(Operators.AndObject(!Operators.ConditionalCompareObjectEqual(oDR["cCartXML"], "", false), bForceRefresh == false)))
                                     {
-                                        oContent.InnerXml = Conversions.ToString(oDR["cCartXML"]);
+                                        try
+                                        {
+                                            // if we have a badly saved xml we get a new one.
+                                            oContent.InnerXml = Conversions.ToString(oDR["cCartXML"]);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            cProcessInfo = ex.Message;
+                                            mnCartId = Convert.ToInt32(oDR["nCartOrderKey"]);
+                                            GetCart(ref oContent, mnCartId);
+                                            mnCartId = 0;
+                                        }
                                         if (oContent.InnerXml.Contains("\n"))
                                         {
                                             oContent.InnerXml = oContent.InnerXml.TrimStart('\n');
@@ -10060,7 +10277,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListOrders", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListOrders", ex, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -10219,6 +10436,7 @@ namespace Protean
                 {
                     if (nCartId > 0L)
                     {
+                        cartXML.SetAttribute("cartId", nCartId.ToString());
                         string sSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Update tblCartOrder SET cCartXML ='", SqlFmt(cartXML.OuterXml.ToString())), "' WHERE nCartOrderKey = "), nCartId));
                         moDBHelper.ExeProcessSql(sSQL);
                     }
@@ -10921,7 +11139,8 @@ namespace Protean
                             string PostcodePrefix = System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1];
                             sCountryList = getParentCountries(ref PostcodePrefix, ref argnIndex);
                         }
-                        catch {
+                        catch
+                        {
                             sCountryList = "";
                         }
 
@@ -11026,28 +11245,42 @@ namespace Protean
                         // Go and collect the valid shipping options available for this order
                         oDS = moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
                     }
+
+                    //// fix for bOverrideForWholeOrder mot required as SP now does this.
+                    //if (oDS.Tables["Option"].Columns["bOverrideForWholeOrder"] != null)
+                    //{
+                    //    bool hasOverideForWholeOrder = false;
+                    //    foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                    //    {
+                    //        if (Convert.ToInt16(oRow["bOverrideForWholeOrder"]) == 1) {
+                    //            hasOverideForWholeOrder = true;
+                    //        }
+                    //    }
+                    //    if (hasOverideForWholeOrder) {
+                    //        foreach (DataRow oRow in oDS.Tables["Option"].Rows)
+                    //        {
+                    //            if (Convert.ToInt16(oRow["bOverrideForWholeOrder"]) != 1)
+                    //            {
+                    //                oRow.Delete();
+                    //            }
+                    //        }
+                    //    }
+                    //}
+
                     if (oDS.Tables["Option"].Columns["cLocationNameShort"] != null)
                     {
                         string overiddenLocations = "";
                         foreach (DataRow oRow in oDS.Tables["Option"].Rows)
                         {
-                            // Calculate any shipping cost overage
-                            double nShippingCost;
-                            nShippingCost = Conversions.ToDouble(oRow["nShippingTotal"]);
-                            nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
 
+                            // Calculate any shipping cost overage
+                            double nShippingCost = Conversions.ToDouble(Strings.FormatNumber(Conversions.ToDouble(oRow["nShippingTotal"]), 2, TriState.True, TriState.False, TriState.False));
                             double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
                             double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
-                            if (overageUnit > 0)
-                            {
-                                double multiplier = 0;
-                                if (nWeight > Conversions.ToDouble(oRow["nShipOptWeightMax"]))
-                                {
-                                    multiplier = Math.Ceiling(nWeight - Conversions.ToDouble(oRow["nShipOptWeightMax"]));
-                                }
-                                nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
-                            }
-                            oRow["nShippingTotal"] = nShippingCost;
+                            double overageWeightMax = Conversions.ToDouble(oRow["nShipOptWeightMax"]);
+                            nShippingCost = calcShippingCost(nShippingCost, overageUnit, overageRate, nWeight, overageWeightMax);
+
+                            oRow["nShipOptCost"] = nShippingCost;
 
                             // TODO delete any parent relations /  or remove if allready have child
                             string delLocation = oRow["cLocationNameShort"].ToString();
@@ -11086,6 +11319,32 @@ namespace Protean
 
             }
 
+            private double calcShippingCost(double baseCost, double overageUnit, double overageRate, double nWeight, double nWeightMax)
+            {
+                try
+                {
+                    double nShippingCost = baseCost;
+                    nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
+
+                    if (overageUnit > 0)
+                    {
+                        double multiplier = 0;
+                        if (nWeight > nWeightMax)
+                        {
+                            multiplier = Math.Ceiling(nWeight - nWeightMax);
+                        }
+                        nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
+                    }
+
+                    return nShippingCost;
+                }
+
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "calcShippingCost", ex, vstrFurtherInfo: "", bDebug: gbDebug);
+                    return 0;
+                }
+            }
 
             private XmlElement makeShippingOptionsXML()
             {
@@ -11154,7 +11413,7 @@ namespace Protean
 
             }
 
-            private string updatePackagingForFreeGiftDiscount(string nCartItemKey, decimal AmountToDiscount)
+            public string updatePackagingForFreeGiftDiscount(string nCartItemKey, decimal AmountToDiscount)
             {
                 try
                 {
@@ -11187,11 +11446,11 @@ namespace Protean
                 }
             }
 
-            private string updateGCgetValidShippingOptionsDS(string nShipOptKey)
+            public string updateGCgetValidShippingOptionsDS(string nShipOptKey)
             {
                 try
                 {
-
+                    //tidy up this logic
                     // Dim ods As DataSet
                     // Dim oRow As DataRow
                     string sSql;
@@ -11240,7 +11499,7 @@ namespace Protean
             }
 
 
-            public void AddProductOption(ref Newtonsoft.Json.Linq.JObject jObj)
+            public void AddProductOption(Newtonsoft.Json.Linq.JObject jObj)
             {
 
                 try
@@ -11251,6 +11510,7 @@ namespace Protean
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);
+
 
                     var json = jObj;
 
@@ -11316,8 +11576,13 @@ namespace Protean
                     XmlNode argoNode18 = oelmt;
                     addNewTextNode("xItemXml", ref argoNode18, (string)json.SelectToken("ItemXml"));
                     oelmt = (XmlElement)argoNode18;
+                    XmlNode argoNode19 = oelmt;
+                    addNewTextNode("nDepositAmount", ref argoNode19, (string)json.SelectToken("DepositAmount"));
+                    oelmt = (XmlElement)argoNode19;
 
                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
+                    
+                   
                 }
                 // UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
                 catch (Exception)
@@ -11336,7 +11601,7 @@ namespace Protean
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);
-
+                  
                     // Dim json As Newtonsoft.Json.Linq.JObject = jObj
 
                     // Dim CartItemId As Long = json.SelectToken("CartItemId")
@@ -11721,7 +11986,7 @@ namespace Protean
             {
                 try
                 {
-                    string cResult = "Success";
+                   // string cResult = "Success";
                     var oCartListElmt = moPageXml.CreateElement("Order");
                     //GetCart(ref oCartListElmt, nOrderId);
                     // Insert code into tblcartOrder
@@ -11731,12 +11996,12 @@ namespace Protean
                     var oInstance = new XmlDocument();
                     XmlElement oElmt;
                     XmlElement oeResponseElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response");
-                    string ReceiptId = oCartListElmt.SelectSingleNode("/PaymentDetails/instance/Response/@ReceiptId").Value.ToString();
+                    string ReceiptId = oCartListElmt.SelectSingleNode("/PaymentDetails/@ref").Value.ToString();
                     double Amount = Convert.ToDouble(oCartListElmt.GetAttribute("total"));
                     //int nItemID = 0; // ID of the cart item record
                     // Dim oDs As DataSet
 
-                    XmlElement oePaymentDetailsInstanceElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails/instance");
+                    XmlElement oePaymentDetailsInstanceElmt = (XmlElement)oCartListElmt.SelectSingleNode("/PaymentDetails");
 
                     oInstance.AppendChild(oInstance.CreateElement("instance"));
                     XmlNode argoNode = oInstance.DocumentElement;
@@ -11879,10 +12144,20 @@ namespace Protean
                     {
                         useSavedAddressesOnCart(billingAddId, deliveryAddId, null);
                     }
-                    ConfirmPayment(ref oCartListElmt, ref oePaymentDetailsInstanceElmt, cNewAuthNumber, cMethodName, Amount);
+                    XmlElement instanceNode = (XmlElement)oePaymentDetailsInstanceElmt
+                             .SelectSingleNode("//PaymentDetails/instance");
+
+
+                    XmlElement targetNode = instanceNode ?? oePaymentDetailsInstanceElmt;
+
+                    ConfirmPayment(ref oCartListElmt, ref targetNode, cNewAuthNumber, cMethodName, Amount);
+
                     GetCart(ref oCartListElmt, mnCartId);
-                    oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber);
+
+                    oCartListElmt.InnerXml = oCartListElmt.InnerXml.Replace(ReceiptId, cNewAuthNumber);
+
                     SaveCartXML(oCartListElmt, mnCartId);
+
                     return mnCartId.ToString();
                 }
                 catch (Exception ex)
@@ -11891,6 +12166,310 @@ namespace Protean
                     return null;
                 }
             }
+
+            public string GDPRAnonomize(string cEmailAddress)
+            {
+
+                string result = "";
+                try
+                {
+                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper( myWeb);
+                    Protean.Cms.model.Contact contact = new Cms.model.Contact();
+                    if (!string.IsNullOrEmpty(cEmailAddress))
+                    {
+                        DataSet oDS;
+                        if (myWeb.moDbHelper.checkDBObjectExists("spGetCartContact", Tools.Database.objectTypes.StoredProcedure))
+                        {
+
+                            var param = new Hashtable();
+                            param.Add("EmailAddress", cEmailAddress);
+                            XmlDocument oXml = new XmlDocument();
+                            oDS = moDBHelper.GetDataSet("spGetCartContact", "tblCartContact", "", false, param, CommandType.StoredProcedure);
+                            if (oDS.Tables["tblCartContact"] != null && oDS.Tables["tblCartContact"].Rows.Count > 0)
+                            {
+                                foreach (DataRow row in oDS.Tables["tblCartContact"].Rows)
+                                {
+                                    DataRow oRow = row;
+                                    contact.cContactName = "GDPR Removal Request (" + DateTime.Now + ")";
+                                    contact.cContactAddress = "";
+                                    contact.cContactCity = "";
+                                    contact.cContactZip = "";
+                                    contact.cContactCountry = "";
+                                    contact.cContactTel = "";
+                                    contact.cContactEmail = "";
+                                    contact.cContactFirstName = "";
+                                    contact.cContactLastName = "";
+                                    contact.nContactKey = Convert.ToInt32(oRow["nContactkey"]);
+                                    dbHelper.SetContact(ref contact);
+                                    int nCartOrderid = Convert.ToInt32(oRow["nContactCartId"]);
+                                    if (nCartOrderid > 0)
+                                    {
+                                        var oCartElmt = moPageXml.CreateElement("Order");
+                                        oCartElmt.InnerXml = "";
+                                        GetCart(ref oCartElmt, nCartOrderid);
+                                        SaveCartXML(oCartElmt, nCartOrderid);
+                                        result = "Cart data anonymized successfully.";
+                                    }
+
+
+                                }
+                                // OptOut from spotler mail +
+                                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                                if (moMailConfig != null)
+                                {
+                                    string sMessagingProvider = "";
+                                    sMessagingProvider = moMailConfig["MessagingProvider"];
+
+                                    if (!string.IsNullOrEmpty(sMessagingProvider))
+                                    {
+                                        Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                                        IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
+                                        bool isOptOut = oMessaging.Activities.OptOutAll(cEmailAddress);
+                                        if (isOptOut)
+                                        {
+                                            result += " Messaging opt-out successful.";
+                                        }
+                                        else
+                                        {
+                                            result += " Messaging opt-out failed or already unsubscribed.";
+                                        }
+                                    }
+                                }
+                                //update in tblOptOutAddresses
+                                DataSet oDSOptOut;
+                                string cSql = "select nOptOutKey  from tblOptOutAddresses where EmailAddress='" + cEmailAddress + "'";
+                                oDSOptOut = moDBHelper.GetDataSet(cSql, "Item");
+                                if (oDSOptOut.Tables["Item"].Rows.Count > 0)
+                                {
+                                    List<string> optOutKeys = new List<string>();
+                                    foreach (DataRow row in oDSOptOut.Tables["Item"].Rows)
+                                    {
+                                        optOutKeys.Add(row["nOptOutKey"].ToString());
+                                    }
+                                    string keyList = string.Join(",", optOutKeys);
+                                    string updateSql = "UPDATE tblOptOutAddresses SET dGDPROptOut =" + Tools.Database.SqlDate(DateTime.Now) + ",optout_reason='GDPR Opt Out request',nStatus='1'  WHERE nOptOutKey IN (" + keyList + ")";
+                                    moDBHelper.ExeProcessSql(updateSql);
+                                    result += " update in tblOptOutAddresses.";
+                                }
+                                else
+                                {
+                                    string cSQL = "INSERT INTO tblOptOutAddresses (EmailAddress,optout_reason,nStatus,dOptOut,dGDPROptOut) VALUES ('" + cEmailAddress + "','GDPR Opt Out request','1'," + Tools.Database.SqlDate(DateTime.Now) + "," + Tools.Database.SqlDate(DateTime.Now) + ")";
+                                    moDBHelper.ExeProcessSql(cSQL);
+                                    result += " added GDPR in tblOptOutAddresses.";
+                                }
+                                //if (oDSOptOut.Tables["Item"].Rows.Count > 0)
+                                //{
+                                //    foreach (DataRow currentRow in oDSOptOut.Tables["Item"].Rows)
+                                //    {
+                                //        DataRow oOptOutRow;
+                                //        oOptOutRow = currentRow;
+                                //        if(oOptOutRow["nOptOutKey"]!=null)
+                                //        {
+                                //            moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.OptOutAddresses, Conversions.ToLong(oOptOutRow["nOptOutKey"]));
+                                //            result += " Removed from tblOptOutAddresses.";
+                                //        }
+
+                                //    }
+                                //}
+                            }
+                        }
+                    }
+                    return result;
+
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GDPRAnonomize", ex, "", "", gbDebug);
+                    if (ex != null)
+                    {
+                        result = "Error: " + ex.Message;
+                    }
+                    return result;
+                }
+            }
+
+            public string GetBlockCartUpdatesConfig()
+            {
+               
+                string mcBlockCartUpdate = "";
+                string paymentMethod = myWeb?.moSession?["mcPaymentMethod"] as string;
+
+                if (!string.IsNullOrEmpty(paymentMethod))
+                {
+                    Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
+
+                XmlElement oProvider = oEwProv.GetValidPaymentProviders();
+                XmlNode oPaymentProviderCfg = oProvider.SelectSingleNode("provider[@name='" + paymentMethod + "']");
+
+
+                if (oPaymentProviderCfg != null)
+                {
+                    XmlNode allowNode = oPaymentProviderCfg.SelectSingleNode("BlockCartUpdates");
+
+                    if (allowNode != null && allowNode.Attributes["value"] != null)
+                    {
+                            mcBlockCartUpdate = allowNode.Attributes["value"].Value;
+                    }
+                }
+                }
+                return mcBlockCartUpdate;
+            }
+
+            #region IDisposable Implementation
+
+            private bool disposedValue = false; // To detect redundant calls
+
+            // IDisposable
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        try
+                        {
+                            // ====================
+                            // 1. DISPOSE CHILD COMPONENTS
+                            // ====================
+
+                            // Discount engine
+                            if (moDiscount != null)
+                            {
+                                try
+                                {
+                                    if (moDiscount is IDisposable disposableDiscount)
+                                    {
+                                        disposableDiscount.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moDiscount: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moDiscount = null;
+                                }
+                            }
+
+                            // Subscription engine
+                            if (moSubscription != null)
+                            {
+                                try
+                                {
+                                    if (moSubscription is IDisposable disposableSubscription)
+                                    {
+                                        disposableSubscription.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moSubscription: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moSubscription = null;
+                                }
+                            }
+
+                            // Payment provider
+                            if (moPay != null)
+                            {
+                                try
+                                {
+                                    if (moPay is IDisposable disposablePay)
+                                    {
+                                        disposablePay.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moPay: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moPay = null;
+                                }
+                            }
+
+                            // Database helper (DO NOT dispose - owned by parent Cms object)
+                            // moDBHelper is a reference to myWeb.moDbHelper, not owned by Cart
+                            moDBHelper = null;
+
+                            // ====================
+                            // 2. NULL OUT LARGE OBJECTS
+                            // ====================
+                            moPageXml = null;
+                            moCartXml = null;
+                            oShippingOptions = null;
+
+                            // ====================
+                            // 3. NULL OUT REFERENCES
+                            // ====================
+                            myWeb = null;
+                            moConfig = null;
+                            moCartConfig = null;
+                            moServer = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log disposal errors but don't throw
+                            System.Diagnostics.Debug.WriteLine(
+                                $"Error in Cart.Dispose: {ex.Message}");
+                        }
+                    }
+
+                    // Free unmanaged resources (if any)
+
+                    disposedValue = true;
+                }
+            }
+
+            // Finalizer
+            ~Cart()
+            {
+                Dispose(false);
+            }
+
+            // Public Dispose method
+            public void Dispose()
+            {
+                //Dispose(true);
+               // GC.SuppressFinalize(this);
+            }
+
+
+            public void close()
+            {
+                myWeb.PerfMon.Log("Cart", "close");
+                string cProcessInfo = "";
+                try
+                {
+                    PersistVariables();
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
+                }
+                finally
+                {
+                    Dispose();
+                }
+            }
+
+            // Helper method to prevent use after disposal
+            protected void ThrowIfDisposed()
+            {
+                if (disposedValue)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+            }
+
+            #endregion
         }
     }
 }

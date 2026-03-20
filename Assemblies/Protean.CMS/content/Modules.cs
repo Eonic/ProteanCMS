@@ -72,8 +72,10 @@ namespace Protean
                         string cOrigUrl = myWeb.mcOriginalURL;
                         string cOrigQS = "";
                         string cPageURL = myWeb.mcPagePath.TrimEnd('/');
-
+                        string thisId = oContentNode.GetAttribute("id");
                         var PageDate = myWeb.mdDate;
+                        thisId = thisId + "-";
+                        thisId = "ByDate";
 
                         // Overide for testing
                         // PageDate = New Date(2016, 3, 15)
@@ -84,11 +86,8 @@ namespace Protean
                             cOrigUrl = myWeb.mcOriginalURL.Split('?')[0];
                             cOrigQS = "?" + myWeb.mcOriginalURL.Split('?')[1];
                         }
-
-                        if (Strings.InStr(cOrigUrl, "-/") > 0)
-                        {
-                            dateQuery = cOrigUrl.Substring(Strings.InStr(cOrigUrl, "-/") + 1);
-                        }
+                        cOrigQS = "";
+                        dateQuery = myWeb.moRequest["bydate"];
 
                         string thisDateQuery;
                         // Week start date...
@@ -134,7 +133,7 @@ namespace Protean
                         {
 
                             thisDateQuery = "latest";
-                            NewMenu.AddMenuItem("Latest Articles", thisDateQuery, cPageURL + "/" + oContentNode.GetAttribute("id") + "-/" + thisDateQuery + cOrigQS, contentCount: contentCount);
+                            NewMenu.AddMenuItem("Latest Articles", thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, contentCount: contentCount);
                             if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                             {
                                 startDate = FirstPageLastDate;
@@ -149,7 +148,7 @@ namespace Protean
                         if (contentCount > 0)
                         {
                             thisDateQuery = "thisweek";
-                            NewMenu.AddMenuItem("This Week", thisDateQuery, cPageURL + "/" + oContentNode.GetAttribute("id") + "-/" + thisDateQuery + cOrigQS, contentCount: contentCount);
+                            NewMenu.AddMenuItem("This Week", thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, contentCount: contentCount);
                             if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                             {
                                 startDate = mondayDate;
@@ -163,7 +162,7 @@ namespace Protean
                         if (contentCount > 0)
                         {
                             thisDateQuery = "lastweek";
-                            NewMenu.AddMenuItem("Last Week", thisDateQuery, cPageURL + "/" + oContentNode.GetAttribute("id") + "-/" + thisDateQuery + cOrigQS, contentCount: contentCount);
+                            NewMenu.AddMenuItem("Last Week", thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, contentCount: contentCount);
                             if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                             {
                                 startDate = mondayDate.AddDays((double)-8);
@@ -178,7 +177,7 @@ namespace Protean
                         if (contentCount > 0)
                         {
                             thisDateQuery = "thismonth";
-                            NewMenu.AddMenuItem("This Month", thisDateQuery, cPageURL + "/" + oContentNode.GetAttribute("id") + "-/" + thisDateQuery + cOrigQS, contentCount: contentCount);
+                            NewMenu.AddMenuItem("This Month", thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, contentCount: contentCount);
                             if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                             {
                                 startDate = Conversions.ToDate(firstDayMonth);
@@ -201,7 +200,7 @@ namespace Protean
                             if (contentCount > 0)
                             {
                                 thisDateQuery = nThisYear + "-" + nThisMonth;
-                                NewMenu.AddMenuItem(DateAndTime.MonthName(nThisMonth) + " " + nThisYear, thisDateQuery, cPageURL + "/" + oContentNode.GetAttribute("id") + "-/" + thisDateQuery + cOrigQS, contentCount: contentCount);
+                                NewMenu.AddMenuItem(DateAndTime.MonthName(nThisMonth) + " " + nThisYear, thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, contentCount: contentCount);
                                 if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                                 {
                                     startDate = Conversions.ToDate(firstDayloopMonth);
@@ -223,7 +222,7 @@ namespace Protean
                             if (contentCount > 0)
                             {
                                 thisDateQuery = "restofyear";
-                                NewMenu.AddMenuItem("Rest of " + PageDate.Year, thisDateQuery, cPageURL + "/" + oContentNode.GetAttribute("id") + "-/" + thisDateQuery + cOrigQS, contentCount: contentCount);
+                                NewMenu.AddMenuItem("Rest of " + PageDate.Year, thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, contentCount: contentCount);
                                 if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                                 {
                                     startDate = Conversions.ToDate(firstDayYear);
@@ -244,7 +243,12 @@ namespace Protean
                             if (contentCount > 0)
                             {
                                 thisDateQuery = nThisYear.ToString();
-                                NewMenu.AddMenuItem(nThisYear.ToString(), thisDateQuery, cPageURL + "/" + oContent.XmlElement.GetAttribute("id") + "-/" + thisDateQuery + cOrigQS, contentCount: contentCount);
+                                string sClass = null;
+                                if (thisDateQuery == dateQuery) {
+                                    sClass = "active";
+                                }
+
+                                NewMenu.AddMenuItem(nThisYear.ToString(), thisDateQuery, cOrigUrl + "?" + thisId + "=" + thisDateQuery + cOrigQS, null ,null, contentCount, sClass);
                                 if ((dateQuery ?? "") == (thisDateQuery ?? "") | string.IsNullOrEmpty(dateQuery))
                                 {
                                     startDate = Conversions.ToDate(firstDayloopYear);
@@ -261,6 +265,8 @@ namespace Protean
                             // Get content by date range and future posts
                             if (startDate == DateTime.MinValue)
                             {
+                                myWeb.mbCheckDetailPath = false;
+                                myWeb.msRedirectOnEnd = null;
                                 int argnCount = 0;
                                 XmlElement argoContentsNode = null;
                                 XmlElement argoPageDetail = null;
@@ -268,6 +274,8 @@ namespace Protean
                             }
                             else
                             {
+                                myWeb.mbCheckDetailPath = false;
+                                myWeb.msRedirectOnEnd = null;
                                 int argnCount1 = 0;
                                 XmlElement argoContentsNode1 = null;
                                 XmlElement argoPageDetail1 = null;
@@ -289,6 +297,8 @@ namespace Protean
                             // Get content by date range
                             if (startDate == DateTime.MinValue)
                             {
+                                myWeb.mbCheckDetailPath = false;
+                                myWeb.msRedirectOnEnd = null;
                                 int argnCount2 = 0;
                                 XmlElement argoContentsNode2 = null;
                                 XmlElement argoPageDetail2 = null;
@@ -296,21 +306,24 @@ namespace Protean
                             }
                             else
                             {
+                                myWeb.mbCheckDetailPath = false;
+                                myWeb.msRedirectOnEnd = null;
                                 int argnCount3 = 0;
                                 XmlElement argoContentsNode3 = null;
                                 XmlElement argoPageDetail3 = null;
+                                string cShowRelatedBriefDepth =myWeb.moConfig["ShowRelatedBriefDepth"] + "";                               
                                 myWeb.GetPageContentFromSelect("CL.nStructId = " + myWeb.mnPageId + " And c.cContentSchemaName = '" + oContentNode.GetAttribute("contentType") + "' and a.dpublishDate >= " + sqlDate(startDate) + endstr, nCount: ref argnCount3, oContentsNode: ref argoContentsNode3, oPageDetail: ref argoPageDetail3);
                             }
                         }
-
+                                         
                         // remove content detail
-                        if (myWeb.moContentDetail != null)
+                        if (myWeb.mnArtId == Convert.ToInt16(oContentNode.GetAttribute("id")))
                         {
                             myWeb.moPageXml.DocumentElement.RemoveChild(myWeb.moPageXml.DocumentElement.SelectSingleNode("ContentDetail"));
                             myWeb.moContentDetail = (XmlElement)null;
                             myWeb.moPageXml.DocumentElement.RemoveAttribute("artid");
                             myWeb.mnArtId = default(int);
-                        }
+                        } 
                         oContent.XmlElement.SetAttribute("dateQuery", dateQuery);
                         oContentNode = oContent.XmlElement;
                     }
@@ -447,6 +460,7 @@ namespace Protean
                         string cAdditionalJoins = string.Empty;
                         string cAdditionalColumns = string.Empty;
                         string cOrderBySql = string.Empty;
+                        string cGroupBySql = string.Empty;
                         string parentPageId = string.Empty;
                         string formName = "ContentFilter";
                         string cFilterTarget = "Product";
@@ -456,6 +470,10 @@ namespace Protean
                         string className = string.Empty;
                         var oAdditionalFilterInput = new Hashtable();
                         filterForm.NewFrm(formName);
+                        var oSortBy = filterForm.moPageXML.CreateAttribute("SortBy");
+                        oContentNode.Attributes.Append(oSortBy);
+                       
+
                         filterForm.submission(formName, "", "POST", "");
                         if (oContentNode.Attributes["filterTarget"] != null)
                         {
@@ -477,6 +495,7 @@ namespace Protean
                         //bool bShowMoreFilterButton = false;
 
                         oFrmGroup = filterForm.addGroup(ref filterForm.moXformElmt, "", "filter-main");
+                        filterForm.addInput(ref oFrmGroup, "SortBy", true, "", "hidden");
                         // XmlElement oXml = filterForm.moPageXML.CreateElement("ShowMore");
                         // oXml.InnerText = cShowMore;
                         // filterForm.Instance.AppendChild(oXml);
@@ -555,6 +574,7 @@ namespace Protean
 
                         string whereSQL = string.Empty;
                         string orderBySql = string.Empty;
+                        string groupBySql = string.Empty;
                         string cCssClassName = "hidden";
                         //  filterForm.addBind("cShowMore", "ShowMore", ref filterForm.model, "false()", "string");
 
@@ -642,24 +662,65 @@ namespace Protean
                                             parentPageId = oFilterElmt.Attributes["parId"].Value;
 
                                         }
+                                        groupBySql = GetFilterGroupByClause(calledType, "", ref myWeb);
+                                        if (groupBySql != "")
+                                        {
+                                            cGroupBySql = groupBySql;
+                                        }
                                         orderBySql = GetFilterOrderByClause(calledType, "", ref myWeb);
                                         if (orderBySql != "")
                                         {
-                                            cOrderBySql = orderBySql + "," + cOrderBySql;
+                                            if(cOrderBySql !="")
+                                            {
+                                                string orderby = orderBySql.Replace("desc", "").Replace("asc", "");
+                                                if (cOrderBySql.ToLower().Contains(orderby.ToLower()) == true)
+                                                {
+                                                    if (cOrderBySql.ToLower().Contains(orderby.ToLower()+ "desc") == true)
+                                                    {
+                                                        cOrderBySql = cOrderBySql.Replace(orderby + "desc", "");
+                                                    }
+                                                    if(cOrderBySql.ToLower().Contains(orderby.ToLower() + "asc") == true)
+                                                    {
+                                                        cOrderBySql = cOrderBySql.Replace(orderby + "asc", "");
+                                                    }
+
+                                                    cOrderBySql = orderBySql + "," + cOrderBySql;
+                                                    cOrderBySql = cOrderBySql.Replace(",,", ",");
+                                                }
+                                                else
+                                                {
+                                                    cOrderBySql = orderBySql + "," + cOrderBySql;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                cOrderBySql = orderBySql +",";
+                                            }
+                                           
                                         }
 
 
                                         if (orderBySql.Length > 0)
 
                                         {
-                                            cAdditionalColumns += "," + orderBySql.ToLower().Replace("asc", "").Replace("desc", "");
-                                            if (myWeb.moConfig["ExcludeFilterForJoin"] != className)
+                                            cAdditionalColumns += "," + orderBySql.ToLower().Replace("asc", "").Replace(" desc", "");
+                                            if (!myWeb.moConfig["ExcludeFilterForJoin"].Contains(className))
                                             {
                                                 string cAlies = className.Replace("Filter", "");
+                                                string cIndexDefiniationName = GetContentIndexDefinationName(calledType, ref myWeb);
+                                                
+                                               
                                                 cAdditionalJoins += "inner join tblContentIndex cii" + cAlies + " on cii" + cAlies + ".nContentId=c.nContentKey inner join tblContentIndexDef cid" + cAlies;
                                                 cAdditionalJoins += " on cii" + cAlies + ".nContentIndexDefinitionKey=cid" + cAlies + ".nContentIndexDefKey ";
-                                                cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cAlies + "'";
+                                                cAdditionalJoins += " and cid" + cAlies + ".cDefinitionName='" + cIndexDefiniationName + "'";
 
+
+                                            }
+                                            else
+                                            {
+                                                //this is the change for only location filters for the pagination issue.
+                                                cOrderBySql = orderBySql + ",";
+                                                bDistinct = true;
 
                                             }
                                         }
@@ -724,9 +785,9 @@ namespace Protean
 
 
                                 }
-
+                               
                                 myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail,
-                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns);
+                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns,cGroupBySql: cGroupBySql);
 
                                 if (oContentNode.SelectNodes("Content[@type='Product']").Count == 0)
                                 {
@@ -775,6 +836,38 @@ namespace Protean
                     }
 
                     return filterOrderByClause;
+                }
+
+                public string GetFilterGroupByClause(Type calledType, string existingOrder, ref Cms myWeb)
+                {
+                    string filterGroupByClause = string.Empty;
+
+                    if (calledType != null)
+                    {
+                        string methodname = "GetFilterGroupByClause";
+
+                        var o = Activator.CreateInstance(calledType);
+                        var args = new object[1];
+                        args[0] = myWeb;
+                        filterGroupByClause = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
+                    }
+                    return filterGroupByClause;
+                }
+
+                public string GetContentIndexDefinationName(Type calledType, ref Cms myWeb)
+                {
+                    string filterGroupByClause = string.Empty;
+
+                    if (calledType != null)
+                    {
+                        string methodname = "ContentIndexDefinationName";
+
+                        var o = Activator.CreateInstance(calledType);
+                        var args = new object[1];
+                        args[0] = myWeb;
+                        filterGroupByClause = Convert.ToString(calledType.InvokeMember(methodname, BindingFlags.InvokeMethod, null, o, args));
+                    }
+                    return filterGroupByClause;
                 }
 
                 public string GetFilterWhereClause(ref Cms myWeb, ref Cms.xForm filterForm, ref XmlElement oContentNode, string excludeClassName)

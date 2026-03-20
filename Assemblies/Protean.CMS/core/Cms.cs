@@ -5,11 +5,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.stdTools;
@@ -68,7 +70,7 @@ namespace Protean
         public string mcContentType = System.Net.Mime.MediaTypeNames.Text.Html;
         public string mcContentDisposition = "";
         public long mnProteanCMSError = 0L;
-
+        public Cms.model.APILog goAPILog;
 
         public string msException = "";
 
@@ -101,7 +103,7 @@ namespace Protean
         public static string gcEwBaseUrl;
         public static string gcBlockContentType = "";
         public static bool gbMembership = false;
-        public static bool gbCart = false;
+        public bool gbCart = false;
         public static bool gbQuote = false;
         public static bool gbReport = false;
         public static int gnTopLevel = 0;
@@ -151,6 +153,7 @@ namespace Protean
         public string mcBehaviourAddPageCommand = "";
         public string mcBehaviourEditPageCommand = "";
 
+        public Boolean mbCheckDetailPath = false;
 
         public string mcClientCommonFolder = "";
         public string mcEWCommonFolder = "/ewcommon";
@@ -265,7 +268,7 @@ namespace Protean
 
         #region Constructors
 
-        public Cms() : this(System.Web.HttpContext.Current)
+        public Cms() :  this(System.Web.HttpContext.Current)
         {
 
         }
@@ -346,7 +349,7 @@ namespace Protean
         {
 
             var argaWeb = this;
-            return new Cms.dbHelper(ref argaWeb);
+            return new Cms.dbHelper(argaWeb);
 
         }
 
@@ -711,6 +714,10 @@ namespace Protean
                     mcPagePath = moRequest["path"] + "";
                     mcPagePath = mcPagePath.Replace("//", "/");
 
+                    if (Strings.LCase(moConfig["CheckDetailPath"]) == "on") {
+                        mbCheckDetailPath = true;
+                       }
+
                     JSStart.InitialiseJSEngine();
 
                     // Get the User ID
@@ -1057,6 +1064,7 @@ namespace Protean
                             }
                     }
                 }
+
                 bool bSessionLogging = false;
                 if (moSession != null)
                 {
@@ -1345,7 +1353,7 @@ namespace Protean
                                     {
                                         bAllowCachePage = true;
                                     }
-                                }                              
+                                }
 
                                 if (gnResponseCode == 200L & moRequest.Form.Count == 0 & mnUserId == 0 & bAllowCachePage) //!moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"].Contains("?"))
                                 {
@@ -1608,15 +1616,15 @@ namespace Protean
                     default:
                         {
                             CheckPagePath();
-
-                            if (gbCart | gbQuote)
-                            {
-                                if (Conversions.ToInteger(Operators.AddObject("0", moSession["CartId"])) > 0)
+                            if (moSession != null) {
+                                if (gbCart | gbQuote)
                                 {
-                                    bPageCache = false;
+                                    if (Conversions.ToInteger("0" + moSession["CartId"] ?? string.Empty) > 0)
+                                    {
+                                        bPageCache = false;
+                                    }
                                 }
                             }
-
 
                             if (moRequest["reBundle"] != null)
                             {
@@ -1679,7 +1687,8 @@ namespace Protean
                                 // TS 21-06-2017 Moved from New() as not required for cached pages I think.
                                 Open();
 
-                                if (!string.IsNullOrEmpty(msException)) {
+                                if (!string.IsNullOrEmpty(msException))
+                                {
                                     sProcessInfo = "we should stop now";
                                 }
 
@@ -1780,7 +1789,8 @@ namespace Protean
                                                     mbOutputXml = false;
                                             }
                                         }
-                                        if (mbOutputXml == true) {
+                                        if (mbOutputXml == true)
+                                        {
                                             switch (Strings.LCase(mcContentType) ?? "")
                                             {
                                                 case "application/xml":
@@ -1795,7 +1805,8 @@ namespace Protean
                                                     }
                                             }
                                         }
-                                        else {
+                                        else
+                                        {
 
                                             PerfMon.Log("Web", "GetPageHTML-loadxsl");
                                             string styleFile;
@@ -1826,7 +1837,8 @@ namespace Protean
                                                     styleFile = goServer.MapPath(mcEwSiteXsl);
                                                 }
                                             }
-                                            else  {
+                                            else
+                                            {
                                                 if (moResponseType == pageResponseType.Page)
                                                 {
                                                     if (!string.IsNullOrEmpty(moConfig["xframeoptions"]))
@@ -1838,6 +1850,7 @@ namespace Protean
                                                         moResponse.AddHeader("X-Frame-Options", "DENY");
                                                     }
                                                 }
+
                                                 if (mbSetNoBrowserCache)
                                                 {
                                                     moResponse.Cache.SetNoStore();
@@ -1866,7 +1879,8 @@ namespace Protean
                                                             moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L, 0L, 0L, oTransformClear.transformException.Message);
                                                             throw new Exception(oTransformClear.transformException.Message);
                                                         }
-                                                        else {
+                                                        else
+                                                        {
                                                             //only redirect if able to delete
                                                             Protean.Cms myWeb = this;
                                                             Protean.Config.UpdateConfigValue(ref myWeb, "protean/web", "CompiledTransform", "on");
@@ -1879,14 +1893,15 @@ namespace Protean
                                                 else if (mbAdminMode)
                                                 {
                                                     //we only want to recompile if compiled transform is on
-                                                    if(gbCompiledTransform) {
-                                                        
+                                                    if (gbCompiledTransform)
+                                                    {
+
                                                         Cms myWeb = this;
                                                         Protean.Config.UpdateConfigValue(ref myWeb, "protean/web", "CompiledTransform", "off");
                                                         // just sent value as it might be true when user did ResetConfig
                                                         // to avoid skipping update functionality, we are just set it differently
                                                         Protean.Config.UpdateConfigValue(ref myWeb, "", "recompile", "recompiling");
-                                                        moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L,0L, 0L, "Recompiling XSLT");
+                                                        moDbHelper.logActivity(Cms.dbHelper.ActivityType.Recompile, (long)mnUserId, 0L, 0L, 0L, "Recompiling XSLT");
                                                         // we log to the activity log this action
                                                         msRedirectOnEnd = "/?recompile=del&SessionId=" + SessionID;
                                                     }
@@ -1894,13 +1909,14 @@ namespace Protean
                                             }
 
                                             var argaWeb1 = this;
+                                            PerfMon.Log("Web", "GetPageHTML-loadxsl2");
                                             var oTransform = new Protean.XmlHelper.Transform(ref argaWeb1, styleFile, gbCompiledTransform, 15000L, brecompile);
                                             if (!string.IsNullOrEmpty(moConfig["XslTimeout"]))
                                             {
                                                 oTransform.TimeOut = Conversions.ToLong(moConfig["XslTimeout"]);
                                             }
                                             oTransform.mbDebug = gbDebug;
-
+                                            PerfMon.Log("Web", "GetPageHTML-loadxsl3");
                                             if (bPageCache)
                                             {
 
@@ -1948,6 +1964,8 @@ namespace Protean
                                                 mcContentType = "application/pdf";
                                                 // Next we transform using into FO.Net Xml
 
+                                                moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "Create Pdf" , false);
+
 
                                                 string styleFile2 = goServer.MapPath(mcEwSiteXsl);
                                                 PerfMon.Log("Web", "ReturnPageHTML - loaded Style");
@@ -1964,6 +1982,9 @@ namespace Protean
 
                                                 string foNetXml = icPageWriter.ToString();
 
+                                                moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "Create Pdf Transformed", false);
+
+
 
                                                 if (foNetXml.StartsWith("<html"))
                                                 {
@@ -1971,6 +1992,9 @@ namespace Protean
                                                 }
                                                 else
                                                 {
+
+                                                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "FO.Net-Start", false);
+
                                                     // now we use FO.Net to generate our PDF
 
                                                     string strFileName = mcOutputFileName;
@@ -2041,8 +2065,7 @@ namespace Protean
                                                             }
                                                         }
                                                     }
-
-                                                    oFoNet.Options = rendererOpts;
+                                                     oFoNet.Options = rendererOpts;
                                                     oFoNet.Render(oTxtReader, ofileStream);
 
                                                     moResponse.Buffer = true;
@@ -2069,6 +2092,7 @@ namespace Protean
                                                     moCtx.Response.BinaryWrite(Buffer);
                                                     moCtx.Response.Flush();
 
+                                                    moDbHelper.logActivity(Cms.dbHelper.ActivityType.Custom1, (long)mnUserId, 0L, 0L, 0L, "FO.Net-End", false);
                                                     // objStream = Nothing
                                                     oFoNet = null;
                                                     oTxtReader = null;
@@ -2141,6 +2165,7 @@ namespace Protean
                                 {
                                     moResponse.AddHeader("X-Frame-Options", "DENY");
                                 }
+
                                 short filelen = (short)(goServer.MapPath("/" + gcProjectPath).Length + sServeFile.Length);
                                 DateTime UpdatedTime = mdPageUpdateDate ?? DateTime.Now;
                                 moResponse.AddHeader("Last-Modified", Tools.Text.HtmlHeaderDateTime(UpdatedTime));
@@ -2316,7 +2341,7 @@ namespace Protean
                         {
                             RefreshUserXML();
                         }
-
+                    }
                         // TS-Moved to after add bulk related content to enable filters to be processed.
                         // not sure if this is before for a reason. I cannot seem to think of one.
                         // required for related images on contentgrabber for practitioner so added config setting
@@ -2325,7 +2350,7 @@ namespace Protean
                             ContentActions();
                         }
 
-
+                   
                         if (Strings.LCase(moConfig["FinalAddBulk"]) == "on")
                         {
 
@@ -2340,14 +2365,15 @@ namespace Protean
                             moDbHelper.addBulkRelatedContent(ref argoContentParent, ref UpdatedTime, nMaxDepth);
 
                         }
-
+                 
                         sProcessInfo = "Check Admin Mode";
-
                         if (moConfig["ActionsBeforeAddBulk"] != "on")
                         {
                             ContentActions();
                         }
 
+                    if (!ibIndexMode)
+                    {
                         CommonActions();
 
                         // TS commented out so Century can perform searches in admin mode
@@ -2588,7 +2614,7 @@ namespace Protean
                                 }
                             }
 
-                            if (Strings.LCase(moConfig["CheckDetailPath"]) == "on" & mbAdminMode == false & mnArtId > 0 & (mcOriginalURL.Contains("-/") | mcOriginalURL.Contains("/Item")))
+                            if (mbCheckDetailPath & mbAdminMode == false & mnArtId > 0 & (mcOriginalURL.Contains("-/") | mcOriginalURL.Contains("/Item")))
                             {
                                 if (oPageElmt.SelectSingleNode("ContentDetail/Content/@name") != null)
                                 {
@@ -3166,8 +3192,8 @@ namespace Protean
                     moAdmin.GetPreviewMenu();
                 }
 
-                moAdmin.close();
-                moAdmin = (Cms.Admin)null;
+                moAdmin.Dispose();
+                moAdmin = null;
 
 
                 sProcessInfo = "Transform PageXML using XSLT";
@@ -3401,7 +3427,7 @@ namespace Protean
                                             var tmp = moRequest;
                                             string argAlternateFormName = tmp["formName"];
                                             string zcReturnSchema = null;
-                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId: ref argnReturnId, ref zcReturnSchema, AlternateFormName: ref argAlternateFormName, nVersionId: Conversions.ToLong("0" + moRequest["verId"]));
+                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId:  argnReturnId,  zcReturnSchema, AlternateFormName:  argAlternateFormName, nVersionId: Conversions.ToLong("0" + moRequest["verId"]));
                                             nContentId = argnReturnId;
                                             if (moAdXfm.valid)
                                             {
@@ -3509,6 +3535,7 @@ namespace Protean
                     case "GetLocateNode":
                     case "GetAdvNode":
                     case "editStructurePermissions":
+                    case "GetSEOReport":
                         {
 
                             // Make sure admin mode is true and we don't need to check for permissions
@@ -3533,7 +3560,16 @@ namespace Protean
                             mbAdminMode = true;
 
                             // Note need to fix for newsletters.
-                            var FullMenuXml = GetStructureXML(-1, RootPageId, nContextId);
+                            XmlElement FullMenuXml = GetStructureXML(-1, RootPageId, nContextId);
+
+                            // 
+                            if (!string.IsNullOrEmpty(gcMenuContentCountTypes))
+                            {
+                                foreach (var contentType in Strings.Split(gcMenuContentCountTypes, ","))
+                                    AddContentCount(FullMenuXml, Strings.Trim(contentType));
+                            }
+
+
                             long getLevel = 0L;
 
                             // Move the requested ID to the top.
@@ -3546,6 +3582,10 @@ namespace Protean
                                 FullMenuXml.ReplaceChild(FullMenuXml.SelectSingleNode("descendant-or-self::MenuItem[@id = " + expId + "]"), FullMenuXml.FirstChild);
 
                                 FullMenuXml.SetAttribute("level", getLevel.ToString());
+                                if (moRequest["ajaxCmd"] == "GetSEOReport")
+                                {
+                                    FullMenuXml = moDbHelper.GetMenuMetaTitleDescriptionDetailsXml(FullMenuXml);
+                                }
                             }
 
                             oPageElmt.AppendChild(FullMenuXml);
@@ -3775,6 +3815,7 @@ namespace Protean
                     }
                     // reinitialize variables because we might've changed some
                     moCart.InitializeVariables();
+
                     moCart.apply();
                     // get any discount information for this page
                     XmlElement RootElmt = moPageXml.DocumentElement;
@@ -4765,7 +4806,7 @@ namespace Protean
         /// <param name="bShowContentDetails"></param>
         ///
 
-        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "")
+        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string cGroupBySql="")
         {
             PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -4780,6 +4821,7 @@ namespace Protean
             long nAuthGroup;
             string cContentField = "";
             string cFilterTarget = string.Empty;
+            string sGroupByClause;
 
 
             try
@@ -4834,18 +4876,24 @@ namespace Protean
 
 
                 sSql = "SET ARITHABORT ON ";
-                sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
-                sSql = sSql + "CAST(" + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
+                //sSql = sSql + " SELECT  c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
+
+                sSql = sSql + " SELECT " + Interaction.IIf(distinct, "DISTINCT ", "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, ";
+                sSql = sSql + "CAST(c." + cContentField + " AS varchar(max)) as content, a.nStatus as status, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner,CL.cPosition as position  ";
 
                 // if distinct flag true and order by clause is also enabled then  required to bring all this column in select query too. 
                 // column which you are passing here is either 
                 // - agreegate function
                 // -or an xpath/xquery too eg : return Convert(XML, cContentXmlBrief).value("/Content/StockCode[1]",'varchar(10)')
-
+             
                 if (cAdditionalColumns != string.Empty)
+                    
                 {
-                    sSql = sSql + cAdditionalColumns;
+                    cAdditionalColumns = cAdditionalColumns.Trim(' ');
+                    cAdditionalColumns = cAdditionalColumns.Trim(',');
+                    sSql = sSql + ", "  + cAdditionalColumns + " ";
                 }
+                
                 sSql += "FROM tblContent AS c INNER JOIN ";
                 sSql += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                 sSql += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
@@ -4867,8 +4915,10 @@ namespace Protean
 
                 // ' Add the extra joins if specified.
                 if (!string.IsNullOrEmpty(cAdditionalJoins))
-                    sSql += " " + cAdditionalJoins + " ";
-
+                { 
+                        sSql += " " + cAdditionalJoins + " ";
+                    }
+                   
 
 
                 // we only want to return results that occur on pages beneath the current root id.
@@ -4877,9 +4927,9 @@ namespace Protean
 
 
                 if (bPrimaryOnly)
-                {
-                    sPrimarySql = " CL.bPrimary = 1 ";
-                }
+                    {
+                        sPrimarySql = " CL.bPrimary = 1 ";
+                    }
 
 
                 object sFilterTargetSql = "";
@@ -4983,6 +5033,27 @@ namespace Protean
                     oContentsNode.SetAttribute("resultCount", nTotal.ToString());
                 }
 
+                sGroupByClause ="group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), c.cContentForiegnRef , c.cContentName, c.cContentSchemaName, CAST(c.cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId, CL.cPosition ";
+
+                if (cAdditionalColumns != string.Empty)
+                {
+                    string[] aAddCols = cAdditionalColumns.Split(',');
+                    foreach (string col in aAddCols) {
+                        string trimmedcol = col.Trim(' ');
+                        //sGroupByClause += ", " + trimmedcol.Split(' ')[0];
+                        if (trimmedcol != string.Empty)
+                        {
+                            {
+                                //check for any aggregate function
+                                if (!trimmedcol.Contains("("))
+                                {
+                                    sGroupByClause += ", " + trimmedcol.Split(' ')[0];
+                                }
+                            }
+                        }
+                    }
+                    sGroupByClause = sGroupByClause.Trim(' ').Trim(',');
+                }
 
                 if (!string.IsNullOrEmpty(cOrderBy))
                 {
@@ -4992,7 +5063,15 @@ namespace Protean
                     {
                         // additional column have agreegate function and distinct flag is true then group by needs to eanble with default column
                         // along with orderby clause
-                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+                        else
+                        {
+                            sSql = sSql + sGroupByClause;
+                        }
+                       // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
                         sSql += cOrderBy;
 
@@ -5001,15 +5080,21 @@ namespace Protean
                         // else default column will have same columns.. 
                         if (cOrderBy.Contains("a.nStatus"))
                         {
-                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), c.cContentForiegnRef , c.cContentName, c.cContentSchemaName, CAST(c.cContentXmlBrief AS varchar(max)), a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
                         }
                         else
                         {
-                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                            sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), c.cContentForiegnRef , c.cContentName, c.cContentSchemaName, CAST(c.cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
                         }
                     }
                     else
                     {
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+
+                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition"+ cAdditionalColumns;
                         sSql = sSql + " ORDER BY ";
                         sSql += cOrderBy;
                     }
@@ -5022,9 +5107,17 @@ namespace Protean
                     // along with orderby clause
                     if (distinct)
                     {
-                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+                        else
+                        {
+                            sSql = sSql + sGroupByClause;
+                        }
+                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
-                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        sSql = sSql + "  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), c.cContentForiegnRef , c.cContentName, c.cContentSchemaName, CAST(c.cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId, CL.cPosition  ";
 
                     }
                     else
@@ -5081,7 +5174,7 @@ namespace Protean
 
 
 
-        public void GetPageContentFromSelectFilterPagination(ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, string sWhereSql, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string cAdminMode = "false")
+        public void GetPageContentFromSelectFilterPagination(ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, string sWhereSql, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string cAdminMode = "false", string cGroupBySql = "")
         {
             PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -5097,6 +5190,7 @@ namespace Protean
             long nAuthGroup;
             string cContentField = "";
             string cFilterTarget = string.Empty;
+            string sGroupByClause;
 
             try
             {
@@ -5237,16 +5331,31 @@ namespace Protean
                 }
 
                 sSql = sSql + " where (" + combinedWhereSQL + ")";
+                sGroupByClause = "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+
                 if (!string.IsNullOrEmpty(cOrderBy))
                 {
 
 
                     if (distinct)
                     {
-                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        // additional column have agreegate function and distinct flag is true then group by needs to eanble with default column
+                        // along with orderby clause
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+                        else
+                        {
+                            sSql = sSql + sGroupByClause;
+                        }
+                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
                         sSql += cOrderBy;
 
+                        //this code is checking  if input cOrderby parameter is already contains nStatus field, then removing it from default column list
+                        // in order by clause.
+                        // else default column will have same columns.. 
                         if (cOrderBy.Contains("a.nStatus"))
                         {
                             sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
@@ -5258,6 +5367,12 @@ namespace Protean
                     }
                     else
                     {
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+
+                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition"+ cAdditionalColumns;
                         sSql = sSql + " ORDER BY ";
                         sSql += cOrderBy;
                     }
@@ -5266,16 +5381,26 @@ namespace Protean
                 }
                 else
                 {
-
+                    // additional column have agreegate function and distinct flag is true then group by needs to eanble with default column
+                    // along with orderby clause
                     if (distinct)
                     {
-                        sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
+                        if (cGroupBySql != string.Empty)
+                        {
+                            sSql = sSql + cGroupBySql;
+                        }
+                        else
+                        {
+                            sSql = sSql + sGroupByClause;
+                        }
+                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)),a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
-                        sSql = sSql + " c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
+                        sSql = sSql + "  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus, a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition  ";
 
                     }
                     else
                     {
+                        //default behaviour
                         sSql = sSql + " ORDER BY";
                         sSql += "(SELECT NULL)";
                     }
@@ -6023,7 +6148,7 @@ namespace Protean
 
         }
 
-        public virtual object getXform()
+        public virtual Protean.Cms.xForm getXform()
         {
             // this is to allow us to overide Xforms lower down
 
@@ -6296,7 +6421,7 @@ namespace Protean
                     }
                     // Please never add any setting here you do not want to be publicly accessible.
                     object s = "web.Cart;web.Membership;web.Search;web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;";
-                    s = Operators.AddObject(s, $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;");
+                    s = Operators.AddObject(s, $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;web.ReCaptchaKeyV3;web.ReCaptchaVersion;web.GoCertifyCompanyName;");
                     s = Operators.AddObject(s, "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;");
                     s = Operators.ConcatenateObject(Operators.AddObject(s, moConfig["XmlSettings"]), ";");
 
@@ -7575,8 +7700,17 @@ namespace Protean
                                         }
                                     }
 
-                                    if (string.IsNullOrEmpty(pvUrlPrefix))
-                                        pvUrlPrefix = httpStart + goLangConfig.GetAttribute("defaultDomain");
+                                    if (string.IsNullOrEmpty(pvUrlPrefix)) {
+                                        if (string.IsNullOrEmpty(goLangConfig.GetAttribute("defaultDomain")))
+                                        {
+                                            pvUrlPrefix = "/";
+                                        }
+                                        else
+                                            pvUrlPrefix = httpStart + goLangConfig.GetAttribute("defaultDomain");
+                                    }
+
+                              
+                                       
                                     pvElmt.SetAttribute("url", pvUrlPrefix + sUrl);
 
                                 }
@@ -7818,8 +7952,18 @@ namespace Protean
         public void addPageDetailLinksToStructure(string cContentTypes)
         {
             string cProcessInfo = "addPageDetailLinksToStructure";
+            string cIndexDetailSubTypes = "";
+            string[] IndexDetailSubTypes;
             try
             {
+
+                if (!string.IsNullOrEmpty(moConfig["SiteSearchIndexDetailSubTypes"]))
+                {
+                    cIndexDetailSubTypes = moConfig["SiteSearchIndexDetailSubTypes"];
+                }
+                IndexDetailSubTypes = Strings.Split(Strings.Replace(cIndexDetailSubTypes, " ", ""), ",");
+
+
                 XmlElement oMenuElmt = (XmlElement)moPageXml.DocumentElement.SelectSingleNode("Menu");
                 if (oMenuElmt is null)
                     return;
@@ -7833,6 +7977,7 @@ namespace Protean
                 var pageDict = new SortedDictionary<long, string>();
                 foreach (XmlElement MenuItem in oMenuElmt.SelectNodes("descendant-or-self::MenuItem"))
                     pageDict.Add(Conversions.ToLong(MenuItem.GetAttribute("id")), MenuItem.GetAttribute("url"));
+
                 // Dim keys As List(Of Long) = pageDict.KeyCollection
                 // keys.Sort()
 
@@ -7844,7 +7989,7 @@ namespace Protean
 
                 //string sProcessInfo = "addPageDetailLinksToStructure";
                 string cSQL = "SELECT tblContent.nContentKey, tblContent.cContentName, tblContentLocation.nStructId, tblAudit.dPublishDate, tblAudit.dUpdateDate, tblContent.cContentSchemaName" + " FROM tblContent INNER JOIN" + " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" + " tblContentLocation ON tblContent.nContentKey = tblContentLocation.nContentId" + " WHERE (tblContentLocation.bPrimary = 1) AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dPublishDate is null) AND " + " (tblAudit.dExpireDate >= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN (" + cContentTypes + ")) ";
-
+                string ContentIdsCSV = "";
 
                 using (var oDR = moDbHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
                 {
@@ -7855,65 +8000,71 @@ namespace Protean
                     {
                         string cURL = "";
                         var oContElmt = moPageXml.CreateElement("MenuItem");
+                        long ContentId = Conversions.ToLong(oDR[0]);
+                        ContentIdsCSV = ContentIdsCSV + ContentId + ",";
+                        cURL = GetDetailURL(ContentId, oDR[5].ToString(), oDR[1].ToString(), "", Conversions.ToLong(oDR[2]), pageDict);
 
-                        switch (moConfig["DetailPathType"] ?? "")
-                        {
-                            case "ContentType/ContentName":
-                                {
-                                    string[] prefixs = moConfig["DetailPrefix"].Split(',');
-                                    string thisPrefix = "";
-                                    string thisContentType = "";
-                                    int i;
-                                    var loopTo = prefixs.Length - 1;
-                                    for (i = 0; i <= loopTo; i++)
-                                    {
-                                        thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
-                                        thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
-                                        if ((thisContentType ?? "") == (oDR[5].ToString() ?? ""))
-                                        {
-                                            string ItemIdPath = "";
-                                            if (moConfig["addPathArtId"] == "on")
-                                            {
-                                                ItemIdPath = oDR[0] + "-/";
-                                            }
-                                            cURL = "/" + thisPrefix + "/" + ItemIdPath + oRe.Replace(oDR[1].ToString(), "-").Trim('-');
-                                            if (moConfig["DetailPathTrailingSlash"] == "on")
-                                            {
-                                                cURL = cURL + "/";
-                                            }
-                                            if (moConfig["LowerCaseUrl"] == "on")
-                                            {
-                                                cURL = cURL.ToLower();
-                                            }
-                                        }
-                                    }
+                        #region old code
+                        //switch (moConfig["DetailPathType"] ?? "")
+                        //{
+                        //    case "ContentType/ContentName":
+                        //        {
+                        //            string[] prefixs = moConfig["DetailPrefix"].Split(',');
+                        //            string thisPrefix = "";
+                        //            string thisContentType = "";
+                        //            int i;
+                        //            var loopTo = prefixs.Length - 1;
+                        //            for (i = 0; i <= loopTo; i++)
+                        //            {
+                        //                thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
+                        //                thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
+                        //                if ((thisContentType ?? "") == (oDR[5].ToString() ?? ""))
+                        //                {
+                        //                    string ItemIdPath = "";
+                        //                    if (moConfig["addPathArtId"] == "on")
+                        //                    {
+                        //                        ItemIdPath = oDR[0] + "-/";
+                        //                    }
+                        //                    cURL = "/" + thisPrefix + "/" + ItemIdPath + oRe.Replace(oDR[1].ToString(), "-").Trim('-');
+                        //                    if (moConfig["DetailPathTrailingSlash"] == "on")
+                        //                    {
+                        //                        cURL = cURL + "/";
+                        //                    }
+                        //                    if (moConfig["LowerCaseUrl"] == "on")
+                        //                    {
+                        //                        cURL = cURL.ToLower();
+                        //                    }
+                        //                }
+                        //            }
 
-                                    break;
-                                }
+                        //            break;
+                        //        }
 
-                            default:
-                                {
-                                    if (pageDict.ContainsKey(Conversions.ToLong(oDR[2])))
-                                    {
-                                        cURL = pageDict[Conversions.ToLong(oDR[2])];
-                                        // If moConfig("LegacyRedirect") = "on" Then
-                                        cURL += "/" + oDR[0].ToString() + "-/" + Tools.Text.CleanName(oDR[1].ToString(), false, true);
-                                    }
-                                    // Else
-                                    // cURL &= "/Item" & oDR(0).ToString
-                                    // End If
-                                    else
-                                    {
-                                        cProcessInfo = "orphan Content";
-                                    }
+                        //    default:
+                        //        {
+                        //            if (pageDict.ContainsKey(Conversions.ToLong(oDR[2])))
+                        //            {
+                        //                cURL = pageDict[Conversions.ToLong(oDR[2])];
+                        //                // If moConfig("LegacyRedirect") = "on" Then
+                        //                cURL += "/" + oDR[0].ToString() + "-/" + Tools.Text.CleanName(oDR[1].ToString(), false, true);
+                        //            }
+                        //            // Else
+                        //            // cURL &= "/Item" & oDR(0).ToString
+                        //            // End If
+                        //            else
+                        //            {
+                        //                cProcessInfo = "orphan Content";
+                        //            }
 
-                                    break;
-                                }
-                        }
-                        if (moConfig["LowerCaseUrl"] == "on")
-                        {
-                            cURL = cURL.ToLower();
-                        }
+                        //            break;
+                        //        }
+                        //}
+                        //if (moConfig["LowerCaseUrl"] == "on")
+                        //{
+                        //    cURL = cURL.ToLower();
+                        //}
+                        #endregion
+
                         if (!string.IsNullOrEmpty(cURL))
                         {
                             oContElmt.SetAttribute("url", cURL);
@@ -7923,8 +8074,37 @@ namespace Protean
                             oMenuElmt.AppendChild(oContElmt);
                         }
 
+                       
+
                     }
                     oDR.Close();
+
+                    ContentIdsCSV = ContentIdsCSV.TrimEnd(',');
+                    // we have sub products with there own pages which need to be indexed but they are not on the parent page
+                        if (cIndexDetailSubTypes != "")
+                        {
+                           foreach (string subType in IndexDetailSubTypes)
+                            {
+                               string cSQL2 = "SELECT tblContent.nContentKey, tblContent.cContentName, tblAudit.dPublishDate, tblAudit.dUpdateDate, tblContent.cContentSchemaName" + " FROM tblContent INNER JOIN" + " tblAudit ON tblContent.nAuditId = tblAudit.nAuditKey INNER JOIN" + " tblContentRelation ON tblContent.nContentKey = tblContentRelation.nContentChildId" + " WHERE tblContentRelation.nContentParentId IN (" + ContentIdsCSV + ") AND tblContent.nContentKey NOT IN (" + ContentIdsCSV + ") AND (tblAudit.nStatus = 1) AND (tblAudit.dPublishDate <= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dPublishDate is null) AND " + " (tblAudit.dExpireDate >= " + Tools.Database.SqlDate(mdDate) + " or tblAudit.dExpireDate is null) AND (tblContent.cContentSchemaName IN ('" + cIndexDetailSubTypes + "')) ";
+                                using (SqlDataReader oDR2 = moDbHelper.getDataReaderDisposable(cSQL2))  // Done by nita on 6/7/22
+                            {
+                                while (oDR2.Read())
+                                {
+                                    string cURL2 = "";
+                                    var oContElmt2 = moPageXml.CreateElement("MenuItem");
+                                    cURL2 = GetDetailURL(Conversions.ToLong(oDR2[0]), oDR2[4].ToString(), oDR2[1].ToString(), "", 0, pageDict);
+                                    if (!string.IsNullOrEmpty(cURL2))
+                                    {
+                                        oContElmt2.SetAttribute("url", cURL2);
+                                        oContElmt2.SetAttribute("name", oDR2[1].ToString());
+                                        oContElmt2.SetAttribute("publish", Tools.Xml.XmlDate(oDR2[2].ToString(), false));
+                                        oContElmt2.SetAttribute("update", Tools.Xml.XmlDate(oDR2[3].ToString(), false));
+                                        oMenuElmt.AppendChild(oContElmt2);
+                                    }
+                                }
+                            }
+                        }
+                        }
                 }
             }
 
@@ -8088,7 +8268,8 @@ namespace Protean
                             string cAdminMode = Convert.ToString(moSession["AdminMode"]);
                             XmlElement argoPageDetail = null;
                             int nCount = 0;
-                            GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows, distinct: true, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns, cOrderBy: cOrderBySql, cAdminMode: cAdminMode);
+                            string cGroupBySql = string.Empty;
+                            GetPageContentFromSelectFilterPagination(ref nCount, oContentsNode: ref oPageElmt, oPageDetail: ref argoPageDetail, whereSQL, bIgnorePermissionsCheck: true, cShowSpecificContentTypes: moRequest["singleContentType"], ignoreActiveAndDate: false, nStartPos: (long)nStart, nItemCount: (long)nRows, distinct: true, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns, cOrderBy: cOrderBySql, cAdminMode: cAdminMode, cGroupBySql: cGroupBySql);
                         }
                         else
                         {
@@ -8250,7 +8431,7 @@ namespace Protean
                     oRoot = moPageXml.CreateElement("Contents");
                     moPageXml.DocumentElement.AppendChild(oRoot);
                 }
-                  
+
                 string nCurrentPageId = nPageId.ToString();
                 // Adjust the page id if it's a cloned page.
                 if (Conversions.ToDouble(nCurrentPageId) != (double)mnPageId)
@@ -8259,17 +8440,21 @@ namespace Protean
                     sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
                 }
                 else
-                {   
+                {
                     // If we have an article id we only want to show cascaded content
-                    if (moConfig["ContentDetailShowOnlyCascaded"] != null) { 
+                    if (moConfig["ContentDetailShowOnlyCascaded"] != null)
+                    {
                         if (moConfig["ContentDetailShowOnlyCascaded"].ToLower() == "on" && mnArtId != 0)
-                        {      
-                                if (ibIndexMode) {
-                                    //when we are indexing we want to be able to index the brief because we use this as the abstract.
-                                    sFilterSql += " and ((CL.bCascade = 1 and CL.bPrimary = 1) or nContentKey = " + mnArtId + ") ";
-                                } else {
-                                    sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
-                                }
+                        {
+                            if (ibIndexMode)
+                            {
+                                //when we are indexing we want to be able to index the brief because we use this as the abstract.
+                                sFilterSql += " and ((CL.bCascade = 1 and CL.bPrimary = 1) or nContentKey = " + mnArtId + ") ";
+                            }
+                            else
+                            {
+                                sFilterSql += " and CL.bCascade = 1 and CL.bPrimary = 1 ";
+                            }
                         }
                     }
                     // we are pulling in located and native items but not cascaded
@@ -9363,7 +9548,7 @@ namespace Protean
                                 {
                                     // If we can find a content detail Content node, 
                                     // AND it contains some InnerXml, then YAY.
-                                    oPageElmt.AppendChild(oRoot.FirstChild);
+                                    oPageElmt.AppendChild(oRoot.FirstChild.CloneNode(true));
                                 }
                                 else
                                 {
@@ -10151,8 +10336,8 @@ namespace Protean
                     moAdmin.open(moPageXml);
                     var argoWeb = this;
                     moAdmin.adminProcess(ref argoWeb);
-                    moAdmin.close();
-                    moAdmin = (Cms.Admin)null;
+                    moAdmin.Dispose();
+                    moAdmin = null;
                 }
                 else if (string.IsNullOrEmpty(moPageXml.OuterXml))
                 {
@@ -11127,24 +11312,7 @@ namespace Protean
 
         private bool disposedValue = false;        // To detect redundant calls
 
-        // IDisposable
-        protected override void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-                    // free managed resources when explicitly called
-                    if (icPageWriter != null)
-                    {
-                        icPageWriter.Dispose();
-                    }
-                }
-
-                // free shared unmanaged resources
-            }
-            disposedValue = true;
-        }
+       
         public virtual string UserFolder()
         {
             // NB : Empty to hold a place for Brokerage's bespoky-er-ness
@@ -11348,7 +11516,7 @@ namespace Protean
         {
             string cProcessInfo = "";
             try
-            {                
+            {
                 string result = moFSHelper.DeleteFolder(mcPageCacheFolder, goServer.MapPath("/" + gcProjectPath));
                 if (result == "1")
                 {
@@ -11365,18 +11533,126 @@ namespace Protean
             }
         }
 
+        //GetDetailURL(long ContentId, schemaType, contentName, pagePath of the primary location) (if more than one primary location then run for both)
+        public string GetDetailURL(long ContentId, string schemaType, string contentName, string pagePath, long cChildId, SortedDictionary<long, string> pageDict)
+        {
+            string cProcessInfo = string.Empty;
+            string cURL = "";
+            var oRe = new Regex("[^A-Z0-9]", RegexOptions.IgnoreCase);           
+
+            switch (moConfig["DetailPathType"] ?? "")
+            {
+                case "ContentType/ContentName":
+                    {
+                        string[] prefixs = moConfig["DetailPrefix"].Split(',');
+                        string thisPrefix = "";
+                        string thisContentType = "";
+                        int i;
+                        var loopTo = prefixs.Length - 1;
+                        for (i = 0; i <= loopTo; i++)
+                        {
+                            thisPrefix = prefixs[i].Substring(0, prefixs[i].IndexOf("/"));
+                            thisContentType = prefixs[i].Substring(prefixs[i].IndexOf("/") + 1, prefixs[i].Length - prefixs[i].IndexOf("/") - 1);
+                            if ((thisContentType ?? "") == (schemaType ?? ""))
+                            {
+                                string ItemIdPath = "";
+                                if (moConfig["addPathArtId"] == "on")
+                                {
+                                    ItemIdPath = ContentId + "-/";
+                                }
+                                cURL = "/" + thisPrefix + "/" + ItemIdPath + oRe.Replace(contentName.ToString(), "-").Trim('-');
+                                if (moConfig["DetailPathTrailingSlash"] == "on")
+                                {
+                                    cURL = cURL + "/";
+                                }
+                                if (moConfig["LowerCaseUrl"] == "on")
+                                {
+                                    cURL = cURL.ToLower();
+                                }
+                            }
+                        }
+
+                        break;
+                    }
+
+                default:
+                    {
+                        //This pageDict passed from addPageDetailLinksToStructure method.
+                        if (pageDict.ContainsKey(Conversions.ToLong(cChildId)))
+                        {
+                            cURL = pageDict[Conversions.ToLong(cChildId)];
+                            // If moConfig("LegacyRedirect") = "on" Then
+                            cURL += "/" + ContentId.ToString() + "-/" + Tools.Text.CleanName(contentName.ToString(), false, true);
+                        }
+                        // Else
+                        // cURL &= "/Item" & oDR(0).ToString
+                        // End If
+                        else
+                        {
+                            cProcessInfo = "orphan Content";
+                        }
+
+                        break;
+                    }
+            }
+            if (moConfig["LowerCaseUrl"] == "on")
+            {
+                cURL = cURL.ToLower();
+            }
+            return cURL;
+        }
         public void ClearPageCache(string ContentId)
         {
-
-            string filePath = goServer.MapPath("/") + mcPageCacheFolder;
-            // check startfolder exists
-            var rootDir = new DirectoryInfo(filePath);
-            string fileName = mcOriginalURL;
             try
             {
-                if (rootDir.Exists)
-                {
-                    string FilesToDeleteFromCache = moFSHelper.DeleteFolder(fileName, filePath);
+                string filePath = goServer.MapPath("/") + mcPageCacheFolder;
+                // check startfolder exists
+                var rootDir = new DirectoryInfo(filePath);
+                string productUrl = string.Empty;//mcOriginalURL;
+                string sSql;
+                DataSet oDs;
+                string cChildID; string cContentSchemaName; string cContentName; string sPagePath;
+                string sProcessInfo; var pageDict = new SortedDictionary<long, string> ();
+                sProcessInfo = "ClearPageCache-Start";
+                PerfMon.Log("Web", sProcessInfo);
+              
+                if(Strings.LCase(moConfig["PageCache"]) == "on" && rootDir.Exists)
+                {       
+                    //spGetParentPagesForCache
+                    sSql = "EXEC spGetParentPagesForCache @nContentkey=" + ContentId + "";
+                    // Get the dataset
+                    oDs = moDbHelper.GetDataSet(sSql, "Content");
+                    if (oDs.Tables[0].Rows.Count > 0)
+                    {                        
+                        List<string> sFoldersUrlslist = new List<string>();
+                        GetStructureXML("Site");
+                        // Convert any text to xml
+                        foreach (DataRow oRow2 in oDs.Tables[0].Rows)
+                        {
+                            cContentName = Convert.ToString(oRow2["cContentName"]);
+                            cContentSchemaName = Convert.ToString(oRow2["cContentSchemaName"]);
+                            cChildID = Convert.ToString(oRow2["child_id"]);                           
+                            foreach (XmlElement oElmt3 in moPageXml.SelectNodes($"/Page/Menu/descendant-or-self::MenuItem[@id='{cChildID}']"))
+                            {
+                                //catch child id from dataset and match into the mopagfexml and get the exact url of pages and pass it to delete.
+                                string[] paths = oElmt3.SelectSingleNode("@url").InnerText.Split('?'); //split ? from urls
+                                sPagePath = paths[0];
+                                sFoldersUrlslist.Add(filePath + @"\" + sPagePath.Replace("/", @"\"));
+                                //Create Product Url here
+                                productUrl = GetDetailURL(Convert.ToInt32(ContentId), cContentSchemaName, cContentName, sPagePath, Conversions.ToLong(cChildID), pageDict);
+                                sFoldersUrlslist.Add(filePath + @"\" + productUrl.Replace("/", @"\"));
+                            }                          
+                         
+                        }
+                        // Remove duplicates using HashSet
+                        HashSet<string> uniqueFolderPaths = new HashSet<string>(sFoldersUrlslist);
+                        // delete all folders list which are exists 
+                        string FolderstoDeleteFromCache = moFSHelper.DeleteMultipleFolder(uniqueFolderPaths);
+                        if (!mbSuppressLastPageOverrides)
+                        {
+                            moSession["lastPage"] = "/" + Cms.gcProjectPath + mcPagePath.TrimStart('/') + "?ewCmd=Normal&pgid=" + mnPageId; // myWeb.mcOriginalURL
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -11385,7 +11661,7 @@ namespace Protean
             }
         }
         /// <summary>
-        /// get active productslist
+        /// get active productslist 
         /// </summary>
         /// <param name="nArtId"></param>
         /// <returns></returns>
@@ -11473,17 +11749,327 @@ namespace Protean
 
 
         #region  IDisposable Support 
-        // This code added by Visual Basic to correctly implement the disposable pattern.
-        public void Dispose()
+
+
+        protected override void Dispose(bool disposing)
         {
-            // Do not change this code.  Put cleanup code in Dispose(ByVal disposing As Boolean) above.
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    try
+                    {
+                        // ====================
+                        // 1. UNSUBSCRIBE EVENT HANDLERS FIRST
+                        // ====================
+                        if (OnError != null)
+                        {
+                            foreach (var handler in OnError.GetInvocationList())
+                            {
+                                OnError -= (OnErrorEventHandler)handler;
+                            }
+                        }
+
+                        if (_moCalendar != null)
+                        {
+                            _moCalendar.OnError -= OnComponentError;
+                            try
+                            {
+                                if (_moCalendar is IDisposable disposableCalendar)
+                                {
+                                    disposableCalendar.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing _moCalendar: {ex.Message}");
+                            }
+                            finally
+                            {
+                                _moCalendar = null;
+                            }
+                        }
+
+                        if (_oSync != null)
+                        {
+                            _oSync.OnError -= OnComponentError;
+                        }
+
+                        // ====================
+                        // 2. DISPOSE CHILD COMPONENTS
+                        // ====================
+
+                        // StringWriter (already being disposed - keep it)
+                        if (icPageWriter != null)
+                        {
+                            icPageWriter.Dispose();
+                            icPageWriter = null;
+                        }
+
+                        // Membership Provider
+                        if (moMemProv != null)
+                        {
+                            try
+                            {
+                                if (moSession != null)
+                                {
+                                    Cms argmyWeb = this;
+                                    moMemProv.Activities.SetUserId(ref argmyWeb);
+                                }
+                                moMemProv.Dispose();
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moMemProv: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moMemProv = null;
+                            }
+                        }
+
+                        // Transform
+                        if (moTransform != null && !ibIndexMode)
+                        {
+                            try
+                            {
+                                moTransform.Close(); // Assuming Close() calls Dispose
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moTransform: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moTransform = null;
+                            }
+                        }
+
+                        // Cart instances
+                        if (gbCart && moCart != null)
+                        {
+                            try
+                            {
+                                moCart.close(); // TODO: Change to Dispose() when Cart implements it properly
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moCart: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moCart = null;
+                            }
+                        }
+
+                        // Discount
+                        if (moDiscount != null)
+                        {
+                            try
+                            {
+                                if (moDiscount is IDisposable disposableDiscount)
+                                {
+                                    disposableDiscount.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moDiscount: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moDiscount = null;
+                            }
+                        }
+
+                        // E-commerce Cart (oEc)
+                        if (oEc != null)
+                        {
+                            try
+                            {
+                                oEc.close(); // TODO: Change to Dispose() when Cart implements it properly
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing oEc: {ex.Message}");
+                            }
+                            finally
+                            {
+                                oEc = null;
+                            }
+                        }
+
+                        // Admin
+                        if (moAdmin != null)
+                        {
+                            try
+                            {
+                                moAdmin.Dispose(); // ✅ Now uses proper disposal pattern
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moAdmin: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moAdmin = null;
+                            }
+                        }
+
+                        // Search
+                        if (oSrch != null)
+                        {
+                            try
+                            {
+                                if (oSrch is IDisposable disposableSearch)
+                                {
+                                    disposableSearch.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing oSrch: {ex.Message}");
+                            }
+                            finally
+                            {
+                                oSrch = null;
+                            }
+                        }
+
+                        // File System Helper
+                        if (moFSHelper != null)
+                        {
+                            try
+                            {
+                                if (moFSHelper is IDisposable disposableFSHelper)
+                                {
+                                    disposableFSHelper.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moFSHelper: {ex.Message}");
+                            }
+                            finally
+                            {
+                                moFSHelper = null;
+                            }
+                        }
+
+                        // External Synchronisation
+                        if (_oSync != null)
+                        {
+                            try
+                            {
+                                if (_oSync is IDisposable disposableSync)
+                                {
+                                    disposableSync.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing _oSync: {ex.Message}");
+                            }
+                            finally
+                            {
+                                _oSync = null;
+                            }
+                        }
+
+                        // Calendar
+                        if (_moCalendar != null)
+                        {
+                            try
+                            {
+                                if (_moCalendar is IDisposable disposableCalendar)
+                                {
+                                    disposableCalendar.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing _moCalendar: {ex.Message}");
+                            }
+                            finally
+                            {
+                                _moCalendar = null;
+                            }
+                        }
+
+                        // XForm
+                        if (oXform != null)
+                        {
+                            try
+                            {
+                                if (oXform is IDisposable disposableXform)
+                                {
+                                    disposableXform.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing oXform: {ex.Message}");
+                            }
+                            finally
+                            {
+                                oXform = null;
+                            }
+                        }
+
+                        // ====================
+                        // 3. NULL OUT LARGE OBJECTS
+                        // ====================
+                        moPageXml = null;
+                        moContentDetail = null;
+                        _responses = null;
+
+                        // Context references (handled by base class, but null them anyway)
+                        moRequest = null;
+                        goServer = null;
+                        moConfig = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log disposal errors but don't throw
+                        System.Diagnostics.Debug.WriteLine(
+                            $"Error in Cms.Dispose: {ex.Message}");
+                    }
+                }
+
+                // Free unmanaged resources (if any)
+
+                disposedValue = true;
+            }
+
+            // ✅ CRITICAL: Call base class Dispose
+            base.Dispose(disposing);
+        }
+
+        // ✅ Add finalizer for safety
+        ~Cms()
+        {
+            Dispose(false);
+        }
+
+        // ✅ Add public Dispose() method (ensure it's present)
+        public new void Dispose()
+        {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        #endregion
 
-        ~Cms()
-        {
-        }
+        #endregion
     }
 }

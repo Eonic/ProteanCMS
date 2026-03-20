@@ -655,3 +655,13 @@
     flex-direction: column;
     //height: 100%;
 }
+.email-wysiwyg-body {
+    justify-content: flex-start;
+
+    .Site {
+        flex-grow:2;
+    }
+}
+.active-admin-dd-wrapper {
+    z-index:3;
+}

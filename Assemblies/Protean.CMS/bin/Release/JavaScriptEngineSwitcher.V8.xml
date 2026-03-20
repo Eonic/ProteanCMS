@@ -166,19 +166,19 @@
             Gets a cached data for accelerated recompilation
             </summary>
         </member>
-        <member name="P:JavaScriptEngineSwitcher.V8.V8PrecompiledScript.DocumentName">
+        <member name="P:JavaScriptEngineSwitcher.V8.V8PrecompiledScript.DocumentInfo">
             <summary>
-            Gets a document name
+            Gets a meta-information for the document
             </summary>
         </member>
-        <member name="M:JavaScriptEngineSwitcher.V8.V8PrecompiledScript.#ctor(System.String,Microsoft.ClearScript.V8.V8CacheKind,System.Byte[],System.String)">
+        <member name="M:JavaScriptEngineSwitcher.V8.V8PrecompiledScript.#ctor(System.String,Microsoft.ClearScript.V8.V8CacheKind,System.Byte[],Microsoft.ClearScript.DocumentInfo)">
             <summary>
             Constructs an instance of pre-compiled script
             </summary>
             <param name="code">The source code of the script</param>
             <param name="cacheKind">The kind of cache data to be generated</param>
             <param name="cachedBytes">Cached data for accelerated recompilation</param>
-            <param name="documentName">Document name</param>
+            <param name="documentInfo">Meta-information for the document</param>
         </member>
         <member name="P:JavaScriptEngineSwitcher.V8.V8PrecompiledScript.EngineName">
             <inheritdoc/>

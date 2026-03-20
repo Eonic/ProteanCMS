@@ -3,7 +3,7 @@
 
 	<ContentTypes>
 		<ContentTypeGroup name="Reviews">
-			<ContentType type="Review" formPath="Review" name="Review">Reviews</ContentType>
+			<ContentType type="Review" formPath="Review" name="Review">Review</ContentType>
 		</ContentTypeGroup>
 	</ContentTypes>
 	<ModuleTypes>

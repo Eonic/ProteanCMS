@@ -389,6 +389,13 @@
   <xsl:variable name="lazy" select="'off'"/>
   <xsl:variable name="placeholder" select="'/ewcommon/images/t22.gif'"/>
   <xsl:variable name="lazyplaceholder" select="''"/>
+	<xsl:variable name="GoCertifyCompanyName">
+		<xsl:call-template name="getXmlSettings">
+			<xsl:with-param name="sectionName" select="'web'"/>
+			<xsl:with-param name="valueName" select="'GoCertifyCompanyName'"/>
+		</xsl:call-template>
+	</xsl:variable>
+	
   <!--####################### Page Level Templates, can be overridden later. ##############################-->
   <!-- -->
 
@@ -514,6 +521,21 @@
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
+
+		<!-- GoCertify Preload -->
+		<link rel="preload" href="https://assets.gocertify.me/assets/gocertify.js" as="script"/>
+
+		<!-- GoCertify Script -->
+		<script>
+			(function() {
+			var el = document.createElement("script");
+			el.setAttribute("src", "https://assets.gocertify.me/assets/gocertify.js");
+			el.setAttribute("data-brand", "<xsl:value-of select='$GoCertifyCompanyName'/>");
+			el.setAttribute("defer", "true");
+			document.head.appendChild(el);
+			})();
+		</script> 
+		  
       </head>
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
@@ -623,12 +645,12 @@
   <xsl:template match="Page" mode="LayoutAdminJs"></xsl:template>
 
   <xsl:template match="Page" mode="headerOnlyJS">
+	<xsl:apply-templates select="." mode="JSONLD"/>	  
     <xsl:apply-templates select="Contents/Content" mode="headerOnlyContentJS"/>
-
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraph-namespace">
-    <xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>
+    <!--<xsl:text>og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# article: http://ogp.me/ns/article#</xsl:text>-->
   </xsl:template>
 
   <xsl:template name="favicon">
@@ -802,10 +824,11 @@
     <!-- admin javascripts -->
     <xsl:if test="$adminMode">
       <xsl:apply-templates select="." mode="adminJs"/>
-     </xsl:if>
+     </xsl:if>  
 
     <xsl:apply-templates select="." mode="xform_control_scripts"/>
-    <!-- IF IE6 apply PNG Fix as standard -->
+
+	  <!-- IF IE6 apply PNG Fix as standard -->
     <xsl:if test="contains(/Page/Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'MSIE 6.0') and not(contains(Request/ServerVariables/Item[@name='HTTP_USER_AGENT'], 'Opera'))">
       <script type="{$scriptType}" src="/ewcommon/js/pngfix.js" defer="" cookie-consent="strictly-necessary">
         <xsl:text> </xsl:text>
@@ -1249,9 +1272,7 @@
         <xsl:apply-templates select="/Page/Contents/Content" mode="contentJS"/>
       </xsl:otherwise>
     </xsl:choose>
-
     <xsl:apply-templates select="/Page/Cart" mode="cartJS"/>
-
     <!-- GOOGLE MAPS -->
     <xsl:apply-templates select="." mode="googleMapJS" />
     <!-- Includes initialisation template if at least one method is in use: -->
@@ -1399,7 +1420,7 @@
     </xsl:if>
 
 
-    <xsl:apply-templates select="." mode="JSONLD"/>
+
 
     <!--  Google analytics javascript  -->
     <xsl:choose>
@@ -1525,7 +1546,9 @@
     </xsl:if>
     <!--New OG Tags for Facebook-->
     <xsl:apply-templates select="." mode="opengraphdata"/>
+	  <!--
     <meta property="og:url" content="{$href}"/>
+	-->
 
     <!--json-ld-->
     <xsl:apply-templates select="." mode="json-ld"/>
@@ -1835,7 +1858,7 @@
   </xsl:template>
 
   <xsl:template match="Content" mode="opengraphdata">
-    <meta property="og:type" content="article" />
+    <!--<meta property="og:type" content="article" />-->
   </xsl:template>
 
   <!--json-ld-->
@@ -2842,18 +2865,48 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="BingTrackingCode">
+	 
     <xsl:if test="$BingTrackingID!=''">
-      <script cookie-consent="tracking">
-
-        (function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>'} ; <xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push('pageLoad')},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s &amp;&amp;s!=='loaded' &amp;&amp; s!=='complete'||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,'script','//bat.bing.com/bat.js','uetq'); </xsl:text>
-        <xsl:if test="Cart/Order/@cmd='ShowInvoice'">
-          window.uetq = window.uetq || [];
-          window.uetq.push('event', 'purchase', {"revenue_value":<xsl:value-of select="Cart/Order/@total"/>,"currency":"<xsl:value-of select="Cart/@currency"/>"});
-        </xsl:if>
-
+      <script>
+	       <xsl:choose>
+		    <xsl:when test="Contents/Content[@type='CookieFirst']">
+			  <xsl:attribute name="type">text/javascript</xsl:attribute>		  
+			  <xsl:attribute name="data-cookiefirst-script">bing_ads</xsl:attribute>
+			</xsl:when>
+			<xsl:otherwise>
+				
+				<xsl:attribute name="cookie-consent">tracking</xsl:attribute>
+		    </xsl:otherwise>
+		  </xsl:choose>
+		(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:'<xsl:value-of select="$BingTrackingID"/>', enableAutoSpaTracking: true};<xsl:text disable-output-escaping="yes">o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s &amp;&amp; s!=="loaded" &amp;&amp;s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");</xsl:text>
+     	  <xsl:apply-templates select="." mode="BingTrackingCodeAction" />
       </script>
     </xsl:if>
   </xsl:template>
+
+	<xsl:template match="Page" mode="BingTrackingCodeAction">
+		
+	</xsl:template>
+
+	<xsl:template match="Page[Cart/Order/@cmd='ShowInvoice']" mode="BingTrackingCodeAction">
+
+		window.uetq = window.uetq || [];
+
+		window.uetq.push('set', { 'pid': {
+		'em': '<xsl:value-of select="Cart/Order/Contact[@type='Billing Address']/Email"/>' 
+		} });
+
+		<xsl:for-each select="Cart/Order/Item">
+				window.uetq.push('event', 'PRODUCT_PURCHASE', {
+				'ecomm_prodid': '<xsl:value-of select="productDetail/StockCode"/>',
+				'revenue_value': '<xsl:value-of select="@itemTotal"/>',
+				
+		        'currency': '<xsl:value-of select="Page/Cart/Order/@currency"/>'
+		        });
+	    </xsl:for-each>
+
+
+	</xsl:template>
 
   <xsl:template match="Page" mode="FacebookTrackingCode">
     <xsl:if test="$FacebookTrackingID!=''">
@@ -4270,7 +4323,6 @@
           <xsl:choose>
             <xsl:when test="$menu/descendant-or-self::MenuItem[@id=$contentParId]/@url='/'">
               <xsl:call-template name="getSiteURL"/>
-
             </xsl:when>
             <xsl:otherwise>
               <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
@@ -4373,13 +4425,26 @@
 
       <!-- get the href -->
       <xsl:attribute name="href">
-        <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+        <xsl:choose>
+          <xsl:when test="DisplayName/@linkType='popUp'">
+            <xsl:text>#</xsl:text>
+            <xsl:value-of select="DisplayName/@ModalID"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:apply-templates select="self::MenuItem" mode="getHref"/>
+          </xsl:otherwise>
+        </xsl:choose>
       </xsl:attribute>
 
       <!-- title attribute -->
       <xsl:attribute name="title">
         <xsl:apply-templates select="." mode="getTitleAttr"/>
       </xsl:attribute>
+
+      <xsl:if test="DisplayName/@linkType='popUp'">
+        <xsl:attribute name="data-toggle">modal</xsl:attribute>
+        <xsl:attribute name="role">button</xsl:attribute>
+      </xsl:if>
 
 
       <!-- check for different states to be applied -->
@@ -5205,7 +5270,7 @@
             <xsl:attribute name="class">btn btn-default btn-xs pull-left</xsl:attribute>
             <i class="fa fa-chevron-left">
               <xsl:text> </xsl:text>
-            </i>&#160;
+            </i>
           </xsl:if>
           <xsl:choose>
             <xsl:when test="$linkText!=''">
@@ -6376,7 +6441,6 @@
 
       </xsl:otherwise>
     </xsl:choose>
-
   </xsl:template>
 
 
@@ -6429,9 +6493,11 @@
           <xsl:text>');</xsl:text>
         </xsl:attribute>
       </xsl:if>
-
+		<xsl:apply-templates mode="cleanXhtml"/>
+		<xsl:text> </xsl:text>
+		<!--
      	<xsl:variable name="anchorText">
-			<xsl:apply-templates mode="cleanXhtml"/>
+			<xsl:apply-templates select="*" mode="cleanXhtml"/>
 		</xsl:variable>
 		<xsl:choose>
 			<xsl:when test="$anchorText!=''">
@@ -6441,7 +6507,7 @@
 				<xsl:text> </xsl:text>
 			</xsl:otherwise>
 		</xsl:choose>
-    
+    -->
     </xsl:element>
   </xsl:template>
 
@@ -9265,7 +9331,7 @@
           <xsl:value-of select="@maxDisplay"/>
         </xsl:when>
         <xsl:otherwise>
-          0
+			<xsl:text>0</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
     </xsl:param>
@@ -10798,6 +10864,7 @@
   <xsl:template name="bundle-css">
     <xsl:param name="comma-separated-files"/>
     <xsl:param name="bundle-path"/>
+	  
     <xsl:call-template name="render-css-files">
       <xsl:with-param name="list" select="ew:BundleCSS($comma-separated-files,$bundle-path)"/>
       <xsl:with-param name="ie8mode">
@@ -10948,10 +11015,10 @@
                 </div>
               </xsl:when>
               <xsl:otherwise>
-                <div class="{$class}">
-                  <xsl:apply-templates select="." mode="displayModule"/>
-                  <xsl:text> </xsl:text>
-                </div>
+					  <div class="{$class}">
+						  <xsl:apply-templates select="." mode="displayModule"/>
+						  <xsl:text> </xsl:text>
+					  </div>
               </xsl:otherwise>
             </xsl:choose>
           </section>

@@ -4,6 +4,6 @@
 <bind id="cEmail" nodeset="user/email" required="true()" type="format:^[a-zA-Z0-9._%+-@ ]*$" />
 </model><group ref="ResetAccount"><label>
   <span class="msg-028">Please enter your email address and we will email a link to reset the password.</span></label>
-<input bind="cEmail"><label>Email address / Username</label><value></value></input>
+<input bind="cEmail"><label>Email address</label><value></value></input>
 <submit submission="" ref="ewAccountReset" class="principle"><label>Send Password</label></submit></group>
 </Content>

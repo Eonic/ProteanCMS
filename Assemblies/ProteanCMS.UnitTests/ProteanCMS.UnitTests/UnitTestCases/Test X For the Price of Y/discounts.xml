@@ -1,0 +1,28 @@
+<Discount>
+	<nDiscountKey>34188</nDiscountKey>
+	<nDiscountForeignRef/>
+	<cDiscountName>Test X price Y product</cDiscountName>
+	<cDiscountCode>XTESTY</cDiscountCode>
+	<nDiscountCat>3</nDiscountCat>
+	<bDiscountIsPercent>0</bDiscountIsPercent>
+	<nDiscountValue>2</nDiscountValue>
+	<nDiscountMinPrice></nDiscountMinPrice>
+	<nDiscountMinQuantity>3</nDiscountMinQuantity>
+	<cAdditionalXML>
+		<cDescription />
+		<cTerms />
+		<Images>
+			<img src="" width="" height="" class="thumbnail" alt="" />
+			<img src="" width="" height="" class="display" alt="" />
+			<img src="" width="" height="" class="detail" alt="" />
+		</Images>
+		<bFreeGiftBox></bFreeGiftBox>
+		<bApplyToOrder></bApplyToOrder>
+		<cFreeShippingMethods></cFreeShippingMethods>
+		<nMinimumOrderValue></nMinimumOrderValue>
+		<nMaximumOrderValue></nMaximumOrderValue>
+		<nDiscountMaxPrice></nDiscountMaxPrice>
+	</cAdditionalXML>
+	<cDiscountUserCode>XTESTY</cDiscountUserCode>
+	<nDiscountCodeType>1</nDiscountCodeType>
+</Discount>

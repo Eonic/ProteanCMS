@@ -509,6 +509,36 @@
 			<xsl:apply-templates select="/Page/Contents/Content[@type='Module' and @position = $position]" mode="displayModule"/>
 		</xsl:if>
 	</xsl:template>
+
+	<xsl:template match="Page" mode="addModuleControls">
+		<xsl:param name="text"/>
+		<xsl:param name="class"/>
+		<xsl:param name="position"/>
+		<xsl:if test="AdminMenu/descendant-or-self::MenuItem[@cmd='AddModule'] and $page/@ewCmd!='PreviewOn'">
+			<xsl:attribute name="class">
+				<xsl:text>moduleContainer</xsl:text>
+				<xsl:if test="$class!=''">
+					<xsl:text> </xsl:text>
+					<xsl:value-of select="$class"/>
+				</xsl:if>
+			</xsl:attribute>
+			<div class="ptn-edit options addmodule">
+
+				<div class="addHere">
+					<strong>
+						<xsl:value-of select="$position"/>
+					</strong>
+					<xsl:text> - drag a module here</xsl:text>
+				</div>
+				<a class="btn btn-primary btn-xs pull-right" href="?ewCmd=AddModule&amp;pgid={/Page/@id}&amp;position={$position}">
+					<i class="fa fa-plus">&#160;</i>&#160;<span class="sr-only">
+						<xsl:value-of select="$text"/>
+					</span>
+				</a>
+			</div>
+		</xsl:if>
+	</xsl:template>
+	
 	<!-- -->
 	<xsl:template match="Page" mode="inlinePopupAdd">
 		<xsl:param name="type"/>
@@ -1002,7 +1032,6 @@
 				<xsl:if test="@contentType!=''">
 					<xsl:apply-templates select="." mode="inlinePopupRelateTop"/>
 				</xsl:if>
-
 				<xsl:if test="starts-with(@position,'column1') and $page/@layout='Modules_Masonary'">
 					<div class="dropdown pull-right">
 						<a href="#" class="btn btn-primary btn-xs" data-bs-toggle="dropdown">
@@ -1054,7 +1083,7 @@
 					<xsl:choose>
 						<!-- NEED A TRIGGER FOR ONLY CASCADED STUFF TO EDIT ON PARID <xsl:when test="@parId=/Page/@id">-->
 						<xsl:when test="false()">
-							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={@parId}" title="Click here to edit this content" class="btn btn-primary btn-xs">
+							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={@parId}&amp;cModuleType={@moduleType}" title="Click here to edit this content" class="btn btn-primary btn-xs">
 								<xsl:choose>
 									<xsl:when test="@contentType!=''">
 										<xsl:attribute name="class">btn btn-primary btn-primary-darker btn-xs</xsl:attribute>
@@ -1072,7 +1101,7 @@
 							</a>
 						</xsl:when>
 						<xsl:otherwise>
-							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={$pageId}" title="Click here to edit this content" class="btn btn-primary btn-xs">
+							<a href="?ewCmd=Edit{$isMail}Content&amp;id={@id}&amp;pgid={$pageId}&amp;cModuleType={@moduleType}" title="Click here to edit this content" class="btn btn-primary btn-xs">
 								<xsl:choose>
 									<xsl:when test="@contentType!=''">
 										<xsl:attribute name="class">btn btn-primary btn-primary-darker btn-xs</xsl:attribute>
@@ -1287,12 +1316,13 @@
 						</xsl:if>
 
 						<xsl:choose>
-							<xsl:when test="parent::*[name()='Content']">
+							<xsl:when test="$page/descendant-or-self::Content[@id=$id and parent::*[name()='Content']]">
 								<xsl:variable name="parId" select="parent::*[name()='Content']/@id"/>
 								<li class="divider">&#160;</li>
 								<li class="updown">
 									<a href="?ewCmd=MoveTop&amp;relId={$parId}&amp;id={@id}{$modulePosition}" title="Move this item to the top" class="btn btn-xs">
 										<i class="fa fa-step-backward fa-rotate-90">&#160;</i>
+										<xsl:value-of select="$sortBy"/>
 									</a>
 									<a href="?ewCmd=MoveUp&amp;relId={$parId}&amp;id={@id}{$modulePosition}" title="Move this item up by one space" class="btn btn-xs">
 										<i class="fa fa-caret-up fa-lg">&#160;</i>

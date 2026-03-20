@@ -42,9 +42,14 @@ Public Class IssueSubscription : Implements IHttpHandler, IRequiresSessionState
                 moSubscription = New Protean.Cms.Cart.Subscriptions(myCms)
                 moSubscription.AddUserSubscriptions(oCart.mnCartId, oCart.mnEwUserId, itemElmt, oCart.mnPaymentId)
 
+
+
             Next
 
+            myCms.moDbHelper.ExeProcessSql("update tblCartOrder set nCartStatus = 6 where nCartOrderKey = " + OrderId)
+
             context.Response.Redirect("/?ewCmd=Orders&ewCmd2=Display&id=" & OrderId)
+
         Catch ex As Exception
             context.Response.Write(ex.Message)
         Finally

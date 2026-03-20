@@ -395,7 +395,7 @@
       <!--
 			</xsl:choose>-->
       <xsl:if test="@facebookURL!=''">
-        <a href="{@facebookURL}"  title="{$myName} on Facebook" class="social-id-fb">
+        <a href="{@facebookURL}" aria-label="{$myName} on Facebook" class="social-id-fb">
           <xsl:attribute name="target">_blank</xsl:attribute>
           <i>
             <xsl:attribute name="class">
@@ -409,7 +409,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@twitterURL!=''">
-        <a href="{@twitterURL}" target="_blank" title="{$myName} on Twitter" class="social-id-tw">
+        <a href="{@twitterURL}" target="_blank" aria-label="{$myName} on Twitter" class="social-id-tw">
           <i>
             <xsl:attribute name="class">
               <xsl:text>fab fa-x-twitter </xsl:text>
@@ -422,7 +422,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@linkedInURL!=''">
-        <a href="{@linkedInURL}" target="_blank" title="{$myName} on LinkedIn" class="social-id-li">
+        <a href="{@linkedInURL}" target="_blank" aria-label="{$myName} on LinkedIn" class="social-id-li">
           <i>
             <xsl:attribute name="class">
               <xsl:text>fab fa-linkedin </xsl:text>
@@ -435,7 +435,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@pinterestURL!=''">
-        <a href="{@pinterestURL}" target="_blank" title="{$myName} on Pinterest" class="social-id-pi">
+        <a href="{@pinterestURL}" target="_blank" aria-label="{$myName} on Pinterest" class="social-id-pi">
           <i>
             <xsl:attribute name="class">
               <xsl:text>fab fa-pinterest </xsl:text>
@@ -448,7 +448,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@youtubeURL!=''">
-        <a href="{@youtubeURL}" target="_blank" title="{$myName} on Youtube" class="social-id-yt">
+        <a href="{@youtubeURL}" target="_blank" aria-label="{$myName} on Youtube" class="social-id-yt">
           <i>
             <xsl:attribute name="class">
               <xsl:text>fab fa-youtube </xsl:text>
@@ -461,7 +461,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@instagramURL!=''">
-        <a href="{@instagramURL}" target="_blank" title="{$myName} on Instagram" class="social-id-ig">
+        <a href="{@instagramURL}" target="_blank" aria-label="{$myName} on Instagram" class="social-id-ig">
           <i>
             <xsl:attribute name="class">
               <xsl:text>fab fa-instagram </xsl:text>
@@ -474,7 +474,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@blueSkyURL!=''">
-        <a href="{@blueSkyURL}" target="_blank" title="{$myName} on Bluesky" class="social-id-bs">
+        <a href="{@blueSkyURL}" target="_blank" aria-label="{$myName} on Bluesky" class="social-id-bs">
           <i>
             <xsl:attribute name="class">
               <xsl:text>fa-brands  fa-bluesky </xsl:text>
@@ -855,7 +855,7 @@
 				</xsl:otherwise>
 			</xsl:choose>-->
       <xsl:if test="@facebookURL!=''">
-        <a href="{@facebookURL}" title="{$myName} on Facebook" class="social-id-fb" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$fb-order}">
+        <a href="{@facebookURL}" aria-label="{$myName} on Facebook" class="social-id-fb" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$fb-order}">
           <xsl:if test="$blank='true'">
             <xsl:attribute name="target">_blank</xsl:attribute>
           </xsl:if>
@@ -874,7 +874,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@twitterURL!=''">
-        <a href="{@twitterURL}" title="{$myName} on Twitter" class="social-id-tw" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$x-order}">
+        <a href="{@twitterURL}" aria-label="{$myName} on Twitter" class="social-id-tw" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$x-order}">
           <xsl:if test="$blank='true'">
             <xsl:attribute name="target">_blank</xsl:attribute>
           </xsl:if>
@@ -893,7 +893,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@linkedInURL!=''">
-        <a href="{@linkedInURL}" title="{$myName} on LinkedIn" class="social-id-li" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$li-order}">
+        <a href="{@linkedInURL}" aria-label="{$myName} on LinkedIn" class="social-id-li" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$li-order}">
           <xsl:if test="$blank='true'">
             <xsl:attribute name="target">_blank</xsl:attribute>
           </xsl:if>
@@ -912,7 +912,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@pinterestURL!=''">
-        <a href="{@pinterestURL}" title="{$myName} on Pinterest" class="social-id-pi" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$p-order}">
+        <a href="{@pinterestURL}" aria-label="{$myName} on Pinterest" class="social-id-pi" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$p-order}">
           <xsl:if test="$blank='true'">
             <xsl:attribute name="target">_blank</xsl:attribute>
           </xsl:if>
@@ -931,7 +931,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@youtubeURL!=''">
-        <a href="{@youtubeURL}" title="{$myName} on Youtube" class="social-id-yt" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$yt-order}">
+        <a href="{@youtubeURL}" aria-label="{$myName} on Youtube" class="social-id-yt" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$yt-order}">
           <xsl:if test="$blank='true'">
             <xsl:attribute name="target">_blank</xsl:attribute>
           </xsl:if>
@@ -950,7 +950,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@instagramURL!=''">
-        <a href="{@instagramURL}" title="{$myName} on Instagram" class="social-id-ig" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$i-order}">
+        <a href="{@instagramURL}" aria-label="{$myName} on Instagram" class="social-id-ig" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$i-order}">
           <xsl:if test="$blank='true'">
             <xsl:attribute name="target">_blank</xsl:attribute>
           </xsl:if>
@@ -969,7 +969,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@spotifyURL!=''">
-        <a href="{@spotifyURL}" title="{$myName} on Spotify" class="social-id-isp" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};">
+        <a href="{@spotifyURL}" aria-label="{$myName} on Spotify" class="social-id-isp" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};">
           <xsl:if test="$blank='true'">
             <xsl:attribute name="target">_blank</xsl:attribute>
           </xsl:if>
@@ -988,7 +988,7 @@
         </a>
       </xsl:if>
       <xsl:if test="@blueSkyURL!=''">
-        <a href="{@blueSkyURL}" title="{$myName} on Bluesky" class="social-id-bs" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$bs-order}">
+        <a href="{@blueSkyURL}" aria-label="{$myName} on Bluesky" class="social-id-bs" style="padding-left:{$half-spacing}{$spacing-unit};padding-right:{$half-spacing}{$spacing-unit};padding-bottom:{$spacing}{$spacing-unit};order:{$bs-order}">
           <xsl:if test="$blank='true'">
             <xsl:attribute name="target">_blank</xsl:attribute>
           </xsl:if>

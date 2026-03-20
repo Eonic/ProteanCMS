@@ -61,19 +61,32 @@ namespace Protean.Tools
 
         public static bool IsEmail(string cEmail)
         {
-            // checks the validity of the email address by assuming it is false and running a series of tests.
-            // if the email string passes all tests then this function returns True
-            // checks are:-
-            // is empty?
-            // no spaces inside?
-            // @ separator in place
-            // last . is less than 4 chars from end
+            // Validates email addresses according to RFC 5322 standards
+            // Supports:
+            // - Standard ASCII email addresses
+            // - Quoted strings in local part
+            // - Special characters (e.g., +, -, _, ., %)
+            // - IP address domains (e.g., user@[192.168.1.1])
+            // - Internationalized Domain Names (IDN) via punycode conversion
+            // - Comments (via punycode in domains)
+            // - Multiple TLD levels
+            
+            if (string.IsNullOrWhiteSpace(cEmail))
+                return false;
 
-            // OR... Do it in one very efficient line (more efficient than nested text searches)
-
-
-            // Validate the e-mail address
-            return new Regex(@"^[A-Z0-9.'_%-]+@[A-Z0-9-]+(\.[A-Z0-9-]+)*\.[A-Z]{2,24}$", RegexOptions.IgnoreCase).IsMatch(cEmail + "");
+            try
+            {
+                // Use built-in .NET email validation which handles RFC 5322 and IDN
+                var addr = new System.Net.Mail.MailAddress(cEmail);
+                
+                // Verify the address matches the original input (handles edge cases)
+                return addr.Address == cEmail.Trim();
+            }
+            catch
+            {
+                // If MailAddress constructor throws, it's not a valid email
+                return false;
+            }
         }
 
         public static string IntegerToString(int nNumber, int nMinLength)
@@ -739,6 +752,33 @@ namespace Protean.Tools
             xmlString = Regex.Replace(xmlString, "<[/]?(" + tagNames + @":\w+)[^>]*?>", "", RegexOptions.IgnoreCase);
 
             return xmlString;
+        }
+
+        public static bool IsAppleDevice(string userAgent)
+        {
+            if (string.IsNullOrEmpty(userAgent))
+            {
+                return false;
+            }
+
+            // Check for iPhone, iPod, or iPad (for older iOS versions)
+            if (userAgent.Contains("iphone") || userAgent.Contains("ipod"))
+            {
+                return true;
+            }
+            // Check for iPad (for newer iPadOS which might use "Macintosh" in UA string)
+            else if (userAgent.Contains("ipad") || userAgent.Contains("macintosh"))
+            {
+
+                return true;
+            }
+            // if a broader "Apple device" detection is needed beyond mobile devices.
+            if (userAgent.Contains("mac os x"))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }
