@@ -265,7 +265,7 @@
   </xsl:template>
 
 
-	<xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
+	<xsl:template match="label[ancestor::Content[@name='UserLogon' or @name='AdminLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
 		<xsl:choose>
 			<xsl:when test="$page/Settings/add[@key='web.proteanProductName']/@value!=''">
 				<xsl:call-template name="proteanAdminSystemName"/>
@@ -6562,13 +6562,13 @@ $(document).ready(function () {
 
           <!--<a href="{$appPath}?ewCmd=EditUserContact&amp;parid={$dirid}&amp;id={nContactKey}" class="btn btn-primary btn-sm float-end">-->
           <span class="btn-group-spaced float-end">
-            <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-primary btn-sm ">
+            <a href="{$appPath}?ewCmd=EditUserContact&amp;parid={nContactKey}&amp;id={nContactDirId}" class="btn btn-primary btn-sm ">
               <i class="fa fa-edit">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>
               Edit
             </a>
-            <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={nContactKey}&amp;id={$dirid}" class="btn btn-danger btn-sm ">
+            <a href="{$appPath}?ewCmd=DeleteUserContact&amp;parid={nContactKey}&amp;id={nContactDirId}" class="btn btn-danger btn-sm ">
               <i class="fa fa-trash-alt">
                 <xsl:text> </xsl:text>
               </i><xsl:text> </xsl:text>Delete
@@ -6842,26 +6842,27 @@ $(document).ready(function () {
         <xsl:value-of select="@id"/>
       </td>
       <td>
-        [<xsl:value-of select="@statusId"/>]&#160;<xsl:choose>
-          <xsl:when test="@statusId='0'">New</xsl:when>
-          <xsl:when test="@statusId='1'">Items Added</xsl:when>
-          <xsl:when test="@statusId='2'">Billing Address Added</xsl:when>
-          <xsl:when test="@statusId='3'">Delivery Address Added</xsl:when>
-          <xsl:when test="@statusId='4'">Confirmed</xsl:when>
-          <xsl:when test="@statusId='5'">Pass for Payment</xsl:when>
-          <xsl:when test="@statusId='6'">New Sale</xsl:when>
-          <xsl:when test="@statusId='7'">Refunded</xsl:when>
-          <xsl:when test="@statusId='8'">Failed</xsl:when>
-          <xsl:when test="@statusId='9'">Shipped</xsl:when>
-          <xsl:when test="@statusId='10'">Deposit Paid</xsl:when>
-          <xsl:when test="@statusId='11'">Abandoned</xsl:when>
-          <xsl:when test="@statusId='12'">Deleted</xsl:when>
-          <xsl:when test="@statusId='13'">Awaiting Payment</xsl:when>
-			<xsl:when test="@statusId='14'">Settlement Initiated</xsl:when>
-			<xsl:when test="@statusId='15'">Skip Address</xsl:when>
-			<xsl:when test="@statusId='16'">Archived</xsl:when>
-			<xsl:when test="@statusId='17'">In Progress</xsl:when>
-        </xsl:choose>
+		  <xsl:choose>
+			  <xsl:when test="@statusId='6' and Order/Item/Name/node()='Donation'">
+				  <i class="fa-solid fa-circle-dollar-to-slot">&#160;</i>
+				  <xsl:text>&#160;Donation</xsl:text>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:choose>
+					  <xsl:when test="@statusId='6'">
+						  <i class="fa-solid fa-bag-shopping">&#160;</i>
+					  </xsl:when>
+					  <xsl:otherwise>
+						  [<xsl:value-of select="@statusId"/>]
+					  </xsl:otherwise>
+				  </xsl:choose>
+				  <xsl:text>&#160;</xsl:text>
+				  <xsl:call-template name="getStatusTitle">
+					  <xsl:with-param name="statusId" select="@statusId"/>
+				  </xsl:call-template>
+			  </xsl:otherwise>
+		  </xsl:choose>
+		  
       </td>
       <td>
         <xsl:choose>

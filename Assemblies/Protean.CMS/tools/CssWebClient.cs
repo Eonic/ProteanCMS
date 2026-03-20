@@ -8,8 +8,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 namespace Protean
@@ -86,9 +84,9 @@ namespace Protean
                         serverPort = ":" + goRequest.ServerVariables["SERVER_PORT"];
                     }
 
-                    if (!(Strings.InStr(Serviceurl, "http") == 1))
+                    if (!Serviceurl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (Strings.LCase(goRequest.ServerVariables["HTTPS"]) == "on")
+                        if (goRequest.ServerVariables["HTTPS"].ToLower() == "on")
                         {
                             origServiceUrl = "https://" + goRequest.ServerVariables["SERVER_NAME"] + serverPort + Serviceurl;
                             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
@@ -135,13 +133,13 @@ delegate (object sender, System.Security.Cryptography.X509Certificates.X509Certi
                             strResponse = readStream.ReadToEnd();
                         }
                     }
-                    strResponse = strResponse.Replace(Constants.vbLf, "");
+                    strResponse = strResponse.Replace("\n", "");
                     fullCss = strResponse;
 
                     ClearApplicationCache(origServiceUrl);
                     ServicePointManager.ServerCertificateValidationCallback = null;
                 }
-                int cssSplit = Conversions.ToInteger(Interaction.IIf(string.IsNullOrEmpty(moConfig["cssSplit"]), 2000, moConfig["cssSplit"]));
+                int cssSplit = string.IsNullOrEmpty(moConfig["cssSplit"]) ? 2000 : Convert.ToInt32(moConfig["cssSplit"]);
                 ComputeCSS(fullCss, cssSplit);
             }
             catch (Exception ex)

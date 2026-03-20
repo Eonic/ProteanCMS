@@ -2953,8 +2953,7 @@
 				</xsl:attribute>
 				<label for="{@ref}_selectAll">
 					<input type="checkbox" name="{@ref}_selectAll" id="{@ref}_selectAll" class="selectAll"/>
-					&#160;
-					&#160;
+					<xsl:text>  </xsl:text>
 					Select All
 				</label>
 			</span>
@@ -3385,7 +3384,7 @@
 						</xsl:if>
 					</xsl:if>
 				</input>
-				&#160;
+				<xsl:text> </xsl:text>
 				<xsl:value-of select="label/node()"/>
 			</label>
 		</span>
@@ -3489,7 +3488,7 @@
 						</xsl:if>
 					</xsl:if>
 				</input>
-				&#160;
+				<xsl:text> </xsl:text>
 				<xsl:value-of select="label/node()"/>
 			</label>
 		</span>

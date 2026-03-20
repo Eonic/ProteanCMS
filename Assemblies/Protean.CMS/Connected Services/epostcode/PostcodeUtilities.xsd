@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:mstns="http://ws.epostcode.com/uk/PostcodeUtilities.xsd" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns="http://ws.epostcode.com/uk/PostcodeUtilities.xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.epostcode.com/uk/PostcodeUtilities.xsd" id="PostcodeUtilities" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element msdata:IsDataSet="true" msdata:Locale="en-GB" name="PostcodeUtilities">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ListAddressPremise">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="List_Address" type="xs:string" />
+              <xs:element minOccurs="0" name="Unique_Delivery_Point" type="xs:string" />
+              <xs:element minOccurs="0" name="Return_Code" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ListAddressThoroughfare">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="List_Address" type="xs:string" />
+              <xs:element minOccurs="0" name="Identifier" type="xs:string" />
+              <xs:element minOccurs="0" name="Return_Code" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Nearest">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="Postcode_Datum" type="xs:string" />
+              <xs:element minOccurs="0" name="Postcode_Return" type="xs:string" />
+              <xs:element minOccurs="0" name="Postcode_Description" type="xs:string" />
+              <xs:element minOccurs="0" name="Ordinal_Position" type="xs:string" />
+              <xs:element minOccurs="0" name="Distance_Metres" type="xs:string" />
+              <xs:element minOccurs="0" name="Distance_Kilometres" type="xs:string" />
+              <xs:element minOccurs="0" name="Distance_Miles" type="xs:string" />
+              <xs:element minOccurs="0" name="Distance_NauticalMiles" type="xs:string" />
+              <xs:element minOccurs="0" name="Return_Code" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Geographic">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="Postcode" type="xs:string" />
+              <xs:element minOccurs="0" name="Grid_Reference" type="xs:string" />
+              <xs:element minOccurs="0" name="x_Coord" type="xs:string" />
+              <xs:element minOccurs="0" name="y_Coord" type="xs:string" />
+              <xs:element minOccurs="0" name="Latitude_Deg_Min_Sec" type="xs:string" />
+              <xs:element minOccurs="0" name="Longitude_Deg_Min_Sec" type="xs:string" />
+              <xs:element minOccurs="0" name="Latitude_Degrees" type="xs:string" />
+              <xs:element minOccurs="0" name="Longitude_Degrees" type="xs:string" />
+              <xs:element minOccurs="0" name="Country_Code" type="xs:string" />
+              <xs:element minOccurs="0" name="Country_Name" type="xs:string" />
+              <xs:element minOccurs="0" name="Administrative_County" type="xs:string" />
+              <xs:element minOccurs="0" name="Local_Auth_Name" type="xs:string" />
+              <xs:element minOccurs="0" name="Local_Auth_Ward_Code" type="xs:string" />
+              <xs:element minOccurs="0" name="Local_Auth_Ward_Name" type="xs:string" />
+              <xs:element minOccurs="0" name="NHS_Regional_Office" type="xs:string" />
+              <xs:element minOccurs="0" name="NHS_Strat_Health_Board_Code" type="xs:string" />
+              <xs:element minOccurs="0" name="NHS_Strat_Health_Board_Name" type="xs:string" />
+              <xs:element minOccurs="0" name="NHS_Primary_Health_Auth_Code" type="xs:string" />
+              <xs:element minOccurs="0" name="NHS_Primary_Health_Board_Code" type="xs:string" />
+              <xs:element minOccurs="0" name="NHS_Primary_Health_Board_Name" type="xs:string" />
+              <xs:element minOccurs="0" name="M_Details" type="xs:string" />
+              <xs:element minOccurs="0" name="G_Details" type="xs:string" />
+              <xs:element minOccurs="0" name="Return_Code" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="AddressPremise">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="Unique_Delivery_Point" type="xs:string" />
+              <xs:element minOccurs="0" name="Organisation_Department" type="xs:string" />
+              <xs:element minOccurs="0" name="Organisation" type="xs:string" />
+              <xs:element minOccurs="0" name="Sub_Building_Name" type="xs:string" />
+              <xs:element minOccurs="0" name="Building_Name" type="xs:string" />
+              <xs:element minOccurs="0" name="Number" type="xs:string" />
+              <xs:element minOccurs="0" name="Dependent_Street" type="xs:string" />
+              <xs:element minOccurs="0" name="Street" type="xs:string" />
+              <xs:element minOccurs="0" name="Double_Dependent_Locality" type="xs:string" />
+              <xs:element minOccurs="0" name="Dependent_Locality" type="xs:string" />
+              <xs:element minOccurs="0" name="Post_Town" type="xs:string" />
+              <xs:element minOccurs="0" name="County_LocalAuthority" type="xs:string" />
+              <xs:element minOccurs="0" name="County_Administrative" type="xs:string" />
+              <xs:element minOccurs="0" name="County_Traditional" type="xs:string" />
+              <xs:element minOccurs="0" name="County_FormerPostal" type="xs:string" />
+              <xs:element minOccurs="0" name="Country" type="xs:string" />
+              <xs:element minOccurs="0" name="Postcode" type="xs:string" />
+              <xs:element minOccurs="0" name="Post_Office_Box" type="xs:string" />
+              <xs:element minOccurs="0" name="User_Category" type="xs:string" />
+              <xs:element minOccurs="0" name="Mailsort_Sortcode" type="xs:string" />
+              <xs:element minOccurs="0" name="Delivery_Point_Suffix" type="xs:string" />
+              <xs:element minOccurs="0" name="Return_Code" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="License">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element minOccurs="0" name="AccountName" type="xs:string" />
+              <xs:element minOccurs="0" name="Guid" type="xs:string" />
+              <xs:element minOccurs="0" name="LicenseID" type="xs:string" />
+              <xs:element minOccurs="0" name="LicenseTypeName" type="xs:string" />
+              <xs:element minOccurs="0" name="LicenseTypeDesc" type="xs:string" />
+              <xs:element minOccurs="0" name="ExpiryDate" type="xs:string" />
+              <xs:element minOccurs="0" name="CurrentCreditsAvailable" type="xs:string" />
+              <xs:element minOccurs="0" name="AllowedIpAddress" type="xs:string" />
+              <xs:element minOccurs="0" name="LicenseInUse" type="xs:string" />
+              <xs:element minOccurs="0" name="Available" type="xs:string" />
+              <xs:element minOccurs="0" name="Status" type="xs:string" />
+              <xs:element minOccurs="0" name="Return_Code" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

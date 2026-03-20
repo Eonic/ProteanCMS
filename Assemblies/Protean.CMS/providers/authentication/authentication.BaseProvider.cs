@@ -1,6 +1,4 @@
 ﻿using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Providers.Payment;
@@ -316,7 +314,7 @@ namespace Protean.Providers
             //        else
             //        {
             //            DataRow oUserDetails = dsUsers.Tables[0].Rows[0];
-            //            userid = Conversions.ToLong(oUserDetails["nDirKey"]);                
+            //            userid = Convert.ToInt64(oUserDetails["nDirKey"]);                
             //        }
             //    }
             //    return userid;

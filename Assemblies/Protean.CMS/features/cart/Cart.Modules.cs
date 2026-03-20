@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Xml;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Protean
 {
@@ -42,7 +41,7 @@ namespace Protean
                                 Cart oCart;
                                 oCart = new Cart(ref myWeb);
                                 XmlElement argoPageDetail = null;
-                                oCart.ListOrders(Conversions.ToInteger("0" + myWeb.moRequest["OrderId"]).ToString(),false,0, oPageDetail: ref argoPageDetail);
+                                oCart.ListOrders(Convert.ToInt16("0" + myWeb.moRequest["OrderId"]).ToString(),false,0, oPageDetail: ref argoPageDetail);
                                 oCart = null;
                             }
 
@@ -71,7 +70,7 @@ namespace Protean
                                 Cart oCart;
                                 oCart = new Cart(ref myWeb);
                                 XmlElement argoPageDetail = null;
-                                oCart.ListOrders(Conversions.ToInteger("0" + myWeb.moRequest["QuoteId"]).ToString(),false,0, oPageDetail: ref argoPageDetail);
+                                oCart.ListOrders(Convert.ToInt16("0" + myWeb.moRequest["QuoteId"]).ToString(),false,0, oPageDetail: ref argoPageDetail);
                                 oCart = null;
                             }
 
@@ -96,20 +95,20 @@ namespace Protean
                             case "Item": // case for item in shopping cart
                                 {
 
-                                    int CodeGroup = Conversions.ToInteger("0" + oContentNode.SelectSingleNode("CodeGroup").InnerText);
+                                    int CodeGroup = Convert.ToInt16("0" + oContentNode.SelectSingleNode("CodeGroup").InnerText);
 
                                     if (CodeGroup > 0)
                                     {
                                         // Save with current stock available
                                         string sSql = "select count(nCodeKey) from tblCodes where nUseId is null and nIssuedDirId is null and nCodeParentId = " + CodeGroup.ToString();
-                                        int codesAvailable = Conversions.ToInteger(myWeb.moDbHelper.ExeProcessSqlScalar(sSql));
+                                        int codesAvailable = Convert.ToInt16(myWeb.moDbHelper.ExeProcessSqlScalar(sSql));
                                         var stockElmt = myWeb.moPageXml.CreateElement("Stock");
-                                        stockElmt.InnerText = ((int)Math.Round(Conversions.ToDouble("0") + codesAvailable)).ToString();
+                                        stockElmt.InnerText = ((int)Math.Round(Convert.ToDouble("0") + codesAvailable)).ToString();
                                         oContentNode.AppendChild(stockElmt);
 
                                         // getQuantity
                                         XmlElement ItemParent = (XmlElement)oContentNode.ParentNode;
-                                        int VoucherQuantity = Conversions.ToInteger(ItemParent.GetAttribute("quantity"));
+                                        int VoucherQuantity = Convert.ToInt16(ItemParent.GetAttribute("quantity"));
                                         int i;
                                         var loopTo = VoucherQuantity;
                                         for (i = 1; i <= loopTo; i++)
@@ -146,14 +145,14 @@ namespace Protean
                             case "Contents":
                                 {
 
-                                    int CodeGroup = Conversions.ToInteger("0" + oContentNode.SelectSingleNode("CodeGroup").InnerText);
+                                    int CodeGroup = Convert.ToInt16("0" + oContentNode.SelectSingleNode("CodeGroup").InnerText);
 
                                     if (CodeGroup > 0)
                                     {
                                         string sSql = "select count(nCodeKey) from tblCodes where nUseId is null and nCodeParentId = " + CodeGroup.ToString();
-                                        int codesAvailable = Conversions.ToInteger(myWeb.moDbHelper.ExeProcessSqlScalar(sSql));
+                                        int codesAvailable = Convert.ToInt16(myWeb.moDbHelper.ExeProcessSqlScalar(sSql));
                                         var stockElmt = myWeb.moPageXml.CreateElement("Stock");
-                                        stockElmt.InnerText = ((int)Math.Round(Conversions.ToDouble("0") + codesAvailable)).ToString();
+                                        stockElmt.InnerText = ((int)Math.Round(Convert.ToDouble("0") + codesAvailable)).ToString();
                                         oContentNode.AppendChild(stockElmt);
                                     }
 
@@ -246,17 +245,17 @@ namespace Protean
                                     tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/StartDate[1]', 'VARCHAR(255)') + ' ' + (CAST(xItemXml AS XML)).value('/Content[1]/Times[1]/@start', 'VARCHAR(255)') AS 'Time',";
                                     tktDet += "(CAST(xItemXml AS XML)).value('/Content[1]/StartDate[1]', 'VARCHAR(255)') AS 'EventDate'";
                                     tktDet += " From tblCartItem inner Join tblCartOrder On tblCartOrder.nCartOrderKey = tblCartItem.nCartOrderId";
-                                    tktDet = Conversions.ToString(tktDet + Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" Where tblCartOrder.nCartOrderKey = ", oDr["nCartOrderKey"]), " and tblCartItem.nCartItemKey = "), oDr["nCartItemKey"]));
+                                    tktDet = tktDet + " Where tblCartOrder.nCartOrderKey = " + oDr["nCartOrderKey"] + " and tblCartItem.nCartItemKey = " + oDr["nCartItemKey"];
                                     using (var oDr1 = myWeb.moDbHelper.getDataReaderDisposable(tktDet))  // Done by nita on 6/7/22
                                     {
                                         while (oDr1.Read())
                                         {
-                                            oContentNode.SetAttribute("PurchaserName", Conversions.ToString(oDr1["PurchaserName"]));
-                                            oContentNode.SetAttribute("EventName", Conversions.ToString(oDr1["EventName"]));
-                                            oContentNode.SetAttribute("Venue", Conversions.ToString(oDr1["Venue"]));
-                                            oContentNode.SetAttribute("Time", Conversions.ToString(oDr1["Time"]));
+                                            oContentNode.SetAttribute("PurchaserName", Convert.ToString(oDr1["PurchaserName"]));
+                                            oContentNode.SetAttribute("EventName", Convert.ToString(oDr1["EventName"]));
+                                            oContentNode.SetAttribute("Venue", Convert.ToString(oDr1["Venue"]));
+                                            oContentNode.SetAttribute("Time", Convert.ToString(oDr1["Time"]));
 
-                                            DateTime eDay = Conversions.ToDate(oDr1["EventDate"]);
+                                            DateTime eDay = Convert.ToDateTime(oDr1["EventDate"]);
                                             if (eDay != DateTime.Today)
                                             {
                                                 oContentNode.SetAttribute("ticketValid", "notToday");
@@ -282,7 +281,7 @@ namespace Protean
                                     using (var oDr2 = myWeb.moDbHelper.getDataReaderDisposable(useStr))  // Done by nita on 6/7/22
                                     {
                                         while (oDr2.Read())
-                                            oContentNode.SetAttribute("lastUsedTime", Conversions.ToString(oDr2["dUseDate"]));
+                                            oContentNode.SetAttribute("lastUsedTime", Convert.ToString(oDr2["dUseDate"]));
                                     }
                                     oContentNode.SetAttribute("ticketValid", "used");
                                 }

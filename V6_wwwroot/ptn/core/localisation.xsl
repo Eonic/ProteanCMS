@@ -3982,6 +3982,17 @@
     </xsl:choose>
   </xsl:template>
 
+	<xsl:template name="term5007">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>For regular payments you need to create an account with us.</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>For regular payments you need to create an account with us.</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
   <!-- ################################################################################################ -->
   <!-- Language number formatting -->
   <!-- 1,000.5 - 1.000,5 -->

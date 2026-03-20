@@ -2,9 +2,9 @@
 // $Library:     Protean.Providers.messaging.base
 // $Revision:    3.1  
 // $Date:        2010-03-02
-// $Author:      Trevor Spink (trevor@eonic.co.uk)
-// &Website:     www.eonic.co.uk
-// &Licence:     All Rights Reserved.
+// $Author:      Trevor Spink (trevor@eonic.digital)
+// &Website:     eonic.digital
+// &Licence:     Apache-2.0 license
 // $Copyright:   Copyright (c) 2002 - 2010 Eonic Ltd.
 // ***********************************************************************
 
@@ -17,8 +17,6 @@ using System.Runtime.InteropServices;
 using System.Web.Configuration;
 
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.Cms;
 using static Protean.stdTools;
 using Protean.Tools;
@@ -64,30 +62,29 @@ namespace Protean.Providers
                         System.Configuration.ProviderSettings ourProvider = moPrvConfig.Providers[ProviderName];
                         Assembly assemblyInstance;
                         // = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
-
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["path"], "", false)))
+                        if (!string.IsNullOrEmpty(ourProvider.Parameters["path"]?.ToString()))
                         {
-                            cProgressInfo = goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"]));
-                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
+                            cProgressInfo = goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"]));
+                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"])));
                         }
                         else
                         {
                             assemblyInstance = Assembly.Load(ourProvider.Type);
                         }
 
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["className"], "", false)))
+                        if (!string.IsNullOrEmpty(ourProvider.Parameters["className"]?.ToString()))
                         {
-                            ProviderName = Conversions.ToString(ourProvider.Parameters["className"]);
+                            ProviderName = Convert.ToString(ourProvider.Parameters["className"]);
                         }
 
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.Parameters["rootClass"], "", false)))
+                        if (string.IsNullOrEmpty(ourProvider.Parameters["rootClass"]?.ToString()))
                         {
                             calledType = assemblyInstance.GetType("Protean.Providers.Database." + ProviderName, true);
                         }
                         else
                         {
                             // calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
-                            calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], ".Providers.Database."), ProviderName)), true);
+                            calledType = assemblyInstance.GetType($"{ourProvider.Parameters["rootClass"]}.Providers.Database.{ProviderName}", true);
                         }
                     }
 

@@ -1,0 +1,302 @@
+﻿// ***********************************************************************
+// $Library:     protean.cms.dbhelper
+// $Revision:    3.1  
+// $Date:        2006-03-02
+// $Author:      Trevor Spink (trevor@eonic.digital)
+// &Website:     eonic.digital
+// &Licence:     Apache-2.0 license
+// $Copyright:   Copyright (c) 2002 - 2026 Eonic Digital Group Ltd.
+// ***********************************************************************
+
+
+
+using System;
+using System.Data;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Protean
+{
+
+
+
+    public partial class Cms
+    {
+
+        // Inherits dbTools
+      
+            // Inherits dbTools
+            public partial class dbHelper : Tools.Database
+            {
+
+            public async Task<long> getPageIdFromPathAsync(
+    string sFullPath,
+    bool bSetGlobalPageVariable = true,
+    bool bCheckPermissions = true,
+    CancellationToken cancellationToken = default)
+            {
+                string sSql = "";
+                try
+                {
+                    // Parse the path to get structure IDs
+                    string[] aPath = sFullPath.Split('/');
+                    int nParentId = 0;
+                    long nPageId = 0;
+
+                    // Build SQL to find matching pages by name path
+                    sSql = "SELECT nStructKey FROM tblContentStructure WHERE cUrl = " +
+                           SqlString(sFullPath) + " OR cUrl LIKE " + SqlString(sFullPath + "%");
+
+                    // Use async database operation
+                    var oDs = await GetDataSetAsync(
+                        sql: sSql,
+                        tablename: "Pages",
+                        datasetname: "Structure",
+                        cancellationToken: cancellationToken
+                    ).ConfigureAwait(false);
+
+                    if (oDs != null && oDs.Tables.Count > 0 && oDs.Tables[0].Rows.Count > 0)
+                    {
+                        nPageId = Convert.ToInt64(oDs.Tables[0].Rows[0]["nStructKey"]);
+                    }
+
+                    if (bSetGlobalPageVariable && nPageId > 0)
+                    {
+                        // Set global if requested
+                        myWeb.mnPageId = (int)nPageId;
+                    }
+
+                    return nPageId;
+                }
+                catch (Exception ex)
+                {
+                    // Handle error appropriately
+                    throw;
+                }
+            }
+
+            public async Task<long> checkPagePermissionAsync(
+                long nPageId,
+                CancellationToken cancellationToken = default)
+            {
+                string sSql = "";
+                try
+                {
+                    if (nPageId <= 0)
+                        return 0;
+
+                    // Check if page has permission restrictions
+                    sSql = "SELECT nStructKey FROM tblContentStructure " +
+                           "WHERE nStructKey = " + nPageId +
+                           " AND (cPermissionLevelId IS NULL OR cPermissionLevelId = '')";
+
+                    var oValue = await GetDataValueAsync(
+                        sql: sSql,
+                        cancellationToken: cancellationToken
+                    ).ConfigureAwait(false);
+
+                    if (oValue != null && oValue is long)
+                    {
+                        return (long)oValue;
+                    }
+
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            /// <summary>
+            /// Asynchronously gets page ID and article ID from a URL path.
+            /// Returns a tuple containing (pageId, articleId, success).
+            /// Note: Async methods cannot have ref parameters, so we return a tuple instead.
+            /// </summary>
+            public async Task<(long pageId, long articleId, bool success)> getPageAndArticleIdFromPathAsync(
+                string sFullPath,
+                bool bSetGlobalPageVariable = true,
+                bool bCheckPermissions = true,
+                CancellationToken cancellationToken = default)
+            {
+                long nPageId = 0;
+                long nArtId = 0;
+
+                try
+                {
+                    // First get the page ID
+                    nPageId = await getPageIdFromPathAsync(
+                        sFullPath,
+                        bSetGlobalPageVariable,
+                        bCheckPermissions,
+                        cancellationToken
+                    ).ConfigureAwait(false);
+
+                    // If path contains article reference (e.g., /page/123-/article-name)
+                    if (sFullPath.Contains("-/") && Regex.IsMatch(sFullPath, @"/\d+-/"))
+                    {
+                        string[] aParts = sFullPath.Split('/');
+                        foreach (string sPart in aParts)
+                        {
+                            if (sPart.Contains("-/") && Tools.Number.IsNumeric(sPart.Substring(0, sPart.IndexOf("-"))))
+                            {
+                                nArtId = Convert.ToInt64(sPart.Substring(0, sPart.IndexOf("-")));
+                                break;
+                            }
+                        }
+                    }
+
+                    return (nPageId, nArtId, nPageId > 0);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            public async Task<bool> checkPageExistAsync(
+                long nPageId,
+                CancellationToken cancellationToken = default)
+            {
+                string sSql = "";
+                try
+                {
+                    sSql = "SELECT COUNT(*) FROM tblContentStructure WHERE nStructKey = " + nPageId;
+
+                    var oValue = await GetDataValueAsync(
+                        sql: sSql,
+                        cancellationToken: cancellationToken
+                    ).ConfigureAwait(false);
+
+                    return oValue != null && Convert.ToInt32(oValue) > 0;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            public async Task<long> getClonePageIDAsync(
+                long nPageId,
+                CancellationToken cancellationToken = default)
+            {
+                string sSql = "";
+                try
+                {
+                    if (!gbClone || nPageId <= 0)
+                        return 0;
+
+                    sSql = "SELECT nClonePageId FROM tblContentStructure WHERE nStructKey = " + nPageId;
+
+                    var oValue = await GetDataValueAsync(
+                        sql: sSql,
+                        cancellationToken: cancellationToken
+                    ).ConfigureAwait(false);
+
+                    if (oValue != null && oValue is long cloneId && cloneId > 0)
+                    {
+                        return cloneId;
+                    }
+
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            public async Task<PermissionLevel> getPagePermissionLevelAsync(
+                long nPageId,
+                CancellationToken cancellationToken = default)
+            {
+                string sSql = "";
+                try
+                {
+                    sSql = "SELECT nPermissionLevel FROM tblContentStructure WHERE nStructKey = " + nPageId;
+
+                    var oValue = await GetDataValueAsync(
+                        sql: sSql,
+                        cancellationToken: cancellationToken
+                    ).ConfigureAwait(false);
+
+                    if (oValue != null && Int32.TryParse(oValue.ToString(), out int nLevel))
+                    {
+                        return (PermissionLevel)nLevel;
+                    }
+
+                    return PermissionLevel.Open;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            /// <summary>
+            /// Asynchronously gets the layout for a specific page.
+            /// If the page is cloned, retrieves the layout from the source page.
+            /// </summary>
+            /// <param name="nPageId">Page ID to get layout for</param>
+            /// <param name="cancellationToken">Cancellation token</param>
+            /// <returns>Layout name or "default"</returns>
+            public async Task<string> getPageLayoutAsync(
+                    long nPageId,
+                    CancellationToken cancellationToken = default)
+                {
+                    PerfMonLog("DBHelper", "getPageLayoutAsync");
+
+                    string cLayout = "";
+                    string cSql = "";
+
+                    try
+                    {
+                        // ✅ FIXED: Check for cloned pages first (same as sync version)
+                        if (Cms.gbClone)
+                        {
+                            // If the page is cloned then we need to look at the page that it's cloned from
+                            cSql = "SELECT nCloneStructId FROM tblContentStructure WHERE nStructKey = " + nPageId;
+
+                            using (var reader = await getDataReaderDisposableAsync(cSql, CommandType.Text, null, cancellationToken).ConfigureAwait(false))
+                            {
+                                if (reader != null && await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+                                {
+                                    if (!reader.IsDBNull(0))
+                                    {
+                                        long nClonePageId = reader.GetInt64(0);
+                                        if (nClonePageId > 0L)
+                                            nPageId = nClonePageId;
+                                    }
+                                }
+                            }
+                        }
+
+                        // ✅ FIXED: Query the correct table (tblContentStructure, not tblDirectory)
+                        cSql = "SELECT cStructLayout FROM tblContentStructure WHERE nStructKey = " + nPageId;
+
+                        using (var reader = await getDataReaderDisposableAsync(cSql, CommandType.Text, null, cancellationToken).ConfigureAwait(false))
+                        {
+                            if (reader != null && await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+                            {
+                                if (!reader.IsDBNull(0))
+                                {
+                                    cLayout = reader.GetString(0);
+                                }
+                            }
+                        }
+
+                        // Return "default" if no layout found
+                        return string.IsNullOrEmpty(cLayout) ? "default" : cLayout;
+                    }
+                    catch (System.Exception ex)
+                    {
+                        OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(
+                            mcModuleName, "getPageLayoutAsync", ex, cSql));
+                        return "default";
+                    }
+                }
+            }
+
+    }
+}

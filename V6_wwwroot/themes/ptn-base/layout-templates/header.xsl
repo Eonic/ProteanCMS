@@ -352,6 +352,11 @@
                 </div>
               </xsl:if>
             </div>
+            <button type="button" class="xs-only skip mobile-end-close" data-bs-dismiss="offcanvas" aria-label="Close">
+              <i class="fa fa-times">
+                <xsl:text> </xsl:text>
+              </i> Close Menu
+            </button>
           </div>
         </nav>
       </xsl:if>
@@ -482,6 +487,7 @@
                         <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenudropdown">
                           <xsl:with-param name="overviewLink">self</xsl:with-param>
                           <xsl:with-param name="menu-back">true</xsl:with-param>
+                          <xsl:with-param name="span">true</xsl:with-param>
                         </xsl:apply-templates>
                       </xsl:when>
                       <xsl:when test="$nav-dropdown='hover'">
@@ -489,12 +495,22 @@
                           <xsl:with-param name="hover">false</xsl:with-param>
                           <xsl:with-param name="accessible-hover">true</xsl:with-param>
                           <xsl:with-param name="menu-back">true</xsl:with-param>
+                          <xsl:with-param name="span">true</xsl:with-param>
                         </xsl:apply-templates>
                       </xsl:when>
                       <xsl:otherwise>
                         <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenu"/>
                       </xsl:otherwise>
                     </xsl:choose>
+                    <xsl:if test="Menu/MenuItem/MenuItem[not(DisplayName/@exclude='true') and DisplayName/@featuredLink='true']">
+                      <li class="header-featured-btn">
+                        <xsl:for-each select="Menu/MenuItem/MenuItem[not(DisplayName/@exclude='true') and DisplayName/@featuredLink='true']">
+                          <xsl:apply-templates select="." mode="menuLink">
+                            <xsl:with-param name="span">true</xsl:with-param>
+                          </xsl:apply-templates>
+                        </xsl:for-each>
+                      </li>
+                    </xsl:if>
                   </ul>
                   <!--INFO NAV-->
                   <xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">
@@ -525,6 +541,11 @@
                       </xsl:apply-templates>
                     </div>
                   </xsl:if>
+                  <button type="button" class="xs-only skip mobile-end-close" data-bs-dismiss="offcanvas" aria-label="Close">
+                    <i class="fa fa-times">
+                      <xsl:text> </xsl:text>
+                    </i> Close Menu
+                  </button>
                 </div>
               </nav>
             </xsl:if>
@@ -707,6 +728,11 @@
                     </xsl:apply-templates>
                   </div>
                 </xsl:if>
+                <button type="button" class="xs-only skip mobile-end-close" data-bs-dismiss="offcanvas" aria-label="Close">
+                  <i class="fa fa-times">
+                    <xsl:text> </xsl:text>
+                  </i> Close Menu
+                </button>
               </div>
             </nav>
           </xsl:if>
@@ -815,6 +841,11 @@
           <xsl:if test="$cart='on' and not($cartPage)">
             <xsl:apply-templates select="/" mode="cartSimple"/>
           </xsl:if>
+          <button type="button" class="xs-only skip mobile-end-close" data-bs-dismiss="offcanvas" aria-label="Close">
+            <i class="fa fa-times">
+              <xsl:text> </xsl:text>
+            </i> Close Menu
+          </button>
         </div>
       </div>
     </nav>

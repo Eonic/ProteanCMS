@@ -447,7 +447,9 @@
   <!-- ## Layout Types are specified in the LayoutsManifest.XML file  ################################   -->
   <xsl:template match="Page" mode="mainLayout">
     <xsl:param name="containerClass"/>
+    <xsl:param name="hideHeader"/>
     <xsl:param name="hideFooter"/>
+  
     <xsl:choose>
       <!-- IF QUOTE CMD SHOW QUOTE -->
       <xsl:when test="Cart[@type='quote']/Quote/@cmd!=''">
@@ -484,6 +486,7 @@
 
         <xsl:apply-templates select="." mode="Layout">
           <xsl:with-param name="containerClass" select="$containerClass"/>
+          <xsl:with-param name="hideHeader" select="$hideHeader"/>
           <xsl:with-param name="hideFooter" select="$hideFooter"/>
         </xsl:apply-templates>
 
@@ -498,7 +501,9 @@
 
   <xsl:template match="Page" mode="layoutHeader">
     <xsl:param name="containerClass"/>
-    <xsl:if test="/Page/Contents/Content[@name='header' or @position='header']">
+    <xsl:param name="hideHeader"/>
+    
+    <xsl:if test="/Page/Contents/Content[@name='header' or @position='header'] and not($hideHeader='true')">
       <xsl:apply-templates select="/Page" mode="addModule">
         <xsl:with-param name="text">Add Module</xsl:with-param>
         <xsl:with-param name="position">header</xsl:with-param>
@@ -522,6 +527,7 @@
   <!-- ## Default Layout  ############################################################################   -->
   <xsl:template match="Page" mode="Layout">
     <xsl:param name="containerClass"/>
+    <xsl:param name="hideHeader"/>
     <xsl:param name="hideFooter"/>
     <div class="template" id="template_1_Column"  role="main">
       <xsl:apply-templates select="." mode="layoutHeader">
@@ -546,6 +552,7 @@
       </div>
       <xsl:apply-templates select="." mode="layoutFooter">
         <xsl:with-param name="containerClass" select="$containerClass"/>
+        <xsl:with-param name="hideHeader" select="hideHeader"/>
         <xsl:with-param name="hideFooter" select="hideFooter"/>
       </xsl:apply-templates>
       <xsl:apply-templates select="." mode="socialBookmarks" />
@@ -574,10 +581,12 @@
 
   <xsl:template match="Page[@layout='Modules_1_column' or @layout='1_Column' or @type='default']" mode="Layout">
     <xsl:param name="containerClass"/>
+    <xsl:param name="hideHeader"/>
     <xsl:param name="hideFooter"/>
     <div id="template_1_Column" class="template template_1_Column"  role="main">
       <xsl:apply-templates select="." mode="layoutHeader">
         <xsl:with-param name="containerClass" select="$containerClass"/>
+        <xsl:with-param name="hideHeader" select="$hideHeader"/>
       </xsl:apply-templates>
       <div>
         <xsl:if test="/Page/Contents/Content[@name='column1' or @position='column1'] or /Page/@adminMode">
@@ -1112,7 +1121,7 @@
       </xsl:if>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
         </div>
       </xsl:if>
       <xsl:if test="not(@position='header' or @position='footer' or (@position='column1' and $page/@layout='Modules_1_column'))">
@@ -1307,7 +1316,7 @@
       </xsl:if>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
         </div>
       </xsl:if>
       <xsl:apply-templates select="." mode="displayBrief"/>
@@ -1419,7 +1428,7 @@
       </xsl:attribute>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
         </div>
       </xsl:if>
       <xsl:if test="$title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
@@ -1442,7 +1451,7 @@
       <xsl:if test="not(@listGroup='true')">
         <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
           <div class="panel-image">
-            <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+            <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
           </div>
         </xsl:if>
         <div>
@@ -1576,7 +1585,7 @@
       </xsl:attribute>
       <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and @imagePosition='above'">
         <div class="panel-image">
-          <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+          <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
         </div>
       </xsl:if>
       <xsl:if test="$title!='' or @icon!='' or @icon-class!='' or @uploadIcon!=''">
@@ -1638,7 +1647,7 @@
       <xsl:if test="not(@listGroup='true')">
         <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_' and not(@imagePosition='above')">
           <div class="panel-image">
-            <img src="{@panelImage}" alt="{$title}" class="img-responsive" />
+            <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
           </div>
         </xsl:if>
         <!--<xsl:if test="node()"> TS this hides donate button-->
@@ -1782,7 +1791,7 @@
       <xsl:if test="not(@listGroup='true')">
         <xsl:if test="@panelImage!='' and @panelImage!=' ' and @panelImage!='_'">
           <div class="panel-image">
-            <img src="{@panelImage}" alt="{@title}" class="img-responsive" />
+            <img src="{@panelImage}" alt="{@panelAltText}" width="{@panelImageWidth}" class="img-responsive" />
           </div>
         </xsl:if>
         <div class="modal-body">

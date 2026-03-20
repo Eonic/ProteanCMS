@@ -132,13 +132,19 @@
     }
 }
 
-.skip:focus {
-    left: 10px;
-    top: 0px;
-    z-index: 20;
-    width: auto;
-    height: auto;
-    overflow: visible;
+    .skip:focus {
+        left: 10px;
+        top: 0px;
+        z-index: 20;
+        width: auto;
+        height: auto;
+        overflow: visible;
+    }
+
+.mobile-end-close:focus {
+    top: auto;
+    left: 0;
+    width: 100%;
 }
 
 a {
