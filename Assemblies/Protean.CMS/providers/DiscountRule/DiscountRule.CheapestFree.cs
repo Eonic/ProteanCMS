@@ -81,7 +81,7 @@ namespace Protean.Providers
 
                         // Discount rule values
                         decimal nDiscountValue = Convert.ToDecimal(oCurDiscount.GetAttribute("nDiscountValue"));
-                        bool bDiscountIsPercent = Convert.ToBoolean(oCurDiscount.GetAttribute("bDiscountIsPercent"));
+                        bool bDiscountIsPercent = Convert.ToInt32(oCurDiscount.GetAttribute("bDiscountIsPercent")) == 1;
 
                         int nMinItems = Tools.Number.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinQuantity"))
                             ? Convert.ToInt16(oCurDiscount.GetAttribute("nDiscountMinQuantity"))
@@ -200,7 +200,7 @@ namespace Protean.Providers
                                 // Update all cart items after applying discounts
                                 foreach (XmlElement oItemLoop in oFinalDiscounts.SelectNodes("//Item"))
                                 {
-                                    int nId = Convert.ToInt16(oItemLoop.GetAttribute("id"));
+                                    int nId = Convert.ToInt32(oItemLoop.GetAttribute("id"));
                                     XmlElement cartItem = (XmlElement)oCartXML.SelectSingleNode($"Item[@id='{nId}']");
                                     if (cartItem == null) continue;
 
