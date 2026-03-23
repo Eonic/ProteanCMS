@@ -1,0 +1,28 @@
+<Discount>
+	<nDiscountKey>37661</nDiscountKey>
+	<nDiscountForeignRef/>
+	<cDiscountName>Testpxy44</cDiscountName>
+	<cDiscountCode>Testpxy44</cDiscountCode>
+	<nDiscountCat>3</nDiscountCat>
+	<bDiscountIsPercent>0</bDiscountIsPercent>
+	<nDiscountValue>3</nDiscountValue>
+	<nDiscountMinPrice></nDiscountMinPrice>
+	<nDiscountMinQuantity>4</nDiscountMinQuantity>
+	<cAdditionalXML>
+		<cDescription />
+		<cTerms />
+		<Images>
+			<img src="" width="" height="" class="thumbnail" alt="" />
+			<img src="" width="" height="" class="display" alt="" />
+			<img src="" width="" height="" class="detail" alt="" />
+		</Images>
+		<bFreeGiftBox></bFreeGiftBox>
+		<bApplyToOrder></bApplyToOrder>
+		<cFreeShippingMethods></cFreeShippingMethods>
+		<nMinimumOrderValue></nMinimumOrderValue>
+		<nMaximumOrderValue></nMaximumOrderValue>
+		<nDiscountMaxPrice></nDiscountMaxPrice>
+	</cAdditionalXML>
+	<cDiscountUserCode>Testpxy44</cDiscountUserCode>
+	<nDiscountCodeType>2</nDiscountCodeType>
+</Discount>
