@@ -242,7 +242,7 @@ namespace Protean
                 }
             }
 
-         
+
             #endregion
 
             #region Classes
@@ -573,8 +573,8 @@ namespace Protean
                 string cartXmlFromDatabase = "";
                 mcOrderType = "Order";
                 cOrderReference = "";
-                mcModuleName = "Protean.Cart";                
-               
+                mcModuleName = "Protean.Cart";
+
                 string cProcessInfo = Convert.ToString(string.IsNullOrEmpty("initialise variables"));
                 try
                 {
@@ -631,7 +631,7 @@ namespace Protean
                         mcCurrencyRef = moCartConfig["Currency"];
                         if (string.IsNullOrEmpty(mcCurrency))
                             mcCurrency = "GBP";
-                      
+
                         XmlNode moPaymentCfg;
 
                         // change currency based on language selection
@@ -1158,7 +1158,8 @@ namespace Protean
                         }
                         else
                         {
-                            if (mnCartId > 0) {
+                            if (mnCartId > 0)
+                            {
                                 myWeb.moSession["CartId"] = mnCartId.ToString();
                             }
                         }
@@ -1609,8 +1610,8 @@ namespace Protean
                                 if (Convert.ToString(oElmt.Attributes["statusId"].Value) == "6")
                                 {
                                     mnProcessId = 6;
-                                   // addDateAndRef(ref oElmt);
-                                   // purchaseActions(oContentElmt,true);
+                                    // addDateAndRef(ref oElmt);
+                                    // purchaseActions(oContentElmt,true);
                                     mcCartCmd = "ShowInvoice";
                                     goto processFlow;
                                 }
@@ -1695,7 +1696,7 @@ namespace Protean
                                 if (mcReturnPage is null)
                                     mcReturnPage = "";
 
-                                myWeb.msRedirectOnEnd =  mcSiteURL + mcReturnPage + ((mcSiteURL + mcReturnPage).Contains("?") ? "&" : "?") + "cartCmd=finish";
+                                myWeb.msRedirectOnEnd = mcSiteURL + mcReturnPage + ((mcSiteURL + mcReturnPage).Contains("?") ? "&" : "?") + "cartCmd=finish";
                                 break;
 
                             }
@@ -1958,18 +1959,18 @@ namespace Protean
                                 //    GetCart(ref oElmt);
                                 //}
 
-                            // Add the date and reference to the cart
-                            if (oElmt != null)
-                            {
-                                addDateAndRef(ref oElmt);
-                            }
+                                // Add the date and reference to the cart
+                                if (oElmt != null)
+                                {
+                                    addDateAndRef(ref oElmt);
+                                }
 
-                            if (mcPaymentMethod == "No Charge")
-                            {
-                                mcCartCmd = "ShowInvoice";
-                                mnProcessId = (short)cartProcess.Complete;
-                                goto processFlow;
-                            }
+                                if (mcPaymentMethod == "No Charge")
+                                {
+                                    mcCartCmd = "ShowInvoice";
+                                    mnProcessId = (short)cartProcess.Complete;
+                                    goto processFlow;
+                                }
 
                                 cProcessInfo = "Payment Method from session = '" + mcPaymentMethod + "'";
                                 //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, mcPaymentMethod);
@@ -2036,9 +2037,9 @@ namespace Protean
                                     moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt);
                                 }
 
-                                    break;
-                                }
-                            
+                                break;
+                            }
+
 
                         // oEwProv = Nothing
 
@@ -2067,7 +2068,7 @@ namespace Protean
                                         {
 
                                             addDateAndRef(ref oElmt);
-                                           // purchaseActions(oContentElmt);
+                                            // purchaseActions(oContentElmt);
                                         }
                                     }
 
@@ -2076,7 +2077,7 @@ namespace Protean
                                     {
                                         EndSession();
                                     }
-                                   
+
                                 }
 
                                 break;
@@ -2284,7 +2285,7 @@ namespace Protean
                 return oEwProv;
 
             }
-   
+
             /// <summary>
             /// This provides the ability to add customers to makreting lists if they reach a particular stage within a shopping cart.
             /// Only works if 3rd party messaging provider enabled.
@@ -2761,7 +2762,7 @@ namespace Protean
                                         decimal nNPrice = (decimal)getOptionPricesByXml(Convert.ToString(oRow["productDetail"]), Convert.ToInt16(oRow["nItemOptGrpIdx"]), Convert.ToInt16(oRow["nItemOptIdx"]));
                                         if (nNPrice > 0m && !nNPrice.Equals(oOpRow["price"]))
                                         {
-                                            nOpPrices += nNPrice;  
+                                            nOpPrices += nNPrice;
                                             // oOpRow.BeginEdit()
                                             oOpRow["price"] = nNPrice;
                                         }
@@ -2777,7 +2778,7 @@ namespace Protean
 
                                         }
                                     }
-                                    else if ((moCartConfig["ProductOptionOverideQuantity"]?.ToString() == "on") &&  Convert.ToInt32(oOpRow["quantity"]) > 1)
+                                    else if ((moCartConfig["ProductOptionOverideQuantity"]?.ToString() == "on") && Convert.ToInt32(oOpRow["quantity"]) > 1)
                                     {
                                         nOpPrices += Convert.ToDecimal(oOpRow["price"]) * Convert.ToDecimal(oOpRow["quantity"]);
                                     }
@@ -2790,7 +2791,7 @@ namespace Protean
                                 if (!(oRow["productDetail"] is DBNull))
                                 {
                                     // not sure why the product has no detail but if it not we skip this, suspect it was old test data that raised this issue.
-                                    CheckQuantities(ref oCartElmt,  oRow["productDetail"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"]?.ToString() ?? "0").ToString());
+                                    CheckQuantities(ref oCartElmt, oRow["productDetail"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"]?.ToString() ?? "0").ToString());
                                 }
 
                                 weight += Convert.ToInt32(oRow["weight"]) * Convert.ToInt32(oRow["quantity"]);
@@ -2870,7 +2871,7 @@ namespace Protean
                                     {
                                         // discountSQL = ", nDiscountValue = " & Discount & " "
                                     }
-                                    string cUpdtSQL = "UPDATE tblCartItem Set nPrice = " + oRow["price"] + discountSQL +  " WHERE nCartItemKey = " + oRow["id"];
+                                    string cUpdtSQL = "UPDATE tblCartItem Set nPrice = " + oRow["price"] + discountSQL + " WHERE nCartItemKey = " + oRow["id"];
                                     moDBHelper.ExeProcessSql(cUpdtSQL);
                                     // End If
                                 }
@@ -2905,7 +2906,7 @@ namespace Protean
                         oCartElmt.SetAttribute("weight", weight.ToString());
                         oCartElmt.SetAttribute("orderType", mmcOrderType + "");
 
-                         mcBlockCartUpdate = GetBlockCartUpdatesConfig();
+                        mcBlockCartUpdate = GetBlockCartUpdatesConfig();
 
                         if (!string.IsNullOrEmpty(mcBlockCartUpdate)
                             && mcBlockCartUpdate.Trim().ToLower() == "on")
@@ -3385,7 +3386,7 @@ namespace Protean
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
-                                oElmt.InnerXml = Convert.ToString(oRow["cClientNotes"]);                               
+                                oElmt.InnerXml = Convert.ToString(oRow["cClientNotes"]);
                                 if (Convert.ToString(oElmt.FirstChild) != "")
                                 {
                                     if (oElmt.FirstChild.Name == "Notes")
@@ -3514,7 +3515,38 @@ namespace Protean
                     {
                         mnCartId = nCartIdUse;
                     }
+                    // testing cookiefirst session variable
+                    if (mnCartId > 0)
+                    {
+                        int isCookieConsentEnabled = 0; // default = disabled
 
+                        var request = HttpContext.Current?.Request;
+
+                        if (request != null)
+                        {
+                            HttpCookie consentCookie = request.Cookies["cookiefirst-consent"];
+
+                            if (consentCookie != null && !string.IsNullOrWhiteSpace(consentCookie.Value))
+                            {
+                                string cookieValue = HttpUtility.UrlDecode(consentCookie.Value);
+
+                                // Case 1: Simple value
+                                if (cookieValue.Equals("accept_all", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    isCookieConsentEnabled = 1;
+                                }
+                                else if (cookieValue.Equals("reject_all", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    isCookieConsentEnabled = 0;
+                                }
+                            }
+
+                            string sSqlupdate = "UPDATE tblCartOrder SET isCookieConsentEnabled = " + isCookieConsentEnabled + " WHERE nCartOrderKey = " + mnCartId;
+
+                            moDBHelper.ExeProcessSql(sSqlupdate);
+                        }
+
+                    }
                     //mnCartId = (int)oldCartId;
                     SaveCartXML(oCartElmt);
                     // mnCartId = nCartIdUse
@@ -3545,6 +3577,7 @@ namespace Protean
 
                     }
                 }
+
 
                 catch (Exception ex)
                 {
@@ -4077,7 +4110,7 @@ namespace Protean
                             }
 
                             // Add product specific msg
-                            oMsg = addElement( ref oError,"msg", "<strong>" + getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ") +
+                            oMsg = addElement(ref oError, "msg", "<strong>" + getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ") +
      "</strong> requires a quantity equal to or above <em>" +
      getNodeValueByType(ref oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).") +
      "</em>",
@@ -4359,7 +4392,7 @@ namespace Protean
 
                             nNewQty = Convert.ToDecimal(oRow["nQuantity"]);
 
-                            sSql ="select * from tblCartItem where nCartOrderId=" + mnGiftListId + " and nItemId =" + oRow["nItemId"] + " and cItemOption1='" + SqlFmt(oRow["cItemOption1"]?.ToString() ?? "") + "' and cItemOption2='" + SqlFmt(oRow["cItemOption2"]?.ToString() ?? "") + "'";
+                            sSql = "select * from tblCartItem where nCartOrderId=" + mnGiftListId + " and nItemId =" + oRow["nItemId"] + " and cItemOption1='" + SqlFmt(oRow["cItemOption1"]?.ToString() ?? "") + "' and cItemOption2='" + SqlFmt(oRow["cItemOption2"]?.ToString() ?? "") + "'";
 
                             using (var oDr2 = moDBHelper.getDataReaderDisposable(sSql)) // Done by nita on 6/7/22
                             {
@@ -4615,7 +4648,7 @@ namespace Protean
                         addNewTextNode("cClientNotes", ref argoNode15, cOrderReference);
                         oElmt = (XmlElement)argoNode15;
                         XmlNode argoNode16 = oElmt;
-                        addNewTextNode("cSellerNotes", ref argoNode16,"referer:" + myWeb.moSession["previousPage"]?.ToString() + "\n"); 
+                        addNewTextNode("cSellerNotes", ref argoNode16, "referer:" + myWeb.moSession["previousPage"]?.ToString() + "\n");
                         oElmt = (XmlElement)argoNode16;
                         if (moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign") != null)
                         {
@@ -4710,7 +4743,7 @@ namespace Protean
 
                     if (nQuantity < itemLimit)
                     {
-                        
+
                         mcBlockCartUpdate = GetBlockCartUpdatesConfig();
 
                         if (mnProcessId < 5 || string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
@@ -4889,8 +4922,8 @@ namespace Protean
                                         XmlElement parentElmt = moDBHelper.GetContentDetailXml(nParentId, true);
                                         if (parentElmt != null)
                                         {
-                                           // ItemParent.InnerXml = parentElmt.OuterXml;
-                                            if(nPrice!=0)
+                                            // ItemParent.InnerXml = parentElmt.OuterXml;
+                                            if (nPrice != 0)
                                             {
                                                 //parentElmt.SetAttribute("overridePrice", "true");
                                                 //parentElmt.SelectSingleNode("/Content/Prices/Price[@type='sale']").InnerText = Convert.ToString(nPrice);
@@ -4927,7 +4960,7 @@ namespace Protean
                                         strPrice1 = myWeb.moRequest["price_" + nProductId];
                                     }
                                 }
-                                addNewTextNode("nPrice",ref oElmt,Tools.Number.IsNumeric(strPrice1) ? strPrice1 : "0");
+                                addNewTextNode("nPrice", ref oElmt, Tools.Number.IsNumeric(strPrice1) ? strPrice1 : "0");
                                 addNewTextNode("nShpCat", ref oElmt, (-1).ToString());
                                 addNewTextNode("nTaxRate", ref oElmt, nTaxRate.ToString());
                                 addNewTextNode("nQuantity", ref oElmt, nQuantity.ToString());
@@ -5701,7 +5734,7 @@ namespace Protean
                         {
 
                             if (ReferenceEquals(oRow["nParentId"], DBNull.Value) || Convert.ToInt32(oRow["nParentId"]) == 0)
-                            {    
+                            {
                                 nItemCount = nItemCount + 1;
                                 // First check if the quantity is numeric (if not ignore it)
                                 string key = "itemId-" + oRow["nCartItemKey"];
@@ -5727,7 +5760,8 @@ namespace Protean
 
 
                             } // for options
-                            else {
+                            else
+                            {
                                 // ensure any product options keep the same quantity as parent.
                                 string parkey = "itemId-" + oRow["nParentId"];
                                 if (Tools.Number.IsNumeric(myWeb.moRequest[parkey]))
@@ -5984,7 +6018,7 @@ namespace Protean
                                 // Add any priority countries
                                 for (arrIdx = 0; arrIdx < arrPreLocs.Length; arrIdx++)
                                 {
-                                    oLocation = (XmlElement)oLoctree.SelectSingleNode("//TreeItem[@nameShort='" + arrPreLocs[arrIdx] + "']/ancestor-or-self::*[@nOptCount!='0']"                                    );
+                                    oLocation = (XmlElement)oLoctree.SelectSingleNode("//TreeItem[@nameShort='" + arrPreLocs[arrIdx] + "']/ancestor-or-self::*[@nOptCount!='0']");
 
                                     if (oLocation != null)
                                     {
@@ -6025,8 +6059,8 @@ namespace Protean
                                 break;
                             }
                         case "ISOa2":
-                            {                              
-                                sSql = "SELECT DISTINCT cLocationNameShort as name, cLocationISOa2 as value FROM tblCartShippingLocations WHERE nLocationType = 2 ORDER BY cLocationNameShort"; 
+                            {
+                                sSql = "SELECT DISTINCT cLocationNameShort as name, cLocationISOa2 as value FROM tblCartShippingLocations WHERE nLocationType = 2 ORDER BY cLocationNameShort";
                                 using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
                                 {
                                     oXform.addOptionsFromSqlDataReader(oCountriesDropDown, oDr);
@@ -6057,7 +6091,7 @@ namespace Protean
                                 }
                                 using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
-                                    oXform.addOptionsFromSqlDataReader( oCountriesDropDown, oDr);
+                                    oXform.addOptionsFromSqlDataReader(oCountriesDropDown, oDr);
                                     // this closes the oDr too
                                 }
 
@@ -6071,7 +6105,7 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "populateCountriesDropDown", ex, "", cProcessInfo, gbDebug);
                 }
             }
-     public void DoNotesItem(string cAction)
+            public void DoNotesItem(string cAction)
             {
                 myWeb.PerfMon.Log("Cart", "DoNotesItem");
                 string sSql;
@@ -6756,8 +6790,8 @@ namespace Protean
                     oelmt = (XmlElement)argoNode19;
 
                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
-                    
-                   
+
+
                 }
                 // UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
                 catch (Exception)
@@ -6776,7 +6810,7 @@ namespace Protean
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);
-                  
+
                     // Dim json As Newtonsoft.Json.Linq.JObject = jObj
 
                     // Dim CartItemId As Long = json.SelectToken("CartItemId")
@@ -6984,7 +7018,7 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                oCheckPrice = getContentPricesNode(oProd, oRow["unit"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"]), "SubscriptionPrices" );
+                                                oCheckPrice = getContentPricesNode(oProd, oRow["unit"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"]), "SubscriptionPrices");
                                                 nCheckPrice = Convert.ToDouble(oCheckPrice.InnerText);
                                                 nTaxRate = (long)Math.Round(getProductTaxRate(oCheckPrice));
                                             }
@@ -7048,7 +7082,7 @@ namespace Protean
                             if (oRow["productDetail"] != DBNull.Value)
                             {
                                 // not sure why the product has no detail but if it not we skip this, suspect it was old test data that raised this issue.
-                                CheckQuantities(ref oCartElmt, oRow["productDetail"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"] ?? 0).ToString() );
+                                CheckQuantities(ref oCartElmt, oRow["productDetail"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"] ?? 0).ToString());
                             }
 
                             decimal weightDecimal = Convert.ToDecimal(oRow["weight"]) * Convert.ToDecimal(oRow["quantity"]);
@@ -7113,7 +7147,7 @@ namespace Protean
             {
                 try
                 {
-                   // string cResult = "Success";
+                    // string cResult = "Success";
                     var oCartListElmt = moPageXml.CreateElement("Order");
                     //GetCart(ref oCartListElmt, nOrderId);
                     // Insert code into tblcartOrder
@@ -7301,7 +7335,7 @@ namespace Protean
                 string result = "";
                 try
                 {
-                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper( myWeb);
+                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper(myWeb);
                     Protean.Cms.model.Contact contact = new Cms.model.Contact();
                     if (!string.IsNullOrEmpty(cEmailAddress))
                     {
