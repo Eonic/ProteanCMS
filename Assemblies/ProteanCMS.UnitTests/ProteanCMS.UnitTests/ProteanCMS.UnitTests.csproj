@@ -186,6 +186,12 @@
     <Content Include="UnitTestCases\BringAFriend\cart.xml" />
     <Content Include="UnitTestCases\BringAFriend\discounts.xml" />
     <Content Include="UnitTestCases\BringAFriend\expectedCart.xml" />
+    <Content Include="UnitTestCases\Test Cheapest Item Discount\cart.xml" />
+    <Content Include="UnitTestCases\Test Cheapest Item Discount\discounts.xml" />
+    <Content Include="UnitTestCases\Test Cheapest Item Discount\expectedCart.xml" />
+    <Content Include="UnitTestCases\Test X For the Price of Y\cart.xml" />
+    <Content Include="UnitTestCases\Test X For the Price of Y\discounts.xml" />
+    <Content Include="UnitTestCases\Test X For the Price of Y\expectedCart.xml" />
     <Content Include="UnitTestCases\WOODWARD20\cart.xml" />
     <Content Include="UnitTestCases\WOODWARD20\discounts.xml" />
     <Content Include="UnitTestCases\WOODWARD20\expectedCart.xml" />
