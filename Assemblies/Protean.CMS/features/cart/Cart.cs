@@ -3516,49 +3516,7 @@ namespace Protean
                     {
                         mnCartId = nCartIdUse;
                     }
-                    // testing cookiefirst session variable
-                    if (mnCartId > 0)
-                    {
-                        int isCookieConsentEnabled = 0; // default = disabled
-
-                        var request = HttpContext.Current?.Request;
-
-                        if (request != null)
-                        {
-                            HttpCookie consentCookie = myWeb.moRequest.Cookies["cookiefirst-consent"];
-                            HttpCookie cookieId = request.Cookies["cookiefirst-id"]; 
-                           
-                            if (consentCookie != null && !string.IsNullOrWhiteSpace(consentCookie.Value))
-                            {
-                                string cookieValue = HttpUtility.UrlDecode(consentCookie.Value);
-
-                                try
-                                {
-                                    JObject consentJson = JObject.Parse(cookieValue);
-
-                                    bool preferences = consentJson.Value<bool?>("preferences") == true;
-                                    bool statistics = consentJson.Value<bool?>("statistics") == true;
-                                    bool advertising = consentJson.Value<bool?>("advertising") == true;
-
-                                    
-                                    if (preferences || statistics || advertising)
-                                    {
-                                        isCookieConsentEnabled = 1;
-                                    }
-                                }
-                                catch
-                                {
-                                    // Invalid JSON → keep default = 0
-                                }
-                            }
-
-
-                            string sSqlupdate = "UPDATE tblCartOrder SET isCookieConsentEnabled = " + isCookieConsentEnabled + " WHERE nCartOrderKey = " + mnCartId;
-
-                            moDBHelper.ExeProcessSql(sSqlupdate);
-                        }
-
-                    }
+                   
                     //mnCartId = (int)oldCartId;
                     SaveCartXML(oCartElmt);
                     // mnCartId = nCartIdUse
@@ -3586,6 +3544,49 @@ namespace Protean
                         var flagCookie = new System.Web.HttpCookie("Flag");
                         flagCookie.Value = "1";
                         myWeb.moRequest.Cookies.Add(flagCookie);
+
+                    }
+                    // Save cookiFirts consent  flag
+                    if (mnCartId > 0)
+                    {
+                        int isCookieConsentEnabled = 0; // default = disabled
+
+                        var request = HttpContext.Current?.Request;
+
+                        if (request != null)
+                        {
+                            HttpCookie consentCookie = myWeb.moRequest.Cookies["cookiefirst-consent"];
+                            HttpCookie cookieId = request.Cookies["cookiefirst-id"];
+
+                            if (consentCookie != null && !string.IsNullOrWhiteSpace(consentCookie.Value))
+                            {
+                                string cookieValue = HttpUtility.UrlDecode(consentCookie.Value);
+
+                                try
+                                {
+                                    JObject consentJson = JObject.Parse(cookieValue);
+
+                                    bool preferences = consentJson.Value<bool?>("preferences") == true;
+                                    bool statistics = consentJson.Value<bool?>("statistics") == true;
+                                    bool advertising = consentJson.Value<bool?>("advertising") == true;
+
+
+                                    if (preferences || statistics || advertising)
+                                    {
+                                        isCookieConsentEnabled = 1;
+                                    }
+                                }
+                                catch
+                                {
+                                    isCookieConsentEnabled = 0;
+                                }
+                            }
+
+
+                            string sSqlupdate = "UPDATE tblCartOrder SET isCookieConsentEnabled = " + isCookieConsentEnabled + " WHERE nCartOrderKey = " + mnCartId;
+
+                            moDBHelper.ExeProcessSql(sSqlupdate);
+                        }
 
                     }
                 }
