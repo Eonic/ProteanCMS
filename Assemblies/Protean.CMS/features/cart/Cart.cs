@@ -1,4 +1,5 @@
-﻿using Protean.Providers.Membership;
+﻿using Newtonsoft.Json.Linq;
+using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
 using System;
@@ -3524,22 +3525,33 @@ namespace Protean
 
                         if (request != null)
                         {
-                            HttpCookie consentCookie = request.Cookies["cookiefirst-consent"];
-
+                            HttpCookie consentCookie = myWeb.moRequest.Cookies["cookiefirst-consent"];
+                            HttpCookie cookieId = request.Cookies["cookiefirst-id"]; 
+                           
                             if (consentCookie != null && !string.IsNullOrWhiteSpace(consentCookie.Value))
                             {
                                 string cookieValue = HttpUtility.UrlDecode(consentCookie.Value);
 
-                                // Case 1: Simple value
-                                if (cookieValue.Equals("accept_all", StringComparison.OrdinalIgnoreCase))
+                                try
                                 {
-                                    isCookieConsentEnabled = 1;
+                                    JObject consentJson = JObject.Parse(cookieValue);
+
+                                    bool preferences = consentJson.Value<bool?>("preferences") == true;
+                                    bool statistics = consentJson.Value<bool?>("statistics") == true;
+                                    bool advertising = consentJson.Value<bool?>("advertising") == true;
+
+                                    
+                                    if (preferences || statistics || advertising)
+                                    {
+                                        isCookieConsentEnabled = 1;
+                                    }
                                 }
-                                else if (cookieValue.Equals("reject_all", StringComparison.OrdinalIgnoreCase))
+                                catch
                                 {
-                                    isCookieConsentEnabled = 0;
+                                    // Invalid JSON → keep default = 0
                                 }
                             }
+
 
                             string sSqlupdate = "UPDATE tblCartOrder SET isCookieConsentEnabled = " + isCookieConsentEnabled + " WHERE nCartOrderKey = " + mnCartId;
 
