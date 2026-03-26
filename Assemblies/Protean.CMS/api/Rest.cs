@@ -100,7 +100,7 @@ namespace Protean
             {
 
 
-                apiLog = new Protean.Cms.dbHelper.utils.APILog(oWeb.moDbHelper);
+               apiLog = new Protean.Cms.dbHelper.utils.APILog(oWeb.moDbHelper);
 
                 string path = moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"];
 

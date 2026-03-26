@@ -3280,9 +3280,12 @@ namespace Protean
                             sContent = oElmt.InnerText;
                             try
                             {
-                                oElmt.InnerXml = sContent;
+                                // remove regex
+                                string pattern = @"<\?xml\s+version=""[^""]*""\s+encoding=""[^""]*""\?>";
+                                oElmt.InnerXml = Regex.Replace(sContent, pattern, "");
+                                
                             }
-                            catch
+                            catch ( Exception ex)
                             {
                                 // run tidy...
                                 oElmt.InnerXml = stdTools.tidyXhtmlFrag(sContent, true, false);
