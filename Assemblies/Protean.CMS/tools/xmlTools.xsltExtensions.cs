@@ -1584,6 +1584,19 @@ namespace Protean
                 }
             }
 
+            public string ResizeImage(string cVirtualPath, long maxWidth, long maxHeight, string sPrefix, string sSuffix, int nCompression, bool noStretch, bool isCrop, bool forceCheck)
+            {
+                string newFilepath = string.Empty;
+                try
+                {
+                    return ResizeImage2(cVirtualPath, maxWidth, maxHeight, sPrefix, sSuffix, nCompression, noStretch, isCrop, forceCheck, null, null);
+                }
+                catch (Exception ex)
+                {
+                    return "Error - " + ex.Message;
+                }
+            }
+
             public string ResizeImage(string cVirtualPath, long maxWidth, long maxHeight, string sPrefix, string sSuffix, int nCompression, bool noStretch, bool isCrop, bool forceCheck, string WatermarkText, string copyright)
             {
                 string newFilepath = string.Empty;
@@ -1596,6 +1609,9 @@ namespace Protean
                     return "Error - " + ex.Message;
                 }
             }
+
+
+
 
             public string ResizeImage2(string cVirtualPath, long maxWidth, long maxHeight,  string sPrefix, string sSuffix, int nCompression, bool noStretch, bool isCrop, bool forceCheck)
             {

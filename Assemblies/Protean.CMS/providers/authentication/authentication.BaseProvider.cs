@@ -62,52 +62,12 @@ namespace Protean.Providers
 
                     Type calledType;
                     string ProviderClass = "";
-                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/authenticationProviders");
+                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/authentication");
 
                     ICollection<IauthenticaitonProvider> providerList = new IauthenticaitonProvider[0];
                     var modifiable = providerList.ToList();
 
-                    //if (moPrvConfig != null)
-                    //{
-                    //    foreach (System.Configuration.ProviderSettings authProvider in moPrvConfig.Providers) { 
-
-                    //        ProviderClass = Convert.ToString(authProvider.Name);
-
-                    //        if (string.IsNullOrEmpty(ProviderClass))
-                    //        {
-                    //            ProviderClass = "Protean.Providers.Authentication.DefaultProvider";
-                    //            calledType = Type.GetType(ProviderClass, true);
-                    //        }
-                    //        else
-                    //        {
-                    //            if (authProvider.Type != "")
-                    //            {
-                    //                var assemblyInstance = Assembly.Load(authProvider.Type);
-                    //                calledType = assemblyInstance.GetType("Protean.Providers.Authentication." + ProviderClass, true);
-                    //            }
-                    //            else
-                    //            {
-                    //                calledType = Type.GetType("Protean.Providers.Authentication." + ProviderClass, true);
-                    //            }
-                    //        }
-
-                    //        var o = Activator.CreateInstance(calledType);
-                    //        var args = new object[2];
-                    //        args[0] = myWeb;
-                    //        args[1] = authProvider.Parameters;
-
-                    //        modifiable.Add((IauthenticaitonProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args));
-
-                    //    }
-
-                    //    providerList = modifiable;
-                    //    return providerList;
-
-                    //}else
-                    //{
-                    //    return null;
-                    //}
-
+                   
 
                     if (moPrvConfig != null)
                     {
@@ -195,7 +155,7 @@ namespace Protean.Providers
             {
                 get
                 {
-                    string authType = config["type"];
+                    string authType = config["method"];
                     if (string.IsNullOrEmpty(authType))
                     {
                         authType = "SAML"; // Default to SAML for backward compatibility
