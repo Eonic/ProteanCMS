@@ -1,17 +1,23 @@
-﻿using Protean.Providers.Membership;
+﻿using Newtonsoft.Json;
+using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using System.Xml.Linq;
 using static Lucene.Net.QueryParsers.QueryParser;
 using static Protean.Cms;
 using static Protean.Cms.dbHelper;
@@ -27,6 +33,7 @@ namespace Protean
 
         public partial class Cart : IDisposable
         {
+            private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
 
             public void CompleteOrder(XmlDocument oCartXML, ref XmlElement oContentElmt, ref XmlElement oElmt)
@@ -581,6 +588,87 @@ namespace Protean
 
             }
 
+            public async Task SendPurchaseEventToGA4(string cartXml, string clientId = null)
+            {
+                string measurementId;
+                string apiSecret;
+                try
+                {
+                    if (moWebConfig["GoogleGA4MeasurementID"] != null && moWebConfig["GoogleGA4MeasurementID"] != "" && moWebConfig["GA4ApiSecret"] != null && moWebConfig["GA4ApiSecret"] != "")
+
+                    {
+                        measurementId = moWebConfig["GoogleGA4MeasurementID"];
+                        apiSecret = moWebConfig["GA4ApiSecret"];
+                        var xml = XDocument.Parse(cartXml);
+
+                        var order = xml.Descendants("Order").FirstOrDefault();
+                        if (order == null) return;
+
+
+                        string transactionId = order.Attribute("InvoiceRef")?.Value;
+                        double value = Convert.ToDouble(order.Attribute("totalNet")?.Value ?? "0");
+                        double tax = Convert.ToDouble(order.Attribute("vatAmt")?.Value ?? "0");
+                        double shipping = Convert.ToDouble(order.Attribute("shippingCost")?.Value ?? "0");
+                        string currency = order.Attribute("currency")?.Value;
+
+
+                        var items = xml.Descendants("Item").Select(x => new
+                        {
+                            item_id = x.Descendants("StockCode").FirstOrDefault()?.Value ?? x.Attribute("id")?.Value,
+                            item_name = x.Descendants("Name").FirstOrDefault()?.Value,
+                            item_brand = x.Descendants("Manufacturer").FirstOrDefault()?.Value,
+                            price = Convert.ToDouble(x.Descendants("Price").FirstOrDefault()?.Value ?? "0"),
+                            quantity = Convert.ToInt32(x.Attribute("quantity")?.Value ?? "1")
+                        }).ToList();
+
+                        //  fallback client id if no cookie
+                        if (string.IsNullOrEmpty(clientId))
+                            clientId = Guid.NewGuid().ToString();
+
+                        //  Build GA4 payload
+                        var payload = new
+                        {
+                            client_id = clientId,
+                            events = new[]
+                            {
+                    new
+                    {
+                        name = "purchase",
+                        @params = new
+                        {
+                            transaction_id = transactionId,
+                            value = value,
+                            currency = currency,
+                            tax = tax,
+                            shipping = shipping,
+                            items = items
+                        }
+                    }
+                        }
+                        };
+
+                        string url = $"https://www.google-analytics.com/mp/collect?measurement_id={measurementId}&api_secret={apiSecret}";
+
+                        using (var client = new HttpClient())
+                        {
+                            var json = JsonConvert.SerializeObject(payload);
+                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                            var response = await client.PostAsync(url, content);
+
+                            if (!response.IsSuccessStatusCode)
+                            {
+                                string error = await response.Content.ReadAsStringAsync();
+                                //  LogError("GA4 Error: " + error);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // LogError("GA4 Exception: " + ex.Message);
+                }
+            }
 
         }
     }
