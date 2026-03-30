@@ -3549,7 +3549,10 @@ namespace Protean
                      // Save cookiFirts consent  flag
                     if (mnCartId > 0)
                     {
-                        saveCookiesConsent();
+                        if (moDBHelper.checkTableColumnExists("tblCartOrder", "bCookieConsentEnabled") && (myWeb.moRequest.Cookies["bCookieConsentEnabled"] == null ))
+                        {
+                            saveCookiesConsent();
+                        }
 
                     }
                 }
@@ -7462,7 +7465,7 @@ namespace Protean
                     }
 
 
-                    string sSqlupdate = "UPDATE tblCartOrder SET isCookieConsentEnabled = " + isCookieConsentEnabled + " WHERE nCartOrderKey = " + mnCartId;
+                    string sSqlupdate = "UPDATE tblCartOrder SET bCookieConsentEnabled = " + isCookieConsentEnabled + " WHERE nCartOrderKey = " + mnCartId;
 
                     moDBHelper.ExeProcessSql(sSqlupdate);
                 }
