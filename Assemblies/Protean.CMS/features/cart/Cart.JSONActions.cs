@@ -342,6 +342,17 @@ namespace Protean
 
                 }
 
+                public string UpdateShippingOption(Protean.rest myApi, Newtonsoft.Json.Linq.JObject jObj)
+                {
+                    Newtonsoft.Json.Linq.JObject json = jObj;
+                    Protean.Cms.Cart.JSONActions jSONActions = new Protean.Cms.Cart.JSONActions(apiLog);
+                    long nCartOrderId = Convert.ToInt64(json.SelectToken("CartOrderId"));
+                    int nShippingKey = Convert.ToInt32(json.SelectToken("ShipOptKey").ToString());
+                    myCart.updateOrderShippingOption(nCartOrderId, nShippingKey);
+
+                    return jSONActions.GetCart(ref myApi, ref jObj);
+                }
+
                 public string GetShippingOptions(ref Protean.rest myApi, ref JObject jObj)
                 {
                     try
