@@ -499,7 +499,15 @@ namespace Protean
                         {
                             moDiscount.RecordDiscountUsage(ref oCartElmt);
                         }
+
+                        if (!IsCookieConsentEnabled(mnCartId))
+                        {
+                            SendPurchaseEventToGA4(oCartElmt);
+                        }
+
+
                         calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
+
                     }
 
 
@@ -586,10 +594,12 @@ namespace Protean
 
             }
 
-            public async Task SendPurchaseEventToGA4(string cartXml, string clientId = null)
+            public async Task SendPurchaseEventToGA4(XmlElement cartXml)
             {
+                string clientId = "";
                 string measurementId;
                 string apiSecret;
+                string error = "";
                 try
                 {
                     if (moWebConfig["GoogleGA4MeasurementID"] != null && moWebConfig["GoogleGA4MeasurementID"] != "" && moWebConfig["GA4ApiSecret"] != null && moWebConfig["GA4ApiSecret"] != "")
@@ -597,8 +607,7 @@ namespace Protean
                     {
                         measurementId = moWebConfig["GoogleGA4MeasurementID"];
                         apiSecret = moWebConfig["GA4ApiSecret"];
-                        var xml = XDocument.Parse(cartXml);
-
+                        var xml = XDocument.Parse(cartXml.OuterXml);
                         var order = xml.Descendants("Order").FirstOrDefault();
                         if (order == null) return;
 
@@ -610,20 +619,24 @@ namespace Protean
                         string currency = order.Attribute("currency")?.Value;
 
 
-                        var items = xml.Descendants("Item").Select(x => new
+                        var items = xml
+                         .Descendants("Order")
+                         .Elements("Item")
+                         .Select(x => new
                         {
-                            item_id = x.Descendants("StockCode").FirstOrDefault()?.Value ?? x.Attribute("id")?.Value,
-                            item_name = x.Descendants("Name").FirstOrDefault()?.Value,
-                            item_brand = x.Descendants("Manufacturer").FirstOrDefault()?.Value,
-                            price = Convert.ToDouble(x.Descendants("Price").FirstOrDefault()?.Value ?? "0"),
-                            quantity = Convert.ToInt32(x.Attribute("quantity")?.Value ?? "1")
-                        }).ToList();
+                          item_id = x.Attribute("id")?.Value,
+                          item_name = x.Attribute("url")?.Value,
+                          item_brand = x.Attribute("ref")?.Value,
+                          price = Convert.ToDouble(x.Attribute("price")?.Value ?? "0"),
+                          quantity = Convert.ToInt32(x.Attribute("quantity")?.Value ?? "1")
+                          })
+                         .ToList();
 
-                        //  fallback client id if no cookie
+
                         if (string.IsNullOrEmpty(clientId))
                             clientId = Guid.NewGuid().ToString();
 
-                        //  Build GA4 payload
+
                         var payload = new
                         {
                             client_id = clientId,
@@ -656,16 +669,33 @@ namespace Protean
 
                             if (!response.IsSuccessStatusCode)
                             {
-                                string error = await response.Content.ReadAsStringAsync();
-                                //  LogError("GA4 Error: " + error);
+                                 error = await response.Content.ReadAsStringAsync();
+
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // LogError("GA4 Exception: " + ex.Message);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SendPurchaseEventToGA4", ex, "", error, gbDebug);
                 }
+            }
+
+            public bool IsCookieConsentEnabled(Int64 mnCartId)
+            {
+                bool isEnabled = false;
+
+                string sSql = "SELECT * FROM tblCartOrder WHERE nCartOrderKey = " + mnCartId;
+
+                using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
+                {
+                    while (oDr.Read())
+                        isEnabled = oDr["bCookieConsentEnabled"] != DBNull.Value
+                                        && Convert.ToBoolean(oDr["bCookieConsentEnabled"]);
+                }
+
+
+                return isEnabled;
             }
 
         }
