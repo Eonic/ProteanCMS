@@ -360,6 +360,8 @@ namespace Protean
                 {
                     string PayableType = oCartElmt.GetAttribute("payableType");
 
+                  
+
                     // Add processing for deposits.
                     switch (PayableType ?? "")
                     {
@@ -452,7 +454,7 @@ namespace Protean
                 }
             }
 
-            public virtual void purchaseActions(XmlElement oCartElmt, bool bRenderScriptOnly = false)
+            public virtual void purchaseActions(XmlElement oCartElmt)
             {
                 myWeb.PerfMon.Log("Cart", "purchaseActions");
                 // Dim sMessageResponse As String
@@ -479,10 +481,10 @@ namespace Protean
 
                         if (passCMS == "true")
                         {
-                            args = new object[3];
+                            args = new object[2];
                             args[0] = myWeb;
                             args[1] = oCartElmt;
-                            args[2] = bRenderScriptOnly;
+                           
                         }
                         //else if (bRenderScriptOnly != null)
                         //{
@@ -556,18 +558,18 @@ namespace Protean
                                 var o = Activator.CreateInstance(calledType);
 
                                 var args = new object[2];
-                                if (bRenderScriptOnly == true)
-                                {
-                                    args = new object[3];
+                                //if (bRenderScriptOnly == true)
+                                //{
+                                //    args = new object[3];
+                                //    args[0] = myWeb;
+                                //    args[1] = ocNode;
+                                //    args[2] = bRenderScriptOnly;
+                                //}
+                                //else
+                                //{
                                     args[0] = myWeb;
                                     args[1] = ocNode;
-                                    args[2] = bRenderScriptOnly;
-                                }
-                                else
-                                {
-                                    args[0] = myWeb;
-                                    args[1] = ocNode;
-                                }
+                                //}
 
                                 calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
                             }
