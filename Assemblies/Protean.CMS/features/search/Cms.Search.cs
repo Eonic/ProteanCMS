@@ -736,7 +736,7 @@ namespace Protean
 
                                     if (resultDoc.GetField("artid") != null)
                                     {
-                                        thisArtId = Convert.ToInt16(resultDoc.GetField("artid").StringValue);
+                                        thisArtId = Convert.ToInt64(resultDoc.GetField("artid").StringValue);
 
                                         if (string.IsNullOrEmpty(thisArtIdList))
                                         {
@@ -803,7 +803,7 @@ namespace Protean
 
                                     if (resultDoc.GetField("artid") != null)
                                     {
-                                        thisArtId = Convert.ToInt16(resultDoc.GetField("artid").StringValue);
+                                        thisArtId = Convert.ToInt64(resultDoc.GetField("artid").StringValue);
                                     }
 
                                     if (thisArtId == 0L | thisArtIdList.Contains(thisArtId.ToString()))
@@ -1119,7 +1119,7 @@ namespace Protean
                                 long thisArtId;
                                 if (resultDoc.GetField("artid") != null)
                                 {
-                                    thisArtId = Convert.ToInt16(resultDoc.GetField("artid").StringValue);
+                                    thisArtId = Convert.ToInt64(resultDoc.GetField("artid").StringValue);
                                     if (string.IsNullOrEmpty(thisArtIdList))
                                     {
                                         thisArtIdList = thisArtId.ToString();
@@ -1163,7 +1163,7 @@ namespace Protean
                                 long thisArtId = 0L;
                                 if (resultDoc.GetField("artid") != null)
                                 {
-                                    thisArtId = Convert.ToInt16(resultDoc.GetField("artid").StringValue);
+                                    thisArtId = Convert.ToInt64(resultDoc.GetField("artid").StringValue);
                                 }
                                 if (thisArtId == 0L | thisArtIdList.Contains(thisArtId.ToString()))
                                 {
