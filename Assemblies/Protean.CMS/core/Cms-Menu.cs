@@ -754,7 +754,7 @@ namespace Protean
                 string cCloneParent;
                 var oRe = new Regex("[^A-Z0-9]", RegexOptions.IgnoreCase);
                 XmlElement oPageVerElmts;
-
+                // string DomainURL = (mbIsUsingHTTPS ? "https://" : "http://") + moRequest.ServerVariables["SERVER_NAME"];
                 string DomainURL = mcRequestDomain;
                 string ExcludeFoldersFromPaths = ("" + moConfig["ExcludeFoldersFromPaths"]).ToLower();
                 string[] foldersExcludedFromPaths = ExcludeFoldersFromPaths.Split(',');
@@ -1046,7 +1046,16 @@ namespace Protean
                                     // If this matches the path requested then change the pageId
                                     if (!string.IsNullOrEmpty(sUrl))
                                     {
-                                        string PathToMatch = sUrl.Replace(DomainURL, "").ToLower();
+                                        string PathToMatch;
+                                        //string PathToMatch = sUrl.Replace(DomainURL, "").ToLower();
+                                        if (!string.IsNullOrEmpty(DomainURL))
+                                        {
+                                            PathToMatch = sUrl.Replace(DomainURL, "").ToLower();
+                                        }
+                                        else
+                                        {
+                                            PathToMatch = sUrl.ToLower(); // fallback
+                                        }
                                         string PathToMatch2 = "/" + gcLang + PathToMatch;
                                         string PathToTest = moRequest["path"].ToLower().TrimEnd('/');
                                         if ((PathToMatch ?? "") == (PathToTest ?? "") | (PathToMatch2 ?? "") == (PathToTest ?? ""))
