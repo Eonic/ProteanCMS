@@ -5076,7 +5076,7 @@ namespace Protean
                                     foreach (DataRow currentODR11 in oDS.Tables["CartItems"].Rows)
                                     {
                                         oDR1 = currentODR11;
-                                        if (oDR1["nCartItemKey"] != null && oDR1["nCartItemKey"].Equals(nItemID))
+                                        if (oDR1["nCartItemKey"] != null && Convert.ToInt64(oDR1["nCartItemKey"]).Equals(nItemID))
                                         {
                                             oDR1.BeginEdit();
 
