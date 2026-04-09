@@ -34,6 +34,7 @@ namespace Protean
                 private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 private Cms myWeb;
                 private Cart myCart;
+                public bool bNoClose;
 
                 public JSONActions(Cms.dbHelper.utils.APILog ApiLog)
                 {
@@ -45,6 +46,8 @@ namespace Protean
                     this.apiLog = ApiLog;
 
                 }
+
+
 
                 private XmlElement updateCartforJSON(XmlElement CartXml)
                 {
@@ -121,7 +124,7 @@ namespace Protean
                         // Output the new cart
                         var oDoc = new XmlDocument();
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
-
+                       // myCart.bNoClose = true;
 
                         if (myCart.mnCartId < 1)
                         {
@@ -196,7 +199,8 @@ namespace Protean
                             myCart.GetCart(ref argoCartElmt);
                             CartXml = updateCartforJSON(CartXml);
                             // persist cart
-                            myCart.close();
+                          
+                            myCart.close(bNoClose);
 
                             string jsonString = JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.None);
                             jsonString = jsonString.Replace("\"@", "\"_");
@@ -913,10 +917,10 @@ namespace Protean
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
                         myCart.GetCart(ref argoCartElmt);
                         myCart.purchaseActions(CartXml);
+                       
+                        CartXml = updateCartforJSON(CartXml);
                         // persist cart
                         myCart.close();
-                        CartXml = updateCartforJSON(CartXml);
-
                         string jsonString = JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented);
                         jsonString = jsonString.Replace("\"@", "\"_");
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue");
