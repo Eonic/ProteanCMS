@@ -3,14 +3,13 @@
 // $Revision:    4.0  
 // $Date:        2011-03-01
 // $Author:      Ali Granger
-// &Website:     www.eonic.co.uk
-// &Licence:     All Rights Reserved.
+// &Website:     eonic.digital
+// &Licence:     Apache-2.0 license
 // $Copyright:   Copyright (c) 2002 - 2011 EonicWeb Ltd.
 // ***********************************************************************
 
 using System;
 using System.IO;
-using Microsoft.VisualBasic;
 using Protean.Tools.Integration.Twitter;
 
 namespace Protean
@@ -160,7 +159,7 @@ namespace Protean
                 _absolutepath = physicalPath;
                 if (_exists)
                 {
-                    _extension = Strings.LCase(fi.Extension);
+                    _extension = fi.Extension.ToLower();
                     _filename = fi.Name;
                     _libraryType = GetLibraryTypeFromExtension(_extension);
                 }

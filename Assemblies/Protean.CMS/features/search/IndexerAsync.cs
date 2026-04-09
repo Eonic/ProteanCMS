@@ -15,8 +15,6 @@ using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
 // This is the Indexer/Search items
 using Lucene.Net.Index;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 // regular expressions
 using static Protean.Tools.FileHelper;
@@ -57,7 +55,7 @@ namespace Protean
             myWeb = aWeb;
             moConfig = myWeb.moConfig;
             string siteSearchPath = moConfig["SiteSearchPath"];
-            if (Strings.LCase(moConfig["SiteSearchDebug"]) == "on")
+            if ((moConfig["SiteSearchDebug"]).ToLower() == "on")
             {
                 bDebug = true;
             }
@@ -108,7 +106,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                cExError += ex.ToString() + Constants.vbCrLf;
+                cExError += ex.ToString() + Environment.NewLine;
                 stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", bDebug: gbDebug);
             }
         }
@@ -146,7 +144,7 @@ namespace Protean
 
             catch (Exception ex)
             {
-                cExError += ex.ToString() + Constants.vbCrLf;
+                cExError += ex.ToString() + Environment.NewLine;
                 stdTools.returnException(ref myWeb.msException, mcModuleName, "New", ex, "", bDebug: gbDebug);
                 return null;
             }
@@ -192,7 +190,7 @@ namespace Protean
             int idxConcurrency = 10;
             if (!string.IsNullOrEmpty(moConfig["indexConcurrency"]))
             {
-                idxConcurrency = Conversions.ToInteger(moConfig["indexConcurrency"]);
+                idxConcurrency = Convert.ToInt16(moConfig["indexConcurrency"]);
             }
             var lcts = new LimitedConcurrencyLevelTaskScheduler(idxConcurrency);
             var factory = new TaskFactory(lcts);
@@ -214,7 +212,7 @@ namespace Protean
                 {
                     cIndexDetailSubTypes = moConfig["SiteSearchIndexDetailSubTypes"];
                 }
-                IndexDetailTypes = Strings.Split(Strings.Replace(cIndexDetailTypes, " ", ""), ",");
+                IndexDetailTypes = cIndexDetailTypes.Replace(" ", "").Split(',');
                 dStartTime = DateTime.Now;
 
                 DateTime dLastRun;
@@ -230,7 +228,7 @@ namespace Protean
                     // End If
                     if (moConfig["SiteSearchIndexResultPaging"] != null)
                     {
-                        minInterval = Conversions.ToInteger(moConfig["SiteSearchIndexResultPaging"]);
+                        minInterval = Convert.ToInt16(moConfig["SiteSearchIndexResultPaging"]);
                     }
                     // If moConfig("SiteSearchIndexResultPaging") <> "" Then
                     // minInterval = moConfig("SiteSearchIndexResultPaging")
@@ -239,10 +237,10 @@ namespace Protean
                     if (oLastIndexInfo != null)
                     {
                         var oLastInfoElmt = oLastIndexInfo.DocumentElement;
-                        dLastRun = Conversions.ToDate(oLastInfoElmt.GetAttribute("startTime"));
+                        dLastRun = Convert.ToDateTime(oLastInfoElmt.GetAttribute("startTime"));
                         if (string.IsNullOrEmpty(oLastInfoElmt.GetAttribute("endTime")) & dLastRun > DateTime.Now.AddHours(minInterval * -1))
                         {
-                            ResponseMessage = "Last Index is still running. Started:" + Conversions.ToString(dLastRun);
+                            ResponseMessage = "Last Index is still running. Started:" + Convert.ToString(dLastRun);
                         }
                     }
                 }
@@ -342,8 +340,8 @@ namespace Protean
                         {
 
                             var pageObj = new IndexPageAsync.oPage();
-                            pageObj.pgid = Conversions.ToLong(oDR["nStructKey"]);
-                            pageObj.pagename = Conversions.ToString(oDR["cStructName"]);
+                            pageObj.pgid = Convert.ToInt64(oDR["nStructKey"]);
+                            pageObj.pagename = Convert.ToString(oDR["cStructName"]);
 
                             // checking index file size start
                             infoReader = new FileInfo(Path.GetDirectoryName(Path.GetDirectoryName(myWeb.goServer.MapPath(@"\"))) + @"\Index\Write\indexInfo.xml");
@@ -419,7 +417,7 @@ namespace Protean
             catch (Exception ex)
             {
 
-                cExError += ex.InnerException.StackTrace.ToString() + Constants.vbCrLf;
+                cExError += ex.InnerException?.StackTrace + Environment.NewLine;
                 stdTools.returnException(ref myWeb.msException, mcModuleName, "DoIndex", ex, "", cProcessInfo, gbDebug);
                 errElmt = oIndexInfo.CreateElement("error");
                 errElmt.InnerXml = cExError;
@@ -472,8 +470,8 @@ namespace Protean
                         }
                         else
                         {
-                            Information.Err().Raise(108, Description: "Indexer did not validate");
-                            break;
+                            throw new Exception("Indexer did not validate", new System.ComponentModel.InvalidEnumArgumentException());
+                            //break;
                         }
                     }
                     EmptyFolder(mcIndexWriteFolder);
@@ -501,7 +499,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    cExError += ex.StackTrace.ToString() + Constants.vbCrLf;
+                    cExError += ex.StackTrace.ToString() + Environment.NewLine;
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "StartIndex", ex, "", cProcessInfo, gbDebug);
 
                     bIsError = true;
@@ -530,11 +528,13 @@ namespace Protean
                 if (bNewIndex)
                 {
                     // delete directories and thier children
-                    while (Information.UBound(Directory.GetDirectories(cDirectory)) > 0)
+                    while (Directory.GetDirectories(cDirectory).Length > 0)
                         Directory.Delete(Directory.GetDirectories(cDirectory)[0], true);
+
                     // delete files
-                    while (Information.UBound(Directory.GetFiles(cDirectory)) > 0)
+                    while (Directory.GetFiles(cDirectory).Length > 0)
                     {
+
                         try
                         {
                             File.SetAttributes(Directory.GetFiles(cDirectory)[0], FileAttributes.Normal);
@@ -542,22 +542,24 @@ namespace Protean
                         }
                         catch (Exception ex)
                         {
-                            cExError += ex.StackTrace.ToString() + Constants.vbCrLf;
+                            cExError += ex.StackTrace.ToString() + Environment.NewLine;
                             stdTools.returnException(ref myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
                             return;
 
                         }
                     }
                     // try deleting a hidden folder
-                    if (Directory.Exists(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cDirectory, Interaction.IIf(Strings.Right(cDirectory, 1) == @"\", "", @"\")), "_vti_cnf"))))
+                    string vtiPath = cDirectory.TrimEnd('\\') + @"\_vti_cnf";
+
+                    if (Directory.Exists(vtiPath))
                     {
                         try
                         {
-                            Directory.Delete(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(cDirectory, Interaction.IIf(Strings.Right(cDirectory, 1) == @"\", "", @"\")), "_vti_cnf")), true);
+                            Directory.Delete(vtiPath, true);
                         }
                         catch (Exception ex)
                         {
-                            cExError += ex.ToString() + Constants.vbCrLf;
+                            cExError += ex.ToString() + Environment.NewLine;
                             stdTools.returnException(ref myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
                             return;
                         }
@@ -566,16 +568,13 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                try
-                {
-                    oIndexWriter.Dispose();
-                    oIndexWriter = null;
-                }
-                catch (Exception)
-                {
-
-                }
-                cExError += ex.ToString() + Constants.vbCrLf;
+             
+                    if (oIndexWriter != null)
+                    {
+                        oIndexWriter.Dispose();
+                        oIndexWriter = null;
+                    }
+                cExError += ex.ToString() + Environment.NewLine;
                 stdTools.returnException(ref myWeb.msException, mcModuleName, "Empty Folder", ex, "", cProcessInfo, gbDebug);
             }
         }
@@ -601,7 +600,7 @@ namespace Protean
             }
             catch (Exception ex)
             {
-                cExError += ex.ToString() + Constants.vbCrLf;
+                cExError += ex.ToString() + Environment.NewLine;
                 stdTools.returnException(ref myWeb.msException, mcModuleName, "StopIndex", ex, "", cProcessInfo, gbDebug);
                 bIsError = true;
             }
@@ -619,14 +618,14 @@ namespace Protean
                 var loopTo = FileCount - 1;
                 for (i = 0; i <= loopTo; i++)
                 {
-                    string cFileName = Strings.Replace(Directory.GetFiles(cLocation)[i], cLocation, cDestination);
+                    string cFileName = Directory.GetFiles(cLocation)[i].Replace(cLocation, cDestination);
                     Debug.WriteLine(cFileName);
                     File.Copy(Directory.GetFiles(cLocation)[i], cFileName, true);
                 }
             }
             catch (Exception ex)
             {
-                cExError += ex.ToString() + Constants.vbCrLf;
+                cExError += ex.ToString() + Environment.NewLine;
                 stdTools.returnException(ref myWeb.msException, mcModuleName, "CopyFolderContents", ex, "", cProcessInfo, gbDebug);
             }
         }
@@ -901,8 +900,8 @@ namespace Protean
                     }
 
                     cPageHtml = myWeb.ReturnPageHTML(0, true);
-                    cPageHtml = Strings.Replace(cPageHtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
-                    cPageHtml = Strings.Replace(cPageHtml, " xmlns=\"http://www.w3.org/1999/xhtml\"", "");
+                    cPageHtml = cPageHtml.Replace("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
+                    cPageHtml = cPageHtml.Replace(" xmlns=\"http://www.w3.org/1999/xhtml\"", "");
 
                     var oPageElmt = oInfoElmt.OwnerDocument.CreateElement("page");
 
@@ -915,14 +914,14 @@ namespace Protean
                             errorElmt.InnerText = myWeb.msException;
                             try
                             {
-                                errorElmt.SetAttribute("pgid", Conversions.ToString(oPage.pgid));
-                                errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
+                                errorElmt.SetAttribute("pgid", Convert.ToString(oPage.pgid));
+                                errorElmt.SetAttribute("name", Convert.ToString(oPage.pagename));
                             }
                             catch (Exception)
                             {
 
                             }
-                            cExError += ControlChars.CrLf + errorElmt.OuterXml;
+                            cExError += Environment.NewLine + errorElmt.OuterXml;
                         }
                         nPagesSkipped += 1L;
                     }
@@ -942,7 +941,7 @@ namespace Protean
 
                             if (oElmtRules != null)
                                 cRules = oElmtRules.GetAttribute("content");
-                            if (!(Strings.InStr(cRules, "NOINDEX") > 0) & oElmtURL != null)
+                            if (!cRules.Contains("NOINDEX") && oElmtURL != null)
                             {
                                 if (!oElmtURL.GetAttribute("url").StartsWith("http"))
                                 {
@@ -973,7 +972,7 @@ namespace Protean
                             nPagesSkipped += 1L;
                         }
 
-                        if (!(Strings.InStr(cRules, "NOFOLLOW") > 0))
+                        if (!cRules.Contains("NOFOLLOW"))
                         {
                             // Now let index the content of the pages
                             // Only index content where this is the parent page, so we don't index for multiple locations.
@@ -1116,10 +1115,10 @@ namespace Protean
                     myWeb.mcEwSiteXsl = cXslPath;
                     myWeb.mnArtId = Convert.ToInt32(oElmt.GetAttribute("id"));
                     myWeb.moContentDetail = null;
+                        
                     cPageHtml = myWeb.ReturnPageHTML(0, true);
-                    // remove any declarations that might affect and Xpath Search
-                    cPageHtml = Strings.Replace(cPageHtml, "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "");
-                    cPageHtml = Strings.Replace(cPageHtml, " xmlns=\"http://www.w3.org/1999/xhtml\"", "");
+                        // remove any declarations that might affect and Xpath Search
+                     cPageHtml = cPageHtml.Replace("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">", "").Replace(" xmlns=\"http://www.w3.org/1999/xhtml\"", "");
 
                     if (string.IsNullOrEmpty(cPageHtml))
                     {
@@ -1133,13 +1132,14 @@ namespace Protean
                             try
                             {
                                 errorElmt.SetAttribute("pgid", "0");
-                                errorElmt.SetAttribute("name", Conversions.ToString(oPage.pagename));
+                                errorElmt.SetAttribute("name", Convert.ToString(oPage.pagename));
                             }
                             catch (Exception)
                             {
                                 // Don't error if you can't set the above.
                             }
-                            cExError += ControlChars.CrLf + errorElmt.OuterXml;
+                            cExError += Environment.NewLine + errorElmt.OuterXml;
+
                         }
                         nPagesSkipped += 1L;
                     }
@@ -1160,9 +1160,8 @@ namespace Protean
                                 }
                                 if (oElmtRules != null)
                                     cRules = oElmtRules.GetAttribute("content");
-                                if (!(Strings.InStr(cRules, "NOINDEX") > 0) & !sPageUrl.StartsWith("http"))
+                                if (!cRules.Contains("NOINDEX") && !sPageUrl.StartsWith("http"))
                                 {
-
                                     // handle cannonical link tag
                                     if (oPageXml.DocumentElement.SelectSingleNode("descendant-or-self::link[@rel='canonical']") != null)
                                     {
@@ -1287,9 +1286,11 @@ namespace Protean
                 {
                     try
                     {
-                        short F = (short)FileSystem.FreeFile();
-                        FileSystem.FileOpen(F, sFile, OpenMode.Binary, OpenAccess.ReadWrite, OpenShare.LockReadWrite);
-                        FileSystem.FileClose(F);
+                        using (FileStream fs = new FileStream(sFile, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
+                        {
+                            // File is opened and locked; the using block ensures it is closed automatically
+                        }
+
                     }
                     catch
                     {
@@ -1364,7 +1365,7 @@ namespace Protean
                     {
 
                     }
-                    cExError += ex.StackTrace.ToString() + Constants.vbCrLf;
+                    cExError += ex.StackTrace + Environment.NewLine;
                     returnException(ref sException, mcModuleName, methodName, ex, "", processInfo, gbDebug);
                     bIsError = true;
                 }
@@ -1373,7 +1374,7 @@ namespace Protean
 
 
             //Indexes each page and does not use metatags on the page additional fields to be specified. used for indexing documents that do not return metadata, for webpages with metadate use other function:
-            private void IndexPage(int nPageId, string cPageText, string cURL, string cPageTitle, ref string sException, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime? dPublish = null, DateTime? dUpdate = null)
+            private void IndexPage(long nPageId, string cPageText, string cURL, string cPageTitle, ref string sException, string cContentType = "Page", long nContentId = 0L, string cAbstract = "", DateTime? dPublish = null, DateTime? dUpdate = null)
             {
                 // PerfMon.Log("Indexer", "IndexPage")
                 string cProcessInfo = cURL;
@@ -1418,7 +1419,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    cExError += ex.ToString() + Constants.vbCrLf;
+                    cExError += ex.ToString() + Environment.NewLine;
                     returnException(ref sException, mcModuleName, "IndexPage", ex, "", cProcessInfo, gbDebug);
                     bIsError = true;
                 }
@@ -1448,10 +1449,14 @@ namespace Protean
                 {
 
                     // Determine whether to tokenize this - by default, no
-                    indexContent = (Field.Index)Conversions.ToInteger(Interaction.IIf(metaContent.GetAttribute("tokenize") == "true" & !forSorting, Field.Index.ANALYZED, Field.Index.NOT_ANALYZED));
+                    indexContent = metaContent.GetAttribute("tokenize") == "true" && !forSorting
+                                   ? Field.Index.ANALYZED
+                                   : Field.Index.NOT_ANALYZED;
 
                     // Determine whether to store this - by default, YES
-                    storeContent = (Field.Store)Conversions.ToInteger(Interaction.IIf(metaContent.GetAttribute("store") == "false" | forSorting, Field.Store.NO, Field.Store.YES));
+                    storeContent = metaContent.GetAttribute("store") == "false" || forSorting
+                                   ? Field.Store.NO
+                                   : Field.Store.YES;
 
                     metaName = metaContent.GetAttribute("name");
                     if (forSorting)
@@ -1480,7 +1485,7 @@ namespace Protean
                         case "number":
                             {
 
-                                if (Tools.Number.CheckAndReturnStringAsNumber(metaContentValue, ref convertedNumber, (Type)Interaction.IIf(metaType == "float", typeof(float), typeof(long))))
+                                if (Tools.Number.CheckAndReturnStringAsNumber( metaContentValue, ref convertedNumber, metaType == "float" ? typeof(float) : typeof(long)))
                                 {
 
                                     // Create the numeric field
@@ -1493,13 +1498,13 @@ namespace Protean
 
                                         case "float":
                                             {
-                                                metaNumericField.SetFloatValue(Conversions.ToSingle(convertedNumber));
+                                                metaNumericField.SetFloatValue(Convert.ToSingle(convertedNumber));
                                                 break;
                                             }
 
                                         default:
                                             {
-                                                metaNumericField.SetLongValue(Conversions.ToLong(convertedNumber));
+                                                metaNumericField.SetLongValue(Convert.ToInt64(convertedNumber));
                                                 break;
                                             }
 
@@ -1527,7 +1532,7 @@ namespace Protean
                                 if (!string.IsNullOrEmpty(metaContentValue) && DateTime.TryParse(metaContentValue, out convertedDate))
                                 {
 
-                                    metaField = new Field(metaName, DateTools.DateToString(Conversions.ToDate(metaContentValue), DateTools.Resolution.SECOND), storeContent, indexContent);
+                                    metaField = new Field(metaName, DateTools.DateToString(Convert.ToDateTime(metaContentValue), DateTools.Resolution.SECOND), storeContent, indexContent);
                                 }
                                 else
                                 {
@@ -1564,7 +1569,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    cExError += ex.ToString() + Constants.vbCrLf;
+                    cExError += ex.ToString() + Environment.NewLine;
                     returnException(ref sException, mcModuleName, "indexMeta", ex, "", processInfo, gbDebug);
                     bIsError = true;
                 }
@@ -1582,7 +1587,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    cExError += ex.ToString() + Constants.vbCrLf;
+                    cExError += ex.ToString() + Environment.NewLine;
                     returnException(ref sException, mcModuleName, "DoCheck", ex, "", cProcessInfo, gbDebug);
                     return cOtherText;
                 }
@@ -1618,11 +1623,17 @@ namespace Protean
                         }
                         else
                         {
-                            filename = Strings.Left(cUrl.Substring(cUrl.LastIndexOf("/") + 1), 240);
+                            filename = cUrl.Substring(cUrl.LastIndexOf("/") + 1);
+                            if (filename.Length > 240)
+                                filename = filename.Substring(0, 240);
+
                             if (cUrl.LastIndexOf("/") > 0)
                             {
-                                filepath = Strings.Left(cUrl.Substring(0, cUrl.LastIndexOf("/")), 240) + "";
+                                filepath = cUrl.Substring(0, cUrl.LastIndexOf("/"));
+                                if (filepath.Length > 240)
+                                    filepath = filepath.Substring(0, 240);
                             }
+
                         }
 
                         var oFS = new fsHelper(moCtx);
@@ -1632,8 +1643,8 @@ namespace Protean
 
                         // Tidy up the filename
                         filename = ReplaceIllegalChars(filename);
-                        filename = Strings.Replace(filename, @"\", "-");
-                        filepath = Strings.Replace(filepath, "/", @"\") + "";
+                        filename = filename.Replace("\\", "-");
+                        filepath = filepath.Replace("/", "\\");
                         if (filepath.StartsWith(@"\") & mcIndexCopyFolder.EndsWith(@"\"))
                         {
                             filepath.Remove(0, 1);
@@ -1644,7 +1655,7 @@ namespace Protean
 
                         if (FullFilePath.Length > 255)
                         {
-                            FullFilePath = Strings.Left(FullFilePath, 240) + Ext;
+                            FullFilePath = (FullFilePath.Length > 240 ? FullFilePath.Substring(0, 240) : FullFilePath) + Ext;
                         }
                         else
                         {
@@ -1660,7 +1671,7 @@ namespace Protean
                             }
                             else
                             {
-                                cExError += "<Error>Create Path: " + filepath + " - " + sError + "</Error>" + Constants.vbCrLf;
+                                cExError += "<Error>Create Path: " + filepath + " - " + sError + "</Error>" + Environment.NewLine;
                             }
                         }
                         else
@@ -1676,7 +1687,7 @@ namespace Protean
                 catch (Exception ex)
                 {
                     // if saving of a page fails we are not that bothered.
-                    cExError += "<Error>" + filepath + filename + ex.Message + "</Error>" + Constants.vbCrLf;
+                    cExError += "<Error>" + filepath + filename + ex.Message + "</Error>" + Environment.NewLine;
                     // returnException(myWeb.msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
                     // bIsError = True
                 }

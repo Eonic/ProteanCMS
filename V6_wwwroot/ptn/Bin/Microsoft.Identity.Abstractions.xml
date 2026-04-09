@@ -1,0 +1,2467 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Identity.Abstractions</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Identity.Abstractions.CredentialDescription">
+            <summary>
+            Description of a credential. Credentials are used to prove the identity of the
+            application (See <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.ClientCredentials"/>), or
+            to decrypt tokens (See <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.TokenDecryptionCredentials"/>). Credentials can be
+            secrets (client secrets), certificates, or signed assertions. They can be stored or provided in a variety of ways, 
+            and this class provides a way to describe them. The description is then used by Microsoft.Identity.Web to retrieve the credential.
+            (See the DefaultCredentialProvider class)
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.CredentialDescription.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.CredentialDescription.#ctor(Microsoft.Identity.Abstractions.CredentialDescription)">
+            <summary>
+            Copy constructor for <see cref="T:Microsoft.Identity.Abstractions.CredentialDescription"/>
+            </summary>
+            <param name="other">CredentialDescription to copy.</param>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.Id">
+            <summary>
+            Gets a unique identifier for a CredentialDescription based on <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.Algorithm">
+            <summary>
+            Algorithm used to create signing credentials.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType">
+            <summary>
+            Type of the source of the credential. This property is used to determine which other properties need
+            to be provided to describe the credential.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.KeyVaultUrl">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.KeyVault"/>, use this property to specify the
+            URL of the Key Vault containing the certificate, in conjunction with <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.KeyVaultCertificateName"/>.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a certificate stored in Key Vault used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="keyvault_json":::
+            
+            The code below describes programmatically in C#, the same certificate stored in Key Vault.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="keyvault_csharp":::
+            ]]></format>
+            </example>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.KeyVaultCertificateName"/>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateStorePath">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.StoreWithDistinguishedName"/> or 
+            <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.StoreWithThumbprint"/>, specifies the certificate store from which to extract
+            the certificate. The format is the concatenation of a value of <see cref="T:System.Security.Cryptography.X509Certificates.StoreLocation"/> and a value of <see cref="T:System.Security.Cryptography.X509Certificates.StoreName"/>
+            separated by a slash. For instance, use <c>CurrentUser/My</c> for a user certificate, and <c>LocalMachine/My</c> for a computer certificate.
+            </summary>
+            <remarks>Use this property in conjunction with <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateDistinguishedName"/> or <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateThumbprint"/>.</remarks>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateStorePath"/>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateDistinguishedName"/>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateThumbprint"/>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateDistinguishedName">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.StoreWithDistinguishedName"/>, specifies the distinguished name of
+            the certificate in the store specified by <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateStorePath"/>.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a user certificate stored in the personal certificates folder (<b>CurrentUser/My</b>) and specified by its distinguised name, used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="distinguishedname_json":::
+            
+            The code below describes programmatically in C#, a computer certificate in the personal certificates folder (<b>LocalMachine/My<b>).
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="distinguishedname_csharp":::
+            ]]></format>
+            </example>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateStorePath"/>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateThumbprint"/>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.KeyVaultCertificateName">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.KeyVault"/>, use this property to specify the
+            the name of the certificate in Key Vault in conjunction with <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.KeyVaultUrl"/>.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a certificate stored in Key Vault used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="keyvault_json":::
+            
+            The code below describes programmatically in C#, the same certificate stored in Key Vault.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="keyvault_csharp":::
+            ]]></format>
+            </example>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateThumbprint">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.StoreWithThumbprint"/> specifies the thumbprint of the certificate to extract from
+            the certificate store specified by <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateStorePath"/>.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a user certificate stored in the personal certificates folder (<b>CurrentUser/My</b>) and specified by its thumbprint, used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="thumbprint_json":::
+            
+            The code below describes programmatically in C#, a computer certificate in the personal certificates folder (<b>LocalMachine/My<b>) accessed by its thumbprint.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="thumbprint_csharp":::
+            ]]></format>
+            </example>
+            <remarks>Use this property in conjunction with <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateStorePath"/>.</remarks>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateDistinguishedName"/>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateStorePath"/>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateDiskPath">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.Path"/>, specifies the path to the certificate on disk. You can
+            use this property to specify the path to a PFX file containing the certificate and its private key. If a password is needed, 
+            use <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificatePassword"/>.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a certificate retrieved by its path and a password to be used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="path_json":::
+            
+            The code below describes programmatically in C#, a the same certificate.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="path_csharp":::
+            ]]></format>
+            </example>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificatePassword"/>
+            <remarks>Using a certificate from a file is not recommended in production.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificatePassword">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.Path"/>, specifies the password to use to access the certificate which
+            path is specified by <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateDiskPath"/>. Only use this property if the certificate is protected by a password.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a certificate retrieved by its path and a password to be used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="path_json":::
+            
+            The code below describes programmatically in C#, the same certificate.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="path_csharp":::
+            ]]></format>
+            </example>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/>
+            <seealso cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateDiskPath"/>
+            <remarks>Using a certificate from a file is not recommended in production.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.Base64EncodedValue">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.Base64Encoded"/>, specifies the base64 encoded value of the certificate.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a certificate by its base64 encoded value, to be used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="base64_json":::
+            
+            The code below describes programmatically in C#, the same certificate.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="base64_csharp":::
+            ]]></format>
+            </example>
+            <remarks>Using a certificate from its base64 encoded value is not recommended in production.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.ClientSecret">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.ClientSecret"/>, describes the client secret to use as a client credential in a confidential client application.
+            The client secret is a string known only to the application and the identity provider. It needs to match the value configured during the application registration.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a client secret used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="secret_json":::
+            
+            The code below describes programmatically in C#, the same client secret.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="secret_csharp":::
+            ]]></format>
+            </example>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.ManagedIdentityClientId">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.SignedAssertionFromManagedIdentity"/>, it specifies the client ID of the Azure user-assigned managed identity 
+            used to provide a signed assertion to act as a client credential for the application. This requires that the application is deployed on Azure, that the managed identity is configured, 
+            and that workload identity federation with the managed identity is declared in the application registration. For details, see https://learn.microsoft.com/azure/active-directory/workload-identities/workload-identity-federation.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a workload identity federation with a user assigned managed identity:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="msi_json":::
+            
+            The code below describes programmatically in C#, the same workload identity federation with a user assigned managed identity.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="msi_csharp":::
+            ]]></format>
+            </example>        
+            <remarks>If you want to use the system-assigned managed identity, just use <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> = <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.SignedAssertionFromManagedIdentity"/> and
+            don't provide a managed identity client ID.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.SignedAssertionFileDiskPath">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.SignedAssertionFilePath"/>, optionally specifies the path on disk of a file 
+            containing a signed assertion used as a client assertion for the confidential client application. 
+            The signed assertion file is a file containing a signed JWT assertion that is used as a client credential. You will usually use this option when you want to integrate
+            with workload identity federation with Azure Kubernetes Service (AKS). 
+            For details, see https://learn.microsoft.com/azure/active-directory/workload-identities/workload-identity-federation.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a signed assertion acquired with workload identity federation with Azure Kubernetes Services (AKS):
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="aks_json":::
+            
+            The code below describes programmatically in C#, the same workload identity federation with with Azure Kubernetes Services (AKS) signed assertion.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="aks_csharp":::
+            ]]></format>
+            </example>
+            <remarks>When deployed to AKS, if you specify <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> = <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.SignedAssertionFilePath"/> but don't provide
+            the signed assertion file disk path, the file will be searched based on the content of two environment variables: 
+            <b>AZURE_FEDERATED_TOKEN_FILE</b> and <b>AZURE_ACCESS_TOKEN_FILE</b>.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.DecryptKeysAuthenticationOptions">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.AutoDecryptKeys"/>, this property describes the authority to use
+            to get a token for a web API to get the keys used to decrypt an encrypted token. The cloud instance will be the same as the application, but the application can be a multi-tenant
+            application (tenant = <b>common</b> or <b>organizations</b>), and in this case to get a token on behalf of itself, the
+            credential type needs to provide a tenant. More generally you might want to specify authentication options, including protocol, PopKey, etc ...
+            This credential description is only used for decrypt credentials, not for client credentials.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a decrypt credential to get the decrypt keys automatically:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="autodecryp_json":::
+            
+            The code below describes the same, programmatically in C#.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="autodecryp_csharp":::
+            ]]></format>
+            </example>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.TokenExchangeAuthority">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.SignedAssertionFromManagedIdentity"/>, 
+            specifies the authority URL to use for token exchange. This is useful in scenarios where the issuer 
+            for the token exchange is different from the application's authority.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a workload identity federation with a user assigned managed identity:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="tokenExchangeAuthority_json":::
+            
+            The code below describes programmatically in C#, the same workload identity federation with a user assigned managed identity.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="tokenExchangeAuthority_csharp":::
+            ]]></format>
+            </example>
+            <remarks>If you want to use the default authority, don't provide a token exchange authority URL.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.Certificate">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.Certificate"/>, you will use this property to provide the certificate yourself. 
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.Base64Encoded"/> or <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.KeyVault"/>
+            or <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.Path"/> or <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.StoreWithDistinguishedName"/> or <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.StoreWithThumbprint"/>
+            after the certificate is retrieved by a <see cref="T:Microsoft.Identity.Abstractions.ICredentialsLoader"/>, it will be stored in this property and also in the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CachedValue"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.CachedValue">
+            <summary>
+            When the credential is retrieved by a <see cref="T:Microsoft.Identity.Abstractions.ICredentialsLoader"/>, it will be stored in this property, where you can retrieve it. If the credential is a certificate,
+            it will also be stored in the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.Certificate"/> property.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.Skip">
+            <summary>
+            Skip this credential description. This is useful when, you specify a list of
+            credentials, some of which don't apply in a particular deployment.
+            It will also be used by the <see cref="T:Microsoft.Identity.Abstractions.ICredentialsLoader"/> if it cannot find or load the credential.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.CredentialType">
+            <summary>
+            Describes the type of credentials, based on the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/>.
+            </summary>
+            <remarks>
+            Returns:
+            <list type="bullet">
+            <item>
+            <term><see cref="F:Microsoft.Identity.Abstractions.CredentialType.Certificate"/></term>
+            <description>when <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.Certificate"/>, you will use this property to provide the certificate yourself. 
+            When <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.Base64Encoded"/> or <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.KeyVault"/>
+            or <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.Path"/> or <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.StoreWithDistinguishedName"/> or <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.StoreWithThumbprint"/></description>
+            </item>
+            <item>
+            <term><see cref="F:Microsoft.Identity.Abstractions.CredentialType.Secret"/></term>
+            <description>when <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.ClientSecret"/>.</description>
+            </item>
+            <item>
+            <term><see cref="F:Microsoft.Identity.Abstractions.CredentialType.SignedAssertion"/></term>
+            <description>when <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.SignedAssertionFilePath"/> or <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.SignedAssertionFromManagedIdentity"/>
+            or <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.SignedAssertionFromVault"/>.</description>
+            </item>
+            <item>
+            <term><see cref="F:Microsoft.Identity.Abstractions.CredentialType.DecryptKeys"/></term>
+            <description>when <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> is <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.AutoDecryptKeys"/>.</description>
+            </item>
+            </list>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.TokenExchangeUrl">
+            <summary>
+            (Microsoft Entra specific)
+            Value that can be used to configure the token exchange resource url in the case
+            of federation identity credentials with Managed identity.
+            </summary>
+            /// <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The JSON fragment below describes a workload identity federation with a user assigned managed identity:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="tokenExchangeUrl_json":::
+            
+            The code below describes programmatically in C#, the same workload identity federation with a user assigned managed identity.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="tokenExchangeUrl_csharp":::
+            ]]></format>
+            </example> 
+            <remarks>If you want to use the default token exchange resource "api://AzureADTokenExchange", don't provide a token exchange url.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.CustomSignedAssertionProviderName">
+            <summary>
+            Extensibility. When used with <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> = <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.CustomSignedAssertion"/>, this property specifies the fully qualified
+            named of the extension that will be used to retrieve the signed assertion used as a client credentials.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialDescription.CustomSignedAssertionProviderData">
+            <summary>
+            Extensibility. When used with <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> = <see cref="F:Microsoft.Identity.Abstractions.CredentialSource.CustomSignedAssertion"/>, this property specifies 
+            additional data that will be passed to the extension computing the signed assertion. This is meant for SDKs extending the credential
+            description capabilities.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.CredentialSource">
+            <summary>
+            Source for a credential.
+            Credentials are used to prove the identity of the
+            application (See <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.ClientCredentials"/>), or
+            to decrypt tokens (See <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.TokenDecryptionCredentials"/>). Credentials can be
+            secrets (client secrets), certificates, or signed assertions. They can be stored or provided in a variety of ways, 
+            and this enumeration describes these ways. It's used in the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.Certificate">
+            <summary>
+            Use this value if you provide a certificate yourself. When setting the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property to this value,
+            you will also provide the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.Certificate"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.KeyVault">
+            <summary>
+            Use this value when the certificate is stored in Azure Key Vault. When setting the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property to this value,
+            you'll also provide the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.KeyVaultUrl"/> and <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.KeyVaultCertificateName"/>
+            properties.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The Json fragment below describes a certificate stored in Key Vault used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="keyvault_json":::
+            
+            The code below describes programmatically in C#, the same certificate stored in Key Vault.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="keyvault_csharp":::
+            ]]></format>
+            </example>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.Base64Encoded">
+            <summary>
+            Use this value when you provide a Base64 encoded string. When setting the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property to this value,
+            you'll also provide the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.Base64EncodedValue"/> property and optionally, the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificatePassword"/>.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The Json fragment below describes a certificate by its base64 encoded value, to be used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="base64_json":::
+            
+            The code below describes programmatically in C#, the same certificate.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="base64_csharp":::
+            ]]></format>
+            </example>
+            <remarks>Using the base64 encoded representation of a certificate is not recommended in production.</remarks>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.Path">
+            <summary>
+            Use this value when you provide a path to a file containing the certificate on disk. When setting the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property to this value,
+            you'll also provide the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateDiskPath"/> property, and optionally, the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificatePassword"/>
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The Json fragment below describes a certificate retrieved by its path and a password to be used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="path_json":::
+            
+            The code below describes programmatically in C#, a the same certificate.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="path_csharp":::
+            ]]></format>
+            </example>
+            <remarks>Using a certificate from a local path is not recommended in production.</remarks>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.StoreWithThumbprint">
+            <summary>
+            Use this value when you provide a certificate from the certificate store, described by its thumbprint.
+            When setting the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property to this value, you'll also provide the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateThumbprint"/>
+            and <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateStorePath"/> properties.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The Json fragment below describes a user certificate stored in the personal certificates folder (<b>CurrentUser/My</b>) and specified by its thumbprint, used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="thumbprint_json":::
+            
+            The code below describes programmatically in C#, a computer certificate in the personal certificates folder (<b>LocalMachine/My<b>) accessed by its thumbprint.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="thumbprint_csharp":::
+            ]]></format>
+            </example>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.StoreWithDistinguishedName">
+            <summary>
+            Use this value when you provide a certificate from the certificate store, described by its distinguished name.
+            When setting the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property to this value, you'll also provide the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateDistinguishedName"/>
+            and <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CertificateStorePath"/> properties.
+            </summary>
+                    /// <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The Json fragment below describes a user certificate stored in the personal certificates folder (<b>CurrentUser/My</b>) and specified by its distinguised name, used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="distinguishedname_json":::
+            
+            The code below describes programmatically in C#, a computer certificate in the personal certificates folder (<b>LocalMachine/My<b>).
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="distinguishedname_csharp":::
+            ]]></format>
+            </example>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.ClientSecret">
+            <summary>
+            Use this value when you provide a client secret.
+            When setting the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property to this value, you'll also provide the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.ClientSecret"/>.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The Json fragment below describes a client secret used as a client credential in a confidential client application:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="secret_json":::
+            
+            The code below describes programmatically in C#, the same client secret.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="secret_csharp":::
+            ]]></format>
+            </example>
+            <remarks>Using a client secret is not recommended in production.</remarks>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.SignedAssertionFromManagedIdentity">
+            <summary>
+            Use this value for a Certificateless client credentials using workload identity federation with managed identity.
+            When setting the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property to this value, you can also provide a user assigned managed identity using the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.ManagedIdentityClientId"/>.
+            If you don't the client credential will be based on the system assigned managed identity.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The Json fragment below describes a workload identity federation with a user assigned managed identity:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="msi_json":::
+            
+            The code below describes programmatically in C#, the same workload identity federation with a user assigned managed identity.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="msi_csharp":::
+            ]]></format>
+            </example> 
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.SignedAssertionFilePath">
+            <summary>
+            Use this value for a Certificateless client credentials using workload identity federation with Azure Kubernetes Services (AKS).
+            When setting the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property to this value, you can also optionally provide a path containing the signed assertion.
+            If you don't the credential will be searched in files contained in the following environment variables: <b>AZURE_FEDERATED_TOKEN_FILE</b> and <b>AZURE_ACCESS_TOKEN_FILE</b>.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The Json fragment below describes a signed assertion acquired with workload identity federation with Azure Kubernetes Services (AKS):
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="aks_json":::
+            
+            The code below describes programmatically in C#, the same workload identity federation with with Azure Kubernetes Services (AKS) signed assertion.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="aks_csharp":::
+            ]]></format>
+            </example>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.SignedAssertionFromVault">
+            <summary>
+            Use this value for a certificateless client credentials generated from another vault.
+            When setting the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property to this value, you can also optionally provide the name of a certificate used to compute
+            the signed assertion using the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.KeyVaultCertificateName"/> property.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.AutoDecryptKeys">
+            <summary>
+            Use this value for automatic decrypt keys used by a web API to decrypt an encrypted token. When setting the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/> property to this value,
+            also use the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.DecryptKeysAuthenticationOptions"/> to provide the tenant used by the web API to get a token to get the decrypt keys. This value
+            only applies to <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.TokenDecryptionCredentials"/>, but the client credentials are used to get the token 
+            to acquire the decrypt keys.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The Json fragment below describes a decrypt credential to get the decrypt keys automatically:
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="autodecryp_json":::
+            
+            The code below describes the same, programmatically in C#.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/CredentialDescriptionTest.cs" id="autodecryp_csharp":::
+            ]]></format>
+            </example>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.CustomSignedAssertion">
+            <summary>
+            Use this value in order to utilize a credential provider that is not part of the Microsoft.Identity.Abstractions library.
+            This is an extension point, which goes along with <see cref = "P:Microsoft.Identity.Abstractions.CredentialDescription.CustomSignedAssertionProviderName" />
+            </summary>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialSource.ManagedCertificate">
+            <summary>
+            Use this value to indicate that the credential is a managed certificate.
+            This is currently a Microsoft-Internal concept which has no meaning outside of Microsoft.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.CredentialSourceLoaderParameters">
+            <summary>
+            Parameters that credential loaders, like signed assertion providers, can use to load credentials. You won't use this class directly
+            unless you are writing a custom credential loader.
+            </summary>
+            <seealso cref="M:Microsoft.Identity.Abstractions.ICredentialsLoader.LoadCredentialsIfNeededAsync(Microsoft.Identity.Abstractions.CredentialDescription,Microsoft.Identity.Abstractions.CredentialSourceLoaderParameters)"/>
+            <seealso cref="M:Microsoft.Identity.Abstractions.ICredentialsLoader.LoadFirstValidCredentialsAsync(System.Collections.Generic.IEnumerable{Microsoft.Identity.Abstractions.CredentialDescription},Microsoft.Identity.Abstractions.CredentialSourceLoaderParameters)"></seealso>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.CredentialSourceLoaderParameters.#ctor(System.String,System.String)">
+            <summary>
+            Initialize the CredentialSourceLoaderParameters from the application ID and authority.
+            </summary>
+            <param name="clientId">Application ID of the confidential client application that
+            wants to use these credentials as client credentials</param>
+            <param name="authority">Authority (Cloud instance and tenant) to which the credential will be presented.</param>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialSourceLoaderParameters.ClientId">
+            <summary>
+            Application ID of the confidential client application that wants to present the client credentials to the authority.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.CredentialSourceLoaderParameters.Authority">
+            <summary>
+            Authority (Cloud instance and tenant) to which the credential will be presented.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.CredentialType">
+            <summary>
+            Credential type. This is used to specify the type of credential that is being loaded. This value
+            is provided in the see <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CredentialType"/> based on the type of
+            credential (which depends on the type of <see cref="T:Microsoft.Identity.Abstractions.CredentialSource"/> value of the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.SourceType"/>).
+            </summary>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialType.Certificate">
+            <summary>
+            Certificate. Certificates can be used both as <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.ClientCredentials"/>
+            or <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.TokenDecryptionCredentials"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialType.Secret">
+            <summary>
+            (Client) secret. It can only be used in <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.ClientCredentials"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialType.SignedAssertion">
+            <summary>
+            Signed assertion. It can only be used in <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.ClientCredentials"/>.
+            </summary>
+        </member>
+        <member name="F:Microsoft.Identity.Abstractions.CredentialType.DecryptKeys">
+            <summary>
+            Decrypt keys. It can only be used in <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.TokenDecryptionCredentials"/>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.IAuthenticationSchemeInformationProvider">
+            <summary>
+            Provides information about the effective authentication scheme (options name). 
+            If passing null or string.Empty, this returns the default authentication scheme.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IAuthenticationSchemeInformationProvider.GetEffectiveAuthenticationScheme(System.String)">
+            <summary>
+            Get the effective authentication scheme based on the provided authentication scheme.
+            </summary>
+            <param name="authenticationScheme">intended authentication scheme (options name).</param>
+            <returns>Effective authentication scheme (default authentication scheme if the intended
+            authentication scheme is null or an empty string.</returns>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.ICredentialsLoader">
+            <summary>
+            Contract for credential loaders, implemented by classes like the DefaultCertificateLoader or the DefaultCredentialLoader 
+            in Microsoft.Identity.Web. Credential loaders are used to load credentials from a <see cref="T:Microsoft.Identity.Abstractions.CredentialDescription"/>, the result
+            is then in the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CachedValue"/> property.
+            Credential loaders constitute an extensibility point. They delegate to credential source loaders, which are specified in the <see cref="P:Microsoft.Identity.Abstractions.ICredentialsLoader.CredentialSourceLoaders"/>
+            collection, choosing the one which <see cref="P:Microsoft.Identity.Abstractions.ICredentialSourceLoader.CredentialSource"/> matches the credential source of the
+            credential description to load.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.ICredentialsLoader.CredentialSourceLoaders">
+            <summary>
+            Dictionary of credential source loaders per credential source. Your application can add more to 
+            process additional credential sources.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.ICredentialsLoader.LoadCredentialsIfNeededAsync(Microsoft.Identity.Abstractions.CredentialDescription,Microsoft.Identity.Abstractions.CredentialSourceLoaderParameters)">
+            <summary>
+            Load a given credential description, if needed. This method will leverage the <see cref="P:Microsoft.Identity.Abstractions.ICredentialsLoader.CredentialSourceLoaders"/> to
+            load the credentials from the description.
+            </summary>
+            <param name="credentialDescription">Description of the credentials to load.</param>
+            <param name="parameters">Parameters, related to the host application, that the credential source loader can use.</param>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.ICredentialsLoader.LoadFirstValidCredentialsAsync(System.Collections.Generic.IEnumerable{Microsoft.Identity.Abstractions.CredentialDescription},Microsoft.Identity.Abstractions.CredentialSourceLoaderParameters)">
+            <summary>
+            Load the first valid credential from the credentials description list. This is useful when you have multiple deployments
+            (for instance on your developer machine, you can use a certificate from KeyVault, and when deployed in AKS, you use
+            workload identity federation for AKS. You can express the list of credentials in the appsettings.json file, and this method will
+            load the most appropriate based on the order.
+            </summary>
+            <param name="credentialDescriptions">Description of the credentials.</param>
+            <param name="parameters">Parameters, related to the host application, that the credential source loader can use.</param>
+            <returns>First valid credential description that could be loaded from the credential description list.
+            <c>null</c> if none is valid. Otherwise the first <see cref="T:Microsoft.Identity.Abstractions.CredentialDescription"/> that could be loaded.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.ICredentialsLoader.ResetCredentials(System.Collections.Generic.IEnumerable{Microsoft.Identity.Abstractions.CredentialDescription})">
+            <summary>
+            Resets resettable credentials in the credential description list (for instance reset the 
+            certificates so that they can be re-loaded again)
+            Use, for example, before a retry.
+            </summary>
+            <param name="credentialDescriptions">Description of the credentials.</param>
+            <remarks>This method is, for instance, used, in Microsoft.Identity.Web to automatically reload the certificates from
+            KeyVault, when the certificate was rotated in Azure AD.</remarks>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.ICredentialSourceLoader">
+            <summary>
+            Contract to implement to load credentials, for instance certificates.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.ICredentialSourceLoader.LoadIfNeededAsync(Microsoft.Identity.Abstractions.CredentialDescription,Microsoft.Identity.Abstractions.CredentialSourceLoaderParameters)">
+            <summary>
+            Load the credential from the description, if needed.
+            </summary>
+            <param name="credentialDescription">Description of the credential.</param>
+            <param name="parameters">Parameters, related to the host application, that the credential source loader can use.</param>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.ICredentialSourceLoader.CredentialSource">
+            <summary>
+            CredentialSource that this credential source loader knows how to load.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.ICustomSignedAssertionProvider">
+            <summary>
+            Interface to implement loading of a custom signed assertion provider.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.ICustomSignedAssertionProvider.Name">
+            <summary>
+            Configuration friendly name of the custom signed assertion provider as it
+            will appear in the <see cref="P:Microsoft.Identity.Abstractions.CredentialDescription.CustomSignedAssertionProviderName"/>
+            Can be <c>null</c> in which case developers will need to pass-in the fully
+            qualified name of the implementing class.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.IdentityApplicationOptions">
+            <summary>
+            Options for configuring authentication in a web app, web API or daemon app.
+            <para>
+            This class contains configuration properties for any OAuth 2.0 identity provider.
+            For Azure AD specific options see the derived class: <see cref="T:Microsoft.Identity.Abstractions.MicrosoftIdentityApplicationOptions"/>. This class
+            and its derived class are usually used as options, that are deserialized from a configuration file like appsettings.json
+            </para>
+            </summary>
+            <example>
+            </example>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.Authority">
+            <summary>
+            Gets or sets the authority to use when calling the identity provider. 
+            For AzureAD or Azure AD B2C, rather use <see cref="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.Instance"/>
+            and <see cref="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.TenantId"/>. For Microsoft Entra External IDs, use
+            the authority of the form <c>https://subdomain.ciamlogin.com</c>.
+            </summary>
+            <example>
+            <code>
+            IdentityApplicationOptions options = new 
+            {
+             Authority = "https://subdomain.ciamlogin.com"
+            };
+            </code>
+            </example>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.ClientId">
+            <summary>
+            Gets or sets the 'client_id' (application ID) as it appears in the 
+            application registration. This is the string representation of a GUID.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.EnablePiiLogging">
+            <summary>
+            Flag used to enable/disable logging of Personally Identifiable Information (PII).
+            PII logs are never written to default outputs.
+            Default is set to <c>false</c>, which ensures that your application is compliant with GDPR. You can set
+            it to <c>true</c> for advanced debugging requiring PII.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.ExtraQueryParameters">
+            <summary>
+            Sets query parameters for the query string in the HTTP request to the IdP. This parameter is useful
+            if you want to send the request to a specific test slice, or a particular dc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.ClientCredentials">
+            <summary>
+            Description of the client credentials that the app provides to prove its identity to the IdP,
+            See <see cref="T:Microsoft.Identity.Abstractions.CredentialSource"/> for the list of supported credential types.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            Here is an example of client credentials in the AzureAd section of the *appsetting.json*. The app will try to use
+            workload identity federation from Managed identity (when setup and deployed in Azure), and otherwise, will use a certificate
+            from Key Vault, and otherwise, will use a client secret.
+            ```json
+             "ClientCredentials": [
+              {
+               "SourceType": "SignedAssertionFromManagedIdentity",
+               "ManagedIdentityClientId": "Optional GUID of user assigned Managed identity"
+              },
+              {
+               "SourceType": "KeyVault",
+               "KeyVaultUrl": "https://webappsapistests.vault.azure.net",
+               "KeyVaultCertificateName": "Self-Signed-5-5-22"
+              },
+              {
+               "SourceType": "ClientSecret",
+               "ClientSecret": "***"
+              }
+             ]
+            ```
+              See also https://aka.ms/ms-id-web-certificates.
+            ]]></format>
+            </example>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.Audience">
+            <summary>
+            In a web API, audience of the tokens that will be accepted by the web API.
+            <para>If your web API accepts several audiences, see <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.Audiences"/>.</para>
+            </summary>
+            <remarks>If both Audience and <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.Audiences"/>, are expressed, the effective audiences is the
+            union of these properties.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.Audiences">
+            <summary>
+            In a web API, accepted audiences for the tokens received by the web API.
+            <para>See also <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.Audience"/>.</para>
+            The audience is the intended recipient of the token. You can usually assume that the ApplicationID of your web API
+            is a valid audience. It can, in general be any of the App ID URIs (or resource identitfier) you defined for your application
+            during its registration in the Azure portal.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            Here is an example of client credentials in the AzureAd section of the *appsetting.json*. The app will try to use
+            workload identity federation from Managed identity (when setup and deployed in Azure), and otherwise, will use a certificate
+            from Key Vault, and otherwise, will use a client secret.
+            ```json
+             "Audiences": [
+               "api://a88bb933-319c-41b5-9f04-eff36d985612",
+               "a88bb933-319c-41b5-9f04-eff36d985612",
+               "https://mydomain.com/myapp"
+             ]
+            ```
+              See also https://aka.ms/ms-id-web-certificates.
+            ]]></format>
+            </example>
+            <remarks>If both Audiences and <see cref="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.Audience"/>, are expressed, the effective audiences is the
+            union of these properties.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.TokenDecryptionCredentials">
+            <summary>
+            Description of the credentials (usually certificates) used to decrypt an encrypted 
+            token in a web API.
+            </summary>
+            <example> 
+            <format type="text/markdown">
+            <![CDATA[
+            Here is how to specify a decrypt certificate read from the certificate store:
+            
+            ```json
+            "TokenDecryptionCredentials": [
+              {
+                "SourceType": "StoreWithDistinguishedName",
+                 "CertificateStorePath": "CurrentUser/My",
+                 "CertificateDistinguishedName": "CN=WebAppCallingWebApiCert"
+                }
+               ]
+            ```   
+              See also https://aka.ms/ms-id-web-certificates.
+            ]]></format>
+            </example>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.IdentityApplicationOptions.AllowWebApiToBeAuthorizedByACL">
+            <summary>
+            Web APIs called on behalf of a user can validate a token based on scopes (representing delegated permissions).
+            Web APIs called by daemon applications can validate a token based on roles (representing app permissions).
+            By default, the web API will validate the presence of roles and scopes. You can set this property to <c>false</c> to
+            use the ACL-based authorization pattern for the client (daemon) to the web API. If using ACL-based authorization,
+            the implementation will not throw if roles or scopes are not in the Claims.
+            For details see https://aka.ms/ms-identity-web/daemon-ACL.
+            </summary>
+            The default is <c>false.</c>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions">
+            <summary>
+            Options for configuring authentication specific to Microsoft Entra (Azure AD) for a web app, web API, or daemon application.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.Name">
+            <summary>
+            Gets or sets the name of the options.
+            This can be used to associate the options with a named options in 
+            the .NET IOptionsMonitor or IOptionsSnapshot (or ASP.NET Core authentication schemes)
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.Instance">
+            <summary>
+            Gets or sets the Azure Active Directory instance, e.g. <c>"https://login.microsoftonline.com/"</c>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.TenantId">
+            <summary>
+            Gets or sets the tenant ID. If your application is multi-tenant, you can also use "common" if it supports
+            both work and school, or personal accounts accounts, or "organizations" if your application supports only work 
+            and school accounts. If your application is single tenant, set this property to the tenant ID or domain name.
+            If your application works only for Microsoft personal accounts, use "consumers".
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.Authority">
+            <summary>
+            Gets or sets the Authority to use when making OpenIdConnect calls. By default the authority is computed
+            from the <see cref="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.Instance"/> and <see cref="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.TenantId"/> properties, by concatenating them, and appending "v2.0".
+            If your authority is not an Azure AD authority, you can set it directly here.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.AppHomeTenantId">
+            <summary>
+            Home tenant of the app in which the app can acquire a token to call a downstream API on behalf of itself.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.AzureRegion">
+            <summary>
+            Specifies the Azure region. See https://aka.ms/azure-region. To have
+            the app attempt to detect the Azure region automatically,
+            use "TryAutoDetect".
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.ClientCapabilities">
+            <summary>
+            Specifies the capabilities of the client (for instance {"cp1", "cp2"}). This is
+            useful to express that the Client is capable of handling claims challenge. If your application
+            is CAE capable, it needs to express "cp1".
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftEntraApplicationOptions.SendX5C">
+            <summary>
+            Specifies if the x5c claim (public key of the certificate) should be sent to the STS.
+            Sending the x5c enables application developers to achieve easy certificate rollover in Azure AD:
+            this method will send the public certificate to Azure AD along with the token request,
+            so that Azure AD can use it to validate the subject name based on a trusted issuer policy.
+            This saves the application admin from the need to explicitly manage the certificate rollover
+            (either via the app registration portal or using PowerShell/CLI). 
+            For details see https://aka.ms/msal-net-sni.
+            The default is <c>false</c>.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.MicrosoftIdentityApplicationOptions">
+            <summary>
+            Options for configuring authentication for a web app, web API, or daemon application, using Azure Active Directory. 
+            It has both AAD and B2C configuration attributes.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftIdentityApplicationOptions.WithSpaAuthCode">
+            <summary>
+            If set to <c>true</c>, when the user signs-in in a web app, the application requests an auth code 
+            for the frontend (single page application using MSAL.js for instance). This will allow the front end
+            JavaScript code to bypass going to the authoriize endpoint (which requires reloading the page), by 
+            directly redeeming the auth code to get access tokens to call APIs.
+            See https://aka.ms/msal-net/hybrid-spa-sample for details. Only works for AAD, not B2C.
+            </summary>
+            The default is <c>false.</c>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftIdentityApplicationOptions.Domain">
+            <summary>
+            Gets or sets the domain of the Azure Active Directory tenant, e.g. contoso.onmicrosoft.com.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftIdentityApplicationOptions.EditProfilePolicyId">
+            <summary>
+            Gets or sets the edit profile user flow name for B2C, e.g. b2c_1_edit_profile.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftIdentityApplicationOptions.SignUpSignInPolicyId">
+            <summary>
+            Gets or sets the sign up or sign in user flow name for B2C, e.g. b2c_1_susi.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftIdentityApplicationOptions.ResetPasswordPolicyId">
+            <summary>
+            Gets or sets the reset password user flow name for B2C, e.g. B2C_1_password_reset.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftIdentityApplicationOptions.DefaultUserFlow">
+            <summary>
+            Gets the default user flow (which is signUpsignIn).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftIdentityApplicationOptions.ResetPasswordPath">
+            <summary>
+            Sets the ResetPassword route path (from the root of the web site).
+            Defaults to /MicrosoftIdentity/Account/ResetPassword,
+            which is the value used by Microsoft.Identity.Web.UI.
+            If you override it, you need to provide your own controller/actions.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.MicrosoftIdentityApplicationOptions.ErrorPath">
+            <summary>
+            Sets the Error route path.
+            Defaults to the value /MicrosoftIdentity/Account/Error,
+            which is the value used by Microsoft.Identity.Web.UI.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.AuthorizationHeaderError">
+            <summary>
+            Represents an error that occurred during authorization header creation or processing.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderError.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderError"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderError.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderError"/> class
+            with the specified error code and message.
+            </summary>
+            <param name="code">The error code that identifies the type of error.</param>
+            <param name="message">A human-readable message describing the error.</param>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderError.#ctor(System.String,System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderError"/> class
+            with the specified error code, message, and underlying exception.
+            </summary>
+            <param name="code">The error code that identifies the type of error.</param>
+            <param name="message">A human-readable message describing the error.</param>
+            <param name="exception">The underlying exception that caused this error.</param>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderError.Code">
+            <summary>
+            Gets or sets the error code that identifies the type of error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderError.Message">
+            <summary>
+            Gets or sets a human-readable message describing the error.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderError.Exception">
+            <summary>
+            Gets or sets the underlying exception that caused this error, if any.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.AuthorizationHeaderInformation">
+            <summary>
+            Represents comprehensive information about an authorization header,
+            including the header value and binding certificate.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderInformation.AuthorizationHeaderValue">
+            <summary>
+            Gets or sets the authorization header value.
+            For example: "Bearer token", "PoP token", etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderInformation.BindingCertificate">
+            <summary>
+            Gets or sets the binding certificate for client authentication.
+            This certificate is used to bind the authorization header to the client,
+            commonly used in mutual TLS (mTLS) authentication scenarios and Proof-of-Possession (PoP) protocols.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions">
+            <summary>
+            Options passed-in to call downstream web APIs. To call Microsoft Graph, see rather
+            <c>MicrosoftGraphOptions</c> in the <c>Microsoft.Identity.Web.MicrosoftGraph</c> assembly.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.#ctor(Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions)">
+            <summary>
+            Copy constructor for <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions"/>
+            </summary>
+            <param name="other">Options to copy from.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="other"/> is <c>null</c>.</exception>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.BaseUrl">
+            <summary>
+            Base URL for the called downstream web API. For instance <c>"https://graph.microsoft.com/beta/"</c>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.RelativePath">
+            <summary>
+            Path relative to the <see cref="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.BaseUrl"/> (for instance "me").
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.HttpMethod">
+            <summary>
+            HTTP method used to call this downstream web API (by default Get).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.CustomizeHttpRequestMessage">
+            <summary>
+            Provides an opportunity for the caller app to customize the HttpRequestMessage. For example,
+            to customize the headers. This is called after the message was formed, including
+            the Authorization header, and just before the message is sent.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.AcquireTokenOptions">
+            <summary>
+            Options related to token acquisition.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.ProtocolScheme">
+            <summary>
+            Name of the protocol scheme used to create the authorization header. By default: "Bearer".
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.RequestAppToken">
+            <summary>
+            Describes if the downstream API is called on behalf of the calling service itself
+            (App token) or on behalf of a user processed by the service (user token).
+            If <c>true</c>, the token is requested on behalf of the app. Otherwise, it on-behalf of the user.
+            </summary>
+            <remarks>This is especially usefull when the call to the downstream API is described
+            by configuration.</remarks>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.Clone">
+            <summary>
+            Clone the options (to be able to override them).
+            </summary>
+            <returns>A clone of the options.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.CloneInternal">
+            <summary>
+            Clone the options (to be able to override them).
+            </summary>
+            <returns>A clone of the options.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.GetApiUrl">
+            <summary>
+            Return the downstream web API URL.
+            </summary>
+            <returns>URL of the downstream web API.</returns>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.AuthorizationHeaderResult">
+            <summary>
+            Represents the result of an authorization header creation operation.
+            This result can contain either successful authorization header information or error details.
+            </summary>
+            <remarks>
+            This class wraps <see cref="T:Microsoft.Identity.Abstractions.OperationResult`2"/> to provide strongly-typed
+            results for authorization header operations. It includes an implicit conversion to string
+            for backward compatibility with existing code that expects a string authorization header.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.#ctor(Microsoft.Identity.Abstractions.AuthorizationHeaderInformation)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderResult"/> class
+            with successful authorization header information.
+            </summary>
+            <param name="info">The authorization header information containing the result of a successful operation.</param>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.#ctor(Microsoft.Identity.Abstractions.AuthorizationHeaderError)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderResult"/> class
+            with error information.
+            </summary>
+            <param name="error">The error information describing why the operation failed.</param>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.#ctor(Microsoft.Identity.Abstractions.AuthorizationHeaderInformation,Microsoft.Identity.Abstractions.AuthorizationHeaderError)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderResult"/> class
+            with either authorization header information or error details.
+            </summary>
+            <param name="info">The authorization header information if the operation succeeded, or null if it failed.</param>
+            <param name="error">The error information if the operation failed, or null if it succeeded.</param>
+            <remarks>
+            Exactly one of <paramref name="info"/> or <paramref name="error"/> should be non-null.
+            This constructor is provided for compatibility with the original design proposal.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.Succeeded">
+            <summary>
+            Gets a value indicating whether the operation succeeded.
+            </summary>
+            <value>
+            <c>true</c> if the operation succeeded and <see cref="P:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.Result"/> contains a valid value;
+            <c>false</c> if the operation failed and <see cref="P:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.Error"/> contains the error.
+            </value>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.Result">
+            <summary>
+            Gets the authorization header information associated with the operation result.
+            </summary>
+            <returns>The authorization header information associated with the operation result.</returns>
+            <remarks>This property is only valid if <see cref="P:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.Succeeded"/> is <c>true</c>.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.Error">
+            <summary>
+            Gets the error associated with the operation result.
+            </summary>
+            <returns>The error associated with the operation result.</returns>
+            <remarks>This property is only valid if <see cref="P:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.Succeeded"/> is <c>false</c>.</remarks>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.op_Implicit(Microsoft.Identity.Abstractions.AuthorizationHeaderResult)~System.String">
+            <summary>
+            Implicitly converts an <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderResult"/> to a string
+            containing the authorization header value.
+            </summary>
+            <param name="result">The result to convert.</param>
+            <returns>The authorization header value if the operation succeeded.</returns>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown when the result represents a failed operation. If the error contains an exception,
+            the original exception is thrown; otherwise, a new <see cref="T:System.InvalidOperationException"/>
+            is thrown with details about the failure.
+            </exception>
+            <remarks>
+            This implicit conversion provides backward compatibility with code that expects
+            authorization header providers to return string values directly.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.op_Implicit(Microsoft.Identity.Abstractions.AuthorizationHeaderInformation)~Microsoft.Identity.Abstractions.AuthorizationHeaderResult">
+            <summary>
+            Implicitly creates an <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderResult"/> from
+            <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderInformation"/>.
+            </summary>
+            <param name="info">The authorization header information.</param>
+            <returns>A successful result containing the authorization header information.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AuthorizationHeaderResult.op_Implicit(Microsoft.Identity.Abstractions.AuthorizationHeaderError)~Microsoft.Identity.Abstractions.AuthorizationHeaderResult">
+            <summary>
+            Implicitly creates an <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderResult"/> from
+            <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderError"/>.
+            </summary>
+            <param name="error">The authorization header error.</param>
+            <returns>A failed result containing the error information.</returns>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.DownstreamApiOptions">
+            <summary>
+            Options passed-in to call downstream web APIs.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            Here is an example of a configuration of a downstream API that would retrieve
+            the user profile (it's illustrated with Microsoft Graph as this is a well-known API, but of course
+            to effectively call Microsoft graph, rather use Microsoft.Identity.Web.MicrosoftGraph)
+            
+            ```json
+             "DownstreamApis": [
+                "MyProfile": {
+                   "BaseUrl": "https://graph.microsoft.com/v1.0",
+                   "RelativePath": "/me/profile",
+                    "Scopes": [ "user.read"],
+                    "ExtraHeaderParameters": {
+                      "OData-Version": "4.0"
+                    },
+                    "ExtraQueryParameters": {
+                      "filter": "displayName eq 'John'"
+                    }
+                }
+              ]
+            ```
+            
+            The following describes a downstream web API called on behalf of the application itself (application token)
+            and using the Pop protocol:
+            ```json
+             "DownstreamApis": [
+                "AllBooks": {
+                   "BaseUrl": "https://mylibrary.com",
+                   "RelativePath": "/books/all",
+                   "RequestAppToken": true,
+                   "ProtocolScheme": "Pop",
+                    "Scopes": ["https://mylibrary.com/.default"],
+                    "ExtraHeaderParameters": {
+                      "X-API-Version": "v2"
+                    },
+                    "ExtraQueryParameters": {
+                      "format": "json"
+                    }
+                }
+              ]
+            ```
+            ]]></format>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.DownstreamApiOptions.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.DownstreamApiOptions.#ctor(Microsoft.Identity.Abstractions.DownstreamApiOptions)">
+            <summary>
+            Copy constructor.
+            </summary>
+            <param name="other"></param>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.DownstreamApiOptions.Clone">
+            <summary>
+            Clone the options (to be able to override them).
+            </summary>
+            <returns>A clone of the options.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.DownstreamApiOptions.CloneInternal">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.DownstreamApiOptions.Scopes">
+            <summary>
+            Scopes required to call the downstream web API.
+            For instance "user.read mail.read".
+            For Microsoft identity, in the case of application tokens (token 
+            requested by the app on behalf of itself), there should be only one scope, and it
+            should end in "./default")
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.DownstreamApiOptions.Serializer">
+            <summary>
+            Optional serializer. Will serialize the input to the web API (if any).
+            By default, when not provided:
+            <list type="bullet">
+            <item><description>If the input derives from <c>HttpInput</c>, it's used as is</description></item>
+            <item><description>If the input is a string it's used as is an considered a media type json.</description></item>
+            <item><description>Otherwise, the object is serialized in JSON, with a UTF8 encoding, and a media
+            type of application/json:
+            <code>
+            new StringContent(JsonSerializer.Serialize(input), Encoding.UTF8, "application/json")
+            </code>
+            </description></item>
+            </list>
+            </summary>
+            <remarks>This property cannot be set in the configuration. It's code only.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.DownstreamApiOptions.Deserializer">
+            <summary>
+            Optional de-serializer. Will de-serialize the output from the web API (if any).
+            When not provided, the following is returned:
+            <code>JsonSerializer.Deserialize&lt;TOutput&gt;(content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });</code>
+            </summary>
+            <remarks>This property cannot be set in the configuration. It's code only.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.DownstreamApiOptions.AcceptHeader">
+            <summary>
+            The HTTP Accept header is used to inform that server about the content type
+            that the client is expecting in the response.
+            </summary>
+            <default>application/json</default>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.DownstreamApiOptions.ContentType">
+            <summary>
+            Content type of the request body.
+            </summary>
+            <default>application/json</default>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.DownstreamApiOptions.ExtraHeaderParameters">
+            <summary>
+            Sets extra headers in the HTTP request to the downstream web API. This should
+            not be confused with another option to set the headers in the request to the 
+            Identity Provider. See <see cref="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.ExtraHeadersParameters"/> for 
+            that scenario.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.DownstreamApiOptions.ExtraQueryParameters">
+            <summary>
+            Sets query parameters for the query string in the HTTP request to the 
+            downstream web API. This should not be confused with another option to set the 
+            query parameters in the request to the Identity Provider. See 
+            <see cref="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.ExtraQueryParameters"/> for that scenario.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod">
+            <summary>
+            Specialization of <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/> where the <see cref="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.HttpMethod"/>
+            is not settable beyond it's construction.
+            </summary>
+            <remarks>This class is useful to provide a better developer experience on the specialized methods
+            of <see cref="T:Microsoft.Identity.Abstractions.IDownstreamApi"/> where the HTTP method is provided already by the name of the 
+            method, and should not be overridden by the options. You shouldn't need to use it directly.</remarks>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod.#ctor(Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod)">
+            <summary>
+            Copy constructor for <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod"/>.
+            </summary>
+            <param name="other">other instance to copy from.</param>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod.#ctor(Microsoft.Identity.Abstractions.DownstreamApiOptions,System.String)">
+            <summary>
+            Constructor fro a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/> and an HTTP method.
+            </summary>
+            <param name="options">Options</param>
+            <param name="httpMethod">HTTP method.</param>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod.HttpMethod">
+            <summary>
+            Http method only readable publicly.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod.Clone">
+            <summary>
+            Clone the options
+            </summary>
+            <returns>A clone.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod.CloneInternal">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.IAuthorizationHeaderProvider">
+            <summary>
+            Creates the value of an authorization header that the caller can use to call a protected web API.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IAuthorizationHeaderProvider.CreateAuthorizationHeaderForUserAsync(System.Collections.Generic.IEnumerable{System.String},Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions,System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Creates the authorization header used to call a protected web API on behalf of a user.
+            </summary>
+            <param name="scopes">Scopes for which to request the authorization header.</param>
+            <param name="authorizationHeaderProviderOptions">Information about the API that will be called (for some
+            protocols like Pop), and token acquisition options.</param>
+            <param name="claimsPrincipal">Inbound authentication elements. In a web API, this is usually the result of the
+            validation of a token. In a web app, this would be information about the signed-in user. This is not useful in
+            daemon applications. In Microsoft.Identity.Web you rarely need to provide this parameter as it's inferred from the
+            context.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A string containing the authorization header, that is protocol and tokens
+            (for instance: "Bearer token", "PoP token", etc ...).
+            </returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IAuthorizationHeaderProvider.CreateAuthorizationHeaderForAppAsync(System.String,Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions,System.Threading.CancellationToken)">
+            <summary>
+            Creates the authorization header used to call a protected web API on behalf
+            of the application itself.
+            </summary>
+            <param name="scopes">Scopes for which to request the authorization header.</param>
+            <param name="downstreamApiOptions">Information about the API that will be called (for some
+            protocols like Pop), and token acquisition options. Optional. If not provided, the
+            authentication header will be for a bearer token.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>A string containing the authorization header, that is protocol and tokens
+            (for instance: "Bearer token", "PoP token", etc ...).
+            </returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IAuthorizationHeaderProvider.CreateAuthorizationHeaderAsync(System.Collections.Generic.IEnumerable{System.String},Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions,System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Creates an authorization header for calling a protected web API on behalf of a user or the application.
+            </summary>
+            <param name="scopes">The scopes for which to request the authorization header. 
+            Provide a single scope if the header needs to be created on behalf of an application.</param>
+            <param name="options">The <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions"/> containing information about the API
+            to be called and token acquisition settings. If not provided, the header will be for a bearer token.</param>
+            <param name="claimsPrincipal">Inbound authentication elements. In a web API, this is usually the result of the
+            validation of a token. In a web app, this would be information about the signed-in user. This is not useful in
+            daemon applications. In Microsoft.Identity.Web you rarely need to provide this parameter as it's inferred from the
+            context.</param>
+            <param name="cancellationToken">A token to cancel the operation.</param>
+            <returns>A string containing the authorization header, such as "Bearer token" or "PoP token".</returns>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.IAuthorizationHeaderProvider`1">
+            <summary>
+            <inheritdoc cref="T:Microsoft.Identity.Abstractions.IAuthorizationHeaderProvider"/>
+            </summary>
+            <typeparam name="TResult">The result type.</typeparam>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IAuthorizationHeaderProvider`1.CreateAuthorizationHeaderAsync(Microsoft.Identity.Abstractions.DownstreamApiOptions,System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <inheritdoc cref="M:Microsoft.Identity.Abstractions.IAuthorizationHeaderProvider.CreateAuthorizationHeaderAsync(System.Collections.Generic.IEnumerable{System.String},Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions,System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)"/>
+            <param name="downstreamApiOptions">
+            The options containing information about the API
+            to be called and token acquisition settings.
+            Use <see cref="P:Microsoft.Identity.Abstractions.DownstreamApiOptions.Scopes"/> to request scope(s)
+            for the authorization header.
+            </param>
+            <param name="claimsPrincipal">
+            <inheritdoc cref="M:Microsoft.Identity.Abstractions.IAuthorizationHeaderProvider.CreateAuthorizationHeaderAsync(System.Collections.Generic.IEnumerable{System.String},Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions,System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)"/>
+            </param>
+            <param name="cancellationToken">
+            <inheritdoc cref="M:Microsoft.Identity.Abstractions.IAuthorizationHeaderProvider.CreateAuthorizationHeaderAsync(System.Collections.Generic.IEnumerable{System.String},Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions,System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)"/>
+            </param>        
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.IDownstreamApi">
+            <summary>
+            Interface used to call a downstream API, for instance from controllers.
+            </summary>
+            <summary>
+            Interface used to call a downstream API, for instance from controllers, including with
+            specialized methods depending on the Http Methods.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.CallApiAsync(Microsoft.Identity.Abstractions.DownstreamApiOptions,System.Security.Claims.ClaimsPrincipal,System.Net.Http.HttpContent,System.Threading.CancellationToken)">
+            <summary>
+            Calls the downstream API based on a programmatic description of the
+            downstream API. The choice of calling the API on behalf of the user or the app, is made using
+            <see cref="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.RequestAppToken"/>.
+            </summary>
+            <param name="downstreamApiOptions">Options.</param>
+            <param name="user">(Optional) Claims representing a user. This is useful on platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HTTP request context.</param>
+            <param name="content">Content to send to the API in the case where
+            <see cref="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.HttpMethod"/> is <code>HttpMethod.Patch</code>, 
+            <see cref="P:System.Net.Http.HttpMethod.Post"/>, <see cref="P:System.Net.Http.HttpMethod.Put"/>.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>An <see cref="T:System.Net.Http.HttpResponseMessage"/> that the application will process.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.CallApiAsync(System.String,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptions},System.Security.Claims.ClaimsPrincipal,System.Net.Http.HttpContent,System.Threading.CancellationToken)">
+            <summary>
+            Calls the downstream API based on a description of the
+            downstream API in the configuration (service name), overridatable programmatically. The choice
+            of calling the API on behalf of the user or the app, is made by the configuration or programmatically. 
+            This is the lowest level API. There are other APIs for specific Http methods.
+            </summary>
+            <param name="serviceName">Name of the service describing the downstream web API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="downstreamApiOptionsOverride">(Optional) Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>. Can be null, in which case only the configuration is applied.</param>
+            <param name="user">(Optional) Claims representing a user. This is useful on platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HTTP request context.</param>
+            <param name="content">Content to send to the API in the case where
+            <see cref="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.HttpMethod"/> is <code>HttpMethod.Patch</code>, 
+            <see cref="P:System.Net.Http.HttpMethod.Post"/>, <see cref="P:System.Net.Http.HttpMethod.Put"/>.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>An <see cref="T:System.Net.Http.HttpResponseMessage"/> that the application will process.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.CallApiForUserAsync(System.String,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptions},System.Security.Claims.ClaimsPrincipal,System.Net.Http.HttpContent,System.Threading.CancellationToken)">
+            <summary>
+            Calls the downstream API on behalf of the user, based on a description of the
+            downstream API in the configuration (service name), overridatable programmatically. This
+            is a lower level API. There are other APIs for specific Http methods.
+            </summary>
+            <param name="serviceName">Name of the service describing the downstream web API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="downstreamApiOptionsOverride">(Optional) Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="user">(Optional) Claims representing a user. This is useful on platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HTTP request context.</param>
+            <param name="content">Content to send to the API in the case where
+            <see cref="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.HttpMethod"/> is <code>HttpMethod.Patch</code>, 
+            <see cref="P:System.Net.Http.HttpMethod.Post"/>, <see cref="P:System.Net.Http.HttpMethod.Put"/>.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>An <see cref="T:System.Net.Http.HttpResponseMessage"/> that the application will process.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.CallApiForAppAsync(System.String,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptions},System.Net.Http.HttpContent,System.Threading.CancellationToken)">
+            <summary>
+            Calls the downstream API on behalf of the app itself, with the required scopes.
+            </summary>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="downstreamApiOptionsOverride">(Optional) Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="content">Content to send to the API in the case where
+            <see cref="P:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions.HttpMethod"/> is <code>HttpMethod.Patch</code>, 
+            <see cref="P:System.Net.Http.HttpMethod.Post"/>, <see cref="P:System.Net.Http.HttpMethod.Put"/>.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>An <see cref="T:System.Net.Http.HttpResponseMessage"/> that the application will process.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.CallApiForUserAsync``2(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptions},System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+             <summary>
+             Calls a downstream API consuming JSON with some data and returns data.
+             </summary>
+             <typeparam name="TInput">Input type.</typeparam>
+             <typeparam name="TOutput">Output type.</typeparam>
+             <param name="serviceName">Name of the service describing the downstream API. There can
+             be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+             each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+             needs to be set.</param>
+             <param name="input">Input parameter to the downstream web API.</param>
+             <param name="downstreamApiOptionsOverride">Overrides the options proposed in the configuration described
+             by <paramref name="serviceName"/>.</param>
+             <param name="user">[Optional] Claims representing a user. This is useful in platforms like Blazor
+             or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+             will find the user from the HttpContext.</param>
+             <param name="cancellationToken">Cancellation token.</param>
+             <returns>The value returned by the downstream web API.</returns>
+             <example>
+             A list method that returns an IEnumerable&lt;MyItem&gt;&gt;.
+             <code>
+             public Task&lt;IEnumerable&lt;MyItem&gt;&gt; GetAsync()
+             {
+              return _downstreamWebApi.CallWebApiForUserAsync&lt;object, IEnumerable&lt;MyItem&gt;&gt;(
+                     ServiceName,
+                     null,
+                     options =>
+                     {
+                       options.RelativePath = $"api/todolist";
+                     });
+             }
+             </code>
+            
+             Example of editing.
+             <code>
+             public Task&lt;MyItem&gt; EditAsync(MyItem myItem)
+             {
+               return _downstreamWebApi.CallWebApiForUserAsync&lt;MyItem, MyItem&gt;(
+                     ServiceName,
+                     nyItem,
+                     options =>
+                     {
+                        options.HttpMethod = HttpMethod.Patch;
+                        options.RelativePath = $"api/todolist/{myItem.Id}";
+                     });
+             }
+             </code>
+             </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.CallApiForUserAsync``1(System.String,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptions},System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Call a web API endpoint with an HttpGet, and return strongly typed data.
+            </summary>
+            <typeparam name="TOutput">Output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="downstreamApiOptionsOverride">Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="user">[Optional] Claims representing a user. This is useful in platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HttpContext.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>The value returned by the downstream web API.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.CallApiForAppAsync``2(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptions},System.Threading.CancellationToken)">
+            <summary>
+            Calls a downstream API consuming JSON with some data and returns data.
+            </summary>
+            <typeparam name="TInput">Input type.</typeparam>
+            <typeparam name="TOutput">Output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Input parameter to the downstream web API.</param>
+            <param name="downstreamApiOptionsOverride">Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>The value returned by the downstream web API.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.CallApiForAppAsync``1(System.String,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptions},System.Threading.CancellationToken)">
+            <summary>
+            Call a web API endpoint with an HttpGet, and return strongly typed data.
+            </summary>
+            <typeparam name="TOutput">Output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="downstreamApiOptionsOverride">Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="cancellationToken">Cancellation token.</param>
+            <returns>The value returned by the downstream web API.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.GetForUserAsync``1(System.String,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Get"/>, a downstream API returning data.
+            By default the returned data is deserialized from JSON but you can provide your own deserializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TOutput">Generic output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="user">[Optional] Claims representing a user. This is useful in platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HttpContext.</param>
+            <param name="cancellationToken"></param>
+            <returns> a Task</returns>
+            <example>
+            <code>
+             var result = await _downstreamApi.GetForUserAsync&lt;IEnumerable&lt;MyItem&gt;&gt;(
+                    "MyService",
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.GetForUserAsync``2(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Get"/>, a downstream API with some input data and returning data.
+            By default the input data is serialized in JSON and the returned data is deserialized from JSON but you can provide your own serializer and your own deserializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <typeparam name="TOutput">Generic output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="user">[Optional] Claims representing a user. This is useful in platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HttpContext.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+             var result = await _downstreamApi.GetForUserAsync&lt;MyItem, IEnumerable&lt;MyItem&gt;&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.GetForAppAsync``1(System.String,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Get"/>, a downstream API returning data.
+            By default the returned data is deserialized from JSON but you can provide your own deserializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TOutput">Generic output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="cancellationToken"></param>
+            <returns> a Task</returns>
+            <example>
+            <code>
+             var result = await _downstreamApi.GetForAppAsync&lt;IEnumerable&lt;MyItem&gt;&gt;(
+                    "MyService",
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.GetForAppAsync``2(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Get"/>, a downstream API with some input data and returning data.
+            By default the input data is serialized in JSON and the returned data is deserialized from JSON but you can provide your own serializer and your own deserializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <typeparam name="TOutput">Generic output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+             var result = await _downstreamApi.GetForAppAsync&lt;MyItem, IEnumerable&lt;MyItem&gt;&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.PostForUserAsync``1(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Post"/>, a downstream API with some input data .
+            By default the input data is serialized in JSON  but you can provide your own serializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="user">[Optional] Claims representing a user. This is useful in platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HttpContext.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+              await _downstreamApi.PostForUserAsync&lt;MyItem&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.PostForUserAsync``2(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Post"/>, a downstream API with some input data and returning data.
+            By default the input data is serialized in JSON and the returned data is deserialized from JSON but you can provide your own serializer and your own deserializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <typeparam name="TOutput">Generic output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="user">[Optional] Claims representing a user. This is useful in platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HttpContext.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+             var result = await _downstreamApi.PostForUserAsync&lt;MyItem, IEnumerable&lt;MyItem&gt;&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.PostForAppAsync``1(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Post"/>, a downstream API with some input data .
+            By default the input data is serialized in JSON  but you can provide your own serializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+              await _downstreamApi.PostForAppAsync&lt;MyItem&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.PostForAppAsync``2(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Post"/>, a downstream API with some input data and returning data.
+            By default the input data is serialized in JSON and the returned data is deserialized from JSON but you can provide your own serializer and your own deserializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <typeparam name="TOutput">Generic output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+             var result = await _downstreamApi.PostForAppAsync&lt;MyItem, IEnumerable&lt;MyItem&gt;&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.PutForUserAsync``1(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Put"/>, a downstream API with some input data .
+            By default the input data is serialized in JSON  but you can provide your own serializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="user">[Optional] Claims representing a user. This is useful in platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HttpContext.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+              await _downstreamApi.PutForUserAsync&lt;MyItem&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.PutForUserAsync``2(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Put"/>, a downstream API with some input data and returning data.
+            By default the input data is serialized in JSON and the returned data is deserialized from JSON but you can provide your own serializer and your own deserializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <typeparam name="TOutput">Generic output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="user">[Optional] Claims representing a user. This is useful in platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HttpContext.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+             var result = await _downstreamApi.PutForUserAsync&lt;MyItem, IEnumerable&lt;MyItem&gt;&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.PutForAppAsync``1(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Put"/>, a downstream API with some input data .
+            By default the input data is serialized in JSON  but you can provide your own serializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+              await _downstreamApi.PutForAppAsync&lt;MyItem&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.PutForAppAsync``2(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Put"/>, a downstream API with some input data and returning data.
+            By default the input data is serialized in JSON and the returned data is deserialized from JSON but you can provide your own serializer and your own deserializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <typeparam name="TOutput">Generic output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+             var result = await _downstreamApi.PutForAppAsync&lt;MyItem, IEnumerable&lt;MyItem&gt;&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.DeleteForUserAsync``1(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Delete"/>, a downstream API with some input data .
+            By default the input data is serialized in JSON  but you can provide your own serializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="user">[Optional] Claims representing a user. This is useful in platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HttpContext.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+              await _downstreamApi.DeleteForUserAsync&lt;MyItem&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.DeleteForUserAsync``2(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Delete"/>, a downstream API with some input data and returning data.
+            By default the input data is serialized in JSON and the returned data is deserialized from JSON but you can provide your own serializer and your own deserializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <typeparam name="TOutput">Generic output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="user">[Optional] Claims representing a user. This is useful in platforms like Blazor
+            or Azure Signal R, where the HttpContext is not available. In other platforms, the library
+            will find the user from the HttpContext.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+             var result = await _downstreamApi.DeleteForUserAsync&lt;MyItem, IEnumerable&lt;MyItem&gt;&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.DeleteForAppAsync``1(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Delete"/>, a downstream API with some input data .
+            By default the input data is serialized in JSON  but you can provide your own serializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+              await _downstreamApi.DeleteForAppAsync&lt;MyItem&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.IDownstreamApi.DeleteForAppAsync``2(System.String,``0,System.Action{Microsoft.Identity.Abstractions.DownstreamApiOptionsReadOnlyHttpMethod},System.Threading.CancellationToken)">
+            <summary>
+            Calls, using <see cref="P:System.Net.Http.HttpMethod.Delete"/>, a downstream API with some input data and returning data.
+            By default the input data is serialized in JSON and the returned data is deserialized from JSON but you can provide your own serializer and your own deserializer in the action
+            you pass-in through the <paramref name="downstreamApiOptionsOverride"/> parameter.
+            </summary>
+            <typeparam name="TInput">Generic input type.</typeparam>
+            <typeparam name="TOutput">Generic output type.</typeparam>
+            <param name="serviceName">Name of the service describing the downstream API. There can
+            be several configuration named sections mapped to a <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>,
+            each for one downstream API. You can pass-in null, but in that case <paramref name="downstreamApiOptionsOverride"/>
+            needs to be set.</param>
+            <param name="input">Data sent to the downstream web API, through the body or the HTTP request.</param>
+            <param name="downstreamApiOptionsOverride">[Optional] Overrides the options proposed in the configuration described
+            by <paramref name="serviceName"/>.</param>
+            <param name="cancellationToken"></param>
+            <returns> The value returned by the downstream web API.</returns>
+            <example>
+            <code>
+             var result = await _downstreamApi.DeleteForAppAsync&lt;MyItem, IEnumerable&lt;MyItem&gt;&gt;(
+                    "MyService",
+                    myItem,
+                    options =>
+                    {
+                      options.RelativePath = $"api/todolist/{myItem.Id}";
+                    });
+            </code>
+            </example>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.OperationError">
+            <summary>
+            Represents an error that occurred during an operation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.OperationError.#ctor">
+            <summary>
+            Creates an instance of <see cref="T:Microsoft.Identity.Abstractions.OperationError"/>
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.OperationResult`2">
+            <summary>
+            Represents the result of an operation that can either succeed with a valid result or failed with a specific error.
+            </summary>
+            <typeparam name="TResult">The type of the successful result value.</typeparam>
+            <typeparam name="TError">The type of the error.</typeparam>
+            <remarks>
+            This struct implements a discriminated union pattern for operation results.
+            It ensures that either a valid result or an error is available, but never both.
+            This pattern helps with clear error handling and propagation.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.OperationResult`2.#ctor(`0)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.Identity.Abstractions.OperationResult`2"/> indicating a successful operation
+            and containing an object of the associated type.
+            </summary>
+            <param name="result">The value associated with the success.</param>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.OperationResult`2.#ctor(`1)">
+            <summary>
+            Creates a new instance of <see cref="T:Microsoft.Identity.Abstractions.OperationResult`2"/>
+            indicating a failed operation and containing error information.
+            </summary>
+            <param name="error">The error associated with the failure.</param>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.OperationResult`2.#ctor">
+            <summary>
+            Empty constructor implementation to prevent creating an empty result.
+            </summary>
+            <remarks>Throws an <see cref="T:System.InvalidOperationException"/> when called as this should never be used. Always initialize Result with either a value or error.</remarks>
+            <exception cref="T:System.InvalidOperationException">Thrown when called.</exception>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.OperationResult`2.Succeeded">
+            <summary>
+            Gets a value indicating whether the operation succeeded.
+            </summary>
+            <value>
+            <c>true</c> if the operation succeeded and <see cref="P:Microsoft.Identity.Abstractions.OperationResult`2.Result"/> contains a valid value;
+            <c>false</c> if the operation failed and <see cref="P:Microsoft.Identity.Abstractions.OperationResult`2.Error"/> contains the error.
+            </value>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.OperationResult`2.Error">
+            <summary>
+            Gets the error associated with the operation result.
+            </summary>
+            <returns>The error associated with the operation result.</returns>
+            <remarks>This property is only valid if the result type is not valid.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.OperationResult`2.Result">
+            <summary>
+            Gets the result associated with the operation result.
+            </summary>
+            <returns>The result associated with the operation result.</returns>
+            <remarks>This property is only valid if the result type is valid.</remarks>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.OperationResult`2.op_Implicit(`0)~Microsoft.Identity.Abstractions.OperationResult{`0,`1}">
+            <summary>
+            Creates an <see cref="T:Microsoft.Identity.Abstractions.OperationResult`2"/>, successful result implicitly from the value.
+            </summary>
+            <param name="result">The value to be stored in the result.</param>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.OperationResult`2.op_Implicit(`1)~Microsoft.Identity.Abstractions.OperationResult{`0,`1}">
+            <summary>
+            Creates an <see cref="T:Microsoft.Identity.Abstractions.OperationResult`2"/> result implicitly from the error value.
+            </summary>
+            <param name="error">The error to be stored in the result.</param>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.OperationResult`2.ToOperationResult">
+            <summary>
+            Casts the result to a <see cref="T:Microsoft.Identity.Abstractions.OperationResult`2"/>.
+            </summary>
+            <remarks>Required for compatibility, see CA2225 for more information</remarks>
+            <returns>The existing instance.</returns>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.AcquireTokenOptions">
+            <summary>
+            Options directing the token acquisition. These options are provided to the <see cref="T:Microsoft.Identity.Abstractions.ITokenAcquirer"/> methods, or
+            part of the <see cref="T:Microsoft.Identity.Abstractions.AuthorizationHeaderProviderOptions"/>, or <see cref="T:Microsoft.Identity.Abstractions.DownstreamApiOptions"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AcquireTokenOptions.#ctor">
+            <summary>
+            Default constructor.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AcquireTokenOptions.#ctor(Microsoft.Identity.Abstractions.AcquireTokenOptions)">
+            <summary>
+            Copy constructor for <see cref="T:Microsoft.Identity.Abstractions.AcquireTokenOptions"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.AuthenticationOptionsName">
+            <summary>
+            Gets the name of the options describing the confidential client application (ClientID,
+            Region, Authority, client credentials). In ASP.NET Core, the authentication options name
+            is the same as the authentication scheme.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.CorrelationId">
+            <summary>
+            Sets the correlation ID to be used in the request to the STS "/token" endpoint.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.ExtraQueryParameters">
+            <summary>
+            Sets query parameters for the query string in the HTTP request to the 
+            "/token" endpoint.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.ExtraParameters">
+            <summary>
+            An property bag used for extensiblity. 
+            </summary>
+            <remarks>
+            Not meant to be used by application developers, but by other SDKs.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.ExtraHeadersParameters">
+            Sets extra headers in the HTTP request to the STS "/token" endpoint.
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.Claims">
+            <summary>
+            A string with one or multiple claims to request. It's a json blob (encoded or not)
+            Normally used with Conditional Access. It receives the Claims member of the UiRequiredException.
+            It can also be used to request specific optional claims, and for 
+            <see href="https://learn.microsoft.com/en-us/azure/active-directory/conditional-access/concept-conditional-access-cloud-apps">
+            CA Auth context</see>
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.FmiPath">
+            <summary>
+            Federated Managed Identity (FMI) sub-path.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.ForceRefresh">
+            <summary>
+            Specifies if the token request will ignore the access token in the token cache
+            and will attempt to acquire a new access token.
+            If <c>true</c>, the request will ignore the token cache. The default is <c>false</c>.
+            Use this option with care and only when needed, for instance, if you know that conditional access policies have changed,
+            for it induces performance degradation, as the token cache is not utilized, and the STS might throttle the app.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.PopPublicKey">
+            <summary>
+            Modifies the token acquisition request so that the acquired token is a Proof of Possession token (PoP),
+            rather than a Bearer token.
+            PoP tokens are similar to Bearer tokens, but are bound to the HTTP request and to a cryptographic key,
+            which MSAL can manage. See https://aka.ms/msal-net-pop.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.PopClaim">
+            <summary>
+            In addition to the <see cref="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.PopPublicKey"/>, specify the PopClaim when needed in specific POP protocols. 
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.ManagedIdentity">
+            <summary>
+            When <see cref="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.ManagedIdentity"/> is set, the application uses a managed identity instead of client credentials to
+            acquire an app token.
+            To use a system-assigned identity, simply leave <see cref="P:Microsoft.Identity.Abstractions.ManagedIdentityOptions.UserAssignedClientId"/> null.
+            To use a user-assigned identity, set <see cref="P:Microsoft.Identity.Abstractions.ManagedIdentityOptions.UserAssignedClientId"/> to the ClientID of the
+            user-assigned identity you want to use. Using either form of managed identity requires the application to be deployed
+            on Azure and the managed identity to be configured. For more details, check the
+            <see href="https://aka.ms/Entra/ManagedIdentityOverview"> managed identities for Azure documentation</see>.
+            </summary>
+            <example>
+            <format type="text/markdown">
+            <![CDATA[
+            The Json fragment below describes how to use a system-assigned Managed Identity for authentication in a confidential client application :
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/AquireTokenOptionsTests.cs" id="managedidentitysystem_json":::
+            
+            The code below describes the same, programmatically in C#.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/AquireTokenOptionsTests.cs" id="managedidentitysystem_csharp":::
+            
+            The Json fragment below describes how to use a user-assigned Managed Identity for authentication in a confidential client application :
+            :::code language="json" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/AquireTokenOptionsTests.cs" id="managedidentityuser_json":::
+            
+            The code below describes the same, programmatically in C#.
+            :::code language="csharp" source="~/../abstractions-samples/test/Microsoft.Identity.Abstractions.Tests/AquireTokenOptionsTests.cs" id="managedidentityuser_csharp":::
+            ]]></format>
+            </example>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.LongRunningWebApiSessionKey">
+            <summary>
+            Key used for long running web APIs that need to call downstream web
+            APIs on behalf of the user. Can be null, if you are not developing a long
+            running web API, <see cref="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.LongRunningWebApiSessionKeyAuto"/> if you want
+            the token acquirer to allocate a session key for you, or your own string
+            if you want to associate the session with some information you have externally
+            (for instance a Microsoft Graph hook identifier).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.LongRunningWebApiSessionKeyAuto">
+            <summary>
+            Value that can be used for <see cref="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.LongRunningWebApiSessionKey"/> so that
+            the token acquirer allocates the long running web api session key for the developer.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.Tenant">
+            <summary>
+            (Microsoft identity specific)
+            Enables to override the tenant/account for which to get a token. 
+            This is useful in multi-tenant apps in the cases where a given user account is a guest 
+            in other tenants, and you want to acquire tokens for a specific tenant.
+            </summary>
+            <remarks>Can be the tenant ID or domain name.</remarks>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.UserFlow">
+            <summary>
+            (Microsoft identity specific)
+            In the case of AzureAD B2C, uses a particular user flow.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AcquireTokenOptions.Clone">
+            <summary>
+            Performs a shallow Clone the options (to be able to override them).
+            </summary>
+            <returns>A shallow Clone of the options.</returns>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.AcquireTokenResult">
+            <summary>
+            Result of a token acquisition.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.AcquireTokenResult.#ctor(System.String,System.DateTimeOffset,System.String,System.String,System.Collections.Generic.IEnumerable{System.String},System.Guid,System.String)">
+            <summary>
+            Constructor.
+            </summary>
+            <param name="accessToken">Access token.</param>
+            <param name="expiresOn">Expiration date/time.</param>
+            <param name="tenantId">Tenant for which the token was acquired.</param>
+            <param name="idToken">ID Token, in the case of a token for a user.</param>
+            <param name="scopes">Scopes granted by the IdP.</param>
+            <param name="correlationId">Correlation ID of the token acquisition.</param>
+            <param name="tokenType">Token type of the access token (Bearer or Pop).</param>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenResult.AccessToken">
+            <summary>
+            Access Token that can be used to build an authorization header 
+            to access protected web APIs. 
+            </summary>
+            <seealso cref="T:Microsoft.Identity.Abstractions.IAuthorizationHeaderProvider"/> which creates the authorization
+            header directly, whatever the protocol.
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenResult.ExpiresOn">
+            <summary>
+            Gets the point in time in which the Access Token returned in the <see cref="P:Microsoft.Identity.Abstractions.AcquireTokenResult.AccessToken"/>
+            property ceases to be valid. This value is calculated based on current UTC time
+            measured locally and the value expiresIn received from the service.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenResult.TenantId">
+            <summary>
+             (Microsoft Identity specific) In the case of Azure AD, Azure AD B2C, or Microsoft Entra External IDs, 
+             gets an identifier for the tenant for which the token was acquired.
+             This property will be null if tenant information is not returned by the service or the service
+             is not Azure AD.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenResult.IdToken">
+            <summary>
+            Gets the Id Token if returned by the service or null if no Id Token is returned.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenResult.Scopes">
+            <summary>
+            Gets the scope values effectively granted by the IdP. They can be different
+            form the scopes requested.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenResult.CorrelationId">
+            <summary>
+            Gets the correlation id used for the request. If provided in <see cref="P:Microsoft.Identity.Abstractions.AcquireTokenOptions.CorrelationId"/>, this
+            will be the same, otherwise a new one will be created by the token acquirer.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenResult.TokenType">
+            <summary>
+            Gets the protocol (Bearer or Pop).
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenResult.AdditionalResponseParameters">
+            <summary>
+            Exposes response parameters returned by the token issuer on the token endpoint, alongside the access token and its expiration time.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.AcquireTokenResult.BindingCertificate">
+            <summary>
+            The certificate bound to the access token, specific to mTLS POP tokens.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.ITokenAcquirer">
+            <summary>
+            Interface for the token acquisition service (for instance encapsulating MSAL.NET).
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.ITokenAcquirer.GetTokenForUserAsync(System.Collections.Generic.IEnumerable{System.String},Microsoft.Identity.Abstractions.AcquireTokenOptions,System.Security.Claims.ClaimsPrincipal,System.Threading.CancellationToken)">
+            <summary>
+            Typically used from an ASP.NET Core web app or web API controller. This method gets an access token
+            for a downstream API on behalf of the user account for which the claims are provided in the current user.
+            </summary>
+            <param name="scopes">Scopes to request for the downstream API to call.</param>
+            <param name="tokenAcquisitionOptions">Options passed-in to create the token acquisition object which calls into MSAL .NET.</param>
+            <param name="user">Optional claims principal representing the user. If not provided, will use the signed-in
+            user (in a web app), or the user for which the token was received (in a web API)
+            cases where a given account is a guest in other tenants, and you want to acquire tokens for a specific tenant, like where the user is a guest in.</param>
+            <param name="cancellationToken">Cancellation token</param>
+            <returns>An <see cref="T:Microsoft.Identity.Abstractions.AcquireTokenResult"/> to call on behalf of the user, the downstream API characterized by its scopes.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.ITokenAcquirer.GetTokenForAppAsync(System.String,Microsoft.Identity.Abstractions.AcquireTokenOptions,System.Threading.CancellationToken)">
+            <summary>
+            Acquires an authentication result from the authority configured in the app, for the confidential client itself (not on behalf of a user)
+            using the client credentials flow. See https://aka.ms/msal-net-client-credentials.
+            </summary>
+            <param name="scope">The scope requested to access a protected API. For this flow (client credentials), the scope
+            should be of the form "{ResourceIdUri/.default}" for instance <c>https://management.azure.net/.default</c> or, for Microsoft
+            Graph, <c>https://graph.microsoft.com/.default</c> as the requested scopes are defined statically with the application registration
+            in the portal, and cannot be overridden in the application, as you can request a token for only one resource at a time (use
+            several calls to get tokens for other resources).</param>
+            <param name="tokenAcquisitionOptions">Options passed-in to create the token acquisition object which calls into MSAL .NET.</param>
+            <param name="cancellationToken">Cancellation token</param>
+            <returns>An authentication result for the app itself, based on its scopes.</returns>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.ITokenAcquirerFactory">
+            <summary>
+            Token acquirer factory.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.ITokenAcquirerFactory.GetTokenAcquirer(Microsoft.Identity.Abstractions.IdentityApplicationOptions)">
+            <summary>
+            Get a token acquirer given a set of application identity options.
+            </summary>
+            <param name="identityApplicationOptions"> the <see cref="T:Microsoft.Identity.Abstractions.IdentityApplicationOptions" />
+            that describe the <see cref="T:Microsoft.Identity.Abstractions.ITokenAcquirer"/> instance to return.
+            For Microsoft applications use <see cref="T:Microsoft.Identity.Abstractions.MicrosoftIdentityApplicationOptions"/>.</param>
+            <returns>An instance of <see cref="T:Microsoft.Identity.Abstractions.ITokenAcquirer"/> for acquiring tokens.</returns>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.ITokenAcquirerFactory.GetTokenAcquirer(System.String)">
+            <summary>
+            Get a token acquirer for a specific named configuration
+            (for instance an ASP.NET Core authentication scheme).
+            </summary>
+            <param name="optionName">Name of the Application configuration as defined by the configuration.
+            For instance in ASP.NET Core it could be the authentication scheme.</param>
+            <returns>An instance of <see cref="T:Microsoft.Identity.Abstractions.ITokenAcquirer"/> for acquiring tokens.</returns>
+        </member>
+        <member name="T:Microsoft.Identity.Abstractions.ManagedIdentityOptions">
+            <summary>
+            Data object to hold the definition of a managed identity for an application to use for authentication. If 
+            <see cref="P:Microsoft.Identity.Abstractions.ManagedIdentityOptions.UserAssignedClientId"/> is null, the application will use the system-assigned managed identity. If
+            <see cref="P:Microsoft.Identity.Abstractions.ManagedIdentityOptions.UserAssignedClientId"/> is set, the application will try to use the user-assigned managed identity associated
+            with the provided ClientID. See <see href="https://aka.ms/Entra/ManagedIdentityOverview"/> for more details.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Identity.Abstractions.ManagedIdentityOptions.UserAssignedClientId">
+            <summary>
+            Gets or sets the value of the ClientID for user-assigned managed identity. If not set, the default value is null
+            which will tell the application to use the system-assigned managed identity.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Identity.Abstractions.ManagedIdentityOptions.Clone">
+            <summary>
+            Makes a new object to avoid sharing the same reference.
+            </summary>
+            <returns>
+            New instance of <see cref="T:Microsoft.Identity.Abstractions.ManagedIdentityOptions"/> with the same <see cref="P:Microsoft.Identity.Abstractions.ManagedIdentityOptions.UserAssignedClientId"/>.
+            </returns>
+        </member>
+    </members>
+</doc>

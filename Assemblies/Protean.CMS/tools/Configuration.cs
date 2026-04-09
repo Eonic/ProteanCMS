@@ -3,7 +3,6 @@ using System.Configuration;
 using System.Web.Configuration;
 using System.Xml;
 using System.Xml.Serialization;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Protean
 {
@@ -63,7 +62,7 @@ namespace Protean
                 DefaultSection oCgfSect = (DefaultSection)oCfg.GetSection(configPath);
                 Tools.Security.Impersonate oImp = null;
 
-                if (Conversions.ToBoolean(myWeb.impersonationMode))
+                if (Convert.ToBoolean(myWeb.impersonationMode))
                 {
                     oImp = new Tools.Security.Impersonate();
                     oImp.ImpersonateValidUser(myWeb.moConfig["AdminAcct"], myWeb.moConfig["AdminDomain"], myWeb.moConfig["AdminPassword"], cInGroup: myWeb.moConfig["AdminGroup"]);
@@ -104,7 +103,7 @@ namespace Protean
                 }
                 oCfg.Save();
 
-                if (Conversions.ToBoolean(myWeb.impersonationMode))
+                if (Convert.ToBoolean(myWeb.impersonationMode))
                 {
                     oImp.UndoImpersonation();
                     oImp = null;

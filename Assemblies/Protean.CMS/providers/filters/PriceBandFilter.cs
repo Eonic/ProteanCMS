@@ -1,5 +1,4 @@
 using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Filter;
 using System;
 using System.Collections;
@@ -141,9 +140,9 @@ namespace Protean.Providers
                         {
                             while (oDr.Read())
                             {
-                                nMinPriceBandProduct = Conversions.ToInteger(oDr["MinPrice"]);
+                                nMinPriceBandProduct = Convert.ToInt16(oDr["MinPrice"]);
                                 string sText= string.Empty;
-                                nMaxPriceBandProduct = Conversions.ToInteger(oDr["MaxPrice"]);
+                                nMaxPriceBandProduct = Convert.ToInt16(oDr["MaxPrice"]);
                                 sProductCount = Convert.ToString(oDr["PriceBandContentCount"]);
                                 cProductCountList = cProductCountList + cnt.ToString() + ":" + sProductCount + ",";
                                 if(nMinPriceBandProduct== nMaxPriceBandProduct)

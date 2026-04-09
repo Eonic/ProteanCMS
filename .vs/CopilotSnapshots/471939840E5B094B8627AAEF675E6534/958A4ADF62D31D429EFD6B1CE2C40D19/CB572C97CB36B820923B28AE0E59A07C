@@ -1,0 +1,200 @@
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.SessionState;
+
+namespace Protean.Handlers
+{
+    /// <summary>
+    /// Async HTTP Handler for delivering CMS pages with improved performance.
+    /// Uses async/await to free up threads during I/O operations (database, file system).
+    /// </summary>
+    public class DeliverPageAsync : HttpTaskAsyncHandler, IRequiresSessionState
+    {
+        /// <summary>
+        /// Asynchronously processes the incoming HTTP request and renders the CMS page.
+        /// </summary>
+        /// <param name="context">The HTTP context</param>
+        /// <returns>Task representing the async operation</returns>
+        public override async Task ProcessRequestAsync(HttpContext context)
+        {
+            Cms oCms = null;
+            CancellationToken cancellationToken = GetCancellationToken(context);
+
+            try
+            {
+                // Initialize CMS
+                oCms = new Cms(context);
+
+                oCms.InitializeVariables();
+
+                // Set default content type
+                context.Response.ContentType = "text/html";
+
+                // ✅ ASYNC: Render page HTML (frees thread during DB/file I/O)
+                await GetPageHTMLAsync(oCms, context, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                // Request was cancelled - log and exit gracefully
+                System.Diagnostics.Trace.TraceWarning(
+                    "DeliverPageAsync: Request cancelled for URL: {0}",
+                    context.Request.RawUrl);
+
+                if (context.Response.IsClientConnected)
+                {
+                    context.Response.StatusCode = 499; // Client Closed Request
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error with full details
+                System.Diagnostics.Trace.TraceError(
+                    "DeliverPageAsync error: {0}\r\nURL: {1}\r\nStack: {2}",
+                    ex.Message,
+                    context.Request.RawUrl,
+                    ex.StackTrace);
+
+                // Return appropriate error response
+                if (context.Response.IsClientConnected)
+                {
+                    try
+                    {
+                        context.Response.StatusCode = 500;
+                        context.Response.ContentType = "text/html";
+                        context.Response.Write(
+                            "<html><body>" +
+                            "<h1>An error occurred</h1>" +
+                            "<p>We're sorry, but an error occurred while processing your request.</p>" +
+                            "</body></html>");
+                    }
+                    catch (HttpException httpEx)
+                    {
+                        // Client disconnected - can't write response
+                        System.Diagnostics.Trace.TraceWarning(
+                            "DeliverPageAsync: Could not write error response: {0}",
+                            httpEx.Message);
+                    }
+                }
+            }
+            finally
+            {
+                // Ensure cleanup
+                if (oCms != null)
+                {
+                    try
+                    {
+                        oCms.Dispose();
+                    }
+                    catch (Exception disposeEx)
+                    {
+                        System.Diagnostics.Trace.TraceError(
+                            "Error disposing Cms object: {0}",
+                            disposeEx.ToString());
+                    }
+                    oCms = null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously generates and writes the page HTML to the response.
+        /// </summary>
+        private async Task GetPageHTMLAsync(
+            Cms cms,
+            HttpContext context,
+            CancellationToken cancellationToken)
+        {
+            if (cms == null)
+                throw new ArgumentNullException(nameof(cms));
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            try
+            {
+                // Open CMS (synchronous - no DB calls yet)
+                cms.Open();
+
+
+                // Check for early cancellation
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // ✅ ASYNC: Get page HTML (frees thread during DB/file operations)
+                await cms.GetPageHTMLAsync(cancellationToken)
+                    .ConfigureAwait(false);
+
+                // The HTML is written directly to the response by GetPageHTMLAsync
+                // No need to capture and write it here
+            }
+            catch (OperationCanceledException)
+            {
+                // Propagate cancellation
+                throw;
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError(
+                    "Error in GetPageHTMLAsync: {0}",
+                    ex.ToString());
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Gets a cancellation token from the HTTP context if available.
+        /// In .NET Framework 4.8, this attempts to get Response.ClientDisconnectedToken,
+        /// but falls back safely to CancellationToken.None if unavailable.
+        /// </summary>
+        private CancellationToken GetCancellationToken(HttpContext context)
+        {
+            try
+            {
+                // Check if ClientDisconnectedToken is available (.NET 4.5.2+)
+                var response = context.Response;
+                var property = response.GetType().GetProperty("ClientDisconnectedToken", 
+                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.IgnoreCase);
+
+                if (property != null && property.CanRead)
+                {
+                    try
+                    {
+                        var tokenValue = property.GetValue(response);
+                        
+                        // Safely convert to CancellationToken
+                        if (tokenValue != null && tokenValue is CancellationToken cancellationToken)
+                        {
+                            return cancellationToken;
+                        }
+                    }
+                    catch (InvalidCastException)
+                    {
+                        // Property exists but is not a CancellationToken type
+                        // This is expected in some .NET Framework versions
+                        System.Diagnostics.Trace.TraceWarning(
+                            "ClientDisconnectedToken property is not a CancellationToken");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Fall back to CancellationToken.None if reflection fails
+                System.Diagnostics.Trace.TraceWarning(
+                    "Could not get ClientDisconnectedToken: {0}",
+                    ex.Message);
+            }
+
+            return CancellationToken.None;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether another request can use the handler instance.
+        /// Set to false for thread safety with session state.
+        /// </summary>
+        public override bool IsReusable
+        {
+            get { return false; }
+        }
+    }
+}

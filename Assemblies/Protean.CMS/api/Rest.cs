@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Protean.Providers.Membership;
 using System;
 using System.Collections.Generic;
@@ -45,9 +43,9 @@ namespace Protean
                     Protean.Cms myWeb = new Cms();
                     ReturnProvider RetProv = new Protean.Providers.Membership.ReturnProvider();
                     IMembershipProvider oMembershipProv = RetProv.Get(ref myWeb, moConfig["MembershipProvider"]);
-                    mnUserId = Conversions.ToInteger(oMembershipProv.Activities.GetUserId(ref myWeb));
-                  
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["adminMode"], "true", false)))
+                    mnUserId = Convert.ToInt64(oMembershipProv.Activities.GetUserId(ref myWeb));
+
+                    if (string.Equals(moSession["adminMode"]?.ToString(), "true", StringComparison.OrdinalIgnoreCase))
                     {
                         mbAdminMode = true;
                         // moDbHelper.gbAdminMode = mbAdminMode
@@ -59,7 +57,7 @@ namespace Protean
 
                 if (moConfig["Debug"] != null)
                 {
-                    switch (Strings.LCase(moConfig["Debug"]) ?? "")
+                    switch ((moConfig["Debug"]).ToLower() ?? "")
                     {
                         case "on":
                             {
@@ -102,7 +100,7 @@ namespace Protean
             {
 
 
-                apiLog = new Protean.Cms.dbHelper.utils.APILog(oWeb.moDbHelper);
+               apiLog = new Protean.Cms.dbHelper.utils.APILog(oWeb.moDbHelper);
 
                 string path = moRequest.ServerVariables["HTTP_X_ORIGINAL_URL"];
 
@@ -111,7 +109,7 @@ namespace Protean
                     path = path.Substring(0, path.IndexOf("?"));
                 }
 
-                string[] pathsplit = Strings.Split(path, "/");
+                string[] pathsplit = (path ?? "").Split('/');
                 // URL = /API/ProviderName/methodName
 
                 string ProviderName = pathsplit[2];
@@ -190,8 +188,12 @@ namespace Protean
                 Type calledType = null;
 
 
-                if (Strings.LCase(ProviderName) == "cms.cart" | Strings.LCase(ProviderName) == "cms.content" | Strings.LCase(ProviderName) == "cms.admin")
+                string provider = ProviderName?.ToLower();
+
+                if (provider == "cms.cart" || provider == "cms.content" || provider == "cms.admin")
+                {
                     ProviderName = "";
+                }
 
                 if (!string.IsNullOrEmpty(ProviderName))
                 {
@@ -199,7 +201,7 @@ namespace Protean
                     if (ProviderName.Contains("."))
                     {
                         string[] pnArr = ProviderName.Split('.');
-                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/" + Strings.LCase(pnArr[0]) + "Providers");
+                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/" + (pnArr[0]).ToLower() + "Providers");
 
                         if (moPrvConfig != null)
                         {
@@ -217,7 +219,7 @@ namespace Protean
                             }
 
                             moResponse.StatusCode = 200;
-                            myResponse = "Config Section - protean/" + Strings.LCase(pnArr[0]) + "Providers Not Found";
+                            myResponse = "Config Section - protean/" + (pnArr[0]?.ToLower() ?? "") + "Providers Not Found";
                         }
 
                     }
@@ -242,7 +244,7 @@ namespace Protean
                 else
                 {
                     // case for methods within ProteanCMS Core DLL
-                    calledType = Type.GetType("Protean." + Strings.Replace(classPath, ".", "+"), true);
+                    calledType = Type.GetType("Protean." + (classPath ?? "").Replace(".", "+"), true);
                 }
                 if (calledType != null)
                 {
@@ -271,7 +273,7 @@ namespace Protean
 
                     // check the response whatever is coming like with code 400, 200, based on the output- return in Json
 
-                    myResponse = Conversions.ToString(calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args));
+                    myResponse = Convert.ToString(calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args));
 
                 }
                 // Protean.Cms myWeb = new Cms();
@@ -371,7 +373,7 @@ namespace Protean
                 int seperatorIndex;
                 string username = string.Empty;
                 string password = string.Empty;
-                int nUserId = 0;
+                long nUserId = 0;
                 string sValidResponse = string.Empty;
               
                 try
@@ -380,7 +382,7 @@ namespace Protean
                     {
                         if (myWeb.moSession["nUserId"] != null)
                         {
-                            nUserId = Convert.ToInt32(myWeb.moSession["nUserId"]);
+                            nUserId = Convert.ToInt64(myWeb.moSession["nUserId"]);
                         }
                     }
 
@@ -402,9 +404,9 @@ namespace Protean
                                 username = usernamePassword.Substring(0, seperatorIndex);
                                 password = usernamePassword.Substring(seperatorIndex + 1);
                                 sValidResponse = myWeb.moDbHelper.validateUser(username, password);
-                                if (Information.IsNumeric(sValidResponse))
+                                if (Tools.Number.IsNumeric(sValidResponse))
                                 {
-                                    nUserId = (int)Conversions.ToLong(sValidResponse);
+                                    nUserId = Convert.ToInt64(sValidResponse);
                                 }
                             }
                         }

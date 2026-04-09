@@ -6,7 +6,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Xml;
 using Lucene.Net.Search;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Filter;
 
 namespace Protean.Providers
@@ -42,11 +41,13 @@ namespace Protean.Providers
                     //add control
                     XmlElement thisSelect = oXform.addSelect(ref oFromGroup,"", false, sControlDisplayName, "specfilter", xForm.ApperanceTypes.Full);
                     // oXform.addOption(ref thisSelect, "Value1", "Value1");
-                    SqlDataReader odr = aWeb.moDbHelper.getDataReader("SELECT DISTINCT CONCAT(cTextValue,' [',Count(*),']') as [Name], cTextValue as [Value] FROM [dbo].[tblContentIndex]\r\n  Where nContentIndexDefinitionKey = (Select nContentIndexDefKey from tblContentIndexDef where cDefinitionName = '" + sControlDisplayName + "') GROUP BY cTextValue Order By cTextValue");
-
-                    if (odr != null) {
-                        oXform.addOptionsFromSqlDataReader(ref thisSelect,ref odr);
-                        //odr.Dispose();
+                    using (var oDr = aWeb.moDbHelper.getDataReaderDisposable("SELECT DISTINCT CONCAT(cTextValue,' [',Count(*),']') as [Name], cTextValue as [Value] FROM [dbo].[tblContentIndex]\r\n  Where nContentIndexDefinitionKey = (Select nContentIndexDefKey from tblContentIndexDef where cDefinitionName = '" + sControlDisplayName + "') GROUP BY cTextValue Order By cTextValue"))  // Done by nita on 6/7/22
+                    {
+                        if (oDr != null)
+                        {
+                            var argoDr = oDr;
+                            oXform.addOptionsFromSqlDataReader(thisSelect, argoDr);                          
+                        }
                     }
                 }
 

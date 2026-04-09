@@ -274,29 +274,29 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="/" mode="cartSimple">
-		<div id="cartBrief">
-			<div class="cartinfo">
-				<a href="{$currentPage/@url}?cartCmd=Cart" title="Click here to checkout" role="button">
-					<div class="cart-icon">
-						<i class="fa fa-shopping-basket">
-							<xsl:text> </xsl:text>
-						</i>
-						<xsl:choose>
-							<xsl:when test="/Page/Cart/Order/@itemCount &gt; 0">
-								<span id="itemCount">
-									<xsl:value-of select="/Page/Cart/Order/@itemCount"/>
-								</span>
-							</xsl:when>
-							<xsl:otherwise>
-								<span id="itemCount">0</span>
-							</xsl:otherwise>
-						</xsl:choose>
-					</div>
-				</a>
-			</div>
-		</div>
-	</xsl:template>
+  <xsl:template match="/" mode="cartSimple">
+    <div id="cartBrief">
+      <div class="cartinfo">
+        <a href="{$currentPage/@url}?cartCmd=Cart" role="button" aria-label="shopping basket">
+          <div class="cart-icon">
+            <i class="fa fa-shopping-cart">
+              <xsl:text> </xsl:text>
+            </i>
+            <xsl:choose>
+              <xsl:when test="/Page/Cart/Order/@itemCount &gt; 0">
+                <span id="itemCount">
+                  <xsl:value-of select="/Page/Cart/Order/@itemCount"/>
+                </span>
+              </xsl:when>
+              <xsl:otherwise>
+                <span id="itemCount" aria-label="items in basket">0</span>
+              </xsl:otherwise>
+            </xsl:choose>
+          </div>
+        </a>
+      </div>
+    </div>
+  </xsl:template>
 
 	<!-- ############################################ SEARCH ############################################### -->
 	<xsl:template match="/" mode="searchBrief">
