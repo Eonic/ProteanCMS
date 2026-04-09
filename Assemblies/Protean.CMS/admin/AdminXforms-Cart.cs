@@ -2398,7 +2398,7 @@ namespace Protean
                                 {
 
                                     // Generate non-random codes
-                                    oCodes = CodeGen(oInstanceRoot.SelectSingleNode("cPreceedingText").InnerText, Convert.ToInt16(oInstanceRoot.SelectSingleNode("nStartNumber").InnerText), nNoCodes, Convert.ToBoolean(oInstanceRoot.SelectSingleNode("bKeepProceedingZeros").InnerText), Convert.ToBoolean(oInstanceRoot.SelectSingleNode("bMD5Results").InnerText));
+                                    oCodes = CodeGen(oInstanceRoot.SelectSingleNode("cPreceedingText").InnerText, Convert.ToInt16(oInstanceRoot.SelectSingleNode("nStartNumber").InnerText), nNoCodes, XmlConvert.ToBoolean(oInstanceRoot.SelectSingleNode("bKeepProceedingZeros").InnerText), XmlConvert.ToBoolean(oInstanceRoot.SelectSingleNode("bMD5Results").InnerText));
                                 }
                                 else
                                 {
