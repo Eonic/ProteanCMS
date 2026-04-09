@@ -98,6 +98,9 @@
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\MSTest.TestFramework.3.10.3\lib\net462\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="SkiaSharp, Version=3.119.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\SkiaSharp.3.119.0\lib\net462\SkiaSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
@@ -136,6 +139,7 @@
   <ItemGroup>
     <Compile Include="BaseTests.cs" />
     <Compile Include="Directory.cs" />
+    <Compile Include="ImageTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="providers\discounts\discountsTests.cs" />
   </ItemGroup>
@@ -164,19 +168,49 @@
     <Content Include="providers\discounts\test-data\basic-discount\Percent_BringAFriend\discounts.xml" />
     <Content Include="providers\discounts\test-data\basic-discount\Percent_COMER20_Evoucher_Free\cart.xml" />
     <Content Include="providers\discounts\test-data\basic-discount\Percent_COMER20_Evoucher_Free\discounts.xml" />
+    <Content Include="UnitTestCases\Angela 10%25 Discount\cart.xml" />
+    <Content Include="UnitTestCases\Angela 10%25 Discount\discounts.xml" />
+    <Content Include="UnitTestCases\Angela 10%25 Discount\expectedCart.xml" />
+    <Content Include="UnitTestCases\Angela 15%25 Discount\cart.xml" />
+    <Content Include="UnitTestCases\Angela 15%25 Discount\discounts.xml" />
+    <Content Include="UnitTestCases\Angela 15%25 Discount\expectedCart.xml" />
+    <Content Include="UnitTestCases\Angela 20%25 Discount\cart.xml" />
+    <Content Include="UnitTestCases\Angela 20%25 Discount\discounts.xml" />
+    <Content Include="UnitTestCases\Angela 20%25 Discount\expectedCart.xml" />
+    <Content Include="UnitTestCases\Angela 5%25 Discount\cart.xml" />
+    <Content Include="UnitTestCases\Angela 5%25 Discount\discounts.xml" />
+    <Content Include="UnitTestCases\Angela 5%25 Discount\expectedCart.xml" />
+    <Content Include="UnitTestCases\BringAFriend10\cart.xml" />
+    <Content Include="UnitTestCases\BringAFriend10\discounts.xml" />
+    <Content Include="UnitTestCases\BringAFriend10\expectedCart.xml" />
+    <Content Include="UnitTestCases\BringAFriend\cart.xml" />
+    <Content Include="UnitTestCases\BringAFriend\discounts.xml" />
+    <Content Include="UnitTestCases\BringAFriend\expectedCart.xml" />
     <Content Include="UnitTestCases\Test Cheapest Item Discount\cart.xml" />
     <Content Include="UnitTestCases\Test Cheapest Item Discount\discounts.xml" />
     <Content Include="UnitTestCases\Test Cheapest Item Discount\expectedCart.xml" />
-    <Content Include="UnitTestCases\Test Product Break Promocode\cart.xml" />
-    <Content Include="UnitTestCases\Test Product Break Promocode\discounts.xml" />
-    <Content Include="UnitTestCases\Test Product Break Promocode\expectedCart.xml" />
     <Content Include="UnitTestCases\Test X For the Price of Y\cart.xml" />
     <Content Include="UnitTestCases\Test X For the Price of Y\discounts.xml" />
     <Content Include="UnitTestCases\Test X For the Price of Y\expectedCart.xml" />
-    <Content Include="UnitTestCases\TESTGROUP\cart.xml" />
-    <Content Include="UnitTestCases\TESTGROUP\discounts.xml" />
-    <Content Include="UnitTestCases\TESTGROUP\expectedCart.xml" />
-    <Content Include="UnitTestCases\WELCOME - newsletter website signup\discount.xml" />
+    <Content Include="UnitTestCases\WOODWARD20\cart.xml" />
+    <Content Include="UnitTestCases\WOODWARD20\discounts.xml" />
+    <Content Include="UnitTestCases\WOODWARD20\expectedCart.xml" />
+    <Content Include="UnitTestCases\Defense Services 15%25\cart.xml" />
+    <Content Include="UnitTestCases\Defense Services 15%25\discounts.xml" />
+    <Content Include="UnitTestCases\Defense Services 15%25\expectedCart.xml" />
+    <Content Include="UnitTestCases\ITBLUE15 Affiliate code\cart.xml" />
+    <Content Include="UnitTestCases\ITBLUE15 Affiliate code\discounts.xml" />
+    <Content Include="UnitTestCases\ITBLUE15 Affiliate code\expectedCart.xml" />
+    <Content Include="UnitTestCases\NHS15\cart.xml" />
+    <Content Include="UnitTestCases\NHS15\Cart_EvoucherFree.xml" />
+    <Content Include="UnitTestCases\NHS15\discounts.xml" />
+    <Content Include="UnitTestCases\NHS15\expectedCart.xml" />
+    <Content Include="UnitTestCases\Tammy 20pc off\cart.xml" />
+    <Content Include="UnitTestCases\Tammy 20pc off\discounts.xml" />
+    <Content Include="UnitTestCases\Tammy 20pc off\expectedCart.xml" />
+    <Content Include="UnitTestCases\WELCOME\cart.xml" />
+    <Content Include="UnitTestCases\WELCOME\discounts.xml" />
+    <Content Include="UnitTestCases\WELCOME\expectedCart.xml" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\..\..\packages\MSTest.Analyzers.3.10.3\analyzers\dotnet\cs\MSTest.Analyzers.CodeFixes.dll" />
@@ -196,9 +230,13 @@
     <Error Condition="!Exists('..\..\..\packages\MSTest.TestAdapter.3.10.3\build\net462\MSTest.TestAdapter.props')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\MSTest.TestAdapter.3.10.3\build\net462\MSTest.TestAdapter.props'))" />
     <Error Condition="!Exists('..\..\..\packages\MSTest.TestAdapter.3.10.3\build\net462\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\MSTest.TestAdapter.3.10.3\build\net462\MSTest.TestAdapter.targets'))" />
     <Error Condition="!Exists('..\..\..\packages\MSTest.TestFramework.3.10.3\build\net462\MSTest.TestFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\MSTest.TestFramework.3.10.3\build\net462\MSTest.TestFramework.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\SkiaSharp.NativeAssets.macOS.3.119.0\build\net462\SkiaSharp.NativeAssets.macOS.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\SkiaSharp.NativeAssets.macOS.3.119.0\build\net462\SkiaSharp.NativeAssets.macOS.targets'))" />
+    <Error Condition="!Exists('..\..\..\packages\SkiaSharp.NativeAssets.Win32.3.119.0\build\net462\SkiaSharp.NativeAssets.Win32.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\SkiaSharp.NativeAssets.Win32.3.119.0\build\net462\SkiaSharp.NativeAssets.Win32.targets'))" />
   </Target>
   <Import Project="..\..\..\packages\Microsoft.Testing.Platform.1.8.3\build\netstandard2.0\Microsoft.Testing.Platform.targets" Condition="Exists('..\..\..\packages\Microsoft.Testing.Platform.1.8.3\build\netstandard2.0\Microsoft.Testing.Platform.targets')" />
   <Import Project="..\..\..\packages\Microsoft.Testing.Platform.MSBuild.1.8.3\build\Microsoft.Testing.Platform.MSBuild.targets" Condition="Exists('..\..\..\packages\Microsoft.Testing.Platform.MSBuild.1.8.3\build\Microsoft.Testing.Platform.MSBuild.targets')" />
   <Import Project="..\..\..\packages\MSTest.TestAdapter.3.10.3\build\net462\MSTest.TestAdapter.targets" Condition="Exists('..\..\..\packages\MSTest.TestAdapter.3.10.3\build\net462\MSTest.TestAdapter.targets')" />
   <Import Project="..\..\..\packages\MSTest.TestFramework.3.10.3\build\net462\MSTest.TestFramework.targets" Condition="Exists('..\..\..\packages\MSTest.TestFramework.3.10.3\build\net462\MSTest.TestFramework.targets')" />
+  <Import Project="..\..\..\packages\SkiaSharp.NativeAssets.macOS.3.119.0\build\net462\SkiaSharp.NativeAssets.macOS.targets" Condition="Exists('..\..\..\packages\SkiaSharp.NativeAssets.macOS.3.119.0\build\net462\SkiaSharp.NativeAssets.macOS.targets')" />
+  <Import Project="..\..\..\packages\SkiaSharp.NativeAssets.Win32.3.119.0\build\net462\SkiaSharp.NativeAssets.Win32.targets" Condition="Exists('..\..\..\packages\SkiaSharp.NativeAssets.Win32.3.119.0\build\net462\SkiaSharp.NativeAssets.Win32.targets')" />
 </Project>

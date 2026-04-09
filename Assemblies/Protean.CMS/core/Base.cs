@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
+using static Protean.Env;
 
 namespace Protean
 {
@@ -63,9 +63,9 @@ namespace Protean
 
         public string mcPagePath;
         public string mcPageLayout;
-        public int mnPageId = 0;
-        public int mnArtId = 0;
-        public int mnUserId = 0;
+        public long mnPageId = 0;
+        public long mnArtId = 0;
+        public long mnUserId = 0;
 
         public bool mbAdminMode = false;
 
@@ -93,7 +93,7 @@ namespace Protean
 
         // Application Level Properties   
         public NameValueCollection moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-        public System.Web.HttpApplicationState goApp;
+        public IHttpApplicationState goApp;
         public System.Web.Caching.Cache goCache;
         public System.Web.HttpServerUtility goServer;
         public XmlElement goLangConfig = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/languages");
@@ -104,6 +104,7 @@ namespace Protean
 
         public bool mbPreview = false;
         public bool mbPreviewHidden = false;
+        public string sitename = "";
 
         public PerfLog PerfMon;
 
@@ -130,14 +131,18 @@ namespace Protean
                     moCtx = Context;
                 }
 
-                goApp = moCtx.Application;
+                //goApp = moCtx.Application;
                 moRequest = moCtx.Request;
                 moResponse = moCtx.Response;
                 moSession = moCtx.Session;
                 goServer = moCtx.Server;
                 goCache = moCtx.Cache;
 
-                PerfMon = new PerfLog("");
+                sitename = moRequest.ServerVariables["HTTP_HOST"];
+
+                goApp = new Protean.Framework.Adapters.FrameworkApplicationStateAdapter(sitename);
+
+                PerfMon = new PerfLog("", moCtx);
                 PerfMon.Log("Base", "New");
 
                 EnumberateFeatures();
@@ -145,8 +150,8 @@ namespace Protean
 
             catch (Exception ex)
             {
-                // returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
-               // OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
+               //  returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
+                OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
                 Dispose();
                 throw;
             }
@@ -158,56 +163,57 @@ namespace Protean
         {
             Features.Add("Lite", "Lite");
             Features.Add("Pro", "Pro");
-            if (Strings.LCase(moConfig["Cart"]) == "on")
+            
+            if (IsFeatureEnabled("Cart"))
             {
                 Features.Add("Cart", "Cart");
             }
-            if (Strings.LCase(moConfig["Quote"]) == "on")
+            if (IsFeatureEnabled("Quote"))
             {
                 Features.Add("Quote", "Quote");
             }
-            if (Strings.LCase(moConfig["Membership"]) == "on")
+            if (IsFeatureEnabled("Membership"))
             {
                 Features.Add("Membership", "Membership");
             }
-            if (Strings.LCase(moConfig["MailingList"]) == "on")
+            if (IsFeatureEnabled("MailingList"))
             {
                 Features.Add("MailingList", "MailingList");
             }
-            if (Strings.LCase(moConfig["Search"]) == "on" | Strings.LCase(moConfig["SiteSearch"]) == "on")
+            if (IsFeatureEnabled("Search") || IsFeatureEnabled("SiteSearch"))
             {
                 Features.Add("Search", "Search");
             }
-            if (Strings.LCase(moConfig["VersionControl"]) == "on")
+            if (IsFeatureEnabled("VersionControl"))
             {
                 Features.Add("VersionControl", "VersionControl");
             }
-            if (Strings.LCase(moConfig["Import"]) == "on")
+            if (IsFeatureEnabled("Import"))
             {
                 Features.Add("Import", "Import");
             }
-            if (Strings.LCase(moConfig["Sync"]) == "on")
+            if (IsFeatureEnabled("Sync"))
             {
                 Features.Add("Sync", "Sync");
             }
-            if (Strings.LCase(moConfig["MemberCodes"]) == "on")
+            if (IsFeatureEnabled("MemberCodes"))
             {
                 Features.Add("MemberCodes", "MemberCodes");
             }
-            if (Strings.LCase(moConfig["Subscriptions"]) == "on")
+            if (IsFeatureEnabled("Subscriptions"))
             {
                 Features.Add("Subscriptions", "Subscriptions");
             }
-            if (Strings.LCase(moConfig["Scheduler"]) == "on")
+            if (IsFeatureEnabled("Scheduler"))
             {
                 Features.Add("Scheduler", "Scheduler");
             }
-            if (Strings.LCase(moConfig["ActivityLogging"]) == "on" | Strings.LCase(moConfig["ActivityReporting"]) == "on")
+            if (IsFeatureEnabled("ActivityLogging") || IsFeatureEnabled("ActivityReporting"))
             {
                 Features.Add("ActivityLogging", "ActivityLogging");
                 Features.Add("ActivityReporting", "ActivityReporting");
             }
-            if (Strings.LCase(moConfig["PageVersions"]) == "on")
+            if (IsFeatureEnabled("PageVersions"))
             {
                 Features.Add("PageVersions", "PageVersions");
             }
@@ -219,7 +225,18 @@ namespace Protean
             {
                 Features.Add("Themes", "Themes");
             }
+        }
 
+        /// <summary>
+        /// Checks if a feature is enabled in the configuration.
+        /// Performs null-safe, case-insensitive comparison without allocations.
+        /// </summary>
+        /// <param name="featureName">The feature name to check in moConfig</param>
+        /// <returns>True if the feature config value equals "on" (case-insensitive), false otherwise</returns>
+        private bool IsFeatureEnabled(string featureName)
+        {
+            string value = moConfig?[featureName];
+            return value != null && string.Equals(value, "on", StringComparison.OrdinalIgnoreCase);
         }
 
         private bool disposedValue = false;
@@ -232,7 +249,7 @@ namespace Protean
         }
 
         // ✅ Complete the protected Dispose(bool) pattern
-        protected virtual void Dispose(bool disposing)
+        public virtual void Dispose(bool disposing)
         {
             if (!disposedValue)  // ✅ Now checks the flag
             {

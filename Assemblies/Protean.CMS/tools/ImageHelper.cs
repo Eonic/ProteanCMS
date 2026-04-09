@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using SkiaSharp;
 using static Protean.Tools.Text;
 
 namespace Protean
@@ -34,7 +34,7 @@ namespace Protean
         }
 
 
-        public Bitmap generateImage(string sTextToImg = "")
+        public SKBitmap generateImage(string sTextToImg = "")
         {
             // 
             if (string.IsNullOrEmpty(sTextToImg))
@@ -59,7 +59,7 @@ namespace Protean
 
             var ci = new Tools.Image.CaptchaImage();
 
-            System.Drawing.Bitmap b = ci.RenderImage();
+            SKBitmap b = ci.RenderImage();
 
             goSession["imgVerification"] = ci.Text;
 

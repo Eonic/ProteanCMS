@@ -236,6 +236,21 @@ header {
     }
 }
 /*############### NAVIGATION #################*/
+@mixin mega-menu() {
+    //add to main-nav
+    position: static;
+
+    .dropdown {
+        position: static;
+
+        > .dropdown-menu {
+            position: absolute;
+            left: 0;
+            right: 0;
+        }
+    }
+}
+
 .main-nav {
     padding: 0;
     //DESKTOP MENU
@@ -772,6 +787,10 @@ header {
 @mixin search-simple {
     position: relative;
 
+    form:focus-within {
+        box-shadow: 0 0 0 $focus-ring-width rgba(#fff, $focus-ring-opacity);
+    }
+
     .input-group {
         display: block;
 
@@ -796,18 +815,41 @@ header {
             &:active {
                 box-shadow: none;
             }
+
+            transition: all ease 0.2s;
+
+            i {
+                transition: all ease 0.2s;
+            }
         }
 
 
-        button:hover,
-        button:focus,
-        button:active,
-        button.btn-outline-primary:hover,
-        button.btn-outline-primary:focus,
-        button.btn-outline-primary:active {
-            background: transparent;
-            color: rgba($body-color,0.8);
-        }
+            button:hover,
+            button:focus-visible,
+            button:active,
+            button.btn-outline-primary:hover,
+            button.btn-outline-primary:focus-visible,
+            button.btn-outline-primary:active {
+                background: transparent;
+                box-shadow: none;
+
+                i {
+                    background: $link-color;
+                    color: #fff;
+                    border-radius: 100px;
+                    padding: 7px;
+                    margin: -7px;
+                }
+            }
+
+            button:focus-visible,
+            button.btn-outline-primary:focus-visible {
+
+
+                i {
+                    box-shadow: 0 0 0 $focus-ring-width rgba($link-color, $focus-ring-opacity);
+                }
+            }
 
         button,
         button.btn-outline-primary {

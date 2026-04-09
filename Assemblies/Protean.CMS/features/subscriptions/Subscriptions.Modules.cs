@@ -2,7 +2,6 @@
 using System.Data;
 using System.IO;
 using System.Xml;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Payment;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
@@ -100,7 +99,7 @@ namespace Protean
                                     {
                                         // Confirm Subscription Details Form
                                         var oSubForm = new Subscriptions.Forms(ref myWeb);
-                                        var confSubForm = oSubForm.xFrmConfirmSubscription(Conversions.ToLong(myWeb.moRequest["subId"]));
+                                        var confSubForm = oSubForm.xFrmConfirmSubscription(Convert.ToInt64(myWeb.moRequest["subId"]));
 
                                         XmlElement oSubmitBtn = (XmlElement)confSubForm.SelectSingleNode("group/submit");
                                         string buttonRef = oSubmitBtn.GetAttribute("ref");
@@ -122,12 +121,12 @@ namespace Protean
                                         {
                                             oSubForm.updateInstanceFromRequest();
                                             oSubForm.validate();
-                                            DateTime dRenewalDate = Conversions.ToDate(oSubForm.Instance.SelectSingleNode("tblSubscription/dExpireDate").InnerText);
+                                            DateTime dRenewalDate = Convert.ToDateTime(oSubForm.Instance.SelectSingleNode("tblSubscription/dExpireDate").InnerText);
                                             double nFirstPayment = 0d;
 
                                             if (dRenewalDate < DateTime.Now)
                                             {
-                                                nFirstPayment = Conversions.ToDouble(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText);
+                                                nFirstPayment = Convert.ToDouble(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText);
                                                 var oSub = new Subscriptions();
                                                 dRenewalDate = oSub.SubscriptionEndDate(dRenewalDate, (XmlElement)oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content"));
                                                 if (dRenewalDate < DateTime.Now)
@@ -147,14 +146,14 @@ namespace Protean
                                                 pseudoOrder.PaymentMethod = SelectedPaymentMethod;
                                                 var RandGen = new Random();
 
-                                                pseudoOrder.TransactionRef = "SUB" + Conversions.ToDouble(oSubForm.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) + "-" + Conversions.ToDouble("0" + oSubForm.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText) + "-" + RandGen.Next(1000, 9999).ToString();
+                                                pseudoOrder.TransactionRef = "SUB" + Convert.ToDouble(oSubForm.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) + "-" + Convert.ToDouble("0" + oSubForm.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText) + "-" + RandGen.Next(1000, 9999).ToString();
 
                                                 pseudoOrder.firstPayment = nFirstPayment;
-                                                pseudoOrder.repeatPayment = Conversions.ToDouble(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText);
+                                                pseudoOrder.repeatPayment = Convert.ToDouble(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText);
                                                 pseudoOrder.delayStart = false; // IIf(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/@delayStart").InnerText = "true", True, False)
                                                 pseudoOrder.startDate = dRenewalDate;
                                                 pseudoOrder.repeatInterval = oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Duration/Unit").InnerText;
-                                                pseudoOrder.repeatLength = Conversions.ToInteger(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Duration/Length").InnerText);
+                                                pseudoOrder.repeatLength = Convert.ToInt16(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Duration/Length").InnerText);
 
                                                 pseudoOrder.SetAddress(oSubForm.Instance.SelectSingleNode("Contact/cContactName").InnerText, oSubForm.Instance.SelectSingleNode("Contact/cContactEmail").InnerText, oSubForm.Instance.SelectSingleNode("Contact/cContactTel").InnerText, oSubForm.Instance.SelectSingleNode("Contact/cContactTelCountryCode").InnerText, oSubForm.Instance.SelectSingleNode("Contact/cContactCompany").InnerText, oSubForm.Instance.SelectSingleNode("Contact/cContactAddress").InnerText, oSubForm.Instance.SelectSingleNode("Contact/cContactCity").InnerText, oSubForm.Instance.SelectSingleNode("Contact/cContactState").InnerText, oSubForm.Instance.SelectSingleNode("Contact/cContactZip").InnerText, oSubForm.Instance.SelectSingleNode("Contact/cContactCountry").InnerText);
 
@@ -204,7 +203,7 @@ namespace Protean
                                         {
                                             ewCmd = "UpdateSubscription";
                                             // Cancel Old Payment Method
-                                            long oldPaymentId = Conversions.ToLong(myWeb.moDbHelper.ExeProcessSqlScalar("select nPaymentMethodId from tblSubscription where nSubKey = " + myWeb.moRequest["subId"]));
+                                            long oldPaymentId = Convert.ToInt64(myWeb.moDbHelper.ExeProcessSqlScalar("select nPaymentMethodId from tblSubscription where nSubKey = " + myWeb.moRequest["subId"]));
                                             var oSubs = new Subscriptions(ref myWeb);
                                             oSubs.CancelPaymentMethod((int)oldPaymentId);
                                             // Set new payment method Id
@@ -276,7 +275,7 @@ namespace Protean
                                     case "cancelSubscription":
                                         {
                                             var oSubs = new Subscriptions(ref myWeb);
-                                            oSubs.CancelSubscription(Conversions.ToInteger(myWeb.moRequest["subId"]));
+                                            oSubs.CancelSubscription(Convert.ToInt16(myWeb.moRequest["subId"]));
                                             break;
                                         }
                                     case "edit":
@@ -305,7 +304,7 @@ namespace Protean
                                             myWeb.moContentDetail = myWeb.moPageXml.CreateElement("ContentDetail");
                                             contentNode = myWeb.moContentDetail;
                                             myWeb.moPageXml.DocumentElement.AppendChild(contentNode);
-                                            myWeb.mnArtId = Conversions.ToInteger(myWeb.moRequest["subId"]);
+                                            myWeb.mnArtId = Convert.ToInt16(myWeb.moRequest["subId"]);
                                             sSql = sSql + " and nSubKey = " + myWeb.moRequest["subId"];
                                             listSubs = true;
                                             break;
@@ -319,7 +318,7 @@ namespace Protean
                                     foreach (DataRow oDr in oDS.Tables[0].Rows)
                                     {
                                         oElmt = myWeb.moPageXml.CreateElement("Subscription");
-                                        oElmt.InnerXml = Conversions.ToString(oDr["cSubXml"]);
+                                        oElmt.InnerXml = Convert.ToString(oDr["cSubXml"]);
                                         oElmt.SetAttribute("status", oDr["status"].ToString());
                                         oElmt.SetAttribute("id", oDr["id"].ToString());
                                         oElmt.SetAttribute("name", oDr["name"].ToString());
@@ -345,9 +344,9 @@ namespace Protean
                                                 string paymentMethodid = oDr["paymentMethodId"].ToString();
                                                 if (oPaymentProv != null)
                                                 {
-                                                    paymentStatus = Conversions.ToString(oPaymentProv.Activities.CheckStatus(ref myWeb, ref paymentMethodid));    
+                                                    paymentStatus = Convert.ToString(oPaymentProv.Activities.CheckStatus(ref myWeb, ref paymentMethodid));    
                                                     XmlElement oPaymentMethodDetails = myWeb.moPageXml.CreateElement("PaymentMethodDetails");
-                                                    oPaymentMethodDetails.InnerXml = Conversions.ToString(oPaymentProv.Activities.GetMethodDetail(ref myWeb, ref paymentMethodid));
+                                                    oPaymentMethodDetails.InnerXml = Convert.ToString(oPaymentProv.Activities.GetMethodDetail(ref myWeb, ref paymentMethodid));
                                                     oElmt.AppendChild(oPaymentMethodDetails);
                                                 }
                                                 else {
@@ -370,7 +369,7 @@ namespace Protean
                                         var oPaymentMethod = myWeb.moPageXml.CreateElement("PaymentMethod");
                                         if (!(oDr["paymentMethodId"] is DBNull))
                                         {
-                                            oPaymentMethod.InnerXml = myWeb.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartPaymentMethod, Conversions.ToLong(oDr["paymentMethodId"]));
+                                            oPaymentMethod.InnerXml = myWeb.moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartPaymentMethod, Convert.ToInt64(oDr["paymentMethodId"]));
                                         }
                                         // oPaymentMethod.InnerXml = CStr(oDr("cPayMthdDetailXml") & "")
                                         oElmt.AppendChild(oPaymentMethod);
@@ -405,14 +404,14 @@ namespace Protean
                         try
                         {
                             // First we check if free trail
-                            if (Conversions.ToInteger("0" + contentNode.SelectSingleNode("Prices/Price[@type='sale']").InnerText) == 0 & Conversions.ToInteger("0" + contentNode.SelectSingleNode("SubscriptionPrices/Price[@type='sale']").InnerText) == 0)
+                            if (Convert.ToDouble("0" + contentNode.SelectSingleNode("Prices/Price[@type='sale']").InnerText) == 0 & Convert.ToDouble("0" + contentNode.SelectSingleNode("SubscriptionPrices/Price[@type='sale']").InnerText) == 0)
                             {
                                 if (myWeb.mnUserId > 0)
                                 {
                                     if (myWeb.moRequest["subCmd"] == "Subscribe")
                                     {
                                         var oSubs = new Subscriptions(ref myWeb);
-                                        oSubs.AddUserSubscription(myWeb.mnArtId, myWeb.mnUserId);
+                                        oSubs.AddUserSubscription((int)myWeb.mnArtId, myWeb.mnUserId);
 
                                         // Email site owner with new subscription details
                                         // send registration confirmation
@@ -442,7 +441,7 @@ namespace Protean
                                             if (!string.IsNullOrEmpty(recipientEmail))
                                             {
                                                 Cms.dbHelper argodbHelper = null;
-                                                sProcessInfo = Conversions.ToString(oMsg.emailer(EmailContent, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
+                                                sProcessInfo = Convert.ToString(oMsg.emailer(EmailContent, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed"));
                                             }
                                             // send an email to the webadmin
 
@@ -455,7 +454,7 @@ namespace Protean
                                         {
                                             string SubjectLine = "New Trial Subscription";
                                             Cms.dbHelper argodbHelper1 = null;
-                                            sProcessInfo = Conversions.ToString(oMsg.emailer(EmailContent, xsltPath2, "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
+                                            sProcessInfo = Convert.ToString(oMsg.emailer(EmailContent, xsltPath2, "New User", recipientEmail, fromEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed"));
                                         }
                                         // Adding user to group could have added them to a triggered email list.
 

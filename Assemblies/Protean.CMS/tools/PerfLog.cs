@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text;
 using System.Web.Configuration;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.stdTools;
 
 namespace Protean
 {
 
-    public class PerfLog
+    public class PerfLog : IDisposable
     {
 
         public string cSiteName;
@@ -17,22 +17,56 @@ namespace Protean
 
         private bool bLoggingOn;
         private int nStep;
-        //private StringBuilder oBuilder;
         private PerformanceCounter oPerfMonRequests;
-        private string[] Entries;
+        private List<string> Entries;
         private DateTime dLast = DateTime.Now;
         private double nTimeAccumalative = 0d;
         private int nMemLast = 0;
         private int nProcLast = 0;
         private string LatestLog = "";
 
+        // Shared performance counters (singleton pattern for efficiency)
+        private static readonly Lazy<PerformanceCounter> _sharedWorkingSetPrivateMemoryCounter = 
+            new Lazy<PerformanceCounter>(() => 
+            {
+                try
+                {
+                    return new PerformanceCounter("Process", "Working Set - Private", Process.GetCurrentProcess().ProcessName);
+                }
+                catch
+                {
+                    return null;
+                }
+            });
 
-        // Counters
+        private static readonly Lazy<PerformanceCounter> _sharedWorkingSetMemoryCounter = 
+            new Lazy<PerformanceCounter>(() => 
+            {
+                try
+                {
+                    return new PerformanceCounter("Process", "Working Set", Process.GetCurrentProcess().ProcessName);
+                }
+                catch
+                {
+                    return null;
+                }
+            });
+
+        // Instance references to shared counters
         private PerformanceCounter _workingSetPrivateMemoryCounter;
         private PerformanceCounter _workingSetMemoryCounter;
 
+        // Cached SQL insert prefix
+        private static readonly string InsertPrefix = 
+            "INSERT INTO tblPerfMon ( MachineName, Website, SessionID, SessionRequest, Path, [Module], [Procedure], Description, Step, [Time], TimeAccumalative, Requests, PrivateMemorySize64, PrivilegedProcessorTimeMilliseconds) VALUES(";
 
-        private System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
+        // StringBuilder pool for better memory reuse
+        private StringBuilder _stringBuilder;
+
+        // Disposal flag
+        private bool _disposed = false;
+
+        private System.Web.HttpContext moCtx;
 
         // Session / Request Level Properties
         public System.Web.HttpRequest moRequest;
@@ -57,25 +91,16 @@ namespace Protean
             }
         }
 
-        public PerfLog(string SiteName)
+        public PerfLog(string SiteName, System.Web.HttpContext oCtx)
         {
             try
             {
                 cSiteName = SiteName;
-
-                if (moCtx != null)
-                {
-                    moRequest = moCtx.Request;
-                    moResponse = moCtx.Response;
-                    if (moCtx.Session != null)
-                        moSession = moCtx.Session;
-                    moServer = moCtx.Server;
-                }
-
+                moCtx = oCtx;
 
                 if (moSession != null)
                 {
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moSession["Logging"], "On", false)))
+                    if (moSession["Logging"]?.ToString() == "On")
                     {
                         TurnOn();
                     }
@@ -93,39 +118,39 @@ namespace Protean
             {
                 if (!bLoggingOn)
                 {
-                    Entries = new string[1001];
+                    if (moCtx != null)
+                    {
+                        moRequest = moCtx.Request;
+                        moResponse = moCtx.Response;
+                        if (moCtx.Session != null)
+                            moSession = moCtx.Session;
+                        moServer = moCtx.Server;
+                    }
+
+                    Entries = new List<string>(64); // Start with reasonable capacity
+                    _stringBuilder = new StringBuilder(512); // Reusable StringBuilder
                     bLoggingOn = true;
                     nStep = 0;
                     moSession["Logging"] = "On";
-                    try
-                    {
-                    }
-                    // oPerfMonRequests = New System.Diagnostics.PerformanceCounter("ASP.NET v4.0.30319", "Requests Current")
-                    catch (Exception)
-                    {
-                        // do nothing
-                    }
 
-                    string cSessionRequest = Conversions.ToString(moSession["SessionRequest"]);
-                    if (Information.IsNumeric(cSessionRequest))
+                    string cSessionRequest = Convert.ToString(moSession["SessionRequest"]);
+                    if (Tools.Number.IsNumeric(cSessionRequest))
                     {
-                        moSession["SessionRequest"] = Conversions.ToInteger(cSessionRequest) + 1;
-                        dLast = DateTime.Now;
-                        nTimeAccumalative = 0d;
-                        nMemLast = 0;
-                        nProcLast = 0;
+                        moSession["SessionRequest"] = Convert.ToInt16(cSessionRequest) + 1;
                     }
                     else
                     {
                         moSession["SessionRequest"] = 0;
-                        dLast = DateTime.Now;
-                        nTimeAccumalative = 0d;
-                        nMemLast = 0;
-                        nProcLast = 0;
                     }
+                    
+                    dLast = DateTime.Now;
+                    nTimeAccumalative = 0d;
+                    nMemLast = 0;
+                    nProcLast = 0;
 
-                    _workingSetPrivateMemoryCounter = new PerformanceCounter("Process", "Working Set - Private", Process.GetCurrentProcess().ProcessName);
-                    _workingSetMemoryCounter = new PerformanceCounter("Process", "Working Set", Process.GetCurrentProcess().ProcessName);
+                    // Use shared static counters instead of creating new instances
+                    _workingSetPrivateMemoryCounter = _sharedWorkingSetPrivateMemoryCounter.Value;
+                    _workingSetMemoryCounter = _sharedWorkingSetMemoryCounter.Value;
 
                 }
             }
@@ -144,203 +169,212 @@ namespace Protean
         {
             bLoggingOn = false;
             moSession["Logging"] = "Off";
+            Dispose();
         }
 
         public void Log(string cModuleName, string cProcessName, string cDescription = "")
         {
-            // If Not bLoggingOn Then Exit Sub
+            if (!bLoggingOn)
+            {
+                // Still update LatestLog for memory dumps even when not logging
+                LatestLog = $"{cModuleName}-{cProcessName}-{cDescription}";
+                return;
+            }
+
             try
             {
+                var oLN = DateTime.Now - dLast;
+                nTimeAccumalative += oLN.TotalMilliseconds;
 
-                // TS moved to run regardless as this seems to improve peformance if you call these values.
-                if (bLoggingOn)
+                long memoryPrivate = _workingSetPrivateMemoryCounter != null 
+                    ? (long)Math.Round(_workingSetPrivateMemoryCounter.NextValue()) 
+                    : 0L;
+
+                nMemLast = (int)memoryPrivate;
+                nProcLast = Process.GetCurrentProcess().PrivilegedProcessorTime.Milliseconds;
+
+                // Clear and reuse StringBuilder
+                _stringBuilder.Clear();
+                _stringBuilder.Append(InsertPrefix)
+                    .Append('\'').Append(moServer?.MachineName ?? "").Append("','");
+                _stringBuilder.Append(cSiteName).Append("','");
+
+                if (moSession?.SessionID != null)
                 {
-                    var oLN = DateTime.Now - dLast;
-                    nTimeAccumalative += oLN.TotalMilliseconds;
-
-                    long memoryPrivate;
-                    if (_workingSetPrivateMemoryCounter is null)
-                    {
-                        memoryPrivate = 0L;
-                    }
-                    else
-                    {
-                        memoryPrivate = (long)Math.Round(_workingSetPrivateMemoryCounter.NextValue());
-                    }
-
-                    nMemLast = (int)memoryPrivate;
-                    nProcLast = Process.GetCurrentProcess().PrivilegedProcessorTime.Milliseconds;
-
-                    long nMemDif = memoryPrivate - nMemLast;
-                    long nProcDif = Process.GetCurrentProcess().PrivilegedProcessorTime.Milliseconds - nProcLast;
-                    long nMemoryCounterNextVal = default;
-                    if (_workingSetMemoryCounter != null)
-                    {
-                        nMemoryCounterNextVal = (long)Math.Round(_workingSetMemoryCounter.NextValue());
-                    }
-
-                    // If bLoggingOn Then
-
-                    string cEntryFull = "INSERT INTO tblPerfMon" + " ( MachineName, Website, SessionID, SessionRequest, Path, [Module], [Procedure],Description, Step, [Time],TimeAccumalative, Requests, PrivateMemorySize64, PrivilegedProcessorTimeMilliseconds)" + " VALUES(";
-                    cEntryFull += "'";
-                    cEntryFull += moServer.MachineName + "','";
-                    cEntryFull += cSiteName + "','";
-                    if (moSession.SessionID != null)
-                    {
-                        try
-                        {
-                            cEntryFull += moSession.SessionID + "" + "','";
-                            cEntryFull += Conversions.ToString(Operators.ConcatenateObject(moSession["SessionRequest"], "")) + "','";
-                        }
-                        catch (Exception)
-                        {
-                            cEntryFull += "','','";
-                        }
-                    }
-                    else
-                    {
-                        cEntryFull += "','','";
-                    }
-
-                    // If moSession.SessionID Is Nothing Then
-
-                    // Else
-                    // cEntryFull &= CStr(moSession.SessionID & "") & "','"
-                    // cEntryFull &= CStr(moSession("SessionRequest") & "") & "','"
-                    // End If
-                    string cPath = "";
-                    if (System.Web.HttpContext.Current != null)
-                    {
-                        if (System.Web.HttpContext.Current.Request != null)
-                        {
-                            cPath = System.Web.HttpContext.Current.Request["path"];
-                        }
-                    }
-
-                    cEntryFull = Conversions.ToString(cEntryFull + Operators.ConcatenateObject(SqlFmt(cPath), "','"));
-                    cEntryFull = Conversions.ToString(cEntryFull + Operators.ConcatenateObject(SqlFmt(cModuleName), "','"));
-                    cEntryFull += Strings.Left(Conversions.ToString(SqlFmt(cProcessName)), 254) + "','";
-                    cEntryFull += Strings.Left(Conversions.ToString(SqlFmt(cDescription)), 3999) + "',";
-                    cEntryFull += nStep + ",";
-                    cEntryFull += oLN.TotalMilliseconds + ",";
-                    cEntryFull += nTimeAccumalative + ",";
-                    if (oPerfMonRequests is null)
-                    {
-                        cEntryFull += "null,'";
-                    }
-                    else
-                    {
-                        cEntryFull += oPerfMonRequests.RawValue + ",'";
-                    }
-
-                    cEntryFull += nMemLast + "','";
-                    if (_workingSetMemoryCounter is null)
-                    {
-                        cEntryFull += "";
-                    }
-                    else
-                    {
-                        cEntryFull += ((long)Math.Round(_workingSetMemoryCounter.NextValue())).ToString();
-                    }
-                    // cEntryFull &= Process.GetCurrentProcess.PrivateMemorySize64 & "','"
-                    // cEntryFull &= Process.GetCurrentProcess.WorkingSet64
-                    cEntryFull += "')";
-                    nStep += 1;
-
-                    if (nStep > 128)
-                    {
-                        //string test = "text";
-                    }
-
-                    // ReDim Preserve Entries(nStep)
-                    Entries[nStep - 1] = cEntryFull;
-
-                    // nMemLast = Process.GetCurrentProcess.PrivateMemorySize64
-                    // nProcLast = Process.GetCurrentProcess.PrivilegedProcessorTime.Milliseconds
-                    dLast = DateTime.Now;
+                    _stringBuilder.Append(moSession.SessionID).Append("','");
+                    _stringBuilder.Append(moSession["SessionRequest"]?.ToString() ?? "").Append("','");
                 }
-
-                // Else
-
-                // Dim nMemDif As Long = Process.GetCurrentProcess.WorkingSet64
-                // Dim nMemTotal As Long = Process.GetCurrentProcess.PrivateMemorySize64
                 else
                 {
-                    // TS this is to be viewed in a memory dump to see how far the CMS object has proceeded.
-                    LatestLog = cModuleName + "-" + cProcessName + "-" + cDescription;
+                    _stringBuilder.Append("','").Append("','");
                 }
+
+                string cPath = moCtx?.Request?["Path"] ?? "";
+
+                _stringBuilder.Append(SqlFmt(cPath)).Append("','");
+                _stringBuilder.Append(SqlFmt(cModuleName)).Append("','");
+                _stringBuilder.Append(TruncateSqlFmt(cProcessName, 254)).Append("','");
+                _stringBuilder.Append(TruncateSqlFmt(cDescription, 3999)).Append("',");
+                _stringBuilder.Append(nStep).Append(',');
+                _stringBuilder.Append(oLN.TotalMilliseconds).Append(',');
+                _stringBuilder.Append(nTimeAccumalative).Append(',');
+                _stringBuilder.Append(oPerfMonRequests?.RawValue.ToString() ?? "null").Append(",'");
+                _stringBuilder.Append(nMemLast).Append("','");
+                
+                if (_workingSetMemoryCounter != null)
+                {
+                    _stringBuilder.Append(((long)Math.Round(_workingSetMemoryCounter.NextValue())).ToString());
+                }
+                
+                _stringBuilder.Append("')");
+
+                Entries.Add(_stringBuilder.ToString());
+                nStep++;
+                dLast = DateTime.Now;
             }
             catch (Exception ex)
             {
-                Debug.WriteLine(ex.ToString());
+                Debug.WriteLine($"PerfLog.Log Error: {ex}");
             }
+        }
+
+        /// <summary>
+        /// Helper method to truncate SqlFmt results efficiently
+        /// </summary>
+        private static string TruncateSqlFmt(string value, int maxLength)
+        {
+            string formatted = SqlFmt(value).ToString();
+            return formatted.Length <= maxLength ? formatted : formatted.Substring(0, maxLength);
         }
 
         public void Write()
         {
-            // If Not bLoggingOn Then Exit Sub
+            if (!bLoggingOn || Entries == null || Entries.Count == 0) return;
+            
             string cProcessInfo = null;
+            
             try
             {
-                if (bLoggingOn)
+                string ConStr = BuildConnectionString();
+                
+                using (var oCon = new System.Data.SqlClient.SqlConnection(ConStr))
+                using (var oCmd = oCon.CreateCommand())
                 {
-                    string ConStr = ""; // moConfig("PerfMonConnection")
-                    if (string.IsNullOrEmpty(ConStr))
-                    {
-                        string dbAuth;
-                        if (!string.IsNullOrEmpty(moConfig["DatabasePassword"]))
-                        {
-                            dbAuth = "user id=" + moConfig["DatabaseUsername"] + "; password=" + moConfig["DatabasePassword"];
-                        }
-                        else if (!string.IsNullOrEmpty(moConfig["DatabaseAuth"]))
-                        {
-                            dbAuth = moConfig["DatabaseAuth"];
-                        }
-                        else
-                        {
-                            dbAuth = "Integrated Security=SSPI;";
-                        }
-                        ConStr = "Data Source=" + moConfig["DatabaseServer"] + "; " + "Initial Catalog=" + moConfig["DatabaseName"] + "; " + dbAuth;
-                    }
-                    var oCon = new System.Data.SqlClient.SqlConnection(ConStr);
-                    var oCmd = new System.Data.SqlClient.SqlCommand();
-                    oCmd.Connection = oCon;
                     oCon.Open();
-                    int i;
-                    var loopTo = Information.UBound(Entries);
-                    for (i = 0; i <= loopTo; i++)
+                    
+                    // Batch inserts in groups to avoid SQL Server command limits
+                    const int batchSize = 100;
+                    var validEntries = Entries.Where(e => !string.IsNullOrEmpty(e)).ToList();
+                    
+                    for (int i = 0; i < validEntries.Count; i += batchSize)
                     {
-                        if (!string.IsNullOrEmpty(Entries[i]))
+                        var batch = validEntries.Skip(i).Take(batchSize);
+                        var batchSql = string.Join(";", batch);
+                        
+                        cProcessInfo = $"Batch {i / batchSize + 1}";
+                        oCmd.CommandText = batchSql;
+                        oCmd.CommandTimeout = 30; // Explicit timeout
+                        
+                        try
                         {
-                            cProcessInfo = Entries[i];
-                            oCmd.CommandText = Entries[i];
-                            try
-                            {
-                                oCmd.ExecuteNonQuery();
-                            }
-                            catch (Exception)
-                            {
-                                cProcessInfo = oCmd.CommandText;
-                            }
+                            oCmd.ExecuteNonQuery();
+                        }
+                        catch (Exception batchEx)
+                        {
+                            Debug.WriteLine($"PerfLog batch insert failed: {cProcessInfo} - {batchEx}");
+                            // Continue with next batch even if this one fails
                         }
                     }
-                    oCmd.Dispose();
-                    oCon.Close();
-                    oCon.Dispose();
-                    oCon = null;
-                    bLoggingOn = false;
                 }
+                
+                bLoggingOn = false;
             }
             catch (Exception ex)
             {
-
-                Debug.WriteLine(cProcessInfo + " - errormsg - " + ex.ToString());
+                Debug.WriteLine($"PerfLog.Write Error: {cProcessInfo} - {ex}");
             }
             finally
             {
+                // Clear entries to free memory
+                Entries?.Clear();
                 Entries = null;
+                _stringBuilder = null;
             }
         }
+
+        /// <summary>
+        /// Builds the database connection string from config
+        /// </summary>
+        private string BuildConnectionString()
+        {
+            string ConStr = moConfig?["PerfMonConnection"];
+            if (string.IsNullOrEmpty(ConStr))
+            {
+                string dbAuth = !string.IsNullOrEmpty(moConfig?["DatabasePassword"])
+                    ? $"user id={moConfig["DatabaseUsername"]}; password={moConfig["DatabasePassword"]}"
+                    : moConfig?["DatabaseAuth"] ?? "Integrated Security=SSPI;";
+                
+                ConStr = $"Data Source={moConfig["DatabaseServer"]}; Initial Catalog={moConfig["DatabaseName"]}; {dbAuth}";
+            }
+            return ConStr;
+        }
+
+        #region IDisposable Support
+        
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    try
+                    {
+                        // Dispose non-shared Performance Counters only
+                        if (oPerfMonRequests != null)
+                        {
+                            oPerfMonRequests.Dispose();
+                            oPerfMonRequests = null;
+                        }
+                        
+                        // DO NOT dispose shared static counters - they are reused across requests
+                        // Just null out the references
+                        _workingSetPrivateMemoryCounter = null;
+                        _workingSetMemoryCounter = null;
+                        
+                        // Clear list (faster than array clearing)
+                        if (Entries != null)
+                        {
+                            Entries.Clear();
+                            Entries = null;
+                        }
+                        
+                        // Clear StringBuilder
+                        if (_stringBuilder != null)
+                        {
+                            _stringBuilder.Clear();
+                            _stringBuilder = null;
+                        }
+                        
+                        // Clear string to help GC
+                        LatestLog = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Error disposing PerfLog: {ex}");
+                    }
+                }
+                
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+        
+        #endregion
 
     }
 }

@@ -11,7 +11,6 @@ using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using Alphaleonis.Win32.Network;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json.Linq;
 using static Protean.Cms;
 using static Protean.stdTools;
@@ -103,7 +102,7 @@ namespace Protean
                             {
                                 ObjId = inputJson["objId"].ToObject<string>();
                             }
-                            result = myWeb.moDbHelper.DeleteObject((Cms.dbHelper.objectTypes)Conversions.ToInteger(ObjType), Conversions.ToLong(ObjId), false);
+                            result = myWeb.moDbHelper.DeleteObject((Cms.dbHelper.objectTypes)Convert.ToInt16(ObjType), Convert.ToInt64(ObjId), false);
 
                         }
                         return "[{\"Key\":\"" + ObjId + "\",\"Value\":\"" + result + "\"}]";
@@ -127,7 +126,7 @@ namespace Protean
 
                             object sSql = myApi.moConfig[myApi.moRequest["query"]];
 
-                            var result = myWeb.moDbHelper.GetDataValue(Conversions.ToString(sSql), CommandType.StoredProcedure);
+                            var result = myWeb.moDbHelper.GetDataValue(Convert.ToString(sSql), CommandType.StoredProcedure);
                             count = result is null ? "" : Convert.ToString(result);
 
                         }
@@ -451,8 +450,8 @@ namespace Protean
                     {
                         if (myApi.mbAdminMode)
                         {
-                            int argpageId = Conversions.ToInteger(pageId);
-                            JsonResult = Conversions.ToString(moAdminRedirect.IsParentPage(ref argpageId));
+                            int argpageId = Convert.ToInt16(pageId);
+                            JsonResult = Convert.ToString(moAdminRedirect.IsParentPage(ref argpageId));
                             pageId = argpageId.ToString();
                         }
                         return JsonResult;
@@ -512,7 +511,7 @@ namespace Protean
                     {
                         if (myApi.mbAdminMode)
                         {
-                            JsonResult = moAdminRedirect.RedirectPage(ref redirectType, ref oldUrl, ref newUrl, ref hiddenOldUrl, Conversions.ToBoolean(isParentPage), sType, Conversions.ToInteger(pageId));
+                            JsonResult = moAdminRedirect.RedirectPage(ref redirectType, ref oldUrl, ref newUrl, ref hiddenOldUrl, Convert.ToBoolean(isParentPage), sType, Convert.ToInt16(pageId));
                         }
 
                         return JsonResult;
@@ -594,7 +593,7 @@ namespace Protean
                 {
                     try
                     {
-                        return Conversions.ToString(moCtx.Session["ExistsFileName"]);
+                        return Convert.ToString(moCtx.Session["ExistsFileName"]);
                     }
                     catch
                     {
@@ -726,7 +725,7 @@ namespace Protean
                     {
                         if (myApi.mbAdminMode)
                         {
-                            JsonResult = myWeb.moDbHelper.CreateLibraryImages(Conversions.ToInteger(nContentId), cRelatedLibraryImages, cSkipAttribute, "LibraryImage");
+                            JsonResult = myWeb.moDbHelper.CreateLibraryImages(Convert.ToInt16(nContentId), cRelatedLibraryImages, cSkipAttribute, "LibraryImage");
                         }
 
                         return JsonResult;

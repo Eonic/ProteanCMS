@@ -882,8 +882,7 @@ section.stretchBG {
     background: $light;
     color: $body-color;
     margin-bottom: 0;
-   // height: calc(100% - ($grid-gutter-height / 2));
-   height:100%;
+    height: calc(100% - ($grid-gutter-height / 2));
 
     .btn-custom {
         @extend .#{$btn-list-style};

@@ -1,0 +1,141 @@
+﻿            public XmlElement GetContentDetailXml(long nArtId = 0L, Boolean noFilter = false)
+            {
+                PerfMonLog("Web", "GetContentDetailXml");
+                XmlElement oRoot;
+                XmlElement oElmt = null;
+                //XmlElement retElmt = null;
+                string sContent;
+                string sSql;
+                string sProcessInfo = "GetContentDetailXml";
+                var oDs = new DataSet();
+                string sFilterSql = "";
+                bool bLoadAsXml;
+                XmlComment oComment;
+
+                try
+                {
+
+                    // If requested, we need to make sure that the content we are looking for doesn't belong to a page
+                    // that the user is not allowed to access.
+                    // We can review the current menu structure xml instead of calling the super slow permissions functions.
+
+                    if (nArtId > 0L)
+                    {
+                        sProcessInfo = "loading content" + nArtId;
+                        if (noFilter == false)
+                        {
+                            sFilterSql += GetStandardFilterSQLForContent();
+                        }
+                        oRoot = moPageXml.CreateElement("ContentDetail");
+                        sSql = "select c.nContentKey as id, cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], a.nInsertDirId as owner, a.nStatus as status from tblContent c ";
+                        sSql += "inner join tblAudit a on c.nAuditId = a.nAuditKey  ";
+                        // sSql &= "inner join tblContentLocation CL on c.nContentKey = CL.nContentId "
+                        sSql += "where c.nContentKey = " + nArtId + sFilterSql + " ";
+                        // sSql &= "and CL.nStructId = " & mnPageId
+
+                        oDs = GetDataSet(sSql, "Content", "ContentDetail");
+
+                        oDs.Tables[0].Columns["id"].ColumnMapping = MappingType.Attribute;
+                        oDs.Tables[0].Columns["ref"].ColumnMapping = MappingType.Attribute;
+                        oDs.Tables[0].Columns["name"].ColumnMapping = MappingType.Attribute;
+                        oDs.Tables[0].Columns["type"].ColumnMapping = MappingType.Attribute;
+                        oDs.Tables[0].Columns["publish"].ColumnMapping = MappingType.Attribute;
+                        oDs.Tables[0].Columns["expire"].ColumnMapping = MappingType.Attribute;
+                        oDs.Tables[0].Columns["update"].ColumnMapping = MappingType.Attribute;
+                        oDs.Tables[0].Columns["parId"].ColumnMapping = MappingType.Attribute;
+                        oDs.Tables[0].Columns["owner"].ColumnMapping = MappingType.Attribute;
+                        oDs.Tables[0].Columns["status"].ColumnMapping = MappingType.Attribute;
+                        oDs.Tables[0].Columns["content"].ColumnMapping = MappingType.SimpleContent;
+
+                        // Need to check the content is found on the current page.
+
+
+                        if (oDs.Tables[0].Rows.Count > 0)
+                        {
+
+                            oRoot.InnerXml = Strings.Replace(oDs.GetXml(), "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+                            foreach (XmlNode oNode in oRoot.SelectNodes("/ContentDetail/Content"))
+                            {
+                                oElmt = (XmlElement)oNode;
+                                sContent = oElmt.InnerText;
+
+                                // Try to convert the InnerText to InnerXml
+                                // Also if the innerxml has Content as a first node, then get the innerxml of the content node.
+                                try
+                                {
+                                    oElmt.InnerXml = sContent;
+                                    bLoadAsXml = true;
+                                }
+
+                                catch (Exception)
+                                {
+                                    // If the load failed, then flag it in the Content node and return the InnerText as a Comment
+                                    oComment = oRoot.OwnerDocument.CreateComment(oElmt.InnerText);
+                                    oElmt.SetAttribute("xmlerror", "getContentBriefXml");
+                                    oElmt.InnerXml = "";
+                                    oElmt.AppendChild(oComment);
+                                    oComment = null;
+                                    bLoadAsXml = false;
+                                }
+
+                                if (bLoadAsXml)
+                                {
+
+                                    // Successfully converted to XML.
+                                    // Now check if the node imported is a Content node - if so get rid of the Content node
+                                    var oFirst = firstElement(ref oElmt);
+                                    // NB 19-02-2010 Added to stop unsupported types falling over
+                                    if (oFirst != null)
+                                    {
+                                        if (oFirst.LocalName == "Content")
+                                        {
+                                            foreach (XmlAttribute oAttr in oElmt.SelectNodes("Content/@*"))
+                                            {
+                                                if (string.IsNullOrEmpty(oElmt.GetAttribute(oAttr.Name)))
+                                                {
+                                                    oElmt.SetAttribute(oAttr.Name, oAttr.InnerText);
+                                                }
+                                            }
+
+                                            oElmt.InnerXml = oFirst.InnerXml;
+                                        }
+                                    }
+
+                                    // addRelatedContent(oNode, nArtId, False)
+
+                                }
+
+                            }
+
+                            return oElmt;
+                        }
+
+                        else
+                        {
+                            // Just a page no detail requested
+                            return null;
+                        }
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+
+                catch (Exception ex)
+                {
+                    // returnException(myWeb.msException, mcModuleName, "getContentDetailXml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentDetailXml", ex, sProcessInfo));
+                    return null;
+                }
+
+            }
+
+            /// <summary>
+            /// Gets content detail XML with version control support.
+            /// If nVersionId is greater than 0, retrieves the specific version using GetVersionInstance.
+            /// </summary>
+            /// <param name="nArtId">The content/article ID</param>
+            /// <param name="nVersionId">The version ID to retrieve (0 for current/live version)</param>
+            /// <param name="bIgnoreContentStatus">If true, bypasses content status filtering</param>
+            /// <returns>XmlElement containing the content detail</returns>

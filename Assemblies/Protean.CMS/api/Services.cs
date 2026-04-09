@@ -9,8 +9,6 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Services;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Lucene.Net.Documents.Field;
 using static Protean.stdTools;
 using static QRCoder.PayloadGenerator;
@@ -20,7 +18,7 @@ namespace Protean
 
     [WebService(Namespace = "http://www.eonic.co.uk/ewcommon/Services")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
-    [DesignerGenerated()]
+    //[DesignerGenerated()]
     public class Services : WebService
     {
         #region Declarations
@@ -124,7 +122,7 @@ namespace Protean
                 System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 string SoapIps = moConfig["SoapIps"];
 
-                if (Strings.LCase(moConfig["Debug"]) == "on")
+                if ((moConfig["Debug"]).ToLower() == "on")
                 {
                     SoapIps = SoapIps + ",127.0.0.1,::1,";
                 }
@@ -177,7 +175,7 @@ namespace Protean
             catch (Exception ex)
             {
                 AddResponse(ex.ToString());
-                return Conversions.ToString(false);
+                return Convert.ToString(false);
             }
 
             return default;
@@ -244,8 +242,8 @@ namespace Protean
                     // using multiple addresses here
                     if (recipientEmail.Contains(cSeperator))
                     {
-                        string[] oTos = Strings.Split(recipientEmail, cSeperator);
-                        string[] oModes = Strings.Split(Mode, cSeperator);
+                        string[] oTos = (recipientEmail ?? "").Split('/');
+                        string[] oModes = (Mode ?? "").Split('/');
                         int i;
                         var loopTo = oTos.Length - 1;
                         for (i = 0; i <= loopTo; i++)
@@ -289,7 +287,7 @@ namespace Protean
                 var myWeb = new Cms(moCtx);
                 var oMsg = new Messaging(ref myWeb.msException);
                 Cms.dbHelper odbhelper = null;
-                sMessage = Conversions.ToString(oMsg.emailerWithXmlAttachment(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, attachmentFromXSLPath, attachmentFromXSLType, attachmentName, ref odbhelper, "Message Sent", "Message Failed", recipientEmail, ccRecipient, bccRecipient, cSeperator));
+                sMessage = Convert.ToString(oMsg.emailerWithXmlAttachment(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, attachmentFromXSLPath, attachmentFromXSLType, attachmentName, ref odbhelper, "Message Sent", "Message Failed", recipientEmail, ccRecipient, bccRecipient, cSeperator));
                 return sMessage;
             }
             catch (Exception ex)
@@ -309,7 +307,7 @@ namespace Protean
                 var myWeb = new Cms(moCtx);
                 var oMsg = new Messaging(ref myWeb.msException);
 
-                sMessage = Conversions.ToString(oMsg.emailerMultiUsers(oBodyXML, xsltPath, fromName, fromEmail, recipientIds, SubjectLine));
+                sMessage = Convert.ToString(oMsg.emailerMultiUsers(oBodyXML, xsltPath, fromName, fromEmail, recipientIds, SubjectLine));
 
                 return sMessage;
             }
@@ -346,7 +344,7 @@ namespace Protean
                     }
                 }
                 Cms.dbHelper odbhelper = null;
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                sMessage = Convert.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
                 return sMessage;
             }
 
@@ -369,7 +367,7 @@ namespace Protean
 
                 oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend);
                 Cms.dbHelper odbhelper = null;
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                sMessage = Convert.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
                 oMsg.deleteAttachment(cAttachmentFilePath);
                 return sMessage;
             }
@@ -399,7 +397,7 @@ namespace Protean
                     oMsg.addAttachment(arrayItem, bDeleteAfterSend);
                 }
                 Cms.dbHelper odbhelper = null;
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                sMessage = Convert.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
                 // deleting physical files given full path
                 foreach (var currentArrayItem1 in strFilePath)
                 {
@@ -428,7 +426,7 @@ namespace Protean
                 // oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend)
                 // oMsg.deleteAttachment(cAttachmentFilePath)
                 string FileName = cAttachmentFilePath.Substring(cAttachmentFilePath.LastIndexOf("/") + 1);
-                FTPFolder = FTPFolder.Trim('/') + "/" + Strings.Replace(fromName, " ", "-");
+                FTPFolder = FTPFolder.Trim('/') + "/" + (fromName ?? "").Replace(" ", "-");
 
                 // Dim miUri As String = "ftp://" & FTPServer & "/" & FTPFolder & "/" & Replace(fromName, " ", "-") & "/" & FileName
                 // Dim miRequest As Net.FtpWebRequest = Net.WebRequest.Create(miUri)
@@ -463,7 +461,7 @@ namespace Protean
                     oBodyXML.SetAttribute("error", "FTP Failed: " + ex.Message);
                 }
                 Cms.dbHelper odbhelper = null;
-                sMessage = Conversions.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
+                sMessage = Convert.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
 
                 return sMessage;
             }
@@ -515,7 +513,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
             }
             return oRXML;
         }
@@ -531,8 +529,8 @@ namespace Protean
 
                 var oIndexer = new IndexerAsync(ref myWeb);
 
-                bool argbResult = Conversions.ToBoolean(0);
-                sResult = oIndexer.DoIndex(ref argbResult, Conversions.ToInteger(bResult));
+                bool argbResult = Convert.ToBoolean(0);
+                sResult = oIndexer.DoIndex(ref argbResult, Convert.ToInt16(bResult));
 
                 string cSubResponse = oIndexer.cExError;
                 if (string.IsNullOrEmpty(cSubResponse))
@@ -589,7 +587,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
             }
             return oRXML;
         }
@@ -616,7 +614,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
             }
 
             HttpContext.Current.ApplicationInstance.CompleteRequest();
@@ -656,7 +654,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
             }
             return oRXML;
         }
@@ -695,7 +693,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
             }
             return oRXML;
         }
@@ -724,7 +722,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
             }
             return oRXML;
         }
@@ -758,7 +756,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
             }
             return oRXML;
         }
@@ -790,7 +788,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
             }
             return oRXML;
         }
@@ -823,14 +821,14 @@ namespace Protean
                             var oMsg = new Messaging(ref myWeb.msException);
 
                             string cEmail = oVConfig["notificationEmail"];
-                            string cXSLPath = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty("" + oVConfig["notificationXsl"]), "/ewcommon/xsl/Email/pendingcontentNotification.xsl", oVConfig["notificationXsl"]));
+                            string cXSLPath = string.IsNullOrEmpty(oVConfig["notificationXsl"]?.ToString()) ? "/ewcommon/xsl/Email/pendingcontentNotification.xsl" : oVConfig["notificationXsl"].ToString();
                             string cWebmasterEmail = oVConfig["notificationEmailSender"];
                             if (string.IsNullOrEmpty(cWebmasterEmail))
                                 cWebmasterEmail = myWeb.moConfig["SiteAdminEmail"];
                             string SenderName = myWeb.moConfig["SiteName"] + " Notification";
 
                             Cms.dbHelper odbhelper = null;
-                            string cMessage = Conversions.ToString(oMsg.emailer(oResponse, cXSLPath, SenderName, cWebmasterEmail, cEmail, "", ref odbhelper, "Message Sent", "Message Failed", "", "", "", ""));
+                            string cMessage = Convert.ToString(oMsg.emailer(oResponse, cXSLPath, SenderName, cWebmasterEmail, cEmail, "", ref odbhelper, "Message Sent", "Message Failed", "", "", "", ""));
                             AddResponse(cMessage);
                         }
                         bResult = true;
@@ -852,7 +850,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
                 myWeb.Close();
                 myWeb = null;
             }
@@ -899,7 +897,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
                 myWeb.Close();
                 myWeb = null;
             }
@@ -948,7 +946,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
                 myWeb.Close();
                 myWeb = null;
             }
@@ -988,7 +986,10 @@ namespace Protean
                         if (oDr.HasRows)
                         {
                             while (oDr.Read())
-                                sResult = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oDr[1], "."), oDr[2]), "."), oDr[3]), "."), oDr[4]));
+                            {
+                                sResult = string.Join(".", oDr[1]?.ToString() ?? "", oDr[2]?.ToString() ?? "", oDr[3]?.ToString() ?? "", oDr[4]?.ToString() ?? "");
+                            }
+
                         }
                         else
                         {
@@ -1021,11 +1022,11 @@ namespace Protean
 
                 // Start LocalOrCommonBin
                 oElmt = oRXML.CreateElement("LocalOrCommonBin");
-                if (!string.IsNullOrEmpty(FileSystem.Dir(Server.MapPath("../default.ashx"))))
+                if (System.IO.File.Exists(Server.MapPath("../default.ashx")))
                 {
                     oElmt.InnerText = "Local";
                 }
-                else if (!string.IsNullOrEmpty(FileSystem.Dir(Server.MapPath("../ewcommon/default.ashx"))))
+                else if (System.IO.File.Exists(Server.MapPath("../ewcommon/default.ashx")))
                 {
                     oElmt.InnerText = "Common";
                 }
@@ -1112,7 +1113,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
                 myWeb.Close();
                 myWeb = null;
             }
@@ -1126,7 +1127,7 @@ namespace Protean
 
             // We should be checking users permissions here.
 
-            xmlEle = myWeb.GetContentDetailXml(null, nContentKey, false);
+            xmlEle = myWeb.BuildPageContentDetailXml(null, nContentKey, false);
 
 
             return xmlEle;
@@ -1218,7 +1219,7 @@ namespace Protean
             }
             finally
             {
-                oResponseElmt.SetAttribute("bResult", Conversions.ToString(bResult));
+                oResponseElmt.SetAttribute("bResult", Convert.ToString(bResult));
             }
 
             HttpContext.Current.ApplicationInstance.CompleteRequest();

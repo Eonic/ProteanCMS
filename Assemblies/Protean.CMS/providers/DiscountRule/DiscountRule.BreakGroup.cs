@@ -1,6 +1,4 @@
 ﻿using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Providers.Authentication;
@@ -111,9 +109,9 @@ namespace Protean.Providers
                             }
 
                             // Minimum quantities or price for discount
-                            int minQuantity = Information.IsNumeric(oDiscount.GetAttribute("nDiscountMinQuantity"))
+                            int minQuantity = Tools.Number.IsNumeric(oDiscount.GetAttribute("nDiscountMinQuantity"))
                                               ? Convert.ToInt32(oDiscount.GetAttribute("nDiscountMinQuantity")) : 0;
-                            decimal minPrice = Information.IsNumeric(oDiscount.GetAttribute("nDiscountMinPrice"))
+                            decimal minPrice = Tools.Number.IsNumeric(oDiscount.GetAttribute("nDiscountMinPrice"))
                                                ? Convert.ToDecimal(oDiscount.GetAttribute("nDiscountMinPrice")) : 0;
 
                             if ((minQuantity > 0 && totalQuantity >= minQuantity) || (minPrice > 0 && totalValue >= minPrice))
@@ -139,7 +137,7 @@ namespace Protean.Providers
 
                                         if (counter < itemsToDiscount)
                                         {
-                                            if (Conversions.ToDouble(oDiscount.GetAttribute("bDiscountIsPercent")) == 1d)
+                                            if (Convert.ToDouble(oDiscount.GetAttribute("bDiscountIsPercent")) == 1d)
                                             {
                                                 discountedUnitPrice = priceRound(originalUnitPrice * (100 - Convert.ToDecimal(oDiscount.GetAttribute("nDiscountValue"))) / 100m, bForceRoundup: mbRoundUp);
                                             }

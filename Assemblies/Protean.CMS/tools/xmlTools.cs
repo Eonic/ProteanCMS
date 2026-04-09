@@ -9,8 +9,6 @@ using System.Web;
 
 using System.Xml;
 using System.Xml.XPath;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 
 
 namespace Protean
@@ -58,8 +56,8 @@ namespace Protean
         public static string removeTagFromXml(string xmlString, string tagNames)
         {
 
-            tagNames = Strings.Replace(tagNames, " ", "");
-            tagNames = Strings.Replace(tagNames, ",", "|");
+            tagNames = tagNames.Replace(" ", "");
+            tagNames = tagNames.Replace( ",", "|");
 
             xmlString = Regex.Replace(xmlString, "<[/]?(" + tagNames + @":\w+)[^>]*?>", "", RegexOptions.IgnoreCase);
 

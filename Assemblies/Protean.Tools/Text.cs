@@ -20,6 +20,80 @@ namespace Protean.Tools
             UnambiguousCharacters = 64
         }
 
+
+        public static bool IsDate(object value)
+        {
+            if (value == null) return false;
+            return DateTime.TryParse(Convert.ToString(value), out _);
+        }
+
+
+        public static string DateDiff(string date1String, string date2String, string datePart)
+        {
+            string nDiff = "";
+            try
+            {
+                string[] ValidDatePart = new[] { "d", "y", "h", "n", "m", "q", "s", "w", "ww", "yyyy" };
+                if (Tools.Text.IsDate(date1String) && Tools.Text.IsDate(date2String) && Array.IndexOf(ValidDatePart, datePart) > ValidDatePart.GetLowerBound(0) - 1)
+                {
+                    DateTime d1 = Convert.ToDateTime(date1String);
+                    DateTime d2 = Convert.ToDateTime(date2String);
+                    long diff = 0;
+
+                    switch ((datePart ?? "").ToLowerInvariant())
+                    {
+                        case "d":
+                            diff = (long)(d2.Date - d1.Date).TotalDays;
+                            break;
+
+                        case "h":
+                            diff = (long)(d2 - d1).TotalHours;
+                            break;
+
+                        case "n": // minutes (VB uses "n")
+                            diff = (long)(d2 - d1).TotalMinutes;
+                            break;
+
+                        case "s":
+                            diff = (long)(d2 - d1).TotalSeconds;
+                            break;
+
+                        case "m": // months
+                            diff = (d2.Year - d1.Year) * 12L + (d2.Month - d1.Month);
+                            break;
+
+                        case "q": // quarters
+                            {
+                                long months = (d2.Year - d1.Year) * 12L + (d2.Month - d1.Month);
+                                diff = months / 3L;
+                                break;
+                            }
+
+                        case "w":
+                        case "ww": // treat both as weeks
+                            diff = (long)((d2.Date - d1.Date).TotalDays / 7.0);
+                            break;
+
+                        case "y":
+                        case "yyyy": // years (VB DateDiff "yyyy" is year-component difference)
+                            diff = d2.Year - d1.Year;
+                            break;
+
+                        default:
+                            diff = (long)(d2.Date - d1.Date).TotalDays;
+                            break;
+                    }
+
+                    nDiff = diff.ToString();
+                }
+                return nDiff;
+            }
+            catch (Exception)
+            {
+                return nDiff;
+            }
+        }
+
         public static long ToUnixTime(this DateTime date)
         {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -31,6 +105,7 @@ namespace Protean.Tools
         {
             return date.ToString("ddd") + ", " + date.ToString("dd MM yyyy HH:mm:ss") + " GMT";
         }
+
 
 
         public static string MaskString(string cInitialString, string cMaskchar = "*", bool bKeepSpaces = false, int nNoCharsToLeave = 4)

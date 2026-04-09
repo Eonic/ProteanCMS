@@ -89,6 +89,8 @@
   <xsl:variable name="boxpad" select="'15'"/>
   <xsl:variable name="colpad" select="'20'"/>
   <xsl:variable name="jqueryVer" select="'1.11'"/>
+  <xsl:variable name="jqueryUIVer" select="'1.11.1'"/>
+  <xsl:variable name="bsVer" select="'3'"/>
   <!-- Dates -->
   <xsl:variable name="today" select="/Page/Request/ServerVariables/Item[@name='Date']/node()"/>
   <xsl:variable name="currentYear" select="substring($today,1,4)"/>
@@ -882,8 +884,16 @@
         <xsl:text>~/ewcommon/js/jquery/jquery-migrate-1.2.1.min.js,</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>~/ewcommon/js/jquery/ui/1.11.1/jquery-ui.min.js,</xsl:text>
-    <xsl:text>~/ewcommon/bs3/js/bootstrap.js,</xsl:text>
+	  <xsl:choose>
+		  <xsl:when test="$jqueryUIVer='1.13.2'">
+			  <xsl:text>~/ewcommon/js/jquery/ui/1.13.2/jquery-ui.min.js,</xsl:text>
+		  </xsl:when>
+			  <xsl:otherwise>
+                <xsl:text>~/ewcommon/js/jquery/ui/1.11.1/jquery-ui.min.js,</xsl:text>
+			  </xsl:otherwise>
+		  </xsl:choose>
+    <xsl:text>~/ewcommon/bs</xsl:text><xsl:value-of select="$bsVer"/>
+	  <xsl:text>/js/bootstrap.js,</xsl:text>
     <xsl:text>~/ewcommon/js/jquery/colorpickersliders/tinycolor.js,</xsl:text>
     <xsl:text>~/ewcommon/js/jquery/colorpickersliders/bootstrap.colorpickersliders.min.js,</xsl:text>
     <xsl:text>~/ewcommon/js/jquery/jquery.matchHeight.js,</xsl:text>

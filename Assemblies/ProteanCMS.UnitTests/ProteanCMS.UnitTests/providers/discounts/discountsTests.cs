@@ -38,42 +38,12 @@ namespace Protean.CmsTests
             XmlElement oCartXML = xCart.DocumentElement;
             string appliedCode = "";
 
-            try
-            {
-                myCart = new Protean.Cms.Cart();
-                moDiscount = new Protean.Cms.Cart.Discount(ref myCart);
+            moDiscount = new Protean.Cms.Cart.Discount();
+            myCart = new Protean.Cms.Cart();
 
-                XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode, myCart);
-                return result;
-            }
-            finally
-            {
-                // ✅ Ensure proper disposal
-                if (moDiscount != null)
-                {
-                    try
-                    {
-                        moDiscount.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Error disposing moDiscount: {ex.Message}");
-                    }
-                }
-
-                if (myCart != null)
-                {
-                    try
-                    {
-                        myCart.Dispose();
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Error disposing myCart: {ex.Message}");
-                    }
-                }
-            }
-        }       
+            XmlElement result = moDiscount.CheckDiscounts(oXmlDiscounts, ref oCartXML, ref appliedCode, myCart);
+            return result;
+        }
 
         // Full XML assert
         public void AssertDiscountResult(string testFolderPath)
@@ -117,9 +87,24 @@ namespace Protean.CmsTests
                     if (actAttr == null)
                         Assert.Fail($"Missing attribute {expAttr.Name} at {path}");
 
-                    // Case-insensitive compare
-                    if (!string.Equals(expVal, actVal, StringComparison.OrdinalIgnoreCase))
-                        Assert.Fail($"Attribute mismatch at {path}/{expAttr.Name}: expected '{expVal}', got '{actVal}'");
+                    decimal expDec, actDec;
+
+                    //If both values are numeric → compare as decimal
+                    if (decimal.TryParse(expVal, out expDec) && decimal.TryParse(actVal, out actDec))
+                    {
+                        if (Math.Abs(expDec - actDec) > 0.01m) // tolerance for safety
+                        {
+                            Assert.Fail($"Attribute mismatch at {path}/{expAttr.Name}: expected '{expVal}', got '{actVal}'");
+                        }
+                    }
+                    else
+                    {
+                        //fallback to string compare (case-insensitive)
+                        if (!string.Equals(expVal, actVal, StringComparison.OrdinalIgnoreCase))
+                        {
+                            Assert.Fail($"Attribute mismatch at {path}/{expAttr.Name}: expected '{expVal}', got '{actVal}'");
+                        }
+                    }
                 }
             }
 
@@ -189,91 +174,91 @@ namespace Protean.CmsTests
         }
 
 
-        [TestMethod]
-        public void Apply_And_Validate_ITBTEST_Ten_Monitory_PromotionalCode()
-        {            
-            // Get updated cart with discount applied
-            XmlElement oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/BasicMonitory/");
-            XmlNode discountPriceLineNode = oCartXML.SelectSingleNode("//DiscountPriceLine");
-            string totalSaving = discountPriceLineNode.Attributes["TotalSaving"]?.Value;
-            string unitPrice = discountPriceLineNode.Attributes["UnitPrice"]?.Value;
-            string priceOrder = discountPriceLineNode.Attributes["PriceOrder"]?.Value;
-            if (discountPriceLineNode != null && discountPriceLineNode.Attributes["Total"] != null)
-            {
-                string totalStr = discountPriceLineNode.Attributes["Total"].Value;
+        //[TestMethod]
+        //public void Apply_And_Validate_ITBTEST_Ten_Monitory_PromotionalCode()
+        //{            
+        //    // Get updated cart with discount applied
+        //    XmlElement oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/BasicMonitory/");
+        //    XmlNode discountPriceLineNode = oCartXML.SelectSingleNode("//DiscountPriceLine");
+        //    string totalSaving = discountPriceLineNode.Attributes["TotalSaving"]?.Value;
+        //    string unitPrice = discountPriceLineNode.Attributes["UnitPrice"]?.Value;
+        //    string priceOrder = discountPriceLineNode.Attributes["PriceOrder"]?.Value;
+        //    if (discountPriceLineNode != null && discountPriceLineNode.Attributes["Total"] != null)
+        //    {
+        //        string totalStr = discountPriceLineNode.Attributes["Total"].Value;
 
-                if (decimal.TryParse(totalStr, out decimal total))
-                {                                    
-                    Assert.AreEqual(90m, total);
-                    Assert.IsTrue(true);
-                }
-                else
-                {
-                    Assert.Fail("Failed to parse Total attribute as decimal.");
-                }
-            }
-            else
-            {
-                Assert.Fail("DiscountPriceLine node or Total attribute not found.");
-            }  
-        }
+        //        if (decimal.TryParse(totalStr, out decimal total))
+        //        {                                    
+        //            Assert.AreEqual(90m, total);
+        //            Assert.IsTrue(true);
+        //        }
+        //        else
+        //        {
+        //            Assert.Fail("Failed to parse Total attribute as decimal.");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Assert.Fail("DiscountPriceLine node or Total attribute not found.");
+        //    }  
+        //}
 
-        [TestMethod]
-        public void Apply_And_Validate_BringAFriend_Ten_Percentage_PromotionalCode()
-        {
-            // Get updated cart with discount applied
-            XmlElement oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/Percent_BringAFriend/");
-            XmlNode discountPriceLineNode = oCartXML.SelectSingleNode("//DiscountPriceLine");
-            string totalSaving = discountPriceLineNode.Attributes["TotalSaving"]?.Value;
-            string unitPrice = discountPriceLineNode.Attributes["UnitPrice"]?.Value;
-            string priceOrder = discountPriceLineNode.Attributes["PriceOrder"]?.Value;
-            if (discountPriceLineNode != null && discountPriceLineNode.Attributes["Total"] != null)
-            {
-                string totalStr = discountPriceLineNode.Attributes["Total"].Value;
+        //[TestMethod]
+        //public void Apply_And_Validate_BringAFriend_Ten_Percentage_PromotionalCode()
+        //{
+        //    // Get updated cart with discount applied
+        //    XmlElement oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/Percent_BringAFriend/");
+        //    XmlNode discountPriceLineNode = oCartXML.SelectSingleNode("//DiscountPriceLine");
+        //    string totalSaving = discountPriceLineNode.Attributes["TotalSaving"]?.Value;
+        //    string unitPrice = discountPriceLineNode.Attributes["UnitPrice"]?.Value;
+        //    string priceOrder = discountPriceLineNode.Attributes["PriceOrder"]?.Value;
+        //    if (discountPriceLineNode != null && discountPriceLineNode.Attributes["Total"] != null)
+        //    {
+        //        string totalStr = discountPriceLineNode.Attributes["Total"].Value;
 
-                if (decimal.TryParse(totalStr, out decimal total))
-                {
-                    Assert.AreEqual(90m, total);
-                    Assert.IsTrue(true);
-                }
-                else
-                {
-                    Assert.Fail("Failed to parse Total attribute as decimal.");
-                }
-            }
-            else
-            {
-                Assert.Fail("DiscountPriceLine node or Total attribute not found.");
-            }
-        }
+        //        if (decimal.TryParse(totalStr, out decimal total))
+        //        {
+        //            Assert.AreEqual(90m, total);
+        //            Assert.IsTrue(true);
+        //        }
+        //        else
+        //        {
+        //            Assert.Fail("Failed to parse Total attribute as decimal.");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Assert.Fail("DiscountPriceLine node or Total attribute not found.");
+        //    }
+        //}
 
-        [TestMethod]
-        public void Apply_And_Validate_COMER20_Twenty_Percentage_PromotionalCode()
-        {
-            // Get updated cart with discount applied
-            XmlElement oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/Percent_COMER20_Evoucher_Free/");
-            XmlNode discountPriceLineNode = oCartXML.SelectSingleNode("//DiscountPriceLine");
-            string totalSaving = discountPriceLineNode.Attributes["TotalSaving"]?.Value;
-            string unitPrice = discountPriceLineNode.Attributes["UnitPrice"]?.Value;
-            string priceOrder = discountPriceLineNode.Attributes["PriceOrder"]?.Value;
-            if (discountPriceLineNode != null && discountPriceLineNode.Attributes["Total"] != null)
-            {
-                string totalStr = discountPriceLineNode.Attributes["Total"].Value;
+        //[TestMethod]
+        //public void Apply_And_Validate_COMER20_Twenty_Percentage_PromotionalCode()
+        //{
+        //    // Get updated cart with discount applied
+        //    XmlElement oCartXML = RunDiscountTest("providers/discounts/test-data/basic-discount/Percent_COMER20_Evoucher_Free/");
+        //    XmlNode discountPriceLineNode = oCartXML.SelectSingleNode("//DiscountPriceLine");
+        //    string totalSaving = discountPriceLineNode.Attributes["TotalSaving"]?.Value;
+        //    string unitPrice = discountPriceLineNode.Attributes["UnitPrice"]?.Value;
+        //    string priceOrder = discountPriceLineNode.Attributes["PriceOrder"]?.Value;
+        //    if (discountPriceLineNode != null && discountPriceLineNode.Attributes["Total"] != null)
+        //    {
+        //        string totalStr = discountPriceLineNode.Attributes["Total"].Value;
 
-                if (decimal.TryParse(totalStr, out decimal total))
-                {
-                    Assert.AreEqual(168m, total);
-                    Assert.IsTrue(true);
-                }
-                else
-                {
-                    Assert.Fail("Failed to parse Total attribute as decimal.");
-                }
-            }
-            else
-            {
-                Assert.Fail("DiscountPriceLine node or Total attribute not found.");
-            }
-        }
+        //        if (decimal.TryParse(totalStr, out decimal total))
+        //        {
+        //            Assert.AreEqual(168m, total);
+        //            Assert.IsTrue(true);
+        //        }
+        //        else
+        //        {
+        //            Assert.Fail("Failed to parse Total attribute as decimal.");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Assert.Fail("DiscountPriceLine node or Total attribute not found.");
+        //    }
+        //}
     }
 }

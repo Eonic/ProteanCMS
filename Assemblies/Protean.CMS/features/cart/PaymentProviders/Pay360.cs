@@ -5,8 +5,6 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.Cms.Cart;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
