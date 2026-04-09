@@ -324,6 +324,20 @@ namespace Protean.Providers
 
 
 
+
+
+
+
+                        base.addDiv(ref oFrmElmt, "", "footer-override");
+                        base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
+                    Check:
+
+
+                        if (oFrmElmt == null)
+                        {
+                            oFrmElmt = (XmlElement)base.moXformElmt.SelectSingleNode("group");
+                        }
+
                         if (oAuthProviders != null)
                         {
                             if (oAuthProviders.Count() > 0)
@@ -333,6 +347,10 @@ namespace Protean.Providers
                                 {
                                     Boolean bUse = false;
                                     if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin")
+                                    {
+                                        bUse = true;
+                                    }
+                                    if (FormName == "UserLogon" && authProvider.config["scope"].ToString() == "site")
                                     {
                                         bUse = true;
                                     }
@@ -347,19 +365,9 @@ namespace Protean.Providers
                         }
                         //END auth provider
 
-
-
-
-                        base.addDiv(ref oFrmElmt, "", "footer-override");
-
-                        base.Instance.InnerXml = "<user rememberMe=\"\"><username/><password/></user>";
-
-                    Check:
-                        ;
-                        XmlElement xmlGroupElmt = (XmlElement)base.moXformElmt.SelectSingleNode("group");
                         // Set the action URL
                         // Is the membership email address secure.
-                            if (!string.IsNullOrEmpty(myWeb.moConfig["SecureMembershipAddress"]))
+                        if (!string.IsNullOrEmpty(myWeb.moConfig["SecureMembershipAddress"]))
                         {
                             XmlElement oSubElmt = (XmlElement)base.moXformElmt.SelectSingleNode("descendant::submission");
                             oSubElmt.SetAttribute("action", myWeb.moConfig["SecureMembershipAddress"] + myWeb.moConfig["ProjectPath"] + "/" + myWeb.mcPagePath);
@@ -373,7 +381,7 @@ namespace Protean.Providers
                             if (Xml.NodeState(ref base.model, "bind[@id='cRemember']") == XmlNodeState.NotInstantiated)
                             {
 
-                                oSelElmt = base.addSelect(ref xmlGroupElmt, "cRemember", true, "&#160;", "", ApperanceTypes.Full);
+                                oSelElmt = base.addSelect(ref oFrmElmt, "cRemember", true, "&#160;", "", ApperanceTypes.Full);
                                 base.addOption(ref oSelElmt, "Remember me", "true");
                                 XmlElement oBindParent1 = null;
                                 base.addBind("cRemember", "user/@rememberMe", ref oBindParent1, "false()");
@@ -492,7 +500,7 @@ namespace Protean.Providers
                                                 {
                                                     //user not present in proteanCms                                               
                                                     base.valid = false;
-                                                    base.addNote(ref xmlGroupElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
+                                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
                                                 }
                                             }
                                         }
@@ -514,8 +522,9 @@ namespace Protean.Providers
                                             string redirectUrl = authProvider.GetAuthenticationURL(selectedProvider);
                                             if (!string.IsNullOrEmpty(redirectUrl))
                                             {
-                                                //myWeb.msRedirectOnEnd = redirectUrl;
-                                                myWeb.moResponse.Redirect(redirectUrl);
+                                                myWeb.msRedirectOnEnd = redirectUrl;
+                                                // TS really want to redirect on the end this may cause error ???
+                                                //myWeb.moResponse.Redirect(redirectUrl);
                                             }
                                         }
                                     }
@@ -581,7 +590,7 @@ namespace Protean.Providers
                                     else
                                     {
                                         base.valid = false;
-                                        base.addNote(ref xmlGroupElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
+                                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
 
                                         if (sValidResponse.Contains("msg-1021"))
                                         {

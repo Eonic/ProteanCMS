@@ -2392,16 +2392,28 @@
 	  </xsl:variable>
 	  
 	  <xsl:variable name="adminUrl">
-
-						  <xsl:value-of select="$siteURL"/>
-						  <xsl:value-of select="@url"/>
-						  <xsl:value-of select="/Page/@pageExt"/>
-						  <xsl:if test="/Page/@adminMode and /Page/@pageExt!='' and /Page/@ewCmd!='ByType'">
-							  <xsl:text>?pgid=</xsl:text>
-							  <xsl:value-of select="@id"/>
-						  </xsl:if>
+		  <xsl:choose>
+			  <xsl:when test="not(contains(@url,'?pgid='))">
+				  <xsl:text>?pgid=</xsl:text>
+				  <xsl:value-of select="@id"/>
+		  </xsl:when>
+			  <xsl:when test="format-number(@url,'0')!='NaN'">
+				  <xsl:text>?pgid=</xsl:text>
+				  <xsl:value-of select="@id"/>
+			  </xsl:when>
+			  <xsl:otherwise>
+				  <xsl:value-of select="$siteURL"/>
+				  <xsl:value-of select="@url"/>
+				  <xsl:value-of select="/Page/@pageExt"/>
+				  <xsl:if test="/Page/@adminMode and /Page/@pageExt!='' and /Page/@ewCmd!='ByType'">
+					  <xsl:text>?pgid=</xsl:text>
+					  <xsl:value-of select="@id"/>
+				  </xsl:if>
+			  </xsl:otherwise>
+		  </xsl:choose>  
 				
 	  </xsl:variable>
+	  
 	  <xsl:variable name="redirectUrl">
 		  <xsl:variable name="url" select="@url"/>
 		  <xsl:choose>
@@ -2410,6 +2422,7 @@
 					  <xsl:when test="format-number(@url,'0')!='NaN'">
 						  <xsl:value-of select="$siteURL"/>
 						  <xsl:value-of select="$page/Menu/descendant-or-self::MenuItem[@id=$url]/@url"/>
+						  <xsl:text>&amp;ewCmd=Normal</xsl:text>
 					  </xsl:when>
 					  <xsl:when test="contains(@url,'http')">
 						  <xsl:value-of select="@url"/>
@@ -2475,12 +2488,13 @@
               </span>
             </xsl:otherwise>
           </xsl:choose>
-
-
-
         </a>
-		  
-		  
+		<xsl:if test="not(contains(@url,'?pgid='))">
+		  &#160;
+		  <a href="{$redirectUrl}">
+			  <i class="fa-solid fa-arrow-up-right-from-square">&#160;</i>
+		  </a>
+		</xsl:if>
 		  
       </div>
       <div class="optionButtons">

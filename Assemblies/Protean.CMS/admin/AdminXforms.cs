@@ -203,7 +203,7 @@ namespace Protean
                 // Check if a specific button has been pressed
                 public bool isSubmittedOther(long pgid = 0)
                 {
-                    int nRelId;
+                    long nRelId;
                     long nParId = default(int);
                     // Dim oDbh As New dbHelper(myWeb)
                     bool bResult = false;
@@ -273,32 +273,32 @@ namespace Protean
 
                                     if (Convert.ToBoolean(myItem.ToString().Contains("RelateUp")))
                                     {
-                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt64(relateCmdArr[1]);
                                         myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveUp", true);
                                         bResult = true;
                                     }
                                     else if (Convert.ToBoolean(myItem.ToString().Contains("RelateDown")))
                                     {
-                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt64(relateCmdArr[1]);
                                         myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveDown", true);
                                         bResult = true;
                                     }
                                     else if (Convert.ToBoolean(myItem.ToString().Contains("RelateTop")))
                                     {
-                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt64(relateCmdArr[1]);
                                         myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveTop", true);
                                         bResult = true;
                                     }
                                     else if (Convert.ToBoolean(myItem.ToString().Contains("RelateBottom")))
                                     {
-                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt64(relateCmdArr[1]);
                                         myWeb.moDbHelper.ReorderContent((long)nParId, (long)nRelId, "MoveBottom", true);
                                         bResult = true;
                                     }
                                     // ###############################-ACTIONS-########################
                                     else if (Convert.ToBoolean(myItem.ToString().Contains("RelateEdit")))
                                     {
-                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt64(relateCmdArr[1]);
                                         goSession["mnContentRelationParent"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId +
                                             (string.IsNullOrEmpty(goRequest.QueryString["pgid"]) ? "" : "&pgid=" + goRequest.QueryString["pgid"]);
                                         goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nRelId;
@@ -307,7 +307,7 @@ namespace Protean
                                     }
                                     else if (Convert.ToBoolean(myItem.ToString().Contains("RelateRemove")))
                                     {
-                                        nRelId = Convert.ToInt16(relateCmdArr[1]);
+                                        nRelId = Convert.ToInt64(relateCmdArr[1]);
                                         myWeb.moDbHelper.RemoveContentRelation((long)nParId, (long)nRelId);
                                         bResult = true;
 

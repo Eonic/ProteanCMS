@@ -2900,7 +2900,7 @@ namespace Protean
                         case objectTypes.CartItem:
                             {
                                 sSql = "Select  nAuditID from tblCartItem WHERE nCartItemKey = " + nId;
-
+                                // delete audit
                                 using (SqlDataReader oDr = getDataReaderDisposable(sSql))
                                 {
                                     long nCrtItmAdtId = default(long);
@@ -2909,13 +2909,14 @@ namespace Protean
                                         nCrtItmAdtId = Convert.ToInt64(oDr.GetValue(0));
                                     DeleteObject(objectTypes.Audit, nCrtItmAdtId);
                                 }
-                                // options
+                                // delete options
                                 sSql = $"Select nCartItemKey from tblCartItem WHERE nParentID = {nId}";
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {
                                     while (oDr.Read())
                                         DeleteObject(objectTypes.CartItem, Convert.ToInt64(oDr.GetValue(0)));
                                 }
+                                // delete item itself
                                 ExeProcessSql($"Delete from tblCartItem where nCartItemKey = {nId}");
                                 break;
                             }
@@ -3280,9 +3281,12 @@ namespace Protean
                             sContent = oElmt.InnerText;
                             try
                             {
-                                oElmt.InnerXml = sContent;
+                                // remove regex
+                                string pattern = @"<\?xml\s+version=""[^""]*""\s+encoding=""[^""]*""\?>";
+                                oElmt.InnerXml = Regex.Replace(sContent, pattern, "");
+                                
                             }
-                            catch
+                            catch ( Exception ex)
                             {
                                 // run tidy...
                                 oElmt.InnerXml = stdTools.tidyXhtmlFrag(sContent, true, false);

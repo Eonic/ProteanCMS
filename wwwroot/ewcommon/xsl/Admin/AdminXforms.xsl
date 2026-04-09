@@ -209,7 +209,7 @@
 	</xsl:template>
 
 
-	<xsl:template match="Content[ancestor::Page[@adminMode='true'] and @name='UserLogon']" mode="xform">
+	<xsl:template match="Content[ancestor::Page[@adminMode='true'] and (@name='UserLogon' or @name='AdminLogon')]" mode="xform">
 		<form method="{model/submission/@method}" action="">
 			<xsl:attribute name="class">
 				<xsl:text>ewXform panel panel-default</xsl:text>

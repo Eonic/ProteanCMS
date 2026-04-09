@@ -62,52 +62,12 @@ namespace Protean.Providers
 
                     Type calledType;
                     string ProviderClass = "";
-                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/authenticationProviders");
+                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/authentication");
 
                     ICollection<IauthenticaitonProvider> providerList = new IauthenticaitonProvider[0];
                     var modifiable = providerList.ToList();
 
-                    //if (moPrvConfig != null)
-                    //{
-                    //    foreach (System.Configuration.ProviderSettings authProvider in moPrvConfig.Providers) { 
-
-                    //        ProviderClass = Convert.ToString(authProvider.Name);
-
-                    //        if (string.IsNullOrEmpty(ProviderClass))
-                    //        {
-                    //            ProviderClass = "Protean.Providers.Authentication.DefaultProvider";
-                    //            calledType = Type.GetType(ProviderClass, true);
-                    //        }
-                    //        else
-                    //        {
-                    //            if (authProvider.Type != "")
-                    //            {
-                    //                var assemblyInstance = Assembly.Load(authProvider.Type);
-                    //                calledType = assemblyInstance.GetType("Protean.Providers.Authentication." + ProviderClass, true);
-                    //            }
-                    //            else
-                    //            {
-                    //                calledType = Type.GetType("Protean.Providers.Authentication." + ProviderClass, true);
-                    //            }
-                    //        }
-
-                    //        var o = Activator.CreateInstance(calledType);
-                    //        var args = new object[2];
-                    //        args[0] = myWeb;
-                    //        args[1] = authProvider.Parameters;
-
-                    //        modifiable.Add((IauthenticaitonProvider)calledType.InvokeMember("Initiate", BindingFlags.InvokeMethod, null, o, args));
-
-                    //    }
-
-                    //    providerList = modifiable;
-                    //    return providerList;
-
-                    //}else
-                    //{
-                    //    return null;
-                    //}
-
+                   
 
                     if (moPrvConfig != null)
                     {
@@ -188,6 +148,22 @@ namespace Protean.Providers
                 }
             }
 
+            /// <summary>
+            /// Gets the authentication type from config (SAML or OAuth2)
+            /// </summary>
+            private string AuthenticationType
+            {
+                get
+                {
+                    string authType = config["method"];
+                    if (string.IsNullOrEmpty(authType))
+                    {
+                        authType = "SAML"; // Default to SAML for backward compatibility
+                    }
+                    return authType.ToUpper();
+                }
+            }
+
             public IauthenticaitonProvider Initiate(Cms myWeb, NameValueCollection config)
             {
                 _myWeb = myWeb;
@@ -195,7 +171,25 @@ namespace Protean.Providers
                 return this;
             }
 
+            /// <summary>
+            /// Gets authentication URL based on configured type (SAML or OAuth2)
+            /// </summary>
             public string GetAuthenticationURL(string ProviderName)
+            {
+                if (AuthenticationType == "OAUTH2")
+                {
+                    return GetOAuth2AuthenticationURL(ProviderName);
+                }
+                else
+                {
+                    return GetSamlAuthenticationURL(ProviderName);
+                }
+            }
+
+            /// <summary>
+            /// Gets SAML authentication URL
+            /// </summary>
+            private string GetSamlAuthenticationURL(string ProviderName)
             {
                 string gcEwBaseUrl = "https://" + _myWeb.moRequest.ServerVariables["HTTP_HOST"];
                 // NOTE: This value must match the exact Application Identifier (Entity ID) configured in the Microsoft/Google SAML app.
@@ -214,6 +208,59 @@ namespace Protean.Providers
                 }
                 return GetSamlLoginUrl(config["ssoUrl"].ToString(), appId, gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName, keyUrl);
             }
+
+            /// <summary>
+            /// Gets OAuth2 authentication URL
+            /// </summary>
+            private string GetOAuth2AuthenticationURL(string ProviderName)
+            {
+                string authorizationEndpoint = config["authorizationEndpoint"];
+                string clientId = config["clientId"];
+                string scope = config["scope"] ?? "openid profile email";
+                string responseType = config["responseType"] ?? "code";
+
+                string gcEwBaseUrl = "https://" + _myWeb.moRequest.ServerVariables["HTTP_HOST"];
+                string redirectUri = gcEwBaseUrl + (_myWeb.moConfig["ProjectPath"] ?? "") + "/oauth2callback";
+
+                if (!string.IsNullOrEmpty(config["redirectUri"]))
+                {
+                    redirectUri = config["redirectUri"];
+                }
+
+                // Generate state parameter for CSRF protection
+                string state = GenerateState(ProviderName);
+
+                // Store state in session for validation
+                if (_myWeb.moSession != null)
+                {
+                    _myWeb.moSession["OAuth2_State"] = state;
+                    _myWeb.moSession["OAuth2_Provider"] = ProviderName;
+                }
+
+                var parameters = new List<string>
+                {
+                    $"client_id={HttpUtility.UrlEncode(clientId)}",
+                    $"redirect_uri={HttpUtility.UrlEncode(redirectUri)}",
+                    $"response_type={responseType}",
+                    $"scope={HttpUtility.UrlEncode(scope)}",
+                    $"state={HttpUtility.UrlEncode(state)}"
+                };
+
+                // Add optional parameters
+                if (!string.IsNullOrEmpty(config["prompt"]))
+                {
+                    parameters.Add($"prompt={HttpUtility.UrlEncode(config["prompt"])}");
+                }
+
+                if (!string.IsNullOrEmpty(config["accessType"]))
+                {
+                    parameters.Add($"access_type={HttpUtility.UrlEncode(config["accessType"])}");
+                }
+
+                string queryString = string.Join("&", parameters);
+                return $"{authorizationEndpoint}?{queryString}";
+            }
+
             //check ACS URL in google account- here need to pass exactly same
             // issuer = Entity ID in google account
             public static string GetSamlLoginUrl(string idpSsoUrl, string issuer, string assertionConsumerServiceUrl, string ProviderName, string keyUrl)
@@ -283,6 +330,7 @@ namespace Protean.Providers
 
             public string ExtractEmail(XmlDocument xmlDoc)
             {
+                // For SAML authentication
                 XmlNodeList attributes = xmlDoc.SelectNodes(
                     "//*[local-name()='Attribute' and namespace-uri()='urn:oasis:names:tc:SAML:2.0:assertion']");
 
@@ -296,6 +344,149 @@ namespace Protean.Providers
                     }
                 }
                 return string.Empty;
+            }
+
+            /// <summary>
+            /// Extracts email from OAuth2 JSON response
+            /// </summary>
+            public string ExtractEmailFromJson(JObject userInfo)
+            {
+                // Try common email claim names
+                var emailClaims = new[] { "email", "mail", "emailAddress", "upn", "preferred_username" };
+
+                foreach (var claim in emailClaims)
+                {
+                    if (userInfo[claim] != null)
+                    {
+                        return userInfo[claim].ToString();
+                    }
+                }
+
+                return string.Empty;
+            }
+
+            /// <summary>
+            /// Extracts issuer from OAuth2 JSON response
+            /// </summary>
+            public string ExtractIssuerFromJson(JObject userInfo)
+            {
+                if (userInfo["iss"] != null)
+                {
+                    return userInfo["iss"].ToString();
+                }
+
+                // Fallback to provider name from config
+                return config["name"] ?? "OAuth2";
+            }
+
+            /// <summary>
+            /// Exchanges authorization code for access token (OAuth2)
+            /// </summary>
+            public async Task<OAuth2TokenResponse> ExchangeCodeForTokenAsync(string code, string state)
+            {
+                // Validate state
+                if (_myWeb.moSession != null)
+                {
+                    string storedState = _myWeb.moSession["OAuth2_State"] as string;
+                    if (storedState != state)
+                    {
+                        throw new AuthenticationException("Invalid state parameter - possible CSRF attack");
+                    }
+                }
+
+                string tokenEndpoint = config["tokenEndpoint"];
+                string clientId = config["clientId"];
+                string clientSecret = config["clientSecret"];
+
+                string gcEwBaseUrl = "https://" + _myWeb.moRequest.ServerVariables["HTTP_HOST"];
+                string redirectUri = gcEwBaseUrl + (_myWeb.moConfig["ProjectPath"] ?? "") + "/oauth2callback";
+
+                if (!string.IsNullOrEmpty(config["redirectUri"]))
+                {
+                    redirectUri = config["redirectUri"];
+                }
+
+                using (var httpClient = new HttpClient())
+                {
+                    var parameters = new Dictionary<string, string>
+                    {
+                        { "grant_type", "authorization_code" },
+                        { "code", code },
+                        { "redirect_uri", redirectUri },
+                        { "client_id", clientId },
+                        { "client_secret", clientSecret }
+                    };
+
+                    var content = new FormUrlEncodedContent(parameters);
+                    var response = await httpClient.PostAsync(tokenEndpoint, content);
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new AuthenticationException($"Token exchange failed: {responseContent}");
+                    }
+
+                    var tokenResponse = JsonConvert.DeserializeObject<OAuth2TokenResponse>(responseContent);
+                    return tokenResponse;
+                }
+            }
+
+            /// <summary>
+            /// Gets user info from OAuth2 provider
+            /// </summary>
+            public async Task<JObject> GetUserInfoAsync(string accessToken)
+            {
+                string userInfoEndpoint = config["userInfoEndpoint"];
+
+                using (var httpClient = new HttpClient())
+                {
+                    httpClient.DefaultRequestHeaders.Authorization = 
+                        new AuthenticationHeaderValue("Bearer", accessToken);
+
+                    var response = await httpClient.GetAsync(userInfoEndpoint);
+                    var responseContent = await response.Content.ReadAsStringAsync();
+
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new AuthenticationException($"UserInfo request failed: {responseContent}");
+                    }
+
+                    return JObject.Parse(responseContent);
+                }
+            }
+
+            /// <summary>
+            /// Generates a secure state parameter for OAuth2
+            /// </summary>
+            private string GenerateState(string providerName)
+            {
+                var random = new byte[32];
+                using (var rng = System.Security.Cryptography.RandomNumberGenerator.Create())
+                {
+                    rng.GetBytes(random);
+                }
+                return $"{providerName}_{Convert.ToBase64String(random)}";
+            }
+
+            /// <summary>
+            /// Decodes JWT token (without validation - for debugging/info only)
+            /// </summary>
+            public JObject DecodeJwt(string token)
+            {
+                var parts = token.Split('.');
+                if (parts.Length != 3)
+                {
+                    throw new ArgumentException("Invalid JWT token format");
+                }
+
+                var payload = parts[1];
+                // Add padding if needed
+                payload = payload.PadRight(payload.Length + (4 - payload.Length % 4) % 4, '=');
+
+                var payloadBytes = Convert.FromBase64String(payload);
+                var payloadJson = Encoding.UTF8.GetString(payloadBytes);
+
+                return JObject.Parse(payloadJson);
             }
 
             //public long ValidateUser(string samlUserEmail)
@@ -320,6 +511,30 @@ namespace Protean.Providers
             //    return userid;
             //}
 
+        }
+
+        /// <summary>
+        /// OAuth2 token response model
+        /// </summary>
+        public class OAuth2TokenResponse
+        {
+            [JsonProperty("access_token")]
+            public string AccessToken { get; set; }
+
+            [JsonProperty("token_type")]
+            public string TokenType { get; set; }
+
+            [JsonProperty("expires_in")]
+            public int ExpiresIn { get; set; }
+
+            [JsonProperty("refresh_token")]
+            public string RefreshToken { get; set; }
+
+            [JsonProperty("id_token")]
+            public string IdToken { get; set; }
+
+            [JsonProperty("scope")]
+            public string Scope { get; set; }
         }
     }
 }
