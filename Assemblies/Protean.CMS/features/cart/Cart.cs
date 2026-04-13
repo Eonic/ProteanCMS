@@ -3546,7 +3546,7 @@ namespace Protean
                         myWeb.moRequest.Cookies.Add(flagCookie);
 
                     }
-                     // Save cookiFirts consent  flag
+                     // Save cookieFirst consent  flag
                     if (mnCartId > 0)
                     {
                         if (moDBHelper.checkTableColumnExists("tblCartOrder", "bCookieConsentEnabled") && (myWeb.moRequest.Cookies["bCookieConsentEnabled"] == null ))
