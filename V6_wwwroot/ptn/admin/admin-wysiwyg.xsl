@@ -1146,13 +1146,13 @@
 						<xsl:choose>
 							<xsl:when test="@moduleType!=''">
 								<li class="title">
-									<xsl:value-of select="@moduleType"/> test2
+									<xsl:value-of select="@moduleType"/>
 								</li>
 								<li class="divider">&#160;</li>
 							</xsl:when>
 							<xsl:otherwise>
 								<li class="title">
-									<xsl:value-of select="@type"/> test2
+									<xsl:value-of select="@type"/>
 								</li>
 								<li class="divider">&#160;</li>
 							</xsl:otherwise>

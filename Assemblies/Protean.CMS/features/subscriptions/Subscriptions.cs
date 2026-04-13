@@ -2129,7 +2129,7 @@ namespace Protean
                         // Cancel the payment method
                         if (PaymentMethodId > 0L)
                         {
-                            CancelPaymentMethod(Convert.ToInt16(editElmt.SelectSingleNode("nPaymentMethodId").InnerText));
+                            CancelPaymentMethod(PaymentMethodId);
                         }
 
                         // We only remove user from groups (this needs to happen by schduler to remove once expired)
@@ -2232,7 +2232,7 @@ namespace Protean
                     }
                 }
 
-                public void CancelPaymentMethod(int nPaymentMethodId)
+                public void CancelPaymentMethod(long nPaymentMethodId)
                 {
 
                     try

@@ -9775,7 +9775,7 @@
         <xsl:value-of select="ew:ResizeImage2($path,$max-width-calc,$max-height-calc,$file-prefix,$file-suffix,$quality,$no-stretch,$crop,1,$watermarktext,$copyright)"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="ew:ResizeImage($path,$max-width-calc,$max-height-calc,$file-prefix,$file-suffix,$quality,$no-stretch,$crop,$watermarktext,$copyright)"/>
+        <xsl:value-of select="ew:ResizeImage($path,$max-width-calc,$max-height-calc,$file-prefix,$file-suffix,$quality,$no-stretch,$crop,0,$watermarktext,$copyright)"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

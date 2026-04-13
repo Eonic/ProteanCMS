@@ -34,6 +34,7 @@ namespace Protean
                 private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 private Cms myWeb;
                 private Cart myCart;
+                public bool bNoClose;
 
                 public JSONActions(Cms.dbHelper.utils.APILog ApiLog)
                 {
@@ -45,6 +46,8 @@ namespace Protean
                     this.apiLog = ApiLog;
 
                 }
+
+
 
                 private XmlElement updateCartforJSON(XmlElement CartXml)
                 {
@@ -121,7 +124,7 @@ namespace Protean
                         // Output the new cart
                         var oDoc = new XmlDocument();
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
-
+                       // myCart.bNoClose = true;
 
                         if (myCart.mnCartId < 1)
                         {
@@ -196,7 +199,8 @@ namespace Protean
                             myCart.GetCart(ref argoCartElmt);
                             CartXml = updateCartforJSON(CartXml);
                             // persist cart
-                            myCart.close();
+                          
+                            myCart.close(bNoClose);
 
                             string jsonString = JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.None);
                             jsonString = jsonString.Replace("\"@", "\"_");
@@ -340,6 +344,17 @@ namespace Protean
                         return ex.Message;
                     }
 
+                }
+
+                public string UpdateShippingOption(Protean.rest myApi, Newtonsoft.Json.Linq.JObject jObj)
+                {
+                    Newtonsoft.Json.Linq.JObject json = jObj;
+                    Protean.Cms.Cart.JSONActions jSONActions = new Protean.Cms.Cart.JSONActions(apiLog);
+                    long nCartOrderId = Convert.ToInt64(json.SelectToken("CartOrderId"));
+                    int nShippingKey = Convert.ToInt32(json.SelectToken("ShipOptKey").ToString());
+                    myCart.updateOrderShippingOption(nCartOrderId, nShippingKey);
+
+                    return jSONActions.GetCart(ref myApi, ref jObj);
                 }
 
                 public string GetShippingOptions(ref Protean.rest myApi, ref JObject jObj)
@@ -913,10 +928,10 @@ namespace Protean
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
                         myCart.GetCart(ref argoCartElmt);
                         myCart.purchaseActions(CartXml);
+                       
+                        CartXml = updateCartforJSON(CartXml);
                         // persist cart
                         myCart.close();
-                        CartXml = updateCartforJSON(CartXml);
-
                         string jsonString = JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented);
                         jsonString = jsonString.Replace("\"@", "\"_");
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue");

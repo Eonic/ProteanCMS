@@ -46,6 +46,7 @@ namespace Protean
             public string mcEwDataConn;
             public string mcEwSiteDomain;
             public bool mbEwMembership;
+           
 
             public XmlElement oShippingOptions;
 
@@ -5088,7 +5089,7 @@ namespace Protean
                                     foreach (DataRow currentODR11 in oDS.Tables["CartItems"].Rows)
                                     {
                                         oDR1 = currentODR11;
-                                        if (oDR1["nCartItemKey"] != null && oDR1["nCartItemKey"].Equals(nItemID))
+                                        if (oDR1["nCartItemKey"] != null && Convert.ToInt64(oDR1["nCartItemKey"]).Equals(nItemID))
                                         {
                                             oDR1.BeginEdit();
 
@@ -7598,13 +7599,17 @@ namespace Protean
             }
 
 
-            public void close()
+            public void close(bool bNoClose=false)
             {
                 myWeb.PerfMon.Log("Cart", "close");
                 string cProcessInfo = "";
                 try
                 {
-                    PersistVariables();
+                    //This allows us to run jsonactions from within other functions like AddProductOption without closing dbhelper object.
+                    if (bNoClose == false)
+                    {
+                        PersistVariables();
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -7612,7 +7617,8 @@ namespace Protean
                 }
                 finally
                 {
-                    Dispose();
+                   
+                        Dispose(!bNoClose);
                 }
             }
 

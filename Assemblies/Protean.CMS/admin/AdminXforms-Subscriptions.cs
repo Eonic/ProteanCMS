@@ -29,7 +29,7 @@ namespace Protean
                     try
                     {
 
-                        if (moRequest["reset"].ToLower() == "true")
+                        if (moRequest["reset"]?.ToLower() == "true")
                         {
                             myWeb.moSession["tempInstance"] = (object)null;
                         }

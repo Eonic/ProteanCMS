@@ -367,7 +367,11 @@ namespace Protean
                             {
 
                                 bAllowUser = true;
-                                bSkipGroupCheck = true;
+                                //before marking as skip group check, check if there are any invalid groups specified. If there are, we still need to check those even if valid groups is set to all.
+                                if (oElmt.GetAttribute("invalidGroups") == null && oElmt.GetAttribute("invalidGroups").ToLower() == string.Empty)
+                                {
+                                    bSkipGroupCheck = true;
+                                }
                             }
                             else
                             {
@@ -388,10 +392,13 @@ namespace Protean
 
                             // Safely get userId    
                             long userId = myWeb.SessionUserId;
-                            if (!bSkipGroupCheck) { 
-                            if (userId > 0)
-                            {
-                                string[] aGroups = oElmt.GetAttribute("validGroups").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                           
+
+                           
+                                if (!bSkipGroupCheck){
+                                if (userId > 0)
+                                {
+                                    string[] aGroups = oElmt.GetAttribute("validGroups").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 string[] aInvalidGroups = oElmt.GetAttribute("invalidGroups").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                                 bAllowUser = false;
