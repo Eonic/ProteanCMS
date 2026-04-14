@@ -1,5 +1,3 @@
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Membership;
 using Protean.Tools;
 using System;
@@ -37,7 +35,6 @@ namespace Protean
 
         public System.Web.HttpContext moCtx;
 
-        public System.Web.HttpApplicationState goApp;
         public System.Web.HttpRequest goRequest;
         public System.Web.HttpResponse goResponse;
         public System.Web.SessionState.HttpSessionState goSession;
@@ -75,9 +72,9 @@ namespace Protean
         }
 
         public int gnTopLevel;
-        public int gnPageId = 0;
-        public int mnArtId = 0;
-        public int mnUserId = 0;
+        public long gnPageId = 0;
+        public long mnArtId = 0;
+        public long mnUserId = 0;
         public string mcEwCmd;
 
         public string mcModuleName = "Protean.Setup";
@@ -105,7 +102,7 @@ namespace Protean
         private void _OnError(object sender, Tools.Errors.ErrorEventArgs e)
         {
             // RaiseEvent OnError(sender, e)
-            Information.Err().Raise(513, e.ProcedureName, e.AddtionalInformation + " - " + e.Exception.Message);
+            throw new Exception($"Error 513 in {e.ProcedureName}: {e.AddtionalInformation} - {e.Exception.Message}", e.Exception);
         }
 
         protected virtual void OnComponentError(object sender, Tools.Errors.ErrorEventArgs e)
@@ -151,7 +148,6 @@ namespace Protean
                     moCtx = System.Web.HttpContext.Current;
                 }
 
-                goApp = moCtx.Application;
                 goRequest = moCtx.Request;
                 goResponse = moCtx.Response;
                 goSession = moCtx.Session;
@@ -167,7 +163,7 @@ namespace Protean
                 // Set the debug mode
                 if (goConfig["Debug"] != null)
                 {
-                    switch (Strings.LCase(goConfig["Debug"]) ?? "")
+                    switch ((goConfig["Debug"]).ToLower() ?? "")
                     {
                         case "on":
                             {
@@ -190,14 +186,15 @@ namespace Protean
 
                 if (goSession != null)
                 {
-                    if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(goSession["nUserId"], null, false), Operators.ConditionalCompareObjectEqual(goSession["nUserId"], 0, false))))
+                    if (goSession["nUserId"] == null || Convert.ToInt32(goSession["nUserId"]) == 0)
                     {
+                        // code here
                     }
                     // this will get set on close
                     else
                     {
                         // lets finally set the user Id from the session
-                        mnUserId = Conversions.ToInteger(goSession["nUserId"]);
+                        mnUserId = Convert.ToInt16(goSession["nUserId"]);
                     }
                 }
 
@@ -283,14 +280,18 @@ namespace Protean
                 }
                 else
                 {
-                    goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#result').append('" + Strings.Replace(cResponse, "'", @"\'") + "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" + Constants.vbCrLf);
+                    goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">" + "$('#result').append('" + cResponse.Replace("'", @"\'") + "<br/>');" + "$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);" + "</script>\n");
                 }
             }
 
             catch (Exception)
             {
-                goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#result').append('" + Strings.Replace("<p><i class=\"fa fa-check text-danger\">&#160;</i>Error in script</p>", "'", @"\'") + "<br/>');$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);</script>" + Constants.vbCrLf);
+                goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">" +
+                    "$('#result').append('" + "<p><i class=\"fa fa-check text-danger\">&#160;</i>Error in script</p>".Replace("'", @"\'") + "<br/>');" +
+                    "$('#result').stop().animate({scrollTop: $('#result')[0].scrollHeight}, 800);" +
+                    "</script>\n");
             }
+
         }
 
         public void AddResponseComplete(string cResponse, string LinkPath)
@@ -306,9 +307,9 @@ namespace Protean
             }
             else
             {
-                goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeButton').attr('href','" + LinkPath + "');</script>" + Constants.vbCrLf);
-                goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeButton').html('" + cResponse + "');</script>" + Constants.vbCrLf);
-                goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeModal').modal('show');</script>" + Constants.vbCrLf);
+                goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeButton').attr('href','" + LinkPath + "');</script>\n");
+                goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeButton').html('" + cResponse + "');</script>\n");
+                goResponse.Write("<script language=\"javascript\" type=\"text/javascript\">$('#completeModal').modal('show');</script>\n");
             }
         }
 
@@ -316,11 +317,11 @@ namespace Protean
         {
             if (string.IsNullOrEmpty(cPostFlushActions))
             {
-                AddResponse(Strings.Replace(Strings.Replace(Strings.Replace(oEx.ToString(), Conversions.ToString('\r'), "<br/>"), "&gt;", ">"), "&lt;", "<"));
+                AddResponse(oEx.ToString().Replace("\r", "<br/>").Replace("&gt;", ">").Replace("&lt;", "<"));
             }
             else
             {
-                AddResponse("ERROR:" + oEx.Message + " - " + oEx.Source + "<br/>" + Strings.Replace(Strings.Replace(oEx.StackTrace, Constants.vbCr, "<br/>"), Constants.vbLf, "<br/>" + cProcessInfo));
+                AddResponse("ERROR:" + oEx.Message + " - " + oEx.Source + "<br/>" +  oEx.StackTrace.Replace("\r", "<br/>").Replace("\n", "<br/>" + cProcessInfo));
             }
         }
 
@@ -434,8 +435,8 @@ namespace Protean
                 icPageWriter = (StringWriter)argoWriter;
                 oTransform = (Protean.XmlHelper.Transform)null;
 
-                cPageHTML = Strings.Replace(icPageWriter.ToString(), "<?xml version=\"1.0\" encoding=\"utf-16\"?>", "");
-                cPageHTML = Strings.Replace(cPageHTML, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
+                cPageHTML = icPageWriter.ToString().Replace("<?xml version=\"1.0\" encoding=\"utf-16\"?>", "");
+                cPageHTML = cPageHTML.Replace("<?xml version=\"1.0\" encoding=\"UTF-8\"?>", "");
 
                 if (bReturnBlankError & !(myWeb.msException == ""))
                 {
@@ -513,6 +514,10 @@ namespace Protean
             var oTests = new Protean.Tests();
             var testCount = default(int);
             string testResponse = "";
+
+
+
+
 
             testResponse = oTests.TestImpersonation();
             if (!testResponse.StartsWith("Impersonation"))
@@ -618,6 +623,12 @@ namespace Protean
             testResponse = oTests.TestReadPDF();
 
             AddResponse("<p><i class=\"fa fa-check text-success\">&#160;</i>" + testResponse + "</p>");
+            testCount = testCount + 1;
+
+
+            testResponse = oTests.SkiaSharpDiagnostics();
+            AddResponse(testResponse);
+
             testCount = testCount + 1;
 
             // 6 test the ability to update config settins
@@ -746,7 +757,7 @@ namespace Protean
                 moPageXml.DocumentElement.AppendChild(oPageDetail);
                 if (mbSchemaExists)
                 {
-                    mnUserId = Conversions.ToInteger(goSession["nUserId"]);
+                    mnUserId = Convert.ToInt16(goSession["nUserId"]);
                 }
 
             Recheck:
@@ -760,7 +771,7 @@ namespace Protean
                     var oSetXfm = new SetupXforms(ref argasetup);
                     oPageDetail.AppendChild(oSetXfm.xFrmWebSettings());
                     moPageXml.DocumentElement.SetAttribute("layout", "AdminXForm");
-                    if (Conversions.ToBoolean(Operators.AndObject(oSetXfm.valid, Operators.OrObject(goSession["nUserId"] is null, Operators.ConditionalCompareObjectEqual(goSession["nUserId"], 0, false)))))
+                    if (oSetXfm.valid && (goSession["nUserId"] == null || Convert.ToInt32(goSession["nUserId"]) == 0))
                     {
                         goSession["nUserId"] = 1;
                         msRedirectOnEnd = "/ewcommon/setup/?ewCmd=NewV4&ewCmd2=Do";
@@ -800,7 +811,7 @@ namespace Protean
                     oAdXfm.open(moPageXml);
                     oPageDetail.AppendChild((XmlNode)oAdXfm.xFrmUserLogon("AdminLogon"));
                     mnUserId = myWeb.mnUserId;
-                    if (Conversions.ToBoolean(oAdXfm.valid))
+                    if (Convert.ToBoolean(oAdXfm.valid))
                     {
 
                         if (!myWeb.moDbHelper.checkUserRole("Administrator") | mnUserId != 1)
@@ -834,7 +845,7 @@ namespace Protean
                     }
                 }
                 if (mnUserId == 0)
-                    mnUserId = Conversions.ToInteger(goSession["nUserId"]);
+                    mnUserId = Convert.ToInt16(goSession["nUserId"]);
                 if (mcEwCmd == "LogOff")
                     mcEwCmd = goRequest["ewCmd"];
                 if (mnUserId > 0)
@@ -1259,7 +1270,7 @@ namespace Protean
                     if (!string.IsNullOrEmpty(AltFolder))
                     {
                         AddResponse("Running: " + filePath);
-                        if (Conversions.ToBoolean(oFS.VirtualFileExists(filePath)))
+                        if (Convert.ToBoolean(oFS.VirtualFileExists(filePath)))
                         {
                             UpdateDatabase(filePath);
                         }
@@ -1273,7 +1284,7 @@ namespace Protean
                         AddResponse("Not Running: " + filePath);
                     }
                 }
-                if (Conversions.ToBoolean(oFS.VirtualFileExists(upgradePath)))
+                if (Convert.ToBoolean(oFS.VirtualFileExists(upgradePath)))
                 {
                     UpdateDatabase(upgradePath);
                 }
@@ -1375,7 +1386,7 @@ namespace Protean
                     AddResponse("--------------------------------------");
                     AddResponse("Updating Database: " + oDBName + " on " + oDBServerName);
                     AddResponse("Current Version: " + cCurrentVersion);
-                    string[] oCurrentVersion = Strings.Split(cCurrentVersion, ".");
+                    string[] oCurrentVersion = cCurrentVersion.Split('.');
                     string cLatestVersion = oUpgrdXML.DocumentElement.GetAttribute("LatestVersion");
                     if ((cLatestVersion ?? "") == (cCurrentVersion ?? ""))
                         return true;
@@ -1392,21 +1403,21 @@ namespace Protean
                     foreach (XmlElement oVer in oUpgrdXML.DocumentElement.SelectNodes("Version"))
                     {
                         // in current main version or above
-                        if (Operators.CompareString(oVer.GetAttribute("Number"), oCurrentVersion[0], false) >= 0)
+                        if (string.Compare(oVer.GetAttribute("Number"), oCurrentVersion[0]) >= 0)
                         {
                             foreach (XmlElement Sub1 in oVer.SelectNodes("Sub1"))
                             {
                                 // in current sub version 1 or above
-                                if (Conversions.ToLong(Sub1.GetAttribute("Number")) >= Conversions.ToLong(oCurrentVersion[1]))
+                                if (Convert.ToInt64(Sub1.GetAttribute("Number")) >= Convert.ToInt64(oCurrentVersion[1]))
                                 {
                                     foreach (XmlElement Sub2 in Sub1.SelectNodes("Sub2"))
                                     {
-                                        if (Conversions.ToLong(Sub2.GetAttribute("Number")) >= Conversions.ToLong(oCurrentVersion[2]))
+                                        if (Convert.ToInt64(Sub2.GetAttribute("Number")) >= Convert.ToInt64(oCurrentVersion[2]))
                                         {
 
                                             foreach (XmlElement Sub3 in Sub2.SelectNodes("Sub3"))
                                             {
-                                                if (Conversions.ToLong(Sub3.GetAttribute("Number")) >= Conversions.ToLong(oCurrentVersion[3]) | bRunAll)
+                                                if (Convert.ToInt64(Sub3.GetAttribute("Number")) >= Convert.ToInt64(oCurrentVersion[3]) | bRunAll)
                                                 {
                                                     // now to get actions
                                                     AddResponse("Updating to:" + oVer.GetAttribute("Number") + "." + Sub1.GetAttribute("Number") + "." + Sub2.GetAttribute("Number") + "." + Sub3.GetAttribute("Number"));
@@ -1492,17 +1503,17 @@ namespace Protean
                                                     // AddResponse("Error: Not yet at this version number")
                                                 }
                                             }
-                                            if (Conversions.ToLong(Sub2.GetAttribute("Number")) == Conversions.ToLong(oCurrentVersion[2]))
+                                            if (Convert.ToInt64(Sub2.GetAttribute("Number")) == Convert.ToInt64(oCurrentVersion[2]))
                                             {
                                                 oCurrentVersion[3] = 0.ToString();
-                                                oCurrentVersion[2] = (Conversions.ToDouble(oCurrentVersion[2]) + 1d).ToString();
+                                                oCurrentVersion[2] = (Convert.ToDouble(oCurrentVersion[2]) + 1d).ToString();
                                             }
                                         }
                                     }
-                                    if (Conversions.ToLong(Sub1.GetAttribute("Number")) == Conversions.ToLong(oCurrentVersion[1]))
+                                    if (Convert.ToInt64(Sub1.GetAttribute("Number")) == Convert.ToInt64(oCurrentVersion[1]))
                                     {
                                         oCurrentVersion[2] = 0.ToString();
-                                        oCurrentVersion[1] = (Conversions.ToDouble(oCurrentVersion[1]) + 1d).ToString();
+                                        oCurrentVersion[1] = (Convert.ToDouble(oCurrentVersion[1]) + 1d).ToString();
                                     }
                                 }
                             }
@@ -1582,50 +1593,38 @@ namespace Protean
                 }
 
 
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/Structure.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/Structure.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/fxn_SearchXML.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/fxn_SearchXML.sql")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/fxn_addAudit.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/fxn_addAudit.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/fxn_getStatus.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/fxn_getStatus.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/fxn_checkPermission.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/fxn_checkPermission.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/fxn_getUserCompanies.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/fxn_getUserCompanies.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/fxn_shippingTotal.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/fxn_shippingTotal.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/fxn_getUserDepts.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/fxn_getUserDepts.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/fxn_getUserRoles.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/fxn_getUserRoles.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/spGetAllUsers.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/spGetAllUsers.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/spGetUsers.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/spGetUsers.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/getContentStructure.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/getContentStructure.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/spGetDirectoryItems.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/spGetDirectoryItems.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/getUsersCompanyAllParents.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/getUsersCompanyAllParents.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/spGetCompanyUsers.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/spGetCompanyUsers.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/spGetAllUsersActive.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/spGetAllUsersActive.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/spGetAllUsersInActive.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/spGetAllUsersInActive.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/spGetCompanyUsersActive.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/spGetCompanyUsersActive.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/spGetCompanyUsersInActive.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/spGetCompanyUsersInActive.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/spSearchUsers.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/spSearchUsers.SQL'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/4.0.1.40/tblOptOutAddresses.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/4.0.1.40/tblOptOutAddresses.sql'")));
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/4.0.1.45/fxn_getContentParents.sql"))));
-                AddResponse(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Run File ", dbUpdatePath), "/toV4/4.0.1.45/fxn_getContentParents.sql'")));
+                string[] sqlFiles = new[]
+                                     {
+                                        "/toV4/Structure.sql",
+                                        "/toV4/fxn_SearchXML.sql",
+                                        "/toV4/fxn_addAudit.sql",
+                                        "/toV4/fxn_getStatus.sql",
+                                        "/toV4/fxn_checkPermission.sql",
+                                        "/toV4/fxn_getUserCompanies.sql",
+                                        "/toV4/fxn_shippingTotal.sql",
+                                        "/toV4/fxn_getUserDepts.sql",
+                                        "/toV4/fxn_getUserRoles.sql",
+                                        "/toV4/spGetAllUsers.sql",
+                                        "/toV4/spGetUsers.sql",
+                                        "/toV4/getContentStructure.sql",
+                                        "/toV4/spGetDirectoryItems.sql",
+                                        "/toV4/getUsersCompanyAllParents.sql",
+                                        "/toV4/spGetCompanyUsers.sql",
+                                        "/toV4/spGetAllUsersActive.sql",
+                                        "/toV4/spGetAllUsersInActive.sql",
+                                        "/toV4/spGetCompanyUsersActive.sql",
+                                        "/toV4/spGetCompanyUsersInActive.sql",
+                                        "/toV4/spSearchUsers.sql",
+                                        "/toV4/4.0.1.40/tblOptOutAddresses.sql",
+                                        "/toV4/4.0.1.45/fxn_getContentParents.sql"
+                                    };
+
+                foreach (var file in sqlFiles)
+                {
+                    string fullPath = goServer.MapPath($"{dbUpdatePath}{file}");
+                    myWeb.moDbHelper.ExeProcessSqlfromFile(fullPath);
+                    AddResponse($"Run File {dbUpdatePath}{file}");
+                }
 
                 AddResponse("Completed Initial Build");
                 saveVersionNumber();
@@ -1726,13 +1725,13 @@ namespace Protean
                 }
 
                 // create the version table if not exists
-                string sFilePath = Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/4.1.1.35/tblSchemaVersion.sql"));
+                string sFilePath = $"{dbUpdatePath}/toV4/4.1.1.35/tblSchemaVersion.sql";
                 if (!myWeb.moDbHelper.checkDBObjectExists("tblSchemaVersion", Tools.Database.objectTypes.Table, cConn))
                 {
                     myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(sFilePath));
                 }
 
-                string[] aVersionNumber = Strings.Split(cVersionNumber, ".");
+                string[] aVersionNumber = cVersionNumber.Split('.');
                 string sSql;
                 DataSet oDs;
                 DataRow oDr;
@@ -1751,19 +1750,19 @@ namespace Protean
                 {
                     oDr = oDs.Tables["VersionNo"].Rows[0];
                     oDr.BeginEdit();
-                    oDr["MajorVersion"] = Conversions.ToInteger(aVersionNumber[0]);
-                    oDr["MinorVersion"] = Conversions.ToInteger(aVersionNumber[1]);
-                    oDr["Release"] = Conversions.ToInteger(aVersionNumber[2]);
-                    oDr["Build"] = Conversions.ToInteger(aVersionNumber[3]);
+                    oDr["MajorVersion"] = Convert.ToInt16(aVersionNumber[0]);
+                    oDr["MinorVersion"] = Convert.ToInt16(aVersionNumber[1]);
+                    oDr["Release"] = Convert.ToInt16(aVersionNumber[2]);
+                    oDr["Build"] = Convert.ToInt16(aVersionNumber[3]);
                     oDr.EndEdit();
                 }
                 else
                 {
                     oDr = oDs.Tables["VersionNo"].NewRow();
-                    oDr["MajorVersion"] = Conversions.ToInteger(aVersionNumber[0]);
-                    oDr["MinorVersion"] = Conversions.ToInteger(aVersionNumber[1]);
-                    oDr["Release"] = Conversions.ToInteger(aVersionNumber[2]);
-                    oDr["Build"] = Conversions.ToInteger(aVersionNumber[3]);
+                    oDr["MajorVersion"] = Convert.ToInt16(aVersionNumber[0]);
+                    oDr["MinorVersion"] = Convert.ToInt16(aVersionNumber[1]);
+                    oDr["Release"] = Convert.ToInt16(aVersionNumber[2]);
+                    oDr["Build"] = Convert.ToInt16(aVersionNumber[3]);
                     oDs.Tables["VersionNo"].Rows.Add(oDr);
                 }
 
@@ -1826,7 +1825,10 @@ namespace Protean
                     }
 
                     foreach (DataRow oDr in oDs.Tables["VersionNo"].Rows)
-                        sVersionNumber = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oDr["MajorVersion"], "."), oDr["MinorVersion"]), "."), oDr["Release"]), "."), oDr["Build"]), "."));
+                    {
+                        sVersionNumber = $"{oDr["MajorVersion"]}.{oDr["MinorVersion"]}.{oDr["Release"]}.{oDr["Build"]}.";
+                    }
+
                     oDs.Dispose();
                     oDs = null;
                 }
@@ -1838,7 +1840,7 @@ namespace Protean
             {
                 AddResponseError(ex); // returnException(myWeb.msException, mcModuleName, "updateDatabase", ex, "", cProcessInfo, gbDebug)
                 AddResponse("Failed to update version number - Error Condition");
-                return Conversions.ToString(false);
+                return Convert.ToString(false);
             }
         }
 
@@ -1910,7 +1912,7 @@ namespace Protean
                         oDC.ColumnMapping = MappingType.Attribute;
                 }
 
-                oDXML.InnerXml = Strings.Replace(oDSDIR.GetXml(), "'", "''");
+                oDXML.InnerXml = oDSDIR.GetXml().Replace("'", "''");
 
                 // ok, now we need to loop through the directory, 
                 // then add the contacts for the users
@@ -1952,15 +1954,15 @@ namespace Protean
                         if (string.IsNullOrEmpty(oConElmt.GetAttribute("cContactName")))
                             cSQLP2 += "Null,";
                         else
-                            cSQLP2 += "'" + Strings.Replace(oConElmt.GetAttribute("cContactName"), "'", "''") + "',";
+                            cSQLP2 += "'" + string.Compare(oConElmt.GetAttribute("cContactName"), "'") + "',";
                         if (string.IsNullOrEmpty(oConElmt.GetAttribute("cContactCompany")))
                             cSQLP2 += "Null,";
                         else
-                            cSQLP2 += "'" + Strings.Replace(oConElmt.GetAttribute("cContactCompany"), "'", "''") + "',";
+                            cSQLP2 += "'" + string.Compare(oConElmt.GetAttribute("cContactCompany"), "'") + "',";
                         if (string.IsNullOrEmpty(oConElmt.GetAttribute("cContactAddress")))
                             cSQLP2 += "Null,";
                         else
-                            cSQLP2 += "'" + Strings.Replace(oConElmt.GetAttribute("cContactAddress"), "'", "''") + "',";
+                            cSQLP2 += "'" + string.Compare(oConElmt.GetAttribute("cContactAddress"), "'") + "',";
                         if (string.IsNullOrEmpty(oConElmt.GetAttribute("cContactCity")))
                             cSQLP2 += "Null,";
                         else
@@ -2002,12 +2004,12 @@ namespace Protean
 
                     if (!string.IsNullOrEmpty(oDirElmt.GetAttribute("cDirMemberOfIdArr")))
                     {
-                        string[] myArr = Strings.Split(oDirElmt.GetAttribute("cDirMemberOfIdArr"), ",");
+                        string[] myArr = oDirElmt.GetAttribute("cDirMemberOfIdArr").Split(',');
                         int i;
-                        var loopTo = Information.UBound(myArr);
+                        var loopTo = myArr.Length - 1;
                         for (i = 0; i <= loopTo; i++)
                         {
-                            int myID = myWeb.moDbHelper.FindDirectoryByForiegn(Strings.Trim(myArr[i]));
+                            int myID = myWeb.moDbHelper.FindDirectoryByForiegn(myArr[i]?.Trim());
                             if (myID > 0)
                                 myWeb.moDbHelper.maintainDirectoryRelation(myID, nDirId);
                         }
@@ -2090,7 +2092,7 @@ namespace Protean
                     oMenuElmt = currentOMenuElmt;
                     if (oMenuElmt.ParentNode.SelectSingleNode("@NewID") != null)
                     {
-                        nParID = Conversions.ToInteger(oMenuElmt.ParentNode.SelectSingleNode("@NewID").InnerText);
+                        nParID = Convert.ToInt16(oMenuElmt.ParentNode.SelectSingleNode("@NewID").InnerText);
                     }
                     switch (oMenuElmt.GetAttribute("nStatus") ?? "")
                     {
@@ -2115,7 +2117,21 @@ namespace Protean
                                 break;
                             }
                     }
-                    nParID = Convert.ToInt32(myWeb.moDbHelper.insertStructure(nParID, oMenuElmt.GetAttribute("nId"), CleanName(oMenuElmt.GetAttribute("cName")), "<DisplayName>" + oMenuElmt.GetAttribute("cName") + "</DisplayName><Description />", oMenuElmt.GetAttribute("cTemplateName"), nMenStatus, Convert.ToDateTime(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dPublishDate")), null, oMenuElmt.GetAttribute("dPublishDate"))), Convert.ToDateTime(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("dExpireDate")), null, oMenuElmt.GetAttribute("dExpireDate"))), "", Convert.ToInt64(Interaction.IIf(string.IsNullOrEmpty(oMenuElmt.GetAttribute("nDisplayOrder")), 0, oMenuElmt.GetAttribute("nDisplayOrder")))));
+                    nParID = Convert.ToInt32(
+    myWeb.moDbHelper.insertStructure(
+        nParID,
+        oMenuElmt.GetAttribute("nId"),
+        CleanName(oMenuElmt.GetAttribute("cName")),
+        "<DisplayName>" + oMenuElmt.GetAttribute("cName") + "</DisplayName><Description />",
+        oMenuElmt.GetAttribute("cTemplateName"),
+        nMenStatus,
+        string.IsNullOrEmpty(oMenuElmt.GetAttribute("dPublishDate")) ? (DateTime?)null : Convert.ToDateTime(oMenuElmt.GetAttribute("dPublishDate")),
+        string.IsNullOrEmpty(oMenuElmt.GetAttribute("dExpireDate")) ? (DateTime?)null : Convert.ToDateTime(oMenuElmt.GetAttribute("dExpireDate")),
+        "",
+        string.IsNullOrEmpty(oMenuElmt.GetAttribute("nDisplayOrder")) ? 0L : Convert.ToInt64(oMenuElmt.GetAttribute("nDisplayOrder"))
+    )
+);
+
                     oMenuElmt.SetAttribute("NewID", nParID.ToString());
                     AddResponse("   Writing Page:" + oMenuElmt.GetAttribute("cName") + "   ");
 
@@ -2145,11 +2161,21 @@ namespace Protean
                                     break;
                                 }
                         }
-                        sContentBrief = upgradeContentSchemas(Strings.Replace(oContElmt.GetAttribute("cContentTypeName"), " ", ""), oContElmt.GetAttribute("cContentXML"), "brief");
+                        sContentBrief = upgradeContentSchemas(oContElmt.GetAttribute("cContentTypeName").Replace(" ", ""), oContElmt.GetAttribute("cContentXML"), "brief");
 
-                        sContentDetail = upgradeContentSchemas(Strings.Replace(oContElmt.GetAttribute("cContentTypeName"), " ", ""), oContElmt.GetAttribute("cContentXML"), "detail");
+                        sContentDetail = upgradeContentSchemas(oContElmt.GetAttribute("cContentTypeName").Replace(" ", ""), oContElmt.GetAttribute("cContentXML"), "detail");
 
-                        nContentId = myWeb.moDbHelper.insertContent(oContElmt.GetAttribute("nContentKey"), CleanName(oContElmt.GetAttribute("cContentPlaceName"), true), Strings.Replace(oContElmt.GetAttribute("cContentTypeName"), " ", ""), sContentBrief, sContentDetail, nParID, Interaction.IIf(string.IsNullOrEmpty(oContElmt.GetAttribute("dPublishDate")), null, oContElmt.GetAttribute("dPublishDate")), Interaction.IIf(string.IsNullOrEmpty(oContElmt.GetAttribute("dExpireDate")), null, oContElmt.GetAttribute("dExpireDate")), nContStatus);
+                        nContentId = myWeb.moDbHelper.insertContent(
+    oContElmt.GetAttribute("nContentKey"),
+    CleanName(oContElmt.GetAttribute("cContentPlaceName"), true),
+    oContElmt.GetAttribute("cContentTypeName").Replace(" ", ""),
+    sContentBrief,
+    sContentDetail,
+    nParID,
+    string.IsNullOrEmpty(oContElmt.GetAttribute("dPublishDate")) ? (DateTime?)null : Convert.ToDateTime(oContElmt.GetAttribute("dPublishDate")),
+    string.IsNullOrEmpty(oContElmt.GetAttribute("dExpireDate")) ? (DateTime?)null : Convert.ToDateTime(oContElmt.GetAttribute("dExpireDate")),
+    nContStatus
+);
 
                         bool bCascade = false;
                         if (oContElmt.GetAttribute("nContentItterateDown") == "1")
@@ -2178,9 +2204,9 @@ namespace Protean
                 {
                     oContElmt = currentOContElmt1;
                     // if the image has a menu sibling of the same name.
-                    if (oContElmt.ParentNode.SelectSingleNode("Menu[@cName='" + Strings.Replace(oContElmt.GetAttribute("cContentPlaceName"), "'", "") + "']") != null)
+                    if (oContElmt.ParentNode.SelectSingleNode("Menu[@cName='" + string.Compare(oContElmt.GetAttribute("cContentPlaceName"), "'") + "']") != null)
                     {
-                        oMenuElmt = (XmlElement)oContElmt.ParentNode.SelectSingleNode("Menu[@cName='" + Strings.Replace(oContElmt.GetAttribute("cContentPlaceName"), "'", "") + "']");
+                        oMenuElmt = (XmlElement)oContElmt.ParentNode.SelectSingleNode("Menu[@cName='" + string.Compare(oContElmt.GetAttribute("cContentPlaceName"), "'") + "']");
                         sSql = "update tblContent set cContentName = 'page_" + oMenuElmt.GetAttribute("NewID") + "_tn' where nContentKey=" + oContElmt.GetAttribute("NewID");
                         AddResponse("<p>Renaming Image: '" + oContElmt.GetAttribute("cContentPlaceName") + "' - 'page_" + oMenuElmt.GetAttribute("NewID") + "_tn'</p>");
                         myWeb.moDbHelper.ExeProcessSql(sSql);
@@ -2254,7 +2280,7 @@ namespace Protean
                     // check parent
                     if (oLocElmt.ParentNode.SelectSingleNode("@NewID") != null)
                     {
-                        nParID = Conversions.ToInteger(oLocElmt.ParentNode.SelectSingleNode("@NewID").InnerText);
+                        nParID = Convert.ToInt16(oLocElmt.ParentNode.SelectSingleNode("@NewID").InnerText);
                     }
                     cSQL = "INSERT INTO tblCartShippingLocations (nLocationType, nLocationParId, cLocationForeignRef, cLocationNameFull, " + "cLocationNameShort, cLocationISOnum, cLocationISOa2, cLocationISOa3, cLocationCode, nLocationTaxRate, " + "nAuditId) VALUES (";
                     if (string.IsNullOrEmpty(oLocElmt.GetAttribute("nLocationType")))
@@ -2272,11 +2298,11 @@ namespace Protean
                     if (string.IsNullOrEmpty(oLocElmt.GetAttribute("cLocationNameFull")))
                         cSQL += "Null,";
                     else
-                        cSQL += "'" + Strings.Replace(oLocElmt.GetAttribute("cLocationNameFull"), "'", "''") + "',";
+                        cSQL += "'" + string.Compare(oLocElmt.GetAttribute("cLocationNameFull"), "'") + "',";
                     if (string.IsNullOrEmpty(oLocElmt.GetAttribute("cLocationNameShort")))
                         cSQL += "Null,";
                     else
-                        cSQL += "'" + Strings.Replace(oLocElmt.GetAttribute("cLocationNameShort"), "'", "''") + "',";
+                        cSQL += "'" + string.Compare(oLocElmt.GetAttribute("cLocationNameShort"), "'") + "',";
                     if (string.IsNullOrEmpty(oLocElmt.GetAttribute("cLocationISOnum")))
                         cSQL += "Null,";
                     else
@@ -2439,7 +2465,7 @@ namespace Protean
                         oDC.ColumnMapping = MappingType.Attribute;
                 }
 
-                oDXML.InnerXml = Strings.Replace(oDS.GetXml(), "'", "''");
+                oDXML.InnerXml = oDS.GetXml().Replace("'", "''");
 
                 // ok, now we need to loop through the carts, 
                 // add the items, splitting out the options as well
@@ -2462,7 +2488,7 @@ namespace Protean
                     if (string.IsNullOrEmpty(oOrdElmt.GetAttribute("nCartStatus")))
                         cSQLP2 += "0,";
                     else
-                        cSQLP2 = Conversions.ToString(cSQLP2 + Operators.ConcatenateObject(Interaction.IIf(Conversions.ToDouble(oOrdElmt.GetAttribute("nCartStatus")) == 6d, 7, oOrdElmt.GetAttribute("nCartStatus")), ","));
+                        cSQLP2 += (Convert.ToDouble(oOrdElmt.GetAttribute("nCartStatus")) == 6 ? "7" : oOrdElmt.GetAttribute("nCartStatus")) + ",";
                     cSQLP2 += "Null,"; // Cart Schema Name
                     if (string.IsNullOrEmpty(oOrdElmt.GetAttribute("cCartSessionId")))
                         cSQLP2 += "Null,";
@@ -2477,7 +2503,7 @@ namespace Protean
                     {
                         cSQLP2 += "Null,";
                     }
-                    else if (!Information.IsNumeric(oOrdElmt.GetAttribute("nPaymentMethod")))
+                    else if (!Tools.Number.IsNumeric(oOrdElmt.GetAttribute("nPaymentMethod")))
                     {
                         cSQLP2 += "Null,";
                     }
@@ -2641,15 +2667,15 @@ namespace Protean
                         if (string.IsNullOrEmpty(oConElmt.GetAttribute("cContactName")))
                             cSQLP2 += "Null,";
                         else
-                            cSQLP2 += "'" + Strings.Replace(oConElmt.GetAttribute("cContactName"), "'", "''") + "',";
+                            cSQLP2 += "'" + oConElmt.GetAttribute("cContactName").Replace("'", "''") + "',";
                         if (string.IsNullOrEmpty(oConElmt.GetAttribute("cContactCompany")))
                             cSQLP2 += "Null,";
                         else
-                            cSQLP2 += "'" + Strings.Replace(oConElmt.GetAttribute("cContactCompany"), "'", "''") + "',";
+                            cSQLP2 += "'" + oConElmt.GetAttribute("cContactCompany").Replace("'", "''") + "',";
                         if (string.IsNullOrEmpty(oConElmt.GetAttribute("cContactAddress")))
                             cSQLP2 += "Null,";
                         else
-                            cSQLP2 += "'" + Strings.Replace(oConElmt.GetAttribute("cContactAddress"), "'", "''") + "',";
+                            cSQLP2 += "'" + oConElmt.GetAttribute("cContactAddress").Replace("'", "''") + "',";
                         if (string.IsNullOrEmpty(oConElmt.GetAttribute("cContactCity")))
                             cSQLP2 += "Null,";
                         else
@@ -2757,9 +2783,9 @@ namespace Protean
                     dbUpdatePath = "/ptn/update/sql";
                 }
                 // AddResponse("Removing V4 Tables")
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/DropAllForeignKeys.sql"))));
+                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath($"{dbUpdatePath}/toV4/DropAllForeignKeys.sql"));
                 myWeb.msException = "";
-                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath(Conversions.ToString(Operators.ConcatenateObject(dbUpdatePath, "/toV4/ClearDB.SQL"))));
+                myWeb.moDbHelper.ExeProcessSqlfromFile(goServer.MapPath($"{dbUpdatePath}/toV4/ClearDB.SQL"));
                 AddResponse("Run File (/ewcommon/sqlupdate/toV4/ClearDB.SQL)");
                 return saveVersionNumber("0.0.0.0");
             }
@@ -2827,7 +2853,7 @@ namespace Protean
                 }
 
                 sSqlStr = "if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[" + sName + "]') and " + sObjProperty + ")";
-                sSqlStr = sSqlStr + "drop " + Strings.LCase(sObjectType) + " [dbo].[" + sName + "] ";
+                sSqlStr += "drop " + sObjectType.ToLower() + " [dbo].[" + sName + "] ";
                 myWeb.moDbHelper.ExeProcessSql(sSqlStr);
             }
 
@@ -2926,7 +2952,7 @@ namespace Protean
             if (goRequest["export"] != null)
             {
                 goResponse.AddHeader("Content-Type", "text/xml");
-                goResponse.AddHeader("Content-Disposition", "attachment; filename=ex_shiplocs_" + Strings.Format(DateTime.Now, "yyMMddHHmmss") + ".xml");
+                goResponse.AddHeader("Content-Disposition", "attachment; filename=ex_shiplocs_" + DateTime.Now.ToString("yyMMddHHmmss") + ".xml");
                 goResponse.Write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + moDbHelper.exportShippingLocations());
             }
             else
@@ -2975,7 +3001,7 @@ namespace Protean
                     goResponse.Write("<div style=\"height: 200px;width:100%;overflow:scroll;\">");
                     if (bIsXml)
                     {
-                        goResponse.Write(Strings.Replace(Strings.Replace(cImport, ">", "&gt;"), "<", "&lt;"));
+                        goResponse.Write(cImport.Replace(">", "&gt;").Replace("<", "&lt;"));
                     }
                     else
                     {
@@ -2993,14 +3019,14 @@ namespace Protean
 
         #endregion
 
-        internal int CommitToLog(Protean.Cms.dbHelper.ActivityType nEventType, int nUserId, string cSessionId, DateTime dDateTime, int nPrimaryId = 0, int nSecondaryId = 0, string cDetail = "")
+        internal int CommitToLog(Protean.Cms.dbHelper.ActivityType nEventType, long nUserId, string cSessionId, DateTime dDateTime, int nPrimaryId = 0, int nSecondaryId = 0, string cDetail = "")
         {
             string cSQL = "INSERT INTO tblActivityLog (nUserDirId, nStructId, nArtId, dDateTime, nActivityType, cActivityDetail, cSessionId) VALUES (";
             cSQL += nUserId + ",";
             cSQL += nPrimaryId + ",";
             cSQL += nSecondaryId + ",";
             cSQL += Tools.Database.SqlDate(dDateTime, true) + ",";
-            cSQL += nEventType + ",";
+            cSQL += (int)nEventType + ",";
             cSQL += "'" + cDetail + "',";
             cSQL += "'" + cSessionId + "')";
             return Convert.ToInt32(myWeb.moDbHelper.GetIdInsertSql(cSQL));
@@ -3008,8 +3034,8 @@ namespace Protean
 
         internal void UpdateLogDetail(int nActivityKey, string cActivityDetail)
         {
-            string cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblActivityLog " + "SET cActivityDetail = '", SqlFmt(cActivityDetail)), "' "), "WHERE nActivityKey = "), SqlFmt(nActivityKey.ToString())));
-
+            string cSQL = "UPDATE tblActivityLog SET cActivityDetail = '" + SqlFmt(cActivityDetail) +
+              "' WHERE nActivityKey = " + SqlFmt(nActivityKey.ToString());
             myWeb.moDbHelper.ExeProcessSql(cSQL);
         }
 
@@ -3046,10 +3072,10 @@ namespace Protean
                     string PrePropURL = goConfig["PrePropUrl"] + "";
                     if (!string.IsNullOrEmpty(PrePropURL))
                         siteUrl = siteUrl.Replace(PrePropURL, "");
-                    siteUrl = Strings.Replace(siteUrl, "http://", "");
-                    siteUrl = Strings.Replace(siteUrl, "www.", "");
-                    siteUrl = Strings.Replace(siteUrl, ".", "_");
-                    siteUrl = Strings.Replace(siteUrl, "-", "_");
+                    siteUrl = siteUrl.Replace("http://", "");
+                    siteUrl = siteUrl.Replace("www.", "");
+                    siteUrl = siteUrl.Replace(".", "_");
+                    siteUrl = siteUrl.Replace("-", "_");
                     return "ew_" + siteUrl;
                 }
                 catch (Exception ex)
@@ -3115,7 +3141,7 @@ namespace Protean
                     // MyBase.instance.InnerXml = oCgfSect.SectionInformation.GetRawXml
                     var oDefaultCfgXml = new XmlDocument();
 
-                    if (Conversions.ToBoolean(oFsh.VirtualFileExists("/protean.web.config")))
+                    if (Convert.ToBoolean(oFsh.VirtualFileExists("/protean.web.config")))
                     {
                         oDefaultCfgXml.Load(this.goServer.MapPath("/protean.web.config"));
                     }
@@ -3250,7 +3276,7 @@ namespace Protean
                 Protean.fsHelper oFsh;
 
                 string DatabaseName = goConfig["DatabaseName"];
-                string DatabaseFilename = System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetYear(DateTime.Now) + "-" + System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetMonth(DateTime.Now) + "-" + System.Threading.Thread.CurrentThread.CurrentCulture.Calendar.GetDayOfMonth(DateTime.Now) + "-" + Conversions.ToString(DateAndTime.TimeOfDay) + "-" + goConfig["DatabaseName"] + ".bak";
+                string DatabaseFilename = $"{DateTime.Now.Year}-{DateTime.Now.Month}-{DateTime.Now.Day}-{DateTime.Now:HH.mm.ss}-{goConfig["DatabaseName"]}.bak";
                 string DatabaseFilepath = this.goServer.MapPath("/") + @"..\data";
 
                 try
@@ -3703,9 +3729,9 @@ namespace Protean
                     UpdateType = goRequest["upgradetype"];
                     goSession["upgradetype"] = UpdateType;
                 }
-                else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(goSession["upgradetype"], "", false)))
+                else if (!string.IsNullOrEmpty(goSession["upgradetype"]?.ToString()))
                 {
-                    UpdateType = Conversions.ToString(goSession["upgradetype"]);
+                    UpdateType = Convert.ToString(goSession["upgradetype"]);
                 }
                 else
                 {
@@ -3797,14 +3823,9 @@ namespace Protean
                     {
                         oSetup.AddResponse("Reading Brief File");
                         nFileLen = oFullFile.ContentLength;
-                        oByteFile = new byte[nFileLen + 1];
-                        var oBuffer = new byte[nFileLen + 1];
+                        oByteFile = new byte[nFileLen];
                         oFStream = oFullFile.InputStream;
-                        oFStream.Read(oBuffer, 0, nFileLen);
-                        int i;
-                        var loopTo = nFileLen - 1;
-                        for (i = 0; i <= loopTo; i++)
-                            oByteFile[i] = oBuffer[i];
+                        oFStream.Read(oByteFile, 0, nFileLen);
                         oFStream.Close();
                         // now make it a string
                         cFullXSLT = ByteToStr(oByteFile);
@@ -3856,9 +3877,9 @@ namespace Protean
                 if (!string.IsNullOrEmpty(cUpdateSchemaColumnName))
                     cSQL += " WHERE (" + cUpdateSchemaColumnName + "= '" + cContentType + "')";
 
-                if (!string.IsNullOrEmpty(Strings.Trim(cAdditionalWhere)))
+                if (!string.IsNullOrEmpty(cAdditionalWhere?.Trim()))
                 {
-                    cSQL = Conversions.ToString(cSQL + Operators.ConcatenateObject(Interaction.IIf(cSQL.Contains(" WHERE "), " AND ", " WHERE "), cAdditionalWhere));
+                    cSQL += (cSQL.Contains(" WHERE ") ? " AND " : " WHERE ") + cAdditionalWhere;
                 }
 
                 // get dataset
@@ -3884,7 +3905,7 @@ namespace Protean
                 {
                     // dont bother if there is no xsl file for the brief
                     // Get the id
-                    long nId = Conversions.ToLong(oDR[cUpdateKeyColumnName]);
+                    long nId = Convert.ToInt64(oDR[cUpdateKeyColumnName]);
                     string cResponse = myWeb.moDbHelper.getObjectInstance(nUpdateTableType, nId);
                     if (Convert.ToInt32(nUpdateTableType) == 4) // Directory
                     {
@@ -3927,17 +3948,17 @@ namespace Protean
                         {
                             // diable version control for this
                             myWeb.gbVersionControl = false;
-                            myWeb.moDbHelper.setObjectInstance(nUpdateTableType, oInstance, Conversions.ToLong(cCurrentId));
-                            if (Conversions.ToLong(cCurrentId) > 0L)
+                            myWeb.moDbHelper.setObjectInstance(nUpdateTableType, oInstance, Convert.ToInt64(cCurrentId));
+                            if (Convert.ToInt64(cCurrentId) > 0L)
                             {
-                                myWeb.moDbHelper.processInstanceExtras(Conversions.ToLong(cCurrentId), oInstance, false, false);
+                                myWeb.moDbHelper.processInstanceExtras(Convert.ToInt64(cCurrentId), oInstance, false, false);
                             }
                             nProgress += 1;
                             if (nProgress == nRowCount | nProgress % 20 == 0 & bAllowLog)
                             {
                                 cProgressDetail = nProgress + "/" + nRowCount;
                                 if (nProgress == nRowCount)
-                                    cProgressDetail += ";" + Strings.Format(DateTime.Now, "yyyy-MM-dd HH:mm:ss");
+                                    cProgressDetail += ";" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                                 oSetup.UpdateLogDetail(nLogId, cProgressDetail);
                             }
                         }
@@ -3973,7 +3994,7 @@ namespace Protean
                     var oElmt = oXML.CreateElement(oDC.ColumnName);
                     if (!(oRow[oDC.ColumnName] is DBNull))
                     {
-                        oElmt.InnerXml = Conversions.ToString(oRow[oDC.ColumnName]);
+                        oElmt.InnerXml = Convert.ToString(oRow[oDC.ColumnName]);
                         oInst.AppendChild(oElmt);
                     }
                 }
@@ -4089,10 +4110,12 @@ namespace Protean
                     using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable("SELECT " + cUpdateSchemaColumnName + " FROM " + cUpdateTableName + " GROUP BY " + cUpdateSchemaColumnName + " ORDER BY " + cUpdateSchemaColumnName))  // Done by nita on 6/7/22
                     {
                         while (oDr.Read())
-                            cOptions = Conversions.ToString(cOptions + Operators.ConcatenateObject(Operators.ConcatenateObject("<option>", oDr.GetValue(0)), "</option>"));
+                        {
+                            cOptions += "<option>" + oDr.GetValue(0).ToString() + "</option>";
+                        }
                         oDr.Close();
                     }
-                    oElmt.InnerXml += Strings.Replace(Strings.Replace(cOptions, "&gt;", ">"), "&lt;", "<");
+                    oElmt.InnerXml += cOptions.Replace("&gt;", ">").Replace("&lt;", "<");
                 }
 
 
@@ -4112,21 +4135,10 @@ namespace Protean
             // to represent the file
             oSetup.AddResponse("Converting Bytes to String");
 
-            char[] oChars; // array of characters
-
-            var oDecoder = System.Text.Encoding.UTF8.GetDecoder(); // a decoder
-            string cResult = ""; // the final string
             try
             {
-                oChars = new char[oDecoder.GetCharCount(oBytes, 0, Information.UBound(oBytes)) + 1]; // make the character array length the same as what will be outputted
-                oDecoder.GetChars(oBytes, 0, Information.UBound(oBytes), oChars, 0); // turn the bytes into chars
-
-                cResult = string.Concat(Conversions.ToString(oChars));
-
-                // For nI = 0 To UBound(oChars) - 1 'read the chars into a string
-                // cResult &= oChars(nI)
-                // Next
-                return cResult;
+                // Simpler and more efficient approach
+                return System.Text.Encoding.UTF8.GetString(oBytes);
             }
             catch (Exception ex)
             {
@@ -4167,7 +4179,7 @@ namespace Protean
                     {
                         oOpt = oSetup.moPageXml.CreateElement("option");
                         oOpt.SetAttribute("class", "schema");
-                        oOpt.InnerText = Conversions.ToString(oDr.GetValue(0));
+                        oOpt.InnerText = Convert.ToString(oDr.GetValue(0));
                         oElmt.AppendChild(oOpt);
                     }
                     oDr.Close();
@@ -4179,8 +4191,8 @@ namespace Protean
                     {
                         oOpt = oSetup.moPageXml.CreateElement("option");
                         oOpt.SetAttribute("class", "page");
-                        oOpt.SetAttribute("value", Conversions.ToString(oDr.GetValue(0)));
-                        oOpt.InnerText = Conversions.ToString(oDr.GetValue(1));
+                        oOpt.SetAttribute("value", Convert.ToString(oDr.GetValue(0)));
+                        oOpt.InnerText = Convert.ToString(oDr.GetValue(1));
                         oElmt.AppendChild(oOpt);
                     }
                     oDr.Close();
@@ -4207,7 +4219,7 @@ namespace Protean
                     // get the basic variables
                     int nContentID;
                     string cContentType;
-                    nContentID = Conversions.ToInteger(goRequest.Form["ContentId"]);
+                    nContentID = Convert.ToInt16(goRequest.Form["ContentId"]);
                     cContentType = goRequest.Form["Contenttype"];
                     var oInstanceXml = goRequest.Files["instancexml"];
                     // now we need to read the file without saving it anywhere
@@ -4267,16 +4279,16 @@ namespace Protean
                 var oInstances = new XmlDocument();
                 oInstances.PreserveWhitespace = false;
 
-                cContent = Strings.Replace(cContent, Conversions.ToString('\r'), ""); // Remove carriage return
-                cContent = Strings.Replace(cContent, Conversions.ToString('\n'), ""); // remove tab
-                cContent = Strings.Replace(cContent, "  ", " "); // remove double space
-                cContent = Strings.Replace(cContent, "  ", " "); // remove double space
-                cContent = Strings.Replace(cContent, "  ", " "); // remove double space
-                cContent = Strings.Replace(cContent, "  ", " "); // remove double space
-                cContent = Strings.Replace(cContent, "  ", " "); // remove double space
-                cContent = Strings.Replace(cContent, "  ", " "); // remove double space
-                cContent = Strings.Replace(cContent, "> <", "><"); // clean xml
-                oInstances.InnerXml = Strings.Trim(cContent);
+                cContent = cContent.Replace("\r", "");
+                cContent = cContent.Replace("\r", ""); // remove tab
+                cContent = cContent.Replace("  ", " "); // remove double space
+                cContent = cContent.Replace("  ", " "); // remove double space
+                cContent = cContent.Replace("  ", " "); // remove double space
+                cContent = cContent.Replace("  ", " "); // remove double space
+                cContent = cContent.Replace("  ", " "); // remove double space
+                cContent = cContent.Replace("  ", " "); // remove double space
+                cContent = cContent.Replace("> <", "><"); // clean xml
+                oInstances.InnerXml = cContent.Trim();
                 oInstances.PreserveWhitespace = false;
 
                 foreach (XmlElement oElmt in oInstances.DocumentElement.SelectNodes("instance/tblContent"))

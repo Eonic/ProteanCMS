@@ -2,9 +2,9 @@
 // $Library:     Protean.Providers.messaging.base
 // $Revision:    3.1  
 // $Date:        2010-03-02
-// $Author:      Trevor Spink (trevor@eonic.co.uk)
-// &Website:     www.eonic.co.uk
-// &Licence:     All Rights Reserved.
+// $Author:      Trevor Spink (trevor@eonic.digital)
+// &Website:     eonic.digital
+// &Licence:     Apache-2.0 license
 // $Copyright:   Copyright (c) 2002 - 2010 Eonic Ltd.
 // ***********************************************************************
 
@@ -17,8 +17,6 @@ using System.Runtime.InteropServices;
 using System.Web.Configuration;
 
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.Cms;
 using static Protean.stdTools;
 using Protean.Tools;
@@ -41,9 +39,9 @@ namespace Protean.Providers
         public interface IMessagingAdminXforms
         {
                   
-            XmlElement xFrmPreviewNewsLetter(int nPageId, ref XmlElement oPageDetail, string cSubject = "");
+            XmlElement xFrmPreviewNewsLetter(long nPageId, ref XmlElement oPageDetail, string cSubject = "");
 
-            XmlElement xFrmSendNewsLetter(int nPageId, string cPageName, string cDefaultEmail, string cDefaultEmailName, ref XmlElement oPageDetail);
+            XmlElement xFrmSendNewsLetter(long nPageId, string cPageName, string cDefaultEmail, string cDefaultEmailName, ref XmlElement oPageDetail);
 
             //Inherited from Proteean.Admin.AdminXForms
             XmlElement xFrmEditPage(long pgid = 0L, string cName = "", string cFormName = "Page", string cParId = "");
@@ -52,7 +50,7 @@ namespace Protean.Providers
 
             XmlElement xFrmAddModule(long pgid, string position);
 
-            XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref int nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L);
+            XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy,  long nReturnId,  string zcReturnSchema,  string AlternateFormName, long nVersionId = 0L);
 
             XmlElement xFrmAdminOptOut();
 
@@ -108,29 +106,29 @@ namespace Protean.Providers
                         Assembly assemblyInstance;
                         // = [Assembly].Load(moPrvConfig.Providers(ProviderName).Type)
 
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["path"], "", false)))
+                        if (!string.IsNullOrEmpty(ourProvider.Parameters["path"]?.ToString()))
                         {
-                            cProgressInfo = goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"]));
-                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Conversions.ToString(ourProvider.Parameters["path"])));
+                            cProgressInfo = goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"]));
+                            assemblyInstance = Assembly.LoadFrom(goServer.MapPath(Convert.ToString(ourProvider.Parameters["path"])));
                         }
                         else
                         {
                             assemblyInstance = Assembly.Load(ourProvider.Type);
                         }
 
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider.Parameters["className"], "", false)))
+                        if (!string.IsNullOrEmpty(ourProvider.Parameters["className"]?.ToString()))
                         {
-                            ProviderName = Conversions.ToString(ourProvider.Parameters["className"]);
+                            ProviderName = Convert.ToString(ourProvider.Parameters["className"]);
                         }
 
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider.Parameters["rootClass"], "", false)))
+                        if (string.IsNullOrEmpty(ourProvider.Parameters["rootClass"]?.ToString()))
                         {
                             calledType = assemblyInstance.GetType("Protean.Providers.Messaging." + ProviderName, true);
                         }
                         else
                         {
                             // calledType = assemblyInstance.GetType(ourProvider.parameters("rootClass") & ".Providers.Messaging", True)
-                            calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider.Parameters["rootClass"], ".Providers.Messaging."), ProviderName)), true);
+                            calledType = assemblyInstance.GetType($"{ourProvider.Parameters["rootClass"]}.Providers.Messaging.{ProviderName}", true);
                         }
                     }
 
@@ -217,7 +215,7 @@ namespace Protean.Providers
                 {
                 }
 
-                public XmlElement xFrmPreviewNewsLetter(int nPageId, ref XmlElement oPageDetail, string cSubject = "")
+                public XmlElement xFrmPreviewNewsLetter(long nPageId, ref XmlElement oPageDetail, string cSubject = "")
                 {
                     XmlElement oFrmElmt;
 
@@ -316,7 +314,7 @@ namespace Protean.Providers
                     }
                 }
 
-                public XmlElement xFrmSendNewsLetter(int nPageId, string cPageName, string cDefaultEmail, string cDefaultEmailName, ref XmlElement oPageDetail)
+                public XmlElement xFrmSendNewsLetter(long nPageId, string cPageName, string cDefaultEmail, string cDefaultEmailName, ref XmlElement oPageDetail)
                 {
                     XmlElement oFrmElmt;
                     XmlElement oCol1;
@@ -331,7 +329,7 @@ namespace Protean.Providers
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Groups", "2col", "Please select a group(s) to send to.");
 
-                        cDefaultEmail = Strings.Trim(cDefaultEmail);
+                        cDefaultEmail = cDefaultEmail?.Trim();
 
                         oCol1 = base.addGroup(ref oFrmElmt, "", "col1", "");
                         oCol2 = base.addGroup(ref oFrmElmt, "", "col2", "");
@@ -406,7 +404,7 @@ namespace Protean.Providers
                                 {
                                     // moDbHelper.logActivity(dbHelper.ActivityType.Email, myWeb.mnUserId, nPageId, , oGroupElmt.InnerText)
                                     moDbHelper.CommitLogToDB(dbHelper.ActivityType.NewsLetterSent, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, myWeb.mnPageId, 0, "", true);
-                                    string cGroupStr = "<Groups><Group>" + Strings.Replace(oGroupElmt.InnerText, ",", "</Group><Group>") + "</Group></Groups>";
+                                    string cGroupStr = "<Groups><Group>" + oGroupElmt.InnerText.Replace(",", "</Group><Group>") + "</Group></Groups>";
                                     // add mssage and return to form so they can sen another
                                     var oMsgElmt = oPageDetail.OwnerDocument.CreateElement("Content");
                                     oMsgElmt.SetAttribute("type", "Message");
@@ -444,17 +442,17 @@ namespace Protean.Providers
                             if (goConfig["cssFramework"] == "bs5")
                             {
                                 string ModulePath = GetMailModuleFormPath(moRequest["cModuleType"]);
-                                int argnReturnId = 0;
+                                long argnReturnId = 0;
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
-                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName);
+                                xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId:  argnReturnId, zcReturnSchema:  argzcReturnSchema, AlternateFormName:  argAlternateFormName);
                             }
                             else
                             {
-                                int argnReturnId1 = 0;
+                                long argnReturnId1 = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
-                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, position, false, nReturnId: ref argnReturnId1, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1);
+                                xFrmEditContent(0L, "Module/" + moRequest["cModuleType"], pgid, position, false, nReturnId:  argnReturnId1, zcReturnSchema:  argzcReturnSchema1, AlternateFormName:  argAlternateFormName1);
                             }
 
                          //   xFrmEditContent(0, "Module/" + moRequest["cModuleType"], pgid, position);
@@ -494,10 +492,10 @@ namespace Protean.Providers
                                     if (goConfig["cssFramework"] == "bs5")
                                     {
                                         string ModulePath = GetModuleFormPath(moRequest["cModuleType"]);
-                                        int argnReturnId2 = 0;
+                                        long argnReturnId2 = 0;
                                         string argzcReturnSchema2 = "";
                                         string argAlternateFormName2 = "";
-                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema2, AlternateFormName: ref argAlternateFormName2);
+                                        xFrmEditContent(0L, ModulePath, pgid, moRequest["cPosition"], false, nReturnId:  argnReturnId2, zcReturnSchema:  argzcReturnSchema2, AlternateFormName:  argAlternateFormName2);
                                     }
 
                                     else { 
@@ -522,9 +520,9 @@ namespace Protean.Providers
                     }
                 }
 
-                public new XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy, ref int nReturnId, ref string zcReturnSchema, ref string AlternateFormName, long nVersionId = 0L) {
+                public new XmlElement xFrmEditContent(long id, string cContentSchemaName, long pgid, string cContentName, bool bCopy,  long nReturnId,  string zcReturnSchema,  string AlternateFormName, long nVersionId = 0L) {
                     base.cModuleName = mcModuleName;
-                    return base.xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy, ref nReturnId, ref zcReturnSchema, ref AlternateFormName, nVersionId);
+                    return base.xFrmEditContent(id, cContentSchemaName, pgid, cContentName, bCopy,  nReturnId,  zcReturnSchema,  AlternateFormName, nVersionId);
                 }
 
 
@@ -620,7 +618,7 @@ namespace Protean.Providers
                                     myWeb.mcEwSiteXsl = cMailingXsl;
                                     bLoadStructure = false;
 
-                                    int nNewsletterRoot = Conversions.ToInteger("0" + moMailConfig["RootPageId"]);
+                                    int nNewsletterRoot = Convert.ToInt16("0" + moMailConfig["RootPageId"]);
                                     if (!myWeb.moDbHelper.checkPageExist(nNewsletterRoot))
                                         nNewsletterRoot = 0;
 
@@ -678,7 +676,7 @@ namespace Protean.Providers
                                         nPage =Convert.ToInt32(myWeb.moRequest["pgid"]);
                                     }
                                     oPageDetail.AppendChild(oAdXfm.xFrmEditPage(nPage, myWeb.moRequest["name"], "Mail"));
-                                    if (Conversions.ToBoolean(oAdXfm.valid))
+                                    if (Convert.ToBoolean(oAdXfm.valid))
                                     {
                                         if (cCmd == "NewMail")
                                         {
@@ -756,7 +754,7 @@ namespace Protean.Providers
                                 {
                                     moAdXfm.goServer = myWeb.goServer;
                                     oPageDetail.AppendChild(moAdXfm.xFrmEditMailLayout(Convert.ToInt64(myWeb.moRequest["pgid"])));
-                                    if (Conversions.ToBoolean(oAdXfm.valid))
+                                    if (Convert.ToBoolean(oAdXfm.valid))
                                     {
                                         cCmd = "NormalMail";
                                         sAdminLayout = "NormalMail";
@@ -775,7 +773,7 @@ namespace Protean.Providers
                                     bLoadStructure = true;
                                     nAdditionId = 0;
                                     oPageDetail.AppendChild(oAdXfm.xFrmAddModule(Convert.ToInt64(myWeb.moRequest["pgid"]), myWeb.moRequest["position"]));
-                                    if (Conversions.ToBoolean(oAdXfm.valid))
+                                    if (Convert.ToBoolean(oAdXfm.valid))
                                     {
                                         if (myWeb.moRequest["nStatus"] != "")
                                         {
@@ -814,16 +812,15 @@ namespace Protean.Providers
                                     string cVersionKey = myWeb.moRequest["verId"]+ "";
                                     bClearEditContext = false;
                                     bLoadStructure = true;
-                                    if (!Information.IsNumeric(cVersionKey))
+                                    if (!Tools.Number.IsNumeric(cVersionKey))
                                         cVersionKey = "0";
-                                    int nContentId;
-                                    nContentId = 0;
+                                    long nContentId = 0;
                                     string zcreturn = "";
                                     string AlernateForm = "";
 
                                     string ModulePath = _oAdXfm.GetMailModuleFormPath(myWeb.moRequest["cModuleType"]);
 
-                                    oPageDetail.AppendChild(_oAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), ModulePath, Convert.ToInt64(myWeb.moRequest["pgid"]), "",false, ref nContentId,ref zcreturn,ref AlernateForm, Conversions.ToLong(cVersionKey)));
+                                    oPageDetail.AppendChild(_oAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), ModulePath, Convert.ToInt64(myWeb.moRequest["pgid"]), "",false,  nContentId, zcreturn, AlernateForm, Convert.ToInt64(cVersionKey)));
 
                                     if (moAdXfm.valid)
                                     {
@@ -832,7 +829,7 @@ namespace Protean.Providers
                                         mcEwCmd = myWeb.moSession["ewCmd"].ToString();
 
                                         // if we have a parent releationship lets add it
-                                        if (myWeb.moRequest["contentParId"] != "" && Information.IsNumeric(myWeb.moRequest["contentParId"]))
+                                        if (myWeb.moRequest["contentParId"] != "" && Tools.Number.IsNumeric(myWeb.moRequest["contentParId"]))
                                         {
                                             myWeb.moDbHelper.insertContentRelation(Convert.ToInt32(myWeb.moRequest["contentParId"]), nContentId.ToString());
                                         }
@@ -841,7 +838,7 @@ namespace Protean.Providers
                                             // bAdminMode = True
                                             sAdminLayout = "AdminXForm";
                                             mcEwCmd = "EditXForm";
-                                            oPageDetail = oWeb.GetContentDetailXml(default, Convert.ToInt64(myWeb.moRequest["id"]));
+                                            oPageDetail = oWeb.BuildPageContentDetailXml(default, Convert.ToInt64(myWeb.moRequest["id"]));
                                         }
                                         else
                                         {
@@ -957,7 +954,7 @@ namespace Protean.Providers
                                 {
                                     bLoadStructure = true;
                                     oPageDetail.AppendChild(oAdXfm.xFrmDeletePage(Convert.ToInt64(myWeb.moRequest["pgid"])));
-                                    if (Conversions.ToBoolean(oAdXfm.valid))
+                                    if (Convert.ToBoolean(oAdXfm.valid))
                                     {
                                         myWeb.msRedirectOnEnd = "/?ewCmd=MailingList";
                                     }
@@ -1074,7 +1071,7 @@ namespace Protean.Providers
                                     oEmail.Subject = cSubject;
                                 }
                                 // if we are not at the bcc limit then we add the addres
-                                if (i2 < Conversions.ToInteger(moMailConfig["BCCLimit"]))
+                                if (i2 < Convert.ToInt16(moMailConfig["BCCLimit"]))
                                 {
                                     if (Text.IsEmail(cRepientMail.Trim()))
                                     {
@@ -1094,7 +1091,7 @@ namespace Protean.Providers
                                 }
                             }
                             // try a send after in case we havent reached the last send
-                            if (i2 < Conversions.ToInteger(moMailConfig["BCCLimit"]))
+                            if (i2 < Convert.ToInt16(moMailConfig["BCCLimit"]))
                             {
                                 cProcessInfo = "Sending queued mail (last)";
                                 SendQueuedMail(oEmail, moMailConfig["PickupHost"], moMailConfig["PickupLocation"]);

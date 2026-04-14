@@ -21,7 +21,7 @@
 			</xsl:otherwise>
 		</xsl:choose>
 		<xsl:if test="/Page/@adminMode">
-			<div class="sentMessage text-white card bg-success">
+			<div class="sentMessage card bg-success">
 				<div class="card-body sentMessage">
 				<xsl:choose>
 					<xsl:when test="Content[@type='FormattedText']">

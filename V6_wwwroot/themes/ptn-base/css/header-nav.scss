@@ -131,6 +131,7 @@ header {
 
         .navbar-content {
             flex-wrap: nowrap;
+            flex-grow:2;
         }
 
         .main-nav ul.navbar-nav {
@@ -157,6 +158,10 @@ header {
 
         a {
             @include focus-visible-offset();
+
+            &:focus-visible {
+                box-shadow: 0 0 0 $focus-ring-width $focus-ring-color;
+            }
         }
     }
 
@@ -231,6 +236,21 @@ header {
     }
 }
 /*############### NAVIGATION #################*/
+@mixin mega-menu() {
+    //add to main-nav
+    position: static;
+
+    .dropdown {
+        position: static;
+
+        > .dropdown-menu {
+            position: absolute;
+            left: 0;
+            right: 0;
+        }
+    }
+}
+
 .main-nav {
     padding: 0;
     //DESKTOP MENU
@@ -254,9 +274,15 @@ header {
                     color: $nav-link-hover-color;
                 }
 
-                &:focus-visible {
+                &:focus {
                     border-radius: 3px;
-                    box-shadow: 0 0 0 $focus-ring-width rgba($header-color, $focus-ring-opacity);
+                    box-shadow: 0 0 0 $focus-ring-width $focus-ring-opacity;
+
+                    span {
+                        padding: $focus-ring-offset;
+                        margin: -#{$focus-ring-offset};
+                        display:block;
+                    }
                 }
             }
         }
@@ -374,7 +400,7 @@ header {
                 margin-top: 15px;
 
                 > li {
-                    float: left
+                    float: none
                 }
             }
 
@@ -761,6 +787,10 @@ header {
 @mixin search-simple {
     position: relative;
 
+    form:focus-within {
+        box-shadow: 0 0 0 $focus-ring-width rgba(#fff, $focus-ring-opacity);
+    }
+
     .input-group {
         display: block;
 
@@ -785,18 +815,41 @@ header {
             &:active {
                 box-shadow: none;
             }
+
+            transition: all ease 0.2s;
+
+            i {
+                transition: all ease 0.2s;
+            }
         }
 
 
-        button:hover,
-        button:focus,
-        button:active,
-        button.btn-outline-primary:hover,
-        button.btn-outline-primary:focus,
-        button.btn-outline-primary:active {
-            background: transparent;
-            color: rgba($body-color,0.8);
-        }
+            button:hover,
+            button:focus-visible,
+            button:active,
+            button.btn-outline-primary:hover,
+            button.btn-outline-primary:focus-visible,
+            button.btn-outline-primary:active {
+                background: transparent;
+                box-shadow: none;
+
+                i {
+                    background: $link-color;
+                    color: #fff;
+                    border-radius: 100px;
+                    padding: 7px;
+                    margin: -7px;
+                }
+            }
+
+            button:focus-visible,
+            button.btn-outline-primary:focus-visible {
+
+
+                i {
+                    box-shadow: 0 0 0 $focus-ring-width rgba($link-color, $focus-ring-opacity);
+                }
+            }
 
         button,
         button.btn-outline-primary {
@@ -964,7 +1017,6 @@ header {
         display: flex;
         align-items: center;
         margin: 1px;
-        font-weight:600;
         text-transform:uppercase;
     }
 }
@@ -1068,12 +1120,26 @@ header {
         margin-top: 1rem;
     }
 
+    .accordion-item {
+        border-color: $body-bg;
+        border-width: 3px;
+    }
+
     .accordion-button {
+        background: $primary;
+        color: color-contrast($primary);
+
+
         &:after {
             background-image: none;
             mask-image: var(--bs-accordion-btn-icon);
             background-color: #fff;
         }
+    }
+
+    .accordion-body h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.5rem;
     }
 }
 

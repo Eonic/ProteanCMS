@@ -122,6 +122,14 @@ namespace Protean.Tools
             return !IsEven(inputNumber);
         }
 
+        public static bool IsNumeric(object Expression)
+        {
+            bool isNum;
+            double retNum;
+            isNum = Double.TryParse(Convert.ToString(Expression), System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out retNum);
+            return isNum;
+        }
+
         public static bool IsStringNumeric(string input)
         {
             return !string.IsNullOrEmpty(input) && double.TryParse(input, out _);

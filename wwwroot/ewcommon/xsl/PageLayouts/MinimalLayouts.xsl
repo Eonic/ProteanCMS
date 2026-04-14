@@ -1015,11 +1015,13 @@
 			<xsl:when test="@linkBox='true'">
 				<div id="mod_{@id}" class="module">
 					<xsl:apply-templates select="." mode="themeModuleExtras"/>
-					<div class="linkedPopUp">
-						<xsl:apply-templates select="." mode="inlinePopupOptions">
-							<xsl:with-param name="class" select="'linkedPopUp'"/>
-						</xsl:apply-templates>
-					</div>
+					<xsl:if test="$adminMode">
+						<div class="linkedPopUp">
+							<xsl:apply-templates select="." mode="inlinePopupOptions">
+								<xsl:with-param name="class" select="'linkedPopUp'"/>
+							</xsl:apply-templates>
+						</div>
+					</xsl:if>
 					<a>
 						<xsl:attribute name="href">
 							<xsl:choose>

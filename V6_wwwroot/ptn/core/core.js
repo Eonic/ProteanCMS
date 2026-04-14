@@ -672,9 +672,10 @@ function showDependant(dependant, allDependants) {
     // Make all now hidden fields inactive so values are lost when submitted.
     $("." + allDependants).find(":input").not(':button').not(':submit').each(function () {
         var fieldName = $(this).attr('name');
-        var tempFieldName = fieldName + '~inactive';
-        //    alert("hide as " + tempFieldName);
-        $(this).attr('name', tempFieldName);
+        if (!fieldName.endsWith('~inactive')) {            
+            //    alert("hide as " + tempFieldName);
+            $(this).attr('name', fieldName + '~inactive');
+        }
         //   $(this).attr('id', $(this).attr('id') + '~inactive');
     });
 

@@ -23,6 +23,27 @@
 		<xsl:apply-templates select="DateTime" mode="reportCell"/>
 		<xsl:apply-templates select="cActivityXml/descendant::*" mode="reportCell"/>
 	</xsl:template>
+
+	<xsl:template match="Item[descendant::Attachments]" mode="reportRow">
+		<xsl:apply-templates select="." mode="reportRowCellFilter"/>
+	</xsl:template>
+
+
+	<xsl:template match="Item[descendant::Attachments]" mode="reportRowCellFilter">
+		<xsl:for-each select="descendant::Attachements | descendant::Attachments">
+			<xsl:for-each select="Attachement | Attachment">
+				<xsl:apply-templates select="ancestor::Item/DateTime" mode="reportCell"/>
+				<xsl:apply-templates select="ancestor::Item/cActivityXml/Items/*[name()!='Attachments']" mode="reportCell"/>
+				<xsl:text>"</xsl:text>
+					<xsl:value-of select="Content/@id"/>
+				<xsl:text>","</xsl:text>
+					<xsl:value-of select="Content/@name"/>
+				<xsl:text>"</xsl:text>
+			<xsl:text>&#xD;</xsl:text>
+			</xsl:for-each>
+		</xsl:for-each>
+		
+	</xsl:template>
 	
 	<xsl:template match="Items" mode ="reportHeader">
 	
@@ -46,7 +67,6 @@
 	</xsl:template>
 
 	<xsl:template match="AttachmentIds" mode="reportCell">
-		<xsl:text>"</xsl:text><xsl:value-of select="@ids"/><xsl:text>",</xsl:text>
 	</xsl:template>
 	
 		

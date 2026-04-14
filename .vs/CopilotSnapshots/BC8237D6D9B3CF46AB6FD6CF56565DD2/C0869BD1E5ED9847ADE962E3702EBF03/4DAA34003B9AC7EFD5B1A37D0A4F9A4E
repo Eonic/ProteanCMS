@@ -1,0 +1,640 @@
+﻿// ***********************************************************************
+// $Library:     protean.cms.dbhelper
+// $Revision:    3.1  
+// $Date:        2006-03-02
+// $Author:      Trevor Spink (trevor@eonic.digital)
+// &Website:     eonic.digital
+// &Licence:     Apache-2.0 license
+// $Copyright:   Copyright (c) 2002 - 2026 Eonic Digital Group Ltd.
+// ***********************************************************************
+
+
+
+using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Xml;
+using static Lucene.Net.QueryParsers.QueryParser;
+using static Protean.Tools.Database;
+using static Protean.Tools.Xml;
+
+namespace Protean
+{
+
+    public partial class Cms
+    {
+
+        // Inherits dbTools
+
+        // Inherits dbTools
+        public partial class dbHelper : Tools.Database
+        {
+
+            public async Task<long> getPageIdFromPathAsync(
+            string sFullPath,
+            bool bSetGlobalPageVariable = true,
+            bool bCheckPermissions = true,
+            CancellationToken cancellationToken = default)
+            {
+                string sSql = "";
+                try
+                {
+                    // Parse the path to get structure IDs
+                    string[] aPath = sFullPath.Split('/');
+                    int nParentId = 0;
+                    long nPageId = 0;
+
+                    // Build SQL to find matching pages by name path
+                    sSql = "SELECT nStructKey FROM tblContentStructure WHERE cUrl = " +
+                           SqlString(sFullPath) + " OR cUrl LIKE " + SqlString(sFullPath + "%");
+
+                    // Use async database operation
+                    var oDs = await GetDataSetAsync(
+                        sql: sSql,
+                        tablename: "Pages",
+                        datasetname: "Structure",
+                        cancellationToken: cancellationToken
+                    ).ConfigureAwait(false);
+
+                    if (oDs != null && oDs.Tables.Count > 0 && oDs.Tables[0].Rows.Count > 0)
+                    {
+                        nPageId = Convert.ToInt64(oDs.Tables[0].Rows[0]["nStructKey"]);
+                    }
+
+                    if (bSetGlobalPageVariable && nPageId > 0)
+                    {
+                        // Set global if requested
+                        myWeb.mnPageId = (int)nPageId;
+                    }
+
+                    return nPageId;
+                }
+                catch (Exception ex)
+                {
+                    // Handle error appropriately
+                    throw;
+                }
+            }
+
+            public async Task<long> checkPagePermissionAsync(
+                long nPageId,
+                CancellationToken cancellationToken = default)
+            {
+                string sSql = "";
+                try
+                {
+                    if (nPageId <= 0)
+                        return 0;
+
+                    // Check if page has permission restrictions
+                    sSql = "SELECT nStructKey FROM tblContentStructure " +
+                           "WHERE nStructKey = " + nPageId +
+                           " AND (cPermissionLevelId IS NULL OR cPermissionLevelId = '')";
+
+                    var oValue = await GetDataValueAsync(
+                        sql: sSql,
+                        cancellationToken: cancellationToken
+                    ).ConfigureAwait(false);
+
+                    if (oValue != null && oValue is long)
+                    {
+                        return (long)oValue;
+                    }
+
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            /// <summary>
+            /// Asynchronously gets page ID and article ID from a URL path.
+            /// Returns a tuple containing (pageId, articleId, success).
+            /// Note: Async methods cannot have ref parameters, so we return a tuple instead.
+            /// </summary>
+            public async Task<(long pageId, long articleId, bool success)> getPageAndArticleIdFromPathAsync(
+                string sFullPath,
+                bool bSetGlobalPageVariable = true,
+                bool bCheckPermissions = true,
+                CancellationToken cancellationToken = default)
+            {
+                long nPageId = 0;
+                long nArtId = 0;
+
+                try
+                {
+                    // First get the page ID
+                    nPageId = await getPageIdFromPathAsync(
+                        sFullPath,
+                        bSetGlobalPageVariable,
+                        bCheckPermissions,
+                        cancellationToken
+                    ).ConfigureAwait(false);
+
+                    // If path contains article reference (e.g., /page/123-/article-name)
+                    if (sFullPath.Contains("-/") && Regex.IsMatch(sFullPath, @"/\d+-/"))
+                    {
+                        string[] aParts = sFullPath.Split('/');
+                        foreach (string sPart in aParts)
+                        {
+                            if (sPart.Contains("-/") && Tools.Number.IsNumeric(sPart.Substring(0, sPart.IndexOf("-"))))
+                            {
+                                nArtId = Convert.ToInt64(sPart.Substring(0, sPart.IndexOf("-")));
+                                break;
+                            }
+                        }
+                    }
+
+                    return (nPageId, nArtId, nPageId > 0);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            public async Task<bool> checkPageExistAsync(
+                long nPageId,
+                CancellationToken cancellationToken = default)
+            {
+                string sSql = "";
+                try
+                {
+                    sSql = "SELECT COUNT(*) FROM tblContentStructure WHERE nStructKey = " + nPageId;
+
+                    var oValue = await GetDataValueAsync(
+                        sql: sSql,
+                        cancellationToken: cancellationToken
+                    ).ConfigureAwait(false);
+
+                    return oValue != null && Convert.ToInt32(oValue) > 0;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            public async Task<long> getClonePageIDAsync(
+                long nPageId,
+                CancellationToken cancellationToken = default)
+            {
+                string sSql = "";
+                try
+                {
+                    if (!gbClone || nPageId <= 0)
+                        return 0;
+
+                    sSql = "SELECT nClonePageId FROM tblContentStructure WHERE nStructKey = " + nPageId;
+
+                    var oValue = await GetDataValueAsync(
+                        sql: sSql,
+                        cancellationToken: cancellationToken
+                    ).ConfigureAwait(false);
+
+                    if (oValue != null && oValue is long cloneId && cloneId > 0)
+                    {
+                        return cloneId;
+                    }
+
+                    return 0;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+
+            public async Task<PermissionLevel> getPagePermissionLevelAsync(
+                long nPageId,
+                CancellationToken cancellationToken = default)
+            { 
+                try
+                {
+                    PerfMonLog("DBHelper", "getPagePermissionLevel");
+
+                    string sProcessInfo = "";
+
+          
+                        if (myWeb.moSession is null)
+                        {
+                            return PermissionLevel.Denied;
+                        }
+                        // Check if we are Domain Super Admin
+                        // RJP 7 Nov 2012. Amended to use Lower Case to prevent against case sensitive entries in Protean.Cms.Config, previously used the string "md5"
+                        string membershipEncryption = myWeb.moConfig["MembershipEncryption"]?.ToLower() ?? "md5";
+                        string expectedHash = Tools.Encryption.HashString(myWeb.moSession.SessionID + goConfig["AdminPassword"], membershipEncryption, true);
+                        string sessionAuth = myWeb.moSession["ewAuth"]?.ToString();
+
+                    if (string.Equals(sessionAuth, expectedHash, StringComparison.Ordinal))
+                    {
+                        return PermissionLevel.Full;
+                    }
+                    else if (checkUserRole("Administrator"))
+                    {
+                        return PermissionLevel.Full;
+                    }
+                    else
+                    {
+                        // Check we have access to this page
+                        long nAuthUserId;
+                        if (mnUserId == 0L & Cms.gnNonAuthUsers != 0)
+                        {
+                            nAuthUserId = (long)Cms.gnNonAuthUsers;
+                        }
+                        else
+                        {
+                            nAuthUserId = mnUserId;
+                        }
+                        string sPerm;
+                        string sSql = $"SELECT dbo.fxn_checkPermission({nPageId}, {nAuthUserId}, {Cms.gnAuthUsers}) AS perm";
+
+                        var oValue = await GetDataValueAsync(
+                            sql: sSql,
+                            cancellationToken: cancellationToken
+                        ).ConfigureAwait(false);
+                        sPerm = oValue.ToString();
+
+
+                        if (!(ReferenceEquals(sPerm, DBNull.Value) | sPerm is null))
+                        {
+                            if (sPerm.Contains("ADDUPDATEOWNPUBLISH"))
+                            {
+                                return PermissionLevel.AddUpdateOwnPublish;
+                            }
+                            else if (sPerm.Contains("ADDUPDATEOWN"))
+                            {
+                                return PermissionLevel.AddUpdateOwn;
+                            }
+                            else if (sPerm.Contains("DENIED"))
+                            {
+                                return PermissionLevel.Denied;
+                            }
+                            else if (sPerm.Contains("OPEN"))
+                            {
+                                return PermissionLevel.Open;
+                            }
+                            else if (sPerm.Contains("VIEW"))
+                            {
+                                return PermissionLevel.View;
+                            }
+                            else if (sPerm.Contains("ADD"))
+                            {
+                                return PermissionLevel.Add;
+                            }
+                            else if (sPerm.Contains("UPDATEALL"))
+                            {
+                                return PermissionLevel.UpdateAll;
+                            }
+                            else if (sPerm.Contains("APPROVE"))
+                            {
+                                return PermissionLevel.Approve;
+                            }
+                            else if (sPerm.Contains("PUBLISH"))
+                            {
+                                return PermissionLevel.Publish;
+                            }
+                            else if (sPerm.Contains("FULL"))
+                            {
+                                return PermissionLevel.Full;
+                            }
+                            else
+                            {
+                                return default;
+                            }
+                        }
+                        else
+                            {
+                                return default;
+                            }
+                     
+                        PerfMonLog("DBHelper", "getPagePermissionLevel - END");
+                   }
+                }
+                catch (Exception ex)
+                {
+                    return default;
+                    throw;
+                }
+            }
+
+            /// <summary>
+            /// Asynchronously gets the layout for a specific page.
+            /// If the page is cloned, retrieves the layout from the source page.
+            /// </summary>
+            /// <param name="nPageId">Page ID to get layout for</param>
+            /// <param name="cancellationToken">Cancellation token</param>
+            /// <returns>Layout name or "default"</returns>
+            public async Task<string> getPageLayoutAsync(
+                    long nPageId,
+                    CancellationToken cancellationToken = default)
+            {
+                PerfMonLog("DBHelper", "getPageLayoutAsync");
+
+                string cLayout = "";
+                string cSql = "";
+
+                try
+                {
+                    // ✅ FIXED: Check for cloned pages first (same as sync version)
+                    if (Cms.gbClone)
+                    {
+                        // If the page is cloned then we need to look at the page that it's cloned from
+                        cSql = "SELECT nCloneStructId FROM tblContentStructure WHERE nStructKey = " + nPageId;
+
+                        using (var reader = await getDataReaderDisposableAsync(cSql, CommandType.Text, null, cancellationToken).ConfigureAwait(false))
+                        {
+                            if (reader != null && await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+                            {
+                                if (!reader.IsDBNull(0))
+                                {
+                                    long nClonePageId = reader.GetInt64(0);
+                                    if (nClonePageId > 0L)
+                                        nPageId = nClonePageId;
+                                }
+                            }
+                        }
+                    }
+
+                    // ✅ FIXED: Query the correct table (tblContentStructure, not tblDirectory)
+                    cSql = "SELECT cStructLayout FROM tblContentStructure WHERE nStructKey = " + nPageId;
+
+                    using (var reader = await getDataReaderDisposableAsync(cSql, CommandType.Text, null, cancellationToken).ConfigureAwait(false))
+                    {
+                        if (reader != null && await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+                        {
+                            if (!reader.IsDBNull(0))
+                            {
+                                cLayout = reader.GetString(0);
+                            }
+                        }
+                    }
+
+                    // Return "default" if no layout found
+                    return string.IsNullOrEmpty(cLayout) ? "default" : cLayout;
+                }
+                catch (System.Exception ex)
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(
+                        mcModuleName, "getPageLayoutAsync", ex, cSql));
+                    return "default";
+                }
+            }
+    
+
+
+        /// <summary>
+        /// Async version of GetContentDetailXml with full feature support including version control,
+        /// content location checking, and locations column.
+        /// </summary>
+        /// <param name="nArtId">The content/article ID</param>
+        /// <param name="noFilter">If true, skips standard content filtering</param>
+        /// <param name="nVersionId">The version ID to retrieve (0 for current/live version)</param>
+        /// <param name="bIgnoreContentStatus">If true, bypasses content status filtering</param>
+        /// <param name="bCheckAccessToContentLocation">If true, verifies content is accessible in current menu</param>
+        /// <param name="bIncludeLocations">If true, includes locations column if fxn_getContentLocations exists</param>
+        /// <param name="cancellationToken">Cancellation token for async operation</param>
+        /// <returns>Tuple containing the XmlElement and optional update date</returns>
+        public async Task<(XmlElement Element, DateTime? UpdateDate)> GetContentDetailXmlAsync(
+            long nArtId,
+            bool noFilter,
+            long nVersionId,
+            bool bIgnoreContentStatus,
+            bool bCheckAccessToContentLocation,
+            bool bIncludeLocations,
+            CancellationToken cancellationToken = default(CancellationToken))
+        {
+            PerfMonLog("Web", "GetContentDetailXmlAsync");
+            DateTime? updateDate = null;
+
+            if (nArtId <= 0)
+            {
+                return (null, null);
+            }
+
+            string sProcessInfo = "GetContentDetailXmlAsync";
+
+            try
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // Check content location access if requested
+                if (bCheckAccessToContentLocation)
+                {
+                    if (!checkContentLocationsInCurrentMenu(nArtId, true))
+                    {
+                        return (null, null);
+                    }
+                }
+
+                // Build the SQL query
+                string sFilterSql = "";
+                if (!noFilter && !bIgnoreContentStatus)
+                {
+                    sFilterSql = GetStandardFilterSQLForContent();
+                }
+
+                // Check if locations function exists in DB
+                bool bContLoc = bIncludeLocations && checkDBObjectExists("fxn_getContentLocations", Tools.Database.objectTypes.UserFunction);
+
+                string sSql = BuildContentDetailSql(nArtId, nVersionId, bContLoc, bIgnoreContentStatus, sFilterSql);
+
+                cancellationToken.ThrowIfCancellationRequested();
+
+                // Execute async database query
+                using (var oConn = new SqlConnection(GetDBAuth()))
+                {
+                    await oConn.OpenAsync(cancellationToken).ConfigureAwait(false);
+
+                    using (var cmd = new SqlCommand(sSql, oConn))
+                    {
+                        cmd.CommandTimeout = 30;
+
+                        using (var reader = await cmd.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false))
+                        {
+                            if (await reader.ReadAsync(cancellationToken).ConfigureAwait(false))
+                            {
+                                var result = ProcessContentDetailReader(reader, nVersionId, bContLoc, out updateDate);
+                                return result;
+                            }
+                        }
+                    }
+                }
+
+                return (null, null);
+            }
+            catch (OperationCanceledException)
+            {
+                throw; // Re-throw cancellation
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetContentDetailXmlAsync", ex, sProcessInfo));
+                return (null, null);
+            }
+        }
+
+        /// <summary>
+        /// Builds the SQL query for content detail retrieval.
+        /// </summary>
+        private string BuildContentDetailSql(long nArtId, long nVersionId, bool bContLoc, bool bIgnoreContentStatus, string sFilterSql)
+        {
+            var sb = new System.Text.StringBuilder(512); // Pre-allocate reasonable size
+
+            if (nVersionId > 0)
+            {
+                // Version-specific query
+                sb.Append("SELECT c.nContentPrimaryId as id, nContentVersionKey as verid, nVersion as verno, ");
+                sb.Append("cContentForiegnRef as ref, dbo.fxn_getContentParents(c.nContentPrimaryId) as parId, ");
+                sb.Append("dbo.fxn_getContentLocations(c.nContentPrimaryId) as locations, ");
+                sb.Append("cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, ");
+                sb.Append("a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], ");
+                sb.Append("a.nInsertDirId as owner, a.nStatus as status ");
+                sb.Append("FROM tblContentVersions c ");
+                sb.Append("INNER JOIN tblAudit a ON c.nAuditId = a.nAuditKey ");
+                sb.Append("WHERE c.nContentPrimaryId = ").Append(nArtId);
+                sb.Append(" AND nContentVersionKey=").Append(nVersionId);
+            }
+            else if (bContLoc)
+            {
+                // Standard query with locations
+                sb.Append("SELECT c.nContentKey as id, cContentForiegnRef as ref, ");
+                sb.Append("dbo.fxn_getContentParents(c.nContentKey) as parId, ");
+                sb.Append("dbo.fxn_getContentLocations(c.nContentKey) as locations, ");
+                sb.Append("cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, ");
+                sb.Append("a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], ");
+                sb.Append("a.nInsertDirId as owner, a.nStatus as status ");
+                sb.Append("FROM tblContent c ");
+                sb.Append("INNER JOIN tblAudit a ON c.nAuditId = a.nAuditKey ");
+                sb.Append("WHERE c.nContentKey = ").Append(nArtId);
+                if (!bIgnoreContentStatus)
+                {
+                    sb.Append(sFilterSql);
+                }
+            }
+            else
+            {
+                // Standard query without locations
+                sb.Append("SELECT c.nContentKey as id, cContentForiegnRef as ref, ");
+                sb.Append("dbo.fxn_getContentParents(c.nContentKey) as parId, ");
+                sb.Append("cContentName as name, cContentSchemaName as type, cContentXmlDetail as content, ");
+                sb.Append("a.dpublishDate as publish, a.dExpireDate as expire, a.dUpdateDate as [update], ");
+                sb.Append("a.nInsertDirId as owner, a.nStatus as status ");
+                sb.Append("FROM tblContent c ");
+                sb.Append("INNER JOIN tblAudit a ON c.nAuditId = a.nAuditKey ");
+                sb.Append("WHERE c.nContentKey = ").Append(nArtId);
+                if (!bIgnoreContentStatus)
+                {
+                    sb.Append(sFilterSql);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Processes the SqlDataReader and builds the XmlElement for content detail.
+        /// </summary>
+        private (XmlElement Element, DateTime? UpdateDate) ProcessContentDetailReader(
+            SqlDataReader reader,
+            long nVersionId,
+            bool bContLoc,
+            out DateTime? updateDate)
+        {
+            updateDate = null;
+
+            try
+            {
+                // FIXED: Don't create oRoot - it's never used and causes memory leak
+                var oElmt = moPageXml.CreateElement("Content");
+
+                // Set attributes from reader
+                oElmt.SetAttribute("id", reader["id"].ToString());
+                oElmt.SetAttribute("ref", reader["ref"]?.ToString() ?? "");
+                oElmt.SetAttribute("parId", reader["parId"]?.ToString() ?? "");
+                oElmt.SetAttribute("name", reader["name"]?.ToString() ?? "");
+                oElmt.SetAttribute("type", reader["type"]?.ToString() ?? "");
+                oElmt.SetAttribute("owner", reader["owner"]?.ToString() ?? "");
+                oElmt.SetAttribute("status", reader["status"]?.ToString() ?? "");
+
+                // Handle dates
+                if (reader["publish"] != DBNull.Value)
+                {
+                    oElmt.SetAttribute("publish", Convert.ToDateTime(reader["publish"]).ToString("yyyy-MM-ddTHH:mm:ss"));
+                }
+                if (reader["expire"] != DBNull.Value)
+                {
+                    oElmt.SetAttribute("expire", Convert.ToDateTime(reader["expire"]).ToString("yyyy-MM-ddTHH:mm:ss"));
+                }
+                if (reader["update"] != DBNull.Value)
+                {
+                    var dtUpdate = Convert.ToDateTime(reader["update"]);
+                    oElmt.SetAttribute("update", dtUpdate.ToString("yyyy-MM-ddTHH:mm:ss"));
+                    updateDate = dtUpdate;
+                }
+
+                // Version-specific attributes
+                if (nVersionId > 0)
+                {
+                    if (Tools.Database.HasColumn(reader, "verid"))
+                        oElmt.SetAttribute("verid", reader["verid"]?.ToString() ?? "");
+                    if (Tools.Database.HasColumn(reader, "verno"))
+                        oElmt.SetAttribute("verno", reader["verno"]?.ToString() ?? "");
+                }
+
+                // Locations attribute
+                if (bContLoc || nVersionId > 0)
+                {
+                    if (Tools.Database.HasColumn(reader, "locations"))
+                        oElmt.SetAttribute("locations", reader["locations"]?.ToString() ?? "");
+                }
+
+                // Process content XML
+                string sContent = reader["content"]?.ToString() ?? "";
+                if (!string.IsNullOrEmpty(sContent))
+                {
+                    try
+                    {
+                        oElmt.InnerXml = sContent;
+
+                        // Check if the imported node is a Content node - if so, unwrap it
+                        var oFirst = firstElement(ref oElmt);
+                        if (oFirst != null && oFirst.LocalName == "Content")
+                        {
+                            foreach (XmlAttribute oAttr in oElmt.SelectNodes("Content/@*"))
+                            {
+                                if (string.IsNullOrEmpty(oElmt.GetAttribute(oAttr.Name)))
+                                {
+                                    oElmt.SetAttribute(oAttr.Name, oAttr.InnerText);
+                                }
+                            }
+                            oElmt.InnerXml = oFirst.InnerXml;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // If XML load failed, return as comment
+                        var oComment = moPageXml.CreateComment(sContent);
+                        oElmt.SetAttribute("xmlerror", "GetContentDetailXmlAsync");
+                        oElmt.InnerXml = "";
+                        oElmt.AppendChild(oComment);
+                    }
+                }
+
+                return (oElmt, updateDate);
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessContentDetailReader", ex, ""));
+                return (null, null);
+            }
+        }
+    }
+
+    }
+}

@@ -1,0 +1,38 @@
+<Order cartId="1048741" session="bargdoru4nyq0kcp3xgkwfql" statusId="1" status="Unknown Process ID" itemCount="1" weight="0" orderType="" BlockCartUpdate="off" complete="True" bDiscountIsPercent="1" discountTotal="35.00" showDiscountCodeBox="true" shippingType="65" shippingCost="3.95" shippingDesc="First Class (Royal Mail)-" ReceiptType="0" totalNet="143.95" vatRate="0" vatAmt="0" total="143.95" currency="" currencySymbol="£" errorMsg="0" cmd="Cart" sessionId="bargdoru4nyq0kcp3xgkwfql" siteUrl="https://demo2019.intotheblue.co.uk/" cartUrl="https://demo2019.intotheblue.co.uk/">
+	<Item id="3023451" contentId="49181" price="140.00" taxRate="0" quantity="1" shippingLevel="-1" discount="35.00" weight="0" parId="" originalPrice="175.00" itemTotal="140.00" unitSaving="35.00" itemSaving="35.00">
+		<Name>One Day Blacksmith Course</Name>
+		
+		<nItemOptGrpIdx>0</nItemOptGrpIdx>
+		<nItemOptIdx>0</nItemOptIdx>
+		<nParentId>0</nParentId>
+		<contentType>SKU</contentType>
+		<ProductStatus>1</ProductStatus>
+		<nShippingGroup/>
+		<nshippingType/>
+		
+		<Discount nDiscountKey="2116" cDiscountName="Tammy 20pc off" cDiscountCode="TAMMY20" bDiscountIsPercent="1" nDiscountValue="20" nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1" nDiscountCodeType="1" cDiscountUserCode="TAMMY20" Applied="1" AppliedToCart="1">
+			<cDescription>
+				<p>Tammy F&amp;F discount</p>
+			</cDescription>
+			<cTerms/>
+			<Images>
+				<img src="" width="" height="" class="thumbnail" alt=""/>
+				<img src="" width="" height="" class="display" alt=""/>
+				<img src="" width="" height="" class="detail" alt=""/>
+			</Images>
+			<bFreeGiftBox/>
+			<bApplyToOrder/>
+			<nMinimumOrderValue>5</nMinimumOrderValue>
+			<nMaximumOrderValue>250</nMaximumOrderValue>
+		</Discount>
+		<DiscountPrice OriginalUnitPrice="175.00" UnitPrice="140.00" Units="1" Total="140" UnitSaving="35" TotalSaving="35">
+			<DiscountPriceLine nDiscountKey="2116" PriceOrder="1" UnitPrice="140.00" Total="140" UnitSaving="35" TotalSaving="0"/>
+		</DiscountPrice>
+	</Item>
+	<Shipping>
+		<Name>First Class (Royal Mail)</Name>
+		<Carrier/>
+		<DeliveryTime>Immediate</DeliveryTime>
+	</Shipping>
+
+</Order>
