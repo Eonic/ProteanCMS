@@ -501,11 +501,14 @@ namespace Protean
                         {
                             moDiscount.RecordDiscountUsage(ref oCartElmt);
                         }
-
-                        if (!IsCookieConsentEnabled(mnCartId))
+                        if (moWebConfig["EnableGA4OrderLog"] != null && moWebConfig["EnableGA4OrderLog"].ToLower() == "on")
                         {
-                            SendPurchaseEventToGA4(oCartElmt);
+                            if (!IsCookieConsentEnabled(mnCartId))
+                            {
+                                SendPurchaseEventToGA4(oCartElmt);
+                            }
                         }
+                       
 
 
                         calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
@@ -621,19 +624,36 @@ namespace Protean
                         string currency = order.Attribute("currency")?.Value;
 
 
-                        var items = xml
-                         .Descendants("Order")
-                         .Elements("Item")
-                         .Select(x => new
-                        {
-                          item_id = x.Attribute("id")?.Value,
-                          item_name = x.Attribute("url")?.Value,
-                          item_brand = x.Attribute("ref")?.Value,
-                          price = Convert.ToDouble(x.Attribute("price")?.Value ?? "0"),
-                          quantity = Convert.ToInt32(x.Attribute("quantity")?.Value ?? "1")
-                          })
-                         .ToList();
+                        var items = xml.Descendants("Order")
+    .SelectMany(orders =>
+    {
+        
+        var attributeItems = order.Elements("Item")
+            .Select(x => new
+            {
+                item_id = x.Attribute("id")?.Value,
+                item_name = x.Attribute("url")?.Value,
+                item_brand = x.Attribute("ref")?.Value,
+                price = Convert.ToDouble(x.Attribute("price")?.Value ?? "0"),
+                quantity = Convert.ToInt32(x.Attribute("quantity")?.Value ?? "1")
+            });
 
+       
+        var elementItems = order
+            .Descendants("CartItem")
+            .Select(x => new
+            {
+                item_id = x.Element("_productId")?.Value,
+                item_name = x.Element("_productName")?.Value,
+                item_brand = x.Element("_brand")?.Value,
+                price = Convert.ToDouble(x.Element("_price")?.Value ?? "0"),
+                quantity = Convert.ToInt32(x.Element("_quantity")?.Value ?? "1")
+            });
+
+        
+        return attributeItems.Any() ? attributeItems : elementItems;
+    })
+    .ToList();
 
                         if (string.IsNullOrEmpty(clientId))
                             clientId = Guid.NewGuid().ToString();
@@ -685,15 +705,19 @@ namespace Protean
 
             public bool IsCookieConsentEnabled(Int64 mnCartId)
             {
-                bool isEnabled = false;
+                bool isEnabled = true;
 
                 string sSql = "SELECT * FROM tblCartOrder WHERE nCartOrderKey = " + mnCartId;
 
                 using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
                 {
-                    while (oDr.Read())
-                        isEnabled = oDr["bCookieConsentEnabled"] != DBNull.Value
-                                        && Convert.ToBoolean(oDr["bCookieConsentEnabled"]);
+                   if( moDBHelper.checkTableColumnExists("tblCartOrder", "bCookieConsentEnabled"))
+                    {
+                        while (oDr.Read())
+                            isEnabled = oDr["bCookieConsentEnabled"] != DBNull.Value
+                                            && Convert.ToBoolean(oDr["bCookieConsentEnabled"]);
+                    }
+                   
                 }
 
 
