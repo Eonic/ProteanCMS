@@ -435,7 +435,7 @@ Original preload function has been kept but is unused.
         checkChildren: function () {
             $(this).find('li').each(function () {
                 var thisParentId = $(this).data('tree-parent');
-
+                var myTreeRoot = $('#MenuTree');
                 if ($(this).prevAll('li[data-tree-parent="' + thisParentId + '"]').length === 0) {
                     //if first amoung siblings
                     if ($(this).prev('li[id="node' + thisParentId + '"]').length === 0) {
@@ -508,6 +508,9 @@ Original preload function has been kept but is unused.
                         myTreeRoot.find('li#' + moveIdNode).removeClass("locked");
                         // alert('move up');
 
+                    },
+                    complete: function () {
+                        myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1).removeClass("locked");
                     }
                 });
 
@@ -538,6 +541,9 @@ Original preload function has been kept but is unused.
                         myTreeRoot.find('li#' + moveIdNode).removeClass("locked");
                         // alert('move down');
 
+                    },
+                    complete: function () {
+                        myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1).removeClass("locked");
                     }
                 });
             }
@@ -562,6 +568,9 @@ Original preload function has been kept but is unused.
                         myTreeRoot.checkChildren();
                         myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1.0);
                         myTreeRoot.find('li#' + moveIdNode).removeClass("locked");
+                    },
+                    complete: function () {
+                        myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1).removeClass("locked");
                     }
                 });
             }
@@ -585,6 +594,9 @@ Original preload function has been kept but is unused.
                         myTreeRoot.checkChildren();
                         myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1.0);
                         myTreeRoot.find('li#' + moveIdNode).removeClass("locked");
+                    },
+                    complete: function () {
+                        myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1).removeClass("locked");
                     }
                 });
             }

@@ -649,20 +649,20 @@ namespace Protean
                             client_id = clientId,
                             events = new[]
                             {
-                    new
-                    {
-                        name = "purchase",
-                        @params = new
-                        {
-                            transaction_id = transactionId,
-                            value = value,
-                            currency = currency,
-                            tax = tax,
-                            shipping = shipping,
-                            items = items
-                        }
-                    }
-                        }
+            new
+            {
+                name = "purchase",
+                @params = new
+                {
+                    transaction_id = transactionId,
+                    value = value,
+                    currency = currency,
+                    tax = tax,
+                    shipping = shipping,
+                    items = items
+                }
+            }
+                }
                         };
 
                         string url = $"https://www.google-analytics.com/mp/collect?measurement_id={measurementId}&api_secret={apiSecret}";
@@ -676,7 +676,7 @@ namespace Protean
 
                             if (!response.IsSuccessStatusCode)
                             {
-                                 error = await response.Content.ReadAsStringAsync();
+                                error = await response.Content.ReadAsStringAsync();
 
                             }
                         }
@@ -687,7 +687,6 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "SendPurchaseEventToGA4", ex, "", error, gbDebug);
                 }
             }
-
             public bool IsCookieConsentEnabled(Int64 mnCartId)
             {
                 if (moDBHelper.checkTableColumnExists("tblCartOrder", "bCookieConsentEnabled") && (myWeb.moRequest.Cookies["bCookieConsentEnabled"] == null))
