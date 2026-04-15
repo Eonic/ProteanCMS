@@ -617,43 +617,28 @@ namespace Protean
                         if (order == null) return;
 
 
-                        string transactionId = order.Attribute("InvoiceRef")?.Value;
+                        string transactionId = !string.IsNullOrEmpty(order.Attribute("InvoiceRef")?.Value)
+                                                ? order.Attribute("InvoiceRef")?.Value
+                                                : order.Attribute("cartId")?.Value;
                         double value = Convert.ToDouble(order.Attribute("totalNet")?.Value ?? "0");
                         double tax = Convert.ToDouble(order.Attribute("vatAmt")?.Value ?? "0");
                         double shipping = Convert.ToDouble(order.Attribute("shippingCost")?.Value ?? "0");
                         string currency = order.Attribute("currency")?.Value;
 
 
-                        var items = xml.Descendants("Order")
-    .SelectMany(orders =>
-    {
-        
-        var attributeItems = order.Elements("Item")
-            .Select(x => new
-            {
-                item_id = x.Attribute("id")?.Value,
-                item_name = x.Attribute("url")?.Value,
-                item_brand = x.Attribute("ref")?.Value,
-                price = Convert.ToDouble(x.Attribute("price")?.Value ?? "0"),
-                quantity = Convert.ToInt32(x.Attribute("quantity")?.Value ?? "1")
-            });
+                        var items = xml
+                         .Descendants("Order")
+                         .Elements("Item")
+                         .Select(x => new
+                         {
+                             item_id = x.Attribute("id")?.Value,
+                             item_name = x.Attribute("url")?.Value,
+                             item_brand = x.Attribute("ref")?.Value,
+                             price = Convert.ToDouble(x.Attribute("price")?.Value ?? "0"),
+                             quantity = Convert.ToInt32(x.Attribute("quantity")?.Value ?? "1")
+                         })
+                         .ToList();
 
-       
-        var elementItems = order
-            .Descendants("CartItem")
-            .Select(x => new
-            {
-                item_id = x.Element("_productId")?.Value,
-                item_name = x.Element("_productName")?.Value,
-                item_brand = x.Element("_brand")?.Value,
-                price = Convert.ToDouble(x.Element("_price")?.Value ?? "0"),
-                quantity = Convert.ToInt32(x.Element("_quantity")?.Value ?? "1")
-            });
-
-        
-        return attributeItems.Any() ? attributeItems : elementItems;
-    })
-    .ToList();
 
                         if (string.IsNullOrEmpty(clientId))
                             clientId = Guid.NewGuid().ToString();
