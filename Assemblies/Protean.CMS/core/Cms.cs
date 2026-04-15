@@ -2734,24 +2734,29 @@ namespace Protean
                                         validatedVersion = Convert.ToInt64(moRequest["verId"]);
                                     }
                                 }
-
+                                Boolean ignoreContentStatus = false;
+                                if (mbAdminMode)
+                                {
+                                    ignoreContentStatus = true;
+                                }
                                 if (Convert.ToBoolean(validatedVersion))
                                 {
                                     // MEMORY FIX: Clear previous moContentDetail reference to allow GC
                                     moContentDetail = null;
-                                    moContentDetail = BuildPageContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Convert.ToInt64(moRequest["verId"]));
+                                    moContentDetail = BuildPageContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Convert.ToInt64(moRequest["verId"]), bIgnoreContentStatus: ignoreContentStatus);
                                 }
                                 else if (moConfig["AllowContentDetailAccess"]?.ToLower() == "on")
                                 {
                                     // MEMORY FIX: Clear previous moContentDetail reference to allow GC
                                     moContentDetail = null;
-                                    moContentDetail = BuildPageContentDetailXml(oPageElmt);
+                                    moContentDetail = BuildPageContentDetailXml(oPageElmt, bIgnoreContentStatus: ignoreContentStatus);
                                 }
                                 else
                                 {
                                     // MEMORY FIX: Clear previous moContentDetail reference to allow GC
                                     moContentDetail = null;
-                                    moContentDetail = BuildPageContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true);
+
+                                    moContentDetail = BuildPageContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, bIgnoreContentStatus: ignoreContentStatus);
                                 }
                             }
 

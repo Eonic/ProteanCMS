@@ -751,14 +751,14 @@ namespace Protean
                             if ((myWeb.moSession["CartId"] as long?) != 0)
                             {
                                 string CurrentCartId = myWeb.moRequest.Form["cartId"];
-                                if ((CurrentCartId ?? "") != (myWeb.moSession["CartId"].ToString() ?? ""))
+                                if ((CurrentCartId ?? "") != (Convert.ToString(myWeb.moSession["CartId"]) ?? ""))
                                 {
                                     myWeb.moSession["CartId"] = Convert.ToString(CurrentCartId);
                                     mcReEstablishSession = "true";
                                 }
                             }
                         }
-                        string newCartId = (String)myWeb.moSession["CartId"];
+                        string newCartId = Convert.ToString(myWeb.moSession["CartId"]);
 
                         if (myWeb.moSession["CartId"] is null)
                         {
@@ -819,9 +819,10 @@ namespace Protean
                             {
                                 writeSessionCookie(); // write the cookie to persist the cart
                             }
+
                             if (!string.IsNullOrEmpty(mcReEstablishSession))
                             {
-                                sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + myWeb.moRequest["id"] + "And cCartSessionId Like '%" + mcReEstablishSession + "'";
+                                sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + myWeb.moRequest["CartId"] + "And cCartSessionId Like '%" + mcReEstablishSession + "'";
                                 // sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + mnCartId + "And cCartSessionId Like '%" + mcSessionId + "'";
                             }
                             else
@@ -3538,23 +3539,12 @@ namespace Protean
                             oCartElmt.AppendChild(oRelatedElmt);
                     }
 
-                    // sonalis code for session set
-                    if (myWeb.moRequest.Cookies["Flag"] is null)
-                    {
-
-                        var flagCookie = new System.Web.HttpCookie("Flag");
-                        flagCookie.Value = "1";
-                        myWeb.moRequest.Cookies.Add(flagCookie);
-
-                    }
-                     // Save cookiFirts consent  flag
+                   // Save cookieFirst consent flag
                     if (mnCartId > 0)
                     {
-                        if (moDBHelper.checkTableColumnExists("tblCartOrder", "bCookieConsentEnabled") && (myWeb.moRequest.Cookies["bCookieConsentEnabled"] == null ))
-                        {
+                       
                             saveCookiesConsent();
-                        }
-
+                        
                     }
                 }
 
@@ -7432,43 +7422,46 @@ namespace Protean
 
             public void saveCookiesConsent()
             {
-                int isCookieConsentEnabled = 0; // default = disabled
-
-                var request = HttpContext.Current?.Request;
-
-                if (request != null)
+                if (moDBHelper.checkTableColumnExists("tblCartOrder", "bCookieConsentEnabled") && (myWeb.moRequest.Cookies["bCookieConsentEnabled"] == null))
                 {
-                    HttpCookie consentCookie = myWeb.moRequest.Cookies["cookiefirst-consent"];
-                    HttpCookie cookieId = request.Cookies["cookiefirst-id"];
+                    int isCookieConsentEnabled = 0; // default = disabled
 
-                    if (consentCookie != null && !string.IsNullOrWhiteSpace(consentCookie.Value))
+                    var request = HttpContext.Current?.Request;
+
+                    if (request != null)
                     {
-                        string cookieValue = HttpUtility.UrlDecode(consentCookie.Value);
+                        HttpCookie consentCookie = myWeb.moRequest.Cookies["cookiefirst-consent"];
+                        HttpCookie cookieId = request.Cookies["cookiefirst-id"];
 
-                        try
+                        if (consentCookie != null && !string.IsNullOrWhiteSpace(consentCookie.Value))
                         {
-                            JObject consentJson = JObject.Parse(cookieValue);
+                            string cookieValue = HttpUtility.UrlDecode(consentCookie.Value);
 
-                            bool preferences = consentJson.Value<bool?>("preferences") == true;
-                            bool statistics = consentJson.Value<bool?>("statistics") == true;
-                            bool advertising = consentJson.Value<bool?>("advertising") == true;
-
-
-                            if (preferences || statistics || advertising)
+                            try
                             {
-                                isCookieConsentEnabled = 1;
+                                JObject consentJson = JObject.Parse(cookieValue);
+
+                                bool preferences = consentJson.Value<bool?>("preferences") == true;
+                                bool statistics = consentJson.Value<bool?>("statistics") == true;
+                                bool advertising = consentJson.Value<bool?>("advertising") == true;
+
+
+                                if (preferences || statistics || advertising)
+                                {
+                                    isCookieConsentEnabled = 1;
+                                }
+                            }
+                            catch
+                            {
+                                isCookieConsentEnabled = 0;
                             }
                         }
-                        catch
-                        {
-                            isCookieConsentEnabled = 0;
-                        }
+
+
+                        string sSqlupdate = "UPDATE tblCartOrder SET bCookieConsentEnabled = " + isCookieConsentEnabled + " WHERE nCartOrderKey = " + mnCartId;
+
+                        moDBHelper.ExeProcessSql(sSqlupdate);
                     }
-
-
-                    string sSqlupdate = "UPDATE tblCartOrder SET bCookieConsentEnabled = " + isCookieConsentEnabled + " WHERE nCartOrderKey = " + mnCartId;
-
-                    moDBHelper.ExeProcessSql(sSqlupdate);
                 }
             }
 
