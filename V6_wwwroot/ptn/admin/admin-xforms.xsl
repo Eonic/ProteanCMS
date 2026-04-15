@@ -514,7 +514,7 @@
 	</xsl:template>
 
 	<!-- Template for login, pick page-->
-	<xsl:template match="Content[@name='UserLogon']" mode="xform">
+	<xsl:template match="Content[@name='UserLogon' or @name='AdminLogon']" mode="xform">
 		<form method="{model/submission/@method}" action=""  novalidate="novalidate">
 			<xsl:attribute name="class">
 				<xsl:text>xform needs-validation</xsl:text>
@@ -545,7 +545,7 @@
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 			</xsl:if>
 			<xsl:for-each select="group">
-				<div class="admin-body {@class}">
+				<div class="admin-body {@class}">					
 					<xsl:apply-templates select="label" mode="legend"/>
 					<p>Welcome back, please sign in to your account</p>
 					<xsl:apply-templates select="parent::*/alert" mode="xform"/>						
@@ -2446,7 +2446,8 @@
 		</xsl:choose>
 
 		<xsl:if test="not(contains(@search,'pick'))">
-			<div class="related-content-rows">
+			<xsl:if test="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]">
+				<div class="related-content-rows">
 				<xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
 					<xsl:sort select="@status" data-type="number" order="descending"/>
 					<xsl:sort select="@displayorder" data-type="number" order="ascending"/>
@@ -2454,7 +2455,9 @@
 					<xsl:with-param name="relationType" select="$relationType" />
 					<xsl:with-param name="relationDirection" select="$RelType" />
 				</xsl:apply-templates>
+				<xsl:text> </xsl:text>
 			</div>
+	</xsl:if>
 		</xsl:if>
 	</xsl:template>
 
@@ -2603,7 +2606,7 @@
 		</xsl:choose>
 
 		<xsl:if test="not(contains(@search,'pick'))">
-
+			<xsl:if test="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]">
 			<div class="related-content-rows">
 				<xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
 					<xsl:sort select="@status" data-type="number" order="descending"/>
@@ -2612,7 +2615,9 @@
 					<xsl:with-param name="relationType" select="$relationType" />
 					<xsl:with-param name="relationDirection" select="$RelType" />
 				</xsl:apply-templates>
+				<xsl:text> </xsl:text>
 			</div>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 
@@ -2741,8 +2746,9 @@
 		</xsl:choose>
 
 		<xsl:if test="not(contains(@search,'pick'))">
+			<xsl:if test="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]">
 
-			<div class="related-content-rows">
+				<div class="related-content-rows">
 				<xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
 					<xsl:sort select="@status" data-type="number" order="descending"/>
 					<xsl:sort select="@displayorder" data-type="number" order="ascending"/>
@@ -2750,7 +2756,9 @@
 					<xsl:with-param name="relationType" select="$relationType" />
 					<xsl:with-param name="relationDirection" select="$RelType" />
 				</xsl:apply-templates>
+					<xsl:text> </xsl:text>
 			</div>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 

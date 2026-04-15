@@ -167,12 +167,12 @@
 						<input bind="cUrl" class="long">
 							<label>URL</label>
 						</input>
-            <select appearance="full" bind="externalNewWindow">
-              <item>
-                <label>Open Link in New Window</label>
-                <value>true</value>
-              </item>
-            </select>
+						<select appearance="full" bind="externalNewWindow">
+						  <item>
+							<label>Open Link in New Window</label>
+							<value>true</value>
+						  </item>
+						</select>
 					</case>
 					<case id="cLinkType_3">
 						<input bind="ModalID" class="long">

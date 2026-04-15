@@ -1,0 +1,28 @@
+<Discount>
+	<nDiscountKey>538</nDiscountKey>
+	<nDiscountForeignRef/>
+	<cDiscountName>ITBLUE15 Affiliate code</cDiscountName>
+	<cDiscountCode>ITBLUE15</cDiscountCode>
+	<nDiscountCat>1</nDiscountCat>
+	<bDiscountIsPercent>1</bDiscountIsPercent>
+	<nDiscountValue>15</nDiscountValue>
+	<nDiscountMinPrice></nDiscountMinPrice>
+	<nDiscountMinQuantity>1</nDiscountMinQuantity>
+	<cAdditionalXML>
+		<cDescription />
+		<cTerms />
+		<Images>
+			<img src="" width="" height="" class="thumbnail" alt="" />
+			<img src="" width="" height="" class="display" alt="" />
+			<img src="" width="" height="" class="detail" alt="" />
+		</Images>
+		<bFreeGiftBox></bFreeGiftBox>
+		<bApplyToOrder></bApplyToOrder>
+		<cFreeShippingMethods></cFreeShippingMethods>
+		<nMinimumOrderValue>1</nMinimumOrderValue>
+		<nMaximumOrderValue>258</nMaximumOrderValue>
+		<nDiscountMaxPrice></nDiscountMaxPrice>
+	</cAdditionalXML>
+	<cDiscountUserCode>ITBLUE15</cDiscountUserCode>
+	<nDiscountCodeType>1</nDiscountCodeType>
+</Discount>

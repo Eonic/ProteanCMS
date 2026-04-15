@@ -1,5 +1,4 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using Microsoft.VisualBasic;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -72,7 +71,7 @@ namespace Protean.Tools
                             cResult = oEnc.Text;
                             if (RemoveLineBreaks)
                             {
-                                cResult = oEnc.Text.Replace(Constants.vbNewLine, ""); //Replace(oEnc.Text, Constants.vbNewLine, "");
+                                cResult = oEnc.Text.Replace(Environment.NewLine, ""); //Replace(oEnc.Text, Constants.vbNewLine, "");
                                 cResult = System.Text.RegularExpressions.Regex.Replace(oEnc.Text, @"\r\n?|\n", "");
 
                             }

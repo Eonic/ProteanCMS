@@ -1,6 +1,7 @@
-<Order cartId="873881" statusId="1" status="Unknown Process ID" itemCount="3" weight="0" orderType="" complete="True" bDiscountIsPercent="1" discountTotal="0.00" shippingType="65" shippingCost="3.95" shippingDesc="First Class (Royal Mail)-" ReceiptType="0" totalNet="267.95" vatRate="0" vatAmt="0" total="267.95" currency="" currencySymbol="£" errorMsg="0" cmd="Cart" sessionId="bzvjkwtwoxgwt00ul3bivuzd" siteUrl="https://demo2019.intotheblue.co.uk/" cartUrl="https://local.intotheblue.co.uk/">
-	<Item id="2512511" contentId="76842" price="0.00" taxRate="0" quantity="1" shippingLevel="-1" discount="0.00" weight="0" parId="" originalPrice="110.00" itemTotal="0.00" unitSaving="110.00" itemSaving="0.00">
-		<Name>Triple Challenge for Four</Name>
+<Order cartId="1048760" session="4ndidfvqqtw3fkxaik1v2ulv" statusId="1" status="Unknown Process ID" itemCount="3" weight="0" orderType="" BlockCartUpdate="off" complete="True" bDiscountIsPercent="1" discountTotal="23.60" showDiscountCodeBox="true" shippingType="65" shippingCost="3.95" shippingDesc="First Class (Royal Mail)-" ReceiptType="0" totalNet="224.34" vatRate="0" vatAmt="0" total="224.34" currency="" currencySymbol="£" errorMsg="0" cmd="Cart" sessionId="4ndidfvqqtw3fkxaik1v2ulv" siteUrl="https://demo2019.intotheblue.co.uk/" cartUrl="https://demo2019.intotheblue.co.uk/">
+	<Item id="3023533" contentId="87532" price="35.40" taxRate="0" quantity="1" shippingLevel="-1" discount="23.60" weight="0" parId="" originalPrice="59.00" itemTotal="35.40" unitSaving="23.60" itemSaving="23.60">
+		<Name>Half Day Course</Name>
+		
 		<nItemOptGrpIdx>0</nItemOptGrpIdx>
 		<nItemOptIdx>0</nItemOptIdx>
 		<nParentId>0</nParentId>
@@ -8,10 +9,12 @@
 		<ProductStatus>1</ProductStatus>
 		<nShippingGroup/>
 		<nshippingType/>
-		<DiscountPrice discountId="29244" OriginalUnitPrice="110.00" UnitPrice="0" Units="1" Total="0.00" UnitSaving="110.00" TotalSaving="110.00"/>
+		
+		<DiscountPrice discountId="37662" OriginalUnitPrice="59" UnitPrice="35.4" Units="1" Total="35.4" UnitSaving="23.6" TotalSaving="23.6"/>
 	</Item>
-	<Item id="2512513" contentId="27866" price="119.00" taxRate="0" quantity="1" shippingLevel="-1" discount="0.00" weight="0" parId="" originalPrice="119.00" itemTotal="119.00" unitSaving="0.00" itemSaving="0.00">
-		<Name>30 Clay and 6 Mile Quad Trek</Name>
+	<Item id="3023537" contentId="30051" price="99.99" taxRate="0" quantity="1" shippingLevel="-1" discount="0.00" weight="0" parId="" originalPrice="99.99" itemTotal="99.99" unitSaving="0.00" itemSaving="0.00">
+		<Name>Zombie Experience</Name>
+		
 		<nItemOptGrpIdx>0</nItemOptGrpIdx>
 		<nItemOptIdx>0</nItemOptIdx>
 		<nParentId>0</nParentId>
@@ -19,25 +22,25 @@
 		<ProductStatus>1</ProductStatus>
 		<nShippingGroup/>
 		<nshippingType/>
-		<DiscountPrice discountId="29244" OriginalUnitPrice="119.00" UnitPrice="119.00" Units="1" Total="119.00" UnitSaving="0" TotalSaving="0"/>
+		
+		<DiscountPrice discountId="37662" OriginalUnitPrice="99.99" UnitPrice="99.99" Units="1" Total="99.99" UnitSaving="0" TotalSaving="0"/>
 	</Item>
-	<Item id="2512515" contentId="25842" price="145.00" taxRate="0" quantity="1" shippingLevel="-1" discount="0.00" weight="0" parId="" originalPrice="145.00" itemTotal="145.00" unitSaving="0.00" itemSaving="0.00">
-		<Name>Shotgun Skills Course</Name>
+	<Item id="3023535" contentId="87437" price="85.00" taxRate="0" quantity="1" shippingLevel="-1" discount="0.00" weight="0" parId="" originalPrice="85.00" itemTotal="85.00" unitSaving="0.00" itemSaving="0.00">
+		<Name>Two Activities</Name>
+		
 		<nItemOptGrpIdx>0</nItemOptGrpIdx>
 		<nItemOptIdx>0</nItemOptIdx>
 		<nParentId>0</nParentId>
 		<contentType>SKU</contentType>
 		<ProductStatus>1</ProductStatus>
 		<nShippingGroup/>
-		<nshippingType/>		
-		<DiscountPrice discountId="29244" OriginalUnitPrice="145.00" UnitPrice="145.00" Units="1" Total="145.00" UnitSaving="0" TotalSaving="0"/>
+		<nshippingType/>
+		
+		<DiscountPrice discountId="37662" OriginalUnitPrice="85" UnitPrice="85" Units="1" Total="85" UnitSaving="0" TotalSaving="0"/>
 	</Item>
 	<Shipping>
 		<Name>First Class (Royal Mail)</Name>
 		<Carrier/>
 		<DeliveryTime>Immediate</DeliveryTime>
-	</Shipping>
-	<Notes>
-		<PromotionalCode>TESTCHEAPEST</PromotionalCode>
-	</Notes>	
+	</Shipping>	
 </Order>

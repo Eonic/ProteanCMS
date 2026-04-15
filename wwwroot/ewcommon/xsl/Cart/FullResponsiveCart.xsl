@@ -1627,7 +1627,7 @@
             <xsl:text>: </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:text>&#160;</xsl:text>
+        <xsl:text> </xsl:text>
       </label>
       <input type="text" name="qty_{@id}" id="qty_{@id}" value="1" size="3" class="qtybox form-control"/>
       <button class="btn btn-action qty-minus" type="button" value="-" onClick="incrementQuantity('qty_{@id}','-')">

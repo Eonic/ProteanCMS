@@ -7,60 +7,24 @@
       "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\core\\cms.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\protean.cms\\core\\cms.dbhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\core\\cms.dbhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|d:\\hostingspaces\\proteancms\\assemblies\\protean.cms\\core\\cms-content.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\core\\cms-content.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\protean.cms\\admin\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\admin\\admin.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|d:\\hostingspaces\\proteancms\\v6_wwwroot\\ptn\\admin\\admin.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\ptn\\admin\\admin.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}|Assemblies\\Protean.Tools\\Protean.Tools.csproj|d:\\hostingspaces\\proteancms\\assemblies\\protean.tools\\protean.tools.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}|Assemblies\\Protean.Tools\\Protean.Tools.csproj|solutionrelative:assemblies\\protean.tools\\protean.tools.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\ptn\\core\\functions.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\ptn\\core\\functions.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\protean.cms\\admin\\admin.jsonactions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\admin\\admin.jsonactions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}|Assemblies\\Protean.Tools\\Protean.Tools.csproj|d:\\hostingspaces\\proteancms\\assemblies\\protean.tools\\database.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}|Assemblies\\Protean.Tools\\Protean.Tools.csproj|solutionrelative:assemblies\\protean.tools\\database.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\protean.cms\\core\\base.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\core\\base.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\protean.cms\\core\\dbhelper\\utils\\apilog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\core\\dbhelper\\utils\\apilog.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\protean.cms\\features\\cart\\cart.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\features\\cart\\cart.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\protean.cms\\admin\\adminxforms-pages.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\admin\\adminxforms-pages.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\protean.web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
       "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\protean.web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\ptn\\tools\\keepalive.ashx||{DAB1E6DB-4119-49A3-ACE3-0FE8F3E0669F}",
-      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\ptn\\tools\\keepalive.ashx||{DAB1E6DB-4119-49A3-ACE3-0FE8F3E0669F}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}|Assemblies\\Protean.Tools\\Protean.Tools.csproj|d:\\hostingspaces\\proteancms\\assemblies\\protean.tools\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{12AF6171-9AAB-4C4D-A83B-85FE18A334C1}|Assemblies\\Protean.Tools\\Protean.Tools.csproj|solutionrelative:assemblies\\protean.tools\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\protean.cms\\admin\\adminxforms.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\admin\\adminxforms.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\protean.cms\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\properties\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\features\\cart\\Cart-invoice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assemblies\\Protean.CMS\\features\\cart\\Cart-invoice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -70,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 200,
-          "SelectedChildIndex": 79,
+          "SelectedChildIndex": 81,
           "Children": [
             {
               "$type": "Bookmark",
@@ -342,10 +306,6 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{6d4078d1-5951-4ed1-ac0e-0a8099c1cce5}"
-            },
-            {
-              "$type": "Bookmark",
               "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
             },
             {
@@ -365,76 +325,40 @@
               "Name": "ST:128:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Cms.DBHelper.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\core\\Cms.DBHelper.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\core\\Cms.DBHelper.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\core\\Cms.DBHelper.cs",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\core\\Cms.DBHelper.cs",
-              "ViewState": "AgIAAAEWAAAAAAAAAAAEwAwWAAAoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:27.855Z"
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Admin.JSONActions.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\admin\\Admin.JSONActions.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\admin\\Admin.JSONActions.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\admin\\Admin.JSONActions.cs",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\admin\\Admin.JSONActions.cs",
-              "ViewState": "AgIAACkAAAAAAAAAAAASwDUAAAAwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:27.912Z"
+              "$type": "Bookmark",
+              "Name": "ST:134:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Cart-invoice.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\features\\cart\\Cart-invoice.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\features\\cart\\Cart-invoice.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\features\\cart\\Cart-invoice.cs",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\features\\cart\\Cart-invoice.cs",
-              "ViewState": "AgIAAHUAAAAAAAAAAAAAAIQAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:27.968Z"
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "Cart.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\features\\cart\\Cart.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\features\\cart\\Cart.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\features\\cart\\Cart.cs",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\features\\cart\\Cart.cs",
-              "ViewState": "AgIAACwFAAAAAAAAAAASwDcFAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:27.989Z"
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{13b12e3e-c1b4-4539-9371-4fe9a0d523fc}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Database.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools\\Database.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.Tools\\Database.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools\\Database.cs",
-              "RelativeToolTip": "Assemblies\\Protean.Tools\\Database.cs",
-              "ViewState": "AgIAAIEDAAAAAAAAAAAnwJADAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:28.007Z"
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "APILog.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\core\\dbhelper\\utils\\APILog.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\core\\dbhelper\\utils\\APILog.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\core\\dbhelper\\utils\\APILog.cs",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\core\\dbhelper\\utils\\APILog.cs",
-              "ViewState": "AgIAABoAAAAAAAAAAAA4wB4AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:28.011Z"
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
               "$type": "Document",
@@ -444,106 +368,72 @@
               "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\core\\Cms.cs",
               "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\core\\Cms.cs",
               "RelativeToolTip": "Assemblies\\Protean.CMS\\core\\Cms.cs",
-              "ViewState": "AgIAAJYHAAAAAAAAAAAgwLkHAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAKcKAAAAAAAAAAAkwMEKAAAkAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:28.086Z",
+              "WhenOpened": "2026-04-14T14:59:53.577Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Admin.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\admin\\Admin.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\admin\\Admin.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\admin\\Admin.cs",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\admin\\Admin.cs",
-              "ViewState": "AgIAAJEIAAAAAAAAAAAEwJoIAAAgAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "Cms-Content.cs",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\core\\Cms-Content.cs",
+              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\core\\Cms-Content.cs",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\core\\Cms-Content.cs",
+              "RelativeToolTip": "Assemblies\\Protean.CMS\\core\\Cms-Content.cs",
+              "ViewState": "AgIAAOMEAAAAAAAAAAAkwPEEAAApAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:28.368Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Base.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\core\\Base.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\core\\Base.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\core\\Base.cs",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\core\\Base.cs",
-              "ViewState": "AgIAAHcAAAAAAAAAAADgv4MAAAARAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:28.37Z"
+              "WhenOpened": "2026-04-14T14:59:17.47Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "Protean.Tools.csproj",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools\\Protean.Tools.csproj",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.Tools\\Protean.Tools.csproj",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools\\Protean.Tools.csproj",
-              "RelativeToolTip": "Assemblies\\Protean.Tools\\Protean.Tools.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-02-20T20:33:28.377Z"
+              "Title": "functions.xsl",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\functions.xsl",
+              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\functions.xsl",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\functions.xsl",
+              "RelativeToolTip": "V6_wwwroot\\ptn\\core\\functions.xsl",
+              "ViewState": "AgIAAKgOAAAAAAAAAAAkwLMOAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
+              "WhenOpened": "2026-03-20T11:42:41.905Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "AssemblyInfo.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools\\Properties\\AssemblyInfo.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.Tools\\Properties\\AssemblyInfo.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.Tools\\Properties\\AssemblyInfo.cs",
-              "RelativeToolTip": "Assemblies\\Protean.Tools\\Properties\\AssemblyInfo.cs",
-              "ViewState": "AgIAABoAAAAAAAAAAAAqwCQAAAAoAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "admin.xsl",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\admin\\admin.xsl",
+              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\admin\\admin.xsl",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\admin\\admin.xsl",
+              "RelativeToolTip": "V6_wwwroot\\ptn\\admin\\admin.xsl",
+              "ViewState": "AgIAAGoJAAAAAAAAAAAkwHgJAAAGAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
+              "WhenOpened": "2026-03-20T11:22:36.603Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AdminXforms-Pages.cs",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\admin\\AdminXforms-Pages.cs",
+              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\admin\\AdminXforms-Pages.cs",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\admin\\AdminXforms-Pages.cs",
+              "RelativeToolTip": "Assemblies\\Protean.CMS\\admin\\AdminXforms-Pages.cs",
+              "ViewState": "AgIAAO8AAAAAAAAAAAAkwA0BAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:28.487Z"
+              "WhenOpened": "2026-03-20T10:30:13.516Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "AdminXforms.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\admin\\AdminXforms.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\admin\\AdminXforms.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\admin\\AdminXforms.cs",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\admin\\AdminXforms.cs",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAqwAsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:28.497Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
-              "Title": "AssemblyInfo.cs",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\Properties\\AssemblyInfo.cs",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\Properties\\AssemblyInfo.cs",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\Properties\\AssemblyInfo.cs",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\Properties\\AssemblyInfo.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAqwCoAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-02-20T20:33:28.5Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "keepalive.ashx",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\tools\\keepalive.ashx",
-              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\tools\\keepalive.ashx",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\tools\\keepalive.ashx",
-              "RelativeToolTip": "V6_wwwroot\\ptn\\tools\\keepalive.ashx",
-              "LogicalView": "7651a703-06e5-11d1-8ebd-00a0c90f26ea",
-              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAECSURBVDhPxZK/boMwEMY/OuKdOWVNn\u002BJmJLZa8jM0PAzpQh7AEt0s\u002BVGalWSGoe3gW68DgRIESjPlt9g\u002B6fvujw94NNE8MMDMMo9NieM4wpoBM0sIAc45OOcQQgAAKKWQ5zmMMcDFJFrLVBQFmqZBkiTYbl8AAMfjJ9q2RZqmKMsSABAxs2RZNgq997DWwlqL3dsOp/MZ\u002BlUDAOqPGs\u002BbDfbvexhjYIzpDUb1Ba31WPYaSinUdd0/mFmISIhIuq4TIpKqOsj31894Tu9VdRAiEmaWp6EC7z2897M8t1mcwT0tLM7griHOxYPhv7/xWt4zmFhrby/StfSPpdamDKv8eH4B1EK5ao2TjxsAAAAASUVORK5CYII=",
-              "WhenOpened": "2026-02-20T20:33:28.76Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 5,
               "Title": "protean.web.config",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\protean.web.config",
               "RelativeDocumentMoniker": "V6_wwwroot\\protean.web.config",
               "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\protean.web.config",
               "RelativeToolTip": "V6_wwwroot\\protean.web.config",
-              "ViewState": "AgIAAAoAAAAAAAAAAAAmwBQAAAAHAAAAAAAAAA==",
-              "Icon": "00000000-0000-0000-0000-000000000000.000000|iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAEHSURBVDhPjZIxboQwFEQfbCofC7lEspJ0lFnoOQpbc4YkDSW3gNo5wibNr3ZxiqyRQZjwJEv2MBrZn0kIEBEXnvdQSiUASSj6gDzPQ3lBURQURQGPkGjAx/tn\u002BAmAl9dnALTW1HUNQLryHKLve5qmAR8gIi58f9d1gX2bvu//NiLixnF0ZVk6H1SWpbP2y31ff6IryzInIi4FaNsWa\u002B2cbq3lcmk4PZ1mLUYKMAzDWmcYBtLljDdZDDHP88UvdPxfixTAGLPWMcYwTQcDqqpCaz2LWmvOb2em\u002BxR6N0l9JX0x/P52u4e\u002BKPOURMT59/se7FWah2834AjRKiulkiNrcYN1QHiO8QuMKZUzWfD1hgAAAABJRU5ErkJggg==",
-              "WhenOpened": "2026-02-20T20:33:28.767Z"
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAC4AAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-03-04T17:52:30.49Z"
             }
           ]
         },
@@ -577,12 +467,18 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:1:0:{90243340-bd7a-11d0-93ef-00a0c90f2734}"
+              "Name": "ST:0:0:{a80febb4-e7e0-4147-b476-21aaf2453969}"
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:0:0:{a80febb4-e7e0-4147-b476-21aaf2453969}"
-            },
+              "Name": "ST:0:0:{9a7cebbb-dc5c-4986-bc49-962da46aa506}"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": -1,
+          "Children": [
             {
               "$type": "Bookmark",
               "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
