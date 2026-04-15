@@ -501,17 +501,17 @@ namespace Protean
                         {
                             moDiscount.RecordDiscountUsage(ref oCartElmt);
                         }
-                        if (moWebConfig["EnableGA4OrderLog"] != null && moWebConfig["EnableGA4OrderLog"].ToLower() == "on")
+
+                        if (moWebConfig["SendPurchaseEventToGA4"] != null && moWebConfig["SendPurchaseEventToGA4"].ToLower() == "on")
                         {
                             if (!IsCookieConsentEnabled(mnCartId))
                             {
+
                                 SendPurchaseEventToGA4(oCartElmt);
                             }
                         }
-                       
-
-
                         calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
+                        
 
                     }
 
@@ -690,23 +690,26 @@ namespace Protean
 
             public bool IsCookieConsentEnabled(Int64 mnCartId)
             {
-                bool isEnabled = true;
-
-                string sSql = "SELECT * FROM tblCartOrder WHERE nCartOrderKey = " + mnCartId;
-
-                using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
+                if (moDBHelper.checkTableColumnExists("tblCartOrder", "bCookieConsentEnabled") && (myWeb.moRequest.Cookies["bCookieConsentEnabled"] == null))
                 {
-                   if( moDBHelper.checkTableColumnExists("tblCartOrder", "bCookieConsentEnabled"))
+                    bool isEnabled = false;
+
+                    string sSql = "SELECT * FROM tblCartOrder WHERE nCartOrderKey = " + mnCartId;
+
+                    using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
                     {
                         while (oDr.Read())
                             isEnabled = oDr["bCookieConsentEnabled"] != DBNull.Value
                                             && Convert.ToBoolean(oDr["bCookieConsentEnabled"]);
                     }
-                   
+
+
+                    return isEnabled;
                 }
-
-
-                return isEnabled;
+                else
+                {
+                    return false;
+                }
             }
 
         }
