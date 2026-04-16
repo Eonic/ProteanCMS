@@ -508,9 +508,6 @@ Original preload function has been kept but is unused.
                         myTreeRoot.find('li#' + moveIdNode).removeClass("locked");
                         // alert('move up');
 
-                    },
-                    complete: function () {
-                        myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1).removeClass("locked");
                     }
                 });
 
@@ -541,9 +538,6 @@ Original preload function has been kept but is unused.
                         myTreeRoot.find('li#' + moveIdNode).removeClass("locked");
                         // alert('move down');
 
-                    },
-                    complete: function () {
-                        myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1).removeClass("locked");
                     }
                 });
             }
@@ -568,9 +562,6 @@ Original preload function has been kept but is unused.
                         myTreeRoot.checkChildren();
                         myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1.0);
                         myTreeRoot.find('li#' + moveIdNode).removeClass("locked");
-                    },
-                    complete: function () {
-                        myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1).removeClass("locked");
                     }
                 });
             }
@@ -594,9 +585,6 @@ Original preload function has been kept but is unused.
                         myTreeRoot.checkChildren();
                         myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1.0);
                         myTreeRoot.find('li#' + moveIdNode).removeClass("locked");
-                    },
-                    complete: function () {
-                        myTreeRoot.find('li#' + moveIdNode).fadeTo("fast", 1).removeClass("locked");
                     }
                 });
             }
