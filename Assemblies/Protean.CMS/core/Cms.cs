@@ -2741,21 +2741,14 @@ namespace Protean
                                 }
                                 if (Convert.ToBoolean(validatedVersion))
                                 {
-                                    // MEMORY FIX: Clear previous moContentDetail reference to allow GC
-                                    moContentDetail = null;
                                     moContentDetail = BuildPageContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, nVersionId: Convert.ToInt64(moRequest["verId"]), bIgnoreContentStatus: ignoreContentStatus);
                                 }
                                 else if (moConfig["AllowContentDetailAccess"]?.ToLower() == "on")
                                 {
-                                    // MEMORY FIX: Clear previous moContentDetail reference to allow GC
-                                    moContentDetail = null;
                                     moContentDetail = BuildPageContentDetailXml(oPageElmt, bIgnoreContentStatus: ignoreContentStatus);
                                 }
                                 else
                                 {
-                                    // MEMORY FIX: Clear previous moContentDetail reference to allow GC
-                                    moContentDetail = null;
-
                                     moContentDetail = BuildPageContentDetailXml(oPageElmt, bCheckAccessToContentLocation: true, bIgnoreContentStatus: ignoreContentStatus);
                                 }
                             }
