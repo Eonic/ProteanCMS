@@ -401,7 +401,7 @@ namespace Protean
                                     string[] aGroups = oElmt.GetAttribute("validGroups").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 string[] aInvalidGroups = oElmt.GetAttribute("invalidGroups").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-                                bAllowUser = false;
+                                //bAllowUser = false;
                            
                                 foreach (var group in aGroups)
                                 {
