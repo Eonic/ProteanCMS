@@ -34,7 +34,7 @@ namespace Protean.Handlers
                 // Return appropriate error response
                 context.Response.StatusCode = 500;
                 context.Response.ContentType = "text/html";
-                context.Response.Write("<html><body><h1>An error occurred</h1></body></html>");
+                context.Response.Write("<html><body><h1>ProteanCMS Handler Error</h1><P>" + ex.Message + "</P></body></html>");
             }
             finally
             {
