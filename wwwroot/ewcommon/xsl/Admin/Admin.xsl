@@ -11072,7 +11072,7 @@
 					<table class="table">
 						<tr>
 							<th>Name</th>
-							<th>Usernane</th>
+							<th>Username</th>
 							<th>Subscription Name</th>
 							<th>Active</th>
 							<th>Start Date</th>
@@ -11486,7 +11486,7 @@
 					<table class="table">
 						<tr>
 							<th>User</th>
-							<th>Usernane</th>
+							<th>Username</th>
 							<th>Subscription</th>
 							<th>Rate</th>
 							<th>Status</th>
@@ -11624,7 +11624,7 @@
 		<table class="table">
 			<tr>
 				<th>User</th>
-				<th>Usernane</th>
+				<th>Username</th>
 				<th>Subscription</th>
 				<th>Rate</th>
 				<th>Status</th>

@@ -658,7 +658,10 @@ function checkboxshowDependant(checkboxId, dependant, allDependants) {
 
 function showDependant(dependant, allDependants) {
 
-
+    // Guard clause: do nothing if dependant is undefined, null, or empty
+    if (!dependant) {
+        return;
+    }
 
     // Hide unwanted Dependants
     $("." + allDependants).addClass('hidden');

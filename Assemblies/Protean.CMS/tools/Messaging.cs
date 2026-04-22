@@ -138,10 +138,11 @@ namespace Protean
                 if (!string.IsNullOrEmpty(fileLocation))
                 {
                     // check if filesystem path allready supplied
-                    if (!fileLocation.Contains(":/"))
+                    if (!fileLocation.Contains(@":\"))
                     {
-                        fileLocation = goServer.MapPath("/") + fileLocation;
+                        fileLocation = goServer.MapPath("/") + fileLocation.Replace("/","\\");
                     }
+                    fileLocation = fileLocation.Replace(@"\\", @"\");
 
                     var oAtt = new Attachment(fileLocation);
                     // rewrite the name
@@ -152,14 +153,6 @@ namespace Protean
                         Attachments = new System.Collections.ObjectModel.Collection<object>();
                     }
                     Attachments.Add(oAtt);
-
-                    // NB : 01-09-2009 Commented, See deleteAttachment
-                    // As here only causes "File in Use" exceptions in the fsHelper
-                    // If deleteAfterAttach Then
-                    // Dim fsh As Protean.fsHelper = New fsHelper
-                    // fsh.DeleteFile(goServer.MapPath("") & fileLocation)
-                    // End If
-
                 }
             }
 
@@ -300,7 +293,13 @@ namespace Protean
                     }
 
                     Protean.fsHelper fsh = new fsHelper();
-                    fsh.DeleteFile(goServer.MapPath("/") + fileLocation);
+
+                    if (fileLocation.Contains(@":\") == false){
+                        fileLocation = goServer.MapPath("/") + fileLocation;
+                    }
+
+
+                    fsh.DeleteFile(fileLocation);
 
                 }
             }
