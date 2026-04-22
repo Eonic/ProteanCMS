@@ -363,12 +363,33 @@ namespace Protean
             try
             {
                 var myWeb = new Cms(moCtx);
+                //string cleanPathName = fsh.UploadRequest(moCtx, cAttachmentFilePath);
                 var oMsg = new Messaging(ref myWeb.msException);
 
-                oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend);
+
+                if (cAttachmentFilePath != "")
+                {
+                    oMsg.addAttachment(cAttachmentFilePath, bDeleteAfterSend);
+                }
+                // new feature for multiple attachments from xForm
+                foreach (XmlNode item in oBodyXML.SelectNodes("*[@uploadPath != '']")) {
+                    XmlElement elmt = (XmlElement)item;
+                    oMsg.addAttachment(elmt.GetAttribute("uploadPath") + item.InnerText, bDeleteAfterSend);
+                }
+
                 Cms.dbHelper odbhelper = null;
                 sMessage = Convert.ToString(oMsg.emailer(oBodyXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, ref odbhelper, "Message Sent", "Message Failed", "", ccRecipient, bccRecipient, cSeperator));
-                oMsg.deleteAttachment(cAttachmentFilePath);
+                if (cAttachmentFilePath != "") { 
+                    oMsg.deleteAttachment(cAttachmentFilePath);
+                }
+                // new feature for multiple attachments from xForm
+                if (bDeleteAfterSend) { 
+                    foreach (XmlNode item in oBodyXML.SelectNodes("*[@uploadPath != '']"))
+                    {
+                        XmlElement elmt = (XmlElement)item;
+                        oMsg.deleteAttachment(elmt.GetAttribute("uploadPath") + item.InnerText);
+                    }
+                }
                 return sMessage;
             }
 
