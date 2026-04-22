@@ -268,6 +268,8 @@ function initialiseXforms() {
     if ($("form.ewXform").exists()) {
         $('form.ewXform').prepareXform();
 
+        initializeSwitchCases(); 
+
         if ($.browser.msie && $.browser.version <= 9 || $.browser.opera) {
             $("input[placeholder], textarea[placeholder]").each(function () {
                 var val = $(this).attr("placeholder");
@@ -762,92 +764,171 @@ function cleanDatepicker() {
 
 
 /*  USED IN ALL EW:xFORMS - For when an Radio Button Toggles a switch /case */
+/// New version from protean6
+
+function checkboxshowDependant(checkboxId, dependant, allDependants) {
+
+    if ($("#" + checkboxId).is(':checked')) {
+        showDependant(dependant, allDependants)
+    }
+    else {
+        $("." + allDependants).addClass('hidden');
+    }
+}
+
+
 function showDependant(dependant, allDependants) {
 
+
+    // Guard clause: do nothing if dependant is undefined, null, or empty
+    if (!dependant) {
+        return;
+    }
+    //alert(dependant);
+   // alert(allDependants);
     // Hide unwanted Dependants
+    $("." + allDependants).addClass('hidden');
+    $("." + allDependants.replace('~inactive','')).addClass('hidden');
 
-        $("." + allDependants).addClass('hidden');
+    // Make required inactive to avoid JS validation
+    $("." + allDependants).find('.required').each(function () {
+        $(this).removeClass('required');
+        $(this).addClass('reqinactive');
+    })
 
-        // Make required inactive to avoid JS validation
-        $("." + allDependants).find('.required').each(function () {
-            $(this).removeClass('required');
-            $(this).addClass('reqinactive');
-        })
-
-        // Make all now hidden fields inactive so values are lost when submitted.
-        $("." + allDependants).find(":input").not(':submit').each(function () {
-            var fieldName = $(this).attr('name');
-            var fieldId = $(this).attr('id');
-
-            // If condition added to check name or id have '~inactive' then revert it to original name and id. So it will not append '~inactive' multiple times.
-            if (fieldName != undefined && fieldName.indexOf("~inactive") != -1) {
-                fieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-                $(this).attr('name', fieldName);
-                
-                if (fieldId!=undefined) {
-                    var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-                    $(this).attr('id', tempFieldId);
-                }               
-
-            } else {
-                var tempFieldName = fieldName + '~inactive';
-                //    alert("hide as " + tempFieldName);
-                $(this).attr('name', tempFieldName);
-            }           
-            //   $(this).attr('id', $(this).attr('id') + '~inactive');
-        });
-
-    // Show wanted Dependants
-    $("#" + dependant).removeClass('hidden');
-
-    // Find all inactive required fields and make required again for JS Validation
-    $("#" + dependant).find('.reqinactive').each(function () {
-        $(this).removeClass('reqinactive');
-        $(this).addClass('required');
-    });
-
-    // Find all inactive inputs, and re-activate,
-    $("#" + dependant).find(":input").not(':submit').each(function () {
+    // Make all now hidden fields inactive so values are lost when submitted.
+    $("." + allDependants).find(":input").not(':button').not(':submit').each(function () {
         var fieldName = $(this).attr('name');
-        if (fieldName != undefined) {
-            var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-            $(this).attr('name', tempFieldName);
+        // Backwards compatible check instead of endsWith (IE compatible)
+        if (fieldName && fieldName.indexOf('~inactive', fieldName.length - 9) === -1) {
+            //    alert("hide as " + tempFieldName);
+            $(this).attr('name', fieldName + '~inactive');
         }
-        var fieldId = $(this).attr('id');
-        if (fieldId != undefined) {
-            var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-            $(this).attr('id', tempFieldId);
-        }
-        //  alert("enable " + tempFieldName);
-        //  $(this).attr('id', $(this).attr('name').replace('~inactive', ''));
+        //   $(this).attr('id', $(this).attr('id') + '~inactive');
     });
 
-    $("#" + dependant).prepareXform();
-    $("#" + dependant).trigger('bespokeXform');
-}
+    var aDependant = dependant.split(",");
 
-function hideAllDependants(thisId, allDependants) {
-    
-    // Hide unwanted Dependants
-    //if (donothide != true) {
-        $("." + allDependants).addClass('hidden');
+    for (var index = 0; index < aDependant.length; ++index) {
+        var sDependant = aDependant[index];
+        // ...use `element`...
+        $("#" + sDependant).removeClass('hidden');
 
-        // Make required inactive to avoid JS validation
-        $("." + allDependants).find('.required').each(function () {
-            $(this).removeClass('required');
-            $(this).addClass('reqinactive');
-        })
+        $("#" + sDependant).addClass(allDependants);
 
-        // Make all now hidden fields inactive so values are lost when submitted.
-        $("." + allDependants).find(":input").not(':submit').each(function () {
-            var fieldName = $(this).attr('name');
-            var tempFieldName = fieldName + '~inactive';
-            //    alert("hide as " + tempFieldName);
-            $(this).attr('name', tempFieldName);
-            //   $(this).attr('id', $(this).attr('id') + '~inactive');
+        // Find all inactive required fields and make required again for JS Validation
+        $("#" + sDependant).find('.reqinactive').each(function () {
+            $(this).removeClass('reqinactive');
+            $(this).addClass('required');
         });
-    //}
+        // Find all inactive inputs, and re-activate,
+        $("#" + sDependant).find(":input").not(':button').not(':submit').each(function () {
+            var fieldName = $(this).attr('name');
+            if (fieldName) { 
+                var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+                $(this).attr('name', tempFieldName);
+            }
+            var fieldId = $(this).attr('id');
+            if (fieldId) {
+                var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+                $(this).attr('id', tempFieldId);
+            }
+        });
+        $("#" + sDependant).prepareXform();
+        $("#" + sDependant).trigger('bespokeXform');
+    }
 }
+
+// Add this initialization function
+function initializeSwitchCases() {
+    // Find all switches and set initial case visibility
+    $('[id$="-dependant"]').each(function () {
+        const caseId = $(this).attr('id');
+        const parentSwitch = $(this).closest('[data-switch-for]');
+
+        // Check if this case should be visible based on selected value
+        if (!$(this).hasClass('hidden')) {
+            // Case is visible, ensure fields are active
+            $(this).find(':input').not(':button').not(':submit').each(function () {
+                const fieldName = $(this).attr('name');
+                if (fieldName && fieldName.endsWith('~inactive')) {
+                    $(this).attr('name', fieldName.replace('~inactive', ''));
+                }
+            });
+        } else {
+            // Case is hidden, ensure fields are inactive
+            $(this).find(':input').not(':button').not(':submit').each(function () {
+                const fieldName = $(this).attr('name');
+                if (fieldName && !fieldName.endsWith('~inactive')) {
+                    $(this).attr('name', fieldName + '~inactive');
+                }
+            });
+        }
+    });
+}
+
+function clearRadioOther(ref, position) {
+    $("input[id='" + ref + "_other']").attr('type', 'input');
+    $("input[id='" + ref + "_other']").on('input', function () {
+        $("input[id='" + ref + "_" + position + "']").val($("input[id='" + ref + "_other']").val())
+    });
+
+    $("input[id^='" + ref + "_']").not("[id='" + ref + "_" + position + "']").not("[id='" + ref + "_other']").on('change', function () {
+        $("input[id='" + ref + "_other']").attr('type', 'hidden');
+    });
+}
+
+
+function showHideDependant(bindVar) {
+
+    //get this list of service chkbxs under bindVar
+    var servicesObjs = $("[name='" + bindVar + "']");
+    var serviceIds = [];
+    $.each(servicesObjs, function (key, value) { //get Ids of the services
+        serviceIds.push(value.id);
+    });
+
+    //get Ids of the services checked
+    var servcsSelected = [];
+    $.each(serviceIds, function (key, value) {
+        if ($('#' + value).is(":checked")) {
+            servcsSelected.push(value);
+        }
+    });
+
+    //get cases/Qs for all services checked
+    var QsForServcChckd = [];
+    var QsForServcChckdDpdnt = [];
+    $.each(servcsSelected, function (key, value) {
+        QsForServcChckd = ($('#' + value).data('showhide').split(','));
+        for (var i = 0; i < QsForServcChckd.length; i++) {
+            if (jQuery.inArray(QsForServcChckd[i] + '-dependant', QsForServcChckdDpdnt) == -1) { //check for duplicate
+                QsForServcChckdDpdnt.push(QsForServcChckd[i] + '-dependant');
+            }
+        }
+    });
+
+    //hide all cases/Qs
+    var QArray = [];
+    $('.' + bindVar + '-dependant').each(function () {
+        QArray.push(this.id);
+    });
+    $.each(QArray, function (key, value) {
+        hideCase(value);
+    });
+
+    //show all cases/Qs for services selected
+    $.each(QsForServcChckdDpdnt, function (key, value) {
+        showCase(value);
+    });
+}
+
+
+
+
+
+
+
 
 function clearRadioOther(ref, position) {
     $("input[id='" + ref + "_other']").attr('type', 'input');

@@ -1151,6 +1151,15 @@ namespace Protean
 
                 oInstance.SetAttribute("valid", bIsValid.ToString().ToLower());
 
+                if (!bIsValid) {
+                    //remove details of uploaded files
+                    foreach (XmlNode oNode in oInstance.SelectNodes("descendant-or-self::*[@uploadPath!='']")) {
+                        XmlElement oElmt = (XmlElement)oNode;
+                        oElmt.RemoveAttribute("uploadPath");
+                        oElmt.InnerText = "";
+                    };
+                }
+
                 valid = bIsValid;
             }
 
@@ -1355,7 +1364,7 @@ namespace Protean
             bool bIsXml;
             string cProcessInfo = "";
             string sDataType;
-
+            int filecount = 0;
             try
             {
 
@@ -1580,9 +1589,10 @@ namespace Protean
                                                             cExtensions = "doc,docx,xls,xlsx,pdf,ppt,jpg,gif,png";
                                                         }
 
-                                                        if (goRequest.Files.Count > 0 && !(goRequest.Files.Count == 1 & goRequest.Files[0].ContentLength == 0))
+                                                        if (goRequest.Files.Count > 0 && !(filecount > goRequest.Files.Count ) && !(goRequest.Files[filecount].ContentLength == 0))
                                                         {
-                                                            var oFile = goRequest.Files[0];
+                                                            var oFile = goRequest.Files[filecount];
+                                                            filecount = filecount + 1;
 
                                                             cSavePath = cSavePath.Replace("$userId$", mnUserId.ToString());
                                                             cSavePath = cSavePath.Replace("$id$", goRequest["id"]);
@@ -1638,7 +1648,11 @@ namespace Protean
 
                                                                     string cFinalFullSavePath = oFs.getUniqueFilename(cFullPath + cSavePath + Filename);
                                                                     oFile.SaveAs(cFinalFullSavePath);
-                                                                    oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = cFinalFullSavePath.Replace(cFullPath, "");
+
+                                                                   XmlElement thisNode = (XmlElement)oInstance.SelectSingleNode(sXpath, nsMgr);
+                                                                    thisNode.SetAttribute("uploadPath", cFullPath + cSavePath);
+                                                                    thisNode.InnerText = Filename;
+                                                                    cFinalFullSavePath.Replace(cFullPath, "");
 
                                                                     // Working on the assumption that only one file has been submitted, then store this in a session object
                                                                     if (goSession != null)
@@ -1659,7 +1673,7 @@ namespace Protean
                                                         // this has been uploaded but the form had to go through a couple of stages of validation
                                                         else if (goSession != null && !string.IsNullOrEmpty(Convert.ToString(goSession["formFileUploaded"])))
                                                         {
-                                                            oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = Convert.ToString(goSession["formFileUploaded"].ToString().Trim());
+                                                         //   oInstance.SelectSingleNode(sXpath, nsMgr).InnerText = Convert.ToString(goSession["formFileUploaded"].ToString().Trim());
                                                         }
                                                         else
                                                         {

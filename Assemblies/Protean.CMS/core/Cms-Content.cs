@@ -1443,6 +1443,7 @@ namespace Protean
                             // put this in to prevent a redirect if we are calling this from somewhere strange.
                             if (gnPageNotFoundId > 1L)
                             {
+                                mbAdminMode = false;
                                 mnPageId = (int)gnPageNotFoundId;
                                 mnArtId = 0;
                                 moPageXml = new XmlDocument();
