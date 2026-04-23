@@ -503,7 +503,7 @@ namespace Protean
             bool bFileExists = true;
             string cFileNameExt;
             string cFilePathFull = cFullPath;
-            cFilePathFull = cFilePathFull.Replace("/", @"\");
+            cFilePathFull = cFilePathFull.Replace("/", @"\").Replace(@"\\", @"\");
             string cFilePath;
             string cFilePathNew = "";
             string cFileName = "";
@@ -512,12 +512,12 @@ namespace Protean
             try
             {
                 // get file extension and path
-                int nDotPos = cFilePathFull.LastIndexOf('.');
-                int nSlashPos = cFilePathFull.LastIndexOf('\\');
-                cFilePath = cFilePathFull.Substring(0, nDotPos - 1);
-                cFileName = cFilePath.Substring(nSlashPos, cFilePath.Length - nSlashPos);
-                cFilePath = cFilePathFull.Substring(0, nSlashPos - 1);
-                cFileNameExt = cFilePathFull.Substring(nDotPos, cFilePathFull.Length - nDotPos);
+                int nDotPos = cFilePathFull.LastIndexOf(".");
+                int nSlashPos = cFilePathFull.LastIndexOf(@"\");
+                cFilePath = cFilePathFull.Substring(0, nDotPos);
+                cFileName = cFilePath.Substring(nSlashPos +1 , cFilePath.Length - nSlashPos -1);
+                cFilePath = cFilePathFull.Substring(0, nSlashPos);
+                cFileNameExt = cFilePathFull.Substring(nDotPos + 1, cFilePathFull.Length - nDotPos - 1);
 
                 do
                 {
