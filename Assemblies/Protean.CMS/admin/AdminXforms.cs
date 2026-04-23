@@ -363,7 +363,7 @@ namespace Protean
                                     }
                                     else if (Convert.ToBoolean(myItem.ToString().Contains("FilterRemove")))
                                     {
-                                        nRelId = Convert.ToInt16(relateCmdArr[2]);
+                                        nRelId = Convert.ToInt64(relateCmdArr[2]);
                                         myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Content, (long)nRelId);
                                         bResult = true;
                                         break;
