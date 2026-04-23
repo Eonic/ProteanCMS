@@ -335,7 +335,7 @@ namespace Protean
                                     else if (Convert.ToBoolean(myItem.ToString().Contains("FilterEdit")))
                                     {
                                         string cContentType = relateCmdArr[1];
-                                        nRelId = Convert.ToInt16(relateCmdArr[2]);
+                                        nRelId = Convert.ToInt64(relateCmdArr[2]);
                                         goSession["mnContentRelationParent"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&id=" + nParId +
                                             (string.IsNullOrEmpty(goRequest.QueryString["pgid"]) ? "" : "&pgid=" + goRequest.QueryString["pgid"]);
                                         goSession["mcRelRedirectString"] = "/" + myWeb.moConfig["ProjectPath"] + goRequest.QueryString["Path"] + "?ewCmd=EditContent&type=" + cContentType + "&id=" + nRelId + "&filter=true";
