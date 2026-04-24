@@ -511,7 +511,7 @@ namespace Protean
                     {
                         if (myApi.mbAdminMode)
                         {
-                            JsonResult = moAdminRedirect.RedirectPage(ref redirectType, ref oldUrl, ref newUrl, ref hiddenOldUrl, Convert.ToBoolean(isParentPage), sType, Convert.ToInt16(pageId));
+                            JsonResult = moAdminRedirect.RedirectPage(ref redirectType, ref oldUrl, ref newUrl, ref hiddenOldUrl, Convert.ToBoolean(isParentPage), sType, Convert.ToInt64(pageId));
                         }
 
                         return JsonResult;

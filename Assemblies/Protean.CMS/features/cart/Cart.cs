@@ -7209,7 +7209,7 @@ namespace Protean
                         oElmt = (XmlElement)argoNode20;
                     }
 
-                    mnCartId = Convert.ToInt16(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement));
+                    mnCartId = Convert.ToInt64(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement));
 
                     mnProcessId = 1;
                     string oOptionName = string.Empty;
@@ -7247,8 +7247,8 @@ namespace Protean
                         }
                     }
 
-                    int deliveryAddId = 0;
-                    int billingAddId = 0;
+                    long deliveryAddId = 0;
+                    long billingAddId = 0;
                     string sSql = "select nContactKey, cContactType, nAuditKey from tblCartContact inner join tblAudit a on nAuditId = a.nAuditKey where nContactCartId = " + nOrderId.ToString();
                     using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
                     {
@@ -7256,7 +7256,7 @@ namespace Protean
                         {
                             if ((oDr["cContactType"]?.ToString() ?? "") == "Billing Address")
                             {
-                                billingAddId = Convert.ToInt16(oDr["nContactKey"]);
+                                billingAddId = Convert.ToInt64(oDr["nContactKey"]);
                             }
 
                             if (mbNoDeliveryAddress)
@@ -7265,7 +7265,7 @@ namespace Protean
                             }
                             else if ((oDr["cContactType"]?.ToString() ?? "") == "Delivery Address")
                             {
-                                deliveryAddId = Convert.ToInt16(oDr["nContactKey"]);
+                                deliveryAddId = Convert.ToInt64(oDr["nContactKey"]);
                             }
                         }
 

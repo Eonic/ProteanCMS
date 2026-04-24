@@ -1881,7 +1881,7 @@ namespace Protean
                             }
                         case "LocateContentDetail":
                             {
-                                oPageDetail.AppendChild(moAdXfm.xFrmContentLocationDetail(Convert.ToInt16(myWeb.moRequest["pgid"]), Convert.ToInt16(myWeb.moRequest["id"])));
+                                oPageDetail.AppendChild(moAdXfm.xFrmContentLocationDetail(Convert.ToInt32(myWeb.moRequest["pgid"]), Convert.ToInt32(myWeb.moRequest["id"])));
                                 sAdminLayout = "AdminXForm";
                                 bMailMenu = true;
                                 bSystemPagesMenu = true;
