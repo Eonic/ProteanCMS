@@ -614,11 +614,11 @@
   <xsl:template match="Page" mode="alternatePages">
     <xsl:choose>
       <xsl:when test="$currentPage/PageVersion[@verType='0']">
-        <link rel="alternate" href="{$currentPage/PageVersion[@verType='0']/@url}" hreflang="x-default" />
+        <link rel="alternate" href="{$currentPage/PageVersion[@verType='0']/@url}" hreflang="{@lang}" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="$currentPage/PageVersion[@verType='3']">
-          <link rel="alternate" href="{$currentPage/@url}" hreflang="x-default" />
+          <link rel="alternate" href="{$currentPage/@url}" hreflang="{@lang}" />
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>

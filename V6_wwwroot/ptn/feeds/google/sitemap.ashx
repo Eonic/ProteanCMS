@@ -30,7 +30,7 @@ Public Class google_sitemap : Implements IHttpHandler, IRequiresSessionState
         If context.Request("xml") <> "" Then
             oEw.mbOutputXml = True
         End If
-
+        oEw.mcContentType = "text/xml";
         oEw.GetPageHTML()
 
         oEw = Nothing
