@@ -237,6 +237,9 @@
           <input bind="dPublishDate" class="calendar short">
             <label>Publish date</label>
           </input>
+			<input bind="dExpireDate" class="calendar short">
+				<label>Expire date</label>
+			</input>
           <select1 bind="nStatus" appearance="full" class="vshort">
             <label>Status</label>
             <item>
