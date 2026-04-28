@@ -40,7 +40,7 @@
   <xsl:variable name="GutterWidth" select="'20'"/>
   <xsl:variable name="GutterWidthLg" select="'30'"/>
   <xsl:variable name="responsiveImageSizes">off</xsl:variable>
-
+	<xsl:variable name="non-display-name">false</xsl:variable>
 
   <xsl:variable name="siteURL">
     <xsl:variable name="baseUrl">
