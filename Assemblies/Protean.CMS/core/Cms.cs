@@ -1925,13 +1925,24 @@ namespace Protean
 
                                             var argaWeb1 = this;
                                             PerfMon.Log("Web", "GetPageHTML-loadxsl2");
-                                            using (var oTransform = new Protean.XmlHelper.Transform(ref argaWeb1, styleFile, gbCompiledTransform, 15000L, brecompile)) 
-                                            { 
+                                            using (var oTransform = new Protean.XmlHelper.Transform(ref argaWeb1, styleFile, gbCompiledTransform, 15000L, brecompile, gbDebug)) 
+                                            {
+                                                if (oTransform.bError) {
+                                                    // Re-throw the original compilation exception with full error details
+                                                    if (oTransform.transformException != null)
+                                                    {
+                                                        throw oTransform.transformException;
+                                                    }
+                                                    else
+                                                    {
+                                                        throw new InvalidOperationException($"XSLT compilation or loading failed for: {styleFile}");
+                                                    }
+                                                }
                                                 if (!string.IsNullOrEmpty(moConfig["XslTimeout"]))
                                                 {
                                                     oTransform.TimeOut = Convert.ToInt64(moConfig["XslTimeout"]);
                                                 }
-                                            oTransform.mbDebug = gbDebug;
+                                          
                                             PerfMon.Log("Web", "GetPageHTML-loadxsl3");
                                             if (bPageCache)
                                             {

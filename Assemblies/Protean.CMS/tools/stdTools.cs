@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
+using Microsoft.Ajax.Utilities;
 using Protean.Tools;
 
 namespace Protean
@@ -203,7 +204,7 @@ namespace Protean
                     {
                         // bDebug = True
 
-                        if (bDebug)
+                        if (bDebug && strErrorHtml != null)
                         {
                             sProcessInfo = "In Debug";
                             oElmt.InnerXml = strErrorHtml;

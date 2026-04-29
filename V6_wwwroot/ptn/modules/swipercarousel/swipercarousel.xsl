@@ -87,6 +87,7 @@
                 </xsl:apply-templates>
               </xsl:otherwise>
             </xsl:choose>
+			  <xsl:text> </xsl:text>
           </div>
           <xsl:if test="@bullets!='true'">
             <div class="swiper-pagination" id="swiper-pagination-{@id}">
