@@ -7683,7 +7683,16 @@
 	</xsl:template>
 
 	<xsl:template match="Contact" mode="AdminListContact">
-		<xsl:variable name="dirid" select="/Page/Request/QueryString/Item[@name='id']"/>
+		<xsl:variable name="dirid">
+			<xsl:choose>
+				<xsl:when test="/Page/Request/QueryString/Item[@name='id']!=''">
+					<xsl:value-of select="/Page/Request/QueryString/Item[@name='id']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="/Page/Request/QueryString/Item[@name='parid']"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<div class="col-md-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
