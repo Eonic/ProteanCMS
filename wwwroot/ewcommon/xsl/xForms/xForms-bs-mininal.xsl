@@ -170,9 +170,6 @@
 					</xsl:for-each>
 				</xsl:attribute>
 			</xsl:if>
-			<xsl:if test="alert">
-				<h1>alert!</h1>
-			</xsl:if>
 			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
 			<xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
 			<xsl:if test="count(submit) &gt; 0">
