@@ -2486,6 +2486,7 @@
 			<xsl:value-of select="translate($ref,'[]#=/','')"/>
 			<xsl:text>-dependant form-group</xsl:text>
 		</xsl:variable>
+
 		<xsl:if test="following-sibling::*[1][local-name()='switch']">
 			<xsl:apply-templates select="following-sibling::switch[1]/case[node()]" mode="xform" >
 				<xsl:with-param name="selectedCase" select="$selectedCase" />
@@ -2547,6 +2548,61 @@
 
 		</script>
 	</xsl:template>
+	
+		<xsl:template match="select1[@appearance='full' and item/toggle]" mode="xform_control_script">
+		<xsl:variable name="ref">
+			<xsl:apply-templates select="." mode="getRefOrBind"/>
+		</xsl:variable>
+		<xsl:variable name="value">
+			<xsl:apply-templates select="." mode="xform_value"/>
+		</xsl:variable>
+		<xsl:variable name="targetId">
+			<xsl:choose>
+				<xsl:when test="contains($ref,'~')">
+					<xsl:value-of select="substring-before(translate($ref,'[]#=/',''),'~')"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="translate($ref,'[]#=/','')"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<script>
+			function toggle_<xsl:value-of select="$targetId"/>(ourRef) {
+
+			//get the selected value for ref
+			//create array of values / toggle ids
+
+
+			var dict_<xsl:value-of select="$targetId"/> = {
+				<xsl:for-each select="item[toggle]">
+					<xsl:text>'</xsl:text>
+					<xsl:value-of select="value"/>
+					<xsl:text>':'</xsl:text>
+					<!-- Loop through all toggle elements and append -dependant to each case -->
+					<xsl:for-each select="toggle">
+						<xsl:value-of select="@case"/>
+						<xsl:text>-dependant</xsl:text>
+						<xsl:if test="position()!=last()">
+							<xsl:text>,</xsl:text>
+						</xsl:if>
+					</xsl:for-each>
+					<xsl:text>'</xsl:text>
+					<xsl:if test="position()!=last()">
+						<xsl:text>,</xsl:text>
+					</xsl:if>
+				</xsl:for-each>
+				};
+
+				var <xsl:value-of select="$targetId"/>_value = $('input[name="<xsl:value-of select="$targetId"/>"]:checked').attr('value');
+				showDependant(dict_<xsl:value-of select="$targetId"/>[<xsl:value-of select="$targetId"/>_value], ourRef + '-dependant');
+			}
+			//
+			toggle_<xsl:value-of select="$targetId"/>('<xsl:value-of select="$targetId"/>');
+
+		</script>
+	</xsl:template>
+	
 	<!-- -->
 	<!-- ## Standard Select1 for Radio Buttons ########################################################### -->
 	<xsl:template match="select1[@appearance='full']" mode="xform_control">
@@ -3073,6 +3129,7 @@
 					<xsl:apply-templates select="." mode="xform"/>
 				</div>
 				<!-- Output Cases - that not empty -->
+
 				<xsl:apply-templates select="following-sibling::switch[1]/case[node()]" mode="xform" >
 					<xsl:with-param name="selectedCase" select="$selectedCase" />
 					<xsl:with-param name="dependantClass" select="$dependantClass" />
