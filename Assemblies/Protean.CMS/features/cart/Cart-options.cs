@@ -235,12 +235,7 @@ namespace Protean
                             foreach (DataRow currentORow1 in ods.Tables["Option"].Rows)
                             {
                                 oRow = currentORow1;
-                                bool bCollection = false;
-                                if (!(oRow["bCollection"] is DBNull))
-                                {
-                                    if (oRow["bCollection"].Equals(1) || oRow["bCollection"].Equals(true))
-                                        bCollection = true;
-                                }
+                                bool bCollection = IsCollectionShippingMethod(oRow);
                                 if (oRow["nShippingTotal"] is DBNull)
                                 {
                                     cHidden = " hidden";
@@ -322,21 +317,7 @@ namespace Protean
                             }
 
                             // If shipping option selected is collection don't change
-                            bool bCollectionSelected = false;
-                            foreach (DataRow currentORow3 in ods.Tables["Option"].Rows)
-                            {
-                                oRow = currentORow3;
-                                if (!(oRow.RowState == DataRowState.Deleted))
-                                {
-                                    if (!(oRow["bCollection"] is DBNull))
-                                    {
-                                        if (oRow["nShipOptKey"] != null && oRow["bCollection"] != null && oRow["nShipOptKey"].Equals(nShippingMethodId) && Convert.ToBoolean(oRow["bCollection"]))
-                                        {
-                                            bCollectionSelected = true;
-                                        }
-                                    }
-                                }
-                            }
+                            bool bCollectionSelected = IsCollectionSelected(ods, nShippingMethodId);
 
                             foreach (DataRow currentORow4 in ods.Tables["Option"].Rows)
                             {
@@ -373,12 +354,9 @@ namespace Protean
                                             // Don't show if a collection method
                                             if (moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
                                             {
-                                                if (!(oRow["bCollection"] is DBNull))
+                                                if (IsCollectionShippingMethod(oRow))
                                                 {
-                                                    if (oRow["bCollection"].Equals(true))
-                                                    {
-                                                        bShowMethod = false;
-                                                    }
+                                                    bShowMethod = false;
                                                 }
                                             }
                                             if (bShowMethod)
@@ -1101,8 +1079,6 @@ namespace Protean
 
                 try
                 {
-
-
                     if (oShippingOptions is null)
                     {
 
@@ -1281,6 +1257,43 @@ namespace Protean
                 {
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "updateOrderShippingOption", ex, vstrFurtherInfo: "", bDebug: gbDebug);
                 }
+            }
+
+            /// <summary>
+            /// Safely checks if a shipping option row represents a collection method
+            /// </summary>
+            private bool IsCollectionShippingMethod(DataRow optionRow)
+            {
+                if (optionRow == null) return false;
+                
+                if (!optionRow.Table.Columns.Contains("bCollection")) return false;
+                
+                if (optionRow["bCollection"] is DBNull) return false;
+                
+                var value = optionRow["bCollection"];
+                return value.Equals(1) || value.Equals(true) || (value is bool b && b);
+            }
+
+            /// <summary>
+            /// Checks if collection option is currently selected for the cart
+            /// </summary>
+            private bool IsCollectionSelected(DataSet shippingOptions, int selectedMethodId)
+            {
+                if (shippingOptions?.Tables["Option"] == null) return false;
+                
+                foreach (DataRow row in shippingOptions.Tables["Option"].Rows)
+                {
+                    if (row.RowState == DataRowState.Deleted) continue;
+                    
+                    if (row["nShipOptKey"] != null && 
+                        Convert.ToInt32(row["nShipOptKey"]) == selectedMethodId &&
+                        IsCollectionShippingMethod(row))
+                    {
+                        return true;
+                    }
+                }
+                
+                return false;
             }
 
         }
