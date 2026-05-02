@@ -238,7 +238,7 @@ namespace Protean
                                 bool bCollection = false;
                                 if (!(oRow["bCollection"] is DBNull))
                                 {
-                                    if (!oRow["bCollection"].Equals("1"))
+                                    if (oRow["bCollection"].Equals(1) || oRow["bCollection"].Equals(true))
                                         bCollection = true;
                                 }
                                 if (oRow["nShippingTotal"] is DBNull)
@@ -349,7 +349,7 @@ namespace Protean
                                         if (bCollectionSelected)
                                         {
                                             // if collection allready selected... Show only this option
-                                            if (!nShippingMethodId.Equals(oRow["nShipOptKey"]))
+                                            if (nShippingMethodId.Equals(oRow["nShipOptKey"]))
                                             {
                                                 oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = Convert.ToString(oRow["nShipOptKey"]);
                                                 double ShippingCost = 0;
@@ -375,7 +375,7 @@ namespace Protean
                                             {
                                                 if (!(oRow["bCollection"] is DBNull))
                                                 {
-                                                    if (!oRow["bCollection"].Equals(true))
+                                                    if (oRow["bCollection"].Equals(true))
                                                     {
                                                         bShowMethod = false;
                                                     }

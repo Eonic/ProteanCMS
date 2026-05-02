@@ -2,6 +2,7 @@
 using BundleTransformer.Core.Bundles;
 using BundleTransformer.Core.Orderers;
 using BundleTransformer.Core.Transformers;
+using Microsoft.Ajax.Utilities;
 using Newtonsoft.Json.Linq;
 using Protean.Tools;
 using SkiaSharp;
@@ -1719,7 +1720,7 @@ namespace Protean
                         {
                             try
                             {
-                                if (myWeb.moRequest["imgRefresh"] != "")
+                                if (!String.IsNullOrWhiteSpace(myWeb.moRequest["imgRefresh"]))
                                 {
                                     forceCheck = true;
                                 }

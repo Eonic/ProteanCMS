@@ -249,7 +249,7 @@
 		</xsl:choose>
 	</xsl:template>
 
-	<xsl:template match="Content[ancestor::Page[@adminMode='true'] and @name='UserLogon']" mode="xform">
+	<xsl:template match="Content[ancestor::Page[@adminMode='true'] and @name='AdminLogon']" mode="xform">
 
 		        <form method="{model/submission/@method}" action="">
 			<xsl:attribute name="class">
