@@ -1104,7 +1104,7 @@ namespace Protean
 
                                         string OptLabel = oDrCollectionOptions["cShipOptName"].ToString() + " - " + oDrCollectionOptions["cShipOptCarrier"].ToString();
 
-                                        oXform.addSubmit(ref oCollectionGrp, "collect", OptLabel, "CollectionID_" + oDrCollectionOptions["nShipOptKey"].ToString(), "collect btn-success principle", "fa-truck");
+                                        oXform.addSubmit(ref oCollectionGrp, "collect", OptLabel, "CollectionID_" + oDrCollectionOptions["nShipOptKey"].ToString(), "collect btn-primary principle", "fa-truck");
                                     }
                                 }
                             }
