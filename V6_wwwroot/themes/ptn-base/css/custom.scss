@@ -1246,16 +1246,17 @@ div[class$="List"] {
 }
 
 .NewsList .listItem.wide-item .lIinner {
-    flex-direction: row;
+    @include media-breakpoint-up(md) {
+        flex-direction: row;
 
-    .list-image-link,
-    .list-image-span {
-        width: 25%;
-        flex-shrink: 0;
-    }
+        .list-image-link {
+            width: 25%;
+            flex-shrink: 0;
+        }
 
-    .media-inner {
-        flex-grow: 100;
+        .media-inner {
+            flex-grow: 100;
+        }
     }
 }
 
