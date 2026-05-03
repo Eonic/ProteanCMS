@@ -1209,7 +1209,7 @@ namespace Protean
 
                                                 collectionContactID = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, NewInstance);
 
-                                                useSavedAddressesOnCart(billingAddId, Convert.ToInt16(collectionContactID), billingContactXml);
+                                                useSavedAddressesOnCart(billingAddId, Convert.ToInt64(collectionContactID), billingContactXml);
                                                 return oReturnForm;
                                             }
                                         }
@@ -1535,10 +1535,13 @@ namespace Protean
                         delInstance.SelectSingleNode("*/nAuditKey").InnerText = savedDeliveryAuditId;
                         moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, delInstance);
                     }
+
+                    RemoveDeliveryOption(mnCartId);
                 }
 
                 // here we should update the current instance so we can calculate the shipping later
 
+            
 
                 catch (Exception ex)
                 {
@@ -1644,6 +1647,7 @@ namespace Protean
                     oTempCXform = (Cms.xForm)null;
                 }
             }
+
         }
     }
 }

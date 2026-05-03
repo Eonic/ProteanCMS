@@ -38,6 +38,7 @@ namespace Protean.Providers
 
                     int nParentId = 1;
                     string sSql = "spGetPagesByParentPageId";
+                    bool bShowAllDescendants = false;
                     Hashtable arrParams = new Hashtable();
                     var oXml = oXform.moPageXML.CreateElement("PageFilter");
                     //XmlElement oFilterElmt = null;
@@ -46,6 +47,19 @@ namespace Protean.Providers
                     if (oContentNode.Attributes["filterTarget"] != null)
                     {
                         cFilterTarget = oContentNode.Attributes["filterTarget"].Value;
+                    }
+
+                    // Check if we should show all descendants or just immediate children
+                    if (FilterConfig.Attributes["showAllDescendants"] != null && 
+                        FilterConfig.Attributes["showAllDescendants"].Value.ToLower() == "on")
+                    {
+                        bShowAllDescendants = true;
+                    }
+
+                    // Select the appropriate stored procedure
+                    if (bShowAllDescendants)
+                    {
+                        sSql = "spGetPagesByParentPageIdAllDescendants";
                     }
                     if (aWeb.moRequest.Form["PageFilter"] != null)
                     {
@@ -101,15 +115,102 @@ namespace Protean.Providers
                         {
                             pageFilterSelect = oXform.addSelect(ref oPageGroup, "PageFilter", false, sCotrolDisplayName, "checkbox SubmitPageFilter", Protean.xForm.ApperanceTypes.Full);
 
+                            // Check if nStructParId column exists (for hierarchical display)
+                            bool hasParentColumn = false;
+                            for (int i = 0; i < oDr.FieldCount; i++)
+                            {
+                                if (oDr.GetName(i) == "nStructParId")
+                                {
+                                    hasParentColumn = true;
+                                    break;
+                                }
+                            }
+
+                            // If hierarchical, read all data first to calculate levels
+                            Dictionary<int, int> parentLookup = new Dictionary<int, int>();
+                            List<Dictionary<string, object>> pageData = new List<Dictionary<string, object>>();
 
                             while (oDr.Read())
                             {
-                                string name = Convert.ToString(oDr["cStructName"]) + " <span class='badge ms-2' id='ProductCount'>" + Convert.ToString(oDr["ContentCount"]) + "</span>";
-                                string value = Convert.ToString(oDr["nStructKey"]);
+                                var row = new Dictionary<string, object>();
+                                row["nStructKey"] = Convert.ToInt32(oDr["nStructKey"]);
+                                row["cStructName"] = Convert.ToString(oDr["cStructName"]);
+                                row["ContentCount"] = Convert.ToString(oDr["ContentCount"]);
 
-                                oXform.addOption(ref pageFilterSelect, name, value, true);
+                                if (hasParentColumn)
+                                {
+                                    row["nStructParId"] = Convert.ToInt32(oDr["nStructParId"]);
+                                    parentLookup[Convert.ToInt32(oDr["nStructKey"])] = Convert.ToInt32(oDr["nStructParId"]);
+                                }
 
+                                pageData.Add(row);
                             }
+
+                            // Function to calculate level by walking up the parent chain
+                            Func<int, int, int> CalculateLevel = null;
+                            CalculateLevel = (pageId, rootId) =>
+                            {
+                                if (pageId == rootId) return 0;
+                                if (!parentLookup.ContainsKey(pageId)) return 0;
+
+                                int parentId = parentLookup[pageId];
+                                if (parentId == rootId) return 0;
+
+                                // Count levels up to root
+                                int level = 0;
+                                int currentId = pageId;
+                                HashSet<int> visited = new HashSet<int>(); // Prevent infinite loops
+
+                                while (parentLookup.ContainsKey(currentId) && !visited.Contains(currentId))
+                                {
+                                    visited.Add(currentId);
+                                    currentId = parentLookup[currentId];
+                                    level++;
+
+                                    if (currentId == rootId || currentId == nParentId)
+                                        break;
+                                }
+
+                                return level;
+                            };
+
+                            // Now render all the options with calculated levels
+                            foreach (var row in pageData)
+                            {
+                                int structKey = (int)row["nStructKey"];
+                                string name = (string)row["cStructName"] + " <span class='badge ms-2' id='ProductCount'>" + (string)row["ContentCount"] + "</span>";
+                                string value = structKey.ToString();
+
+                                XmlElement optionElement = oXform.addOption(ref pageFilterSelect, name, value, true);
+
+                                // Add level-based class if hierarchical data is available
+                                if (hasParentColumn && optionElement != null)
+                                {
+                                    int level = CalculateLevel(structKey, nParentId);
+                                    string levelClass = "page-level-" + level.ToString();
+
+                                    // Add indent class for visual hierarchy
+                                    if (level > 0)
+                                    {
+                                        levelClass += " page-child";
+                                    }
+                                    else
+                                    {
+                                        levelClass += " page-parent";
+                                    }
+
+                                    // Set class attribute
+                                    optionElement.SetAttribute("class", levelClass);
+
+                                    // Add data attributes
+                                    if (row.ContainsKey("nStructParId"))
+                                    {
+                                        optionElement.SetAttribute("data-parent-id", ((int)row["nStructParId"]).ToString());
+                                    }
+                                    optionElement.SetAttribute("data-level", level.ToString());
+                                }
+                            }
+
                             oXform.addSubmit(ref oPageGroup, "", "Apply", "PageFilter", "  btnPageSubmit hidden", "");
                         }
 
