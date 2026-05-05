@@ -36,7 +36,7 @@ namespace Protean.Providers
                     oXform.Instance.AppendChild(oXml);
 
                     //add to binds
-                    oXform.addBind("SpecFilter", "SpecFilter(@name='" + sControlDisplayName + "')", ref oXform.model, "false()", "string");
+                    oXform.addBind("SpecFilter", "SpecFilter[@name='" + sControlDisplayName + "']", ref oXform.model, "false()", "string");
 
                     //add control
                     XmlElement thisSelect = oXform.addSelect(ref oFromGroup,"", false, sControlDisplayName, "specfilter", xForm.ApperanceTypes.Full);

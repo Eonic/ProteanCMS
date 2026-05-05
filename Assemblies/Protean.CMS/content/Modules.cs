@@ -708,7 +708,7 @@ namespace Protean
 
                                         {
                                             cAdditionalColumns += "," + orderBySql.ToLower().Replace("asc", "").Replace(" desc", "");
-                                            if (!myWeb.moConfig["ExcludeFilterForJoin"].Contains(className))
+                                            if (myWeb.moConfig["ExcludeFilterForJoin"] == null || !myWeb.moConfig["ExcludeFilterForJoin"].Contains(className))
                                             {
                                                 string cAlies = className.Replace("Filter", "");
                                                 string cIndexDefiniationName = GetContentIndexDefinationName(calledType, ref myWeb);
