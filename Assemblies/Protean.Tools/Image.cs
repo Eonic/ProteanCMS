@@ -591,8 +591,8 @@ namespace Protean.Tools
                     paint.IsAntialias = true;
                     paint.FilterQuality = SKFilterQuality.High;
 
-                    // Clear canvas
-                    canvas.Clear(SKColors.Transparent);
+                    // Clear canvas with white background (for JPEGs that don't support transparency)
+                    canvas.Clear(SKColors.White);
 
                     // Draw resized image
                     canvas.DrawBitmap(oSourceImg,
@@ -939,6 +939,9 @@ namespace Protean.Tools
                 {
                     paint.IsAntialias = true;
                     paint.FilterQuality = SKFilterQuality.High;
+
+                    // Clear canvas with white background (for JPEGs that don't support transparency)
+                    canvas.Clear(SKColors.White);
 
                     SKRect sourceRect;
                     SKRect destRect = new SKRect(0, 0, nMaxWidthCrop, nMaxHeightCrop);
