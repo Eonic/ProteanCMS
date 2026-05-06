@@ -435,14 +435,15 @@ namespace Protean.Tools
 
                     if (bNoStretch == false)
                     {
-
-                        if (yXCalc < nXCalc)
+                        // FIXED: Use the dimension that needs MORE shrinking (larger ratio)
+                        // This ensures both dimensions fit within max bounds
+                        if (nXCalc > yXCalc)
                         {
-                            Resize(0, nMaxHeight);
+                            Resize(nMaxWidth, 0);  // Width needs more shrinking
                         }
                         else
                         {
-                            Resize(nMaxWidth, 0);
+                            Resize(0, nMaxHeight); // Height needs more shrinking
                         }
                     }
 
@@ -451,13 +452,14 @@ namespace Protean.Tools
                     // If both bigger, shrink
                     else if (oImg.Width >= nMaxWidth & oImg.Height >= nMaxHeight)
                     {
-                        if (yXCalc < nXCalc)
+                        // FIXED: Use the dimension that needs MORE shrinking (larger ratio)
+                        if (nXCalc > yXCalc)
                         {
-                            Resize(0, nMaxHeight);
+                            Resize(nMaxWidth, 0);  // Width needs more shrinking
                         }
                         else
                         {
-                            Resize(nMaxWidth, 0);
+                            Resize(0, nMaxHeight); // Height needs more shrinking
                         }
                     }
                     // Else Shrink accordingly
@@ -484,40 +486,23 @@ namespace Protean.Tools
                     }
                 }
 
-                // If oImg.Height < oImg.Width Then
-                // Resize(0, nMaxHeight)
-                // Else
-                // Resize(nMaxWidth, 0)
-                // End If
-
-                // ElseIf bNoStretch Then
-                // If ((oImg.Height > nMaxHeight) Or (oImg.Width > nMaxWidth)) Then
-                // 'Squares, since they are squares just shrink to the smaller side
-                // If oImg.Height = oImg.Width Then
-                // If nMaxWidth > nMaxHeight Then
-                // Resize(0, nMaxHeight)
-                // Else
-                // Resize(nMaxWidth, 0)
-                // End If
-
-
-                // 'Rectangles
-                // ElseIf oImg.Height > oImg.Width Then
-                // Resize(0, nMaxHeight)
-                // Else
-                // Resize(nMaxWidth, 0)
-                // End If
-                // ' No need to do anything if both sides are smaller
-                // End If
-
                 else
                 {
                     // For regular stretches, make this biggest possible within the max height/width bounds
 
-                    // NB 20-Feb-2009 Redone, old if statements feel a bit clumsy
+                    // Validate dimensions to prevent division by zero
+                    if (oImg.Width <= 0 || oImg.Height <= 0 || nMaxWidth <= 0 || nMaxHeight <= 0)
+                    {
+                        OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ResizeMax",
+                            new ArgumentException($"Invalid dimensions for resize: Image={oImg.Width}×{oImg.Height}, Max={nMaxWidth}×{nMaxHeight}"), ""));
+                        return;
+                    }
+
+                    // Area-based approach: Calculate the area of the image if scaled by width vs height
+                    // This determines which dimension to constrain to maximize the image within bounds
                     double nMaxResizedArea = nMaxWidth * nMaxHeight;
-                    double nXscaledArea = nMaxWidth * (oImg.Height * (nMaxWidth / oImg.Width));
-                    double nYscaledArea = oImg.Width * (nMaxHeight / oImg.Height) * nMaxHeight;
+                    double nXscaledArea = nMaxWidth * (oImg.Height * (nMaxWidth / (double)oImg.Width));
+                    double nYscaledArea = oImg.Width * (nMaxHeight / (double)oImg.Height) * nMaxHeight;
 
 
                     if (bNoStretch & !(oImg.Width >= nMaxWidth & oImg.Height >= nMaxHeight))
@@ -533,9 +518,9 @@ namespace Protean.Tools
                         }
                         else
                         {
-                            // increase size of the image
+                            // Keep original size - don't stretch small images
+                            // Resize(oImg.Width, oImg.Height) effectively does nothing (scales by 1.0)
                             Resize(oImg.Width, oImg.Height);
-                            // Do nothing if both smaller!
                         }
                     }
 
@@ -559,19 +544,6 @@ namespace Protean.Tools
                     {
                         Resize(0, nMaxHeight);
                     }
-
-                    // If oImg.Height = oImg.Width Then
-                    // If nMaxWidth > nMaxHeight Then
-                    // Resize(0, nMaxHeight)
-                    // Else
-                    // Resize(nMaxWidth, 0)
-                    // End If
-                    // ElseIf oImg.Height > oImg.Width Then
-                    // Resize(0, nMaxHeight)
-                    // Else
-                    // Resize(nMaxWidth, 0)
-                    // End If
-
                 }
             }
 
