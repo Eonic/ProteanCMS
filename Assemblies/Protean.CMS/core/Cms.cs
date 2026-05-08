@@ -6876,11 +6876,12 @@ namespace Protean
             string filename = "";
             string filepath = "";
             string artId = string.Empty;
-            //string Ext = ".html";
+
             try
             {
-
-                // let's clean up the url
+                // ========================================
+                // STEP 1: CLEAN UP THE URL
+                // ========================================
                 if (cUrl.LastIndexOf("/?") > -1)
                 {
                     cUrl = cUrl.Substring(0, cUrl.LastIndexOf("/?"));
@@ -6890,130 +6891,177 @@ namespace Protean
                     cUrl = cUrl.Substring(0, cUrl.LastIndexOf("?"));
                 }
 
+                // Extract filename and filepath from URL
                 if (string.IsNullOrEmpty(cUrl) | cUrl == "/")
                 {
                     filename = "home.html";
+                    filepath = "";
                 }
                 else
                 {
                     filename = cUrl.Substring(cUrl.LastIndexOf("/") + 1);
-                    if (filename.Length > 240)
-                        filename = filename.Substring(0, 240);
                     if (cUrl.LastIndexOf("/") > 0)
                     {
                         filepath = cUrl.Substring(0, cUrl.LastIndexOf("/"));
-                        if (filepath.Length > 240)
-                            filepath = filepath.Substring(0, 240);
-                        filepath += "";
                     }
                 }
 
-                var oFS = new Protean.fsHelper(moCtx);
-                oFS.mcRoot = gcProjectPath;
-                oFS.mcStartFolder = goServer.MapPath(@"\" + gcProjectPath) + mcPageCacheFolder;
-
-                cProcessInfo = "Saving:" + mcPageCacheFolder + filepath + @"\" + filename;
-
-                // Tidy up the filename
+                // ========================================
+                // STEP 2: SANITIZE FILENAME
+                // ========================================
                 filename = Tools.FileHelper.ReplaceIllegalChars(filename);
                 filename = filename.Replace(@"\", "-");
-                filepath = filepath.Replace("/", @"\") + "";
-                if (filepath.StartsWith(@"\") & mcPageCacheFolder.EndsWith(@"\"))
+                filename = goServer.UrlDecode(filename);
+
+                // Extract extension
+                int dotIndex = filename.LastIndexOf(".");
+                string Extension = dotIndex >= 0 ? filename.Substring(dotIndex + 1) : "html";
+                string cleanfilename = dotIndex >= 0 ? filename.Substring(0, dotIndex) : filename;
+
+                // ========================================
+                // STEP 3: SANITIZE FILEPATH
+                // ========================================
+                filepath = filepath.Replace("/", @"\");
+                if (filepath.StartsWith(@"\") && mcPageCacheFolder.EndsWith(@"\"))
                 {
-                    filepath.Remove(0, 1);
+                    filepath = filepath.Substring(1);
                 }
-
-                cProcessInfo = "Saving:" + mcPageCacheFolder + filepath + @"\" + filename;
-                PerfMon.Log(mcModuleName, "SavePage", cProcessInfo);
-                string cleanfilename = goServer.UrlDecode(filename);
-
-                // Limit the file length to 255
-                int dotIndex = cleanfilename.IndexOf(".");
-                string Extension = "";
-                if (dotIndex >= 0)
-                {
-                    Extension = cleanfilename.Substring(dotIndex + 1);
-                    cleanfilename = cleanfilename.Substring(0, dotIndex);
-                }
-                short FilenameLength = (short)(255 - Extension.Length);
-                if (cleanfilename.Length > FilenameLength)
-                {
-                    cleanfilename = cleanfilename.Substring(0, FilenameLength);
-                }
-
-                string FullFilePath = mcPageCacheFolder + filepath + @"\" + goServer.UrlDecode(cleanfilename + "." + Extension);
-
-                // If FullFilePath.Length > 255 Then
-                // FullFilePath = Left(FullFilePath, 240) & Ext
-                // Else
-                // FullFilePath = FullFilePath & Ext
-                // End If
-
                 if (string.IsNullOrEmpty(filepath))
-                    filepath = "/";
+                {
+                    filepath = "";
+                }
+
+                // ========================================
+                // STEP 4: CALCULATE FULL PATH AND ENFORCE LIMITS
+                // ========================================
+                string baseDir = goServer.MapPath("/" + gcProjectPath) + mcPageCacheFolder;
+                string targetDir = baseDir + filepath;
+
+                // Azure/Windows MAX_PATH = 260 chars (Alphaleonis bypasses this, but we still need validation)
+                // Reserve space: baseDir + filepath + "\" + filename + ".ext" + some buffer
+                int maxAllowedFilenameLength = 200 - baseDir.Length - filepath.Length - Extension.Length - 2; // -2 for "\" and "."
+
+                if (maxAllowedFilenameLength < 20)
+                {
+                    // Path too deep - truncate the folder path
+                    int excessLength = Math.Abs(maxAllowedFilenameLength - 50); // Ensure at least 50 chars for filename
+                    if (filepath.Length > excessLength)
+                    {
+                        filepath = filepath.Substring(0, filepath.Length - excessLength);
+                        // Remove partial folder name
+                        int lastSlash = filepath.LastIndexOf(@"\");
+                        if (lastSlash > 0)
+                        {
+                            filepath = filepath.Substring(0, lastSlash);
+                        }
+                        targetDir = baseDir + filepath;
+                        maxAllowedFilenameLength = 200 - baseDir.Length - filepath.Length - Extension.Length - 2;
+                    }
+                }
+
+                // Truncate filename if still too long
+                if (cleanfilename.Length > maxAllowedFilenameLength)
+                {
+                    cleanfilename = cleanfilename.Substring(0, maxAllowedFilenameLength);
+                }
+
+                string finalFilename = cleanfilename + "." + Extension;
+                string fullFilePath = System.IO.Path.Combine(targetDir, finalFilename);
+
+                cProcessInfo = $"Saving: {fullFilePath} (Length: {fullFilePath.Length})";
+                PerfMon.Log(mcModuleName, "SavePage", cProcessInfo);
+
+                // ========================================
+                // STEP 5: VALIDATE PATH LENGTH (SAFETY CHECK)
+                // ========================================
+                if (fullFilePath.Length > 240)
+                {
+                    // Log warning but continue (Alphaleonis handles long paths)
+                    cProcessInfo = $"Warning: Path length {fullFilePath.Length} exceeds 240 chars, using Alphaleonis long path support";
+                    PerfMon.Log(mcModuleName, "SavePage", cProcessInfo);
+                }
+
+                // ========================================
+                // STEP 6: CREATE DIRECTORY STRUCTURE
+                // ========================================
+                var oFS = new Protean.fsHelper(moCtx);
+                oFS.mcRoot = gcProjectPath;
+                oFS.mcStartFolder = baseDir;
 
                 PerfMon.Log(mcModuleName, "Create Path - Start");
                 string sError = oFS.CreatePath(filepath);
-                oFS = (Protean.fsHelper)null;
+                oFS = null;
                 PerfMon.Log(mcModuleName, "Create Path - End");
 
-                if (sError == "1")
+                if (sError != "1")
                 {
-                    Tools.Security.Impersonate oImp = null;
-                    if (Convert.ToBoolean(impersonationMode))
+                    throw new InvalidOperationException($"Failed to create directory: {targetDir} - Error: {sError}");
+                }
+
+                // ========================================
+                // STEP 7: WRITE FILE WITH LONG PATH SUPPORT
+                // ========================================
+                Tools.Security.Impersonate oImp = null;
+                if (Convert.ToBoolean(impersonationMode))
+                {
+                    PerfMon.Log(mcModuleName, "Impersonation - Start");
+                    oImp = new Tools.Security.Impersonate();
+                    oImp.ImpersonateValidUser(moConfig["AdminAcct"], moConfig["AdminDomain"], 
+                        moConfig["AdminPassword"], cInGroup: moConfig["AdminGroup"]);
+                    PerfMon.Log(mcModuleName, "Impersonation - End");
+                }
+
+                try
+                {
+                    // Use Alphaleonis with \\?\ prefix for long path support
+                    string longPathPrefix = @"\\?\";
+                    string absolutePath = fullFilePath;
+
+                    // Alphaleonis requires absolute path with \\?\ prefix
+                    if (!absolutePath.StartsWith(longPathPrefix))
                     {
-                        PerfMon.Log(mcModuleName, "Impersonation - Start");
-                        oImp = new Tools.Security.Impersonate();
-                        oImp.ImpersonateValidUser(moConfig["AdminAcct"], moConfig["AdminDomain"], moConfig["AdminPassword"], cInGroup: moConfig["AdminGroup"]);
-                        PerfMon.Log(mcModuleName, "Impersonation - End");
+                        absolutePath = longPathPrefix + fullFilePath;
                     }
 
-                    if (Alphaleonis.Win32.Filesystem.Directory.Exists(@"\\?\" + goServer.MapPath("/" + gcProjectPath) + mcPageCacheFolder + filepath))
+                    // Check directory exists (Alphaleonis handles long paths)
+                    if (!Alphaleonis.Win32.Filesystem.Directory.Exists(longPathPrefix + targetDir))
                     {
-                        if (!Alphaleonis.Win32.Filesystem.File.Exists(@"\\?\" + goServer.MapPath("/" + gcProjectPath) + FullFilePath))
-                        {
-                            PerfMon.Log(mcModuleName, "SavePage - start file write");
-                            Alphaleonis.Win32.Filesystem.File.WriteAllText(@"\\?\" + goServer.MapPath("/" + gcProjectPath) + FullFilePath, cBody, System.Text.Encoding.UTF8);
-                            PerfMon.Log(mcModuleName, "SavePage - end file write");
-                        }
-                        else
-                        {
-                            cProcessInfo += "<Error>File Locked: " + filepath + " - " + sError + "</Error>" + Environment.NewLine;
-                            sError = cProcessInfo;
-                        }
+                        throw new DirectoryNotFoundException($"Directory does not exist: {targetDir}");
+                    }
+
+                    // Only write if file doesn't exist (avoid file locks)
+                    if (!Alphaleonis.Win32.Filesystem.File.Exists(absolutePath))
+                    {
+                        PerfMon.Log(mcModuleName, "SavePage - start file write");
+                        Alphaleonis.Win32.Filesystem.File.WriteAllText(
+                            absolutePath, 
+                            cBody, 
+                            System.Text.Encoding.UTF8);
+                        PerfMon.Log(mcModuleName, "SavePage - end file write");
                     }
                     else
                     {
-                        cProcessInfo += "<Error>Directory Not Exists: " + filepath + " - " + sError + "</Error>" + Environment.NewLine;
-                        sError = cProcessInfo;
+                        cProcessInfo = $"File already exists: {fullFilePath}";
+                        PerfMon.Log(mcModuleName, "SavePage", cProcessInfo);
                     }
-
-                    if (Convert.ToBoolean(impersonationMode))
+                }
+                finally
+                {
+                    if (Convert.ToBoolean(impersonationMode) && oImp != null)
                     {
                         oImp.UndoImpersonation();
                         oImp = null;
                     }
                 }
 
-                else
-                {
-                    cProcessInfo += "<Error>Create Path: " + filepath + " - " + sError + "</Error>" + Environment.NewLine;
-                    sError = cProcessInfo;
-                }
-                if (sError != "1")
-                {
-                    throw new Exception("An Error writing the page.");
-                }
                 PerfMon.Log("Web", "SavePage - End");
             }
             catch (Exception ex)
             {
-                // if saving of a page fails we are not that bothered.
-                // cExError &= "<Error>" & filepath & filename & ex.Message & "</Error>" & vbCrLf
+                // Log error but don't throw - page caching is non-critical
+                cProcessInfo = $"SavePage Error: URL={cUrl}, Path={filepath}, File={filename}, Error={ex.Message}";
                 AddExceptionToEventLog(ex, cProcessInfo);
-                // returnException(msException, mcModuleName, "SavePage", ex, "", cProcessInfo, gbDebug)
-                // bIsError = True
-                // PerfMon.Log("Web", "SavePage - error")
+                PerfMon.Log("Web", "SavePage - error: " + cProcessInfo);
             }
         }
 

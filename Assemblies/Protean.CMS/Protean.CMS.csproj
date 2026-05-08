@@ -434,7 +434,10 @@
     <Compile Include="providers\DiscountRule\DiscountRule.X4PriceY.cs" />
     <Compile Include="providers\filters\Filter.BaseProvider.cs" />
     <Compile Include="providers\Database.BaseProvider.cs" />
+    <Compile Include="providers\filters\FilterFactory.cs" />
+    <Compile Include="providers\filters\IContentFilter.cs" />
     <Compile Include="providers\filters\PriceBandFilter.cs" />
+    <Compile Include="providers\filters\BrandFilter.cs" />
     <Compile Include="providers\filters\SpecFilter.cs" />
     <Compile Include="providers\Membership.BaseProvider.cs" />
     <Compile Include="providers\Messaging.BaseProvider.cs" />

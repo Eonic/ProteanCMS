@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -10,6 +11,48 @@ using static Protean.stdTools;
 
 namespace Protean
 {
+    /// <summary>
+    /// Represents a single validation error produced by xForm.validate().
+    /// Provides structured error information for easier debugging and error handling.
+    /// </summary>
+    public class ValidationError
+    {
+        /// <summary>
+        /// Gets or sets the bind ID that failed validation.
+        /// </summary>
+        public string BindId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of validation that failed (e.g., "Required", "Type", "Constraint", "Unique", "FileSize").
+        /// </summary>
+        public string ValidationType { get; set; }
+
+        /// <summary>
+        /// Gets or sets the validation error message.
+        /// </summary>
+        public string ValidationMessage { get; set; }
+
+        /// <summary>
+        /// Initializes a new instance of the ValidationError class.
+        /// </summary>
+        /// <param name="bindId">The bind ID that failed validation.</param>
+        /// <param name="validationType">The type of validation that failed.</param>
+        /// <param name="validationMessage">The validation error message.</param>
+        public ValidationError(string bindId, string validationType, string validationMessage)
+        {
+            BindId = bindId;
+            ValidationType = validationType;
+            ValidationMessage = validationMessage;
+        }
+
+        /// <summary>
+        /// Returns a string representation of the validation error for logging and debugging.
+        /// </summary>
+        public override string ToString()
+        {
+            return string.Format("[{0}] {1}: {2}", BindId, ValidationType, ValidationMessage);
+        }
+    }
 
 
     public class xForm
@@ -27,6 +70,7 @@ namespace Protean
 
         private bool bValid = false;
         private string cValidationError = "";
+        private readonly List<ValidationError> cValidationErrorList = new List<ValidationError>();
         private string[] _formParameters = null;
 
         public string FormName = "form";
@@ -173,6 +217,18 @@ namespace Protean
             get
             {
                 return cValidationError;
+            }
+        }
+
+        /// <summary>
+        /// Gets the list of structured validation errors produced by the last call to validate().
+        /// This provides detailed error information including bind ID, validation type, and message.
+        /// </summary>
+        public IReadOnlyList<ValidationError> ValidationErrors
+        {
+            get
+            {
+                return cValidationErrorList;
             }
         }
 
@@ -747,6 +803,8 @@ namespace Protean
             string cProcessInfo = "";
             try
             {
+                // Clear the validation error list at the start of validation
+                cValidationErrorList.Clear();
 
                 // validates an html form submission against a bind requirements
                 // updates xform or loads result.
@@ -761,6 +819,7 @@ namespace Protean
                 if (moXformElmt.SelectSingleNode("descendant-or-self::*[contains(@class,'recaptcha') and not(ancestor::instance)]") != null)
                 {
                     cValidationError = "<span class=\"msg-1032\">Please confirm you are not a robot</span>";
+                    cValidationErrorList.Add(new ValidationError("recaptcha", "ReCAPTCHA", "Please confirm you are not a robot"));
                     bIsValid = false;
                     missedError = true;
                 }
@@ -787,6 +846,7 @@ namespace Protean
                             {
                                 cValidationError = "Please complete the CAPTCHA challenge.";
                                 bIsValid = false;
+                                cValidationErrorList.Add(new ValidationError("g-recaptcha-response", "ReCAPTCHA_v3", "Please complete the CAPTCHA challenge."));
                             }
                         }
                         else
@@ -800,6 +860,12 @@ namespace Protean
                                 bIsValid = true;
                                 goSession["recaptcha"] = 1;
                                 missedError = false;
+                            }
+                            else
+                            {
+                                cValidationError = "Please complete the CAPTCHA challenge.";
+                                bIsValid = false;
+                                cValidationErrorList.Add(new ValidationError("g-recaptcha-response", "ReCAPTCHA_v2", "Please complete the CAPTCHA challenge."));
                             }
                         }
                     }
@@ -908,6 +974,8 @@ namespace Protean
                     {
                         bIsValid = false;
                         bIsThisBindValid = false;
+                        string bindId = oBindElmt.GetAttribute("id") ?? "";
+                        cValidationErrorList.Add(new ValidationError(bindId, "Type", sMessage));
                         if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Type, sMessage) == false)
                         {
                             missedError = true;
@@ -1000,6 +1068,7 @@ namespace Protean
                                         cValidationError = $"<span class=\"term4053\">Control not found : Please Complete </span>&#160;{sRef}";
                                     }
                                 }
+                                cValidationErrorList.Add(new ValidationError(sRef, "Required", validationMsg));
                                 if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Required, "<span class=\"msg-1007\">" + validationMsg + " </span>") == false)
                                 {
                                     missedError = true;
@@ -1044,6 +1113,8 @@ namespace Protean
                                 thisValidationError = "<span>" + oBindElmt.GetAttribute("alert") + "</span>";
                             }
 
+                            string constraintBindId = oBindElmt.GetAttribute("id") ?? "";
+                            cValidationErrorList.Add(new ValidationError(constraintBindId, "Constraint", thisValidationError));
                             if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Constraint, thisValidationError))
                             {
                                 missedError = true;
@@ -1063,6 +1134,8 @@ namespace Protean
                             {
                                 bIsValid = false;
                                 bIsThisBindValid = false;
+                                string uniqueBindId = oBindElmt.GetAttribute("id") ?? "";
+                                cValidationErrorList.Add(new ValidationError(uniqueBindId, "Unique", "This must be unique"));
                                 if (addNoteFromBind(oBindElmt, noteTypes.Alert, BindAttributes.Constraint, "<span class=\"msg-1008\">This must be unique</span>"))
                                 {
                                     missedError = true;
@@ -1102,12 +1175,15 @@ namespace Protean
                         // Compare the sizes.
                         if (goRequest.Files[oFileCheck.GetAttribute("id")].ContentLength > Convert.ToInt16(oFileCheck.GetAttribute("maxSize")) * 1024)
                         {
+                            string fileSizeBindId = oFileCheck.GetAttribute("id") ?? "";
                             if (oFileCheck is null)
                             {
                                 missedError = true;
+                                cValidationErrorList.Add(new ValidationError(fileSizeBindId, "FileSize", "The file you are uploading is too large"));
                             }
                             else
                             {
+                                cValidationErrorList.Add(new ValidationError(fileSizeBindId, "FileSize", "The file you are uploading is too large"));
                                 addNoteFromBind(oFileCheck, noteTypes.Alert, BindAttributes.Constraint, "<span class=\"msg-1009\">The file you are uploading is too large</span>");
                             }
                             bIsValid = false;
@@ -1165,6 +1241,7 @@ namespace Protean
 
             catch (Exception ex)
             {
+                cValidationErrorList.Add(new ValidationError("", "Exception", ex.Message + ex.StackTrace));
                 returnException(ref msException, mcModuleName, "validate", ex, "", cProcessInfo, gbDebug);
             }
 

@@ -1776,7 +1776,7 @@ namespace Protean
                         // Use optimized ShouldRegenerateImage to reduce file system calls
                         // Removed redundant VirtualFileExists check - ShouldRegenerateImage already validates source file existence
                         // This saves 50-100ms of Azure File Share latency per operation
-                        if (ShouldRegenerateImage(cVirtualPath, newFilepath))
+                        if (ShouldRegenerateImage(cVirtualPath, newFilepath)  || forceCheck)
                         {
                             switch (filetype ?? "")
                             {
