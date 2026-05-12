@@ -833,7 +833,7 @@ namespace Protean
                             int argresult = 0;
                             if (int.TryParse(Convert.ToString(sPageId), out argresult))
                             {
-                                mnPageId = Convert.ToInt16(sPageId);
+                                mnPageId = Convert.ToInt64(sPageId);
                             }
 
                             // specified pgid takes priority
