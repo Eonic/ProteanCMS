@@ -9,7 +9,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;           
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
@@ -2980,7 +2980,7 @@ namespace Protean
                     {
                         paths.Add(path);
                         foreach (string commonFolders in maCommonFolders)
-                            paths.Add("/" + commonFolders.Trim(Convert.ToChar(@"/\")) + path);
+                            paths.Add("/" + commonFolders.Trim('/', '\\') + path);
                     }
                     rootPaths = null;
 
