@@ -3401,4 +3401,52 @@
 			<xsl:text> </xsl:text>
 		</div>	
 	</xsl:template>
+
+
+	<xsl:template match="div[@class='orderNotes']" mode="xform">
+		<div>
+			<xsl:if test="./@class">
+				<xsl:attribute name="class">
+					<xsl:value-of select="./@class"/>
+				</xsl:attribute>
+			</xsl:if>
+
+			<div class="panel">
+				<div class="panel-body">
+					<xsl:for-each select="ul/li">
+						<xsl:variable name="wordcount">
+							<xsl:call-template name="word-count">
+								<xsl:with-param name="data" select="node()"/>
+								<xsl:with-param name="num" select="'0'"/>
+							</xsl:call-template>
+						</xsl:variable>
+						<div>
+
+							<xsl:choose>
+								<xsl:when test="$wordcount > 20">
+									<xsl:call-template name="firstWords">
+										<xsl:with-param name="value" select="node()"/>
+										<xsl:with-param name="count" select="'20'"/>
+									</xsl:call-template>
+									<a data-toggle="collapse" href="#ordernote-{position()}" role="button" aria-expanded="false" aria-controls="collapseExample">
+										&#160;more...
+									</a>
+									<div class="collapse" id="ordernote-{position()}">
+										<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+									</div>
+								</xsl:when>
+								<xsl:otherwise>
+
+									<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+
+								</xsl:otherwise>
+							</xsl:choose>
+						</div>
+
+					</xsl:for-each>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
+
 </xsl:stylesheet>

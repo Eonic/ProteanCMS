@@ -963,7 +963,8 @@ namespace Protean
                                     prodCatElmt.SetAttribute("ids", Ids);
                                     oTempInstance.AppendChild(prodCatElmt);
                                 }
-                                AddPageSpecs(ref myWeb.mnPageId, ref oTempInstance);
+                                AddPageSpecs(myWeb.mnPageId, oTempInstance);
+                                //moved to after updateInstance so contains newly updated
                             }
                         }
                         else
@@ -1154,8 +1155,9 @@ namespace Protean
 
                             if (sProductTypes.Contains(cContentSchemaName + ","))
                             {
-                                AddPageSpecs(ref myWeb.mnPageId, ref myInstance);
+                                AddPageSpecs(myWeb.mnPageId, myInstance);
                             }
+
                             bProcessRepeats = true;
                             LoadInstance(myInstance);
 
@@ -1229,6 +1231,9 @@ namespace Protean
 
                             base.updateInstanceFromRequest();
                             base.validate();
+
+                          
+
 
                             if (base.valid)
                             {
@@ -1640,7 +1645,7 @@ namespace Protean
                 }
 
 
-                public void AddPageSpecs(ref long nPgId, ref XmlElement Instance)
+                public void AddPageSpecs(long nPgId, XmlElement Instance)
                 {
 
                     if (Instance.SelectSingleNode("descendant-or-self::Specs") != null)
@@ -1653,46 +1658,119 @@ namespace Protean
                         myCMS.mbAdminMode = false;
                         XmlDocument myPageXml = myCMS.GetPageXML();
 
-                        XmlElement SpecsElmt = myPageXml.CreateElement("Specs");
+                        // Collect all unique spec names from the page (for ordering)
+                        var pageSpecNames = new System.Collections.Generic.List<string>();
+                        var pageSpecElements = new System.Collections.Generic.Dictionary<string, XmlElement>();
+
                         foreach (XmlElement SpecElmt in myPageXml.SelectNodes("descendant-or-self::Spec"))
                         {
                             string name = SpecElmt.GetAttribute("name");
-                            if (name != "")
+                            if (!string.IsNullOrEmpty(name) && !pageSpecNames.Contains(name))
                             {
-                                if (SpecsElmt.SelectSingleNode($"Spec[@name='{name}']") == null)
-                                {
-                                    SpecElmt.InnerText = "";
-                                    XmlElement existingSpec = (XmlElement)Instance.SelectSingleNode($"descendant-or-self::Spec[@name='{name}']");
-                                    if (existingSpec != null && existingSpec.InnerText != "")
-                                    {
-                                        SpecElmt.InnerText = existingSpec.InnerText;
-                                    }
-                                    else
-                                    {
-                                        SpecElmt.SetAttribute("noDel", "true");
-                                    }
-                                    SpecsElmt.AppendChild(SpecElmt);
-                                }
+                                pageSpecNames.Add(name);
+                                pageSpecElements[name] = SpecElmt;
                             }
                         }
 
-                        foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs"))
+                        // Process each Specs node in the Instance
+                        foreach (XmlElement InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs"))
                         {
-                            InstanceSpecs.InnerXml = SpecsElmt.InnerXml;
+                            // Build a new ordered Specs element
+                            XmlElement NewSpecsElmt = Instance.OwnerDocument.CreateElement("Specs");
+
+                            // Track which instance specs we've already added
+                            var addedInstanceSpecs = new System.Collections.Generic.HashSet<XmlElement>();
+
+                            // First: Add all specs from page in page order, preserving existing values
+                            foreach (string specName in pageSpecNames)
+                            {
+                                XmlElement existingSpec = (XmlElement)InstanceSpecs.SelectSingleNode($"Spec[@name='{specName}']");
+
+                                if (existingSpec != null)
+                                {
+                                    // Keep the existing spec with its value and attributes
+                                    NewSpecsElmt.AppendChild(Instance.OwnerDocument.ImportNode(existingSpec, true));
+                                    addedInstanceSpecs.Add(existingSpec);
+                                }
+                                else
+                                {
+                                    // Add new empty spec based on page template
+                                    XmlElement pageSpec = pageSpecElements[specName];
+                                    XmlElement newSpec = Instance.OwnerDocument.CreateElement("Spec");
+
+                                    // Copy attributes from page spec template
+                                    foreach (XmlAttribute attr in pageSpec.Attributes)
+                                    {
+                                        newSpec.SetAttribute(attr.Name, attr.Value);
+                                    }
+
+                                    newSpec.InnerText = "";
+                                    NewSpecsElmt.AppendChild(newSpec);
+                                }
+                            }
+
+                            // Second: Preserve ALL remaining specs from Instance that haven't been added yet
+                            // This includes specs with empty names, specs from other pages, and custom specs
+                            foreach (XmlElement existingSpec in InstanceSpecs.SelectNodes("Spec"))
+                            {
+                                if (!addedInstanceSpecs.Contains(existingSpec))
+                                {
+                                    // Keep this spec - it hasn't been added yet
+                                    NewSpecsElmt.AppendChild(Instance.OwnerDocument.ImportNode(existingSpec, true));
+                                }
+                            }
+
+                            // Replace the Specs content only if we have specs to add
+                            if (NewSpecsElmt.HasChildNodes)
+                            {
+                                InstanceSpecs.InnerXml = NewSpecsElmt.InnerXml;
+                            }
                         }
                     }
                 }
 
                 public void DelEmptySpecs(ref XmlElement Instance)
                 {
-                    // removes empty specs from the instance
+                    // removes empty specs from the instance, but keeps at least one Specs node
                     if (Instance.SelectSingleNode("descendant-or-self::Specs") != null)
                     {
-                        foreach (XmlNode InstanceSpecs in Instance.SelectNodes("descendant-or-self::Specs"))
+                        var specsNodes = Instance.SelectNodes("descendant-or-self::Specs");
+                        var specsNodesList = new System.Collections.Generic.List<XmlNode>();
+
+                        // Convert NodeList to List for safe iteration and removal
+                        foreach (XmlNode node in specsNodes)
                         {
-                            if (InstanceSpecs.InnerXml == "")
+                            specsNodesList.Add(node);
+                        }
+
+                        // Count non-empty nodes
+                        int nonEmptyCount = 0;
+                        foreach (var node in specsNodesList)
+                        {
+                            if (node.InnerXml != "")
                             {
-                                InstanceSpecs.ParentNode.RemoveChild(InstanceSpecs);
+                                nonEmptyCount++;
+                            }
+                        }
+
+                        // If all nodes are empty, keep the last one
+                        if (nonEmptyCount == 0 && specsNodesList.Count > 0)
+                        {
+                            // Remove all except the last one
+                            for (int i = 0; i < specsNodesList.Count - 1; i++)
+                            {
+                                specsNodesList[i].ParentNode.RemoveChild(specsNodesList[i]);
+                            }
+                        }
+                        else
+                        {
+                            // Remove all empty nodes (since we have at least one non-empty node remaining)
+                            foreach (var node in specsNodesList)
+                            {
+                                if (node.InnerXml == "")
+                                {
+                                    node.ParentNode.RemoveChild(node);
+                                }
                             }
                         }
                     }

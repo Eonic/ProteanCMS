@@ -302,7 +302,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="Page[@layout='AdminXForm' and ContentDetail/Content[@name='UserLogon']]" mode="SetupBody">
+	<xsl:template match="Page[@layout='AdminXForm' and ContentDetail/Content[@name='AdminLogon']]" mode="SetupBody">
 		<div class="admin-body" id="template_AdminXForm">
 			<span class="text-light logo-text login-logo">
 				<img src="/ptn/admin/skin/images/ptn-logo.png" alt="ProteanCMS" class="cms-logo-dd"/>

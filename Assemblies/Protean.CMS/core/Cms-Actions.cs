@@ -791,7 +791,7 @@ namespace Protean
                         oXform.addValues();
                         oXform = (Protean.xForm)null;
                     }
-                    // just want to add submitted values but not hanlde submit
+                    // just want to add submitted values but not handle submit
                     formXpath = "/Page/Contents/Content[(@process='addValues')]";
                     if (mnArtId > 0)
                         formXpath = "/Page/ContentDetail/descendant-or-self::Content[(@process='addValues')]";

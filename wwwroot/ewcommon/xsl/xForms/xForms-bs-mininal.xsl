@@ -170,9 +170,6 @@
 					</xsl:for-each>
 				</xsl:attribute>
 			</xsl:if>
-			<xsl:if test="alert">
-				<h1>alert!</h1>
-			</xsl:if>
 			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
 			<xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
 			<xsl:if test="count(submit) &gt; 0">
@@ -2489,6 +2486,7 @@
 			<xsl:value-of select="translate($ref,'[]#=/','')"/>
 			<xsl:text>-dependant form-group</xsl:text>
 		</xsl:variable>
+
 		<xsl:if test="following-sibling::*[1][local-name()='switch']">
 			<xsl:apply-templates select="following-sibling::switch[1]/case[node()]" mode="xform" >
 				<xsl:with-param name="selectedCase" select="$selectedCase" />
@@ -3131,6 +3129,7 @@
 					<xsl:apply-templates select="." mode="xform"/>
 				</div>
 				<!-- Output Cases - that not empty -->
+
 				<xsl:apply-templates select="following-sibling::switch[1]/case[node()]" mode="xform" >
 					<xsl:with-param name="selectedCase" select="$selectedCase" />
 					<xsl:with-param name="dependantClass" select="$dependantClass" />

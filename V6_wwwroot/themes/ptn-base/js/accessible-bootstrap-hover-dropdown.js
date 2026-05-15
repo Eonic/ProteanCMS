@@ -54,6 +54,7 @@
                 timeout = window.setTimeout(function () {
                     $this.attr('aria-expanded', false);
                     $parent.removeClass('show');
+                    $this.addClass('hover-active');
                     $parent.find('.dropdown-menu').removeClass('show');
                     $this.trigger(hideEvent);
                 }, settings.delay);
