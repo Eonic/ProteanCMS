@@ -190,6 +190,18 @@ namespace Protean.Tools
         {
             try
             {
+                // Check if source PDF file exists
+                string sourcePdfPath = PDFThumbNail.goServer.MapPath(PDFThumbNail.FilePath);
+                if (!File.Exists(sourcePdfPath))
+                {
+                    OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(
+                        mcModuleName, 
+                        "GeneratePDFThumbNail", 
+                        new FileNotFoundException($"Source PDF file not found: {PDFThumbNail.FilePath}"), 
+                        $"Attempted to generate thumbnail for non-existent file: {sourcePdfPath}"));
+                    return; // Exit gracefully without throwing
+                }
+
                 string cCheckServerPath = PDFThumbNail.newImageFilepath.Substring(0, PDFThumbNail.newImageFilepath.LastIndexOf("/") + 1);
                 cCheckServerPath = PDFThumbNail.goServer.MapPath(cCheckServerPath);
                 if (Directory.Exists(cCheckServerPath) == false)

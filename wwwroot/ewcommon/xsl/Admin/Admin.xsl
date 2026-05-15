@@ -7683,7 +7683,16 @@
 	</xsl:template>
 
 	<xsl:template match="Contact" mode="AdminListContact">
-		<xsl:variable name="dirid" select="/Page/Request/QueryString/Item[@name='id']"/>
+		<xsl:variable name="dirid">
+			<xsl:choose>
+				<xsl:when test="/Page/Request/QueryString/Item[@name='id']!=''">
+					<xsl:value-of select="/Page/Request/QueryString/Item[@name='id']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="/Page/Request/QueryString/Item[@name='parid']"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<div class="col-md-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -8431,7 +8440,30 @@
 										<xsl:value-of select="local-name()"/>
 									</dt>
 									<dd>
-										<xsl:value-of select="node()"/>
+										
+										<xsl:variable name="wordcount">
+											<xsl:call-template name="word-count">
+												<xsl:with-param name="data" select="node()"/>
+												<xsl:with-param name="num" select="'0'"/>
+											</xsl:call-template>
+										</xsl:variable>
+										<div>
+											<xsl:choose>
+												<xsl:when test="$wordcount > 20">
+													
+													<a data-toggle="collapse" href="#paymentNotes{position()}" role="button" aria-expanded="false" aria-controls="collapseExample">
+														&#160;detail >
+													</a>
+													<div class="collapse" id="paymentNotes{position()}">
+														<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+													</div>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+												</xsl:otherwise>
+											</xsl:choose>
+							
+							</div>
 									</dd>
 								</xsl:for-each>
 							</dl>
@@ -8681,7 +8713,37 @@
 					<tr>
 						<td colspan="6">
 							Seller Notes:<br/>
-							<xsl:copy-of select="SellerNotes/node()"/>
+							<div class="panel">
+								<div class="panel-body">
+										<xsl:variable name="wordcount">
+											<xsl:call-template name="word-count">
+												<xsl:with-param name="data" select="SellerNotes/node()"/>
+												<xsl:with-param name="num" select="'0'"/>
+											</xsl:call-template>
+										</xsl:variable>
+										<div>
+											<xsl:choose>
+												<xsl:when test="$wordcount > 20">
+													<xsl:call-template name="firstWords">
+														<xsl:with-param name="value" select="SellerNotes/node()"/>
+														<xsl:with-param name="count" select="'20'"/>
+													</xsl:call-template>
+													<a data-toggle="collapse" href="#sellerNotes" role="button" aria-expanded="false" aria-controls="collapseExample">
+														&#160;more...
+													</a>
+													<div class="collapse" id="sellerNotes">
+														<xsl:apply-templates select="SellerNotes/node()" mode="cleanXhtml"/>
+													</div>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:apply-templates select="SellerNotes/node()" mode="cleanXhtml"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</div>
+
+								</div>
+							</div>
+							
 						</td>
 					</tr>
 				</table>
