@@ -1124,25 +1124,19 @@ namespace Protean
                         return "";
                     if (ValueName != null && ValueName.ToLowerInvariant().Contains("password"))
                         return "";
-                    //System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)GetObject("EonicConfig_" + SectionName);
 
-                    if (myWeb.moConfig is null)
-                    {
-                        myWeb.moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/" + SectionName);
-                        if (myWeb.moConfig != null)
-                        {
-                            SaveObject("EonicConfig_" + SectionName, myWeb.moConfig);
-                        }
-                    }
+                    // Use GetConfigSection which properly caches per section
+                    var config = GetConfigSection(SectionName);
 
-                    if (myWeb.moConfig is null)
+                    if (config == null)
                     {
-                        return "";
+                        return null;
                     }
                     else
                     {
-                        string returnVal = Convert.ToString(myWeb.moConfig[ValueName] ?? "");
-                        return returnVal ?? "";
+                        // Return null if config value doesn't exist, preserving old behavior
+                        // for callers who distinguish between "not configured" (null) and "configured as empty" ("")
+                        return config[ValueName];
                     }
                 }
                 catch (Exception)
