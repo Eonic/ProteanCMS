@@ -1117,6 +1117,9 @@ namespace Protean
             {
                 try
                 {
+                    if (myWeb == null)
+                        return "";
+
                     if (SectionName?.ToLowerInvariant() == "payment")
                         return "";
                     if (ValueName != null && ValueName.ToLowerInvariant().Contains("password"))
