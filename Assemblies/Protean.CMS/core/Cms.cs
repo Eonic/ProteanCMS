@@ -9,7 +9,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;           
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
@@ -833,7 +833,7 @@ namespace Protean
                             int argresult = 0;
                             if (int.TryParse(Convert.ToString(sPageId), out argresult))
                             {
-                                mnPageId = Convert.ToInt16(sPageId);
+                                mnPageId = Convert.ToInt64(sPageId);
                             }
 
                             // specified pgid takes priority
