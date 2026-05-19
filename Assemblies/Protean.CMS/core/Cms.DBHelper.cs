@@ -2750,7 +2750,7 @@ namespace Protean
                                     var nOther = default(int);
                                     while (oDr.Read())
                                     {
-                                        nOther = Convert.ToInt16(oDr[0]);
+                                        nOther = Convert.ToInt32(oDr[0]);
                                         break;
                                     }
                                     if (nOther > 0)

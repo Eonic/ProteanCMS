@@ -4298,6 +4298,23 @@
 			<xsl:value-of select="StockCode/node()"/>
 		</xsl:if>
 	</xsl:template>
+
+	<xsl:template match="Content[@type='Product']" mode="ContentListName">
+		<xsl:param name="indent"/>
+		<xsl:value-of select="$indent"/>
+		<xsl:choose>
+			<xsl:when test="Name/node()!=''">
+				<xsl:copy-of select="Name/node()"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="@name"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:if test="StockCode/node()">
+			<xsl:text> - </xsl:text>
+			<xsl:value-of select="StockCode/node()"/>
+		</xsl:if>
+	</xsl:template>
 	<!-- -->
 	<!-- BJR -->
 	<!--   ##################  Discount Rules   ##############################   -->
