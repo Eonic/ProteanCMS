@@ -1130,13 +1130,12 @@ namespace Protean
 
                     if (config == null)
                     {
-                        return null;
+                        return "";
                     }
                     else
                     {
-                        // Return null if config value doesn't exist, preserving old behavior
-                        // for callers who distinguish between "not configured" (null) and "configured as empty" ("")
-                        return config[ValueName];
+                        // Return empty string if config value doesn't exist
+                        return config[ValueName] ?? "";
                     }
                 }
                 catch (Exception)
