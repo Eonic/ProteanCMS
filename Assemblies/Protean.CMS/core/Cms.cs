@@ -2991,7 +2991,7 @@ namespace Protean
                     {
                         paths.Add(path);
                         foreach (string commonFolders in maCommonFolders)
-                            paths.Add("/" + commonFolders.Trim(Convert.ToChar(@"/\")) + path);
+                            paths.Add("/" + commonFolders.Trim('/', '\\') + path);
                     }
                     rootPaths = null;
 
