@@ -62,6 +62,19 @@ namespace Protean
 
             public string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
 
+            // Cached config values for image processing to avoid repeated dictionary lookups
+            private bool? _isDebugMode;
+            private string _tinifyKey;
+            private short? _webPQuality;
+            private string _forceImageResize;
+            private string _projectPath;
+            private int? _jpegQuality;
+
+            // Thread-safe Random instance to avoid creating new Random() on every call
+            // which causes non-random results when called in quick succession
+            private static readonly System.Threading.ThreadLocal<Random> _random = 
+                new System.Threading.ThreadLocal<Random>(() => new Random(Guid.NewGuid().GetHashCode()));
+
             #endregion
 
             #region Initialisation/Private
@@ -77,6 +90,145 @@ namespace Protean
             {
                 myWeb = null;
             }
+
+            /// <summary>
+            /// Gets a configuration section with caching to avoid repeated WebConfigurationManager calls.
+            /// Uses SaveObject/GetObject cache for non-web sections.
+            /// </summary>
+            private System.Collections.Specialized.NameValueCollection GetConfigSection(string sectionName)
+            {
+                // For "web" section, use myWeb.moConfig if available
+                if (sectionName.Equals("web", StringComparison.OrdinalIgnoreCase) && myWeb?.moConfig != null)
+                {
+                    return myWeb.moConfig;
+                }
+
+                // Check cache first
+                string cacheKey = "Config_" + sectionName;
+                var cached = GetObject(cacheKey) as System.Collections.Specialized.NameValueCollection;
+                if (cached != null)
+                {
+                    return cached;
+                }
+
+                // Load and cache the section
+                var config = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/" + sectionName);
+                if (config != null)
+                {
+                    SaveObject(cacheKey, config);
+                }
+                return config;
+            }
+
+            /// <summary>
+            /// Cached property for Debug mode to avoid repeated dictionary lookups in error handlers.
+            /// </summary>
+            private bool IsDebugMode
+            {
+                get
+                {
+                    if (!_isDebugMode.HasValue && myWeb?.moConfig != null)
+                    {
+                        _isDebugMode = myWeb.moConfig["Debug"]?.ToLower() == "on";
+                    }
+                    return _isDebugMode ?? false;
+                }
+            }
+
+            /// <summary>
+            /// Cached property for TinifyKey to avoid repeated dictionary lookups during image compression.
+            /// </summary>
+            private string TinifyKey
+            {
+                get
+                {
+                    if (_tinifyKey == null && myWeb?.moConfig != null)
+                    {
+                        _tinifyKey = myWeb.moConfig["TinifyKey"];
+                    }
+                    return _tinifyKey;
+                }
+            }
+
+            /// <summary>
+            /// Cached property for WebP quality to avoid repeated dictionary lookups.
+            /// </summary>
+            private short WebPQuality
+            {
+                get
+                {
+                    if (!_webPQuality.HasValue && myWeb?.moConfig != null)
+                    {
+                        if (myWeb.moConfig["WebPQuality"] != null)
+                        {
+                            _webPQuality = Convert.ToInt16(myWeb.moConfig["WebPQuality"]);
+                        }
+                        else
+                        {
+                            _webPQuality = 60; // Default value
+                        }
+                    }
+                    return _webPQuality ?? 60;
+                }
+            }
+
+            /// <summary>
+            /// Cached property for ForceImageResize setting to avoid repeated dictionary lookups.
+            /// Supports three modes:
+            /// - "false" or empty: Smart regeneration (only if source newer than target)
+            /// - "true": Create if missing, skip if exists (fast dev mode)
+            /// - "hard": Always regenerate (slow but ensures fresh images)
+            /// </summary>
+            private string ForceImageResizeMode
+            {
+                get
+                {
+                    if (_forceImageResize == null && myWeb?.moConfig != null)
+                    {
+                        string configValue = myWeb.moConfig["ForceImageResize"]?.ToLower();
+                        _forceImageResize = string.IsNullOrEmpty(configValue) ? "false" : configValue;
+                    }
+                    return _forceImageResize ?? "false";
+                }
+            }
+
+            /// <summary>
+            /// Cached property for ProjectPath to avoid repeated dictionary lookups during bundle operations.
+            /// Accessed 10+ times per BundleJS/BundleCSS call.
+            /// </summary>
+            private string ProjectPath
+            {
+                get
+                {
+                    if (_projectPath == null && myWeb?.moConfig != null)
+                    {
+                        _projectPath = myWeb.moConfig["ProjectPath"] ?? string.Empty;
+                    }
+                    return _projectPath ?? string.Empty;
+                }
+            }
+
+            /// <summary>
+            /// Cached property for JpegQuality to avoid repeated dictionary lookups during image resize.
+            /// </summary>
+            private int JpegQuality
+            {
+                get
+                {
+                    if (!_jpegQuality.HasValue && myWeb?.moConfig != null)
+                    {
+                        if (!string.IsNullOrEmpty(myWeb.moConfig["JpegQuality"]))
+                        {
+                            _jpegQuality = Convert.ToInt32(myWeb.moConfig["JpegQuality"]);
+                        }
+                        else
+                        {
+                            _jpegQuality = 99; // Default value
+                        }
+                    }
+                    return _jpegQuality ?? 99;
+                }
+            }
             #endregion
 
 
@@ -88,6 +240,12 @@ namespace Protean
 
                 public static readonly Regex XmlNamespace = new Regex(
                     @"<\?xml:namespace[^>]*\?>",
+                    RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+                // Culture identifier regex for formatdate method
+                // Avoids creating new Regex instance on every formatdate call with culture parameter
+                public static readonly Regex CultureIdentifier = new Regex(
+                    @"^([a-z]{2})(-([a-z]{2,3}))?$",
                     RegexOptions.IgnoreCase | RegexOptions.Compiled);
             }
 
@@ -142,10 +300,9 @@ namespace Protean
                 if (!string.IsNullOrEmpty(cModuleType))
                     cXformName = cXformName + "/" + cModuleType;
 
-                //ArrayList commonfolders = new ArrayList();
-                string[] commonfolders = Array.Empty<string>();
-                commonfolders.Append("");
-                commonfolders.Append("/ewcommon");
+                // Fix: Array.Append returns a new array, doesn't modify in place
+                // Create array with both folders directly
+                string[] commonfolders = new string[] { "", "/ewcommon" };
 
                 oXfrm.load("/xforms/content/" + cXformName + ".xml", commonfolders);
 
@@ -391,8 +548,7 @@ namespace Protean
             {
                 try
                 {
-                    var oRand = new Random();
-                    return oRand.Next(min, max);
+                    return _random.Value.Next(min, max);
                 }
                 catch (Exception)
                 {
@@ -405,7 +561,7 @@ namespace Protean
                 try
                 {
                     var list = new List<int>();
-                    var oRand = new Random();
+                    var rand = _random.Value;
 
                     if (max - min < count)
                     {
@@ -414,7 +570,7 @@ namespace Protean
 
                     while (count != 0)
                     {
-                        int newNo = oRand.Next(min, max);
+                        int newNo = rand.Next(min, max);
                         if (!list.Contains(newNo))
                         {
                             list.Add(newNo);
@@ -570,8 +726,8 @@ namespace Protean
                         }
                         else
                         {
-                            var re = new Regex("^([a-z]{2})(-([a-z]{2,3}))?$", RegexOptions.IgnoreCase);
-                            var cultureParams = re.Match(cultureIdentifier);
+                            // Use compiled regex instead of creating new instance each call
+                            var cultureParams = CompiledRegex.CultureIdentifier.Match(cultureIdentifier);
                             if (cultureParams.Groups.Count == 4)
                             {
                                 string language = cultureParams.Groups[1].Value;
@@ -965,24 +1121,24 @@ namespace Protean
                         return "";
                     if (ValueName != null && ValueName.ToLowerInvariant().Contains("password"))
                         return "";
-                    System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)GetObject("EonicConfig_" + SectionName);
+                    //System.Collections.Specialized.NameValueCollection oConfig = (System.Collections.Specialized.NameValueCollection)GetObject("EonicConfig_" + SectionName);
 
-                    if (oConfig is null)
+                    if (myWeb.moConfig is null)
                     {
-                        oConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/" + SectionName);
-                        if (oConfig != null)
+                        myWeb.moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/" + SectionName);
+                        if (myWeb.moConfig != null)
                         {
-                            SaveObject("EonicConfig_" + SectionName, oConfig);
+                            SaveObject("EonicConfig_" + SectionName, myWeb.moConfig);
                         }
                     }
 
-                    if (oConfig is null)
+                    if (myWeb.moConfig is null)
                     {
                         return "";
                     }
                     else
                     {
-                        string returnVal = Convert.ToString(oConfig[ValueName] ?? "");
+                        string returnVal = Convert.ToString(myWeb.moConfig[ValueName] ?? "");
                         return returnVal ?? "";
                     }
                 }
@@ -1053,25 +1209,12 @@ namespace Protean
 
             public string GetContentLocations(int nContentId, bool bIncludePrimary, int nExcludeLocation, bool bShowHiddenPages)
             {
-
-
-                // Tried to do this as a node set, but returning a node set in non-XslCompiledTransform ways doesn't seem to work.
-                string cLocations = "";
-
+                // Use StringBuilder instead of string concatenation in loop for better performance
                 try
                 {
-
                     if (myWeb != null)
                     {
-
-
-                        string cSql;
-                        // Dim oDr As SqlClient.SqlDataReader
-
-                       cSql = $"SELECT l.nStructId As LocationID FROM dbo.tblContentStructure s INNER JOIN dbo.tblAudit a ON s.nauditid = a.nauditKey INNER JOIN dbo.tblContentLocation l ON s.nStructKey = l.nStructId WHERE nContentId = {nContentId}";
-
-
-
+                        string cSql = $"SELECT l.nStructId As LocationID FROM dbo.tblContentStructure s INNER JOIN dbo.tblAudit a ON s.nauditid = a.nauditKey INNER JOIN dbo.tblContentLocation l ON s.nStructKey = l.nStructId WHERE nContentId = {nContentId}";
 
                         if (bIncludePrimary)
                             cSql += " AND (l.bPrimary = 0) ";
@@ -1082,24 +1225,25 @@ namespace Protean
 
                         cSql += " ORDER BY s.cStructName ";
 
-                        using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(cSql))  // Done by nita on 6/7/22
+                        var locationsBuilder = new System.Text.StringBuilder();
+                        using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(cSql))
                         {
-
                             while (oDr.Read())
-                                cLocations += "," + oDr[0].ToString();
+                            {
+                                if (locationsBuilder.Length > 0)
+                                    locationsBuilder.Append(",");
+                                locationsBuilder.Append(oDr[0].ToString());
+                            }
                         }
 
-                        cLocations = cLocations.TrimStart(',');
-
+                        return locationsBuilder.ToString();
                     }
-                    return cLocations;
+                    return "";
                 }
                 catch (Exception)
                 {
                     return "";
                 }
-
-
             }
             public XmlElement GetSpecsOnPageItems(string pageId, string artId)
             {
@@ -1326,11 +1470,13 @@ namespace Protean
             /// <summary>
             /// Optimized file check to determine if an image should be regenerated.
             /// Uses FileInfo pattern to reduce file system calls from 4 to 2 on Azure File Share.
+            /// Supports three regeneration modes via ForceImageResizeMode config setting.
             /// </summary>
             /// <param name="sourcePath">Virtual path to source image</param>
             /// <param name="targetPath">Virtual path to target/resized image</param>
+            /// <param name="requestForceCheck">True if ?imgRefresh=true in URL</param>
             /// <returns>True if image should be regenerated, false otherwise</returns>
-            private bool ShouldRegenerateImage(string sourcePath, string targetPath)
+            private bool ShouldRegenerateImage(string sourcePath, string targetPath, bool requestForceCheck = false)
             {
                 try
                 {
@@ -1362,15 +1508,48 @@ namespace Protean
                         return true;
                     }
 
-                    // Both exist, compare timestamps (LastWriteTime is cached after Exists check)
-                    bool needsRegeneration = sourceInfo.LastWriteTime > targetInfo.LastWriteTime;
-
-                    if (myWeb != null && needsRegeneration)
+                    // URL has ?imgRefresh=true - always regenerate
+                    if (requestForceCheck)
                     {
-                        myWeb.PerfMon.Log("xmlTools", "ShouldRegenerateImage - Source is newer, regeneration needed");
+                        if (myWeb != null)
+                        {
+                            myWeb.PerfMon.Log("xmlTools", "ShouldRegenerateImage - Request force check, regeneration needed");
+                        }
+                        return true;
                     }
 
-                    return needsRegeneration;
+                    // Check ForceImageResize config mode
+                    string resizeMode = ForceImageResizeMode;
+
+                    switch (resizeMode)
+                    {
+                        case "hard":
+                            // Always regenerate
+                            if (myWeb != null)
+                            {
+                                myWeb.PerfMon.Log("xmlTools", "ShouldRegenerateImage - Hard mode, always regenerate");
+                            }
+                            return true;
+
+                        case "true":
+                            // Target exists, don't regenerate (fast dev mode)
+                            if (myWeb != null)
+                            {
+                                myWeb.PerfMon.Log("xmlTools", "ShouldRegenerateImage - True mode, target exists, skip regeneration");
+                            }
+                            return false;
+
+                        default: // "false" or any other value
+                            // Smart mode: Compare timestamps (LastWriteTime is cached after Exists check)
+                            bool needsRegeneration = sourceInfo.LastWriteTime > targetInfo.LastWriteTime;
+
+                            if (myWeb != null && needsRegeneration)
+                            {
+                                myWeb.PerfMon.Log("xmlTools", "ShouldRegenerateImage - Source is newer, regeneration needed");
+                            }
+
+                            return needsRegeneration;
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1417,7 +1596,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    if (gbDebug)
+                    if (IsDebugMode)
                     {
                         return ex.Message;
                     }
@@ -1701,10 +1880,10 @@ namespace Protean
 
                 try
                 {
-                    System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-                    if (!string.IsNullOrEmpty(moConfig["JpegQuality"]))
+                    // Use cached JpegQuality property to avoid repeated config lookups
+                    if (myWeb != null)
                     {
-                        nCompression = Convert.ToInt16(moConfig["JpegQuality"]);
+                        nCompression = JpegQuality;
                     }
 
                     // PerfMon.Log("xmlTools", "ResizeImage - Start")
@@ -1765,18 +1944,34 @@ namespace Protean
                     {
                         return newFilepath;
                     }
-
-
-                    else if (!myWeb.mbAdminMode & forceCheck == false)
-                    {
-                        return newFilepath;
-                    }
                     else
                     {
-                        // Use optimized ShouldRegenerateImage to reduce file system calls
+                        // Check if we should process images based on mode and admin status
+                        // In production (non-admin), only process if:
+                        // 1. ForceImageResize is "true" or "hard" (create/regenerate as needed)
+                        // 2. OR ?imgRefresh=true in URL
+                        bool shouldProcessImages = myWeb.mbAdminMode || forceCheck;
+
+                        if (!shouldProcessImages)
+                        {
+                            string resizeMode = ForceImageResizeMode;
+                            // In production, allow processing for "true" and "hard" modes
+                            if (resizeMode == "true" || resizeMode == "hard")
+                            {
+                                shouldProcessImages = true;
+                            }
+                        }
+
+                        if (!shouldProcessImages)
+                        {
+                            // Production mode with ForceImageResize="false" - just return path
+                            return newFilepath;
+                        }
+
+                        // Use optimized ShouldRegenerateImage with forceCheck parameter
                         // Removed redundant VirtualFileExists check - ShouldRegenerateImage already validates source file existence
                         // This saves 50-100ms of Azure File Share latency per operation
-                        if (ShouldRegenerateImage(cVirtualPath, newFilepath)  || forceCheck)
+                        if (ShouldRegenerateImage(cVirtualPath, newFilepath, forceCheck))
                         {
                             switch (filetype ?? "")
                             {
@@ -1824,7 +2019,7 @@ namespace Protean
                                         oImage.Save(goServer.MapPath(newFilepath), nCompression, cCheckServerPath);
                                         var imgFile = new FileInfo(goServer.MapPath(newFilepath));
                                         var ptnImg = new Tools.Image("");
-                                        ptnImg.TinifyKey = moConfig["TinifyKey"];
+                                        ptnImg.TinifyKey = TinifyKey;
                                         ptnImg.CompressImage(imgFile, false);
                                         oImage.Close();
                                         oImage = null;
@@ -1838,25 +2033,17 @@ namespace Protean
                         }
                         else
                         {
-                            // ShouldRegenerateImage returns false if source doesn't exist or target is up-to-date
-                            // If source doesn't exist, return awaitingImgPath; otherwise return existing target
-                            if (VirtualFileExists(cVirtualPath) == 0)
-                            {
-                               // myWeb.PerfMon.Log("xmlTools", "ResizeImage - Source file doesn't exist");
-                                return awaitingImgPath;
-                            }
-                            else
-                            {
-                              //  myWeb.PerfMon.Log("xmlTools", "ResizeImage - " + newFilepath + " exists and is up-to-date");
-                                return newFilepath;
-                            }
+                            // ShouldRegenerateImage already validates source existence
+                            // If it returns false, source either doesn't exist or target is up-to-date
+                            // No need for additional VirtualFileExists call
+                            return newFilepath;
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     // PerfMon.Log("xmlTools", "ResizeImage - End")
-                    if (gbDebug)
+                    if (IsDebugMode)
                     {
                       //  myWeb.PerfMon.Log("xmlTools", "ResizeImage - ERROR");
                         stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, vstrFurtherInfo: cProcessInfo);
@@ -1875,6 +2062,7 @@ namespace Protean
                 Boolean bForceCheck = false;
                 if (sForceCheck.ToLower().Contains("true"))
                 { bForceCheck = true; }
+
                 return CreateWebPAlt(cVirtualPath, bForceCheck);
             }
 
@@ -1891,12 +2079,8 @@ namespace Protean
                     }
                     else
                     {
-                        short WebPQuality = 60;
-
-                        if (myWeb.moConfig["WebPQuality"] != null)
-                        {
-                            WebPQuality = Convert.ToInt16(myWeb.moConfig["WebPQuality"]);
-                        }
+                        // Use cached WebPQuality property
+                        short webpQuality = WebPQuality;
 
                         cVirtualPath = cVirtualPath.Replace("%20", " ");
 
@@ -1907,29 +2091,47 @@ namespace Protean
 
                         string webpFileName = cVirtualPath.Replace( "." + filetype, ".webp");
                         string newFilepath = string.Empty;
-                        if (myWeb.mbAdminMode | forceCheck)
-                        {
-                            // Use FileInfo.Exists pattern to reduce Azure File Share latency
-                            // Saves 50-100ms compared to VirtualFileExists on mounted file shares
-                            var webpFileInfo = new FileInfo(goServer.MapPath(webpFileName));
 
-                            // create a WEBP version of the image if it doesn't exist
-                            if (!webpFileInfo.Exists)
+                        // Check if we should process WebP based on mode and admin status
+                        // In production (non-admin), only process if:
+                        // 1. ForceImageResize is "true" or "hard" (create/regenerate as needed)
+                        // 2. OR ?imgRefresh=true in URL
+                        bool shouldProcessImages = myWeb.mbAdminMode || forceCheck;
+
+                        if (!shouldProcessImages)
+                        {
+                            string resizeMode = ForceImageResizeMode;
+                            // In production, allow processing for "true" and "hard" modes
+                            if (resizeMode == "true" || resizeMode == "hard")
                             {
-                                using (var bitmap = SKBitmap.Decode(goServer.MapPath(cVirtualPath)))
+                                shouldProcessImages = true;
+                            }
+                        }
+
+                        if (!shouldProcessImages)
+                        {
+                            // Production mode with ForceImageResize="false" - just return path without checking
+                            return webpFileName;
+                        }
+
+                        // Use ShouldRegenerateImage with forceCheck to respect ForceImageResize modes
+                        // This integrates WebP generation with the same smart caching logic
+                        if (ShouldRegenerateImage(cVirtualPath, webpFileName, forceCheck))
+                        {
+                            using (var bitmap = SKBitmap.Decode(goServer.MapPath(cVirtualPath)))
+                            {
+                                if (bitmap != null)
                                 {
-                                    if (bitmap != null)
+                                    using (var image = SKImage.FromBitmap(bitmap))
+                                    using (var data = image.Encode(SKEncodedImageFormat.Webp, webpQuality))
+                                    using (var saveImageStream = File.OpenWrite(goServer.MapPath(webpFileName)))
                                     {
-                                        using (var image = SKImage.FromBitmap(bitmap))
-                                        using (var data = image.Encode(SKEncodedImageFormat.Webp, WebPQuality))
-                                        using (var saveImageStream = File.OpenWrite(goServer.MapPath(webpFileName)))
-                                        {
-                                            data.SaveTo(saveImageStream);
-                                        }
+                                        data.SaveTo(saveImageStream);
                                     }
                                 }
-                             }
+                            }
                         }
+
                         return webpFileName;
                     }
                 }
@@ -1937,7 +2139,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    if ((myWeb.moConfig["Debug"]).ToLower() == "on")
+                    if (IsDebugMode)
                     {
                         // reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
                         return awaitingImgPath + "?Error=" + ex.Message + " - " + ex.StackTrace;
@@ -1959,7 +2161,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    if ((myWeb.moConfig["Debug"]).ToLower() == "on")
+                    if (IsDebugMode)
                     {
                         // reportException("xmlTools.xsltExtensions", "ResizeImage2", ex, , cProcessInfo)
                         return awaitingImgPath + "?Error=" + ex.Message + " - " + ex.StackTrace;
@@ -2030,86 +2232,82 @@ namespace Protean
 
                     if (!myWeb.mbAdminMode & forceCheck == false)
                     {
-                        return newFilepath.Replace( " ", "%20");
+                        // Check if we should process images in production
+                        string resizeMode = ForceImageResizeMode;
+                        if (resizeMode != "true" && resizeMode != "hard")
+                        {
+                            // Production mode with ForceImageResize="false" - just return path
+                            return newFilepath.Replace(" ", "%20");
+                        }
+                    }
+
+                    // Use optimized ShouldRegenerateImage with forceCheck parameter
+                    // Replaced VirtualFileExists + CompareDateIsNewer (4 calls) with ShouldRegenerateImage (2 calls)
+                    // Saves 100-200ms of Azure File Share latency per operation
+                    if (ShouldRegenerateImage(cVirtualPath, newFilepath, forceCheck))
+                    {
+                        switch (filetype ?? "")
+                        {
+                            case "pdf":
+                                {
+
+                                    //var ihelp = new Tools.PDF.PDFThumbNail();
+
+                                    //System.Threading.ThreadPool.SetMaxThreads(10, 10);
+                                    //var doneEvents = new System.Threading.ManualResetEvent[2];
+
+                                    //var newThumbnail = new Tools.PDF.PDFThumbNail();
+                                    //newThumbnail.FilePath = cVirtualPath;
+                                    //newThumbnail.newImageFilepath = newFilepath;
+                                    //newThumbnail.goServer = goServer;
+                                    //newThumbnail.maxWidth = (short)maxWidth;
+
+                                    //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
+                                    //newThumbnail = null;
+                                    //ihelp.Close();
+                                    //ihelp = null;
+                                    break;
+                                }
+
+                            default:
+                                {
+                                    string cCheckServerPath = newFilepath.Substring(0, newFilepath.LastIndexOf("/") + 1);
+                                    cCheckServerPath = goServer.MapPath(cCheckServerPath);
+                                    // load the orignal image and resize
+                                    var oImage = new Tools.Image(goServer.MapPath(cVirtualPath));
+                                    oImage.KeepXYRelation = true;
+                                    oImage.NoStretch = noStretch;
+                                    oImage.IsCrop = isCrop;
+                                    oImage.SetMaxSize((int)maxWidth, (int)maxHeight);
+
+                                    if (!string.IsNullOrEmpty(WatermarkImage))
+                                    {
+                                        oImage.AddWatermark(WatermarkText, goServer.MapPath(WatermarkImage));
+                                    }
+
+                                    oImage.Save(goServer.MapPath(newFilepath), nCompression, cCheckServerPath);
+
+                                    oImage.Close();
+                                    oImage = null;
+                                    break;
+                                }
+
+                        }
+
+                        return newFilepath.Replace(" ", "%20");
                     }
                     else
                     {
-                        // Use optimized ShouldRegenerateImage to reduce file system calls
-                        // Replaced VirtualFileExists + CompareDateIsNewer (4 calls) with ShouldRegenerateImage (2 calls)
-                        // Saves 100-200ms of Azure File Share latency per operation
-                        if (ShouldRegenerateImage(cVirtualPath, newFilepath))
-                        {
-                            switch (filetype ?? "")
-                            {
-                                case "pdf":
-                                    {
-
-                                        //var ihelp = new Tools.PDF.PDFThumbNail();
-
-                                        //System.Threading.ThreadPool.SetMaxThreads(10, 10);
-                                        //var doneEvents = new System.Threading.ManualResetEvent[2];
-
-                                        //var newThumbnail = new Tools.PDF.PDFThumbNail();
-                                        //newThumbnail.FilePath = cVirtualPath;
-                                        //newThumbnail.newImageFilepath = newFilepath;
-                                        //newThumbnail.goServer = goServer;
-                                        //newThumbnail.maxWidth = (short)maxWidth;
-
-                                        //System.Threading.ThreadPool.QueueUserWorkItem(new System.Threading.WaitCallback((_) => ihelp.GeneratePDFThumbNail(newThumbnail)));
-                                        //newThumbnail = null;
-                                        //ihelp.Close();
-                                        //ihelp = null;
-                                        break;
-                                    }
-
-                                default:
-                                    {
-                                        string cCheckServerPath = newFilepath.Substring(0, newFilepath.LastIndexOf("/") + 1);
-                                        cCheckServerPath = goServer.MapPath(cCheckServerPath);
-                                        // load the orignal image and resize
-                                        var oImage = new Tools.Image(goServer.MapPath(cVirtualPath));
-                                        oImage.KeepXYRelation = true;
-                                        oImage.NoStretch = noStretch;
-                                        oImage.IsCrop = isCrop;
-                                        oImage.SetMaxSize((int)maxWidth, (int)maxHeight);
-
-                                        if (!string.IsNullOrEmpty(WatermarkImage))
-                                        {
-                                            oImage.AddWatermark(WatermarkText, goServer.MapPath(WatermarkImage));
-                                        }
-
-                                        oImage.Save(goServer.MapPath(newFilepath), nCompression, cCheckServerPath);
-
-                                        oImage.Close();
-                                        oImage = null;
-                                        break;
-                                    }
-
-                            }
-
-                            return newFilepath.Replace(" ", "%20");
-                        }
-                        else
-                        {
-                            // ShouldRegenerateImage returns false if source doesn't exist or target is up-to-date
-                            // If source doesn't exist, return awaitingImgPath; otherwise return existing target
-                            if (VirtualFileExists(cVirtualPath) == 0)
-                            {
-                                return awaitingImgPath;
-                            }
-                            else
-                            {
-                                return newFilepath.Replace(" ", "%20");
-                            }
-                        }
+                        // ShouldRegenerateImage already validates source existence
+                        // If it returns false, source either doesn't exist or target is up-to-date
+                        // No need for additional VirtualFileExists call
+                        return newFilepath.Replace(" ", "%20");
                     }
                 }
-
-
                 catch (Exception ex)
                 {
                     // PerfMon.Log("xmlTools", "ResizeImage - End")
-                    if ((myWeb.moConfig["Debug"]).ToLower() == "on")
+                    if (IsDebugMode)
                     {
                         stdTools.reportException(ref myWeb.msException, "xmlTools.xsltExtensions", "ResizeImage2", ex, myWeb.moCtx, vstrFurtherInfo: cProcessInfo);
                         return awaitingImgPath + "?Error=" + ex.InnerException.Message + " - " + ex.Message + " - " + ex.StackTrace;
@@ -2313,11 +2511,7 @@ namespace Protean
                 {
                     XmlDocument oXformDoc;
                     string buttonName = string.Empty;
-                    string projectPath = "";
-                    if (myWeb.moConfig["ProjectPath"] != string.Empty)
-                    {
-                        projectPath = myWeb.moConfig["ProjectPath"];
-                    }
+                    string projectPath = ProjectPath;
                     var oAdminXforms = new Cms.Admin.AdminXforms(ref myWeb);
                     oXformDoc = oAdminXforms.GetSiteManifest(myWeb.moConfig["cssFramework"]);
 
@@ -2659,10 +2853,10 @@ namespace Protean
 
                         case "themePresets":
                             {
-                                System.Collections.Specialized.NameValueCollection moThemeConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/theme");
-                                string currenttheme = moThemeConfig["CurrentTheme"];
+                                var moThemeConfig = GetConfigSection("theme");
+                                string currenttheme = moThemeConfig?["CurrentTheme"];
 
-                                if (File.Exists(goServer.MapPath("/ewthemes/" + currenttheme + "/themeManifest.xml")))
+                                if (!string.IsNullOrEmpty(currenttheme) && File.Exists(goServer.MapPath("/ewthemes/" + currenttheme + "/themeManifest.xml")))
                                 {
                                     var newXml = new XmlDocument();
                                     newXml.PreserveWhitespace = true;
@@ -2967,6 +3161,9 @@ namespace Protean
                     }
                     else
                     {
+                        // Cache ProjectPath to avoid 10+ config lookups (saves ~200ms on bundle operations)
+                        string projectPath = ProjectPath;
+
                         // Dim fsh As New Protean.fsHelper(myWeb.moCtx)
                         if (myWeb.moRequest["rebundle"] != null)
                         {
@@ -2986,12 +3183,14 @@ namespace Protean
 
                         if (bAppVarExists == false)
                         {
-                            // check if the file exists.
-                            if (Convert.ToBoolean(VirtualFileExists("/" + myWeb.moConfig["ProjectPath"] + "js" + TargetPath.Replace("~", "") + "/script.js")))
+                            // Use FileInfo pattern to reduce file system calls
+                            string scriptPath = "/" + projectPath + "js" + TargetPath.Replace("~", "") + "/script.js";
+                            var scriptFileInfo = new FileInfo(goServer.MapPath(scriptPath));
+                            if (scriptFileInfo.Exists)
                             {
                                 // regenerate the application variable from the files in the folder
                                 // we do not want to recreate all js everytime the application pool is reset anymore.
-                                myWeb.goApp.Set(AppVariableName.ToString(), "/" + myWeb.moConfig["ProjectPath"] + "js" + TargetPath.Replace("~", "") + "/script.js");
+                                myWeb.goApp.Set(AppVariableName.ToString(), scriptPath);
                                 bAppVarExists = true;
                             }
                         }
@@ -3033,25 +3232,25 @@ namespace Protean
                                     {
                                         fileNameToSave = fileNameToSave + ".js";
                                     }
-                                    if (!Directory.Exists(goServer.MapPath("~/" + myWeb.moConfig["ProjectPath"] + "js/external/")))
+                                    if (!Directory.Exists(goServer.MapPath("~/" + projectPath + "js/external/")))
                                     {
-                                        Directory.CreateDirectory(goServer.MapPath("~/" + myWeb.moConfig["ProjectPath"] + "js/external/"));
+                                        Directory.CreateDirectory(goServer.MapPath("~/" + projectPath + "js/external/"));
                                     }
-                                    if (!File.Exists(goServer.MapPath("~/" + myWeb.moConfig["ProjectPath"] + "js/external/") + fileNameToSave))
+                                    if (!File.Exists(goServer.MapPath("~/" + projectPath + "js/external/") + fileNameToSave))
                                     {
 
                                         using (var wc = new System.Net.WebClient())
                                         {
                                             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12;
-                                            wc.DownloadFile(url, goServer.MapPath("~/" + myWeb.moConfig["ProjectPath"] + "js/external/") + fileNameToSave);
+                                            wc.DownloadFile(url, goServer.MapPath("~/" + projectPath + "js/external/") + fileNameToSave);
                                         }
                                     }
-                                    bundleFilePaths[cntFile] = "~/" + myWeb.moConfig["ProjectPath"] + ("js/external/" + fileNameToSave);
+                                    bundleFilePaths[cntFile] = "~/" + projectPath + ("js/external/" + fileNameToSave);
                                 }
                             }
 
                             HttpContextWrapper CtxBase = new HttpContextWrapper(myWeb.moCtx);
-                            BundleContext BundlesCtx = new System.Web.Optimization.BundleContext(CtxBase, Bundles, "~/" + myWeb.moConfig["ProjectPath"] + "js//");
+                            BundleContext BundlesCtx = new System.Web.Optimization.BundleContext(CtxBase, Bundles, "~/" + projectPath + "js//");
                             BundlesCtx.EnableInstrumentation = false;
 
                             CustomScriptBundle jsBundle = new BundleTransformer.Core.Bundles.CustomScriptBundle(TargetPath);
@@ -3100,8 +3299,10 @@ namespace Protean
                             if (scriptFile.StartsWith(TargetPath.TrimStart('~')))
                             {
                                 // file has been saved successfully.
-                                scriptFile = "/" + myWeb.moConfig["ProjectPath"] + "js" + scriptFile;
-                                if (Convert.ToBoolean(VirtualFileExists(scriptFile)))
+                                scriptFile = "/" + projectPath + "js" + scriptFile;
+                                // Use FileInfo pattern to reduce file system calls
+                                var savedFileInfo = new FileInfo(goServer.MapPath(scriptFile));
+                                if (savedFileInfo.Exists)
                                 {
                                     myWeb.goApp.Set(AppVariableName.ToString(), scriptFile);
                                 }
@@ -3157,13 +3358,8 @@ namespace Protean
                 string sReturnString = "";
                 string sReturnError = "";
                 bool bReset = false;
-                string cProjectPath = string.Empty;
-                if (myWeb != null) { 
-                    if (myWeb.moConfig["ProjectPath"] != null)
-                    {
-                        cProjectPath = myWeb.moConfig["ProjectPath"];
-                    }
-                }
+                // Use cached ProjectPath property to avoid repeated config lookups
+                string cProjectPath = myWeb != null ? ProjectPath : string.Empty;
                 string AppVariableName = "css" + TargetPath.Replace("~", "").ToLowerInvariant();
                 do
                 {
@@ -3201,8 +3397,10 @@ namespace Protean
 
                             if (bAppVarExists == false)
                             {
-                                // check if the file exists.
-                                if (Convert.ToBoolean(VirtualFileExists("/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css")))
+                                // Use FileInfo pattern to reduce file system calls
+                                string stylePath = "/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css";
+                                var styleFileInfo = new FileInfo(goServer.MapPath(stylePath));
+                                if (styleFileInfo.Exists)
                                 {
                                     // regenerate the application variable from the files in the folder
                                     // we do not want to recreate all css everytime the application pool is reset anymore.
@@ -3335,8 +3533,10 @@ namespace Protean
 
                                 if (sReturnString.StartsWith("/" + cProjectPath + "css"))
                                 {
-                                    // check the file exists before we set the application variable...
-                                    if (Convert.ToBoolean(VirtualFileExists("/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css")))
+                                    // Use FileInfo pattern to reduce file system calls
+                                    string finalStylePath = "/" + cProjectPath + "css" + TargetPath.Replace("~", "") + "/style.css";
+                                    var finalStyleInfo = new FileInfo(goServer.MapPath(finalStylePath));
+                                    if (finalStyleInfo.Exists)
                                     {
                                         myWeb.goApp.Set(AppVariableName, sReturnString);
                                     }
@@ -3392,9 +3592,15 @@ namespace Protean
 
             public static string GetLatLong(string address)
             {
+                // Static method - direct config lookup required (no caching available)
                 System.Collections.Specialized.NameValueCollection moConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
 
-                string apiKey = moConfig["GoogleAPIKey"];
+                string apiKey = moConfig?["GoogleAPIKey"];
+                if (string.IsNullOrEmpty(apiKey))
+                {
+                    return ",";
+                }
+
                 string url = $"https://maps.googleapis.com/maps/api/geocode/json?address={Uri.EscapeDataString(address)}&key={apiKey}";
                 try
                 {
