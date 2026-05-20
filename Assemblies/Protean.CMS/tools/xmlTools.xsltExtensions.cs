@@ -60,7 +60,7 @@ namespace Protean
             // RaiseEvent OnError(sender, e)
             // End Sub
 
-            public string awaitingImgPath = "/ewcommon/images/awaiting-image-thumbnail.gif";
+            public string awaitingImgPath = "/ewcommon/images/img-missing.png";
 
             // Cached config values for image processing to avoid repeated dictionary lookups
             private bool? _isDebugMode;
