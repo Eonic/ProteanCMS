@@ -1875,6 +1875,10 @@ namespace Protean
 
                 try
                 {
+                    if (cVirtualPath == "") {
+                        cVirtualPath = awaitingImgPath;
+                    }
+
                     // Use cached JpegQuality property to avoid repeated config lookups
                     if (myWeb != null)
                     {
@@ -1931,6 +1935,19 @@ namespace Protean
                                 break;
                             }
                     }
+
+                    if (myWeb != null)
+                    {
+                        if (myWeb.bs5)
+                        {
+                            newFilepath = newFilepath.Replace("/ptn/", "/");
+                        }
+                        else
+                        {
+                            newFilepath = newFilepath.Replace("/ewcommon/", "/");
+                        }
+                    }
+
                     if (myWeb is null)
                     {
                         return newFilepath;
