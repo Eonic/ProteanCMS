@@ -1117,8 +1117,6 @@ namespace Protean
             {
                 try
                 {
-                    if (myWeb == null)
-                        return "";
 
                     if (SectionName?.ToLowerInvariant() == "payment")
                         return "";
