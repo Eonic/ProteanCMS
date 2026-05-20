@@ -1470,7 +1470,7 @@ namespace Protean
             /// </summary>
             /// <param name="sourcePath">Virtual path to source image</param>
             /// <param name="targetPath">Virtual path to target/resized image</param>
-            /// <param name="requestForceCheck">True if ?imgRefresh=true in URL</param>
+            /// <param name="requestForceCheck">True if ?imgRefresh=true in URL or forceCheck param - creates missing images but doesn't overwrite existing ones</param>
             /// <returns>True if image should be regenerated, false otherwise</returns>
             private bool ShouldRegenerateImage(string sourcePath, string targetPath, bool requestForceCheck = false)
             {
@@ -1504,14 +1504,15 @@ namespace Protean
                         return true;
                     }
 
-                    // URL has ?imgRefresh=true - always regenerate
+                    // forceCheck=true means: create missing images but DON'T overwrite existing ones
+                    // This is the same behavior as mode="true" - fast processing for bulk operations
                     if (requestForceCheck)
                     {
                         if (myWeb != null)
                         {
-                            myWeb.PerfMon.Log("xmlTools", "ShouldRegenerateImage - Request force check, regeneration needed");
+                            myWeb.PerfMon.Log("xmlTools", "ShouldRegenerateImage - forceCheck=true, target exists, skip regeneration");
                         }
-                        return true;
+                        return false;
                     }
 
                     // Check ForceImageResize config mode
@@ -1885,12 +1886,9 @@ namespace Protean
                     // PerfMon.Log("xmlTools", "ResizeImage - Start")
                     if (myWeb != null)
                     {
-                        myWeb.PerfMon.Log("xmlTools", "ResizeImage - Start");
-
                         if (myWeb.moRequest is null)
                         {
                         }
-
                         else
                         {
                             try
@@ -1904,7 +1902,6 @@ namespace Protean
                             {
                                 cProcessInfo = "test";
                             }
-
                         }
                     }
 
@@ -1963,6 +1960,8 @@ namespace Protean
                             // Production mode with ForceImageResize="false" - just return path
                             return newFilepath;
                         }
+
+                        myWeb.PerfMon.Log("xmlTools", "ResizeImage - Start");
 
                         // Use optimized ShouldRegenerateImage with forceCheck parameter
                         // Removed redundant VirtualFileExists check - ShouldRegenerateImage already validates source file existence
