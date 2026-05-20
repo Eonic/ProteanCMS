@@ -4082,34 +4082,34 @@
 			<xsl:for-each select="ms:node-set($filterButtons)/*/*">
 				<xsl:variable name="buttonName" select="node()"/>
 				<xsl:variable name="filterType" select="@filterType"/>
-
-				<div class="list-group-item row">
-					<div class="col-md-3">
+				<div class="list-group-item">
+					<div class="row">
+					<div class="col">
 						<label>
 							<xsl:value-of select="$buttonName"/>
 						</label>
 					</div>
-					<div class="col-md-6">
+					<div class="col">
 						<xsl:text> </xsl:text>
 					</div>
-					<div class="col-md-3">
+					<div class="col">
 						<xsl:text> </xsl:text>
 						<xsl:choose>
 							<xsl:when test="$thisGroup/ancestor::ContentDetail/Content/model/instance/ContentRelations/Content[@filterType=$filterType]">
 								<xsl:variable name="relatedContent" select="concat('FilterEdit_',$filterType)" />
 								<xsl:variable name="filterId" select="$thisGroup/ancestor::ContentDetail/Content/model/instance/ContentRelations/Content[@filterType=$filterType]/@id"/>
 
-								<button type="submit" name="{concat('FilterRemove_',$filterType)}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-danger pull-right">
-									<i class="fa fa-times">&#160;</i>&#160;Del
-								</button>
-								<button type="submit" name="{$relatedContent}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-primary pull-right">
+								<button type="submit" name="{$relatedContent}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-primary">
 									<i class="fa fa-edit">&#160;</i>&#160;Edit
+								</button>&#160;
+								<button type="submit" name="{concat('FilterRemove_',$filterType)}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-danger">
+									<i class="fa fa-times">&#160;</i>&#160;Del
 								</button>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:variable name="relatedContent" select="concat('FilterAdd_',$filterType)" />
 								<xsl:variable name="FilterType" select="concat($relatedContent,'_1Way_~inactive')" />
-								<button type="submit" name="{$FilterType}" filtertype="{$buttonName}" class="btn btn-sm btn-primary pull-right">
+								<button type="submit" name="{$FilterType}" filtertype="{$buttonName}" class="btn btn-sm btn-primary">
 									<i class="fa fa-plus">&#160;</i>&#160;
 									Add
 								</button>
@@ -4117,7 +4117,7 @@
 						</xsl:choose>
 
 					</div>
-
+					</div>
 				</div>
 			</xsl:for-each>
 		</div>

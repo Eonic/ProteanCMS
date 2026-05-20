@@ -2750,7 +2750,7 @@ namespace Protean
                                     var nOther = default(int);
                                     while (oDr.Read())
                                     {
-                                        nOther = Convert.ToInt16(oDr[0]);
+                                        nOther = Convert.ToInt32(oDr[0]);
                                         break;
                                     }
                                     if (nOther > 0)
@@ -12071,17 +12071,17 @@ namespace Protean
                         for (cCount = 0; cCount < oGroupArr.Length; cCount++)
                         {
 
-                            int nCatProductRelKey;
-                            int savedId;
+                            long nCatProductRelKey;
+                            long savedId;
 
                             string cSQl = $"Select nCatProductRelKey from tblCartCatProductRelations where nContentId = {nProductId} and nCatId = {oGroupArr[cCount]}";
-                            nCatProductRelKey = Convert.ToInt16(ExeProcessSqlScalar(cSQl));
+                            nCatProductRelKey = Convert.ToInt64(ExeProcessSqlScalar(cSQl));
 
                             // if there's no existing relation, make a new one
                             if (nCatProductRelKey == 0)
                             {
                                 cSQl = $"INSERT INTO tblCartCatProductRelations (nContentId, nCatId, nAuditId) VALUES ({nProductId},{oGroupArr[cCount]},{getAuditId(cDescription: "ContentRelation")})";
-                                savedId = Convert.ToInt16(GetIdInsertSql(cSQl));
+                                savedId = Convert.ToInt64(GetIdInsertSql(cSQl));
                             }
                             else
                             {

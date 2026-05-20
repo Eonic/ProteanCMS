@@ -1,15 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml">
+	
 	<xsl:template match="Content[@type='Module' and @contentType='ContentFilter']" mode="displayBrief">
 		<xsl:choose>
 			<xsl:when test="Content[@type='xform']">
 				<xsl:apply-templates select="Content[@type='xform']" mode="xform"/>
 			</xsl:when>
 		</xsl:choose>
-
 	</xsl:template>
 
 	<xsl:template match="Content[@type='Module' and @contentType='ContentFilter']" mode="contentJS">
+		<xsl:call-template name="bundle-js">
+			<xsl:with-param name="comma-separated-files">
+					<xsl:text>~/ptn/modules/contentfilter/content-filter.js</xsl:text>
+			</xsl:with-param>
+			<xsl:with-param name="bundle-path">
+				<xsl:text>~/Bundles/filter</xsl:text>
+			</xsl:with-param>
+			<xsl:with-param name="async" select="true()"/>
+		</xsl:call-template>
 
 
 	</xsl:template>
@@ -17,7 +26,7 @@
 	
 	<!-- ## Layout Types are specified in the LayoutsManifest.XML file  ################################   -->
 	<xsl:template match="Content[@name='ContentFilter']" mode="xform">
-		<button class="btn btn-custom d-sm-none filter-xs-btn">
+		<button class="btn btn-custom filter-xs-btn">
 			<i class="fas fa-sliders-h">
 				<xsl:text> </xsl:text>
 			</i> Filter <xsl:value-of select="parent::Content/@filterTarget"/>
@@ -95,6 +104,7 @@
 		</form>
 
 	</xsl:template>
+	
 	<xsl:template match="submit[contains(@class,'clear-filters')]" mode="xform">
 		<xsl:variable name="class">
 			<xsl:text>btn</xsl:text>
@@ -650,7 +660,6 @@
 			<xsl:if test="not(contains(@class,'btn-'))">
 				<xsl:text> btn-custom</xsl:text>
 			</xsl:if>
-			d-sm-none
 			showfiltertarget
 		</xsl:variable>
 		<xsl:variable name="name">

@@ -28,7 +28,11 @@
 		</instance>
 		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
 		<bind id="cContentName" nodeset="tblContent/cContentName" required="true()" type="string"/>
-	  <bind id="cModuleLinkPage" nodeset="tblContent/cContentXmlBrief/Content/@parentPageId" required="true()" type="string"/>
+	  
+		<bind id="cModuleLinkPage" nodeset="tblContent/cContentXmlBrief/Content/@parentPageId" required="true()" type="string"/>
+		<bind nodeset="tblContent/cContentXmlBrief/Content">			
+		<bind id="showAllDescendants" nodeset="@showAllDescendants" required="false()" type="string"/>
+		</bind>
 		<bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
 		<bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
 		<bind id="nStatus" nodeset="tblContent/nStatus" required="true()" type="string"/>
@@ -76,6 +80,17 @@
 				  <item>
 					  <label>Pages with products under current page</label>
 					  <value>1</value>
+				  </item>
+			  </select1>
+			  <select1 bind="showAllDescendants" appearance="full" class="required vshort">
+				  <label>Show All Descendants</label>
+				  <item>
+					  <label>Yes</label>
+					  <value>on</value>
+				  </item>
+				  <item>
+					  <label>No</label>
+					  <value>off</value>
 				  </item>
 			  </select1>
 		  </group>
