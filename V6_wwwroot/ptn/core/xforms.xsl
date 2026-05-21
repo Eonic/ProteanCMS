@@ -1523,7 +1523,9 @@
 			  <xsl:variable name="selectedValue" select="$page/descendant-or-self::*[(self::select or self::select1) and @bind=$forId]/value" />
 			  <xsl:variable name="thisCaseValue" select="$page/descendant-or-self::*[(self::select or self::select1) and @bind=$forId]/item[toggle/@case=$caseId]/value" />
 			  <xsl:if test="normalize-space($thisCaseValue)!=normalize-space($selectedValue)">
-				  <xsl:text>~inactive</xsl:text>				  
+				  <xsl:text>~inactive-</xsl:text>
+
+				 [<xsl:value-of select="$thisCaseValue"/>-<xsl:value-of select="$selectedValue"/>]
 			  </xsl:if>
 			  <!--<xsl:value-of select="$selectedValue"/> -  <xsl:value-of select="$thisCaseValue"/>-->
 		  </xsl:when>
@@ -1533,7 +1535,7 @@
 			  <xsl:variable name="thisCaseValue" select="//toggle[@case=$caseId]/parent::item/value/node()" />
 			  <xsl:variable name="selectedValue" select="//toggle[@case=$caseId]/ancestor::*[self::select or self::select1]/value" />
 			  <xsl:if test="normalize-space($thisCaseValue)!=normalize-space($selectedValue)">
-				  <xsl:text>~inactive</xsl:text>
+				  <xsl:text>~inactive2</xsl:text>
 			  </xsl:if>
 		  </xsl:otherwise>
 	  </xsl:choose>

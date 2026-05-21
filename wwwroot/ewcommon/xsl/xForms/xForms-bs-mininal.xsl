@@ -690,14 +690,14 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
+<!-- This breaks ITB contact form..
 	<xsl:template match="div" mode="control-outer">
 
 		<xsl:apply-templates select="." mode="xform"/>
 
 	</xsl:template>
 
-
+-->
 	<xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform">
 		<xsl:param name="nolabel"/>
 

@@ -1655,11 +1655,14 @@ namespace Protean
             // string sProcessInfo = "tidyXhtmlFrag";
             string sTidyXhtml = "";
             int crResult = 0;
+            bool bRetryWithEscapedTags = false;
 
             if (!(removeTags == ""))
                 shtml = removeTagFromXml(shtml, removeTags);
-                TidyManaged.Document oTdyManaged;
-                // Using 
+
+            string originalHtml = shtml; // Keep original for retry
+            TidyManaged.Document oTdyManaged;
+
             try
             {
                 // clear some nasties I haven't allready captured.
@@ -1669,6 +1672,7 @@ namespace Protean
                 //temp fix for dirty VMH data
                 shtml = shtml.Replace( ":=", "=");
 
+            RetryWithEscaping:
 
                 oTdyManaged = TidyManaged.Document.FromString(shtml);
                 oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.Yes;
@@ -1690,14 +1694,80 @@ namespace Protean
                 {
                     oTdyManaged.OutputNumericEntities = true;
                 }
-                oTdyManaged.CleanAndRepair();
+
+                // CleanAndRepair returns status: <0 = error, 0 = no warnings/errors, >0 = warnings
+                crResult = oTdyManaged.CleanAndRepair();
+
                 try
                 {
-                    sTidyXhtml = oTdyManaged.Save();
+                    // Only call Save if CleanAndRepair succeeded (result >= 0)
+                    if (crResult >= 0)
+                    {
+                        // Some versions of TidyManaged have issues with the internal state
+                        try
+                        {
+                            sTidyXhtml = oTdyManaged.Save();
+                        }
+                        catch (InvalidOperationException ioEx)
+                        {
+                            // TidyManaged internal state issue - try to extract content using the underlying buffer
+                            // This happens when CleanAndRepair succeeds but Save() still thinks it hasn't been called
+                            try
+                            {
+                                // Try to write to a memory stream instead
+                                using (var memStream = new System.IO.MemoryStream())
+                                {
+                                    oTdyManaged.Save(memStream);
+                                    memStream.Position = 0;
+                                    using (var reader = new System.IO.StreamReader(memStream, System.Text.Encoding.UTF8))
+                                    {
+                                        sTidyXhtml = reader.ReadToEnd();
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                // If we haven't tried escaping unknown tags yet, do that now
+                                if (!bRetryWithEscapedTags)
+                                {
+                                    bRetryWithEscapedTags = true;
+                                    oTdyManaged.Dispose();
+                                    // Escape unknown/non-standard HTML tags that might be causing issues
+                                    shtml = EscapeUnknownHtmlTags(originalHtml);
+                                    goto RetryWithEscaping;
+                                }
+
+                                // If even that fails, return an error comment
+                                sTidyXhtml = "<!-- HTML Tidy Error: Unable to save cleaned document despite successful repair (code: " + crResult + "). Error: " + ioEx.Message.Replace("<", "&lt;").Replace(">", "&gt;") + " -->";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // CleanAndRepair failed - try with escaped tags if we haven't already
+                        if (!bRetryWithEscapedTags)
+                        {
+                            bRetryWithEscapedTags = true;
+                            oTdyManaged.Dispose();
+                            shtml = EscapeUnknownHtmlTags(originalHtml);
+                            goto RetryWithEscaping;
+                        }
+
+                        sTidyXhtml = "<!-- HTML Tidy Error: CleanAndRepair failed with code " + crResult + " -->";
+                    }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    sTidyXhtml = "<div>html import conversion error result=" + " <br/></div>";
+                    // Try with escaped tags if we haven't already
+                    if (!bRetryWithEscapedTags)
+                    {
+                        bRetryWithEscapedTags = true;
+                        oTdyManaged.Dispose();
+                        shtml = EscapeUnknownHtmlTags(originalHtml);
+                        goto RetryWithEscaping;
+                    }
+
+                    sTidyXhtml = "<!-- HTML Tidy Error: " + ex.Message.Replace("<", "&lt;").Replace(">", "&gt;") + " (Result code: " + crResult + ") -->";
                 }
 
                 oTdyManaged.Dispose();
@@ -1716,6 +1786,43 @@ namespace Protean
             {
                 sTidyXhtml = null;
             }
+        }
+
+        /// <summary>
+        /// Escapes unknown/non-standard HTML tags that might cause TidyManaged to fail
+        /// </summary>
+        private static string EscapeUnknownHtmlTags(string html)
+        {
+            // Define standard HTML tags that should NOT be escaped
+            var standardTags = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                "a", "abbr", "address", "area", "article", "aside", "audio", "b", "base", "bdi", "bdo", "blockquote",
+                "body", "br", "button", "canvas", "caption", "cite", "code", "col", "colgroup", "data", "datalist",
+                "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption",
+                "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hr", "html", "i",
+                "iframe", "img", "input", "ins", "kbd", "label", "legend", "li", "link", "main", "map", "mark", "meta",
+                "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "picture",
+                "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small",
+                "source", "span", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "template",
+                "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "video", "wbr"
+            };
+
+            // Regex to find all tags (opening and closing)
+            return Regex.Replace(html, @"<(/?)([a-zA-Z][a-zA-Z0-9]*)((?:\s+[^>]*)?)>", match =>
+            {
+                string slash = match.Groups[1].Value;
+                string tagName = match.Groups[2].Value;
+                string attributes = match.Groups[3].Value;
+
+                // If it's a standard HTML tag, leave it alone
+                if (standardTags.Contains(tagName))
+                {
+                    return match.Value;
+                }
+
+                // Escape non-standard tags
+                return "&lt;" + slash + tagName + attributes + "&gt;";
+            });
         }
 
         #region Deprecated
