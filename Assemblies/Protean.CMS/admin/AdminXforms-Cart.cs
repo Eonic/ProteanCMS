@@ -865,20 +865,20 @@ namespace Protean
                                     base.addOption(ref oSelElmt, "Refunded", 7.ToString(), false, "Refunded");
                                     base.addOption(ref oSelElmt, shippedStatus, 9.ToString(), false, "Shipped");
                                     base.addOption(ref oSelElmt, "Shipped (No email)", 9.ToString() + ".1", false, "No email");
-                                    base.addOption(ref oSelElmt, "Delete", 12.ToString());
+                                    base.addOption(ref oSelElmt, "Delete", 12.ToString(), false, "Delete");
                                     break;
                                 }
                             case 7: // Refunded
                                 {
                                     base.addOption(ref oSelElmt, "New Sale" + completedMsg, 6.ToString());
-                                    base.addOption(ref oSelElmt, "Refunded", 7.ToString());
-                                    base.addOption(ref oSelElmt, "Delete", 12.ToString());
+                                    base.addOption(ref oSelElmt, "Refunded", 7.ToString(), false, "Refunded");
+                                    base.addOption(ref oSelElmt, "Delete", 12.ToString(), false, "Delete");
                                     break;
                                 }
                             case 8: // Failed
                                 {
-                                    base.addOption(ref oSelElmt, "Abandoned", 11.ToString());
-                                    base.addOption(ref oSelElmt, "Delete", 12.ToString());
+                                    base.addOption(ref oSelElmt, "Abandoned", 11.ToString(), false, "Abandoned");
+                                    base.addOption(ref oSelElmt, "Delete", 12.ToString(), false, "Delete");
                                     break;
                                 }
                             case 9: // Shipped
