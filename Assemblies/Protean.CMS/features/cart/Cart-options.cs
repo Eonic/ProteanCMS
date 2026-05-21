@@ -879,11 +879,24 @@ namespace Protean
                     }
 
                     DataSet oDS;
-                    if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
-                    {
-                        // ' call stored procedure else existing code.
-                        // ' Passing parameter: nCartId
 
+                    // If ProductId is provided and the product-specific SP exists, use it
+                    if (ProductId > 0 && myWeb.moDbHelper.checkDBObjectExists("spGetProductShippingOptions", Tools.Database.objectTypes.StoredProcedure))
+                    {
+                        // Call product-specific stored procedure
+                        var param = new Hashtable();
+                        param.Add("ProductId", ProductId);
+                        param.Add("Currency", mcCurrency);
+                        param.Add("userId", userId);
+                        param.Add("AuthUsers", (object)Cms.gnAuthUsers);
+                        param.Add("NonAuthUsers", (object)Cms.gnNonAuthUsers);
+                        param.Add("CountryList", sCountryList);
+                        param.Add("dValidDate", PublishExpireDate);
+                        oDS = moDBHelper.GetDataSet("spGetProductShippingOptions", "Option", "Shipping", false, param, CommandType.StoredProcedure);
+                    }
+                    else if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
+                    {
+                        // Call cart-based stored procedure (existing functionality)
                         var param = new Hashtable();
                         param.Add("CartOrderId", mnCartId);
                         param.Add("Amount", nAmount);
