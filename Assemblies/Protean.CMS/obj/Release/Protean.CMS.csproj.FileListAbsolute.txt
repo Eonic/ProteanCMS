@@ -122,7 +122,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Protean.Tools.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\QRCoder.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Buffers.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Data.SqlClient.dll
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Drawing.Common.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.IO.Pipelines.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Memory.dll
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Net.FtpClient.dll
@@ -159,8 +158,6 @@ D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Microsoft.Bcl.Asy
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\Newtonsoft.Json.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Buffers.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Data.SqlClient.xml
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Drawing.Common.pdb
-D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Drawing.Common.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.IO.Pipelines.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Memory.xml
 D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\System.Net.FtpClient.xml
@@ -348,3 +345,9 @@ D:\Santosh_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj
 D:\Santosh_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\Protean..4E1E49F9.Up2Date
 D:\Santosh_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\ProteanCMS.dll
 D:\Santosh_workspace\Clients\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\obj\Release\ProteanCMS.pdb
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\libSkiaSharp.dylib
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\x86\libSkiaSharp.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\x64\libSkiaSharp.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\arm64\libSkiaSharp.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\SkiaSharp.dll
+D:\HostingSpaces\ProteanCMS\Assemblies\Protean.CMS\bin\Release\SkiaSharp.pdb
