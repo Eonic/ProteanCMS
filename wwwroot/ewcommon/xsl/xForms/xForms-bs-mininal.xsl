@@ -690,14 +690,14 @@
 			</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
+<!-- This breaks ITB contact form..
 	<xsl:template match="div" mode="control-outer">
 
 		<xsl:apply-templates select="." mode="xform"/>
 
 	</xsl:template>
 
-
+-->
 	<xsl:template match="input | secret | select | select1 | range | textarea | upload" mode="xform">
 		<xsl:param name="nolabel"/>
 
@@ -1281,12 +1281,28 @@
 			<xsl:value-of select="@bind"/>
 		</xsl:if>
 
-		<!-- IF CHILD OF A HIDDEN CASE add ~inactive to the ref/bind/name -->
-		<xsl:variable name="caseId" select="ancestor::case[last()]/@id" />
-		<xsl:variable name="thisCaseValue" select="//toggle[@case=$caseId]/preceding-sibling::value/node()" />
-		<xsl:variable name="selectedValue" select="//toggle[@case=$caseId]/ancestor::select1/value" />
-		<xsl:if test="$thisCaseValue!=$selectedValue">
-			<xsl:text>~inactive</xsl:text>
+		<xsl:if test="ancestor::switch">
+			<xsl:choose>
+				<xsl:when test="ancestor::switch[@for!='']">
+					<xsl:variable name="forId" select="ancestor::switch/@for"/>
+					<xsl:variable name="caseId" select="ancestor::case[last()]/@id" />
+					<xsl:variable name="selectedValue" select="$page/descendant-or-self::*[(self::select or self::select1) and @bind=$forId]/value" />
+					<xsl:variable name="selectedCaseId" select="$page/descendant-or-self::*[(self::select or self::select1) and @bind=$forId]/item[value=$selectedValue]/toggle/@case" />
+					<xsl:if test="normalize-space($caseId)!=normalize-space($selectedCaseId)">
+						<xsl:text>~inactive</xsl:text>
+					</xsl:if>
+					<!--<xsl:value-of select="$selectedValue"/> -  <xsl:value-of select="$thisCaseValue"/>-->
+				</xsl:when>
+				<xsl:otherwise>
+					<!-- IF CHILD OF A HIDDEN CASE add ~inactive to the ref/bind/name -->
+					<xsl:variable name="caseId" select="ancestor::case[last()]/@id" />
+					<xsl:variable name="thisCaseValue" select="//toggle[@case=$caseId]/parent::item/value/node()" />
+					<xsl:variable name="selectedValue" select="//toggle[@case=$caseId]/ancestor::*[self::select or self::select1]/value" />
+					<xsl:if test="normalize-space($thisCaseValue)!=normalize-space($selectedValue)">
+						<xsl:text>~inactive</xsl:text>
+					</xsl:if>
+				</xsl:otherwise>
+			</xsl:choose>
 		</xsl:if>
 	</xsl:template>
 

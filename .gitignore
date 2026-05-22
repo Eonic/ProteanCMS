@@ -45,3 +45,4 @@ Assemblies/Protean.Tools.UnitTests/obj/**
 /.vs/ProjectEvaluation/proteancms-v6.strings.v10.bin
 /.vs/ProteanCMS-V6/DesignTimeBuild/.dtbcache.v2
 /.vs/ProteanCMS-V6/v18/fileList.bin
+/Assemblies/Protean.CMS/obj/Debug/Protean.CMS.csproj.FileListAbsolute.txt
