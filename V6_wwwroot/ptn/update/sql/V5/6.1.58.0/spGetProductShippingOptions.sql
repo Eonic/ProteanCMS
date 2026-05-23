@@ -7,7 +7,8 @@ CREATE PROCEDURE [dbo].[spGetProductShippingOptions]
 @NonAuthUsers BIGINT = 0,
 @CountryList NVARCHAR(1000) = '',
 @dValidDate Date = NULL,
-@GroupType NVARCHAR(100) = 'Shipping'
+@GroupType NVARCHAR(100) = 'Shipping',
+@ProductPrice FLOAT = 0
 
 AS
 BEGIN
@@ -73,6 +74,16 @@ BEGIN
     IF @CountryList <> ''
     BEGIN
         SET @strCountryConditionQuery = 'AND ((loc.cLocationNameShort IN ' + @CountryList + ') OR (loc.cLocationNameFull IN ' + @CountryList + ')) '
+    END
+
+    -- Price condition - filter by product price if provided
+    DECLARE @strPriceConditionQuery NVARCHAR(MAX) = ''
+    IF @ProductPrice > 0
+    BEGIN
+        SET @strPriceConditionQuery = 'AND (
+            (opt.nShipOptPriceMin IS NULL OR opt.nShipOptPriceMin = 0 OR opt.nShipOptPriceMin <= ' + CONVERT(NVARCHAR(50), @ProductPrice) + ')
+            AND (opt.nShipOptPriceMax IS NULL OR opt.nShipOptPriceMax = 0 OR opt.nShipOptPriceMax >= ' + CONVERT(NVARCHAR(50), @ProductPrice) + ')
+        ) '
     END
 
     -- Date and status conditions
@@ -146,7 +157,7 @@ BEGIN
     END
 
     -- Build final query
-    SET @strMainQuery = CONCAT(@strFirstQuery, @strSecondQuery, @strCountryConditionQuery, @strEndConditionQuery)
+    SET @strMainQuery = CONCAT(@strFirstQuery, @strSecondQuery, @strCountryConditionQuery, @strPriceConditionQuery, @strEndConditionQuery)
 
     SET @strMainQuery = 'WITH ShippingOptions AS (
         ' + @strMainQuery + '

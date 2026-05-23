@@ -892,6 +892,7 @@ namespace Protean
                         param.Add("NonAuthUsers", (object)Cms.gnNonAuthUsers);
                         param.Add("CountryList", sCountryList);
                         param.Add("dValidDate", PublishExpireDate);
+                        param.Add("ProductPrice", nAmount);
                         oDS = moDBHelper.GetDataSet("spGetProductShippingOptions", "Option", "Shipping", false, param, CommandType.StoredProcedure);
                     }
                     else if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
