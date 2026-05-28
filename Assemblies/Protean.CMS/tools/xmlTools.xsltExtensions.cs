@@ -2709,26 +2709,6 @@ namespace Protean
                                 }
                                 break;
                             }
-                        case "GetSkuList":
-                            {
-                                // ✅ your SKU query
-                                string sSql = @"SELECT cr.nContentChildId AS value, child.cContentName AS name
-    FROM tblContentRelation cr
-    INNER JOIN tblContent c ON c.nContentKey = cr.nContentParentid
-    INNER JOIN tblContent child ON child.nContentKey = cr.nContentChildId
-    INNER JOIN tblAudit childAudit ON child.nAuditId = childAudit.nAuditKey
-    INNER JOIN tblAudit a ON c.nAuditId = a.nAuditKey
-    WHERE c.cContentForiegnRef = 'PROD-6647'
-    AND a.nStatus = 1 
-    AND childAudit.nStatus = 1";
-
-                                using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
-                                {
-                                    oXfrms.addOptionsFromSqlDataReader(SelectElmt, oDr);
-                                }
-
-                                break;
-                            }
 
                         default:
                             {
