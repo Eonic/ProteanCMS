@@ -825,7 +825,10 @@
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:if>
-              </xsl:otherwise>
+				  <xsl:if test="ancestor::group[contains(@class,'form-floating')]">
+					  <xsl:text>form-floating </xsl:text>
+				  </xsl:if>
+			  </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="not(contains(@class,'row'))">
               <xsl:value-of select="./@class"/>
@@ -919,14 +922,13 @@
         </xsl:apply-templates>
       </xsl:otherwise>
     </xsl:choose>
-
     <xsl:if test="not(contains(@class,'pickImage'))">
       <xsl:apply-templates select="self::node()[not(item[toggle]) and not(hint)]" mode="xform_legend"/>
     </xsl:if>
   </xsl:template>
 
 
-  <xsl:template match="input[contains(@class,'form-floating')] | textarea[contains(@class,'form-floating')]" mode="xform">
+  <xsl:template match="input[ancestor::group[contains(@class,'form-floating')]] | textarea[ancestor::group[contains(@class,'form-floating')]]" mode="xform">
     <xsl:param name="nolabel"/>
     <xsl:param name="dependantClass"/>
 
