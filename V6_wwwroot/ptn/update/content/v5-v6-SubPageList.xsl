@@ -92,9 +92,14 @@
 			<xsl:text>false</xsl:text>
 		</xsl:attribute>
 		<xsl:attribute name="numberFeatured">
-			<xsl:text>6</xsl:text>
+			<xsl:text></xsl:text>
 		</xsl:attribute>
-      <xsl:apply-templates mode="writeNodes"/>
+		<xsl:attribute name="showDesc">
+			<xsl:text>false</xsl:text>
+		</xsl:attribute>
+		
+
+		<xsl:apply-templates mode="writeNodes"/>
   
     </xsl:element>
   </xsl:template>
