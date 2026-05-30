@@ -1247,25 +1247,30 @@ namespace Protean
             {
                 try
                 {
-                    DataSet ods;
+                 
                     string sSql;
-                    string cShippingDesc;
-                    string nShippingCost;
+                    string cShippingDesc = "";
+                    string nShippingCost = "0";
                     string cSqlUpdate;
-                    sSql = "select * from tblCartShippingMethods ";
-                    sSql = sSql + " where nShipOptKey = " + nShipOptKey;
-                    using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                    if (nShipOptKey == 0)
                     {
-
-                        while (oDr.Read())
-                        {
-                            cShippingDesc = oDr["cShipOptName"] + "-" + oDr["cShipOptCarrier"];
-                            nShippingCost = oDr["nShipOptCost"].ToString();
-                            cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" + (cShippingDesc) + "', nShippingCost=" + (nShippingCost) + ", nShippingMethodId = " + nShipOptKey + " WHERE nCartOrderKey=" + mnCartOrderId;
-                            myWeb.moDbHelper.ExeProcessSql(cSqlUpdate);
+                        cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" + (cShippingDesc) + "', nShippingCost=" + (nShippingCost) + ", nShippingMethodId = " + nShipOptKey + " WHERE nCartOrderKey=" + mnCartOrderId;
+                        myWeb.moDbHelper.ExeProcessSql(cSqlUpdate);
+                    }
+                    else {
+                        sSql = "select * from tblCartShippingMethods ";
+                        sSql = sSql + " where nShipOptKey = " + nShipOptKey;
+                        using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                        {                    
+                            while (oDr.Read())
+                            {
+                                cShippingDesc = oDr["cShipOptName"] + "-" + oDr["cShipOptCarrier"];
+                                nShippingCost = oDr["nShipOptCost"].ToString();
+                                cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" + (cShippingDesc) + "', nShippingCost=" + (nShippingCost) + ", nShippingMethodId = " + nShipOptKey + " WHERE nCartOrderKey=" + mnCartOrderId;
+                                myWeb.moDbHelper.ExeProcessSql(cSqlUpdate);
+                            }
                         }
                     }
-
                 }
                 catch (Exception ex)
                 {
