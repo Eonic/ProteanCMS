@@ -1,7 +1,7 @@
 ﻿// (c) Eonic Digital LLP. 2002-2020
 // Authority: Trevor Spink
 
-// ensure jquery is global
+// ensure jquery is global needed if bundled scripts are defered.
 window.$ = window.jQuery;
 
 
