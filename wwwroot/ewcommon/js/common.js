@@ -1,6 +1,10 @@
 ﻿// (c) Eonic Digital LLP. 2002-2020
 // Authority: Trevor Spink
 
+// ensure jquery is global
+window.$ = window.jQuery;
+
+
 var obj = null;
 var oQueryParams = {};
 
