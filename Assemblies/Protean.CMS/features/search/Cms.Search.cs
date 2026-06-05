@@ -189,7 +189,7 @@ namespace Protean
                 }
             }
 
-            public Search(ref Protean.rest myAPi)
+            public Search(ref Protean.rest myAPI)
             {
                 // myAPi.PerfMon.Log("Search", "New")
                 try
@@ -197,7 +197,7 @@ namespace Protean
 
                     // Set the global variables
 
-                    moConfig = myAPi.moConfig;
+                    moConfig = myAPI.moConfig;
 
                     // Read settings in from the config
 
@@ -216,7 +216,7 @@ namespace Protean
                         if (!string.IsNullOrEmpty(moConfig["SiteSearchPath"] + ""))
                             _indexPath = moConfig["SiteSearchPath"];
                         _indexPath = _indexPath.TrimEnd(@"/\".ToCharArray()) + "/";
-                        _indexReadFolder = myAPi.goServer.MapPath("/") + _indexPath;
+                        _indexReadFolder = myAPI.goServer.MapPath("/") + _indexPath;
 
                         // Search read path
                         if (string.IsNullOrEmpty(moConfig["SiteSearchReadPath"]))
@@ -225,7 +225,7 @@ namespace Protean
                         }
                         else
                         {
-                            _indexReadFolder = myWeb.goServer.MapPath("/") + moConfig["SiteSearchReadPath"];
+                            _indexReadFolder = myAPI.goServer.MapPath("/") + moConfig["SiteSearchReadPath"];
                             _indexReadFolder = _indexReadFolder.TrimEnd(@"/\".ToCharArray()) + "/";
                         }
 
@@ -963,7 +963,7 @@ namespace Protean
                             _includeFuzzySearch = true;
                         if (fuzzySearch != "off")
                         {
-                            if ((myAPI.moConfig["SiteSearchFuzzy"]).ToLower() == "on")
+                            if ((myAPI.moConfig["SiteSearchFuzzy"] ?? "").ToLower() == "on")
                                 _includeFuzzySearch = true;
                         }
 
