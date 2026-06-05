@@ -825,7 +825,10 @@
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:if>
-              </xsl:otherwise>
+				  <xsl:if test="ancestor::group[contains(@class,'form-floating')]">
+					  <xsl:text>form-floating </xsl:text>
+				  </xsl:if>
+			  </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="not(contains(@class,'row'))">
               <xsl:value-of select="./@class"/>
@@ -919,14 +922,13 @@
         </xsl:apply-templates>
       </xsl:otherwise>
     </xsl:choose>
-
     <xsl:if test="not(contains(@class,'pickImage'))">
       <xsl:apply-templates select="self::node()[not(item[toggle]) and not(hint)]" mode="xform_legend"/>
     </xsl:if>
   </xsl:template>
 
 
-  <xsl:template match="input[contains(@class,'form-floating')] | textarea[contains(@class,'form-floating')]" mode="xform">
+  <xsl:template match="input[ancestor::group[contains(@class,'form-floating')]] | textarea[ancestor::group[contains(@class,'form-floating')]]" mode="xform">
     <xsl:param name="nolabel"/>
     <xsl:param name="dependantClass"/>
 
@@ -1521,11 +1523,10 @@
 			  <xsl:variable name="forId" select="ancestor::switch/@for"/>
 			  <xsl:variable name="caseId" select="ancestor::case[last()]/@id" />			  
 			  <xsl:variable name="selectedValue" select="$page/descendant-or-self::*[(self::select or self::select1) and @bind=$forId]/value" />
-			  <xsl:variable name="thisCaseValue" select="$page/descendant-or-self::*[(self::select or self::select1) and @bind=$forId]/item[toggle/@case=$caseId]/value" />
-			  <xsl:if test="normalize-space($thisCaseValue)!=normalize-space($selectedValue)">
-				  <xsl:text>~inactive</xsl:text>				  
+			  <xsl:variable name="selectedCaseId" select="$page/descendant-or-self::*[(self::select or self::select1) and @bind=$forId]/item[value=$selectedValue]/toggle/@case" />
+			  <xsl:if test="normalize-space($caseId)!=normalize-space($selectedCaseId)">
+				  <xsl:text>~inactive</xsl:text>
 			  </xsl:if>
-			  <!--<xsl:value-of select="$selectedValue"/> -  <xsl:value-of select="$thisCaseValue"/>-->
 		  </xsl:when>
 		  <xsl:otherwise>
 			  <!-- IF CHILD OF A HIDDEN CASE add ~inactive to the ref/bind/name -->

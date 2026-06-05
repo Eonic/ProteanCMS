@@ -879,11 +879,25 @@ namespace Protean
                     }
 
                     DataSet oDS;
-                    if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
-                    {
-                        // ' call stored procedure else existing code.
-                        // ' Passing parameter: nCartId
 
+                    // If ProductId is provided and the product-specific SP exists, use it
+                    if (ProductId > 0 && myWeb.moDbHelper.checkDBObjectExists("spGetProductShippingOptions", Tools.Database.objectTypes.StoredProcedure))
+                    {
+                        // Call product-specific stored procedure
+                        var param = new Hashtable();
+                        param.Add("ProductId", ProductId);
+                        param.Add("Currency", mcCurrency);
+                        param.Add("userId", userId);
+                        param.Add("AuthUsers", (object)Cms.gnAuthUsers);
+                        param.Add("NonAuthUsers", (object)Cms.gnNonAuthUsers);
+                        param.Add("CountryList", sCountryList);
+                        param.Add("dValidDate", PublishExpireDate);
+                        param.Add("ProductPrice", nAmount);
+                        oDS = moDBHelper.GetDataSet("spGetProductShippingOptions", "Option", "Shipping", false, param, CommandType.StoredProcedure);
+                    }
+                    else if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
+                    {
+                        // Call cart-based stored procedure (existing functionality)
                         var param = new Hashtable();
                         param.Add("CartOrderId", mnCartId);
                         param.Add("Amount", nAmount);
@@ -1233,25 +1247,30 @@ namespace Protean
             {
                 try
                 {
-                    DataSet ods;
+                 
                     string sSql;
-                    string cShippingDesc;
-                    string nShippingCost;
+                    string cShippingDesc = "";
+                    string nShippingCost = "0";
                     string cSqlUpdate;
-                    sSql = "select * from tblCartShippingMethods ";
-                    sSql = sSql + " where nShipOptKey = " + nShipOptKey;
-                    using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                    if (nShipOptKey == 0)
                     {
-
-                        while (oDr.Read())
-                        {
-                            cShippingDesc = oDr["cShipOptName"] + "-" + oDr["cShipOptCarrier"];
-                            nShippingCost = oDr["nShipOptCost"].ToString();
-                            cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" + (cShippingDesc) + "', nShippingCost=" + (nShippingCost) + ", nShippingMethodId = " + nShipOptKey + " WHERE nCartOrderKey=" + mnCartOrderId;
-                            myWeb.moDbHelper.ExeProcessSql(cSqlUpdate);
+                        cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" + (cShippingDesc) + "', nShippingCost=" + (nShippingCost) + ", nShippingMethodId = " + nShipOptKey + " WHERE nCartOrderKey=" + mnCartOrderId;
+                        myWeb.moDbHelper.ExeProcessSql(cSqlUpdate);
+                    }
+                    else {
+                        sSql = "select * from tblCartShippingMethods ";
+                        sSql = sSql + " where nShipOptKey = " + nShipOptKey;
+                        using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
+                        {                    
+                            while (oDr.Read())
+                            {
+                                cShippingDesc = oDr["cShipOptName"] + "-" + oDr["cShipOptCarrier"];
+                                nShippingCost = oDr["nShipOptCost"].ToString();
+                                cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc='" + (cShippingDesc) + "', nShippingCost=" + (nShippingCost) + ", nShippingMethodId = " + nShipOptKey + " WHERE nCartOrderKey=" + mnCartOrderId;
+                                myWeb.moDbHelper.ExeProcessSql(cSqlUpdate);
+                            }
                         }
                     }
-
                 }
                 catch (Exception ex)
                 {

@@ -175,25 +175,34 @@ namespace Protean.Tools.RecaptchaV2
         /// </remarks>
         public RecaptchaValidationResult Validate(string recaptchaResponse, string recaptchaSecret)
         {
-            RecaptchaValidationResult result = new RecaptchaValidationResult();
-
-            HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=" + recaptchaSecret + "&response="
-              + recaptchaResponse + "&remoteip=" + GetClientIp());
-            //Google recaptcha Response
-            using (WebResponse wResponse = req.GetResponse())
+            try
             {
-                using (StreamReader readStream = new StreamReader(wResponse.GetResponseStream()))
+                RecaptchaValidationResult result = new RecaptchaValidationResult();
+
+                HttpWebRequest req = (HttpWebRequest)WebRequest.Create("https://www.google.com/recaptcha/api/siteverify?secret=" + recaptchaSecret + "&response="
+                  + recaptchaResponse + "&remoteip=" + GetClientIp());
+                //Google recaptcha Response     
+                using (WebResponse wResponse = req.GetResponse())
                 {
-                    string jsonResponse = readStream.ReadToEnd();
+                    using (StreamReader readStream = new StreamReader(wResponse.GetResponseStream()))
+                    {
+                        string jsonResponse = readStream.ReadToEnd();
 
-                    result = Newtonsoft.Json.JsonConvert.DeserializeObject<RecaptchaValidationResult>(jsonResponse.Replace("error-codes", "ErrorMessages").Replace("success", "Succeeded"));
+                        result = Newtonsoft.Json.JsonConvert.DeserializeObject<RecaptchaValidationResult>(jsonResponse.Replace("error-codes", "ErrorMessages").Replace("success", "Succeeded"));
 
+                    }
                 }
+
+                return result;
             }
-
-            return result;
+            catch (Exception e)
+            {
+                RecaptchaValidationResult result = new RecaptchaValidationResult();
+                result.Succeeded = false;
+                result.ErrorMessages.Add("Error validating recaptcha: " + e.Message);
+                return result;
+            }
         }
-
         private string GetClientIp()
         {
             // Look for a proxy address first

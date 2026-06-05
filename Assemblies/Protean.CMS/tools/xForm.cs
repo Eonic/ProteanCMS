@@ -816,13 +816,13 @@ namespace Protean
                 var nsMgr = Tools.Xml.getNsMgrRecursive(ref argoNode, ref moPageXML);
 
                 // HANDLING FOR GOOGLE ReCAPTCHA
-                if (moXformElmt.SelectSingleNode("descendant-or-self::*[contains(@class,'recaptcha') and not(ancestor::instance)]") != null)
-                {
-                    cValidationError = "<span class=\"msg-1032\">Please confirm you are not a robot</span>";
-                    cValidationErrorList.Add(new ValidationError("recaptcha", "ReCAPTCHA", "Please confirm you are not a robot"));
-                    bIsValid = false;
-                    missedError = true;
-                }
+               // if (moXformElmt.SelectSingleNode("descendant-or-self::*[contains(@class,'recaptcha') and not(ancestor::instance)]") != null)
+               // {
+                //    cValidationError = "<span class=\"msg-1032\">Please confirm you are not a robot</span>";
+               //     cValidationErrorList.Add(new ValidationError("recaptcha", "ReCAPTCHA", "Please confirm you are not a robot"));
+              //      bIsValid = false;
+              //      missedError = true;
+              //  }
                 if (isSubmitted() == true)
                 {
                     if (!string.IsNullOrEmpty(goRequest["g-recaptcha-response"]))
@@ -837,6 +837,7 @@ namespace Protean
 
                             if (isHuman || Convert.ToBoolean(goSession["recaptcha"] ?? 0))
                             {
+                                cValidationErrorList.RemoveAll(x => x.BindId == "recaptcha");
                                 cValidationError = "";
                                 bIsValid = true;
                                 goSession["recaptcha"] = 1;
@@ -846,16 +847,20 @@ namespace Protean
                             {
                                 cValidationError = "Please complete the CAPTCHA challenge.";
                                 bIsValid = false;
-                                cValidationErrorList.Add(new ValidationError("g-recaptcha-response", "ReCAPTCHA_v3", "Please complete the CAPTCHA challenge."));
+                                missedError = true;
+                                cValidationErrorList.RemoveAll(x => x.BindId == "recaptcha");
+                                cValidationErrorList.Add(new ValidationError("g-recaptcha-response", "ReCAPTCHA_v3", cValidationError));
                             }
                         }
                         else
-                        {                           
+                        {
                             var recap = new Tools.RecaptchaV2.Recaptcha(moConfig["ReCaptchaKey"], moConfig["ReCaptchaKeySecret"]);
                             var recapResult = recap.Validate(goRequest["g-recaptcha-response"], moConfig["ReCaptchaKeySecret"]);
 
                             if (recapResult.Succeeded || Convert.ToBoolean(goSession["recaptcha"] ?? 0))
                             {
+                                //clear errors
+                                cValidationErrorList.RemoveAll(x => x.BindId == "recaptcha");
                                 cValidationError = "";
                                 bIsValid = true;
                                 goSession["recaptcha"] = 1;
@@ -864,12 +869,33 @@ namespace Protean
                             else
                             {
                                 cValidationError = "Please complete the CAPTCHA challenge.";
+                                if (recapResult != null && gbDebug) {
+                                    cValidationError = recapResult.GetErrorMessagesString();
+                                }
                                 bIsValid = false;
-                                cValidationErrorList.Add(new ValidationError("g-recaptcha-response", "ReCAPTCHA_v2", "Please complete the CAPTCHA challenge."));
+                                missedError = true;
+                                cValidationErrorList.RemoveAll(x => x.BindId == "recaptcha");
+                                cValidationErrorList.Add(new ValidationError("g-recaptcha-response", "ReCAPTCHA_v2", cValidationError));
                             }
                         }
                     }
-
+                    else {
+                        if (moXformElmt.SelectSingleNode("descendant-or-self::*[contains(@class,'recaptcha') and not(ancestor::instance)]") != null)
+                        {
+                            // we have recapcha in the form but no response but no g-recaptcha-response
+                            if (gbDebug)
+                            {
+                                cValidationError = "<span>Recaptcha Response Missing</span>";
+                            }
+                            else {
+                                cValidationError = "<span class=\"msg-1032\">Please confirm you are not a robot</span>";
+                            }                           
+                            cValidationErrorList.Add(new ValidationError("recaptcha", "ReCAPTCHA", "Recaptcha Response Missing"));
+                            bIsValid = false;
+                            missedError = true;
+                        }
+                    }
+                    
                 }
 
                 // END HANDLING FOR GOOGLE ReCAPTCHA

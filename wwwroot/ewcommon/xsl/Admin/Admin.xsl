@@ -11333,6 +11333,11 @@
 								</xsl:choose>
 
 								<xsl:choose>
+									<xsl:when test="tblCartPaymentMethod/cPayMthdDescription='Awaiting Activation' and @providerName='GoCardless'">
+										<div class="alert alert-success">
+											We are awaiting for this to be authorised by GoCardless before we can collect.
+										</div>
+									</xsl:when>
 									<xsl:when test="tblCartPaymentMethod/nStatus!='0' or @cancelDate!=''">
 										<xsl:choose>
 											<xsl:when test="@paymentStatus='cancelled' and @providerName='GoCardless' ">
@@ -11340,6 +11345,7 @@
 													The customer has canceled their GoCardless Direct Debit payment directly with their bank.
 												</div>
 											</xsl:when>
+
 											<xsl:when test="tblCartPaymentMethod/nStatus='1' or @paymentStatus='Manual' ">
 												<div class="alert alert-success">
 													<xsl:choose>

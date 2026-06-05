@@ -432,13 +432,7 @@
         <!-- common css -->
         <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
 
-
-
-        <xsl:apply-templates select="." mode="headerOnlyJS"/>
-
         <xsl:if test="$GoogleTagManagerID!=''">
-
-
           <!-- Google Tag Manager -->
           <script cookie-consent="tracking">
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -448,8 +442,10 @@
             })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
           </script>
           <!-- End Google Tag Manager -->
-
         </xsl:if>
+
+		<xsl:apply-templates select="." mode="headerOnlyJS"/>
+		  
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>

@@ -1348,6 +1348,65 @@ namespace Protean
                         }
                         XmlElement argoContentElmt1 = oRoot;  // oRoot IS the ContentDetail element
                         AddGroupsToContent(ref argoContentElmt1);
+
+                        // Add single item shipping costs for JSON-LD - MOVED BEFORE CLONE
+                        string ProductTypes = moConfig["ProductTypes"];
+                        if (string.IsNullOrEmpty(ProductTypes))
+                            ProductTypes = defaultProductTypes;
+                        if (ProductTypes.Contains(contentElmt.GetAttribute("type")) & moCart != null)
+                        {
+                            try
+                            {
+                                var oShippingElmt = moPageXml.CreateElement("ShippingCosts");
+                                string cDestinationCountry = moCart.moCartConfig["DefaultDeliveryCountry"];
+                                double nPrice = 0d;
+                                if (contentElmt.SelectSingleNode("Prices/Price[@type='sale']") != null)
+                                {
+                                    nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText);
+                                }
+
+                                if (nPrice == 0d)
+                                {
+                                    if (contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") != null)
+                                    {
+                                        nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText);
+                                    }
+                                }
+                                double nWeight = 0d;
+                                if (contentElmt.SelectSingleNode("ShippingWeight") != null)
+                                {
+                                    nWeight = Convert.ToDouble("0" + contentElmt.SelectSingleNode("ShippingWeight").InnerText);
+                                }
+                                var dsShippingOption = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1L, nWeight, mnArtId);
+                                if (dsShippingOption != null)
+                                {
+                                    oShippingElmt.InnerXml = dsShippingOption.GetXml().Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
+
+                                    // Process cShipOptTandC nodes to convert text to InnerXml
+                                    foreach (XmlNode oTandCNode in oShippingElmt.SelectNodes("//cShipOptTandC"))
+                                    {
+                                        if (oTandCNode is XmlElement oTandCElmt && !string.IsNullOrEmpty(oTandCElmt.InnerText))
+                                        {
+                                            string sHtmlContent = oTandCElmt.InnerText;
+                                            try
+                                            {
+                                                // Try to convert the InnerText to InnerXml
+                                                oTandCElmt.InnerXml = sHtmlContent;
+                                            }
+                                            catch (Exception)
+                                            {
+                                                oTandCElmt.InnerXml = stdTools.tidyXhtmlFrag(sHtmlContent, true);
+                                            }
+                                        }
+                                    }
+                                }
+                                contentElmt.AppendChild(oShippingElmt);
+                            }
+                            catch (Exception)
+                            {
+                            }
+                        }
+
                         if (oPageElmt != null)
                         {
                             var oContentDetail = contentElmt;
@@ -1391,46 +1450,6 @@ namespace Protean
                         // MEMORY FIX: Clear previous moContentDetail reference to allow GC
                         moContentDetail = null;
                         moContentDetail = (XmlElement)oRoot.FirstChild;
-
-                        // Add single item shipping costs for JSON-LD
-                        string ProductTypes = moConfig["ProductTypes"];
-                        if (string.IsNullOrEmpty(ProductTypes))
-                            ProductTypes = defaultProductTypes;
-                        if (ProductTypes.Contains(contentElmt.GetAttribute("type")) & moCart != null)
-                        {
-                            try
-                            {
-                                var oShippingElmt = moPageXml.CreateElement("ShippingCosts");
-                                string cDestinationCountry = moCart.moCartConfig["DefaultDeliveryCountry"];
-                                double nPrice = 0d;
-                                if (contentElmt.SelectSingleNode("Prices/Price[@type='sale']") != null)
-                                {
-                                    nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText);
-                                }
-
-                                if (nPrice == 0d)
-                                {
-                                    if (contentElmt.SelectSingleNode("Prices/Price[@type='rrp']") != null)
-                                    {
-                                        nPrice = Convert.ToDouble("0" + contentElmt.SelectSingleNode("Prices/Price[@type='rrp']").InnerText);
-                                    }
-                                }
-                                double nWeight = 0d;
-                                if (contentElmt.SelectSingleNode("ShippingWeight") != null)
-                                {
-                                    nWeight = Convert.ToDouble("0" + contentElmt.SelectSingleNode("ShippingWeight").InnerText);
-                                }
-                                var dsShippingOption = moCart.getValidShippingOptionsDS(cDestinationCountry, nPrice, 1L, nWeight, mnArtId);
-                                if (dsShippingOption != null)
-                                {
-                                    oShippingElmt.InnerXml = dsShippingOption.GetXml().Replace("xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"", "");
-                                }
-                                contentElmt.AppendChild(oShippingElmt);
-                            }
-                            catch (Exception)
-                            {
-                            }
-                        }
 
                         return moContentDetail;
                     }
