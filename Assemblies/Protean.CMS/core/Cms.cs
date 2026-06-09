@@ -3578,8 +3578,19 @@ namespace Protean
                                             var tmp = moRequest;
                                             string argAlternateFormName = tmp["formName"];
                                             string zcReturnSchema = null;
-                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId:  argnReturnId,  zcReturnSchema, AlternateFormName:  argAlternateFormName, nVersionId: Convert.ToInt64("0" + moRequest["verId"]));
-                                            nContentId = argnReturnId;
+                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId: ref  argnReturnId,ref  zcReturnSchema, AlternateFormName: ref  argAlternateFormName, nVersionId: Convert.ToInt64("0" + moRequest["verId"]));
+                                            nContentId=(int)argnReturnId;
+                                            if (argnReturnId==0)
+                                            {
+                                                if (xFrmContent.SelectSingleNode("model/instance/tblContent/nContentKey") != null)
+                                                {
+                                                    if (xFrmContent.SelectSingleNode("model/instance/tblContent/nContentKey").InnerText != string.Empty)
+                                                    {
+                                                        nContentId = Convert.ToInt64(xFrmContent.SelectSingleNode("model/instance/tblContent/nContentKey").InnerText);
+                                                    }
+                                                }
+                                            }
+                                            
                                             if (moAdXfm.valid)
                                             {
                                                 // if we have a parent releationship lets add it
