@@ -1341,7 +1341,7 @@ namespace Protean
                                         nReturnId = (long)id;
                                       
                                     }
-                                    base.Instance.SelectSingleNode("tblContent/nContentKey").InnerText = Convert.ToString(nReturnId);
+                                    //base.Instance.SelectSingleNode("tblContent/nContentKey").InnerText = Convert.ToString(nReturnId);
                                 }
 
                                 else
