@@ -1882,7 +1882,11 @@ namespace Protean
                     // Use cached JpegQuality property to avoid repeated config lookups
                     if (myWeb != null)
                     {
-                        nCompression = JpegQuality;
+                        // Global setting only overides if it is higher than specified.
+                        if (nCompression < JpegQuality)
+                        {
+                            nCompression = JpegQuality;
+                        }
                     }
 
                     // PerfMon.Log("xmlTools", "ResizeImage - Start")
