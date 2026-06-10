@@ -10318,9 +10318,11 @@
     <xsl:param name="comma-separated-files"/>
     <xsl:param name="bundle-path"/>
     <xsl:param name="async"/>
+	<xsl:param name="defer"/>
     <xsl:call-template name="render-js-files">
       <xsl:with-param name="list" select="ew:BundleJS($comma-separated-files,$bundle-path)"/>
       <xsl:with-param name="async" select="$async"/>
+	  <xsl:with-param name="defer" select="$defer"/>
     </xsl:call-template>
   </xsl:template>
 
@@ -10345,6 +10347,7 @@
       <xsl:call-template name="render-js-files">
         <xsl:with-param name="list" select="$remaining" />
         <xsl:with-param name="async" select="$async"/>
+		<xsl:with-param name="defer" select="$defer"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
