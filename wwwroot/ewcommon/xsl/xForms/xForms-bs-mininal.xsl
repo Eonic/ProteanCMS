@@ -50,10 +50,12 @@
 			<xsl:value-of select="translate($ref,'/','-')"/>
 		</xsl:variable>
 		<xsl:if test="$ref!=''">
-			<script>
+			<script defer="defer">
+				window.addEventListener("load", () =&gt; {
 				$(function () {
 				<xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
 				<xsl:text>-btn').popover('show');</xsl:text>
+				});
 				});
 			</script>
 		</xsl:if>
@@ -4375,12 +4377,16 @@
 		<link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css">
 			<xsl:text> </xsl:text>
 		</link>
-		<script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" >
+		<script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" defer="defer" >
 			<xsl:text> </xsl:text>
 		</script>
 
-		<script type="text/javascript">
-			$(document).ready(function () {
+		<script type="text/javascript" defer="defer">
+
+
+			
+			window.addEventListener("load", () =&gt; {
+			
 			<xsl:for-each select="descendant::input[contains(@class,'telephone')]">
 				<xsl:variable name="ref">
 					<xsl:apply-templates select="." mode="getRefOrBind"/>
