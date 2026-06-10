@@ -51,7 +51,7 @@
 		</xsl:variable>
 		<xsl:if test="$ref!=''">
 			<script defer="defer">
-				window.addEventListener("load", () =&gt; {
+				window.addEventListener("load",function() {
 				$(function () {
 				<xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
 				<xsl:text>-btn').popover('show');</xsl:text>
@@ -4385,7 +4385,7 @@
 
 
 			
-			window.addEventListener("load", () =&gt; {
+			window.addEventListener("load", function() {
 			
 			<xsl:for-each select="descendant::input[contains(@class,'telephone')]">
 				<xsl:variable name="ref">

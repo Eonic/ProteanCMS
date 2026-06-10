@@ -839,7 +839,7 @@
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/common</xsl:text>
       </xsl:with-param>
-      <xsl:with-param name="defer" select="$async"/>
+      <xsl:with-param name="defer" select="true()"/>
     </xsl:call-template>
   </xsl:template>
 
@@ -1433,7 +1433,9 @@
     </xsl:if>
     <xsl:if test="$GoogleAdConversionID!=''">
       <script id="GadCode" cookie-consent="tracking">
-        gtag('config', '<xsl:value-of select="$GoogleAdConversionID"/>')
+		  window.addEventListener("load", function() {
+        gtag('config', '<xsl:value-of select="$GoogleAdConversionID"/>');
+		});
       </script>
     </xsl:if>
 
