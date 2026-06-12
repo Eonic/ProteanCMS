@@ -2272,7 +2272,8 @@
   <!-- TinyMCE configuration -->
   <xsl:template match="textarea" mode="tinymceConfig">
     <script type="text/javascript">
-      $('#<xsl:apply-templates select="." mode="getRefOrBind"/>').tinymce({
+		window.addEventListener("load", function()  {
+		$('#<xsl:apply-templates select="." mode="getRefOrBind"/>').tinymce({
       <xsl:apply-templates select="." mode="tinymceGeneralOptions"/>,
       theme_modern_buttons1: "<xsl:apply-templates select="." mode="tinymceButtons1"/>",
       theme_modern_buttons2: "<xsl:apply-templates select="." mode="tinymceButtons2"/>",
@@ -2280,6 +2281,7 @@
       theme_modern_blockformats : "p,h1,h2,h3,h4,h5,h6,blockquote,div,dt,dd,code,samp",
       valid_elements: <xsl:apply-templates select="." mode="tinymceValidElements"/>
       });
+	  });
     </script>
   </xsl:template>
 
@@ -2314,6 +2316,7 @@
   <!-- TinyMCE configuration -->
   <xsl:template match="textarea" mode="xform_control_script">
     <script type="text/javascript">
+		window.addEventListener("load", function()  {
       $('#<xsl:apply-templates select="." mode="getRefOrBind"/>').tinymce({
       <xsl:apply-templates select="." mode="tinymceGeneralOptions"/>,
       theme_modern_buttons1: "<xsl:apply-templates select="." mode="tinymceButtons1"/>",
@@ -2322,6 +2325,7 @@
       theme_modern_blockformats : "p,h1,h2,h3,h4,h5,h6,blockquote,div,dt,dd,code,samp",
       valid_elements: <xsl:apply-templates select="." mode="tinymceValidElements"/>
       });
+	  });
     </script>
   </xsl:template>
 
@@ -3872,14 +3876,14 @@
 
 
     <!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-    <script src="/ewcommon/js/jQuery/fileUploader/8.2.1/js/jquery.iframe-transport.js"></script>
+    <script src="/ewcommon/js/jQuery/fileUploader/8.2.1/js/jquery.iframe-transport.js" defer="defer"></script>
     <!-- The basic File Upload plugin -->
-    <script src="/ewcommon/js/jQuery/fileUploader/8.2.1/js/jquery.fileupload.js"></script>
+    <script src="/ewcommon/js/jQuery/fileUploader/8.2.1/js/jquery.fileupload.js" defer="defer"></script>
 
     <script>
-
-      $('#fileupload').fileupload({
-      url: '/?ewCmd=<xsl:value-of select="$page/@ewCmd"/>&amp;ewCmd2=FileUpload&amp;storageRoot=<xsl:value-of select="parent::group/input[@bind='fld']/value/node()"/>',
+		window.addEventListener("load", function()  {
+		$('#fileupload').fileupload({
+		url: '/?ewCmd=<xsl:value-of select="$page/@ewCmd"/>&amp;ewCmd2=FileUpload&amp;storageRoot=<xsl:value-of select="parent::group/input[@bind='fld']/value/node()"/>',
       dataType: 'json',
       sequentialUploads: true,
       dropZone:$('#uploadFiles'),
@@ -3896,6 +3900,7 @@
       );
       }
       });
+	  });
     </script>
 
   </xsl:template>

@@ -290,7 +290,10 @@
 			</div>
 			<xsl:apply-templates select="." mode="adminFooter"/>
 			<xsl:apply-templates select="." mode="footerJs"/>
-			<script>keepAlive();</script>
+			<script type="defer">
+				window.addEventListener("load", function()  {
+				keepAlive();
+			}</script>
 			<div class="modal fade" id="AdminAlertModal" role="dialog" style ="padding-top:15%!important">
 				<div class="modal-dialog">
 					<div class="modal-content  alert alert-danger" role="alert">
@@ -5526,31 +5529,31 @@
 
 	<xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='AddModule'  or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
 		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The basic File Upload plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The File Upload processing plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The File Upload image preview & resize plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The Image Lazy load plugin-->
-		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">
+		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 	</xsl:template>
@@ -5616,31 +5619,31 @@
 		</xsl:variable>
 		<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
 			<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The basic File Upload plugin -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The File Upload processing plugin -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The File Upload image preview & resize plugin -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The Image Lazy load plugin -->
-			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">
+			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 		</xsl:if>
@@ -5651,7 +5654,7 @@
 				$(".modal-backdrop").remove();
 			}-->
 			<xsl:text>
-       
+       window.addEventListener("load", function()  {
         var uploadUrl = '/?ewCmd=</xsl:text><xsl:value-of select="$page/@ewCmd"/>\u0026<xsl:text>ewCmd2=FileUpload</xsl:text>\u0026<xsl:text>storageRoot=</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>'
 
         $('#fileupload').fileupload({
@@ -5759,11 +5762,14 @@
 			);
 			}
 			});
+			});
 		</script>
 
 		<script>
+			window.addEventListener("load", function()  {
 			$(function() {
 			$('.lazy').lazy();
+			});
 			});
 		</script>
 

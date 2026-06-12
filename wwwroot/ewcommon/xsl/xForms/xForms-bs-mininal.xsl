@@ -2532,6 +2532,7 @@
 		</xsl:variable>
 
 		<script>
+			window.addEventListener("load", function()  {
 			function toggle_<xsl:value-of select="$targetId"/>(ourRef) {
 
 			//get the selected value for ref
@@ -2563,6 +2564,7 @@
 			}
 			//
 			toggle_<xsl:value-of select="$targetId"/>('<xsl:value-of select="$targetId"/>');
+			});
 
 		</script>
 	</xsl:template>
@@ -2586,6 +2588,7 @@
 		</xsl:variable>
 
 		<script>
+			window.addEventListener("load", function()  {
 			function toggle_<xsl:value-of select="$targetId"/>(ourRef) {
 
 			//get the selected value for ref
@@ -2617,7 +2620,7 @@
 			}
 			//
 			toggle_<xsl:value-of select="$targetId"/>('<xsl:value-of select="$targetId"/>');
-
+});
 		</script>
 	</xsl:template>
 	
