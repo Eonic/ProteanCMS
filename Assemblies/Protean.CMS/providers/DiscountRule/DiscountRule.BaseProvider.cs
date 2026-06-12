@@ -229,7 +229,7 @@ namespace Protean.Providers
                         int itemQty = Convert.ToInt32(eligibleItem.Attributes["quantity"]?.Value ?? "0");
                         double itemCost = itemPrice * itemQty;
 
-                        // 🔥 Double-check price range per item here
+                        // Double-check price range per item here
                         bool withinPriceRange = dMaxPrice > 0
                             ? (itemCost >= dMinPrice && itemCost <= dMaxPrice)
                             : (itemCost >= dMinPrice);
@@ -237,19 +237,28 @@ namespace Protean.Providers
                         if (!withinPriceRange)
                             continue; // skip items not matching this discount’s range
 
-                        XmlElement itemCopy = (XmlElement)oFinalDiscounts.ImportNode(eligibleItem, true);
+                        // BEFORE appending, check if item already exists
+                        string eligibleItemId = eligibleItem.Attributes["id"]?.Value ?? "";
+                        XmlElement existingItem = (XmlElement)oFinalDiscounts.SelectSingleNode($"/Discounts/Item[@id='{eligibleItemId}']");
 
-                        // Remove existing discounts if necessary
-                        foreach (XmlNode existingDiscount in itemCopy.SelectNodes("Discount").Cast<XmlNode>().ToList())
+                        if (existingItem != null)
                         {
-                            itemCopy.RemoveChild(existingDiscount);
+                            // item already exists - just append the discount node to existing item
+                            XmlNode importedDiscount = oFinalDiscounts.ImportNode(discountEl, true);
+                            existingItem.AppendChild(importedDiscount);
                         }
-
-                        // Attach only the correct discount
-                        XmlNode importedDiscount = oFinalDiscounts.ImportNode(discountEl, true);
-                        itemCopy.AppendChild(importedDiscount);
-
-                        oFinalDiscounts.DocumentElement.AppendChild(itemCopy);
+                        else
+                        {
+                            // item doesn't exist - create new as normal
+                            XmlElement itemCopy = (XmlElement)oFinalDiscounts.ImportNode(eligibleItem, true);
+                            foreach (XmlNode existingDiscount in itemCopy.SelectNodes("Discount").Cast<XmlNode>().ToList())
+                            {
+                                itemCopy.RemoveChild(existingDiscount);
+                            }
+                            XmlNode importedDiscount = oFinalDiscounts.ImportNode(discountEl, true);
+                            itemCopy.AppendChild(importedDiscount);
+                            oFinalDiscounts.DocumentElement.AppendChild(itemCopy);
+                        }
                     }
                 }
 
