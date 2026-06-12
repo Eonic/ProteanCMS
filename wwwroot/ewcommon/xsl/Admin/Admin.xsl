@@ -187,7 +187,7 @@
 			<xsl:with-param name="bundle-path">
 				<xsl:text>~/Bundles/Admin</xsl:text>
 			</xsl:with-param>
-			<xsl:with-param name="async" select="true()"/>
+			<xsl:with-param name="defer" select="true()"/>
 		</xsl:call-template>
 		<xsl:apply-templates select="." mode="siteAdminJs"/>
 		<xsl:apply-templates select="." mode="LayoutAdminJs"/>

@@ -225,7 +225,7 @@ namespace Protean
                         }
                         else
                         {
-                            _indexReadFolder = myWeb.goServer.MapPath("/") + moConfig["SiteSearchReadPath"];
+                            _indexReadFolder = myAPi.goServer.MapPath("/") + moConfig["SiteSearchReadPath"];
                             _indexReadFolder = _indexReadFolder.TrimEnd(@"/\".ToCharArray()) + "/";
                         }
 
