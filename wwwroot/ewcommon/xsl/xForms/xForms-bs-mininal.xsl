@@ -3677,7 +3677,7 @@
 		<xsl:choose>
 			<xsl:when test="not(alert) and value!=''">
 				<xsl:text>Uploaded file: </xsl:text>
-				<xsl:value-of select="value"/>
+				<xsl:value-of select="@filename"/>
 			</xsl:when>
 			<xsl:otherwise>
 				<div class="input-group">

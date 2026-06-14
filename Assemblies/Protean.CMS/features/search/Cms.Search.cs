@@ -473,6 +473,7 @@ namespace Protean
                     XmlElement result = null;
                     Field pageIdField = null;
                     long pageId = 0L;
+                    string initialQuery = cQuery;
                     string url = "";
                     XmlElement menuItem = null;
                     string[] reservedFieldNames = new string[] { "type", "text", "abstract" };
@@ -918,7 +919,7 @@ namespace Protean
                         resultsXML.SetAttribute("Time", "0");
                     }
                     resultsXML.SetAttribute("totalResults", totalResults.ToString());
-                    resultsXML.SetAttribute("searchString", cQuery);
+                    resultsXML.SetAttribute("searchString", initialQuery);
                     resultsXML.SetAttribute("searchType", "INDEX");
                     resultsXML.SetAttribute("type", "SearchHeader");
                     resultsXML.SetAttribute("resultsReturned", (resultsCount + 1).ToString());
