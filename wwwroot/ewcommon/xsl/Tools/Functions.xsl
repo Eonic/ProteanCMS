@@ -921,7 +921,7 @@
           </xsl:with-param>
 			<xsl:with-param name="defer" select="true()"/>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">
+        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js" defer="defer">
           <xsl:text> </xsl:text>
         </script>
       </xsl:when>

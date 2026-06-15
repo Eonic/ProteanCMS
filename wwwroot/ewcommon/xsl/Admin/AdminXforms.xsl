@@ -984,6 +984,7 @@
 			<xsl:apply-templates select="." mode="getRefOrBind"/>
 		</xsl:variable>
 		<script type="text/javascript">
+			window.addEventListener("load", function() {
 			var editor = CodeMirror.fromTextArea('<xsl:value-of select="$ref"/>', {
 			height: "<xsl:value-of select="number(@rows) * 25"/>px",
 			parserfile: "parsexml.js",
@@ -994,6 +995,7 @@
 			reindentOnLoad: true,
 			textWrapping: true,
 			matchClosing: true
+			});
 			});
 		</script>
 	</xsl:template>

@@ -4299,21 +4299,23 @@
 		<xsl:choose>
 			<!-- reCAPTCHA v3 -->
 			<xsl:when test="contains($recaptchaVersion, 'v3')">				
-				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}">
+				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}" defer="defer">
 					<xsl:text> </xsl:text>
 				</script>
 				<script>
+					window.addEventListener("load", function() {
 					var hiddenInput = document.getElementById('recaptcha-token');
 					var form = hiddenInput.closest('form');
 					form.addEventListener('submit', function(e) {
-						e.preventDefault();
-						grecaptcha.ready(function() {
-							grecaptcha.execute('<xsl:value-of select="$recaptchaKey"/>', { action: 'submit' })
+					e.preventDefault();
+					grecaptcha.ready(function() {
+					grecaptcha.execute('<xsl:value-of select="$recaptchaKey"/>', { action: 'submit' })
 								.then(function(token) {
 									hiddenInput.value = token;
 									form.submit();
 								});
 						});
+					});
 					});
 				</script>
 			</xsl:when>
