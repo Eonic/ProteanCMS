@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Content type="xform" name="EditContent">
+	<model>
+		<instance>
+			<tblContent>
+				<nContentKey/>
+				<nContentPrimaryId/>
+				<nVersion/>
+				<cContentForiegnRef/>
+				<cContentName/>
+				<cContentSchemaName>FAQ</cContentSchemaName>
+				<cContentXmlBrief>
+					<Content>
+						<DisplayName/>
+						<Strapline/>
+						<Images>
+							<img class="thumbnail"/>
+						</Images>
+						<Body/>
+					</Content>
+				</cContentXmlBrief>
+				<cContentXmlDetail/>
+				<nAuditId/>
+				<nAuditKey/>
+				<dPublishDate/>
+				<dExpireDate/>
+				<dInsertDate/>
+				<nInsertDirId/>
+				<dUpdateDate/>
+				<nUpdateDirId/>
+				<nStatus>4</nStatus>
+				<cDescription/>
+			</tblContent>
+		</instance>
+		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<bind nodeset="tblContent">
+			<bind id="cContentSourceName" nodeset="cContentName" required="true()" type="string"/>
+			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
+			<bind id="dExpireDate" nodeset="dExpireDate" required="false()" type="string"/>
+			<bind id="nStatus" nodeset="nStatus" required="false()" type="string"/>
+			<bind id="cDescription" nodeset="cDescription" required="false()" type="string"/>
+			<bind nodeset="cContentXmlBrief/Content">
+				<bind id="cContentSourceName" nodeset="DisplayName" required="true()" type="string"/>
+				<bind nodeset="DisplayName">
+					<bind id="cName" nodeset="@name" required="true()" type="string"/>
+					<bind id="cEmail" nodeset="@email" required="true()" type="string"/>
+				</bind>
+				<bind id="cContentStrapline" nodeset="Strapline" required="false()" type="string"/>
+				<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
+			</bind>
+		</bind>
+	</model>
+	<group ref="EditContent">
+		<label>Ask a question about the product</label>
+			<group>
+				<group ref="Content" class="Content">
+					<input bind="cName" class="required long">
+						<label>Your Name</label>
+					</input>
+					<input bind="cEmail" class="required long">
+						<label>Your Email</label>
+					</input>
+					<input bind="cContentSourceName" class="required long">
+						<label>Your Question</label>
+					</input>
+					<group>
+					<label>Supporting Information</label>
+					<textarea bind="cContentStrapline" class="TextArea xhtml" rows="6" cols="50">
+					
+					</textarea></group>
+				</group>
+		</group>
+	</group>
+	<group ref="submit" class="contentSubmit">
+		<submit submission="" ref="ewSubmit" class="principle">
+			<label>Ask Question</label>
+		</submit>
+	</group>
+</Content>
