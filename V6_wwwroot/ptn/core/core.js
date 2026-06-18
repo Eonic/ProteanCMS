@@ -1,4 +1,6 @@
 ﻿/*  ==  Scripts for Both the site and the admin system for all websites and themes  =====================  */
+// ensure jquery is global needed if bundled scripts are defered.
+window.$ = window.jQuery;
 
 var skipValidation = false;
 

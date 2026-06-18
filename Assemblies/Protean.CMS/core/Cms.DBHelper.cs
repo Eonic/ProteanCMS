@@ -11531,7 +11531,7 @@ namespace Protean
 
             }
 
-            public string insertContentRelation(int nParentID, string nChildIDs, bool b2Way = false, string rType = "", bool bHaltRecursion = false)
+            public string insertContentRelation(long nParentID, string nChildIDs, bool b2Way = false, string rType = "", bool bHaltRecursion = false)
             {
                 PerfMonLog("DBHelper", "insertContentRelation");
                 try

@@ -32,7 +32,7 @@
 				<cDescription/>
 			</tblContent>
 		</instance>
-		<submission id="EditContent" action="" method="post" event="return form_check(this)"/>
+		<submission id="AddFAQ" action="" method="post" event="return form_check(this)"/>
 		<bind nodeset="tblContent">
 			<bind id="cContentSourceName" nodeset="cContentName" required="true()" type="string"/>
 			<bind id="dPublishDate" nodeset="dPublishDate" required="false()" type="string"/>
@@ -72,7 +72,7 @@
 		</group>
 	</group>
 	<group ref="submit" class="contentSubmit">
-		<submit submission="" ref="ewSubmit" class="principle">
+		<submit submission="AddFAQ" ref="AddFAQ" class="principle">
 			<label>Ask Question</label>
 		</submit>
 	</group>

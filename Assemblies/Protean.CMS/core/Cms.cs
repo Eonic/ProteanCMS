@@ -3561,6 +3561,10 @@ namespace Protean
                                 {
                                     bUserValid = true; // set true for submitting review functionality
                                 }
+                                if (moRequest["type"].ToLower() == "faq")
+                                {
+                                    bUserValid = true; // set true for submitting FAQ functionality
+                                }
                             }
 
                             // We need to set this for version control
@@ -3578,7 +3582,7 @@ namespace Protean
                                             var tmp = moRequest;
                                             string argAlternateFormName = tmp["formName"];
                                             string zcReturnSchema = null;
-                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId:  argnReturnId,  zcReturnSchema, AlternateFormName:  argAlternateFormName, nVersionId: Convert.ToInt64("0" + moRequest["verId"]));
+                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId:  ref argnReturnId,  zcReturnSchema, AlternateFormName:  argAlternateFormName, nVersionId: Convert.ToInt64("0" + moRequest["verId"]));
                                             nContentId = argnReturnId;
                                             if (moAdXfm.valid)
                                             {
