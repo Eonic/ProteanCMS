@@ -1289,7 +1289,7 @@ namespace Protean
 
                                 string argzcReturnSchema = "";
                                 string argAlternateFormName = "";
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(0L, myWeb.moRequest["type"], Convert.ToInt64(myWeb.moRequest["pgid"]), myWeb.moRequest["name"], false, nReturnId: ref nAdditionId, zcReturnSchema: ref argzcReturnSchema, AlternateFormName: ref argAlternateFormName));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(0L, myWeb.moRequest["type"], Convert.ToInt64(myWeb.moRequest["pgid"]), myWeb.moRequest["name"], false, nReturnId:  ref nAdditionId, zcReturnSchema: argzcReturnSchema, AlternateFormName: argAlternateFormName));
                                 if (moAdXfm.valid)
                                 {
                                     sAdminLayout = "";
@@ -1301,7 +1301,7 @@ namespace Protean
                                     {
                                         bool b2Way = (myWeb.moRequest["RelType"] == "2way" || myWeb.moRequest["direction"] == "2Way");
                                         string sRelType = myWeb.moRequest["relationType"];
-                                        myWeb.moDbHelper.insertContentRelation(Convert.ToInt16(myWeb.moRequest["contentParId"]), nAdditionId.ToString(), b2Way, sRelType);
+                                        myWeb.moDbHelper.insertContentRelation(Convert.ToInt64(myWeb.moRequest["contentParId"]), nAdditionId.ToString(), b2Way, sRelType);
                                     }
 
                                     oPageDetail.RemoveAll();
@@ -1346,7 +1346,7 @@ namespace Protean
                                 nContentId = 0L;
                                 string zcReturnSchema = "";
                                 string AlternateFormName = "";
-                                XmlElement localxFrmEditContent() { long argnReturnId = (int)nContentId; var ret = moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64("0" + myWeb.moRequest["pgid"]), "", false, nReturnId: ref argnReturnId,ref  zcReturnSchema, ref AlternateFormName, nVersionId: Convert.ToInt64(cVersionKey)); nContentId = argnReturnId; return ret; }
+                                XmlElement localxFrmEditContent() { long argnReturnId = (int)nContentId; var ret = moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64("0" + myWeb.moRequest["pgid"]), "", false, nReturnId:ref argnReturnId,  zcReturnSchema,  AlternateFormName, nVersionId: Convert.ToInt64(cVersionKey)); nContentId = argnReturnId; return ret; }
 
                                 oPageDetail.AppendChild(localxFrmEditContent());
 
@@ -1458,7 +1458,7 @@ namespace Protean
                                 string AlternateFormName = "";
                                 bLoadStructure = true;
                                 long nReturnId = 0;
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), "", false,ref  nReturnId, ref zcReturnSchema, ref  AlternateFormName, nVersionId: Convert.ToInt64(myWeb.moRequest["verId"])));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), "", false,  ref nReturnId,  zcReturnSchema,  AlternateFormName, nVersionId: Convert.ToInt64(myWeb.moRequest["verId"])));
                                 if (moAdXfm.valid)
                                 {
                                     bAdminMode = false;
@@ -1489,7 +1489,7 @@ namespace Protean
                                 long argnReturnId = 0;
                                 string argzcReturnSchema1 = "";
                                 string argAlternateFormName1 = "";
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), "", bCopy: true, nReturnId: ref argnReturnId, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "", Convert.ToInt64(myWeb.moRequest["pgid"]), "", bCopy: true, nReturnId: ref argnReturnId, zcReturnSchema: argzcReturnSchema1, AlternateFormName: argAlternateFormName1));
                                 if (moAdXfm.valid)
                                 {
                                     bAdminMode = false;
@@ -2339,7 +2339,7 @@ namespace Protean
                             {
 
                                 sAdminLayout = "Profile";
-                                oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML((long)Convert.ToInt64("0" + myWeb.moRequest["parid"]), true));
+                                oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML((long)Convert.ToInt16("0" + myWeb.moRequest["parid"]), true));
                                 break;
                             }
 
@@ -2347,7 +2347,7 @@ namespace Protean
                             {
 
                                 sAdminLayout = "EditUserContact";
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt64("0" + myWeb.moRequest["id"]), Convert.ToInt16("0" + myWeb.moRequest["parid"])));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt16("0" + myWeb.moRequest["id"]), Convert.ToInt16("0" + myWeb.moRequest["parid"])));
                                 if (moAdXfm.valid)
                                 {
                                     oPageDetail.RemoveAll();
@@ -2446,7 +2446,7 @@ namespace Protean
                             {
 
                                 sAdminLayout = mcEwCmd;
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt64("0" + myWeb.moRequest["parid"]), Convert.ToInt16("0" + myWeb.moRequest["id"])));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt16("0" + myWeb.moRequest["parid"]), Convert.ToInt16("0" + myWeb.moRequest["id"])));
                                 if (moAdXfm.valid)
                                 {
                                     oPageDetail.RemoveAll();
@@ -2463,7 +2463,7 @@ namespace Protean
                             {
 
                                 sAdminLayout = mcEwCmd;
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt64("0" + myWeb.moRequest["id"]), Convert.ToInt16("0" + myWeb.moRequest["parid"])));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt16("0" + myWeb.moRequest["id"]), Convert.ToInt16("0" + myWeb.moRequest["parid"])));
                                 if (moAdXfm.valid)
                                 {
                                     oPageDetail.RemoveAll();
@@ -2477,7 +2477,7 @@ namespace Protean
                         case "DeleteUserContact":
                             {
 
-                                myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, (long)Convert.ToInt64("0" + myWeb.moRequest["parid"]));
+                                myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, (long)Convert.ToInt16("0" + myWeb.moRequest["parid"]));
                                 mcEwCmd = "ListUserContacts";
                                 myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" + myWeb.moRequest["id"];
                                 goto ProcessFlow;
@@ -2485,13 +2485,13 @@ namespace Protean
                         case "DeleteContact":
                             {
 
-                                myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, Convert.ToInt64("0" + myWeb.moRequest["id"]));
+                                myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, (long)Convert.ToInt16("0" + myWeb.moRequest["id"]));
                                 mcEwCmd = "ListUserContacts";
                                 goto ProcessFlow;
                             }
                         case "ListCompanies":
                             {
-                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Company", (long)Convert.ToInt64("0" + nParId)));
+                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Company", (long)Convert.ToInt16("0" + nParId)));
 
                                 sAdminLayout = "ListDirectory"; // "ListCompanies"
                                 myWeb.moSession["ewCmd"] = mcEwCmd;
@@ -2509,7 +2509,7 @@ namespace Protean
                                 {
                                     myWeb.moSession["DeptParId"] = (object)0;
                                 }
-                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Department", (long)Convert.ToInt64("0" + (myWeb.moSession["DeptParId"]?.ToString() ?? ""))));
+                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Department", (long)Convert.ToInt16("0" + (myWeb.moSession["DeptParId"]?.ToString() ?? ""))));
                                 sAdminLayout = "ListDirectory"; // "ListDepartments"
                                 myWeb.moSession["ewCmd"] = mcEwCmd;
                                 break;
@@ -2517,7 +2517,7 @@ namespace Protean
 
                         case "ListGroups":
                             {
-                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Group", (long)Convert.ToInt64("0" + myWeb.moRequest["parid"])));
+                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Group", (long)Convert.ToInt16("0" + myWeb.moRequest["parid"])));
                                 sAdminLayout = "ListDirectory"; // "ListGroups"
                                 myWeb.moSession["ewCmd"] = mcEwCmd;
                                 break;
@@ -2535,7 +2535,7 @@ namespace Protean
                             {
                                 if (mcEwCmd2 != null)
                                 {
-                                    oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory(mcEwCmd2, (long)Convert.ToInt64("0" + myWeb.moRequest["parid"])));
+                                    oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory(mcEwCmd2, (long)Convert.ToInt16("0" + myWeb.moRequest["parid"])));
                                 }
 
                                 sAdminLayout = "ListDirectory"; // "ListRoles"
@@ -5761,7 +5761,7 @@ from tblContentIndexDef";
                             {
                                 long nSubId = 0L;
                                 long pgid = 0;
-                                XmlElement localxFrmEditContent() { long argnReturnId1 = (int)nSubId; string argzcReturnSchema = ""; string argAlternateFormName = ""; var ret = oADX.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "Subscription", pgid, "", true, nReturnId: ref argnReturnId1, zcReturnSchema: ref  argzcReturnSchema, AlternateFormName: ref  argAlternateFormName); nSubId = argnReturnId1; return ret; }
+                                XmlElement localxFrmEditContent() { long argnReturnId1 = (int)nSubId; string argzcReturnSchema = ""; string argAlternateFormName = ""; var ret = oADX.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "Subscription", pgid, "", true, nReturnId:  ref argnReturnId1, zcReturnSchema:  argzcReturnSchema, AlternateFormName:  argAlternateFormName); nSubId = argnReturnId1; return ret; }
 
                                 oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(localxFrmEditContent(), true));
                                 if (oADX.valid)
@@ -5782,7 +5782,7 @@ from tblContentIndexDef";
                         {
                             long nSubId = 0L;
                             long pgid = 0;
-                            XmlElement localxFrmEditContent1() { long argnReturnId2 = (int)nSubId; string argzcReturnSchema1 = ""; string argAlternateFormName1 = ""; var ret = oADX.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "Subscription", pgid, "", true, nReturnId: ref argnReturnId2, zcReturnSchema: ref argzcReturnSchema1, AlternateFormName: ref argAlternateFormName1); nSubId = argnReturnId2; return ret; }
+                            XmlElement localxFrmEditContent1() { long argnReturnId2 = (int)nSubId; string argzcReturnSchema1 = ""; string argAlternateFormName1 = ""; var ret = oADX.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "Subscription", pgid, "", true, nReturnId:  ref argnReturnId2, zcReturnSchema:  argzcReturnSchema1, AlternateFormName:  argAlternateFormName1); nSubId = argnReturnId2; return ret; }
 
                             oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(localxFrmEditContent1(), true));
                             if (oADX.valid)
@@ -6351,7 +6351,7 @@ from tblContentIndexDef";
                     {
                         Protean.Config.UpdateConfigValue(ref myWeb, "", "recompile", "true");
                     }
-                    myWeb.moResponse.Redirect(myWeb.mcRequestDomain,false);
+                    myWeb.moResponse.Redirect(myWeb.mcRequestDomain);
                 }
 
                 catch (Exception ex)

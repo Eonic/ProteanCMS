@@ -1867,6 +1867,7 @@ namespace Protean
                 }
             }
 
+
             public string ResizeImage2(string cVirtualPath, long maxWidth, long maxHeight, string sPrefix, string sSuffix, int nCompression, bool noStretch, bool isCrop, bool forceCheck, string WatermarkText, string copyright)
             {
                 string newFilepath = "";
@@ -1882,9 +1883,7 @@ namespace Protean
                     // Use cached JpegQuality property to avoid repeated config lookups
                     if (myWeb != null)
                     {
-                        // Global setting only overides if it is higher than specified.
-                        if (nCompression < JpegQuality)
-                        {
+                        if (nCompression == 0) { 
                             nCompression = JpegQuality;
                         }
                     }
@@ -2077,10 +2076,24 @@ namespace Protean
                 if (sForceCheck.ToLower().Contains("true"))
                 { bForceCheck = true; }
 
-                return CreateWebPAlt(cVirtualPath, bForceCheck);
+                return CreateWebPAlt(cVirtualPath, bForceCheck, 0);
             }
 
-            public string CreateWebPAlt(string cVirtualPath, bool forceCheck)
+            public string CreateWebP(string cVirtualPath, string sForceCheck, short Compression)
+            {
+                Boolean bForceCheck = false;
+                if (sForceCheck.ToLower().Contains("true"))
+                { bForceCheck = true; }
+
+                return CreateWebPAlt(cVirtualPath, bForceCheck, Compression);
+            }
+
+            public string CreateWebPAlt(string cVirtualPath, bool sForceCheck)
+            {
+                 return CreateWebPAlt(cVirtualPath, sForceCheck, 0);
+            }
+
+            public string CreateWebPAlt(string cVirtualPath, bool forceCheck, short Compression)
             {
                 string cProcessInfo = string.Empty;
                 try
@@ -2094,8 +2107,13 @@ namespace Protean
                     else
                     {
                         // Use cached WebPQuality property
-                        short webpQuality = WebPQuality;
-
+                        if (Compression > 0) {
+                            cProcessInfo = "overide quality";
+                        }
+                        short webpQuality = Compression;
+                        if (Compression == 0) { 
+                            webpQuality = WebPQuality;
+                        }
                         cVirtualPath = cVirtualPath.Replace("%20", " ");
 
                         string filename = cVirtualPath.Substring(cVirtualPath.LastIndexOf("/") + 1);

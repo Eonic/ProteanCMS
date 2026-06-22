@@ -1754,6 +1754,8 @@ namespace Protean
 
                                                                    XmlElement thisNode = (XmlElement)oInstance.SelectSingleNode(sXpath, nsMgr);
                                                                     thisNode.SetAttribute("uploadPath", cFullPath + cSavePath);
+                                                                    thisNode.SetAttribute("filename", Filename);
+                                                                   // thisNode.InnerText = cFullPath + cSavePath + Filename;
                                                                     thisNode.InnerText = Filename;
                                                                     cFinalFullSavePath.Replace(cFullPath, "");
 

@@ -189,7 +189,7 @@ namespace Protean
                 }
             }
 
-            public Search(ref Protean.rest myAPi)
+            public Search(ref Protean.rest myAPI)
             {
                 // myAPi.PerfMon.Log("Search", "New")
                 try
@@ -197,7 +197,7 @@ namespace Protean
 
                     // Set the global variables
 
-                    moConfig = myAPi.moConfig;
+                    moConfig = myAPI.moConfig;
 
                     // Read settings in from the config
 
@@ -216,7 +216,7 @@ namespace Protean
                         if (!string.IsNullOrEmpty(moConfig["SiteSearchPath"] + ""))
                             _indexPath = moConfig["SiteSearchPath"];
                         _indexPath = _indexPath.TrimEnd(@"/\".ToCharArray()) + "/";
-                        _indexReadFolder = myAPi.goServer.MapPath("/") + _indexPath;
+                        _indexReadFolder = myAPI.goServer.MapPath("/") + _indexPath;
 
                         // Search read path
                         if (string.IsNullOrEmpty(moConfig["SiteSearchReadPath"]))
@@ -225,7 +225,7 @@ namespace Protean
                         }
                         else
                         {
-                            _indexReadFolder = myAPi.goServer.MapPath("/") + moConfig["SiteSearchReadPath"];
+                            _indexReadFolder = myAPI.goServer.MapPath("/") + moConfig["SiteSearchReadPath"];
                             _indexReadFolder = _indexReadFolder.TrimEnd(@"/\".ToCharArray()) + "/";
                         }
 
@@ -473,6 +473,7 @@ namespace Protean
                     XmlElement result = null;
                     Field pageIdField = null;
                     long pageId = 0L;
+                    string initialQuery = cQuery;
                     string url = "";
                     XmlElement menuItem = null;
                     string[] reservedFieldNames = new string[] { "type", "text", "abstract" };
@@ -918,7 +919,7 @@ namespace Protean
                         resultsXML.SetAttribute("Time", "0");
                     }
                     resultsXML.SetAttribute("totalResults", totalResults.ToString());
-                    resultsXML.SetAttribute("searchString", cQuery);
+                    resultsXML.SetAttribute("searchString", initialQuery);
                     resultsXML.SetAttribute("searchType", "INDEX");
                     resultsXML.SetAttribute("type", "SearchHeader");
                     resultsXML.SetAttribute("resultsReturned", (resultsCount + 1).ToString());
@@ -963,7 +964,7 @@ namespace Protean
                             _includeFuzzySearch = true;
                         if (fuzzySearch != "off")
                         {
-                            if ((myAPI.moConfig["SiteSearchFuzzy"]).ToLower() == "on")
+                            if ((myAPI.moConfig["SiteSearchFuzzy"] ?? "").ToLower() == "on")
                                 _includeFuzzySearch = true;
                         }
 

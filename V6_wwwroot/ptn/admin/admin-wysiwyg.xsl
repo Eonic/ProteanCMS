@@ -33,8 +33,8 @@
 	<xsl:template match="Page" mode="siteAdminJs"></xsl:template>
 
 	<xsl:template match="Page[@adminMode='false']" mode="siteAdminJs">
-		<script type="text/javascript" src="/ptn/libs/jqueryui/jquery-ui.js">&#160;</script>
-		<script type="text/javascript" src="/ptn/admin/admin-wysiwyg.js">&#160;</script>
+		<script type="text/javascript" src="/ptn/libs/jqueryui/jquery-ui.js" defer="defer">&#160;</script>
+		<script type="text/javascript" src="/ptn/admin/admin-wysiwyg.js" defer="defer">&#160;</script>
 	</xsl:template>
 
 	<!--In admin WYSIWYG mode-->

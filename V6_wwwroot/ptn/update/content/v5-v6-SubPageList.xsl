@@ -3,9 +3,11 @@
   <xsl:output method="xml" indent="no" standalone="yes" omit-xml-declaration="yes" encoding="UTF-8"/>
 
   <!--  IMPORTANT -->
-  <!--  THIS UPGRADE, upgrades Contacts to have the new Locational information that is essential for
-          - Google Maps,
-          - Address formattating and standardisation across ew.
+  <!--  
+		  
+		  
+		  		  cContentXmlBrief like '%moduleType="SubPageGrid"%'
+		  
   -->
     
   <xsl:template match="/instance">

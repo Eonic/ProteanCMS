@@ -76,6 +76,9 @@
                   <xsl:with-param name="cHeightOptions" select="@cHeightOptions"/>
                   <xsl:with-param name="heading" select="$heading"/>
                   <xsl:with-param name="title" select="@title"/>
+					<xsl:with-param name="heightxxl" select="@height"/>
+					<xsl:with-param name="heightmd" select="@heightxs"/>
+					
                 </xsl:apply-templates>
               </xsl:when>
               <xsl:otherwise>
@@ -111,6 +114,8 @@
     <xsl:param name="cHeightOptions"/>
     <xsl:param name="heading"/>
     <xsl:param name="title"/>
+	<xsl:param name="heightxxl"/>
+    <xsl:param name="heightmd"/>
     <xsl:choose>
       <xsl:when test="@linkSlide='true'">
         <div class="swiper-slide">
@@ -225,29 +230,32 @@
             <xsl:text> </xsl:text>
           </div>
           <xsl:choose>
-            <xsl:when test="@height!=''">
+            <xsl:when test="$heightxxl!=''">
+		        <xsl:variable name="widthxxl" select="'1226'"/>
+				<xsl:variable name="widthmd" select="'992'"/>
               <xsl:call-template name="displayResponsiveImage">
                 <xsl:with-param name="crop" select="true()"/>
                 <xsl:with-param name="no-stretch" select="false()"/>
-                <xsl:with-param name="width" select="'2000'"/>
-                <xsl:with-param name="height" select="'@height'"/>
-                <xsl:with-param name="max-width-xs" select="'576'"/>
-                <xsl:with-param name="max-height-xs" select="'@heightxs'"/>
-                <xsl:with-param name="max-width-sm" select="'768'"/>
-                <xsl:with-param name="max-height-sm" select="'@heightxs'"/>
-                <xsl:with-param name="max-width-md" select="'992'"/>
-                <xsl:with-param name="max-height-md" select="'@heightxs'" />
-                <xsl:with-param name="max-width-lg" select="'1200'"/>
-                <xsl:with-param name="max-height-lg" select="'@height'" />
-                <xsl:with-param name="max-width-xl" select="'1400'"/>
-                <xsl:with-param name="max-height-xl" select="'@height'"/>
-                <xsl:with-param name="max-width-xxl" select="'2000'"/>
-                <xsl:with-param name="max-height-xxl" select="'@height'"/>
+                <xsl:with-param name="width" select="$widthxxl"/>
+                <xsl:with-param name="height" select="$heightxxl"/>
+                <xsl:with-param name="max-width-xs" select="format-number($widthmd * 0.8, '0')"/>
+                <xsl:with-param name="max-height-xs" select="format-number($heightmd * 0.8, '0')"/>
+                <xsl:with-param name="max-width-sm" select="format-number($widthmd * 0.75, '0')"/>
+                <xsl:with-param name="max-height-sm" select="format-number($heightmd * 0.75, '0')"/>
+                <xsl:with-param name="max-width-md" select="$widthmd"/>
+                <xsl:with-param name="max-height-md" select="$heightmd" />
+                <xsl:with-param name="max-width-lg" select="format-number($widthxxl * 0.7, '0')"/>
+                <xsl:with-param name="max-height-lg" select="format-number($heightxxl * 0.7, '0')" />
+                <xsl:with-param name="max-width-xl" select="$widthxxl"/>
+                <xsl:with-param name="max-height-xl" select="$heightxxl"/>
+                <xsl:with-param name="max-width-xxl" select="$widthxxl"/>
+                <xsl:with-param name="max-height-xxl" select="$heightxxl"/>
                 <xsl:with-param name="imageUrl" select="Images/img[@class='detail']/@src"/>
                 <xsl:with-param name="altText" select="Title/node()"/>
                 <xsl:with-param name="forceResize" select="true()"/>
                 <xsl:with-param name="class" select="'banner-background'"/>
                 <xsl:with-param name="style" select="''"/>
+			    <xsl:with-param name="quality" select="100"/>
               </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>

@@ -391,7 +391,6 @@
   <xsl:variable name="lazy" select="'off'"/>
   <xsl:variable name="placeholder" select="'/ewcommon/images/t22.gif'"/>
   <xsl:variable name="lazyplaceholder" select="''"/>
-
   <!--####################### Page Level Templates, can be overridden later. ##############################-->
   <!-- -->
 
@@ -513,6 +512,7 @@
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
+		  
       </head>
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
@@ -831,7 +831,6 @@
 
   <xsl:template match="Page" mode="commonJs">
     <xsl:param name="async"/>
-	<xsl:param name="defer"/>
     <xsl:call-template name="bundle-js">
       <xsl:with-param name="comma-separated-files">
         <xsl:apply-templates select="." mode="commonJsFiles" />
@@ -839,7 +838,7 @@
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/common</xsl:text>
       </xsl:with-param>
-      <xsl:with-param name="defer" select="true()"/>
+      <xsl:with-param name="async" select="$async"/>
     </xsl:call-template>
   </xsl:template>
 
@@ -919,9 +918,8 @@
           <xsl:with-param name="bundle-path">
             <xsl:text>~/Bundles/JqueryModules</xsl:text>
           </xsl:with-param>
-			<xsl:with-param name="defer" select="true()"/>
         </xsl:call-template>
-        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js" defer="defer">
+        <script src="/ewcommon/js/jquery/slick-carousel/slick.1.8.1.js">
           <xsl:text> </xsl:text>
         </script>
       </xsl:when>
@@ -1433,9 +1431,7 @@
     </xsl:if>
     <xsl:if test="$GoogleAdConversionID!=''">
       <script id="GadCode" cookie-consent="tracking">
-		  window.addEventListener("load", function() {
-        gtag('config', '<xsl:value-of select="$GoogleAdConversionID"/>');
-		});
+        gtag('config', '<xsl:value-of select="$GoogleAdConversionID"/>')
       </script>
     </xsl:if>
 
@@ -10821,18 +10817,15 @@
     <xsl:param name="comma-separated-files"/>
     <xsl:param name="bundle-path"/>
     <xsl:param name="async"/>
-	<xsl:param name="defer"/>
     <xsl:call-template name="render-js-files">
       <xsl:with-param name="list" select="ew:BundleJS($comma-separated-files,$bundle-path)"/>
       <xsl:with-param name="async" select="$async"/>
-	  <xsl:with-param name="defer" select="$defer"/>
     </xsl:call-template>
   </xsl:template>
 
   <xsl:template name="render-js-files">
     <xsl:param name="list" />
     <xsl:param name="async" />
-	<xsl:param name="defer" />
     <xsl:variable name="seperator" select="','"/>
     <xsl:variable name="newlist" select="concat(normalize-space($list),$seperator)" />
     <xsl:variable name="first" select="substring-before($newlist, $seperator)" />
@@ -10842,15 +10835,11 @@
         <xsl:if test="$async!='' and not($adminMode)">
           <xsl:attribute name="async">async</xsl:attribute>
         </xsl:if>
-		  <xsl:if test="$defer!=''">
-			  <xsl:attribute name="defer">defer</xsl:attribute>
-		  </xsl:if>
         <xsl:text>/* */</xsl:text>
       </script>
       <xsl:call-template name="render-js-files">
         <xsl:with-param name="list" select="$remaining" />
         <xsl:with-param name="async" select="$async"/>
-		<xsl:with-param name="defer" select="$defer"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
