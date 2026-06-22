@@ -115,7 +115,7 @@ namespace Protean
                                         {
                                             if ((double)nStatus != Convert.ToDouble(myWeb.moRequest["nStatus"]) & Convert.ToDouble(myWeb.moRequest["nStatus"]) == (double)Cms.Cart.cartProcess.Complete)
                                             {
-                                                oCart.mnCartId = Convert.ToInt16(myWeb.moRequest["id"]);
+                                                oCart.mnCartId = Convert.ToInt64(myWeb.moRequest["id"]);
                                                 XmlElement argoCartElmt = (XmlElement)oPageDetail.LastChild.FirstChild;
                                                 oCart.addDateAndRef(ref argoCartElmt);
                                                 XmlElement argoCartElmt1 = (XmlElement)oPageDetail.LastChild;
@@ -175,7 +175,7 @@ namespace Protean
 
                             case "RequestSettlement":
                                 {
-                                    oPageDetail.AppendChild(moAdXfm.xFrmRequestSettlement(Convert.ToInt16(myWeb.moRequest["id"])));
+                                    oPageDetail.AppendChild(moAdXfm.xFrmRequestSettlement(Convert.ToInt64(myWeb.moRequest["id"])));
                                     oPageDetail.AppendChild(myWeb.moDbHelper.ActivityReport(Cms.dbHelper.ActivityType.Email, 0L, 0L, 0L, Convert.ToInt64(myWeb.moRequest["id"])));
                                     break;
                                 }

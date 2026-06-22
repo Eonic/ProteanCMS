@@ -1896,7 +1896,7 @@ namespace Protean
 
                 }
 
-                public XmlElement xFrmRequestSettlement(int nOrderId, bool bForceSend = false)
+                public XmlElement xFrmRequestSettlement(long nOrderId, bool bForceSend = false)
                 {
                     string cProcessInfo = "";
                     object InstanceSessionName = "tempInstance_requestSettlement" + nOrderId.ToString();
