@@ -2272,7 +2272,7 @@
   <!-- TinyMCE configuration -->
   <xsl:template match="textarea" mode="tinymceConfig">
     <script type="text/javascript">
-		window.addEventListener("load", function()  {
+	$(function () {
 		$('#<xsl:apply-templates select="." mode="getRefOrBind"/>').tinymce({
       <xsl:apply-templates select="." mode="tinymceGeneralOptions"/>,
       theme_modern_buttons1: "<xsl:apply-templates select="." mode="tinymceButtons1"/>",
