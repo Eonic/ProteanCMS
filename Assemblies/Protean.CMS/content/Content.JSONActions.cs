@@ -325,7 +325,7 @@ namespace Protean
                         bool.TryParse(bIgnoreParID, out ignorePar);
 
                         short effectiveParId = ignorePar ? (short)0 : parId;
-                        searchResultXML = myWeb.moDbHelper.RelatedContentSearch( Convert.ToInt16(nRoot), cContentType, bChilds, cExpression, Convert.ToInt16(nParId), effectiveParId, cTmp.Split(','), bIncRelated);
+                        searchResultXML = myWeb.moDbHelper.RelatedContentSearch(Convert.ToInt16(nRoot), cContentType, bChilds, cExpression, Convert.ToInt16(nParId), effectiveParId, cTmp.Split(','), bIncRelated);
 
                         string jsonString = JsonConvert.SerializeXmlNode(searchResultXML, Newtonsoft.Json.Formatting.Indented);
                         return jsonString.Replace("\"@", "\"_");
@@ -918,8 +918,21 @@ namespace Protean
                 }
 
 
-                #endregion
+                public void CleanDatabase(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                {
+                    try
+                    {
+                        myWeb.moDbHelper.CleanDatabase();
+                    }
+                    catch (Exception ex) {
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "CleanDatabase", ex, ""));
+                        
+                    }
+                }
+
             }
+            #endregion
+             
         }
 
     }
