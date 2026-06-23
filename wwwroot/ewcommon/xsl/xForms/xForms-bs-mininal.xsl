@@ -50,10 +50,12 @@
 			<xsl:value-of select="translate($ref,'/','-')"/>
 		</xsl:variable>
 		<xsl:if test="$ref!=''">
-			<script>
+			<script defer="defer">
+				window.addEventListener("load",function() {
 				$(function () {
 				<xsl:text>$('#popover-</xsl:text><xsl:value-of select="$ref2"/>
 				<xsl:text>-btn').popover('show');</xsl:text>
+				});
 				});
 			</script>
 		</xsl:if>
@@ -2530,6 +2532,7 @@
 		</xsl:variable>
 
 		<script>
+			window.addEventListener("load", function()  {
 			function toggle_<xsl:value-of select="$targetId"/>(ourRef) {
 
 			//get the selected value for ref
@@ -2561,6 +2564,7 @@
 			}
 			//
 			toggle_<xsl:value-of select="$targetId"/>('<xsl:value-of select="$targetId"/>');
+			});
 
 		</script>
 	</xsl:template>
@@ -2584,6 +2588,7 @@
 		</xsl:variable>
 
 		<script>
+			window.addEventListener("load", function()  {
 			function toggle_<xsl:value-of select="$targetId"/>(ourRef) {
 
 			//get the selected value for ref
@@ -2615,7 +2620,7 @@
 			}
 			//
 			toggle_<xsl:value-of select="$targetId"/>('<xsl:value-of select="$targetId"/>');
-
+});
 		</script>
 	</xsl:template>
 	
@@ -4294,21 +4299,23 @@
 		<xsl:choose>
 			<!-- reCAPTCHA v3 -->
 			<xsl:when test="contains($recaptchaVersion, 'v3')">				
-				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}">
+				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}" defer="defer">
 					<xsl:text> </xsl:text>
 				</script>
 				<script>
+					window.addEventListener("load", function() {
 					var hiddenInput = document.getElementById('recaptcha-token');
 					var form = hiddenInput.closest('form');
 					form.addEventListener('submit', function(e) {
-						e.preventDefault();
-						grecaptcha.ready(function() {
-							grecaptcha.execute('<xsl:value-of select="$recaptchaKey"/>', { action: 'submit' })
+					e.preventDefault();
+					grecaptcha.ready(function() {
+					grecaptcha.execute('<xsl:value-of select="$recaptchaKey"/>', { action: 'submit' })
 								.then(function(token) {
 									hiddenInput.value = token;
 									form.submit();
 								});
 						});
+					});
 					});
 				</script>
 			</xsl:when>
@@ -4375,12 +4382,16 @@
 		<link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css">
 			<xsl:text> </xsl:text>
 		</link>
-		<script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" >
+		<script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" defer="defer" >
 			<xsl:text> </xsl:text>
 		</script>
 
-		<script type="text/javascript">
-			$(document).ready(function () {
+		<script type="text/javascript" defer="defer">
+
+
+			
+			window.addEventListener("load", function() {
+			
 			<xsl:for-each select="descendant::input[contains(@class,'telephone')]">
 				<xsl:variable name="ref">
 					<xsl:apply-templates select="." mode="getRefOrBind"/>

@@ -631,7 +631,7 @@ namespace Protean
                                 }
                                 // return to site
                                 bRedirect = true;
-                                myWeb.moResponse.Redirect(mcSiteURL + mcReturnPage);
+                                myWeb.moResponse.Redirect(mcSiteURL + mcReturnPage,false);
                                 break;
                             }
 
@@ -1258,7 +1258,7 @@ namespace Protean
 
                     // now we need to redirect somewhere?
                     // bRedirect = True
-                    myWeb.moResponse.Redirect("/?cartCmd=Cart");
+                    myWeb.moResponse.Redirect("/?cartCmd=Cart",false);
                     return true;
                 }
                 catch (Exception ex)
