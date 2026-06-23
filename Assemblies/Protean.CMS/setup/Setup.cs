@@ -362,7 +362,7 @@ namespace Protean
 
                 if (!string.IsNullOrEmpty(msRedirectOnEnd) & string.IsNullOrEmpty(cPostFlushActions))
                 {
-                    goResponse.Redirect(msRedirectOnEnd);
+                    goResponse.Redirect(msRedirectOnEnd,false);
                     return;
                 }
 
