@@ -1,9 +1,101 @@
 ﻿<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
-  <xsl:template match="Content[@moduleType='SwiperCarousel']" mode="headerOnlyContentJS">
-    <style>
-      #scarousel-<xsl:value-of select="@id"/>{height:<xsl:value-of select="@heightxs"/>px}
-      @media(min-width:992px){#scarousel-<xsl:value-of select="@id"/>{height:<xsl:value-of select="@height"/>px}}
-    </style>
+  
+	<xsl:template match="Content[@moduleType='SwiperCarousel']" mode="headerOnlyContentJS">
+
+<xsl:variable name="h-xxl" select="@height"/>
+<xsl:variable name="h-xs" select="@heightxs"/>
+
+<!-- proportional scaling factors vs xxl (1320) -->
+<xsl:variable name="h-xl" select="round($h-xxl * 1140 div 1320)"/>
+<xsl:variable name="h-lg" select="round($h-xxl * 960 div 1320)"/>
+<xsl:variable name="h-md" select="round($h-xxl * 720 div 1320)"/>
+<xsl:variable name="h-sm" select="round($h-xxl * 540 div 1320)"/>
+
+
+<style>
+  /* xs */
+  #scarousel-<xsl:value-of select="@id"/> {
+    height: <xsl:value-of select="$h-xs"/>px;
+  }
+
+  /* sm ≥576px */
+  @media (min-width:576px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-sm"/>px;
+    }
+  }
+
+  /* md ≥768px */
+  @media (min-width:768px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-md"/>px;
+    }
+  }
+
+  /* lg ≥992px */
+  @media (min-width:992px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-lg"/>px;
+    }
+  }
+
+  /* xl ≥1200px */
+  @media (min-width:1200px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-xl"/>px;
+    }
+  }
+
+  /* xxl ≥1400px */
+  @media (min-width:1400px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-xxl"/>px;
+    }
+  }
+</style>
+
+
+<style>
+  /* xs */
+  #scarousel-<xsl:value-of select="@id"/> {
+    height: <xsl:value-of select="$h-xs"/>px;
+  }
+
+  /* sm ≥576px */
+  @media (min-width:576px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-sm"/>px;
+    }
+  }
+
+  /* md ≥768px */
+  @media (min-width:768px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-md"/>px;
+    }
+  }
+
+  /* lg ≥992px */
+  @media (min-width:992px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-lg"/>px;
+    }
+  }
+
+  /* xl ≥1200px */
+  @media (min-width:1200px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-xl"/>px;
+    }
+  }
+
+  /* xxl ≥1400px */
+  @media (min-width:1400px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-xxl"/>px;
+    }
+  }
+</style>
 
   </xsl:template>
   <!--  ======================================================================================  -->
@@ -218,6 +310,7 @@
                 </div>
               </div>
             </xsl:if>
+			  <xsl:text> </xsl:text>
           </a>
         </div>
       </xsl:when>
@@ -365,6 +458,8 @@
                         <xsl:value-of select="@alignButton"/>
                       </xsl:attribute>
                       <xsl:value-of select="@linkText"/>
+
+						<xsl:text> </xsl:text>
                     </a>
                   </xsl:if>
                 </div>
