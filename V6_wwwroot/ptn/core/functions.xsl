@@ -6384,10 +6384,8 @@
             </div>
           </xsl:if>
           <xsl:if test="@title!=''">
-            <span>
               <xsl:copy-of select="ms:node-set($title)" />
               <xsl:text> </xsl:text>
-            </span>
           </xsl:if>
         </div>
       </xsl:when>
@@ -6439,10 +6437,8 @@
             </div>
           </xsl:if>
           <xsl:if test="@title!=''">
-            <span>
               <xsl:copy-of select="ms:node-set($title)" />
               <xsl:text> </xsl:text>
-            </span>
           </xsl:if>
         </div>
       </xsl:when>
@@ -6499,10 +6495,8 @@
             </span>
           </xsl:if>
           <xsl:if test="@title!=''">
-            <span>
               <xsl:copy-of select="ms:node-set($title)" />
               <xsl:text> </xsl:text>
-            </span>
           </xsl:if>
         </div>
       </xsl:when>

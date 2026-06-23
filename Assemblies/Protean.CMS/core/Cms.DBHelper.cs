@@ -4432,7 +4432,7 @@ namespace Protean
                         foreach (XmlNode oNode in oXml.DocumentElement.SelectNodes("group"))
                         {
                             oElmt = (XmlElement)oNode;
-                            if (Convert.ToInt16("0" + oElmt.GetAttribute("isMember")) > 0)
+                            if (Convert.ToInt64("0" + oElmt.GetAttribute("isMember")) > 0)
                             {
                                 oElmt.SetAttribute("isMember", "true");
                             }

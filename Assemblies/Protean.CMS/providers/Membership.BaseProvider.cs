@@ -1584,7 +1584,7 @@ namespace Protean.Providers
                                     // lets add the user to any groups
                             if ((cDirectorySchemaName == "User" || cDirectorySchemaName == "Company") && maintainMembershipsOnAdd)
                                     {
-                                        maintainMembershipsFromXForm((int)id);
+                                        maintainMembershipsFromXForm(id);
 
                                         // we want to ad the user to a specified group from a pick list of groups.
                                         XmlElement GroupsElmt = (XmlElement)base.Instance.SelectSingleNode("groups");
@@ -1661,12 +1661,12 @@ namespace Protean.Providers
                 /// <param name="nUserId">The user id to be associated with</param>
                 /// <param name="cGroupNodeListXPath">The XPath from the xform instance to the group nodes.</param>
                 /// <remarks>Group nodes membership is indicated by a boolean attribute "isMember"</remarks>
-                public void maintainMembershipsFromXForm(int nUserId, string cGroupNodeListXPath = "groups/group", string Email = null, bool addOnly = false)
+                public void maintainMembershipsFromXForm(long nUserId, string cGroupNodeListXPath = "groups/group", string Email = null, bool addOnly = false)
                 {
                     myWeb.PerfMon.Log(mcModuleName, "maintainMembershipsFromXForm", "start");
                     string sSql = "";
                     // Dim oDr As SqlDataReader
-                    var userMembershipIds = new List<int>();
+                    var userMembershipIds = new List<long>();
 
                     try
                     {
@@ -1675,7 +1675,7 @@ namespace Protean.Providers
                         using (SqlDataReader oDr = moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                         {
                             while (oDr.Read())
-                                userMembershipIds.Add(Convert.ToInt16(oDr["nDirParentId"]));
+                                userMembershipIds.Add(Convert.ToInt64(oDr["nDirParentId"]));
                         }
                         foreach (XmlElement oElmt in base.Instance.SelectNodes(cGroupNodeListXPath))
                         {
@@ -1685,14 +1685,14 @@ namespace Protean.Providers
                             if (oElmt.GetAttribute("isMember").ToLower() == "true" || oElmt.GetAttribute("isMember").ToLower() == "yes")
                             {
                                 // if user not in group
-                                if (!userMembershipIds.Contains(Convert.ToInt16(oElmt.GetAttribute("id"))))
+                                if (!userMembershipIds.Contains(Convert.ToInt64(oElmt.GetAttribute("id"))))
                                 {
                                     moDbHelper.maintainDirectoryRelation(Convert.ToInt64(oElmt.GetAttribute("id")), nUserId, false, default, default, Email, oElmt.GetAttribute("name"), bIsLast);
                                 }
                             }
 
                             // if user is in group
-                            else if (userMembershipIds.Contains(Convert.ToInt16(oElmt.GetAttribute("id"))))
+                            else if (userMembershipIds.Contains(Convert.ToInt64(oElmt.GetAttribute("id"))))
                             {
                                 if (addOnly == false)
                                 {

@@ -595,6 +595,8 @@
                 </div>
               </div>
             </xsl:if>
+			  
+			  <xsl:text> </xsl:text>
           </a>
         </div>
       </xsl:when>
