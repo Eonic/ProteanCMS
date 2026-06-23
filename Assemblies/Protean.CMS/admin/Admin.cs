@@ -6351,7 +6351,7 @@ from tblContentIndexDef";
                     {
                         Protean.Config.UpdateConfigValue(ref myWeb, "", "recompile", "true");
                     }
-                    myWeb.moResponse.Redirect(myWeb.mcRequestDomain);
+                    myWeb.moResponse.Redirect(myWeb.mcRequestDomain,false);
                 }
 
                 catch (Exception ex)

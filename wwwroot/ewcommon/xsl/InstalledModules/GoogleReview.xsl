@@ -200,6 +200,7 @@
       <xsl:with-param name="bundle-path">
         <xsl:text>~/Bundles/GoogleReview</xsl:text>
       </xsl:with-param>
+		<xsl:with-param name="defer" select="true()"/>
     </xsl:call-template>
   </xsl:template>
 

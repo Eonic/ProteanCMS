@@ -161,7 +161,7 @@ namespace Protean
                         if (mbCompiled && !gbDebug)  // Use gbDebug (global debug flag from stdTools)
                         {
                             Protean.Config.UpdateConfigValue(ref myWeb, "", "recompile", "recreate");
-                            myWeb.moResponse.Redirect("/");
+                            myWeb.moResponse.Redirect("/",false);
                         }
                         // In debug mode (gbDebug == true), error details in myWeb.msException will be displayed to the browser
                     }

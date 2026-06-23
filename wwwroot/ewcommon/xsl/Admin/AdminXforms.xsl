@@ -853,6 +853,7 @@
 	<!-- TinyMCE configuration -->
 	<xsl:template match="textarea" mode="xform_control_script">
 		<script type="text/javascript">
+			window.addEventListener("load", function()  {
 			$('#<xsl:apply-templates select="." mode="getRefOrBind"/>').tinymce({
 			<xsl:apply-templates select="." mode="tinymceGeneralOptions"/>,
 			theme_modern_buttons1: "<xsl:apply-templates select="." mode="tinymceButtons1"/>",
@@ -860,6 +861,7 @@
 			theme_modern_buttons3: "<xsl:apply-templates select="." mode="tinymceButtons3"/>",
 			theme_modern_blockformats : "p,h1,h2,h3,h4,h5,h6,blockquote,div,dt,dd,code,samp",
 			valid_elements: <xsl:apply-templates select="." mode="tinymceValidElements"/>
+			});
 			});
 		</script>
 	</xsl:template>
@@ -982,6 +984,7 @@
 			<xsl:apply-templates select="." mode="getRefOrBind"/>
 		</xsl:variable>
 		<script type="text/javascript">
+			window.addEventListener("load", function() {
 			var editor = CodeMirror.fromTextArea('<xsl:value-of select="$ref"/>', {
 			height: "<xsl:value-of select="number(@rows) * 25"/>px",
 			parserfile: "parsexml.js",
@@ -992,6 +995,7 @@
 			reindentOnLoad: true,
 			textWrapping: true,
 			matchClosing: true
+			});
 			});
 		</script>
 	</xsl:template>

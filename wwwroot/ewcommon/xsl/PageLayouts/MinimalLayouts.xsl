@@ -2492,6 +2492,14 @@
 				<xsl:variable name="title">
 					<xsl:apply-templates select="//MenuItem[@id=$pageId]" mode="getTitleAttr" />
 				</xsl:variable>
+				<xsl:variable name="quality">
+					<xsl:choose>
+						<xsl:when test="@quality!=''">
+							<xsl:value-of select="@quality"/>
+						</xsl:when>
+						<xsl:otherwise>0</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
 
 				<a href="{$href}" title="{$title}">
 					<xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($href,'.pdf')">
@@ -2519,6 +2527,7 @@
 								<xsl:with-param name="maxWidth" select="$maxWidth"/>
 								<xsl:with-param name="maxHeight" select="$maxHeight"/>
 								<xsl:with-param name="noLazy" select="$noLazy"/>
+								<xsl:with-param name="quality" select="$quality"/>
 							</xsl:apply-templates>
 						</xsl:when>
 						<xsl:otherwise>
@@ -7581,7 +7590,7 @@
 					<xsl:text>/~lg-</xsl:text>
 				</xsl:with-param>
 				<xsl:with-param name="file-suffix" select="''"/>
-				<xsl:with-param name="quality" select="100"/>
+				<xsl:with-param name="quality" select="0"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="lgImgSrc">
@@ -8229,7 +8238,7 @@
 					<xsl:text>/~dis-</xsl:text>
 				</xsl:with-param>
 				<xsl:with-param name="file-suffix" select="''"/>
-				<xsl:with-param name="quality" select="100"/>
+				<xsl:with-param name="quality" select="0"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="largeSrc">
@@ -8245,7 +8254,7 @@
 					<xsl:text>/~lg-</xsl:text>
 				</xsl:with-param>
 				<xsl:with-param name="file-suffix" select="''"/>
-				<xsl:with-param name="quality" select="100"/>
+				<xsl:with-param name="quality" select="0"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<td>
@@ -12257,7 +12266,7 @@
 					<xsl:text>/~lg-</xsl:text>
 				</xsl:with-param>
 				<xsl:with-param name="file-suffix" select="''"/>
-				<xsl:with-param name="quality" select="100"/>
+				<xsl:with-param name="quality" select="0"/>
 			</xsl:call-template>
 		</xsl:variable>
 		<xsl:variable name="lgImgSrc">
