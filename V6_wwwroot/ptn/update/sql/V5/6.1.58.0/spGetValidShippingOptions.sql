@@ -220,7 +220,7 @@ from tblCartShippingLocations Loc
 		SET @ExistShippingGroupCount = (select COUNT(*) AS ExistShippingGroupCount from #ShippingGroupList where cCatSchemaName = @GroupType) 
 		-- Count items associated with a shipping group; compared against @CartItemCount
 		-- to determine whether ALL or only SOME items belong to a shipping group.
-		Select @GroupItemCount=count(id) from #ShippingGroupList where cCatSchemaName=@GroupType
+		Select @GroupItemCount=count(DISTINCT id) from #ShippingGroupList where cCatSchemaName=@GroupType
 
 		-- Populate @ShippingGroupCatIDs with the distinct category IDs (nRuleType=1 = Include rule)
 		-- that have at least one shipping method mapped to them AND appear in the current
@@ -244,7 +244,7 @@ from tblCartShippingLocations Loc
 			if(@GroupItemCount=@CartItemCount)
 			BEGIN
 				SET @shippingGroupCondition ='INNER JOIN tblCartShippingProductCategoryRelations CSPC ON opt.nShipOptKey= CSPC.nShipOptId  
-				INNER JOIN tblCartCatProductRelations cpr on CSPC.nCatId= cpr.nCatId and cpr.nContentId in (select distinct id from #ShippingGroupList)'  
+				INNER JOIN tblCartCatProductRelations cpr on CSPC.nCatId= cpr.nCatId and cpr.nContentId in (select distinct id from #ShippingGroupList where cCatSchemaName = ''' + @GroupType + ''')'  
 				SET @shippingGroupRuleTypeCondition =' AND CSPC.nRuleType = 1'  
 			END
 		-- Build a comma-separated string of category IDs (e.g. '3,7,12') from
@@ -325,13 +325,22 @@ from tblCartShippingLocations Loc
 	-- methods (they supersede all standard options for the whole order).
 	-- If NO method has the override flag, return all valid methods normally.
 	SET @strMainQuery = ';WITH ShippingOptions AS (
-						 '+@strMainQuery+'   
-						)
-						SELECT * FROM (SELECT * FROM ShippingOptions WHERE EXISTS (SELECT 1 FROM ShippingOptions so WHERE so.bOverrideForWholeOrder = 1) AND bOverrideForWholeOrder = 1
-									UNION
-									SELECT * FROM ShippingOptions WHERE NOT EXISTS (SELECT 1 FROM ShippingOptions so WHERE so.bOverrideForWholeOrder = 1)
-						) AS FinalResult
-						ORDER BY nDisplayPriority, nShippingTotal'
+					 '+@strMainQuery+'   
+					),
+					Ranked AS (
+						SELECT *,
+							   MAX(CAST(ISNULL(bOverrideForWholeOrder, 0) AS INT)) OVER () AS _hasOverride,
+							   ROW_NUMBER() OVER (PARTITION BY nShipOptKey ORDER BY nDisplayPriority, nShippingTotal, cLocationNameShort) AS _rn
+						FROM ShippingOptions
+					)
+					SELECT nShipOptKey, cCurrency, cShipOptName, cShipOptForeignRef, cShipOptCarrier, cShipOptTime, cShipOptTandC,
+						   nShipOptCost, nShipOptPercentage, nShipOptQuantMin, nShipOptQuantMax, nShipOptWeightMin, nShipOptWeightMax,
+						   nShipOptPriceMin, nShipOptPriceMax, nShipOptHandlingPercentage, nShipOptHandlingFixedCost, nShipOptTaxRate,
+						   nAuditId, nDisplayPriority, bCollection, nShipOptCat, nShippingTotal, NonDiscountedShippingCost, nShippingGroup,
+						   bOverrideForWholeOrder, nShipOptWeightOverageUnit, nShipOptWeightOverageRate, cLocationNameShort
+					FROM Ranked
+					WHERE _rn = 1 AND (_hasOverride = 0 OR bOverrideForWholeOrder = 1)
+					ORDER BY nDisplayPriority, nShippingTotal'
 
 
 	--If promocode applied and promocode contains free shipping method then return that free shipping method with 0.00 cost  
@@ -408,13 +417,22 @@ from tblCartShippingLocations Loc
 		print (@strMainQuery)  -- Debug output; logs the assembled SQL to the messages pane.
 		-- Apply the same CTE / bOverrideForWholeOrder logic as Branch A.
 		SET @strMainQuery = 'WITH ShippingOptions AS (
-						 '+@strMainQuery+'     
-						)
-						SELECT * FROM (SELECT * FROM ShippingOptions WHERE EXISTS (SELECT 1 FROM ShippingOptions so WHERE so.bOverrideForWholeOrder = 1) AND bOverrideForWholeOrder = 1
-									UNION
-									SELECT * FROM ShippingOptions WHERE NOT EXISTS (SELECT 1 FROM ShippingOptions so WHERE so.bOverrideForWholeOrder = 1)
-						) AS FinalResult
-						ORDER BY nDisplayPriority, nShippingTotal'
+					 '+@strMainQuery+'     
+					),
+					Ranked AS (
+						SELECT *,
+							   MAX(CAST(ISNULL(bOverrideForWholeOrder, 0) AS INT)) OVER () AS _hasOverride,
+							   ROW_NUMBER() OVER (PARTITION BY nShipOptKey ORDER BY nDisplayPriority, nShippingTotal, cLocationNameShort) AS _rn
+						FROM ShippingOptions
+					)
+					SELECT nShipOptKey, cCurrency, cShipOptName, cShipOptForeignRef, cShipOptCarrier, cShipOptTime, cShipOptTandC,
+						   nShipOptCost, nShipOptPercentage, nShipOptQuantMin, nShipOptQuantMax, nShipOptWeightMin, nShipOptWeightMax,
+						   nShipOptPriceMin, nShipOptPriceMax, nShipOptHandlingPercentage, nShipOptHandlingFixedCost, nShipOptTaxRate,
+						   nAuditId, nDisplayPriority, bCollection, nShipOptCat, nShippingTotal, NonDiscountedShippingCost, nShippingGroup,
+						   bOverrideForWholeOrder, nShipOptWeightOverageUnit, nShipOptWeightOverageRate, cLocationNameShort
+					FROM Ranked
+					WHERE _rn = 1 AND (_hasOverride = 0 OR bOverrideForWholeOrder = 1)
+					ORDER BY nDisplayPriority, nShippingTotal'
 
 		-- If a promo code granting free shipping is present, execute into the staging
 		-- table variable and MERGE to zero the cost of the matching methods before

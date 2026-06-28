@@ -136,37 +136,59 @@ BEGIN
                 FOR XML PATH(''), TYPE
             ).value('.', 'NVARCHAR(MAX)'), 1, 1, '')
 
-            -- Add shipping group filter to query
-            SET @strEndConditionQuery = @strEndConditionQuery + 'AND opt.nShipOptKey IN (
-                SELECT DISTINCT CSPC.nShipOptId 
-                FROM tblCartShippingProductCategoryRelations CSPC
-                INNER JOIN tblCartCatProductRelations cpr ON CSPC.nCatId = cpr.nCatId
-                INNER JOIN tblCartShippingMethods csm ON CSPC.nShipOptId = csm.nShipOptKey
-                WHERE CSPC.nRuleType = 1 AND CSPC.nCatId IN (' + @ShippingGroupCatIDList + ')) '
+            -- Guard: @ShippingGroupCatIDList is NULL when no shipping methods are mapped to the
+            -- product's group categories. Using + concatenation with NULL would silently nullify
+            -- @strEndConditionQuery and remove all filters, returning every method. Instead,
+            -- force no results so a product in a group with no mapped methods returns nothing.
+            IF @ShippingGroupCatIDList IS NOT NULL AND @ShippingGroupCatIDList <> ''
+            BEGIN
+                SET @strEndConditionQuery = @strEndConditionQuery + 'AND opt.nShipOptKey IN (
+                    SELECT DISTINCT CSPC.nShipOptId 
+                    FROM tblCartShippingProductCategoryRelations CSPC
+                    INNER JOIN tblCartCatProductRelations cpr ON CSPC.nCatId = cpr.nCatId
+                    INNER JOIN tblCartShippingMethods csm ON CSPC.nShipOptId = csm.nShipOptKey
+                    WHERE CSPC.nRuleType = 1 AND CSPC.nCatId IN (' + @ShippingGroupCatIDList + ')) '
+            END
+            ELSE
+            BEGIN
+                -- No shipping methods are mapped to this product's group: suppress all results
+                SET @strEndConditionQuery = @strEndConditionQuery + 'AND 1 = 0 '
+            END
         END
         ELSE
         BEGIN
-            -- Exclude shipping options that are marked as override for whole order
+            -- Product has no shipping group: exclude ALL methods that are exclusively mapped to
+            -- any group (nRuleType = 1). Unlike the cart context, on a product page a method
+            -- mapped to a specific group should never appear for a product outside that group.
             SET @strEndConditionQuery = @strEndConditionQuery + 'AND opt.nShipOptKey NOT IN (
                 SELECT DISTINCT CSPC.nShipOptId 
                 FROM tblCartShippingProductCategoryRelations CSPC
-                INNER JOIN tblCartCatProductRelations cpr ON CSPC.nCatId = cpr.nCatId
-                INNER JOIN tblCartShippingMethods csm ON CSPC.nShipOptId = csm.nShipOptKey
-                WHERE csm.bOverrideForWholeOrder = 1) '
-        END
-    END
+                WHERE CSPC.nRuleType = 1) '
+        END  -- END ELSE of IF @ExistShippingGroupCount > 0
+    END  -- END IF @ProductId > 0
 
     -- Build final query
     SET @strMainQuery = CONCAT(@strFirstQuery, @strSecondQuery, @strCountryConditionQuery, @strPriceConditionQuery, @strEndConditionQuery)
 
+    -- Single-pass deduplication: MAX() OVER() computes the override flag without re-evaluating
+    -- the CTE a second time (avoiding UNION double-evaluation and float rounding duplicates).
+    -- ROW_NUMBER() OVER (PARTITION BY nShipOptKey) collapses multiple location rows per method.
     SET @strMainQuery = 'WITH ShippingOptions AS (
         ' + @strMainQuery + '
+    ),
+    Ranked AS (
+        SELECT *,
+               MAX(CAST(ISNULL(bOverrideForWholeOrder, 0) AS INT)) OVER () AS _hasOverride,
+               ROW_NUMBER() OVER (PARTITION BY nShipOptKey ORDER BY nDisplayPriority, nShippingTotal, cLocationNameShort) AS _rn
+        FROM ShippingOptions
     )
-    SELECT * FROM (
-        SELECT * FROM ShippingOptions WHERE EXISTS (SELECT 1 FROM ShippingOptions so WHERE so.bOverrideForWholeOrder = 1) AND bOverrideForWholeOrder = 1
-        UNION
-        SELECT * FROM ShippingOptions WHERE NOT EXISTS (SELECT 1 FROM ShippingOptions so WHERE so.bOverrideForWholeOrder = 1)
-    ) AS FinalResult
+    SELECT nShipOptKey, cCurrency, cShipOptName, cShipOptForeignRef, cShipOptCarrier, cShipOptTime, cShipOptTandC,
+           nShipOptCost, nShipOptPercentage, nShipOptQuantMin, nShipOptQuantMax, nShipOptWeightMin, nShipOptWeightMax,
+           nShipOptPriceMin, nShipOptPriceMax, nShipOptHandlingPercentage, nShipOptHandlingFixedCost, nShipOptTaxRate,
+           nAuditId, nDisplayPriority, bCollection, nShipOptCat, nShippingTotal, nShippingGroup,
+           bOverrideForWholeOrder, nShipOptWeightOverageUnit, nShipOptWeightOverageRate, cLocationNameShort
+    FROM Ranked
+    WHERE _rn = 1 AND (_hasOverride = 0 OR bOverrideForWholeOrder = 1)
     ORDER BY nDisplayPriority, nShippingTotal'
 
     -- Execute the query
