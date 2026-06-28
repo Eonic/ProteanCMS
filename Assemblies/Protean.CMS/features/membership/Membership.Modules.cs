@@ -375,7 +375,7 @@ namespace Protean
                                 // ok if the user is valid we then need to handle what happens next.
                                 if (Convert.ToBoolean(oAdXfm.valid) && oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText != "")
                                 {
-                                    myWeb.mnUserId = Convert.ToInt16(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
+                                    myWeb.mnUserId = Convert.ToInt64(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
                                     var oMembership = new Membership(ref myWeb);
                                     oMembership.RegistrationActions(CmdPrefix);
                                     switch (myWeb.moConfig["RegisterBehaviour"] ?? "")

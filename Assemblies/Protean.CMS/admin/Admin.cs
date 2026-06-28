@@ -5761,13 +5761,13 @@ from tblContentIndexDef";
                             {
                                 long nSubId = 0L;
                                 long pgid = 0;
-                                XmlElement localxFrmEditContent() { long argnReturnId1 = (int)nSubId; string argzcReturnSchema = ""; string argAlternateFormName = ""; var ret = oADX.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "Subscription", pgid, "", true, nReturnId:  ref argnReturnId1, zcReturnSchema:  argzcReturnSchema, AlternateFormName:  argAlternateFormName); nSubId = argnReturnId1; return ret; }
+                                XmlElement localxFrmEditContent() { long argnReturnId1 = nSubId; string argzcReturnSchema = ""; string argAlternateFormName = ""; var ret = oADX.xFrmEditContent(Convert.ToInt64(myWeb.moRequest["id"]), "Subscription", pgid, "", true, nReturnId:  ref argnReturnId1, zcReturnSchema:  argzcReturnSchema, AlternateFormName:  argAlternateFormName); nSubId = argnReturnId1; return ret; }
 
                                 oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(localxFrmEditContent(), true));
                                 if (oADX.valid)
                                 {
                                     var mySub = new Cms.Cart.Subscriptions(ref myWeb);
-                                    mySub.SubscriptionToGroup((int)nSubId, Convert.ToInt16(Tools.Number.IsNumeric(myWeb.moRequest["grp"]) ? myWeb.moRequest["grp"] : (object)0));
+                                    mySub.SubscriptionToGroup(nSubId, Convert.ToInt64(Tools.Number.IsNumeric(myWeb.moRequest["grp"]) ? myWeb.moRequest["grp"] : (object)0));
                                     cCmd = "Subscriptions";
                                     goto SP;
                             }
@@ -5788,7 +5788,7 @@ from tblContentIndexDef";
                             if (oADX.valid)
                             {
                                 var mySub = new Cms.Cart.Subscriptions(ref myWeb);
-                                mySub.SubscriptionToGroup((int)nSubId, Convert.ToInt16(Tools.Number.IsNumeric(myWeb.moRequest["grp"]) ? myWeb.moRequest["grp"] : (object)0));
+                                mySub.SubscriptionToGroup(nSubId, Convert.ToInt64(Tools.Number.IsNumeric(myWeb.moRequest["grp"]) ? myWeb.moRequest["grp"] : (object)0));
                                 cCmd = "Subscriptions";
                                 goto SP;
                             }
@@ -5911,7 +5911,7 @@ from tblContentIndexDef";
                             sAdminLayout = "Subscriptions";
                             if (Tools.Number.IsNumeric(myWeb.moRequest["grp"]))
                             {
-                                oSub.SubscriptionToGroup(Convert.ToInt16(myWeb.moRequest["id"]), Convert.ToInt16(myWeb.moRequest["grp"]));
+                                oSub.SubscriptionToGroup(Convert.ToInt64(myWeb.moRequest["id"]), Convert.ToInt64(myWeb.moRequest["grp"]));
                                 cCmd = "Subscriptions";
                                 goto SP;
                             }

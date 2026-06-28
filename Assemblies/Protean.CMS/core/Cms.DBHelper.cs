@@ -7069,16 +7069,17 @@ namespace Protean
 
                                     Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                                     IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
-                                }
-                                if (moMessaging != null && moMessaging.AdminProcess != null)
-                                {
-                                    try
+                              
+                                    if (moMessaging != null && moMessaging.AdminProcess != null)
                                     {
-                                        moMessaging.AdminProcess.maintainUserInGroup(nChildId, nParId, bRemove, cEmail, cGroup, isLast);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        cProcessInfo = ex.StackTrace;
+                                        try
+                                        {
+                                            moMessaging.AdminProcess.maintainUserInGroup(nChildId, nParId, bRemove, cEmail, cGroup, isLast);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            cProcessInfo = ex.StackTrace;
+                                        }
                                     }
                                 }
                                 // End If

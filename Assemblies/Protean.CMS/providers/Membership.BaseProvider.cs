@@ -1092,7 +1092,7 @@ namespace Protean.Providers
                             {
                                 var oMembership = new Cms.Membership(ref myWeb);
 
-                                if (!oMembership.ReactivateAccount((Int16)nAccount, goRequest["cDirPassword"]))
+                                if (!oMembership.ReactivateAccount((Int64)nAccount, goRequest["cDirPassword"]))
                                 {
                                     base.addNote("cDirPassword2", Protean.xForm.noteTypes.Alert, "There was a problem changing the password");
                                     base.valid = false;
@@ -2198,13 +2198,13 @@ namespace Protean.Providers
                                 }
                                 else
                                 {
-                                    mnUserId = Convert.ToInt16(moSession["PreviewUser"]);
+                                    mnUserId = Convert.ToInt64(moSession["PreviewUser"]);
                                     myWeb.mbPreview = true;
                                 }
                             }
                             else
                             {
-                                mnUserId = Convert.ToInt16(moSession["nUserId"]);
+                                mnUserId = Convert.ToInt64(moSession["nUserId"]);
                             }
 
 
