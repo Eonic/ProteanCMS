@@ -66,6 +66,9 @@
     </bind>
     <bind id="cContentBody" nodeset="tblContent/cContentXmlBrief/Content" required="false()" type="string"/>
     <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent']"/>
+
+    <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
+
   </model>
   <group ref="EditContent">
     <label>Carousel Module</label>
@@ -225,9 +228,9 @@
       </group>
       <group>
         <label>
-          <i class="fas fa-brush"> </i>
+          <i class="fas fa-cog"> </i>
           <span class="space"> </span>
-          <span>Presentation</span>
+          <span>Advanced Settings</span>
         </label>
         <group>
           <!-- These hidden fields and bindings are required for the component-->
