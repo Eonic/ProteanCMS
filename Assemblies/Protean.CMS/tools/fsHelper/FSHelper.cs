@@ -1619,7 +1619,7 @@ namespace Protean
                     }
 
                     string fullName = Path.GetFileName(Convert.ToString(file.FileName)).Replace("'", "");
-                    statuses.Add(new FilesStatus(fullName.Replace(" ", "-"), Convert.ToInt16(file.ContentLength)));
+                    statuses.Add(new FilesStatus(fullName.Replace(" ", "-"), Convert.ToInt32(file.ContentLength)));
                     context.Server.MapPath("/");
                     // We will add one node in ReviewFeedback.xml form and use it instead of config key = context.Request.Form("reviewimagepath")
                     if (!string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]))
