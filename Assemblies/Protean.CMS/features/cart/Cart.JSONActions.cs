@@ -1,14 +1,18 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Office2013.Word;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Protean.Providers.Payment;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Protean.Providers.Payment;
 using static Protean.Tools.Xml;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace Protean
 {
@@ -28,7 +32,7 @@ namespace Protean
 
                 //public event OnErrorEventHandler OnError;
 
-              //  public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+                //  public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Cart.JSONActions";
                 private const string cContactType = "Venue";
                 private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
@@ -124,7 +128,7 @@ namespace Protean
                         // Output the new cart
                         var oDoc = new XmlDocument();
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
-                       // myCart.bNoClose = true;
+                        // myCart.bNoClose = true;
 
                         if (myCart.mnCartId < 1)
                         {
@@ -160,7 +164,7 @@ namespace Protean
                                     string sProductOptionName = "";
                                     double dProductOptionPrice = 0d;
                                     string[][] aProductOptions = null;
-                                    
+
                                     if (item.ContainsKey("UniqueProduct"))
                                     {
                                         bUnique = (bool)item["UniqueProduct"];
@@ -204,7 +208,7 @@ namespace Protean
                                     {
                                         myCart.myWeb.moSession["overridePriceSession"] = (string)jObj["overridePriceSession"];
                                     }
-                                   
+
                                     myCart.AddItem((long)item["contentId"], (long)item["qty"], aProductOptions, sProductName, cProductPrice, "", bUnique, sOverideURL, false, sProductOptionName, dProductOptionPrice);
 
                                 }
@@ -218,7 +222,7 @@ namespace Protean
                             myCart.GetCart(ref argoCartElmt);
                             CartXml = updateCartforJSON(CartXml);
                             // persist cart
-                          
+
                             myCart.close(bNoClose);
 
                             string jsonString = JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.None);
@@ -581,7 +585,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        RaiseOnError(   new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
                         return ex.Message;
                     }
                     //return JsonConvert.ToString(nId);
@@ -631,7 +635,7 @@ namespace Protean
 
                     try
                     {
-                       
+
 
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
                         // myCart.GetCart(CartXml.FirstChild)
@@ -769,7 +773,7 @@ namespace Protean
 
                         long userId = Convert.ToInt64("0" + (myWeb.moSession["nUserId"]?.ToString() ?? "0"));
 
-                        if (myWeb.moDbHelper.checkUserRole( myCart.moCartConfig["AllowPriceUpdateRole"], "Role", userId))
+                        if (myWeb.moDbHelper.checkUserRole(myCart.moCartConfig["AllowPriceUpdateRole"], "Role", userId))
                         {
                             myCart.UpdateItemPrice(cartItemId, cProductPrice);
                         }
@@ -951,7 +955,7 @@ namespace Protean
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
                         myCart.GetCart(ref argoCartElmt);
                         myCart.purchaseActions(CartXml);
-                       
+
                         CartXml = updateCartforJSON(CartXml);
                         // persist cart
                         myCart.close();
@@ -1228,7 +1232,12 @@ namespace Protean
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
                             IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, cProviderName);
                             cRefundPaymentReceipt = oPaymentProv.Activities.RefundPayment(nProviderReference.ToString(), nAmount);
+                            if (moWebConfig["KlaviyoAPIPrivateKey"] != null && moWebConfig["KlaviyoAPIPrivateKey"] != "")
+                            {
+                                sendKlaviyoRefundEvent(nProviderReference, nAmount);
 
+                            }
+                            
                             var xmlDoc = new XmlDocument();
                             var xmlResponse = xmlDoc.CreateElement("Response");
                             xmlResponse.InnerXml = "<RefundPaymentReceiptId>" + cRefundPaymentReceipt + "</RefundPaymentReceiptId>";
@@ -1244,7 +1253,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        RaiseOnError(   new Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""));
                         return "Error"; // ex.Message
                     }
 
@@ -1345,7 +1354,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        RaiseOnError(   new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
                         return "Error"; // ex.Message
                     }
 
@@ -1366,12 +1375,12 @@ namespace Protean
                         bIsAuthorized = this.ValidateAPICall(Convert.ToString(cValidGroup));
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
-                        if(jObj["cEmailAddress"] != null && jObj["cEmailAddress"].ToString()!="")
+                        if (jObj["cEmailAddress"] != null && jObj["cEmailAddress"].ToString() != "")
                         {
                             var cEmailAddress = jObj["cEmailAddress"].ToString();
                             josResult = myCart.GDPRAnonomize(cEmailAddress);
                         }
-                       
+
                         return josResult;
                     }
                     catch (Exception ex)
@@ -1381,6 +1390,285 @@ namespace Protean
                     }
 
                 }
+
+                public void sendKlaviyoRefundEvent(long paymentRefNo, decimal refundAmount)
+                {
+                    try
+                    {
+                        String sSql = "select cCartXml from tblcartorder  where nPayMthdId in (select nPayMthdKey from tblCartPaymentMethod where cPayMthdProviderRef='" + paymentRefNo + "')";
+                        String scartXml = Convert.ToString(myWeb.moDbHelper.GetDataValue(sSql));
+
+                        XmlDocument doc = new XmlDocument();
+                        doc.LoadXml(scartXml);
+
+                        XmlElement cartxml = doc.DocumentElement;
+                        XmlNode orderNode = cartxml.SelectSingleNode("descendant-or-self::Order");
+
+
+                        if (orderNode == null)
+                            return;
+
+                        string siteUrl = "";
+
+                        if (orderNode.Attributes["siteUrl"] != null)
+                            siteUrl = orderNode.Attributes["siteUrl"].Value;
+                        string sCartId = orderNode.Attributes["cartId"].Value;
+                        List<string> itemNames = new List<string>();
+                        List<object> items = new List<object>();
+
+                        XmlNodeList cartItems =
+                            orderNode.SelectNodes("Item");
+
+                        foreach (XmlNode cartItem in cartItems)
+                        {
+                            string productName = "";
+                            string sku = "";
+                            string imageUrl = "";
+                            string productUrl = "";
+
+                            if (cartItem.SelectSingleNode("productDetail/Name") != null)
+                                productName =
+                                    cartItem.SelectSingleNode("productDetail/Name").InnerText;
+
+                            if (cartItem.SelectSingleNode("productDetail/StockCode") != null)
+                                sku =
+                                    cartItem.SelectSingleNode("productDetail/StockCode").InnerText;
+
+                            if (cartItem.Attributes["url"] != null)
+                            {
+                                productUrl =
+                                    siteUrl.TrimEnd('/')
+                                    + "/"
+                                    + cartItem.Attributes["url"].Value.TrimStart('/');
+                            }
+
+                            XmlNode imageNode =
+                                cartItem.SelectSingleNode(
+                                    "productDetail/ParentProduct/Content/Images/img[@class='thumbnail']");
+
+                            if (imageNode != null &&
+                                imageNode.Attributes["src"] != null)
+                            {
+                                imageUrl =
+                                    siteUrl.TrimEnd('/')
+                                    + "/"
+                                    + imageNode.Attributes["src"].Value.TrimStart('/');
+                            }
+
+                            int quantity = 1;
+                            decimal itemPrice = 0;
+                            decimal rowTotal = 0;
+
+                            if (cartItem.Attributes["quantity"] != null)
+                                quantity =
+                                    Convert.ToInt32(
+                                        cartItem.Attributes["quantity"].Value);
+
+                            if (cartItem.Attributes["price"] != null)
+                                itemPrice =
+                                    Convert.ToDecimal(
+                                        cartItem.Attributes["price"].Value);
+
+                            if (cartItem.Attributes["itemTotal"] != null)
+                                rowTotal =
+                                    Convert.ToDecimal(
+                                        cartItem.Attributes["itemTotal"].Value);
+
+                            itemNames.Add(productName);
+
+                            items.Add(new
+                            {
+                                ProductID = cartItem.Attributes["id"]?.Value,
+                                SKU = sku,
+                                ProductName = productName,
+                                Quantity = quantity,
+                                ItemPrice = itemPrice,
+                                RowTotal = rowTotal,
+                                ProductURL = productUrl,
+                                ImageURL = imageUrl,
+                                Categories = new string[] { },
+                                Brand = ""
+                            });
+
+                        }
+
+                        XmlNode oCartAdd = orderNode.SelectSingleNode("Contact[@type='Billing Address']");
+                        string GivenName = "";
+                        string[] aGivenName;
+                        string strAddress1 = "";
+                        string strAddress2 = "";
+                        string strTownCity = "";
+                        string strCounty = "";
+                        string strPostcode = "";
+                        string strCountry = "";
+                        string strFirstName = "";
+                        string strLastName = "";
+                        string strEmail = "";
+                        string strPhone = "";
+
+                        if (oCartAdd != null)
+                        {
+                            GivenName = oCartAdd.SelectSingleNode("GivenName").InnerText;
+
+                            aGivenName = GivenName.Trim().Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                            strFirstName = aGivenName.Length > 0 ? aGivenName[0] : "";
+                            strLastName = aGivenName.Length > 1 ? aGivenName[1] : "";
+                            if (oCartAdd.SelectSingleNode("Company") != null && oCartAdd.SelectSingleNode("Company").Value != null)
+                            {
+                                strAddress1 = oCartAdd.SelectSingleNode("Company").InnerText;
+
+                                if (oCartAdd.SelectSingleNode("Street") != null)
+                                {
+                                    strAddress2 = oCartAdd.SelectSingleNode("Street").InnerText;
+                                }
+                            }
+                            else if (oCartAdd.SelectSingleNode("Street") != null)
+                                strAddress1 = oCartAdd.SelectSingleNode("Street").InnerText;
+                            strAddress2 = "";
+                            if (oCartAdd.SelectSingleNode("City") != null)
+                                strTownCity = oCartAdd.SelectSingleNode("City").InnerText;
+                            if (oCartAdd.SelectSingleNode("State") != null)
+                                strCounty = oCartAdd.SelectSingleNode("State").InnerText;
+                            if (oCartAdd.SelectSingleNode("PostalCode") != null)
+                                strPostcode = oCartAdd.SelectSingleNode("PostalCode").InnerText;
+                            if (oCartAdd.SelectSingleNode("Country") != null)
+                                strCountry = oCartAdd.SelectSingleNode("Country").InnerText;
+                            if (oCartAdd.SelectSingleNode("Email") != null)
+                                strEmail = oCartAdd.SelectSingleNode("Email").InnerText;
+                            if (oCartAdd.SelectSingleNode("Telephone") != null)
+                                strPhone = oCartAdd.SelectSingleNode("Telephone").InnerText;
+
+
+
+                        }
+
+                        var billingAddress = new
+                        {
+                            FirstName = strFirstName,
+                            LastName = strLastName,
+                            Address1 = oCartAdd.SelectSingleNode("Company").InnerText,
+                            Address2 = oCartAdd.SelectSingleNode("Street").InnerText,
+                            City = strTownCity,
+                            RegionCode = strCounty,
+                            CountryCode = strCountry,
+                            Zip = strPostcode,
+                            Phone = strPhone
+                        };
+
+
+                        var payload = new
+                        {
+                            data = new
+                            {
+                                type = "event",
+                                attributes = new
+                                {
+                                    properties = new
+                                    {
+                                        OrderId = sCartId.ToString(),
+                                        Reason = " ",
+                                        ItemNames = itemNames,
+                                        Items = items,
+                                        BillingAddress = billingAddress
+
+                                    },
+
+                                    time = DateTime.UtcNow
+                                        .ToString("yyyy-MM-ddTHH:mm:ssZ"),
+
+                                    value = refundAmount,
+                                    value_currency = "GBP",
+
+                                    unique_id =
+                                        sCartId.ToString()
+                                        + "_REFUND_" +
+                                        DateTime.UtcNow.Ticks,
+
+                                    metric = new
+                                    {
+                                        data = new
+                                        {
+                                            type = "metric",
+                                            attributes = new
+                                            {
+                                                name = "Refunded Order"
+                                            }
+                                        }
+                                    },
+
+                                    profile = new
+                                    {
+                                        data = new
+                                        {
+                                            type = "profile",
+                                            attributes = new
+                                            {
+                                                email = strEmail,
+                                                phone_number =
+                                                    strPhone
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        };
+
+                        string json =
+                            Newtonsoft.Json.JsonConvert.SerializeObject(payload);
+                        string KlaviyoAPIKey = "";
+                        if (moWebConfig["KlaviyoAPIPrivateKey"] != null && moWebConfig["KlaviyoAPIPrivateKey"] != "")
+                        {
+                            KlaviyoAPIKey = moWebConfig["KlaviyoAPIPrivateKey"].ToString();
+
+                        }
+                        using (HttpClient client = new HttpClient())
+                        {
+                            client.DefaultRequestHeaders.Add(
+                                "Authorization",
+                                "Klaviyo-API-Key " +
+                                KlaviyoAPIKey);
+
+                            client.DefaultRequestHeaders.Add(
+                                "revision",
+                                "2024-02-15");
+
+                            client.DefaultRequestHeaders.Add(
+                                "accept",
+                                "application/json");
+
+                            StringContent content =
+                                new StringContent(
+                                    json,
+                                    Encoding.UTF8,
+                                    "application/json");
+
+                            HttpResponseMessage response =
+                                client.PostAsync(
+                                    "https://a.klaviyo.com/api/events/",
+                                    content)
+                                .Result;
+
+                            string responseText =
+                                response.Content
+                                    .ReadAsStringAsync()
+                                    .Result;
+
+
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        RaiseOnError(
+       new Tools.Errors.ErrorEventArgs(
+           mcModuleName,
+           "SendKlaviyoRefundedOrderEvent",
+           ex,
+           ""));
+
+                    }
+                }
+
+
                 #endregion
 
 
@@ -1452,13 +1740,13 @@ namespace Protean
                     else
                     {
                         WS = new epostcode.PostcodeServices13SoapClient();
-                       // WS.Timeout = 3000;
+                        // WS.Timeout = 3000;
 
                         // WriteToLog("Looking up postcode: """ & Postcode & """")
                         try
                         {
                             string msePostcodeAcctName = myCart.moCartConfig["ePostcodeAcctName"];
-                            string msePostcodeKey = myCart.moCartConfig["ePostcodeKey"]; 
+                            string msePostcodeKey = myCart.moCartConfig["ePostcodeKey"];
                             //addressPremises = WS.GetPremiseAddressesFromPostcodeAndHouseNumber(strPostcode, SelectedAddress, "100", msAccountNameDemo, msGUIDDemo, "");
                             addressPremises = WS.GetPremiseAddressesFromPostcodeAndHouseNumber(postcode, "", "100", msePostcodeAcctName, msePostcodeKey, "");
 
