@@ -2,10 +2,12 @@
 SWIPER
 -------------------*/
 
+
 .content-carousel {
+    padding: $grid-gutter-height 40px 0;
+
     .swiper {
-        padding: $grid-gutter-height $grid-gutter-width 0;
-        margin: (-$grid-gutter-height) (-$grid-gutter-width) 0;
+        //   margin: (-$grid-gutter-height) (-$grid-gutter-width) 0;
     }
 
     .swiper-button-prev,
@@ -20,10 +22,33 @@ SWIPER
             text-shadow: none;
         }
     }
+
+    .swiper-button-prev {
+        left: 0 !important;
+    }
+
+    .swiper-button-next {
+        right: 0 !important;
+    }
 }
 
 .swiper-pagination-bullet-active {
     background-color: $primary;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: $primary;
+}
+
+.swiper-pagination-bullet:focus-visible {
+    outline: 2px dashed $secondary;
+    outline-offset: 2px;
+    opacity: 1;
+}
+
+.swiper-slide-link:focus-visible {
+    outline-offset: -5px;
+    outline: 2px dashed $secondary;
 }
 
 /*############### SLIDE CAROUSEL #################*/
