@@ -1,5 +1,5 @@
 ﻿
- ALTER PROCEDURE [dbo].[spGetValidShippingOptions]
+ CREATE PROCEDURE [dbo].[spGetValidShippingOptions]
  -- Returns the valid shipping options available for a given cart order.
  -- Shipping options are filtered by quantity, price, weight, currency, country, CMS audit status,
  -- and user permissions. Results can be further restricted to options associated with product

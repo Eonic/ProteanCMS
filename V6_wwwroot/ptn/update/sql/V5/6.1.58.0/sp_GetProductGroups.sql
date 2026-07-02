@@ -19,6 +19,5 @@ BEGIN
 
 END
 
-GO
 
 

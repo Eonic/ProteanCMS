@@ -2310,7 +2310,7 @@ namespace Protean
                                 {
                                     nStatus = Convert.ToInt16(myWeb.moRequest["status"]);
                                 }
-                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("User", (long)Convert.ToInt16("0" + (myWeb.moSession["UserParId"]?.ToString() ?? "")), nStatus));
+                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("User", Convert.ToInt64("0" + (myWeb.moSession["UserParId"]?.ToString() ?? "")), nStatus));
                                 sAdminLayout = "ListDirectory"; // "ListUsers"
                                 myWeb.moSession["ewCmd"] = mcEwCmd;
                                 break;
@@ -6124,7 +6124,7 @@ from tblContentIndexDef";
 
                         // Set variables
                         nId = Convert.ToInt16(myWeb.moRequest["id"]);
-
+                    restartProcess:
                         switch (cSubCmd ?? "")
                         {
 
@@ -6137,7 +6137,13 @@ from tblContentIndexDef";
                                         bListCodesets = true;
                                     break;
                                 }
+                            case "ReleaseCode":
 
+                                cSQL = "Update tblcodes set nUseId = null, dIssuedDate = null, nIssuedDirId = null  where nCodeKey = " + myWeb.moRequest["subcodeid"];
+                                myWeb.moDbHelper.ExeProcessSql(cSQL);
+
+                                cSubCmd = "ManageCodes";
+                                goto restartProcess;
                             case "ManageCodes":
                                 {
                                     moAdXfm.xFrmMemberCodeGenerator(nId);
@@ -6145,11 +6151,13 @@ from tblContentIndexDef";
                                     // Get the list of sub codes.
                                     if (nId == 0)
                                         nId = -1;
-                                    cSQL = "SELECT nCodeKey As id, cCode As Code, dUseDate As Date_Used, nDirKey As User_Id, cDirName As Username, cDirXml As UserXml FROM tblCodes LEFT OUTER JOIN tblDirectory ON nUseId = nDirKey WHERE nCodeParentId = " + nId;
+                                    cSQL = "SELECT nCodeKey As id, cCode As Code,nUseId As Used_ref, dIssuedDate As Date_Issued, dUseDate As Date_Used, nDirKey As User_Id, cDirName As Username, cDirXml As UserXml FROM tblCodes LEFT OUTER JOIN tblDirectory ON nIssuedDirId = nDirKey WHERE nCodeParentId = " + nId;
 
                                     oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Code", "tblCodes");
                                     oDS.Tables["Code"].Columns["id"].ColumnMapping = MappingType.Attribute;
-                                    oDS.Tables["Code"].Columns["User_Id"].ColumnMapping = MappingType.Attribute;
+                                    oDS.Tables["Code"].Columns["Used_ref"].ColumnMapping = MappingType.Attribute;
+                                    oDS.Tables["Code"].Columns["Date_Issued"].ColumnMapping = MappingType.Attribute;
+                                    oDS.Tables["Code"].Columns["Date_Used"].ColumnMapping = MappingType.Attribute;
 
                                     myWeb.moDbHelper.ReturnNullsEmpty(ref oDS);
                                     oDS.EnforceConstraints = false;
@@ -6188,10 +6196,11 @@ from tblContentIndexDef";
                                 }
                             case "DeleteCodeGroup":
                                 {
-
+                                    moAdXfm.xFrmDeleteMemberCodeset(nId);
+                                    if (moAdXfm.isSubmitted() && moAdXfm.valid)
+                                        bListCodesets = true;
                                     break;
                                 }
-
                         }
 
                         if (!bListCodesets)

@@ -10,10 +10,6 @@
 
 
 //using Microsoft.VisualBasic;
-using Protean.Providers.CDN;
-using Protean.Providers.Membership;
-using Protean.Providers.Payment;
-using Protean.Tools;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,13 +24,18 @@ using System.Text.RegularExpressions;
 //using System.Text.Json.Nodes;
 using System.Web;
 using System.Web.Configuration;
+using System.Web.Services.Description;
 using System.Xml;
+using Protean.Providers.CDN;
+using Protean.Providers.Membership;
+using Protean.Providers.Payment;
+using Protean.Tools;
+using static System.Web.HttpUtility;
 using static Lucene.Net.QueryParsers.QueryParser;
 using static Protean.Cms;
 using static Protean.stdTools;
 using static Protean.Tools.Text;
 using static Protean.Tools.Xml;
-using static System.Web.HttpUtility;
 
 namespace Protean
 {
@@ -2327,6 +2328,67 @@ namespace Protean
                     }
                 }
 
+
+                public XmlElement xFrmDeleteMemberCodeset(long nCodesetKey)
+                {
+
+                    XmlElement oFrmElmt;
+                    XmlElement oElmt;
+
+                    // Dim oDr As SqlDataReader
+                    string cProcessInfo = "";
+
+
+                    try
+                    {
+                        // load the directory item to be deleted
+                        moDbHelper.moPageXml = moPageXML;
+
+                        base.NewFrm("DeleteMemberCodeset");
+
+                        // Lets get the object
+                        if (nCodesetKey != 0L)
+                        {
+                            base.Instance.InnerXml = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Codes, (long)nCodesetKey);
+                        }
+                        base.submission("EditInput", "", "post");
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "DeleteDM", "", "Delete MemberCodeset");
+
+                        //XmlNode argoNode = oFrmElmt;
+                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, "Are you sure you want to delete this MemberCodeset: " + base.Instance.SelectSingleNode("cCodeName"));
+                        //oFrmElmt = (XmlElement)argoNode;
+
+
+                        base.addSubmit(ref oFrmElmt, "", "Delete Codeset");
+
+                        if (base.isSubmitted())
+                        {
+                            base.updateInstanceFromRequest();
+                            base.validate();
+                            if (base.valid)
+                            {
+                                moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.Codes, nCodesetKey);
+                            }
+                            else
+                            {
+                                base.addValues();
+                            }
+                        }
+                        else
+                        {
+                            base.addValues();
+                        }
+
+                        return base.moXformElmt;
+                    }
+
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, _moduleName, "xFrmDeleteDeliveryMethod", ex, "", cProcessInfo, gbDebug);
+                        return null;
+                    }
+                }
+
                 /// <summary>
                 ///   Xform for generating codes for codes sets.
                 /// </summary>
@@ -2501,15 +2563,25 @@ namespace Protean
 
                     try
                     {
+
+                        //Get the Group name
+
+                        string cCodeGroup = moDbHelper.getObjectInstance(Cms.dbHelper.objectTypes.Codes, (long)nParentCodeKey);
+                        XmlDocument oCodeGroup = new XmlDocument();
+                        oCodeGroup.LoadXml(cCodeGroup);
+
+                        string GroupName = oCodeGroup.SelectSingleNode("tblCodes/cCodeName").InnerText;
+
+
                         // Build the form
                         base.NewFrm("ImportCodes");
                         base.submission("Import Codes", "", "post", "form_check(this)");
                         base.Instance.InnerXml = "<ImportCodes/>";
-                        oFrmElmt = base.addGroup(ref base.moXformElmt, "Import Comma Separated Codes", "", "Please copy and paste the codes below separated by commas");
+                        oFrmElmt = base.addGroup(ref base.moXformElmt, "Import Comma Separated Codes for " + GroupName, "", "Please copy and paste the codes below separated by commas");
                         Int16 rows = 20;
                         Int16 cols = 80;
                         string ClassName = "";
-                        base.addTextArea(ref oFrmElmt, "ImportCodes", true, "Import Codes", ClassName, rows, cols);
+                        base.addTextArea(ref oFrmElmt, "ImportCodes", true, "Import Comma Separated Codes for " + GroupName, ClassName, rows, cols);
 
                         XmlElement argoBindParent1 = null;
                         base.addBind("ImportCodes", "ImportCodes", oBindParent: ref argoBindParent1, "true()");
@@ -2540,7 +2612,10 @@ namespace Protean
 
 
 
-                                string[] oCodes = oInstanceRoot.InnerText.Split(',');
+                                string rawText = oInstanceRoot.InnerText;
+                                string[] oCodes = rawText.Contains(',')
+                                    ? rawText.Split(',')
+                                    : rawText.Split(new[] { "\r\n", "\n", "\r" }, StringSplitOptions.RemoveEmptyEntries);
                                 int nNoCodes = oCodes.Count();
                                 // Add the codes to the database
                                 int nAdded = 0;

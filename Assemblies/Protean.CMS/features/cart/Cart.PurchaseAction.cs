@@ -46,7 +46,7 @@ namespace Protean
                             foreach (XmlNode codeNode in oCartItemProductDetailXml.SelectNodes("IssueCodes/code"))
                             {
                                 // if additional codes are defined in product options
-                                int extraCodes = 0;
+                                short extraCodes = 0;
                                 XmlElement codeElmt = (XmlElement)codeNode;
                                 foreach (XmlNode optionNode in oCartItemProductDetailXml.ParentNode.SelectNodes("Item"))
                                 {
@@ -55,13 +55,15 @@ namespace Protean
                                     {
                                         if (short.TryParse(extraCodesNode.Value, out short parsedValue))
                                         {
-                                            extraCodes = extraCodes + parsedValue;
+                                            extraCodes = (short)(extraCodes + parsedValue);
                                         }
                                     }
                                 }
                                 //Add Codes to the order based on product settings
                                 short CodeSetId = (short)Convert.ToInt16("0" + codeElmt.GetAttribute("codeBank"));
-                                short Quantity = (short)(Convert.ToInt16(cartItem.GetAttribute("quantity")) + Convert.ToInt16(codeElmt.GetAttribute("noOfCodes")) + extraCodes);
+                                short noOfCodes = (short)Convert.ToInt16("0" + codeElmt.GetAttribute("noOfCodes"));
+                                if (noOfCodes == 0) { noOfCodes = 1; }; // default to 1 if noOfCodes is not specified
+                                short Quantity = (short)((short)Convert.ToInt16(cartItem.GetAttribute("quantity")) * (short)(noOfCodes + extraCodes));
                                 string SetName = codeElmt.GetAttribute("name");
                                 AddCode(ref oCartItemProductDetailXml, CartItemId, CodeSetId, Quantity, SetName);
                             }

@@ -805,7 +805,7 @@ namespace Protean.Providers
                         var oMembership = new Cms.Membership(ref myWeb);
                         if (oMembership.ActivateAccount(moRequest["key"]))
                         {
-                            addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1036\">Your account is now activated please logon</span>", true, "msg-1036");
+                            addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1036\">Your account is now activated please <a href=\"/" + myWeb.mcPagePath + "\">Sign In</a></span>", true, "msg-1036");
                         }
                         else
                         {
@@ -2057,6 +2057,15 @@ namespace Protean.Providers
 
                     try
                     {
+                        // if the account is being activated we want to logoff first because the activation goes to a logged off page
+                        if (myWeb.moRequest["ewCmd"] == "ActivateAccount")
+                        {
+                            moSession["nUserId"] = null;
+                            moSession.Abandon();
+                            myWeb.mnUserId = 0;
+                            return myWeb.mnUserId;
+                        }
+
                         if (myWeb.moRequest["LogOff"] == "1")
                         {
                             moSession["nUserId"] = null;

@@ -48,7 +48,7 @@ namespace Protean
                         string sReturnValue = string.Empty;
                         string cLogonCmd = "";
 
-                        if (myWeb.mnUserId == 0 & (myWeb.moRequest["ewCmd"] != "passwordReminder" & myWeb.moRequest["ewCmd"] != cmdPrefix + "ActivateAccount"))
+                        if (myWeb.mnUserId == 0 & (myWeb.moRequest["ewCmd"] != "passwordReminder" & myWeb.moRequest["ewCmd"] != cmdPrefix + "ActivateAccount" & myWeb.moRequest["ewCmd"] != "ActivateAccount"))
                         {
 
                             oXfmElmt = (XmlElement)oAdXfm.GetProviderXFrmUserLogon(cmdPrefix: cmdPrefix);
@@ -136,6 +136,13 @@ namespace Protean
                         }
 
                         else if (myWeb.moRequest["ewCmd"] == cmdPrefix + "ActivateAccount")
+                        {
+
+                            oXfmElmt = (XmlElement)oAdXfm.xFrmActivateAccount();
+                            oContentNode.InnerXml = oXfmElmt.InnerXml;
+
+                        }
+                        else if (myWeb.moRequest["ewCmd"] == "ActivateAccount")
                         {
 
                             oXfmElmt = (XmlElement)oAdXfm.xFrmActivateAccount();

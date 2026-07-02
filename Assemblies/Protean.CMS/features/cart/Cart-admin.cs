@@ -518,9 +518,9 @@ namespace Protean
                                     // TS: Removed because it gives a massive overhead when Listing loads of orders.
                                     if (bSingleRecord)
                                     {
-                                        if (myWeb.mbAdminMode && Convert.ToInt16(oDR["nCartUserDirId"]) > 0)
+                                        if (myWeb.mbAdminMode && Convert.ToInt64(oDR["nCartUserDirId"]) > 0)
                                         {
-                                            oContent.AppendChild(moDBHelper.GetUserXML((long)Convert.ToInt16(oDR["nCartUserDirId"]), false));
+                                            oContent.AppendChild(moDBHelper.GetUserXML((long)Convert.ToInt64(oDR["nCartUserDirId"]), false));
                                         }
 
                                         string[] aSellerNotes = oDR["cSellerNotes"]?.ToString().Split(new[] { "\n" }, StringSplitOptions.None) ?? Array.Empty<string>();

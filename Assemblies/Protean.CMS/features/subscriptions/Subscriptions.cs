@@ -3025,7 +3025,7 @@ namespace Protean
 
                             if (goConfig["cssFramework"] == "bs5")
                             {                                
-                                    cXformPath = "/features/subscription/";                              
+                                    cXformPath = "/features/subscriptions/";                              
                             }
 
                             if (mbAdminMode & this.myWeb.mnUserId == 0)
