@@ -2986,7 +2986,7 @@ namespace Protean
                                 }
 
                                 // ensure if no preview user is specified we are anonomous
-                                if (string.IsNullOrEmpty((myWeb.moSession["PreviewUser"]?.ToString() ?? "")) & Convert.ToInt16("0" + myWeb.moRequest["PreviewUser"]) == 0)
+                                if (string.IsNullOrEmpty((myWeb.moSession["PreviewUser"]?.ToString() ?? "")) & Convert.ToInt64("0" + myWeb.moRequest["PreviewUser"]) == 0)
                                 {
                                     myWeb.moSession["PreviewUser"] = 0;
                                 }
@@ -3013,11 +3013,11 @@ namespace Protean
                                 }
                                 myWeb.mbPreviewHidden = Convert.ToBoolean(myWeb.moSession["mbPreviewHidden"]);
 
-                                if (Convert.ToInt16("0" + myWeb.moRequest["PreviewUser"]) > 0)
+                                if (Convert.ToInt64("0" + myWeb.moRequest["PreviewUser"]) > 0)
                                 {
-                                    myWeb.moSession["PreviewUser"] = (object)Convert.ToInt16("0" + myWeb.moRequest["PreviewUser"]);
+                                    myWeb.moSession["PreviewUser"] = (object)Convert.ToInt64("0" + myWeb.moRequest["PreviewUser"]);
                                 }
-                                myWeb.mnUserId = Convert.ToInt16(myWeb.moSession["PreviewUser"]);
+                                myWeb.mnUserId = Convert.ToInt64(myWeb.moSession["PreviewUser"]);
 
                                 if (Convert.ToInt64("0" + myWeb.moRequest["CartId"]) > 0)
                                 {
@@ -3671,7 +3671,7 @@ namespace Protean
                     if (myWeb.mbPreview)
                     {
                         var tmp = myWeb.moSession;
-                        int argnUserId = Convert.ToInt16(tmp["nUserId"]);
+                        long argnUserId = Convert.ToInt64(tmp["nUserId"]);
                         oUserXml = myWeb.moDbHelper.getUserXMLById(ref argnUserId);
                         tmp["nUserId"] = (object)argnUserId;
                     }
@@ -4596,7 +4596,7 @@ namespace Protean
                     }
                     else
                     {
-                        XmlElement localgetUserXMLById() { var tmp2 = myWeb.moSession; int argnUserId = Convert.ToInt16(tmp2["PreviewUser"]); var ret = myWeb.moDbHelper.getUserXMLById(ref argnUserId); tmp2["PreviewUser"] = (object)argnUserId; return ret; }
+                        XmlElement localgetUserXMLById() { var tmp2 = myWeb.moSession; long argnUserId = Convert.ToInt64(tmp2["PreviewUser"]); var ret = myWeb.moDbHelper.getUserXMLById(ref argnUserId); tmp2["PreviewUser"] = (object)argnUserId; return ret; }
 
                         oElmt1.SetAttribute("username", localgetUserXMLById().GetAttribute("name"));
                     }
@@ -4605,7 +4605,7 @@ namespace Protean
                     // also need to add an xform for the group and the date
 
                     // get the origional user details
-                    XmlElement localgetUserXMLById1() { var tmp3 = myWeb.moSession; int argnUserId1 = Convert.ToInt16(tmp3["nUserId"]); var ret = myWeb.moDbHelper.getUserXMLById(ref argnUserId1); tmp3["nUserId"] = (object)argnUserId1; return ret; }
+                    XmlElement localgetUserXMLById1() { var tmp3 = myWeb.moSession; long argnUserId1 = Convert.ToInt64(tmp3["nUserId"]); var ret = myWeb.moDbHelper.getUserXMLById(ref argnUserId1); tmp3["nUserId"] = (object)argnUserId1; return ret; }
 
                     oElmt.AppendChild(localgetUserXMLById1());
                     moPageXML.DocumentElement.AppendChild(oElmt);

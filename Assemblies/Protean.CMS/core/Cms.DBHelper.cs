@@ -8990,7 +8990,7 @@ namespace Protean
                 return default;
             }
 
-            public XmlElement getUserXMLById(ref int nUserId)
+            public XmlElement getUserXMLById(ref long nUserId)
             {
                 PerfMonLog("DBHelper", "getUserXMLById");
                 // Dim oDs As Data.DataSet
