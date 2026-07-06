@@ -10,7 +10,7 @@
 	SELECT 'Invalid AuditIds'
 
 	--Invalid AuditId's. Does not exist in the tblAudit table.
-	SELECT nStructKey, nAuditId
+	SELECT nStructKey, nAuditId, c.*
 	FROM tblContentStructure C
 	WHERE NOT EXISTS
 	(

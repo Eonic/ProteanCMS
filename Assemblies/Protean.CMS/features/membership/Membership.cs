@@ -119,14 +119,14 @@ namespace Protean
                 }
             }
 
-            public int DecryptResetLink(int AccountID, string EncryptedString)
+            public long DecryptResetLink(int AccountID, string EncryptedString)
             {
                 try
                 {
                     EncryptedString = Tools.Text.DeAscString(EncryptedString);
 
                     string cSQL = "SELECT tblDirectory.nDirKey FROM tblDirectory " + "INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey " + "WHERE cDirPassword = '" + SqlFmt(EncryptedString) + "' AND nDirKey = " + AccountID;
-                    return Convert.ToInt16(myWeb.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
+                    return Convert.ToInt64(myWeb.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
                 }
                 catch (Exception ex)
                 {
