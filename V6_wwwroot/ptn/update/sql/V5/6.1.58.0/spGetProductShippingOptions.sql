@@ -40,14 +40,14 @@ BEGIN
         '''' AS nShippingGroup, opt.bOverrideForWholeOrder,
         opt.nShipOptWeightOverageUnit, opt.nShipOptWeightOverageRate,
         Loc.cLocationNameShort
-        FROM tblCartShippingLocations Loc
-        INNER JOIN tblCartShippingRelations rel ON Loc.nLocationKey = rel.nShpLocId
-        INNER JOIN tblCartShippingMethods opt ON rel.nShpOptId = opt.nShipOptKey
-        INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey '
+        FROM tblCartShippingMethods opt
+        INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey
+        LEFT JOIN tblCartShippingRelations rel ON opt.nShipOptKey = rel.nShpOptId
+        LEFT JOIN tblCartShippingLocations Loc ON rel.nShpLocId = Loc.nLocationKey '
 
     -- Permission and currency conditions
     SET @strSecondQuery = 'WHERE ((opt.cCurrency Is Null) OR (opt.cCurrency = '''') OR (opt.cCurrency = ''' + @Currency + '''))
-        AND opt.nShipOptKey =
+        AND (opt.bCollection = 1 OR opt.nShipOptKey =
         CASE WHEN ' + CONVERT(NVARCHAR(10), @userId) + ' = 0 THEN 
             (CASE WHEN (SELECT COUNT(perm.nCartShippingPermissionKey) FROM tblCartShippingPermission perm
                 WHERE perm.nShippingMethodId = opt.nShipOptKey
@@ -68,12 +68,13 @@ BEGIN
                 INNER JOIN tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId
                 AND nPermLevel = 0 AND PermGroup.nDirChildId = ' + CONVERT(NVARCHAR(10), @userId) + ')
                 THEN opt.nShipOptKey END)
-        END '
+        END)
+        AND (opt.bCollection = 1 OR Loc.nLocationKey IS NOT NULL) '
 
     -- Country condition
     IF @CountryList <> ''
     BEGIN
-        SET @strCountryConditionQuery = 'AND ((loc.cLocationNameShort IN ' + @CountryList + ') OR (loc.cLocationNameFull IN ' + @CountryList + ')) '
+        SET @strCountryConditionQuery = 'AND (opt.bCollection = 1 OR (loc.cLocationNameShort IN ' + @CountryList + ') OR (loc.cLocationNameFull IN ' + @CountryList + ')) '
     END
 
     -- Price condition - filter by product price if provided
@@ -142,28 +143,29 @@ BEGIN
             -- force no results so a product in a group with no mapped methods returns nothing.
             IF @ShippingGroupCatIDList IS NOT NULL AND @ShippingGroupCatIDList <> ''
             BEGIN
-                SET @strEndConditionQuery = @strEndConditionQuery + 'AND opt.nShipOptKey IN (
-                    SELECT DISTINCT CSPC.nShipOptId 
+                -- Collection methods (bCollection=1) are always shown regardless of group
+                -- mapping so they appear on every product page.
+                SET @strEndConditionQuery = @strEndConditionQuery + 'AND (opt.bCollection = 1 OR opt.nShipOptKey IN (
+                    SELECT DISTINCT CSPC.nShipOptId
                     FROM tblCartShippingProductCategoryRelations CSPC
                     INNER JOIN tblCartCatProductRelations cpr ON CSPC.nCatId = cpr.nCatId
                     INNER JOIN tblCartShippingMethods csm ON CSPC.nShipOptId = csm.nShipOptKey
-                    WHERE CSPC.nRuleType = 1 AND CSPC.nCatId IN (' + @ShippingGroupCatIDList + ')) '
+                    WHERE CSPC.nRuleType = 1 AND CSPC.nCatId IN (' + @ShippingGroupCatIDList + '))) '
             END
             ELSE
             BEGIN
-                -- No shipping methods are mapped to this product's group: suppress all results
-                SET @strEndConditionQuery = @strEndConditionQuery + 'AND 1 = 0 '
+                -- No methods mapped to this group: suppress results but keep collection options
+                SET @strEndConditionQuery = @strEndConditionQuery + 'AND (opt.bCollection = 1 OR 1 = 0) '
             END
         END
         ELSE
         BEGIN
-            -- Product has no shipping group: exclude ALL methods that are exclusively mapped to
-            -- any group (nRuleType = 1). Unlike the cart context, on a product page a method
-            -- mapped to a specific group should never appear for a product outside that group.
-            SET @strEndConditionQuery = @strEndConditionQuery + 'AND opt.nShipOptKey NOT IN (
-                SELECT DISTINCT CSPC.nShipOptId 
+            -- Product has no shipping group: exclude methods exclusively mapped to any group
+            -- (nRuleType=1). Collection methods (bCollection=1) are exempt and always shown.
+            SET @strEndConditionQuery = @strEndConditionQuery + 'AND (opt.bCollection = 1 OR opt.nShipOptKey NOT IN (
+                SELECT DISTINCT CSPC.nShipOptId
                 FROM tblCartShippingProductCategoryRelations CSPC
-                WHERE CSPC.nRuleType = 1) '
+                WHERE CSPC.nRuleType = 1)) '
         END  -- END ELSE of IF @ExistShippingGroupCount > 0
     END  -- END IF @ProductId > 0
 
@@ -178,7 +180,7 @@ BEGIN
     ),
     Ranked AS (
         SELECT *,
-               MAX(CAST(ISNULL(bOverrideForWholeOrder, 0) AS INT)) OVER () AS _hasOverride,
+               MAX(CASE WHEN ISNULL(bCollection, 0) = 0 THEN CAST(ISNULL(bOverrideForWholeOrder, 0) AS INT) ELSE 0 END) OVER () AS _hasOverride,
                ROW_NUMBER() OVER (PARTITION BY nShipOptKey ORDER BY nDisplayPriority, nShippingTotal, cLocationNameShort) AS _rn
         FROM ShippingOptions
     )
@@ -188,7 +190,7 @@ BEGIN
            nAuditId, nDisplayPriority, bCollection, nShipOptCat, nShippingTotal, nShippingGroup,
            bOverrideForWholeOrder, nShipOptWeightOverageUnit, nShipOptWeightOverageRate, cLocationNameShort
     FROM Ranked
-    WHERE _rn = 1 AND (_hasOverride = 0 OR bOverrideForWholeOrder = 1)
+    WHERE _rn = 1 AND (bCollection = 1 OR _hasOverride = 0 OR bOverrideForWholeOrder = 1)
     ORDER BY nDisplayPriority, nShippingTotal'
 
     -- Execute the query

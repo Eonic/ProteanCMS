@@ -2117,7 +2117,7 @@ namespace Protean
                         //oFrmGrp1 = (XmlElement)argoNode;
 
                         // add the buttons so we can test for submission
-                        oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditDirs", "DirButtons", "Buttons");
+                        oFrmGrp2 = base.addGroup(ref oFrmElmt, "EditDirs", "DirButtons", "Buttons ");
                         base.addSubmit(ref oFrmGrp2, "AddSelected", "Include Selected", "", "PermissionButton btn-allow");
                         if (bDeny)
                         {
@@ -2161,7 +2161,7 @@ namespace Protean
                         // Dim nxxx As Integer = moDbhelper.exeProcessSQLScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " & id & ") AND (nDirId = 0)")
                         if (!(Convert.ToDouble(moDbHelper.ExeProcessSqlScalar("Select nDiscountDirRelationKey From tblCartDiscountDirRelations WHERE (nDiscountId = " + id + ") AND (nDirId = 0)")) > 0d))
                         {
-                            base.addOption(ref oElmt2, "<<All Users>>", 0.ToString());
+                            base.addOption(ref oElmt2, "<<All Products>>", 0.ToString());
                         }
                         sSql = "SELECT nCatKey as value, cCatName as name FROM tblCartProductCategories WHERE (cCatSchemaName = N'Shipping') AND" + " (((SELECT nShipProdCatRelKey" + " FROM tblCartShippingProductCategoryRelations" + " WHERE (nShipOptId  = " + id + ") AND (nCatId = tblCartProductCategories.nCatKey))) IS NULL)" + " ORDER BY cCatName";
 
@@ -2188,7 +2188,7 @@ namespace Protean
                         oElmt4 = base.addSelect(ref oFrmGrp3, "Items", false, "Included", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
 
 
-                        sSql = "SELECT tblCartShippingProductCategoryRelations.nShipProdCatRelKey AS value, " + "  CASE WHEN tblCartShippingProductCategoryRelations.nCatId = 0 THEN '<<All Users>>' ELSE tblCartProductCategories.cCatName END AS name" + " FROM tblCartShippingProductCategoryRelations LEFT OUTER JOIN" + " tblCartProductCategories ON tblCartShippingProductCategoryRelations.nCatId = tblCartProductCategories.nCatKey" + " WHERE (tblCartShippingProductCategoryRelations.nShipOptId = " + id + ")" + cDenyFilter + " ORDER BY cCatName";
+                        sSql = "SELECT tblCartShippingProductCategoryRelations.nShipProdCatRelKey AS value, " + "  CASE WHEN tblCartShippingProductCategoryRelations.nCatId = 0 THEN '<<All Products>>' ELSE tblCartProductCategories.cCatName END AS name" + " FROM tblCartShippingProductCategoryRelations LEFT OUTER JOIN" + " tblCartProductCategories ON tblCartShippingProductCategoryRelations.nCatId = tblCartProductCategories.nCatKey" + " WHERE (tblCartShippingProductCategoryRelations.nShipOptId = " + id + ")" + cDenyFilter + " ORDER BY cCatName";
 
                         using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                         {
@@ -2199,7 +2199,7 @@ namespace Protean
 
                             oElmt5 = base.addSelect(ref oFrmGrp3, "Items", false, "Excluded", "scroll_10", Protean.xForm.ApperanceTypes.Minimal);
 
-                            sSql = "SELECT tblCartShippingProductCategoryRelations.nShipProdCatRelKey AS value, " + "  CASE WHEN tblCartShippingProductCategoryRelations.nCatId = 0 THEN '<<All Users>>' ELSE tblCartProductCategories.cCatName END AS name" + " FROM tblCartShippingProductCategoryRelations LEFT OUTER JOIN" + " tblCartProductCategories ON tblCartShippingProductCategoryRelations.nCatId = tblCartProductCategories.nCatKey" + " WHERE (tblCartShippingProductCategoryRelations.nShipOptId = " + id + ") and nRuleType = 2 ORDER BY cCatName";
+                            sSql = "SELECT tblCartShippingProductCategoryRelations.nShipProdCatRelKey AS value, " + "  CASE WHEN tblCartShippingProductCategoryRelations.nCatId = 0 THEN '<<All Products>>' ELSE tblCartProductCategories.cCatName END AS name" + " FROM tblCartShippingProductCategoryRelations LEFT OUTER JOIN" + " tblCartProductCategories ON tblCartShippingProductCategoryRelations.nCatId = tblCartProductCategories.nCatKey" + " WHERE (tblCartShippingProductCategoryRelations.nShipOptId = " + id + ") and nRuleType = 2 ORDER BY cCatName";
                             using (var oDr = moDbHelper.getDataReaderDisposable(sSql)) // done by sonali at 12/7/22
                             {
                                 base.addOptionsFromSqlDataReader(oElmt5, oDr, "name", "value");
