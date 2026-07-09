@@ -214,7 +214,7 @@
                           <xsl:value-of select="$VATnumber"/>
                           <br/>
                         </xsl:if>
-                        <xsl:apply-templates select="." mode="unsubscribe">
+						  <xsl:apply-templates select="." mode="unsubscribe"/>
                       </td>
                     </tr>
                   </table>
