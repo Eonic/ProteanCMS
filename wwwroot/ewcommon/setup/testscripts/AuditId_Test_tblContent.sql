@@ -3,14 +3,14 @@
 	SELECT 'No AuditId'
 
 	--No AuditId
-	SELECT nContentKey, nAuditId
+	SELECT nContentKey, nAuditId, c.* 
 	FROM tblContent c 
 	WHERE nAuditId IS NULL OR nAuditId = 0
 
 	SELECT 'Invalid AuditIds'
 
 	--Invalid AuditId's. Does not exist in the tblAudit table.
-	SELECT nContentKey, nAuditId
+	SELECT nContentKey, nAuditId, C.*
 	FROM tblContent C
 	WHERE NOT EXISTS
 	(
@@ -31,7 +31,7 @@
 		WHERE nAuditId >  0
 	)
 	
-	SELECT nContentKey, nAuditId
+	SELECT nContentKey, nAuditId, *
 	FROM TEMP T
 	JOIN tblAudit A ON A.nAuditKey = T.nAuditId --Duplicate should not consider not existent audit ids
 	WHERE Row_Num > 1

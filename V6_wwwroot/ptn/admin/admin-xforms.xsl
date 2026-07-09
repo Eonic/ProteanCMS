@@ -3387,6 +3387,59 @@
 		</xsl:if>
 	</xsl:template>
 
+	<xsl:template match="group[contains(@class,'DirButtons')]" mode="xform">
+		<xsl:param name="class"/>
+		<fieldset>
+			<xsl:if test=" @id!='' ">
+				<xsl:attribute name="id">
+					<xsl:value-of select="@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="$class!='' or @class!='' ">
+				<xsl:attribute name="class">
+					<xsl:value-of select="$class"/>
+					<xsl:if test="@class!=''">
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="@class"/>
+					</xsl:if>
+					<xsl:for-each select="group">
+						<xsl:text> form-group li-</xsl:text>
+						<xsl:value-of select="./@class"/>
+					</xsl:for-each>
+					<xsl:if test="contains(@class,'inline-2-col') or contains(@class,'inline-3-col')">
+						<xsl:text> row</xsl:text>
+					</xsl:if>
+					<xsl:text> d-grid gap-1 h-100 align-items-start</xsl:text>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
+			<xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat |  alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+			<xsl:if test="count(submit) &gt; 0">
+				<xsl:choose>
+					<xsl:when test="contains(@class,'form-inline')">
+						<xsl:apply-templates select="submit" mode="xform"/>
+					</xsl:when>
+					<xsl:otherwise>
+							<xsl:if test="not(submit[contains(@class,'hide-required')])">
+								<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+									<span class="required">
+										<span class="req">
+											*<span class="visually-hidden"> (required)</span>
+										</span>
+										<xsl:text> </xsl:text>
+										<xsl:call-template name="msg_required"/>
+									</span>
+								</xsl:if>
+							</xsl:if>
+							<!-- For xFormQuiz change how these buttons work -->
+							<xsl:apply-templates select="submit" mode="xform"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			<xsl:text> </xsl:text>
+		</fieldset>
+	</xsl:template>
+	
 
 	<xsl:template match="submit[contains(@class,'PermissionButton')]" mode="xform">
 		<xsl:variable name="class">

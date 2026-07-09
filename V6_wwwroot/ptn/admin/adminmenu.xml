@@ -42,6 +42,53 @@
      
       <MenuItem name="Awaiting Approval" cmd="AwaitingApproval" display="true" feature="VersionControl" icon="far fa-check-square"/>
     </MenuItem>
+	  <MenuItem name="Ecommerce" cmd="Orders" display="true" feature="Cart" icon="fa fa-shopping-basket">
+		  <MenuItem name="Orders" cmd="Orders" display="true" icon="fa-shopping-basket">
+			  <MenuItem name="New Sales" cmd="Orders" display="true" icon="fa-shopping-cart"/>
+			  <MenuItem name="In Progress" cmd="OrdersInProgress" display="true" icon="fa-archive"/>
+			  <MenuItem name="Confirmed" cmd="OrdersSaved" display="true" icon="fa-clock"/>
+			  <MenuItem name="Awaiting Payment" cmd="OrdersAwaitingPayment" display="true" icon="fa-clock"/>
+			  <MenuItem name="Shipped" cmd="OrdersShipped" display="true" icon="fa-truck"/>
+			  <MenuItem name="Failed Transactions" cmd="OrdersFailed" display="true" icon="fa-exclamation-triangle"/>
+			  <MenuItem name="Deposit Paid" cmd="OrdersDeposit" display="true" icon="fa-money-bill-wave-alt"/>
+			  <MenuItem name="Refunded" cmd="OrdersRefunded" display="true" icon="far fa-credit-card"/>
+			  <MenuItem name="All Activity" cmd="OrdersHistory" display="true" icon="fa-history"/>
+		  </MenuItem>
+		  <MenuItem name="Shipping Locations" cmd="ShippingLocations" display="true" icon="fa-map-marker-alt"/>
+		  <MenuItem name="Delivery Methods" cmd="DeliveryMethods" display="true" icon="fa-box">
+			  <MenuItem name="Set Delivery Methods Locations" cmd="DeliveryMethodLocations" display="false"/>
+		  </MenuItem>
+		  <MenuItem name="Carriers" cmd="Carriers" display="true" icon="fa-truck"/>
+		  <MenuItem name="Discounts" cmd="Discounts" display="true" icon="fa-certificate">
+			  <MenuItem name="Product Groups" cmd="ProductGroups" display="true" icon="fa-gift"/>
+			  <MenuItem name="Discount Rules" cmd="DiscountRules" display="true" icon="fa-certificate"/>
+			  <MenuItem name="Discounts" cmd="Discounts" display="false" icon="fa-certificate"/>
+			  <MenuItem name="ProductGroups" cmd="ProductGroups" display="false" icon="fa-layer-group"/>
+			  <MenuItem name="DiscountRules" cmd="DiscountRules" display="false"/>
+			  <MenuItem name="DiscountGroupRelations" cmd="DiscountGroupRelations" display="false"/>
+			  <MenuItem name="EditProductGroups" cmd="EditProductGroups" display="false" icon="fas fa-pen"/>
+			  <MenuItem name="Add Products to Product Group" cmd="AddProductGroupsProduct" display="false" icon="fas fa-plus"/>
+			  <MenuItem name="AddDiscountRules" cmd="AddDiscountRules" display="false" icon="fa-certificate"/>
+			  <MenuItem name="EditDiscountRules" cmd="EditDiscountRules" display="false" icon="fa-certificate"/>
+			  <MenuItem name="ApplyDirDiscountRules" cmd="ApplyDirDiscountRules" display="false" icon="fa-certificate"/>
+			  <MenuItem name="ApplyGrpDiscountRules" cmd="ApplyGrpDiscountRules" display="false" icon="fa-certificate"/>
+			  <MenuItem name="AddProductGroups" cmd="AddProductGroups" display="false" icon="fas fa-plus"/>
+		  </MenuItem>
+		  <MenuItem name="Voucher Codes" cmd="MemberCodes" display="true" icon="fa-barcode"/>
+		  <MenuItem name="Reports" cmd="CartReportsMain" display="true" icon="fa-chart-bar">
+			  <MenuItem name="Order Download" cmd="CartDownload" display="true" icon="fa-download"/>
+			  <MenuItem name="Sales by Product" cmd="CartReports" display="true" icon="fa-box"/>
+			  <MenuItem name="Sales by Page" cmd="CartActivityDrilldown" display="true" icon="far fa-file"/>
+			  <MenuItem name="Sales by Period" cmd="CartActivityPeriod" display="true" icon="fa-calendar"/>
+		  </MenuItem>
+		  <MenuItem name="Settings" cmd="CartSettings" display="true" icon="fa-cogs">
+			  <MenuItem name="General Settings" cmd="CartSettings" display="true" icon="fa-cog"/>
+			  <MenuItem name="Payment Providers" cmd="PaymentProviders" display="true" icon="fa-credit-card"/>
+			  <MenuItem name="Access Syncronisation" cmd="Sync" display="true" feature="AccessSync" icon="fa-exchange"/>
+		  </MenuItem>
+
+		  <MenuItem name="Edit Order Contact" cmd="EditOrderContact" display="false"/>
+	  </MenuItem>
     <MenuItem name="Membership" cmd="ListUsers" display="true" icon="fas fa-users">
       <MenuItem name="All Users" cmd="ListUsers" display="true" icon="fa-user"/>
       <MenuItem name="Groups" cmd="ListGroups" display="true"  feature="Membership" icon="fa-users"/>
@@ -98,53 +145,7 @@
       </MenuItem>
       <MenuItem name="NewMail" cmd="NewMail" display="false" />
     </MenuItem>
-    <MenuItem name="Ecommerce" cmd="Orders" display="true" feature="Cart" icon="fa fa-shopping-basket">
-      <MenuItem name="Orders" cmd="Orders" display="true" icon="fa-shopping-basket">
-        <MenuItem name="New Sales" cmd="Orders" display="true" icon="fa-shopping-cart"/>
-        <MenuItem name="In Progress" cmd="OrdersInProgress" display="true" icon="fa-archive"/>
-		<MenuItem name="Confirmed" cmd="OrdersSaved" display="true" icon="fa-clock"/>
-        <MenuItem name="Awaiting Payment" cmd="OrdersAwaitingPayment" display="true" icon="fa-clock"/>
-        <MenuItem name="Shipped" cmd="OrdersShipped" display="true" icon="fa-truck"/>
-        <MenuItem name="Failed Transactions" cmd="OrdersFailed" display="true" icon="fa-exclamation-triangle"/>
-        <MenuItem name="Deposit Paid" cmd="OrdersDeposit" display="true" icon="fa-money-bill-wave-alt"/>
-        <MenuItem name="Refunded" cmd="OrdersRefunded" display="true" icon="far fa-credit-card"/>
-        <MenuItem name="All Activity" cmd="OrdersHistory" display="true" icon="fa-history"/>
-      </MenuItem>
-      <MenuItem name="Shipping Locations" cmd="ShippingLocations" display="true" icon="fa-map-marker-alt"/>
-      <MenuItem name="Delivery Methods" cmd="DeliveryMethods" display="true" icon="fa-box">
-        <MenuItem name="Set Delivery Methods Locations" cmd="DeliveryMethodLocations" display="false"/>
-      </MenuItem>
-      <MenuItem name="Carriers" cmd="Carriers" display="true" icon="fa-truck"/>
-      <MenuItem name="Discounts" cmd="Discounts" display="true" icon="fa-certificate">
-        <MenuItem name="Product Groups" cmd="ProductGroups" display="true" icon="fa-gift"/>
-        <MenuItem name="Discount Rules" cmd="DiscountRules" display="true" icon="fa-certificate"/>
-        <MenuItem name="Discounts" cmd="Discounts" display="false" icon="fa-certificate"/>
-        <MenuItem name="ProductGroups" cmd="ProductGroups" display="false" icon="fa-layer-group"/>
-        <MenuItem name="DiscountRules" cmd="DiscountRules" display="false"/>
-        <MenuItem name="DiscountGroupRelations" cmd="DiscountGroupRelations" display="false"/>
-        <MenuItem name="EditProductGroups" cmd="EditProductGroups" display="false" icon="fas fa-pen"/>
-        <MenuItem name="Add Products to Product Group" cmd="AddProductGroupsProduct" display="false" icon="fas fa-plus"/>
-        <MenuItem name="AddDiscountRules" cmd="AddDiscountRules" display="false" icon="fa-certificate"/>
-        <MenuItem name="EditDiscountRules" cmd="EditDiscountRules" display="false" icon="fa-certificate"/>
-        <MenuItem name="ApplyDirDiscountRules" cmd="ApplyDirDiscountRules" display="false" icon="fa-certificate"/>
-        <MenuItem name="ApplyGrpDiscountRules" cmd="ApplyGrpDiscountRules" display="false" icon="fa-certificate"/>
-        <MenuItem name="AddProductGroups" cmd="AddProductGroups" display="false" icon="fas fa-plus"/>
-      </MenuItem>
-      <MenuItem name="Voucher Codes" cmd="MemberCodes" display="true" icon="fa-barcode"/>
-      <MenuItem name="Reports" cmd="CartReportsMain" display="true" icon="fa-chart-bar">
-        <MenuItem name="Order Download" cmd="CartDownload" display="true" icon="fa-download"/>
-        <MenuItem name="Sales by Product" cmd="CartReports" display="true" icon="fa-box"/>
-        <MenuItem name="Sales by Page" cmd="CartActivityDrilldown" display="true" icon="far fa-file"/>
-        <MenuItem name="Sales by Period" cmd="CartActivityPeriod" display="true" icon="fa-calendar"/>
-      </MenuItem>
-      <MenuItem name="Settings" cmd="CartSettings" display="true" icon="fa-cogs">
-        <MenuItem name="General Settings" cmd="CartSettings" display="true" icon="fa-cog"/>
-        <MenuItem name="Payment Providers" cmd="PaymentProviders" display="true" icon="fa-credit-card"/>
-        <MenuItem name="Access Syncronisation" cmd="Sync" display="true" feature="AccessSync" icon="fa-exchange"/>
-      </MenuItem>
-
-		<MenuItem name="Edit Order Contact" cmd="EditOrderContact" display="false"/>
-    </MenuItem>
+    
     <MenuItem name="Reports" cmd="Reports" display="true" plugin="Report" icon="fas fa-chart-bar">
       <MenuItem name="Reports" cmd="Reports" display="true" icon="fa-chart-bar"/>
       <MenuItem name="Web Stats" cmd="WebStats" display="true" icon="fa-globe"/>

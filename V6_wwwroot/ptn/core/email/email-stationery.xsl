@@ -4,7 +4,61 @@
 
 	<xsl:import href="../functions.xsl"/>
   <xsl:import href="email-styles.xsl"/>
+  <xsl:variable name="siteTitle">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'SiteName'"/>
+    </xsl:call-template>
+  </xsl:variable>
 
+  <xsl:variable name="SiteLogo">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'SiteLogo'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <xsl:variable name="CompanyName">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyName'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <xsl:variable name="CompanyAddress">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyAddress'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <xsl:variable name="CompanyTel">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyTel'"/>
+    </xsl:call-template>
+  </xsl:variable>
+
+  <xsl:variable name="CompanyEmail">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyEmail'"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="VATnumber">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'VATnumber'"/>
+    </xsl:call-template>
+  </xsl:variable>
+  <xsl:variable name="CompanyRegNo">
+    <xsl:call-template name="getSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'CompanyRegNo'"/>
+    </xsl:call-template>
+  </xsl:variable>
+  
+    <xsl:variable name="siteURL">https://www.tdlonline.co.uk</xsl:variable>
 
 	<xsl:template match="*">
 		<html>
@@ -160,7 +214,7 @@
                           <xsl:value-of select="$VATnumber"/>
                           <br/>
                         </xsl:if>
-                        <unsubscribe>Unsubscribe</unsubscribe>
+                        <xsl:apply-templates select="." mode="unsubscribe">
                       </td>
                     </tr>
                   </table>
@@ -180,61 +234,10 @@
     </table>
             
   </xsl:template>
-
-  <xsl:variable name="siteTitle">
-    <xsl:call-template name="getSettings">
-      <xsl:with-param name="sectionName" select="'web'"/>
-      <xsl:with-param name="valueName" select="'SiteName'"/>
-    </xsl:call-template>
-  </xsl:variable>
-
-  <xsl:variable name="SiteLogo">
-    <xsl:call-template name="getSettings">
-      <xsl:with-param name="sectionName" select="'web'"/>
-      <xsl:with-param name="valueName" select="'SiteLogo'"/>
-    </xsl:call-template>
-  </xsl:variable>
-
-  <xsl:variable name="CompanyName">
-    <xsl:call-template name="getSettings">
-      <xsl:with-param name="sectionName" select="'web'"/>
-      <xsl:with-param name="valueName" select="'CompanyName'"/>
-    </xsl:call-template>
-  </xsl:variable>
-
-  <xsl:variable name="CompanyAddress">
-    <xsl:call-template name="getSettings">
-      <xsl:with-param name="sectionName" select="'web'"/>
-      <xsl:with-param name="valueName" select="'CompanyAddress'"/>
-    </xsl:call-template>
-  </xsl:variable>
-
-  <xsl:variable name="CompanyTel">
-    <xsl:call-template name="getSettings">
-      <xsl:with-param name="sectionName" select="'web'"/>
-      <xsl:with-param name="valueName" select="'CompanyTel'"/>
-    </xsl:call-template>
-  </xsl:variable>
-
-  <xsl:variable name="CompanyEmail">
-    <xsl:call-template name="getSettings">
-      <xsl:with-param name="sectionName" select="'web'"/>
-      <xsl:with-param name="valueName" select="'CompanyEmail'"/>
-    </xsl:call-template>
-  </xsl:variable>
-  <xsl:variable name="VATnumber">
-    <xsl:call-template name="getSettings">
-      <xsl:with-param name="sectionName" select="'web'"/>
-      <xsl:with-param name="valueName" select="'VATnumber'"/>
-    </xsl:call-template>
-  </xsl:variable>
-  <xsl:variable name="CompanyRegNo">
-    <xsl:call-template name="getSettings">
-      <xsl:with-param name="sectionName" select="'web'"/>
-      <xsl:with-param name="valueName" select="'CompanyRegNo'"/>
-    </xsl:call-template>
-  </xsl:variable>
   
+  <xsl:template match="*" mode="unsubscribe">
+  	<unsubscribe>Unsubscribe</unsubscribe>
+  </xsl:template>  
   
 	
 </xsl:stylesheet>

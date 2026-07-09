@@ -1068,14 +1068,14 @@ namespace Protean
 
                             if (Tools.Number.IsNumeric(cRes) && Convert.ToDouble(cRes) > 0d)
                             {
-                                myWeb.mnUserId = Convert.ToInt16(cRes);
+                                myWeb.mnUserId = Convert.ToInt64(cRes);
                                 mnEwUserId = myWeb.mnUserId;
                                 myWeb.moSession["nUserId"] = cRes;
 
                                 string cRequestPage = myWeb.moRequest["pgid"];
                                 if (Tools.Number.IsNumeric(cRequestPage) && Convert.ToDouble(cRequestPage) > 0d)
                                 {
-                                    myWeb.mnPageId = Convert.ToInt16(myWeb.moRequest["pgid"]);
+                                    myWeb.mnPageId = Convert.ToInt64(myWeb.moRequest["pgid"]);
                                 }
                             }
                         }
@@ -1730,14 +1730,14 @@ namespace Protean
                                         IMembershipAdminXforms oRegXform = oMembershipProv.AdminXforms;
                                         oRegXform.open(moPageXml);
                                         XmlElement argIntanceAppend = null;
-                                        oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend, (long)myWeb.mnUserId, "User", (long)Convert.ToInt16("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
+                                        oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend, myWeb.mnUserId, "User", Convert.ToInt64("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)
                                         {
                                             string sReturn = moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
                                             if (Tools.Number.IsNumeric(sReturn))
                                             {
                                                 myWeb.mnUserId = (int)Convert.ToInt64(sReturn);
-                                                var oUserElmt = moDBHelper.GetUserXML((long)myWeb.mnUserId);
+                                                var oUserElmt = moDBHelper.GetUserXML(myWeb.mnUserId);
 
                                                 var oMembership = new Membership(ref myWeb);
                                                 oMembership.RegistrationActions();
@@ -2110,9 +2110,9 @@ namespace Protean
 
                         case "List":
                             {
-                                int nI = 0;
+                                long nI = 0;
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["OrderID"]))
-                                    nI = Convert.ToInt16(myWeb.moRequest["OrderID"]);
+                                    nI = Convert.ToInt64(myWeb.moRequest["OrderID"]);
                                 GetCartSummary(ref oElmt);
                                 XmlElement argoPageDetail = null;
                                 ListOrders(nI.ToString(), false, 0, oPageDetail: ref argoPageDetail);
@@ -2121,9 +2121,9 @@ namespace Protean
 
                         case "MakeCurrent":
                             {
-                                int nI = 0;
+                                long nI = 0;
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["OrderID"]))
-                                    nI = Convert.ToInt16(myWeb.moRequest["OrderID"]);
+                                    nI = Convert.ToInt64(myWeb.moRequest["OrderID"]);
                                 if (!(nI == 0))
                                     MakeCurrent(nI);
                                 mcCartCmd = "Cart";
@@ -6286,7 +6286,7 @@ namespace Protean
                 }
             }
 
-            public virtual void MakeCurrent(int nOrderID)
+            public virtual void MakeCurrent(long nOrderID)
             {
                 myWeb.PerfMon.Log("Cart", "MakeCurrent");
                 // procedure to make a selected historical
@@ -6300,7 +6300,7 @@ namespace Protean
 
                     if (myWeb.mnUserId == 0)
                         return;
-                    if (!(Convert.ToDouble(moDBHelper.ExeProcessSqlScalar("Select nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + nOrderID)) == (double)mnEwUserId))
+                    if (!(Convert.ToDouble(moDBHelper.ExeProcessSqlScalar("Select nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + nOrderID.ToString())) == (double)mnEwUserId))
                     {
                         return; // else we carry on
                     }
@@ -6315,8 +6315,8 @@ namespace Protean
                     }
                     // now add the details to it
 
-                    oDS = moDBHelper.GetDataSet("Select * From tblCartItem WHERE nCartOrderID = " + nOrderID, "CartItems");
-                    int nParentID;
+                    oDS = moDBHelper.GetDataSet("Select * From tblCartItem WHERE nCartOrderID = " + nOrderID.ToString(), "CartItems");
+                    long nParentID;
                     string sSQL;
 
                     moDBHelper.ReturnNullsEmpty(ref oDS);
@@ -6343,11 +6343,11 @@ namespace Protean
                             sSQL += (oDR1["nWeight"] is DBNull ? "Null" : oDR1["nWeight"].ToString()) + ",";
                             sSQL += moDBHelper.getAuditId() + ")";
 
-                            nParentID = Convert.ToInt16(moDBHelper.GetIdInsertSql(sSQL));
+                            nParentID = Convert.ToInt64(moDBHelper.GetIdInsertSql(sSQL));
                             // now for any children
                             foreach (DataRow oDR2 in oDS.Tables["CartItems"].Rows)
                             {
-                                if (Convert.ToInt32(oDR2["nParentId"]) == Convert.ToInt32(oDR1["nCartItemKey"]))
+                                if (Convert.ToInt64(oDR2["nParentId"]) == Convert.ToInt64(oDR1["nCartItemKey"]))
                                 {
                                     sSQL = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " +
                                            "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " +

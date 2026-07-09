@@ -107,24 +107,24 @@ namespace Protean
                     }
                 }
 
-                public int SubscriptionToGroup(int nSubId, int nSubGroup)
+                public long SubscriptionToGroup(long nSubId, long nSubGroup)
                 {
                     try
                     {
                         string cSQL = "";
-                        int nID = 0;
+                        long nID = 0;
                         // check if exists
                         cSQL = "SELECT nCatProductRelKey FROM tblCartCatProductRelations WHERE nContentId = " + nSubId + " AND nCatId = " + nSubGroup;
-                        nID = Convert.ToInt16(myWeb.moDbHelper.ExeProcessSqlScalar(cSQL));
+                        nID = Convert.ToInt64(myWeb.moDbHelper.ExeProcessSqlScalar(cSQL));
                         // if it does then fine, just return id
                         if (nID > 0)
                             return nID;
                         // if not need to get the last order number
                         cSQL = "SELECT nCatProductRelKey, nDisplayOrder FROM tblCartCatProductRelations WHERE nCatId = " + nSubGroup + " ORDER BY nDisplayOrder DESC";
-                        nID = Convert.ToInt16(myWeb.moDbHelper.ExeProcessSqlScalar(cSQL));
+                        nID = Convert.ToInt64(myWeb.moDbHelper.ExeProcessSqlScalar(cSQL));
                         // add to group as bottom
                         cSQL = "INSERT INTO tblCartCatProductRelations (nContentId, nCatId, nDisplayOrder, nAuditId) VALUES (" + nSubId + ", " + nSubGroup + ", " + (nID + 1) + ", " + myWeb.moDbHelper.getAuditId() + ")";
-                        nID = Convert.ToInt16(myWeb.moDbHelper.GetIdInsertSql(cSQL));
+                        nID = Convert.ToInt64(myWeb.moDbHelper.GetIdInsertSql(cSQL));
                         return nID;
                     }
                     catch (Exception ex)
@@ -689,7 +689,7 @@ namespace Protean
                          
 
                             // Get the email History
-                            sSQL = "SELECT [nActivityKey] as id ,al.[dDateTime],eal.cSubject as Subject,eal.cEmailRecipient,eal.cEmailSender,eal.cActivityDetail  FROM [ew_storeandinsure_co_uk].[dbo].[tblActivityLog] al inner join tblEmailActivityLog eal on al.nStructId = eal.nEmailActivityKey where nOtherId = " + nSubId + " order by al.dDateTime desc";
+                            sSQL = "SELECT [nActivityKey] as id ,al.[dDateTime],eal.cSubject as Subject,eal.cEmailRecipient,eal.cEmailSender,eal.cActivityDetail  FROM tblActivityLog al inner join tblEmailActivityLog eal on al.nStructId = eal.nEmailActivityKey where nOtherId = " + nSubId + " order by al.dDateTime desc";
                             var elmtEmails = myWeb.moPageXml.CreateElement("Emails");
                             oDs = myWeb.moDbHelper.GetDataSet(sSQL, "Email", "Emails");
                             if (oDs != null)
@@ -1823,7 +1823,7 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                myWeb.mnPageId = Convert.ToInt16(oSub.SelectSingleNode("//AccessPage[.!='']").InnerText);
+                                                myWeb.mnPageId = Convert.ToInt64(oSub.SelectSingleNode("//AccessPage[.!='']").InnerText);
                                             }
                                         }
                                         catch (Exception)
@@ -1983,7 +1983,8 @@ namespace Protean
                             {
                                 foreach (DataRow oRows in oDS.Tables["Content"].Rows)
                                     CancelSubscription(Convert.ToInt16(oRows["nSubKey"]));
-                                AddSubscription(nSubscriptionID, oCurSubElmt, SubStartDate, SubscriptionEndDate(DateTime.Now, oCurSubElmt), nSubUserId, nPaymentMethodId);
+                                SubEndDate = SubscriptionEndDate(DateTime.Now, oCurSubElmt);
+                                AddSubscription(nSubscriptionID, oCurSubElmt, SubStartDate, SubEndDate, nSubUserId, nPaymentMethodId);
                             }
                             else
                             {
@@ -1991,10 +1992,19 @@ namespace Protean
                                 // add
                                 var dRenStart = GetRenewalDate(Convert.ToInt16(oNewElmt.GetAttribute("nSubKey")));
                                 dRenStart = dRenStart.AddDays(1d);
-                                AddSubscription(nSubscriptionID, oCurSubElmt, dRenStart, SubscriptionEndDate(dRenStart, oCurSubElmt), nSubUserId, nPaymentMethodId);
+                                SubEndDate = SubscriptionEndDate(dRenStart, oCurSubElmt);
+                                AddSubscription(nSubscriptionID, oCurSubElmt, dRenStart, SubEndDate, nSubUserId, nPaymentMethodId);
                             }
-
                         }
+
+                        // Add user to any subscription groups.
+                        foreach (XmlElement grpElmt2 in oCurSubElmt.SelectNodes("UserGroups/Group[@id!='']"))
+                        {
+                            long grpId = Convert.ToInt64(grpElmt2.GetAttribute("id"));
+                            myWeb.moDbHelper.maintainDirectoryRelation(grpId, nSubUserId, false, SubEndDate);
+                           
+                        }
+
                     }
 
 
@@ -2094,8 +2104,8 @@ namespace Protean
                             foreach (XmlNode currentOElmt in oSubDetailElmt.SelectNodes("UserGroups/Group[@id!='']"))
                             {
                                 oElmt = currentOElmt;
-                                int nGrpID = Convert.ToInt16(oElmt.Attributes["id"].Value);
-                                myWeb.moDbHelper.saveDirectoryRelations((long)nSubUserId, nGrpID.ToString());
+                                long nGrpID = Convert.ToInt64(oElmt.Attributes["id"].Value);
+                                myWeb.moDbHelper.saveDirectoryRelations(nSubUserId, nGrpID.ToString());
                             }
                         }
                     }
@@ -3008,15 +3018,21 @@ namespace Protean
 
                         XmlElement oFrmElmt;
                         string cProcessInfo = "";
+                        string cXformPath = "/xforms/subscription/";
                         //bool bRememberMe = false;
                         try
-                        {                          
+                        {
+
+                            if (goConfig["cssFramework"] == "bs5")
+                            {                                
+                                    cXformPath = "/features/subscriptions/";                              
+                            }
 
                             if (mbAdminMode & this.myWeb.mnUserId == 0)
                                 goto BuildForm;
 
                             // maCommonFolders is an array of folder locations used to look locally, then in wellardscommon and finally eoniccommon.
-                            if (!this.load("/xforms/subscription/" + FormName + ".xml", this.myWeb.maCommonFolders))
+                            if (!this.load(cXformPath + FormName + ".xml", this.myWeb.maCommonFolders))
                             {
                                 // If this does not load manually then build a form to do it.
                                 goto BuildForm;
@@ -3094,7 +3110,7 @@ namespace Protean
                             this.NewFrm("Subscription");
                             this.submission("Subscription", "", "post", "form_check(this)");
 
-                            oFrmElmt = this.addGroup(ref this.moXformElmt, "Subscription", "", "No '/xforms/subscription/" + FormName + "' Form Specified");
+                            oFrmElmt = this.addGroup(ref this.moXformElmt, "Subscription", "", "No '" + cXformPath + FormName + ".xml' Form Specified");
 
                         Check:
                             ;

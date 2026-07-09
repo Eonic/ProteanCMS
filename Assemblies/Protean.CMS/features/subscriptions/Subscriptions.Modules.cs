@@ -403,13 +403,12 @@ namespace Protean
                         string sProcessInfo = "Subscribe";
                         try
                         {
-                            // First we check if free trail
                             if (Convert.ToDouble("0" + contentNode.SelectSingleNode("Prices/Price[@type='sale']").InnerText) == 0 & Convert.ToDouble("0" + contentNode.SelectSingleNode("SubscriptionPrices/Price[@type='sale']").InnerText) == 0)
                             {
                                 if (myWeb.mnUserId > 0)
                                 {
                                     if (myWeb.moRequest["subCmd"] == "Subscribe")
-                                    {
+                                    { 
                                         var oSubs = new Subscriptions(ref myWeb);
                                         oSubs.AddUserSubscription((int)myWeb.mnArtId, myWeb.mnUserId);
 

@@ -87,7 +87,7 @@
 			WHILE @@FETCH_STATUS = 0
 			BEGIN
 				SET @newAuditId = 0
-				SET @auditStatus = 0 -- Default Audit status would be Hidden
+				SET @auditStatus = 1 -- Default Audit status would be Hidden
 
 				--For duplicate records - set the status of new audit record to what it was originally.
 				IF @isDuplicate = 1

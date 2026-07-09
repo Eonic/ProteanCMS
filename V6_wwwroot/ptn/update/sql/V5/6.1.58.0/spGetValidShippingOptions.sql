@@ -1,6 +1,141 @@
 ﻿
- ALTER PROCEDURE [dbo].[spGetValidShippingOptions]
- -- Returns the valid shipping options available for a given cart order.
+ -- =============================================================================
+ -- PROCEDURE  : spGetValidShippingOptions
+ -- VERSION    : 6.1.58.0
+ -- =============================================================================
+ --
+ -- PURPOSE
+ -- -------
+ -- Returns the set of shipping methods that are valid for a given cart order at
+ -- the point of checkout.  The caller supplies the cart order ID; the procedure
+ -- derives the basket totals from tblCartItem automatically unless the caller
+ -- provides them explicitly.
+ --
+ -- FILTERING PIPELINE  (applied in order)
+ -- ----------------------------------------
+ -- 1. QUANTITY / PRICE / WEIGHT RANGE
+ --    Methods whose nShipOptQuantMin, nShipOptQuantMax, nShipOptPriceMin,
+ --    nShipOptPriceMax, nShipOptWeightMin or nShipOptWeightMax values are
+ --    outside the cart totals are excluded.  A value of 0 in any min/max column
+ --    means "no limit" for that boundary.
+ --
+ -- 2. CURRENCY
+ --    Methods are included when: cCurrency IS NULL, cCurrency = '' (all
+ --    currencies), or cCurrency matches @Currency exactly.
+ --
+ -- 3. USER PERMISSIONS  (tblCartShippingPermission / tblDirectoryRelation)
+ --    Anonymous (@userId = 0):
+ --      Include if the @NonAuthUsers group has nPermLevel = 1, OR no permission
+ --      rows exist at all for the method (open to everyone).
+ --    Authenticated (@userId > 0):
+ --      Include if the user belongs to a group with nPermLevel = 1 AND is NOT in
+ --      a group with nPermLevel = 0, OR the global @AuthUsers group is granted,
+ --      OR no permission rows exist.  Always exclude if the user is in any
+ --      explicitly denied (nPermLevel = 0) group.
+ --    Collection methods (bCollection = 1) bypass the permission check entirely
+ --    and are always included when all other filters pass.
+ --
+ -- 4. COUNTRY
+ --    If @CountryList is non-empty (pre-formatted SQL IN list, e.g. ('GB','US'))
+ --    only locations whose cLocationNameShort OR cLocationNameFull appear in the
+ --    list are returned.  Collection methods (bCollection = 1) bypass this filter
+ --    and are always returned regardless of the delivery country.
+ --
+ -- 5. AUDIT STATUS / PUBLISH-EXPIRE DATES
+ --    Only methods where tblAudit.nStatus > 0 and the current @dValidDate falls
+ --    within [dPublishDate, dExpireDate] (NULL or 0 = open-ended) are included.
+ --
+ -- 6. SHIPPING PRODUCT GROUPS  (tblCartShippingProductCategoryRelations)
+ --    Cart items are resolved to their shipping-group categories via
+ --    tblCartCatProductRelations / tblCartProductCategories.  SKU variants
+ --    inherit the group of their parent product via tblContentRelation.
+ --
+ --    BRANCH A – one or more cart items belong to a shipping group:
+ --      Methods must be mapped to the resolved group categories (nRuleType = 1).
+ --      Collection methods (bCollection = 1) are ALWAYS included regardless of
+ --      group mapping.  If @GroupItemCount = @CartItemCount (all items in group)
+ --      additional LEFT JOINs restrict non-collection results further at the
+ --      product level; collection methods are passed through unconditionally via
+ --      (bCollection = 1 OR (CSPC.nShipOptId IS NOT NULL AND CSPC.nRuleType = 1)).
+ --      The nShippingGroup column is set to the resolved group display name.
+ --
+ --    BRANCH B – no cart items belong to any shipping group:
+ --      When @GroupItemCount = 0 (cart has no group context at all), methods
+ --      that are mapped to a group with bOverrideForWholeOrder = 1 are excluded,
+ --      because those override methods are only meaningful within a group order.
+ --      Collection methods are always included.
+ --
+ -- 7. bOverrideForWholeOrder PRIORITY
+ --    After the group/non-group filter, a window-function CTE checks whether ANY
+ --    non-collection result row has bOverrideForWholeOrder = 1.  If so, ONLY
+ --    those override rows (plus all collection methods) are returned.
+ --    Collection methods (bCollection = 1) are excluded from the _hasOverride
+ --    MAX() window calculation and always pass the final WHERE filter.
+ --    If no non-collection method has the flag, all filtered methods are returned.
+ --
+ -- 8. DEDUPLICATION
+ --    Because a method can be linked to multiple shipping locations, ROW_NUMBER()
+ --    OVER (PARTITION BY nShipOptKey) keeps only the highest-priority location
+ --    row per method, eliminating duplicates without UNION double-evaluation.
+ --
+ -- 9. PROMO CODE FREE SHIPPING
+ --    If @PromoCode is non-null and non-empty, the procedure looks up the
+ --    comma-separated list of shipping method IDs stored in
+ --    tblCartDiscountRules.cAdditionalXML (/cFreeShippingMethods).  After the
+ --    main query, a MERGE zeros nShipOptCost and nShippingTotal for those methods
+ --    while preserving the original cost in NonDiscountedShippingCost.
+ --
+ -- RESULT SET COLUMNS
+ -- ------------------
+ -- nShipOptKey, cCurrency, cShipOptName, cShipOptForeignRef, cShipOptCarrier,
+ -- cShipOptTime, cShipOptTandC, nShipOptCost, nShipOptPercentage,
+ -- nShipOptQuantMin, nShipOptQuantMax, nShipOptWeightMin, nShipOptWeightMax,
+ -- nShipOptPriceMin, nShipOptPriceMax, nShipOptHandlingPercentage,
+ -- nShipOptHandlingFixedCost, nShipOptTaxRate, nAuditId, nDisplayPriority,
+ -- bCollection, nShipOptCat, nShippingTotal, NonDiscountedShippingCost,
+ -- nShippingGroup, bOverrideForWholeOrder, nShipOptWeightOverageUnit,
+ -- nShipOptWeightOverageRate, cLocationNameShort
+ --
+ -- ORDERING
+ -- --------
+ -- Results are ordered by nDisplayPriority ASC, nShippingTotal ASC.
+ --
+ -- KNOWN INVARIANTS / CONSTRAINTS
+ -- --------------------------------
+ -- * @CountryList must arrive pre-formatted as a SQL IN list: ('GB','IE','US')
+ -- * @GroupType defaults to 'Shipping'; change only when using a different
+ --   product category schema for shipping group resolution.
+ -- * Only top-level cart items (nParentId = 0) are counted for @CartItemCount
+ --   and @GroupItemCount.  Bundled child items are excluded.
+ -- * Collection methods (bCollection = 1) bypass group-membership filtering,
+ --   the permission CASE WHEN, the country filter, and the bOverrideForWholeOrder
+ --   CTE filter.  They are always returned when the audit status and
+ --   publish/expire date filters pass.
+ -- * @Amount / @Quantity / @Weight are auto-derived from tblCartItem when NULL
+ --   or 0.  The caller may override any subset by supplying non-zero values.
+ -- * The procedure always returns exactly one result set.
+ --
+ -- CHANGE HISTORY
+ -- --------------
+ -- 6.1.58.0  Initial version with shipping group support and promo-code zeroing.
+ --           Fixed: OR->AND in promo guard, table variable scope, missing DROP
+ --           TABLE in Branch B, duplicate results from UNION CTE double-eval,
+ --           COUNT(id)->COUNT(DISTINCT id) for @GroupItemCount, collection method
+ --           exemptions added to all group IN/NOT IN filters.
+ --           Fixed: Branch A full-match path (GroupItemCount=CartItemCount) changed
+ --           @shippingGroupCondition from INNER JOIN to LEFT JOIN (with AND
+ --           opt.bCollection=0 on join predicate) so collection methods are not
+ --           eliminated before the WHERE exemption applies. Rule-type condition
+ --           updated to: AND (opt.bCollection=1 OR (CSPC.nShipOptId IS NOT NULL
+ --           AND CSPC.nRuleType=1)).
+ --           Fixed: Collection methods now bypass permission CASE WHEN, country
+ --           filter, and bOverrideForWholeOrder CTE filter. FROM changed to start
+ --           from tblCartShippingMethods with LEFT JOINs to location tables so
+ --           collection methods with no location row are not dropped.
+ -- =============================================================================
+
+  CREATE PROCEDURE [dbo].[spGetValidShippingOptions]
+  -- Returns the valid shipping options available for a given cart order.
  -- Shipping options are filtered by quantity, price, weight, currency, country, CMS audit status,
  -- and user permissions. Results can be further restricted to options associated with product
  -- shipping group categories. If a promo code granting free shipping is supplied, the cost of
@@ -96,10 +231,10 @@ opt.nAuditId, opt.nDisplayPriority, opt.bCollection, opt.nShipOptCat, dbo.fxn_sh
 ,opt.nShipOptWeightOverageUnit
 ,opt.nShipOptWeightOverageRate
 ,Loc.cLocationNameShort  
-from tblCartShippingLocations Loc   
-   Inner Join tblCartShippingRelations rel ON Loc.nLocationKey = rel.nShpLocId   
-   Inner Join tblCartShippingMethods opt ON rel.nShpOptId = opt.nShipOptKey   
-   INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey '  
+from tblCartShippingMethods opt
+   INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey
+   LEFT JOIN tblCartShippingRelations rel ON opt.nShipOptKey = rel.nShpOptId
+   LEFT JOIN tblCartShippingLocations Loc ON rel.nShpLocId = Loc.nLocationKey '  
     
   -- -------------------------------------------------------------------------
   -- Build the WHERE dynamic SQL fragment.
@@ -120,8 +255,8 @@ from tblCartShippingLocations Loc
    and (nShipOptPriceMin <= 0 or nShipOptPriceMin <= '+convert(NVARCHAR(10), @Amount)+') and (nShipOptPriceMax <= 0 or nShipOptPriceMax >= '+convert(NVARCHAR(10), @Amount)+')   
    and (nShipOptWeightMin <= 0 or nShipOptWeightMin <= '+convert(NVARCHAR(10), @Weight)+') and (nShipOptWeightMax <= 0 or nShipOptWeightMax >= '+convert(NVARCHAR(10), @Weight)+')    
    and ((opt.cCurrency Is Null) or (opt.cCurrency = '''') or (opt.cCurrency = '''+@Currency+''')) and  
-   opt.nShipOptKey =   
-   CASE WHEN '+convert(NVARCHAR(10), @userId)+'= 0 THEN (CASE WHEN (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm  where perm.nShippingMethodId = opt.nShipOptKey   
+   (opt.bCollection = 1 OR opt.nShipOptKey =   
+   CASE WHEN '+convert(NVARCHAR(10), @userId)+'= 0
            and perm.nDirId = '+convert(NVARCHAR(10), @NonAuthUsers)+'  and perm.nPermLevel = 1) > 0   
            or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0  
               THEN opt.nShipOptKey  END ) WHEN '+convert(NVARCHAR(10), @userId)+' >0 THEN (CASE WHEN ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm Inner join  
@@ -141,9 +276,10 @@ from tblCartShippingLocations Loc
           Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId    
            and  nPermLevel = 0  and PermGroup.nDirChildId = '+convert(NVARCHAR(10), @userId)+')  
   
-         THEN opt.nShipOptKey END  
-    )  
-    END '  
+		 THEN opt.nShipOptKey END  
+	)  
+	END)
+	AND (opt.bCollection = 1 OR Loc.nLocationKey IS NOT NULL) '  
   
   -- -------------------------------------------------------------------------
   -- Country filter: if @CountryList is supplied, restrict results to
@@ -153,7 +289,7 @@ from tblCartShippingLocations Loc
   -- -------------------------------------------------------------------------
   IF @CountryList <> ''  
   BEGIN
-	 SET @strCountryConditionQuery = 'AND ((loc.cLocationNameShort IN '+@CountryList+') or (loc.cLocationNameFull IN '+@CountryList+')) '  
+	 SET @strCountryConditionQuery = 'AND (opt.bCollection = 1 OR (loc.cLocationNameShort IN '+@CountryList+') OR (loc.cLocationNameFull IN '+@CountryList+')) '  
   END  
           
   -- -------------------------------------------------------------------------
@@ -220,7 +356,7 @@ from tblCartShippingLocations Loc
 		SET @ExistShippingGroupCount = (select COUNT(*) AS ExistShippingGroupCount from #ShippingGroupList where cCatSchemaName = @GroupType) 
 		-- Count items associated with a shipping group; compared against @CartItemCount
 		-- to determine whether ALL or only SOME items belong to a shipping group.
-		Select @GroupItemCount=count(id) from #ShippingGroupList where cCatSchemaName=@GroupType
+		Select @GroupItemCount=count(DISTINCT id) from #ShippingGroupList where cCatSchemaName=@GroupType
 
 		-- Populate @ShippingGroupCatIDs with the distinct category IDs (nRuleType=1 = Include rule)
 		-- that have at least one shipping method mapped to them AND appear in the current
@@ -236,16 +372,21 @@ from tblCartShippingLocations Loc
 		SET @ShippingGroupName = (select top 1 cCatName from #ShippingGroupList where cCatSchemaName = @GroupType and nCatKey = (select top 1 nCatId from @ShippingGroupCatIDs order by 1 desc ))
 	   -- select * from  @ShippingGroupCatIDs
 	   --Select @GroupItemCount
-			-- When every cart item belongs to a shipping group, inject additional JOINs
+			-- When every cart item belongs to a shipping group, inject additional LEFT JOINs
 			-- directly into the dynamic SELECT so results are restricted to methods
 			-- explicitly mapped to the products in this order (nRuleType = 1 = Include).
+			-- LEFT JOINs (with AND opt.bCollection = 0 on the join predicate) are used so that
+			-- collection methods (bCollection = 1) produce a NULL CSPC row rather than being
+			-- eliminated before the WHERE clause can exempt them.
+			-- @shippingGroupRuleTypeCondition then passes any row where bCollection = 1 OR
+			-- a valid CSPC mapping exists with nRuleType = 1.
 			-- When only SOME items belong to a group, these joins are omitted and
 			-- the restriction is applied via an IN subquery on @strEndConditionQuery instead.
 			if(@GroupItemCount=@CartItemCount)
 			BEGIN
-				SET @shippingGroupCondition ='INNER JOIN tblCartShippingProductCategoryRelations CSPC ON opt.nShipOptKey= CSPC.nShipOptId  
-				INNER JOIN tblCartCatProductRelations cpr on CSPC.nCatId= cpr.nCatId and cpr.nContentId in (select distinct id from #ShippingGroupList)'  
-				SET @shippingGroupRuleTypeCondition =' AND CSPC.nRuleType = 1'  
+				SET @shippingGroupCondition ='LEFT JOIN tblCartShippingProductCategoryRelations CSPC ON opt.nShipOptKey= CSPC.nShipOptId AND opt.bCollection = 0
+				LEFT JOIN tblCartCatProductRelations cpr on CSPC.nCatId= cpr.nCatId and cpr.nContentId in (select distinct id from #ShippingGroupList where cCatSchemaName = ''' + @GroupType + ''')'  
+				SET @shippingGroupRuleTypeCondition =' AND (opt.bCollection = 1 OR (CSPC.nShipOptId IS NOT NULL AND CSPC.nRuleType = 1))'  
 			END
 		-- Build a comma-separated string of category IDs (e.g. '3,7,12') from
 		-- @ShippingGroupCatIDs for embedding in the dynamic SQL IN clause.
@@ -261,28 +402,29 @@ from tblCartShippingLocations Loc
   END
     
   -- -------------------------------------------------------------------------
-  -- Promo code setup (runs whenever a promo code is present).
-  -- Parses the XML stored in tblCartDiscountRules.cAdditionalXML to extract
-  -- the comma-separated list of shipping method IDs that should be free
-  -- (cFreeShippingMethods element). These IDs are split and loaded into
-  -- @FreeShippingOption for use in the MERGE later.
-  -- @ValidShippingOptions is declared here as a staging table so that the
-  -- MERGE can update costs before the final SELECT is returned.
+  -- @ValidShippingOptions and @FreeShippingOption are always declared so they
+  -- are available for both promo-code cost-zeroing (MERGE) and shipping group
+  -- name injection (UPDATE nShippingGroup), regardless of call path.
+  -- The promo IF block only POPULATES @FreeShippingOption; the table itself
+  -- must exist before Branch A/B execute.
   -- -------------------------------------------------------------------------
-  IF @PromoCode <> '' OR @PromoCode Is Not NULL  
+  DECLARE @FreeShippingOption AS TABLE (ID BIGINT)
+  DECLARE @ValidShippingOptions AS TABLE (nShipOptKey INT,cCurrency NVARCHAR(10), cShipOptName NVARCHAR(255),cShipOptForeignRef NVARCHAR(255),cShipOptCarrier NVARCHAR(100),
+  cShipOptTime NVARCHAR(50),cShipOptTandC ntext, nShipOptCost money,nShipOptPercentage float,
+  nShipOptQuantMin float, nShipOptQuantMax float ,nShipOptWeightMin float ,nShipOptWeightMax float, nShipOptPriceMin float ,nShipOptPriceMax float,
+  nShipOptHandlingPercentage float, nShipOptHandlingFixedCost float,
+  nShipOptTaxRate float, nAuditId int, nDisplayPriority int , bCollection bit ,nShipOptCat int, nShippingTotal float ,NonDiscountedShippingCost float, nShippingGroup NVARCHAR(500), bOverrideForWholeOrder INT, nShipOptWeightOverageUnit float, nShipOptWeightOverageRate float,cLocationNameShort NVARCHAR(100))
+
+  -- Promo code setup: only parse and populate when a real promo code is supplied.
+  -- Bug fixed: was 'OR @PromoCode Is Not NULL' which always evaluated TRUE for any
+  -- non-NULL value (including empty string), executing this block unnecessarily.
+  IF @PromoCode IS NOT NULL AND @PromoCode <> ''
   BEGIN
-        DECLARE @FreeShippingOption AS TABLE (ID BIGINT)  
-		DECLARE @GroupId  as nvarchar(500)  
-		Select @GroupId= CONVERT(XML, cAdditionalXML).value('(/cFreeShippingMethods)[1]', 'varchar(100)') from tblCartDiscountRules where cDiscountCode=@PromoCode  
-		INSERT INTO @FreeShippingOption  
-		Select * from String_Split(@GroupId,',')  
-  
-		DECLARE @ValidShippingOptions AS TABLE (nShipOptKey INT,cCurrency NVARCHAR(10), cShipOptName NVARCHAR(255),cShipOptForeignRef NVARCHAR(255),cShipOptCarrier NVARCHAR(100),  
-		cShipOptTime NVARCHAR(50),cShipOptTandC ntext, nShipOptCost money,nShipOptPercentage float,  
-		nShipOptQuantMin float, nShipOptQuantMax float ,nShipOptWeightMin float ,nShipOptWeightMax float, nShipOptPriceMin float ,nShipOptPriceMax float,  
-		nShipOptHandlingPercentage float, nShipOptHandlingFixedCost float,  
-		nShipOptTaxRate float, nAuditId int, nDisplayPriority int , bCollection bit ,nShipOptCat int, nShippingTotal float ,NonDiscountedShippingCost float, nShippingGroup NVARCHAR(500), bOverrideForWholeOrder INT, nShipOptWeightOverageUnit float, nShipOptWeightOverageRate float,cLocationNameShort NVARCHAR(100))  
-  END    
+		DECLARE @GroupId  as nvarchar(500)
+		Select @GroupId= CONVERT(XML, cAdditionalXML).value('(/cFreeShippingMethods)[1]', 'varchar(100)') from tblCartDiscountRules where cDiscountCode=@PromoCode
+		INSERT INTO @FreeShippingOption
+		Select * from String_Split(@GroupId,',')
+  END
  
   
   -- =========================================================================
@@ -296,26 +438,22 @@ from tblCartShippingLocations Loc
   -- =========================================================================
   IF @ExistShippingGroupCount>0  
   BEGIN 
-	-- Partial match: only some cart items have a shipping group.
-	-- Restriction is enforced via the IN subquery on @strEndConditionQuery.
-	IF(@GroupItemCount<> @CartItemCount)
+	-- Guard: if @ShippingGroupCatIDList is NULL (no methods mapped to the group
+	-- categories), NULL concatenation would silently wipe @strEndConditionQuery.
+	-- Suppress all non-collection results in that case.
+	-- Collection methods (bCollection=1) are always shown regardless of group
+	-- membership, so the IN filter exempts them explicitly.
+	IF @ShippingGroupCatIDList IS NOT NULL AND @ShippingGroupCatIDList <> ''
 	BEGIN
-			
-		    SET @strEndConditionQuery=@strEndConditionQuery + 'And opt.nShipOptKey in ( select distinct CSPC.nShipOptId from tblCartShippingProductCategoryRelations CSPC   
-			INNER JOIN tblCartCatProductRelations cpr on CSPC.nCatId= cpr.nCatId 
-			INNER JOIN tblCartShippingMethods csm on CSPC.nShipOptId = csm.nShipOptKey 
-			AND  CSPC.nRuleType = 1 and CSPC.nCatId in (' + @ShippingGroupCatIDList + ')) '
+		SET @strEndConditionQuery=@strEndConditionQuery + 'And (opt.bCollection = 1 OR opt.nShipOptKey in ( select distinct CSPC.nShipOptId from tblCartShippingProductCategoryRelations CSPC
+			INNER JOIN tblCartCatProductRelations cpr on CSPC.nCatId= cpr.nCatId
+			INNER JOIN tblCartShippingMethods csm on CSPC.nShipOptId = csm.nShipOptKey
+			AND  CSPC.nRuleType = 1 and CSPC.nCatId in (' + @ShippingGroupCatIDList + ')) ) '
 	END
-	-- Full match: every cart item belongs to a shipping group.
-	-- The @shippingGroupCondition JOIN is also active (set above), so the
-	-- IN subquery here adds a secondary safeguard at the category level.
 	ELSE
 	BEGIN
-
-			SET @strEndConditionQuery=@strEndConditionQuery + 'And opt.nShipOptKey in ( select distinct CSPC.nShipOptId from tblCartShippingProductCategoryRelations CSPC   
-			INNER JOIN tblCartCatProductRelations cpr on CSPC.nCatId= cpr.nCatId 
-			INNER JOIN tblCartShippingMethods csm on CSPC.nShipOptId = csm.nShipOptKey 
-			AND  CSPC.nRuleType = 1 and CSPC.nCatId in (' + @ShippingGroupCatIDList + ')) '
+		-- No methods mapped to group categories: suppress non-collection results
+		SET @strEndConditionQuery=@strEndConditionQuery + 'AND (opt.bCollection = 1 OR 1 = 0) '
 	END
 
 	-- Assemble the full dynamic SELECT using all accumulated fragment strings.
@@ -325,58 +463,56 @@ from tblCartShippingLocations Loc
 	-- methods (they supersede all standard options for the whole order).
 	-- If NO method has the override flag, return all valid methods normally.
 	SET @strMainQuery = ';WITH ShippingOptions AS (
-						 '+@strMainQuery+'   
-						)
-						SELECT * FROM (SELECT * FROM ShippingOptions WHERE EXISTS (SELECT 1 FROM ShippingOptions so WHERE so.bOverrideForWholeOrder = 1) AND bOverrideForWholeOrder = 1
-									UNION
-									SELECT * FROM ShippingOptions WHERE NOT EXISTS (SELECT 1 FROM ShippingOptions so WHERE so.bOverrideForWholeOrder = 1)
-						) AS FinalResult
-						ORDER BY nDisplayPriority, nShippingTotal'
+					 '+@strMainQuery+'   
+					),
+					Ranked AS (
+						SELECT *,
+							   MAX(CASE WHEN ISNULL(bCollection, 0) = 0 THEN CAST(ISNULL(bOverrideForWholeOrder, 0) AS INT) ELSE 0 END) OVER () AS _hasOverride,
+							   ROW_NUMBER() OVER (PARTITION BY nShipOptKey ORDER BY nDisplayPriority, nShippingTotal, cLocationNameShort) AS _rn
+						FROM ShippingOptions
+					)
+					SELECT nShipOptKey, cCurrency, cShipOptName, cShipOptForeignRef, cShipOptCarrier, cShipOptTime, cShipOptTandC,
+						   nShipOptCost, nShipOptPercentage, nShipOptQuantMin, nShipOptQuantMax, nShipOptWeightMin, nShipOptWeightMax,
+						   nShipOptPriceMin, nShipOptPriceMax, nShipOptHandlingPercentage, nShipOptHandlingFixedCost, nShipOptTaxRate,
+						   nAuditId, nDisplayPriority, bCollection, nShipOptCat, nShippingTotal, NonDiscountedShippingCost, nShippingGroup,
+						   bOverrideForWholeOrder, nShipOptWeightOverageUnit, nShipOptWeightOverageRate, cLocationNameShort
+					FROM Ranked
+					WHERE _rn = 1 AND (bCollection = 1 OR _hasOverride = 0 OR bOverrideForWholeOrder = 1)
+					ORDER BY nDisplayPriority, nShippingTotal'
 
 
-	--If promocode applied and promocode contains free shipping method then return that free shipping method with 0.00 cost  
+	--If promocode applied and promocode contains free shipping method then return that free shipping method with 0.00 cost
 	-- Execute query, then MERGE to zero out the cost of promo-granted free methods,
 	-- preserving the original cost in NonDiscountedShippingCost for display purposes.
-	IF @PromoCode <> '' AND @PromoCode Is Not NULL  
-	BEGIN  
+	IF @PromoCode IS NOT NULL AND @PromoCode <> ''
+	BEGIN
+		INSERT INTO @ValidShippingOptions
+		exec (@strMainQuery)
 
-			INSERT INTO @ValidShippingOptions  
-			exec (@strMainQuery)     
+		MERGE @ValidShippingOptions T1
+		USING @FreeShippingOption T2
+		ON T1.nShipOptKey = T2.ID
+		WHEN MATCHED THEN
+		UPDATE SET NonDiscountedShippingCost = T1.nShipOptCost, nShippingTotal = 0.00, nShipOptCost = 0.00;
 
-			MERGE @ValidShippingOptions T1  
-			USING @FreeShippingOption T2  
-			ON T1.nShipOptKey = T2.ID       
-			WHEN MATCHED THEN  
-			UPDATE SET NonDiscountedShippingCost = T1.nShipOptCost, nShippingTotal = 0.00, nShipOptCost = 0.00;   
-
-			IF(@ShippingGroupName <> '')
-			BEGIN
-				-- Update shipping group name in final table if group exists
-				UPDATE @ValidShippingOptions SET nShippingGroup = @ShippingGroupName
-				SELECT * from @ValidShippingOptions  
-			END
-
-	END  
-	ELSE  
-	BEGIN  
-
-			-- Execute Query without promocode 
-			IF(@ShippingGroupName <> '')
-			BEGIN
-
-					INSERT INTO @ValidShippingOptions  
-					exec (@strMainQuery)   
-					-- Update shipping group name in final table if group exists
-					UPDATE @ValidShippingOptions SET nShippingGroup = @ShippingGroupName
-					SELECT * from @ValidShippingOptions  
-			END
-			ELSE
-			BEGIN
-
-					exec (@strMainQuery)  
-			END			
-
-	END  
+		IF(@ShippingGroupName <> '')
+		BEGIN
+			UPDATE @ValidShippingOptions SET nShippingGroup = @ShippingGroupName
+		END
+		-- SELECT always fires after MERGE regardless of whether a group name is set
+		SELECT * from @ValidShippingOptions
+	END
+	ELSE
+	BEGIN
+		-- No promo: execute directly into staging table so group name can be applied
+		INSERT INTO @ValidShippingOptions
+		exec (@strMainQuery)
+		IF(@ShippingGroupName <> '')
+		BEGIN
+			UPDATE @ValidShippingOptions SET nShippingGroup = @ShippingGroupName
+		END
+		SELECT * from @ValidShippingOptions
+	END
 
 	DROP TABLE #ShippingGroupList  
   END
@@ -394,12 +530,13 @@ from tblCartShippingLocations Loc
 
 		IF(@GroupItemCount=0)
 		BEGIN
-			-- Exclude any method that is mapped to a shipping group category
-			-- with bOverrideForWholeOrder = 1, as those are reserved for group-based orders.
-				SET @strEndConditionQuery=@strEndConditionQuery + 'And opt.nShipOptKey not in ( select distinct CSPC.nShipOptId from tblCartShippingProductCategoryRelations CSPC   
-				INNER JOIN tblCartCatProductRelations cpr on CSPC.nCatId= cpr.nCatId 
-				INNER JOIN tblCartShippingMethods csm on CSPC.nShipOptId = csm.nShipOptKey 
-				AND csm.bOverrideForWholeOrder = 1) '
+			-- Exclude methods mapped to a shipping group with bOverrideForWholeOrder=1.
+			-- Collection methods (bCollection=1) are exempt: they must always appear
+			-- regardless of whether the order has any shipping group context.
+			SET @strEndConditionQuery=@strEndConditionQuery + 'And (opt.bCollection = 1 OR opt.nShipOptKey not in ( select distinct CSPC.nShipOptId from tblCartShippingProductCategoryRelations CSPC
+				INNER JOIN tblCartCatProductRelations cpr on CSPC.nCatId= cpr.nCatId
+				INNER JOIN tblCartShippingMethods csm on CSPC.nShipOptId = csm.nShipOptKey
+				AND csm.bOverrideForWholeOrder = 1)) '
 		END
   
 		-- Assemble the standard (non-group) dynamic query.
@@ -408,13 +545,22 @@ from tblCartShippingLocations Loc
 		print (@strMainQuery)  -- Debug output; logs the assembled SQL to the messages pane.
 		-- Apply the same CTE / bOverrideForWholeOrder logic as Branch A.
 		SET @strMainQuery = 'WITH ShippingOptions AS (
-						 '+@strMainQuery+'     
-						)
-						SELECT * FROM (SELECT * FROM ShippingOptions WHERE EXISTS (SELECT 1 FROM ShippingOptions so WHERE so.bOverrideForWholeOrder = 1) AND bOverrideForWholeOrder = 1
-									UNION
-									SELECT * FROM ShippingOptions WHERE NOT EXISTS (SELECT 1 FROM ShippingOptions so WHERE so.bOverrideForWholeOrder = 1)
-						) AS FinalResult
-						ORDER BY nDisplayPriority, nShippingTotal'
+					 '+@strMainQuery+'     
+					),
+					Ranked AS (
+						SELECT *,
+							   MAX(CASE WHEN ISNULL(bCollection, 0) = 0 THEN CAST(ISNULL(bOverrideForWholeOrder, 0) AS INT) ELSE 0 END) OVER () AS _hasOverride,
+							   ROW_NUMBER() OVER (PARTITION BY nShipOptKey ORDER BY nDisplayPriority, nShippingTotal, cLocationNameShort) AS _rn
+						FROM ShippingOptions
+					)
+					SELECT nShipOptKey, cCurrency, cShipOptName, cShipOptForeignRef, cShipOptCarrier, cShipOptTime, cShipOptTandC,
+						   nShipOptCost, nShipOptPercentage, nShipOptQuantMin, nShipOptQuantMax, nShipOptWeightMin, nShipOptWeightMax,
+						   nShipOptPriceMin, nShipOptPriceMax, nShipOptHandlingPercentage, nShipOptHandlingFixedCost, nShipOptTaxRate,
+						   nAuditId, nDisplayPriority, bCollection, nShipOptCat, nShippingTotal, NonDiscountedShippingCost, nShippingGroup,
+						   bOverrideForWholeOrder, nShipOptWeightOverageUnit, nShipOptWeightOverageRate, cLocationNameShort
+					FROM Ranked
+					WHERE _rn = 1 AND (bCollection = 1 OR _hasOverride = 0 OR bOverrideForWholeOrder = 1)
+					ORDER BY nDisplayPriority, nShippingTotal'
 
 		-- If a promo code granting free shipping is present, execute into the staging
 		-- table variable and MERGE to zero the cost of the matching methods before
@@ -433,11 +579,13 @@ from tblCartShippingLocations Loc
 
 			SELECT  * from @ValidShippingOptions  
 		END  
-		ELSE  
-		BEGIN  
-			-- Execute Query without promocode  			
-			exec (@strMainQuery)  
-		END  
+		ELSE
+		BEGIN
+			-- Execute Query without promocode
+			exec (@strMainQuery)
+		END
+
+		DROP TABLE #ShippingGroupList
   END
   
  
