@@ -62,6 +62,8 @@ namespace Protean.Providers
             void addNote(string sRef, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
             void addNote(ref XmlNode oNode, xForm.noteTypes nTypes, string sMessage, bool bInsertFirst = false, string sClass = "");
             XmlElement addBind(string sId, string sXpath, ref XmlElement oBindParent, string sRequired = "false()", string sType = "string", string sConstraint = "");
+
+
         }
 
         public interface IMessagingAdminProcess
@@ -81,6 +83,8 @@ namespace Protean.Providers
             bool AddToList(string ListId, string Name, string Email, IDictionary values);
             bool RemoveFromList(string ListId, string Email);
             bool OptOutAll(string Email);
+
+            bool TrackRefundEvent(XmlNode orderNode, decimal nAmount);
         }
 
         public class ReturnProvider
@@ -1179,6 +1183,21 @@ namespace Protean.Providers
                     catch (Exception ex)
                     {
                         stdTools.returnException(ref Protean.Messaging.msException, this.mcModuleName, "OptOutAll", ex, "", "", gbDebug);
+                        return default;
+                    }
+                }
+
+                public virtual bool TrackRefundEvent(XmlNode orderNode, decimal refundAmount)
+                {
+                    // PerfMon.Log("Activities", "RemoveFromList")
+                    try
+                    {
+                        // do nothing this is a placeholder
+                        return default;
+                    }
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref Protean.Messaging.msException, this.mcModuleName, "TrackRefundEvent", ex, "", "", gbDebug);
                         return default;
                     }
                 }
