@@ -1185,7 +1185,7 @@ namespace Protean.Providers
                 }
                 public virtual bool TrackRefundEvent(XmlNode orderNode, decimal refundAmount)
                 {
-                    // PerfMon.Log("Activities", "RemoveFromList")
+                    // PerfMon.Log("Activities", "TrackRefundEvent")
                     try
                     {
                         // do nothing this is a placeholder

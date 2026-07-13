@@ -1233,9 +1233,6 @@ namespace Protean
                             IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, cProviderName);
                             cRefundPaymentReceipt = oPaymentProv.Activities.RefundPayment(nProviderReference.ToString(), nAmount);
 
-
-                            if (moWebConfig["KlaviyoAPIPrivateKey"] != null && moWebConfig["KlaviyoAPIPrivateKey"] != "")
-                            {
                                 System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
                                 if (moMailConfig != null)
                                 {
@@ -1247,7 +1244,7 @@ namespace Protean
                                         sMessagingProvider = moMailConfig["MessagingProvider"];
                                     }
 
-                                    if (!string.IsNullOrEmpty(sMessagingProvider) | !string.IsNullOrEmpty(moMailConfig["InvoiceList"]) & !string.IsNullOrEmpty(moMailConfig["QuoteList"]))
+                                    if (!string.IsNullOrEmpty(sMessagingProvider))
                                     {
                                         Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                                         IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
@@ -1266,7 +1263,7 @@ namespace Protean
                                     }
                                 }
                             }
-                        }
+                        
                         var xmlDoc = new XmlDocument();
                         var xmlResponse = xmlDoc.CreateElement("Response");
                         xmlResponse.InnerXml = "<RefundPaymentReceiptId>" + cRefundPaymentReceipt + "</RefundPaymentReceiptId>";
