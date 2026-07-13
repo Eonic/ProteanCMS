@@ -91,8 +91,7 @@
         <add key="DisableServerSenderEmail" value="" />
  	    <add key="ExcludeFoldersFromPaths" value="header,footer" />
   	    <add key="MsGraphTennantId" value="" />
-        <add key="MsGraphClientId" value="" />
-        <add key="KlaviyoTrackingKey" value="X9jhvh" />
+        <add key="MsGraphClientId" value="" />       
 		<add key="MsGraphClientSecret" value="" />
 		  <add key="GoCertifyCompanyName" value="" />
 	  </web>
