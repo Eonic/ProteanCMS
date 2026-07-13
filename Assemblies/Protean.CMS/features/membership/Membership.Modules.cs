@@ -48,7 +48,7 @@ namespace Protean
                         string sReturnValue = string.Empty;
                         string cLogonCmd = "";
 
-                        if (myWeb.mnUserId == 0 & (myWeb.moRequest["ewCmd"] != "passwordReminder" & myWeb.moRequest["ewCmd"] != cmdPrefix + "ActivateAccount"))
+                        if (myWeb.mnUserId == 0 & (myWeb.moRequest["ewCmd"] != "passwordReminder" & myWeb.moRequest["ewCmd"] != cmdPrefix + "ActivateAccount" & myWeb.moRequest["ewCmd"] != "ActivateAccount"))
                         {
 
                             oXfmElmt = (XmlElement)oAdXfm.GetProviderXFrmUserLogon(cmdPrefix: cmdPrefix);
@@ -136,6 +136,13 @@ namespace Protean
                         }
 
                         else if (myWeb.moRequest["ewCmd"] == cmdPrefix + "ActivateAccount")
+                        {
+
+                            oXfmElmt = (XmlElement)oAdXfm.xFrmActivateAccount();
+                            oContentNode.InnerXml = oXfmElmt.InnerXml;
+
+                        }
+                        else if (myWeb.moRequest["ewCmd"] == "ActivateAccount")
                         {
 
                             oXfmElmt = (XmlElement)oAdXfm.xFrmActivateAccount();
@@ -375,7 +382,7 @@ namespace Protean
                                 // ok if the user is valid we then need to handle what happens next.
                                 if (Convert.ToBoolean(oAdXfm.valid) && oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText != "")
                                 {
-                                    myWeb.mnUserId = Convert.ToInt16(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
+                                    myWeb.mnUserId = Convert.ToInt64(oAdXfm.Instance.SelectSingleNode("tblDirectory/nDirKey").InnerText);
                                     var oMembership = new Membership(ref myWeb);
                                     oMembership.RegistrationActions(CmdPrefix);
                                     switch (myWeb.moConfig["RegisterBehaviour"] ?? "")

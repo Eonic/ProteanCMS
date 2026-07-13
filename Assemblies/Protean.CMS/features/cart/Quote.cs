@@ -1268,7 +1268,7 @@ namespace Protean
                 }
             }
 
-            public override void MakeCurrent(int nOrderID)
+            public override void MakeCurrent(long nOrderID)
             {
                 // PerfMon.Log("Quote", "MakeCurrent")
                 // procedure to make a selected historical
@@ -1277,18 +1277,18 @@ namespace Protean
                 var oDS = new DataSet();
                 Cart otmpcart = (Cms.Cart)null;
                 string cNotes = "";
-                int nCheckUser = 0;
+                long nCheckUser = 0;
                 try
                 {
 
                     if (myWeb.mnUserId == 0)
                         return;
                     // Dim oDre As SqlDataReader = moDBHelper.getDataReader("Select nCartUserDirId, cClientNotes FROM tblCartOrder WHERE nCartOrderKey = " & nOrderID)
-                    using (SqlDataReader oDre = base.moDBHelper.getDataReaderDisposable("Select nCartUserDirId, cClientNotes FROM tblCartOrder WHERE nCartOrderKey = " + nOrderID))  // Done by nita on 6/7/22
+                    using (SqlDataReader oDre = base.moDBHelper.getDataReaderDisposable("Select nCartUserDirId, cClientNotes FROM tblCartOrder WHERE nCartOrderKey = " + nOrderID.ToString()))  // Done by nita on 6/7/22
                     {
                         while (oDre.Read())
                         {
-                            nCheckUser = Convert.ToInt16(oDre.GetValue(0));
+                            nCheckUser = Convert.ToInt64(oDre.GetValue(0));
                             if (!oDre.IsDBNull(1))
                                 cNotes = Convert.ToString(oDre.GetValue(1));
                         }

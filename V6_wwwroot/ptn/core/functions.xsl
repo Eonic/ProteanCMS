@@ -3625,6 +3625,7 @@
   <!-- Display Name for a Page -->
   <xsl:template match="MenuItem | PageVersion" mode="getDisplayName">
     <xsl:param name="non-display-name" />
+	  <xsl:param name="nocount" />
 
     <xsl:choose>
       <xsl:when test="$non-display-name='true'">
@@ -3639,7 +3640,9 @@
         <xsl:value-of select="@name"/>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates select="." mode="getContentCount"/>
+	  <xsl:if test="not($nocount='true')">
+		  <xsl:apply-templates select="." mode="getContentCount"/>
+	  </xsl:if>
   </xsl:template>
 
   <xsl:template match="MenuItem" mode="getContentCount">

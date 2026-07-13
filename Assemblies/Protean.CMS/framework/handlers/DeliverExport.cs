@@ -91,6 +91,7 @@ namespace Protean.Handlers
 
                 using (oCms = new Cms())
                 {
+
                     oCms.InitializeVariables();
                     oCms.mcEwSiteXsl = siteXSL;
 

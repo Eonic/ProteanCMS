@@ -10789,37 +10789,54 @@ $(document).ready(function () {
             <i class="fa fa-info-sign fa-3x float-end">
               <xsl:text> </xsl:text>
             </i>
-            <h4>Hint</h4>
+            <h4>Create Voucher Codes</h4>
             <p>Voucher codes are groups of codes that can either be applied to a discount or can enable the user access to a unique subscriber group.</p>
-            <p>Codes Must be created in advanced in code sets</p>
+            <p>Codes must be created in advance within a codeset and then the codeset is linked to the product being sold. Unique codes are then issued.</p>
           </div>
+			<xsl:choose>
+				<xsl:when test="ContentDetail/Content[@type='xform']">
+
+					<a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}" class="btn btn-primary" title="Back to Member Codes">Back to Member Codes</a>
+					<br/>
+					<div class="card card-default">
+						<div class="card-header">
+
+							<h4>
+								Create Codes
+								<xsl:value-of select="@name"/>
+							</h4>
+						</div>
+						<div class="card-body">
+							<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+						</div>
+					</div>
+				</xsl:when>
+				<xsl:otherwise>
+					<a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;subCmd=AddCodeSet" class="btn btn-primary" title="Add a new code set">
+						<i class="fa fa-plus fa-white">
+							<xsl:text> </xsl:text>
+						</i><xsl:text> </xsl:text>Add New Code Set
+					</a>
+					<br/>
+					<div class="card card-default">
+						<div class="card-header">
+
+							<h4>
+								New Codeset
+								<xsl:value-of select="@name"/>
+							</h4>
+						</div>
+						<div class="card-body">
+							<xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+						</div>
+							</div>
+				</xsl:otherwise>
+			</xsl:choose>
         </div>
         <div class="col-lg-9">
-          <div class="card card-default">
-            <div class="card-header">
-              <xsl:choose>
-                <xsl:when test="ContentDetail/Content[@type='xform']">
-                  <p class="btn-group headerButtons">
-                    <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}" class="adminButton edit" title="Back to Member Codes">Back to Member Codes</a>
-                  </p>
-                </xsl:when>
-                <xsl:otherwise>
-                  <a href="{$appPath}?ewCmd=MemberCodes&amp;pgid={/Page/@id}&amp;subCmd=AddCodeSet" class="btn btn-primary float-end" title="Add a new code set">
-                    <i class="fa fa-plus fa-white">
-                      <xsl:text> </xsl:text>
-                    </i><xsl:text> </xsl:text>Add New Code Set
-                  </a>
-                  <h4>
-                    <xsl:value-of select="@name"/>
-                  </h4>
-                </xsl:otherwise>
-              </xsl:choose>
-            </div>
-            <div class="card-body">
-              <xsl:apply-templates select="ContentDetail/Content[@type='xform']" mode="xform"/>
+          
               <xsl:apply-templates select="ContentDetail/Content[@type!='xform']" mode="DirectoryCodes"/>
-            </div>
-          </div>
+       
         </div>
       </div>
     </div>
@@ -11031,8 +11048,79 @@ $(document).ready(function () {
   </xsl:template>
 
   <xsl:template match="Content[@type='SubCodeList']" mode="DirectoryCodes">
-    <xsl:apply-templates select="tblCodes" mode="reportDetail"/>
+	  <table class="table table-mobile-cards">
+		  <thead>
+			  <tr>
+				  <th>Code</th>
+				  <th>Issued Date</th>
+				  <th>Order</th>
+				  <th>User</th>
+				  <th>Used Date</th>
+				  <th>&#160;</th>
+			  </tr>
+		  </thead>
+		  <tbody>
+			  <xsl:apply-templates select="tblCodes/Code" mode="SubCodeItem"/>
+		  </tbody>
+	  </table>
+	  
+	  
   </xsl:template>
+
+
+
+	<xsl:template match="Code" mode="SubCodeItem">
+		<tr>
+			<td>
+				<xsl:value-of select="Code/node()"/>
+			</td>
+			<td>
+				<xsl:if test="not(starts-with(@Date_Issued, '0001'))">
+				<xsl:call-template name="DD_Mon_YY">
+					<xsl:with-param name="date" select="@Date_Issued"/>
+					<xsl:with-param name="showTime" select="'true'"/>
+				</xsl:call-template>
+				</xsl:if>
+			</td>
+			<td>
+				<xsl:if test="@Used_ref!='0'">
+					<a class="btn btn-outline-primary btn-sm mt-1" href="/?ewCmd=Orders&amp;ewCmd2=Display&amp;id={@Used_ref}">
+						<i class="fa fa-shopping-basket fa-white">&#160;</i>&#160;
+						Order</a>
+				</xsl:if>		
+			</td>
+			<td>
+				<xsl:if test="User_Id/node()!='0'">					
+					<a href="/?ewCmd=Profile&amp;DirType=User&amp;id={User_Id/node()}">
+					<span class="btn btn-outline-primary btn-sm mt-1">
+						<i class="fa fa-user fa-white">&#160;</i>&#160;
+						<xsl:value-of select="UserXml/User/FirstName/node()"/>&#160;
+						<xsl:value-of select="UserXml/User/LastName/node()"/>
+					</span>
+				</a>
+			   </xsl:if>
+			</td>
+			<td>
+				
+				<xsl:if test="not(starts-with(@Date_Used, '0001'))">
+					<xsl:call-template name="DD_Mon_YY">
+						<xsl:with-param name="date" select="@Date_Used"/>
+						<xsl:with-param name="showTime" select="'true'"/>
+					</xsl:call-template>
+				</xsl:if>
+			</td>
+				<td >
+					<xsl:if test="@Used_ref!='0'">
+
+						<a href="/?ewCmd=MemberCodes&amp;pgid=1&amp;id={$page/@artid}&amp;subCmd=ReleaseCode&amp;subcodeid={@id}">
+							<span class="btn btn-outline-danger btn-sm mt-1">
+								<i class="fa fa-recycle fa-white">&#160;</i>&#160;Release Code
+							</span>
+						</a>
+					</xsl:if>
+				</td>
+		</tr>
+	</xsl:template>
 
   <!-- -->
   <!--   ##################  Site Index  ##############################   -->

@@ -1487,21 +1487,23 @@
         </xsl:attribute>
       </xsl:if>
     </input>
-    <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
-      <div class="invalid-feedback">
-        <xsl:value-of select="@data-fv-not-empty___message"/>
-      </div>
-    </xsl:if>
-    <xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
-      <div class="invalid-feedback">
-        This is required
-      </div>
-    </xsl:if>
-    <xsl:if test="alert">
-      <div class="invalid-feedback-server">
-        <xsl:copy-of select="alert/node()"/>
-      </div>
-    </xsl:if>
+	  <xsl:choose>
+		  <xsl:when test="alert">
+			  <div class="invalid-feedback">
+				  <xsl:copy-of select="alert/node()"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
+			  <div class="invalid-feedback">
+				  <xsl:value-of select="@data-fv-not-empty___message"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+			  <div class="invalid-feedback">
+				  This is required
+			  </div>
+		  </xsl:when>
+	  </xsl:choose>
   </xsl:template>
 
   <xsl:template match="*" mode="getRefOrBind">
@@ -2241,16 +2243,23 @@
         </button>
       </xsl:if>
     </input>
-    <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
-      <div class="invalid-feedback">
-        <xsl:value-of select="@data-fv-not-empty___message"/>
-      </div>
-    </xsl:if>
-    <xsl:if test="alert">
-      <div class="invalid-feedback">
-        <xsl:copy-of select="alert/node()"/>
-      </div>
-    </xsl:if>
+	  <xsl:choose>
+		  <xsl:when test="alert">
+			  <div class="invalid-feedback">
+				  <xsl:copy-of select="alert/node()"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
+			  <div class="invalid-feedback">
+				  <xsl:value-of select="@data-fv-not-empty___message"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+			  <div class="invalid-feedback">
+				  This is required
+			  </div>
+		  </xsl:when>
+	  </xsl:choose>
   </xsl:template>
   <!-- -->
   <xsl:template match="secret[contains(@class,'textbox')]" mode="xform_control">
@@ -2343,21 +2352,23 @@
       <xsl:text> </xsl:text>
     </textarea>
     <!--Space is required for XSLT compiled mode-->
-    <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
-      <div class="invalid-feedback">
-        <xsl:value-of select="@data-fv-not-empty___message"/>
-      </div>
-    </xsl:if>
-    <xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
-      <div class="invalid-feedback">
-        This is required
-      </div>
-    </xsl:if>
-    <xsl:if test="alert">
-      <div class="invalid-feedback-server">
-        <xsl:copy-of select="alert/node()"/>
-      </div>
-    </xsl:if>
+	  <xsl:choose>
+		  <xsl:when test="alert">
+			  <div class="invalid-feedback">
+				  <xsl:copy-of select="alert/node()"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
+			  <div class="invalid-feedback">
+				  <xsl:value-of select="@data-fv-not-empty___message"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+			  <div class="invalid-feedback">
+				  This is required
+			  </div>
+		  </xsl:when>
+	  </xsl:choose>
   </xsl:template>
   <!-- -->
   <xsl:template match="textarea[contains(@class,'readonly')]" mode="xform_control">
@@ -2392,7 +2403,9 @@
             <xsl:value-of select="@class"/>
           </xsl:otherwise>
         </xsl:choose>
-
+		  <xsl:if test="alert">
+			  <xsl:text> is-invalid</xsl:text>
+		  </xsl:if>
       </xsl:attribute>
       <xsl:variable name="targetId">
         <xsl:choose>
@@ -2470,21 +2483,24 @@
       </xsl:choose>
 
     </select>
-    <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
-      <div class="invalid-feedback">
-        <xsl:value-of select="@data-fv-not-empty___message"/>
-      </div>
-    </xsl:if>
-    <xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
-      <div class="invalid-feedback">
-        This is required
-      </div>
-    </xsl:if>
-    <xsl:if test="alert">
-      <div class="invalid-feedback-server">
-        <xsl:copy-of select="alert/node()"/>
-      </div>
-    </xsl:if>
+   
+	 <xsl:choose>
+        <xsl:when test="alert">
+          <div class="invalid-feedback">
+            <xsl:copy-of select="alert/span/node()"/>			  
+          </div>
+        </xsl:when>
+		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
+			  <div class="invalid-feedback">
+				  <xsl:value-of select="@data-fv-not-empty___message"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+			  <div class="invalid-feedback">
+				  This is required
+			  </div>
+		  </xsl:when>
+	  </xsl:choose>
   </xsl:template>
   <!-- -->
   <!-- ## Standard Select1 for Radio Buttons ########################################################### -->

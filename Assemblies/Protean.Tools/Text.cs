@@ -704,7 +704,7 @@ namespace Protean.Tools
                     }
 
                 }
-                return cName;
+                return cName.Trim();
 
             }
             catch (Exception ex)

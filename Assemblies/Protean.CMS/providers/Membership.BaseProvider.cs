@@ -805,7 +805,7 @@ namespace Protean.Providers
                         var oMembership = new Cms.Membership(ref myWeb);
                         if (oMembership.ActivateAccount(moRequest["key"]))
                         {
-                            addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1036\">Your account is now activated please logon</span>", true, "msg-1036");
+                            addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1036\">Your account is now activated please <a href=\"" + myWeb.mcPagePath + "\">Sign In</a></span>", true, "msg-1036");
                         }
                         else
                         {
@@ -1092,7 +1092,7 @@ namespace Protean.Providers
                             {
                                 var oMembership = new Cms.Membership(ref myWeb);
 
-                                if (!oMembership.ReactivateAccount((Int16)nAccount, goRequest["cDirPassword"]))
+                                if (!oMembership.ReactivateAccount((Int64)nAccount, goRequest["cDirPassword"]))
                                 {
                                     base.addNote("cDirPassword2", Protean.xForm.noteTypes.Alert, "There was a problem changing the password");
                                     base.valid = false;
@@ -1123,7 +1123,7 @@ namespace Protean.Providers
                         var oMembership = new Cms.Membership(ref myWeb);
                         int SubmittedUserId = Convert.ToInt32("0" + goRequest["id"]);
 
-                        int nUserId = oMembership.DecryptResetLink(SubmittedUserId, AccountHash);
+                        long nUserId = oMembership.DecryptResetLink(SubmittedUserId, AccountHash);
 
                         return xFrmConfirmPassword(nUserId);
                     }
@@ -2057,6 +2057,15 @@ namespace Protean.Providers
 
                     try
                     {
+                        // if the account is being activated we want to logoff first because the activation goes to a logged off page
+                        if (myWeb.moRequest["ewCmd"] == "ActivateAccount")
+                        {
+                            moSession["nUserId"] = null;
+                            moSession.Abandon();
+                            myWeb.mnUserId = 0;
+                            return myWeb.mnUserId;
+                        }
+
                         if (myWeb.moRequest["LogOff"] == "1")
                         {
                             moSession["nUserId"] = null;
@@ -2198,13 +2207,13 @@ namespace Protean.Providers
                                 }
                                 else
                                 {
-                                    mnUserId = Convert.ToInt16(moSession["PreviewUser"]);
+                                    mnUserId = Convert.ToInt64(moSession["PreviewUser"]);
                                     myWeb.mbPreview = true;
                                 }
                             }
                             else
                             {
-                                mnUserId = Convert.ToInt16(moSession["nUserId"]);
+                                mnUserId = Convert.ToInt64(moSession["nUserId"]);
                             }
 
 
@@ -2403,7 +2412,7 @@ namespace Protean.Providers
                         }
 
                         // display logon form for all pages if user is not logged on.
-                        if (mnUserId == 0 && (myWeb.moRequest["ewCmd"] != "passwordReminder" && myWeb.moRequest["ewCmd"] != "ResendActivation" && myWeb.moRequest["ewCmd"] != "ActivateAccount" && myWeb.moRequest["ewCmd"] != "AR"))
+                        if (mnUserId == 0 && (myWeb.moRequest["ewCmd"] != "passwordReminder" && myWeb.moRequest["ewCmd"] != "ResendActivation" && myWeb.moRequest["ewCmd"] != "ActivateAccount"  && myWeb.moRequest["ewCmd"] != "AR"))
                         {
 
                             XmlElement oXfmElmt = (XmlElement)adXfm.xFrmUserLogon();

@@ -3034,7 +3034,20 @@ namespace Protean
                             }
                         case objectTypes.OptOutAddresses:
                             {
-                                ExeProcessSql($"Delete from tblOptOutAddresses where nOptOutKey = {nId}");
+                                ExeProcessSql($"Select from tblOptOutAddresses where nOptOutKey = {nId}");
+                                break;
+                            }
+
+                        case objectTypes.Codes:
+                            {
+                                if (nId > 1) {
+                                    sSql = $"SELECT nCodeKey from tblCodes where nCodeParentId  = {nId}";
+                                    using (var oDr = getDataReaderDisposable(sSql))
+                                    {
+                                        while (oDr.Read())
+                                            DeleteObject(objectTypes.Codes, Convert.ToInt64(oDr.GetValue(0)));
+                                    }
+                                }
                                 break;
                             }
                     }
@@ -7069,16 +7082,17 @@ namespace Protean
 
                                     Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                                     IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
-                                }
-                                if (moMessaging != null && moMessaging.AdminProcess != null)
-                                {
-                                    try
+                              
+                                    if (moMessaging != null && moMessaging.AdminProcess != null)
                                     {
-                                        moMessaging.AdminProcess.maintainUserInGroup(nChildId, nParId, bRemove, cEmail, cGroup, isLast);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        cProcessInfo = ex.StackTrace;
+                                        try
+                                        {
+                                            moMessaging.AdminProcess.maintainUserInGroup(nChildId, nParId, bRemove, cEmail, cGroup, isLast);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            cProcessInfo = ex.StackTrace;
+                                        }
                                     }
                                 }
                                 // End If
@@ -8976,7 +8990,7 @@ namespace Protean
                 return default;
             }
 
-            public XmlElement getUserXMLById(ref int nUserId)
+            public XmlElement getUserXMLById(ref long nUserId)
             {
                 PerfMonLog("DBHelper", "getUserXMLById");
                 // Dim oDs As Data.DataSet
@@ -12158,7 +12172,7 @@ namespace Protean
                 {
                     string[] cGroups = nDirIds.Split(',');
                     int nI;
-                    int nDirId;
+                    long nDirId;
                     string cNewIds = "";
                     int nPermLevel = Convert.ToInt16("1");
                     bool bDeny = false;
@@ -12184,14 +12198,14 @@ namespace Protean
                     int loopTo = cGroups.Length - 1;
                     for (nI = 0; nI <= loopTo; nI++)
                     {
-                        nDirId = Convert.ToInt16(cGroups[nI]);
+                        nDirId = Convert.ToInt64(cGroups[nI]);
                         if (bInsert)
                         {
 
 
                             // if exists then  return the id
                             string cSQL = $"Select nDiscountDirRelationKey From tblCartDiscountDirRelations Where nDiscountId = {nDiscountId} And nDirId = {nDirId}";
-                            int nId = Convert.ToInt16(ExeProcessSqlScalar(cSQL));
+                            long nId = Convert.ToInt64(ExeProcessSqlScalar(cSQL));
                             if (nId > 0)
                                 return nId.ToString();
 

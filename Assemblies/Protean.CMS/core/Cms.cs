@@ -747,7 +747,7 @@ namespace Protean
                             moMemProv = RetProv.Get(ref argmyWeb, moConfig["MembershipProvider"]);
                             RetProv = null;
                         }
-                        mnUserId = Convert.ToInt16(moMemProv.Activities.GetUserId(ref argmyWeb));
+                        mnUserId = Convert.ToInt64(moMemProv.Activities.GetUserId(ref argmyWeb));
                     }
                     // We need the userId placed into dbhelper.
                     moDbHelper.mnUserId = (long)mnUserId;
@@ -1401,7 +1401,7 @@ namespace Protean
                         moMemProv = RetProv.Get(ref argmyWeb, moConfig["MembershipProvider"]);
                         RetProv = null;
                     }
-                    mnUserId = Convert.ToInt16(moMemProv.Activities.GetUserSessionId(ref argmyWeb));
+                    mnUserId = Convert.ToInt64(moMemProv.Activities.GetUserSessionId(ref argmyWeb));
 
                     if (mnUserId > 0)
                     {
