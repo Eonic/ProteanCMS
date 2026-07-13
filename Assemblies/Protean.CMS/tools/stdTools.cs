@@ -375,7 +375,6 @@ namespace Protean
 
                                         }
                                     }
-
                                 }
                             }
                             catch (Exception ex)
