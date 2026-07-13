@@ -56,7 +56,7 @@
             <xsl:variable name="secureLink">
               <xsl:value-of select="$siteURL"/>
 			        <xsl:value-of select="@Url"/>
-              <xsl:text>?ewCmd=AR&amp;id=</xsl:text>
+              <xsl:text>?ewCmd=AR-MOD&amp;id=</xsl:text>
               <xsl:value-of select="User/@id"/>
               <xsl:text>&amp;AI=</xsl:text>
               <xsl:value-of select="@Link"/>
