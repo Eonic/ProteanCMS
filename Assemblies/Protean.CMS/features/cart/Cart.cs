@@ -9,6 +9,7 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Reflection;
 using System.Web;
 using System.Web.Configuration;
@@ -2338,14 +2339,30 @@ namespace Protean
                             {
                                 bOptOut = Convert.ToBoolean(oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut").InnerText);
                             }
-
-                            foreach (XmlAttribute Attribute in oCartElmt.Attributes)
+                            else
                             {
-                                if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
+                                if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nOptOutKey"))
                                 {
-                                    valDict.Add(Attribute.Name, Attribute.Value);
+                                    if (!string.IsNullOrEmpty(Email))
+                                    {
+                                        string cSQL = $"Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '{Email}')";
+                                        string cSQLStatusCheck = $"Select top 1 nStatus FROM tblOptOutAddresses WHERE (EmailAddress = '{Email}') order by dOptOut desc";
+
+                                        bool bstatus = Convert.ToBoolean(moDBHelper.ExeProcessSqlScalar(cSQLStatusCheck));
+                                        bOptOut = bstatus;
+                                    }
+                                      
+                                   
+
                                 }
                             }
+                                foreach (XmlAttribute Attribute in oCartElmt.Attributes)
+                                {
+                                    if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
+                                    {
+                                        valDict.Add(Attribute.Name, Attribute.Value);
+                                    }
+                                }
                             string[] fullName = Name.Split(' ');
                             string firstName = "";
                             string lastName = "";

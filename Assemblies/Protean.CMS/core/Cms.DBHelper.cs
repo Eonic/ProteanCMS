@@ -14228,6 +14228,19 @@ namespace Protean
                 }
             }
 
+            public void updatePromoStatus(string discountName)
+            {
+                try
+                {
+                    String sSQL = "update tblAudit set nStatus=1 where nAuditKey in (select top 1 nAuditId from tblCartDiscountRules where cDiscountCode='" + discountName + "')";
+                    ExeProcessSql(sSQL);
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartStatus", ex, "", "", gbDebug);
+                }
+            }
+
             public void SaveCartStatus(long CartId, int StatusId)
             {
                 try
@@ -14240,7 +14253,6 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartStatus", ex, "", "", gbDebug);
                 }
             }
-
             public void UpdateSellerNotes(long CartId, string TransactionDetails)
             {
                 string sSql = "";

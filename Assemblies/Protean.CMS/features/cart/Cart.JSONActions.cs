@@ -1,6 +1,7 @@
-﻿using DocumentFormat.OpenXml.Office2013.Word;
+﻿
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,6 @@ using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.Tools.Xml;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
 
 namespace Protean
 {
@@ -1232,25 +1232,55 @@ namespace Protean
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
                             IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, cProviderName);
                             cRefundPaymentReceipt = oPaymentProv.Activities.RefundPayment(nProviderReference.ToString(), nAmount);
+
+
                             if (moWebConfig["KlaviyoAPIPrivateKey"] != null && moWebConfig["KlaviyoAPIPrivateKey"] != "")
                             {
-                                sendKlaviyoRefundEvent(nProviderReference, nAmount);
+                                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                                if (moMailConfig != null)
+                                {
 
+                                    string sMessagingProvider = "";
+
+                                    if (moMailConfig != null)
+                                    {
+                                        sMessagingProvider = moMailConfig["MessagingProvider"];
+                                    }
+
+                                    if (!string.IsNullOrEmpty(sMessagingProvider) | !string.IsNullOrEmpty(moMailConfig["InvoiceList"]) & !string.IsNullOrEmpty(moMailConfig["QuoteList"]))
+                                    {
+                                        Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                                        IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
+                                        String sSql = "select cCartXml from tblcartorder  where nPayMthdId in (select nPayMthdKey from tblCartPaymentMethod where cPayMthdProviderRef='" + nProviderReference + "')";
+                                        String scartXml = Convert.ToString(myWeb.moDbHelper.GetDataValue(sSql));
+
+                                        XmlDocument doc = new XmlDocument();
+                                        doc.LoadXml(scartXml);
+
+                                        XmlElement cartxml = doc.DocumentElement;
+                                        XmlNode orderNode = cartxml.SelectSingleNode("descendant-or-self::Order");
+
+
+                                        oMessaging.Activities.TrackRefundEvent(orderNode, nAmount);
+
+                                    }
+                                }
                             }
-                            
-                            var xmlDoc = new XmlDocument();
-                            var xmlResponse = xmlDoc.CreateElement("Response");
-                            xmlResponse.InnerXml = "<RefundPaymentReceiptId>" + cRefundPaymentReceipt + "</RefundPaymentReceiptId>";
-                            xmlDoc.LoadXml(xmlResponse.InnerXml);
-
-                            josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
-                            josResult = josResult.Replace("\"@", "\"_");
-                            josResult = josResult.Replace("#cdata-section", "cDataValue");
-
-                            return josResult;
                         }
+                        var xmlDoc = new XmlDocument();
+                        var xmlResponse = xmlDoc.CreateElement("Response");
+                        xmlResponse.InnerXml = "<RefundPaymentReceiptId>" + cRefundPaymentReceipt + "</RefundPaymentReceiptId>";
+                        xmlDoc.LoadXml(xmlResponse.InnerXml);
+
+                        josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
+                        josResult = josResult.Replace("\"@", "\"_");
+                        josResult = josResult.Replace("#cdata-section", "cDataValue");
+
                         return josResult;
                     }
+
+
+
                     catch (Exception ex)
                     {
                         RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""));
@@ -1391,284 +1421,7 @@ namespace Protean
 
                 }
 
-                public void sendKlaviyoRefundEvent(long paymentRefNo, decimal refundAmount)
-                {
-                    try
-                    {
-                        String sSql = "select cCartXml from tblcartorder  where nPayMthdId in (select nPayMthdKey from tblCartPaymentMethod where cPayMthdProviderRef='" + paymentRefNo + "')";
-                        String scartXml = Convert.ToString(myWeb.moDbHelper.GetDataValue(sSql));
-
-                        XmlDocument doc = new XmlDocument();
-                        doc.LoadXml(scartXml);
-
-                        XmlElement cartxml = doc.DocumentElement;
-                        XmlNode orderNode = cartxml.SelectSingleNode("descendant-or-self::Order");
-
-
-                        if (orderNode == null)
-                            return;
-
-                        string siteUrl = "";
-
-                        if (orderNode.Attributes["siteUrl"] != null)
-                            siteUrl = orderNode.Attributes["siteUrl"].Value;
-                        string sCartId = orderNode.Attributes["cartId"].Value;
-                        List<string> itemNames = new List<string>();
-                        List<object> items = new List<object>();
-
-                        XmlNodeList cartItems =
-                            orderNode.SelectNodes("Item");
-
-                        foreach (XmlNode cartItem in cartItems)
-                        {
-                            string productName = "";
-                            string sku = "";
-                            string imageUrl = "";
-                            string productUrl = "";
-
-                            if (cartItem.SelectSingleNode("productDetail/Name") != null)
-                                productName =
-                                    cartItem.SelectSingleNode("productDetail/Name").InnerText;
-
-                            if (cartItem.SelectSingleNode("productDetail/StockCode") != null)
-                                sku =
-                                    cartItem.SelectSingleNode("productDetail/StockCode").InnerText;
-
-                            if (cartItem.Attributes["url"] != null)
-                            {
-                                productUrl =
-                                    siteUrl.TrimEnd('/')
-                                    + "/"
-                                    + cartItem.Attributes["url"].Value.TrimStart('/');
-                            }
-
-                            XmlNode imageNode =
-                                cartItem.SelectSingleNode(
-                                    "productDetail/ParentProduct/Content/Images/img[@class='thumbnail']");
-
-                            if (imageNode != null &&
-                                imageNode.Attributes["src"] != null)
-                            {
-                                imageUrl =
-                                    siteUrl.TrimEnd('/')
-                                    + "/"
-                                    + imageNode.Attributes["src"].Value.TrimStart('/');
-                            }
-
-                            int quantity = 1;
-                            decimal itemPrice = 0;
-                            decimal rowTotal = 0;
-
-                            if (cartItem.Attributes["quantity"] != null)
-                                quantity =
-                                    Convert.ToInt32(
-                                        cartItem.Attributes["quantity"].Value);
-
-                            if (cartItem.Attributes["price"] != null)
-                                itemPrice =
-                                    Convert.ToDecimal(
-                                        cartItem.Attributes["price"].Value);
-
-                            if (cartItem.Attributes["itemTotal"] != null)
-                                rowTotal =
-                                    Convert.ToDecimal(
-                                        cartItem.Attributes["itemTotal"].Value);
-
-                            itemNames.Add(productName);
-
-                            items.Add(new
-                            {
-                                ProductID = cartItem.Attributes["id"]?.Value,
-                                SKU = sku,
-                                ProductName = productName,
-                                Quantity = quantity,
-                                ItemPrice = itemPrice,
-                                RowTotal = rowTotal,
-                                ProductURL = productUrl,
-                                ImageURL = imageUrl,
-                                Categories = new string[] { },
-                                Brand = ""
-                            });
-
-                        }
-
-                        XmlNode oCartAdd = orderNode.SelectSingleNode("Contact[@type='Billing Address']");
-                        string GivenName = "";
-                        string[] aGivenName;
-                        string strAddress1 = "";
-                        string strAddress2 = "";
-                        string strTownCity = "";
-                        string strCounty = "";
-                        string strPostcode = "";
-                        string strCountry = "";
-                        string strFirstName = "";
-                        string strLastName = "";
-                        string strEmail = "";
-                        string strPhone = "";
-
-                        if (oCartAdd != null)
-                        {
-                            GivenName = oCartAdd.SelectSingleNode("GivenName").InnerText;
-
-                            aGivenName = GivenName.Trim().Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
-                            strFirstName = aGivenName.Length > 0 ? aGivenName[0] : "";
-                            strLastName = aGivenName.Length > 1 ? aGivenName[1] : "";
-                            if (oCartAdd.SelectSingleNode("Company") != null && oCartAdd.SelectSingleNode("Company").Value != null)
-                            {
-                                strAddress1 = oCartAdd.SelectSingleNode("Company").InnerText;
-
-                                if (oCartAdd.SelectSingleNode("Street") != null)
-                                {
-                                    strAddress2 = oCartAdd.SelectSingleNode("Street").InnerText;
-                                }
-                            }
-                            else if (oCartAdd.SelectSingleNode("Street") != null)
-                                strAddress1 = oCartAdd.SelectSingleNode("Street").InnerText;
-                            strAddress2 = "";
-                            if (oCartAdd.SelectSingleNode("City") != null)
-                                strTownCity = oCartAdd.SelectSingleNode("City").InnerText;
-                            if (oCartAdd.SelectSingleNode("State") != null)
-                                strCounty = oCartAdd.SelectSingleNode("State").InnerText;
-                            if (oCartAdd.SelectSingleNode("PostalCode") != null)
-                                strPostcode = oCartAdd.SelectSingleNode("PostalCode").InnerText;
-                            if (oCartAdd.SelectSingleNode("Country") != null)
-                                strCountry = oCartAdd.SelectSingleNode("Country").InnerText;
-                            if (oCartAdd.SelectSingleNode("Email") != null)
-                                strEmail = oCartAdd.SelectSingleNode("Email").InnerText;
-                            if (oCartAdd.SelectSingleNode("Telephone") != null)
-                                strPhone = oCartAdd.SelectSingleNode("Telephone").InnerText;
-
-
-
-                        }
-
-                        var billingAddress = new
-                        {
-                            FirstName = strFirstName,
-                            LastName = strLastName,
-                            Address1 = oCartAdd.SelectSingleNode("Company").InnerText,
-                            Address2 = oCartAdd.SelectSingleNode("Street").InnerText,
-                            City = strTownCity,
-                            RegionCode = strCounty,
-                            CountryCode = strCountry,
-                            Zip = strPostcode,
-                            Phone = strPhone
-                        };
-
-
-                        var payload = new
-                        {
-                            data = new
-                            {
-                                type = "event",
-                                attributes = new
-                                {
-                                    properties = new
-                                    {
-                                        OrderId = sCartId.ToString(),
-                                        Reason = " ",
-                                        ItemNames = itemNames,
-                                        Items = items,
-                                        BillingAddress = billingAddress
-
-                                    },
-
-                                    time = DateTime.UtcNow
-                                        .ToString("yyyy-MM-ddTHH:mm:ssZ"),
-
-                                    value = refundAmount,
-                                    value_currency = "GBP",
-
-                                    unique_id =
-                                        sCartId.ToString()
-                                        + "_REFUND_" +
-                                        DateTime.UtcNow.Ticks,
-
-                                    metric = new
-                                    {
-                                        data = new
-                                        {
-                                            type = "metric",
-                                            attributes = new
-                                            {
-                                                name = "Refunded Order"
-                                            }
-                                        }
-                                    },
-
-                                    profile = new
-                                    {
-                                        data = new
-                                        {
-                                            type = "profile",
-                                            attributes = new
-                                            {
-                                                email = strEmail,
-                                                phone_number =
-                                                    strPhone
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        };
-
-                        string json =
-                            Newtonsoft.Json.JsonConvert.SerializeObject(payload);
-                        string KlaviyoAPIKey = "";
-                        if (moWebConfig["KlaviyoAPIPrivateKey"] != null && moWebConfig["KlaviyoAPIPrivateKey"] != "")
-                        {
-                            KlaviyoAPIKey = moWebConfig["KlaviyoAPIPrivateKey"].ToString();
-
-                        }
-                        using (HttpClient client = new HttpClient())
-                        {
-                            client.DefaultRequestHeaders.Add(
-                                "Authorization",
-                                "Klaviyo-API-Key " +
-                                KlaviyoAPIKey);
-
-                            client.DefaultRequestHeaders.Add(
-                                "revision",
-                                "2024-02-15");
-
-                            client.DefaultRequestHeaders.Add(
-                                "accept",
-                                "application/json");
-
-                            StringContent content =
-                                new StringContent(
-                                    json,
-                                    Encoding.UTF8,
-                                    "application/json");
-
-                            HttpResponseMessage response =
-                                client.PostAsync(
-                                    "https://a.klaviyo.com/api/events/",
-                                    content)
-                                .Result;
-
-                            string responseText =
-                                response.Content
-                                    .ReadAsStringAsync()
-                                    .Result;
-
-
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        RaiseOnError(
-       new Tools.Errors.ErrorEventArgs(
-           mcModuleName,
-           "SendKlaviyoRefundedOrderEvent",
-           ex,
-           ""));
-
-                    }
-                }
-
-
+               
                 #endregion
 
 
