@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2013.Word;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Providers.Payment;
 using System;
@@ -12,7 +11,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.Tools.Xml;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Menu;
+
 
 namespace Protean
 {
