@@ -302,7 +302,12 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
-
+  <xsl:variable name="KlaviyoTrackingKey">
+    <xsl:call-template name="getXmlSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'KlaviyoTrackingKey'"/>
+    </xsl:call-template>
+  </xsl:variable>
   <xsl:variable name="GoogleOptimizeID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
       <xsl:call-template name="getXmlSettings">
