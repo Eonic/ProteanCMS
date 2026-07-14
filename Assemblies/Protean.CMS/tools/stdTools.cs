@@ -1,7 +1,4 @@
-﻿using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic.Logging;
-using Protean.Tools;
-using System;
+﻿using System;
 using System.Collections;
 using System.Data;
 using System.Diagnostics;
@@ -12,7 +9,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
+using System.Windows;
 using System.Xml;
+//using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Ajax.Utilities;
+using Protean.Tools;
 
 namespace Protean
 {
@@ -199,37 +200,8 @@ namespace Protean
                     oElmt.SetAttribute("name", "column1");
 
                     strErrorHtml = exceptionReport(oException, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo, httpContext);
-                    //strMessageHtml = "<div style=\"font-family:Verdana,Tahoma,Arial\"><h2>Unfortunately this site has experienced an error.</h2>" + "<h3>We take all errors very seriously.</h3>" + "<p>" + "This error has been recorded and details sent to <a href=\"http://eonic.com\">Eonic</a> who provide technical support for this website." + "</p>" + "<p>" + "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=\"mailto:support@eonic.co.uk\">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." + "</p>" + "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" + "<a href=\"javascript:history.back();\">Click Here to return to the previous page.</a></div>";
-                    strMessageHtml =
-"<style>" +
-".itb-error-page{padding:60px 30px;background:#f4f7fa;min-height:70vh;}" +
-".itb-error-page .itb-error-card{max-width:1200px;margin:0 auto;padding:40px 80px 60px 80px;background:#fff;border-radius:15px;box-shadow:0 8px 25px rgba(0,0,0,.1);}" +
-".itb-error-page .itb-logo{margin:-10px 0 25px 0;}" +
-".itb-error-page .itb-logo img{display:block;}" +
-".itb-error-page h1{color:#0072bc;font-size:32px;line-height:1.3;margin:0 0 20px;font-weight:600;}" +
-".itb-error-page h2{color:#444;font-size:24px;margin:0 0 30px;font-weight:600;}" +
-".itb-error-page p{font-size:17px;line-height:1.8;color:#555;margin:0 0 20px;}" +
-".itb-error-page a{color:#0072bc;}" +
-".itb-error-page .itb-back-btn{display:inline-block;margin-top:15px;padding:12px 28px;background:#f5a623;color:#fff !important;text-decoration:none;border-radius:25px;font-weight:600;}" +
-"</style>"+
-"<div class='itb-error-page'>" +
-    "<div class='itb-error-card'>" +
-        "<div class='itb-logo'><img src=\"/images/Logo-w-Tagline.svg\" width=\"225\" height=\"80\" alt=\"Into The Blue Logo - return to home page\" class=\"image \"></div>" +
-
-        "<h1>Unfortunately this site has experienced an error.</h1>" +
-        "<h2>We take all errors very seriously.</h2>" +
-
-        "<p>This error has been recorded and details sent to <a href='http://eonic.com'>Eonic</a> who provide technical support for this website.</p>" +
-
-        "<p>Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href='mailto:support@eonic.co.uk'>support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT.</p>" +
-
-        "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" +
-
-        "<a href='javascript:history.back();'>Click Here to return to the previous page.</a>" +
-
-     "</div>" +
-"</div>";
-
+                    strMessageHtml = "<div style=\"font-family:Verdana,Tahoma,Arial\"><h2>Unfortunately this site has experienced an error.</h2>" + "<h3>We take all errors very seriously.</h3>" + "<p>" + "This error has been recorded and details sent to <a href=\"http://eonic.com\">Eonic</a> who provide technical support for this website." + "</p>" + "<p>" + "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=\"mailto:support@eonic.co.uk\">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." + "</p>" + "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" + "<a href=\"javascript:history.back();\">Click Here to return to the previous page.</a></div>";
+                 
                     try
                     {
                         // bDebug = True
@@ -334,7 +306,7 @@ namespace Protean
                                     string cEwConnStr = "Data Source=" + oConfig["DatabaseServer"] + "; " + "Initial Catalog=" + oConfig["DatabaseName"] + "; " + dbAuth;
 
                                     sProcessInfo = "Loading Error Page Settings - Conn Open";
-                                    string cSQL = "SELECT nStructKey, cStructLayout FROM tblContentStructure WHERE cStructName = 'Eonic Error'";
+                                    string cSQL = "SELECT nStructKey, cStructLayout FROM tblContentStructure WHERE cStructName = 'Protean Error' or cStructName = 'Eonic Error'";
                                     var oCN = new System.Data.SqlClient.SqlConnection(cEwConnStr);
                                     var oCMD = new System.Data.SqlClient.SqlCommand(cSQL, oCN);
                                     oCMD.Connection.Open();
@@ -391,6 +363,16 @@ namespace Protean
                                         if (oXml.DocumentElement != null)
                                         {
                                             oExceptionXml.SelectSingleNode("/Page/Contents").InnerXml = oXml.DocumentElement.InnerXml.Replace("&gt;", ">").Replace("&lt;", "<");
+
+                                            // Move the content up a level.
+                                            foreach (XmlNode oContent in oExceptionXml.SelectNodes("/Page/Contents/Content")) {
+                                                foreach (XmlNode oAttr in oContent.SelectSingleNode("Content/*")) {
+                                                    XmlElement oContentElmt = (XmlElement)oContent;
+                                                    oContentElmt.SetAttribute(oAttr.Name, oAttr.Value);
+                                                }
+                                                oContent.InnerXml = oContent.SelectSingleNode("Content").InnerXml;
+                                            }
+
                                         }
                                     }
 
@@ -483,6 +465,8 @@ namespace Protean
                                 moResponse.ContentType = "text/html";
                                 moResponse.StatusCode = 500;
                                 moResponse.Write(sReturnHtml);
+                                moResponse.Flush();
+                                moResponse.End();
                             }
                             catch
                             {
@@ -616,36 +600,7 @@ namespace Protean
                     oElmt.SetAttribute("name", "column1");
 
                     strErrorHtml = exceptionReport(oException, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo, httpContext);
-                    //strMessageHtml = "<div style=\"font-family:Verdana,Tahoma,Arial\"><h2>Unfortunately this site has experienced an error.</h2>" + "<h3>We take all errors very seriously.</h3>" + "<p>" + "This error has been recorded and details sent to <a href=\"http://www.eonic.co.uk\">Eonic</a> who provide technical support for this website." + "</p>" + "<p>" + "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=\"mailto:support@eonic.co.uk\">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." + "</p>" + "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" + "<a href=\"javascript:history.back();\">Click Here to return to the previous page.</a></div>";
-                    strMessageHtml =
-"<style>" +
-".itb-error-page{padding:60px 30px;background:#f4f7fa;min-height:70vh;}" +
-".itb-error-page .itb-error-card{max-width:1200px;margin:0 auto;padding:40px 80px 60px 80px;background:#fff;border-radius:15px;box-shadow:0 8px 25px rgba(0,0,0,.1);}" +
-".itb-error-page .itb-logo{margin:-10px 0 25px 0;}" +
-".itb-error-page .itb-logo img{display:block;}" +
-".itb-error-page h1{color:#0072bc;font-size:32px;line-height:1.3;margin:0 0 20px;font-weight:600;}" +
-".itb-error-page h2{color:#444;font-size:24px;margin:0 0 30px;font-weight:600;}" +
-".itb-error-page p{font-size:17px;line-height:1.8;color:#555;margin:0 0 20px;}" +
-".itb-error-page a{color:#0072bc;}" +
-".itb-error-page .itb-back-btn{display:inline-block;margin-top:15px;padding:12px 28px;background:#f5a623;color:#fff !important;text-decoration:none;border-radius:25px;font-weight:600;}" +
-"</style>"+
-"<div class='itb-error-page'>" +
-    "<div class='itb-error-card'>" +
-        "<div class='itb-logo'><img src=\"/images/Logo-w-Tagline.svg\" width=\"225\" height=\"80\" alt=\"Into The Blue Logo - return to home page\" class=\"image \"></div>" +
-
-        "<h1>Unfortunately this site has experienced an error.</h1>" +
-        "<h2>We take all errors very seriously.</h2>" +
-
-        "<p>This error has been recorded and details sent to <a href='http://eonic.com'>Eonic</a> who provide technical support for this website.</p>" +
-
-        "<p>Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href='mailto:support@eonic.co.uk'>support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT.</p>" +
-
-        "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" +
-
-        "<a href='javascript:history.back();'>Click Here to return to the previous page.</a>" +
-
-     "</div>" +
-"</div>";
+                    strMessageHtml = "<div style=\"font-family:Verdana,Tahoma,Arial\"><h2>Unfortunately this site has experienced an error.</h2>" + "<h3>We take all errors very seriously.</h3>" + "<p>" + "This error has been recorded and details sent to <a href=\"http://www.eonic.co.uk\">Eonic</a> who provide technical support for this website." + "</p>" + "<p>" + "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=\"mailto:support@eonic.co.uk\">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." + "</p>" + "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" + "<a href=\"javascript:history.back();\">Click Here to return to the previous page.</a></div>";
 
                     try
                     {

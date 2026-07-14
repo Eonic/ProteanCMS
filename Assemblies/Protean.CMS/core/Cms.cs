@@ -2224,7 +2224,7 @@ namespace Protean
                     mcEwSiteXsl = moConfig["SiteXsl"];
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageHTML", ex, sProcessInfo));
                 // returnException(msException, mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                moResponse.Write(msException);
+                //moResponse.Write(msException);
                 //Finalize();
             }
             finally
@@ -2519,6 +2519,9 @@ namespace Protean
 
                     if (!ibIndexMode)
                     {
+                     
+
+
                         CommonActions();
 
                         // TS commented out so Century can perform searches in admin mode
@@ -2596,7 +2599,13 @@ namespace Protean
                             moSession.Remove("RedirectReason");
                         }
                     }
+
+                    if (moRequest["ewCmd"] == "forceerror") {
+                        throw new Exception("Something went wrong");
+                    }
+
                     GetPageXMLRet = moPageXml;
+
                 }
             }
             catch (Exception ex)
