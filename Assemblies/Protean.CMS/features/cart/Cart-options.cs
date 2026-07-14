@@ -1,4 +1,5 @@
-﻿using Protean.Providers.Membership;
+﻿using Newtonsoft.Json;
+using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
 using System;
@@ -1040,7 +1041,8 @@ namespace Protean
                                 string delLocation = oRow["cLocationNameShort"].ToString();
                                 if (overiddenLocations.Contains("'" + delLocation + "'"))
                                 {
-                                    oRow.Delete();
+                                //    Believe this is not Required for new SP
+                               //     oRow.Delete();
                                 }
                             }
                         }

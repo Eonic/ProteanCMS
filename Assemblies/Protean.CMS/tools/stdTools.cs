@@ -1,7 +1,4 @@
-﻿using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic.Logging;
-using Protean.Tools;
-using System;
+﻿using System;
 using System.Collections;
 using System.Data;
 using System.Diagnostics;
@@ -12,7 +9,11 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
+using System.Windows;
 using System.Xml;
+//using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Ajax.Utilities;
+using Protean.Tools;
 
 namespace Protean
 {
@@ -305,7 +306,7 @@ namespace Protean
                                     string cEwConnStr = "Data Source=" + oConfig["DatabaseServer"] + "; " + "Initial Catalog=" + oConfig["DatabaseName"] + "; " + dbAuth;
 
                                     sProcessInfo = "Loading Error Page Settings - Conn Open";
-                                    string cSQL = "SELECT nStructKey, cStructLayout FROM tblContentStructure WHERE cStructName = 'Eonic Error'";
+                                    string cSQL = "SELECT nStructKey, cStructLayout FROM tblContentStructure WHERE cStructName = 'Protean Error' or cStructName = 'Eonic Error'";
                                     var oCN = new System.Data.SqlClient.SqlConnection(cEwConnStr);
                                     var oCMD = new System.Data.SqlClient.SqlCommand(cSQL, oCN);
                                     oCMD.Connection.Open();
@@ -362,6 +363,16 @@ namespace Protean
                                         if (oXml.DocumentElement != null)
                                         {
                                             oExceptionXml.SelectSingleNode("/Page/Contents").InnerXml = oXml.DocumentElement.InnerXml.Replace("&gt;", ">").Replace("&lt;", "<");
+
+                                            // Move the content up a level.
+                                            foreach (XmlNode oContent in oExceptionXml.SelectNodes("/Page/Contents/Content")) {
+                                                foreach (XmlNode oAttr in oContent.SelectSingleNode("Content/*")) {
+                                                    XmlElement oContentElmt = (XmlElement)oContent;
+                                                    oContentElmt.SetAttribute(oAttr.Name, oAttr.Value);
+                                                }
+                                                oContent.InnerXml = oContent.SelectSingleNode("Content").InnerXml;
+                                            }
+
                                         }
                                     }
 
@@ -454,6 +465,8 @@ namespace Protean
                                 moResponse.ContentType = "text/html";
                                 moResponse.StatusCode = 500;
                                 moResponse.Write(sReturnHtml);
+                                moResponse.Flush();
+                                moResponse.End();
                             }
                             catch
                             {
