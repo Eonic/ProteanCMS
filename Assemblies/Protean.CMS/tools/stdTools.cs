@@ -366,11 +366,19 @@ namespace Protean
 
                                             // Move the content up a level.
                                             foreach (XmlNode oContent in oExceptionXml.SelectNodes("/Page/Contents/Content")) {
-                                                foreach (XmlNode oAttr in oContent.SelectSingleNode("Content/*")) {
-                                                    XmlElement oContentElmt = (XmlElement)oContent;
-                                                    oContentElmt.SetAttribute(oAttr.Name, oAttr.Value);
+                                                //foreach (XmlNode oAttr in oContent.SelectSingleNode("Content/*")) {
+                                                //    XmlElement oContentElmt = (XmlElement)oContent;
+                                                //    oContentElmt.SetAttribute(oAttr.Name, oAttr.Value);
+                                                //}
+                                                // oContent.InnerXml = oContent.SelectSingleNode("Content").InnerXml;
+
+                                                XmlNode innerContent = oContent.SelectSingleNode("Content");
+                                                foreach (XmlAttribute attr in innerContent.Attributes)
+                                                {
+                                                    ((XmlElement)oContent).SetAttribute(attr.Name, attr.Value);
                                                 }
-                                                oContent.InnerXml = oContent.SelectSingleNode("Content").InnerXml;
+                                                oContent.InnerXml = innerContent.InnerXml;
+                                               
                                             }
 
                                         }
