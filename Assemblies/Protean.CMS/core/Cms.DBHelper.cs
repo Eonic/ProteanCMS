@@ -8,7 +8,7 @@
 // $Copyright:   Copyright (c) 2002 - 2026 Eonic Digital Group Ltd.
 // ***********************************************************************
 
-using Lucene.Net.Support;
+
 using Protean.Providers.Authentication;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
@@ -14243,47 +14243,7 @@ namespace Protean
                 }
             }
 
-            public void updatePromoStatus(long nDiscountKey, int nStatus)
-            {
-                try
-                {
            
-                    String sSQL = "update tblAudit set nStatus="+ nStatus + " where nAuditKey in (select top 1 nAuditId from tblCartDiscountRules where nDiscountKey='" + nDiscountKey + "')";
-                    ExeProcessSql(sSQL);
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartStatus", ex, "", "", gbDebug);
-                }
-            }
-
-            public long getDiscountRuleIdDiscountByName(string discountName)
-            {
-                try
-                {
-                    DataSet ods = new DataSet();
-                    long nDiscountKey = 0;
-
-                    string sSQL = "SELECT nDiscountKey FROM tblCartDiscountRules WHERE cDiscountCode='" + discountName + "'";
-
-                    ods = GetDataSet(sSQL, "tblCartDiscountRules");
-
-                    if (ods != null &&
-                        ods.Tables["tblCartDiscountRules"] != null &&
-                        ods.Tables["tblCartDiscountRules"].Rows.Count > 0)
-                    {
-                        nDiscountKey = Convert.ToInt64(
-                            ods.Tables["tblCartDiscountRules"].Rows[0]["nDiscountKey"]);
-                    }
-
-                    return nDiscountKey;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getDiscountRuleIdDiscountByName", ex, "", "", gbDebug);
-                    return 0;
-                }
-            }
             public void SaveCartStatus(long CartId, int StatusId)
             {
                 try
