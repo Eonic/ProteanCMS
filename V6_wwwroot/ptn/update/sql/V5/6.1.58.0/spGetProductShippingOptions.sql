@@ -535,5 +535,8 @@ WHERE
 ORDER BY
     nDisplayPriority,
     nShippingTotal;
+
+
+
 END
 GO
