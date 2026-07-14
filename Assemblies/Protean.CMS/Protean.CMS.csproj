@@ -355,6 +355,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="api\soap.cs" />
+    <Compile Include="App_Start\DynamicImage.cs" />
     <Compile Include="Connected Services\epostcode\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

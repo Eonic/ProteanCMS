@@ -115,6 +115,11 @@
               <value>simple</value>
               <toggle case="cLayout_1" event="DOMActivate"/>
             </item>
+			  <item>
+				  <label>Menu Tree</label>
+				  <value>tree</value>
+				  <toggle case="cLayout_3" event="DOMActivate"/>
+			  </item>
             <item>
               <label>Links with descriptions/images</label>
               <value>detailed</value>
@@ -237,6 +242,21 @@
               </group>
               <ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='carousel']"/>
             </case>
+			  <case id="cLayout_3">
+				  <group class="form-section-wrapper">
+					  <select1 bind="collapse" appearance="full" class="inline-items">
+						  <label>Collapse</label>
+						  <item>
+							  <label>Show Current Section</label>
+							  <value>true</value>
+						  </item>
+						  <item>
+							  <label>Always Open</label>
+							  <value>false</value>
+						  </item>
+					  </select1>
+				  </group>
+			  </case>
           </switch>
           <group class="row">
             <group class="col-md-4">

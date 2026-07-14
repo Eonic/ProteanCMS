@@ -721,6 +721,8 @@
 				  <Action Order="6" Type="Drop" ObjectType="Procedure" ObjectName="spGetValidShippingOptions"/>
 				  <Action Order="7" Type="File" ObjectType="" ObjectName="/v5/6.1.58.0/spGetValidShippingOptions.sql"/>
 				  <Action Order="8" Type="File" ObjectType="" ObjectName="/v5/6.1.58.0/spGetProductShippingOptions.sql"/>
+				  <Action Order="8" Type="File" ObjectType="" ObjectName="/v5/6.1.58.0/vw_VersionControl_GetPendingContent.sql"/>
+				  <Action Order="8" Type="File" ObjectType="" ObjectName="/v5/6.1.58.0/sp_GetProductGroups.sql"/>
 			  </Sub3>
 		  </Sub2>
 	  </Sub1>

@@ -805,7 +805,7 @@ namespace Protean.Providers
                         var oMembership = new Cms.Membership(ref myWeb);
                         if (oMembership.ActivateAccount(moRequest["key"]))
                         {
-                            addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1036\">Your account is now activated please logon</span>", true, "msg-1036");
+                            addNote(ref oFrmGrp2, noteTypes.Hint, "<span class=\"msg-1036\">Your account is now activated please <a href=\"" + myWeb.mcPagePath + "\">Sign In</a></span>", true, "msg-1036");
                         }
                         else
                         {
@@ -1092,7 +1092,7 @@ namespace Protean.Providers
                             {
                                 var oMembership = new Cms.Membership(ref myWeb);
 
-                                if (!oMembership.ReactivateAccount((Int16)nAccount, goRequest["cDirPassword"]))
+                                if (!oMembership.ReactivateAccount((Int64)nAccount, goRequest["cDirPassword"]))
                                 {
                                     base.addNote("cDirPassword2", Protean.xForm.noteTypes.Alert, "There was a problem changing the password");
                                     base.valid = false;
@@ -1123,7 +1123,7 @@ namespace Protean.Providers
                         var oMembership = new Cms.Membership(ref myWeb);
                         int SubmittedUserId = Convert.ToInt32("0" + goRequest["id"]);
 
-                        int nUserId = oMembership.DecryptResetLink(SubmittedUserId, AccountHash);
+                        long nUserId = oMembership.DecryptResetLink(SubmittedUserId, AccountHash);
 
                         return xFrmConfirmPassword(nUserId);
                     }
@@ -1584,7 +1584,7 @@ namespace Protean.Providers
                                     // lets add the user to any groups
                             if ((cDirectorySchemaName == "User" || cDirectorySchemaName == "Company") && maintainMembershipsOnAdd)
                                     {
-                                        maintainMembershipsFromXForm((int)id);
+                                        maintainMembershipsFromXForm(id);
 
                                         // we want to ad the user to a specified group from a pick list of groups.
                                         XmlElement GroupsElmt = (XmlElement)base.Instance.SelectSingleNode("groups");
@@ -1661,12 +1661,12 @@ namespace Protean.Providers
                 /// <param name="nUserId">The user id to be associated with</param>
                 /// <param name="cGroupNodeListXPath">The XPath from the xform instance to the group nodes.</param>
                 /// <remarks>Group nodes membership is indicated by a boolean attribute "isMember"</remarks>
-                public void maintainMembershipsFromXForm(int nUserId, string cGroupNodeListXPath = "groups/group", string Email = null, bool addOnly = false)
+                public void maintainMembershipsFromXForm(long nUserId, string cGroupNodeListXPath = "groups/group", string Email = null, bool addOnly = false)
                 {
                     myWeb.PerfMon.Log(mcModuleName, "maintainMembershipsFromXForm", "start");
                     string sSql = "";
                     // Dim oDr As SqlDataReader
-                    var userMembershipIds = new List<int>();
+                    var userMembershipIds = new List<long>();
 
                     try
                     {
@@ -1675,7 +1675,7 @@ namespace Protean.Providers
                         using (SqlDataReader oDr = moDbHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                         {
                             while (oDr.Read())
-                                userMembershipIds.Add(Convert.ToInt16(oDr["nDirParentId"]));
+                                userMembershipIds.Add(Convert.ToInt64(oDr["nDirParentId"]));
                         }
                         foreach (XmlElement oElmt in base.Instance.SelectNodes(cGroupNodeListXPath))
                         {
@@ -1685,14 +1685,14 @@ namespace Protean.Providers
                             if (oElmt.GetAttribute("isMember").ToLower() == "true" || oElmt.GetAttribute("isMember").ToLower() == "yes")
                             {
                                 // if user not in group
-                                if (!userMembershipIds.Contains(Convert.ToInt16(oElmt.GetAttribute("id"))))
+                                if (!userMembershipIds.Contains(Convert.ToInt64(oElmt.GetAttribute("id"))))
                                 {
                                     moDbHelper.maintainDirectoryRelation(Convert.ToInt64(oElmt.GetAttribute("id")), nUserId, false, default, default, Email, oElmt.GetAttribute("name"), bIsLast);
                                 }
                             }
 
                             // if user is in group
-                            else if (userMembershipIds.Contains(Convert.ToInt16(oElmt.GetAttribute("id"))))
+                            else if (userMembershipIds.Contains(Convert.ToInt64(oElmt.GetAttribute("id"))))
                             {
                                 if (addOnly == false)
                                 {
@@ -2057,6 +2057,15 @@ namespace Protean.Providers
 
                     try
                     {
+                        // if the account is being activated we want to logoff first because the activation goes to a logged off page
+                        if (myWeb.moRequest["ewCmd"] == "ActivateAccount")
+                        {
+                            moSession["nUserId"] = null;
+                            moSession.Abandon();
+                            myWeb.mnUserId = 0;
+                            return myWeb.mnUserId;
+                        }
+
                         if (myWeb.moRequest["LogOff"] == "1")
                         {
                             moSession["nUserId"] = null;
@@ -2198,13 +2207,13 @@ namespace Protean.Providers
                                 }
                                 else
                                 {
-                                    mnUserId = Convert.ToInt16(moSession["PreviewUser"]);
+                                    mnUserId = Convert.ToInt64(moSession["PreviewUser"]);
                                     myWeb.mbPreview = true;
                                 }
                             }
                             else
                             {
-                                mnUserId = Convert.ToInt16(moSession["nUserId"]);
+                                mnUserId = Convert.ToInt64(moSession["nUserId"]);
                             }
 
 
@@ -2403,7 +2412,7 @@ namespace Protean.Providers
                         }
 
                         // display logon form for all pages if user is not logged on.
-                        if (mnUserId == 0 && (myWeb.moRequest["ewCmd"] != "passwordReminder" && myWeb.moRequest["ewCmd"] != "ResendActivation" && myWeb.moRequest["ewCmd"] != "ActivateAccount" && myWeb.moRequest["ewCmd"] != "AR"))
+                        if (mnUserId == 0 && (myWeb.moRequest["ewCmd"] != "passwordReminder" && myWeb.moRequest["ewCmd"] != "ResendActivation" && myWeb.moRequest["ewCmd"] != "ActivateAccount"  && myWeb.moRequest["ewCmd"] != "AR"))
                         {
 
                             XmlElement oXfmElmt = (XmlElement)adXfm.xFrmUserLogon();

@@ -3034,7 +3034,20 @@ namespace Protean
                             }
                         case objectTypes.OptOutAddresses:
                             {
-                                ExeProcessSql($"Delete from tblOptOutAddresses where nOptOutKey = {nId}");
+                                ExeProcessSql($"Select from tblOptOutAddresses where nOptOutKey = {nId}");
+                                break;
+                            }
+
+                        case objectTypes.Codes:
+                            {
+                                if (nId > 1) {
+                                    sSql = $"SELECT nCodeKey from tblCodes where nCodeParentId  = {nId}";
+                                    using (var oDr = getDataReaderDisposable(sSql))
+                                    {
+                                        while (oDr.Read())
+                                            DeleteObject(objectTypes.Codes, Convert.ToInt64(oDr.GetValue(0)));
+                                    }
+                                }
                                 break;
                             }
                     }
@@ -4432,7 +4445,7 @@ namespace Protean
                         foreach (XmlNode oNode in oXml.DocumentElement.SelectNodes("group"))
                         {
                             oElmt = (XmlElement)oNode;
-                            if (Convert.ToInt16("0" + oElmt.GetAttribute("isMember")) > 0)
+                            if (Convert.ToInt64("0" + oElmt.GetAttribute("isMember")) > 0)
                             {
                                 oElmt.SetAttribute("isMember", "true");
                             }
@@ -6989,62 +7002,70 @@ namespace Protean
                     {
                         // Does relationship exist?
                         sSql = $"select * from tblDirectoryRelation where nDirParentId = {nParId} and nDirChildId = {nChildId}";
-                        using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+
+                        Boolean bCheck = true;
+
+                        using (SqlDataReader oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                         {
-                            if (oDr.HasRows)
-                            {
-                                // if so check bRemove and remove it if nessesary
-                                if (!bRemove)
+                            if (oDr == null) {
+                                bCheck = false;
+                            }
+                            else {
+                                if (oDr.HasRows)
                                 {
-                                    // If the permission exists, then we can update it - or we can opt to ignore the option of updating it
-                                    // This is a db performance savign for some bulk routines.
-                                    if (!bIfExistsDontUpdate)
+                                    // if so check bRemove and remove it if nessesary
+                                    if (!bRemove)
+                                    {
+                                        // If the permission exists, then we can update it - or we can opt to ignore the option of updating it
+                                        // This is a db performance savign for some bulk routines.
+                                        if (!bIfExistsDontUpdate)
+                                        {
+                                            while (oDr.Read())
+                                            {
+                                                // update audit
+                                                oXml = new XmlDocument();
+                                                if (dExpireDate != null && DateTime.TryParse(dExpireDate.ToString(), out _))
+                                                {
+                                                    oXml.LoadXml("<instance><tblAudit><dExpireDate>" + XmlDate(dExpireDate) + "</dExpireDate></tblAudit></instance>");
+                                                }
+                                                else
+                                                {
+                                                    // this should update the update date and user
+                                                    oXml.LoadXml("<instance><tblAudit/></instance>");
+                                                }
+                                                setObjectInstance(objectTypes.Audit, oXml.DocumentElement, Convert.ToInt64(oDr["nAuditId"]));
+                                                oXml = null;
+                                            }
+                                        }
+                                    }
+                                    else
                                     {
                                         while (oDr.Read())
                                         {
-                                            // update audit
-                                            oXml = new XmlDocument();
-                                            if (dExpireDate != null && DateTime.TryParse(dExpireDate.ToString(), out _))
-                                            {
-                                                oXml.LoadXml("<instance><tblAudit><dExpireDate>" + XmlDate(dExpireDate) + "</dExpireDate></tblAudit></instance>");
-                                            }
-                                            else
-                                            {
-                                                // this should update the update date and user
-                                                oXml.LoadXml("<instance><tblAudit/></instance>");
-                                            }
-                                            setObjectInstance(objectTypes.Audit, oXml.DocumentElement, Convert.ToInt64(oDr["nAuditId"]));
-                                            oXml = null;
+                                            DeleteObject(objectTypes.DirectoryRelation, Convert.ToInt64(oDr["nRelKey"]));
+                                            bHasChanged = true;
                                         }
                                     }
                                 }
-                                else
+                         
+
+                                // if not create it
+
+                                else if (!bRemove)
                                 {
-                                    while (oDr.Read())
+                                    // Dim nAuditId As String = ""
+                                    if (dExpireDate != null && DateTime.TryParse(dExpireDate.ToString(), out _))
                                     {
-                                        DeleteObject(objectTypes.DirectoryRelation, Convert.ToInt64(oDr["nRelKey"]));
-                                        bHasChanged = true;
+                                        sSql = $"insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( {nParId}, {nChildId}, {getAuditId(dExpireDate: dExpireDate)})";
                                     }
+                                    else
+                                    {
+                                        sSql = $"insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( {nParId}, {nChildId}, {getAuditId()})";
+                                    }
+                                    ExeProcessSql(sSql);
+                                    bHasChanged = true;
                                 }
                             }
-
-                            // if not create it
-
-                            else if (!bRemove)
-                            {
-                                // Dim nAuditId As String = ""
-                                if (dExpireDate != null && DateTime.TryParse(dExpireDate.ToString(), out _))
-                                {
-                                    sSql = $"insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( {nParId}, {nChildId}, {getAuditId(dExpireDate: dExpireDate)})";
-                                }
-                                else
-                                {
-                                    sSql = $"insert into tblDirectoryRelation(nDirParentId, nDirChildId, nAuditId) values( {nParId}, {nChildId}, {getAuditId()})";
-                                }
-                                ExeProcessSql(sSql);
-                                bHasChanged = true;
-                            }
-
                             if (bHasChanged)
                             {
                                 // Keep Mailing List In Sync.
@@ -7061,16 +7082,17 @@ namespace Protean
 
                                     Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
                                     IMessagingProvider moMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
-                                }
-                                if (moMessaging != null && moMessaging.AdminProcess != null)
-                                {
-                                    try
+                              
+                                    if (moMessaging != null && moMessaging.AdminProcess != null)
                                     {
-                                        moMessaging.AdminProcess.maintainUserInGroup(nChildId, nParId, bRemove, cEmail, cGroup, isLast);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        cProcessInfo = ex.StackTrace;
+                                        try
+                                        {
+                                            moMessaging.AdminProcess.maintainUserInGroup(nChildId, nParId, bRemove, cEmail, cGroup, isLast);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            cProcessInfo = ex.StackTrace;
+                                        }
                                     }
                                 }
                                 // End If
@@ -7535,7 +7557,7 @@ namespace Protean
             }
 
 
-            public XmlElement GetUserContactsXml(int nUserId)
+            public XmlElement GetUserContactsXml(long nUserId)
             {
                 PerfMonLog("DBHelper", "GetUserContactsXMl");
                 try
@@ -8968,7 +8990,7 @@ namespace Protean
                 return default;
             }
 
-            public XmlElement getUserXMLById(ref int nUserId)
+            public XmlElement getUserXMLById(ref long nUserId)
             {
                 PerfMonLog("DBHelper", "getUserXMLById");
                 // Dim oDs As Data.DataSet
@@ -11531,7 +11553,7 @@ namespace Protean
 
             }
 
-            public string insertContentRelation(int nParentID, string nChildIDs, bool b2Way = false, string rType = "", bool bHaltRecursion = false)
+            public string insertContentRelation(long nParentID, string nChildIDs, bool b2Way = false, string rType = "", bool bHaltRecursion = false)
             {
                 PerfMonLog("DBHelper", "insertContentRelation");
                 try
@@ -12150,7 +12172,7 @@ namespace Protean
                 {
                     string[] cGroups = nDirIds.Split(',');
                     int nI;
-                    int nDirId;
+                    long nDirId;
                     string cNewIds = "";
                     int nPermLevel = Convert.ToInt16("1");
                     bool bDeny = false;
@@ -12176,14 +12198,14 @@ namespace Protean
                     int loopTo = cGroups.Length - 1;
                     for (nI = 0; nI <= loopTo; nI++)
                     {
-                        nDirId = Convert.ToInt16(cGroups[nI]);
+                        nDirId = Convert.ToInt64(cGroups[nI]);
                         if (bInsert)
                         {
 
 
                             // if exists then  return the id
                             string cSQL = $"Select nDiscountDirRelationKey From tblCartDiscountDirRelations Where nDiscountId = {nDiscountId} And nDirId = {nDirId}";
-                            int nId = Convert.ToInt16(ExeProcessSqlScalar(cSQL));
+                            long nId = Convert.ToInt64(ExeProcessSqlScalar(cSQL));
                             if (nId > 0)
                                 return nId.ToString();
 

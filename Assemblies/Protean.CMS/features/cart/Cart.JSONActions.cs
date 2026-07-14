@@ -159,6 +159,8 @@ namespace Protean
                                     string sOverideURL = "";
                                     string sProductOptionName = "";
                                     double dProductOptionPrice = 0d;
+                                    string[][] aProductOptions = null;
+                                    
                                     if (item.ContainsKey("UniqueProduct"))
                                     {
                                         bUnique = (bool)item["UniqueProduct"];
@@ -180,6 +182,20 @@ namespace Protean
                                     {
                                         sProductOptionName = (string)item["productOption"];
                                     }
+                                    if (item.ContainsKey("productOptions"))
+                                    {
+                                        string productOptionsString = (string)item["productOptions"];
+                                        if (!string.IsNullOrEmpty(productOptionsString))
+                                        {
+                                            string[] optionPairs = productOptionsString.Split(',');
+                                            aProductOptions = new string[optionPairs.Length][];
+                                            for (int i = 0; i < optionPairs.Length; i++)
+                                            {
+                                                aProductOptions[i] = optionPairs[i].Split('_');
+                                            }
+                                        }
+                                    }
+
                                     if (item.ContainsKey("productOptionPrice"))
                                     {
                                         dProductOptionPrice = (double)item["productOptionPrice"];
@@ -189,10 +205,13 @@ namespace Protean
                                         myCart.myWeb.moSession["overridePriceSession"] = (string)jObj["overridePriceSession"];
                                     }
                                    
-                                    myCart.AddItem((long)item["contentId"], (long)item["qty"], null, sProductName, cProductPrice, "", bUnique, sOverideURL, false, sProductOptionName, dProductOptionPrice);
+                                    myCart.AddItem((long)item["contentId"], (long)item["qty"], aProductOptions, sProductName, cProductPrice, "", bUnique, sOverideURL, false, sProductOptionName, dProductOptionPrice);
 
                                 }
                             }
+
+                            //Reset the cart shipping option so new value is calculated
+                            myCart.updateOrderShippingOption(myCart.mnCartId, 0);
 
                             // Output the new cart
                             XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
@@ -251,6 +270,9 @@ namespace Protean
                                 myCart.EndSession();
                             }
 
+
+                            //Reset the cart shipping option so new value is calculated
+                            myCart.updateOrderShippingOption(myCart.mnCartId, 0);
                             // Output the new cart   
                             XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
                             XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
@@ -324,7 +346,8 @@ namespace Protean
                             myCart.QuitCart();
                             myCart.EndSession();
                         }
-
+                        //Reset the cart shipping option so new value is calculated
+                        myCart.updateOrderShippingOption(myCart.mnCartId, 0);
                         // Output the new cart
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
                         myCart.GetCart(ref argoCartElmt);

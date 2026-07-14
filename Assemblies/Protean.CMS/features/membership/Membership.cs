@@ -1,6 +1,4 @@
-﻿using Microsoft.Ajax.Utilities;
-using Protean.Providers.Membership;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
@@ -16,6 +14,10 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI.WebControls;
 using System.Xml;
+using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.Ajax.Utilities;
+using Protean.Providers.Membership;
+using Protean.Providers.Messaging;
 using static Protean.Cms;
 using static Protean.Cms.Admin;
 using static Protean.stdTools;
@@ -117,14 +119,14 @@ namespace Protean
                 }
             }
 
-            public int DecryptResetLink(int AccountID, string EncryptedString)
+            public long DecryptResetLink(int AccountID, string EncryptedString)
             {
                 try
                 {
                     EncryptedString = Tools.Text.DeAscString(EncryptedString);
 
                     string cSQL = "SELECT tblDirectory.nDirKey FROM tblDirectory " + "INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey " + "WHERE cDirPassword = '" + SqlFmt(EncryptedString) + "' AND nDirKey = " + AccountID;
-                    return Convert.ToInt16(myWeb.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
+                    return Convert.ToInt64(myWeb.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
                 }
                 catch (Exception ex)
                 {
@@ -191,7 +193,7 @@ namespace Protean
 
 
 
-            public bool ReactivateAccount(int AccountID, string cPassword)
+            public bool ReactivateAccount(long AccountID, string cPassword)
             {
                 try
                 {
@@ -235,9 +237,9 @@ namespace Protean
                         myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.HistoricPassword, (long)AccountID, 0L, 0L, cPassword, cForiegnRef: "");
                     }
 
-                    string cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cPassword + "' WHERE nDirKey = " + AccountID;
+                    string cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cPassword + "' WHERE nDirKey = " + AccountID.ToString();
                     if (savedSalt != "") {
-                        cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cPassword + "', cDirSalt = '" + savedSalt + "' WHERE nDirKey = " + AccountID;
+                        cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cPassword + "', cDirSalt = '" + savedSalt + "' WHERE nDirKey = " + AccountID.ToString();
                     }
                     if (myWeb.moDbHelper.ExeProcessSql(cSQL) > 0)
                     {
@@ -588,7 +590,7 @@ namespace Protean
 
             public void RegistrationActions(string cmdPrefix = "") {
               string cProcessInfo = "RegistrationActions";
-                ReturnProvider RetProv;
+                Protean.Providers.Membership.ReturnProvider RetProv;
                 IMembershipProvider moMemProv;
                 try
                 {
@@ -598,7 +600,7 @@ namespace Protean
                     {
                         case "validateByEmail":
                             {
-                              
+
                                 // first wmyWebe set the user account to be pending
                                 myWeb.moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.Directory, Cms.dbHelper.Status.Pending, myWeb.mnUserId);
                                 var oMembership = new Membership(ref myWeb);
@@ -610,7 +612,7 @@ namespace Protean
 
                         default:
                             {
-                              if (myWeb.moSession != null)
+                                if (myWeb.moSession != null)
                                     myWeb.moSession["nUserId"] = (object)myWeb.mnUserId;
 
                                 myWeb.moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, 0, 0, "First Logon");
@@ -621,6 +623,38 @@ namespace Protean
                     }
                     moMemProv.Activities.sendRegistrationAlert(ref myWeb, myWeb.mnUserId, false, cmdPrefix);
 
+                    long nAuthUsersGroup = Convert.ToInt64(myWeb.GetConfigItemAsInteger("AuthenticatedUsersGroupId", 0));
+
+                    if (nAuthUsersGroup != 0) { 
+                    // we want to sync the user to the messaging provider if we have one
+                        IMessagingProvider moMessaging = null;
+
+                        System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                        string sMessagingProvider = "";
+
+                        if (moMailConfig != null)
+                        {
+                            sMessagingProvider = moMailConfig["MessagingProvider"];
+                        }
+
+                        if (moMessaging is null & myWeb != null)
+                        {
+                            // myWeb IsNot Nothing prevents being called from bulk imports.
+                            Protean.Providers.Messaging.ReturnProvider RetMsgProv = new Protean.Providers.Messaging.ReturnProvider();
+                            moMessaging = RetMsgProv.Get(ref myWeb, sMessagingProvider);
+                        }
+                        if (moMessaging != null && moMessaging.AdminProcess != null)
+                        {
+                            try
+                            {
+                                moMessaging.AdminProcess.maintainUserInGroup(myWeb.mnUserId, nAuthUsersGroup, false);
+                            }
+                            catch (Exception ex)
+                            {
+                                cProcessInfo = ex.StackTrace;
+                            }
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {

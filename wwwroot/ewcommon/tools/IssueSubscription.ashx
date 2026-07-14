@@ -48,7 +48,7 @@ Public Class IssueSubscription : Implements IHttpHandler, IRequiresSessionState
 
             myCms.moDbHelper.ExeProcessSql("update tblCartOrder set nCartStatus = 6 where nCartOrderKey = " + OrderId)
 
-            context.Response.Redirect("/?ewCmd=Orders&ewCmd2=Display&id=" & OrderId)
+            context.Response.Redirect("/?ewCmd=Orders&ewCmd2=Display&id=" & OrderId, False)
 
         Catch ex As Exception
             context.Response.Write(ex.Message)

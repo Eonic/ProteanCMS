@@ -3625,6 +3625,7 @@
   <!-- Display Name for a Page -->
   <xsl:template match="MenuItem | PageVersion" mode="getDisplayName">
     <xsl:param name="non-display-name" />
+	  <xsl:param name="nocount" />
 
     <xsl:choose>
       <xsl:when test="$non-display-name='true'">
@@ -3639,7 +3640,9 @@
         <xsl:value-of select="@name"/>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates select="." mode="getContentCount"/>
+	  <xsl:if test="not($nocount='true')">
+		  <xsl:apply-templates select="." mode="getContentCount"/>
+	  </xsl:if>
   </xsl:template>
 
   <xsl:template match="MenuItem" mode="getContentCount">
@@ -6384,10 +6387,8 @@
             </div>
           </xsl:if>
           <xsl:if test="@title!=''">
-            <span>
               <xsl:copy-of select="ms:node-set($title)" />
               <xsl:text> </xsl:text>
-            </span>
           </xsl:if>
         </div>
       </xsl:when>
@@ -6439,10 +6440,8 @@
             </div>
           </xsl:if>
           <xsl:if test="@title!=''">
-            <span>
               <xsl:copy-of select="ms:node-set($title)" />
               <xsl:text> </xsl:text>
-            </span>
           </xsl:if>
         </div>
       </xsl:when>
@@ -6499,10 +6498,8 @@
             </span>
           </xsl:if>
           <xsl:if test="@title!=''">
-            <span>
               <xsl:copy-of select="ms:node-set($title)" />
               <xsl:text> </xsl:text>
-            </span>
           </xsl:if>
         </div>
       </xsl:when>
@@ -6736,6 +6733,10 @@
 	<xsl:param name="copyright"/>
     <xsl:param name="imageUrl"/>
     <xsl:param name="altText"/>
+	<xsl:param name="quality"/>
+	  
+	  
+	  
     <!-- IF SO THAT we don't get empty tags if NO IMAGE -->
     <xsl:if test="$imageUrl!=''">
       <!-- SRC VALUE -->
@@ -6778,6 +6779,15 @@
         <xsl:value-of select="$height"/>
       </xsl:variable>
 
+	  <xsl:variable name="quality-loc">
+		  <xsl:choose>
+		  <xsl:when test="$quality!=''">
+			  <xsl:value-of select="$quality"/>
+		  </xsl:when>
+		  <xsl:otherwise>0</xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
+
       <xsl:choose>
         <xsl:when test="$EnableRetina='on' ">
           <!-- IF Image to resize -->
@@ -6801,7 +6811,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -6833,7 +6843,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -6861,7 +6871,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -6889,7 +6899,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -6917,7 +6927,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -6945,7 +6955,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -6973,7 +6983,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7001,7 +7011,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7029,7 +7039,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7057,7 +7067,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7085,7 +7095,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7113,7 +7123,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7141,7 +7151,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7158,20 +7168,20 @@
             <xsl:variable name="image">
               <picture>
 
-                <xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc,$forceResize)"/>
-                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$forceResize)"/>
-                <xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2,$forceResize)"/>
-                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$forceResize)"/>
-                <xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2,$forceResize)"/>
-                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$forceResize)"/>
-                <xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2,$forceResize)"/>
-                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$forceResize)"/>
-                <xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2,$forceResize)"/>
-                <xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl,$forceResize)"/>
-                <xsl:variable name="newSrc-xl-x2-webp" select="ew:CreateWebP($newSrc-xl-x2,$forceResize)"/>
-                <xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl,$forceResize)"/>
-                <xsl:variable name="newSrc-xxl-x2-webp" select="ew:CreateWebP($newSrc-xxl-x2,$forceResize)"/>
-                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$forceResize)"/>
+                <xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xl-x2-webp" select="ew:CreateWebP($newSrc-xl-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xxl-x2-webp" select="ew:CreateWebP($newSrc-xxl-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$forceResize,$quality-loc)"/>
 
 
                 <!--WebP Images-->
@@ -7364,7 +7374,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7396,7 +7406,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7424,7 +7434,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7452,7 +7462,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7480,7 +7490,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7508,7 +7518,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7536,7 +7546,7 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
@@ -7547,13 +7557,13 @@
             <xsl:variable name="image">
               <picture>
 
-                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$forceResize)"/>
-                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$forceResize)"/>
-                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$forceResize)"/>
-                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$forceResize)"/>
-                <xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl,$forceResize)"/>
-                <xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl,$forceResize)"/>
-                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$forceResize)"/>
+                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl,$forceResize,$quality-loc)"/>
+                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$forceResize,$quality-loc)"/>
 
 
                 <!--WebP Images-->
@@ -10318,9 +10328,11 @@
     <xsl:param name="comma-separated-files"/>
     <xsl:param name="bundle-path"/>
     <xsl:param name="async"/>
+	<xsl:param name="defer"/>
     <xsl:call-template name="render-js-files">
       <xsl:with-param name="list" select="ew:BundleJS($comma-separated-files,$bundle-path)"/>
       <xsl:with-param name="async" select="$async"/>
+	  <xsl:with-param name="defer" select="$defer"/>
     </xsl:call-template>
   </xsl:template>
 
@@ -10345,6 +10357,7 @@
       <xsl:call-template name="render-js-files">
         <xsl:with-param name="list" select="$remaining" />
         <xsl:with-param name="async" select="$async"/>
+		<xsl:with-param name="defer" select="$defer"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>

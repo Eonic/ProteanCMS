@@ -399,7 +399,7 @@ namespace Protean
                                         foreach (XmlElement oLocation in oInstance.SelectNodes("Location"))
                                         {
                                             long sPrimary = 0L;
-                                            long displayOrder = Convert.ToInt16("0" + oLocation.GetAttribute("displayOrder"));
+                                            long displayOrder = Convert.ToInt64("0" + oLocation.GetAttribute("displayOrder"));
                                             if (ReferenceEquals(oLocation, oPrmLoc))
                                                 sPrimary = 1L;
                                             if (!string.IsNullOrEmpty(oLocation.GetAttribute("foriegnRef")))
@@ -512,7 +512,7 @@ namespace Protean
                                         }
                                         else
                                         {
-                                            nloc = Convert.ToInt16("0" + oRelation.GetAttribute("relatedDirId"));
+                                            nloc = Convert.ToInt64("0" + oRelation.GetAttribute("relatedDirId"));
                                         }
 
                                         if (nloc > 0L)

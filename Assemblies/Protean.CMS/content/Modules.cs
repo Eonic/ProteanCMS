@@ -606,7 +606,7 @@ namespace Protean
                         {
                             if (Convert.ToString(myWeb.moRequest.Form["clearfilters"]) == "clearfilters")
                             {
-                                myWeb.moResponse.Redirect(myWeb.moRequest.RawUrl);
+                                myWeb.moResponse.Redirect(myWeb.moRequest.RawUrl,false);
 
                             }
                         }

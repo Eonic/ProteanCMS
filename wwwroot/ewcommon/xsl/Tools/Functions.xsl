@@ -391,13 +391,6 @@
   <xsl:variable name="lazy" select="'off'"/>
   <xsl:variable name="placeholder" select="'/ewcommon/images/t22.gif'"/>
   <xsl:variable name="lazyplaceholder" select="''"/>
-	<xsl:variable name="GoCertifyCompanyName">
-		<xsl:call-template name="getXmlSettings">
-			<xsl:with-param name="sectionName" select="'web'"/>
-			<xsl:with-param name="valueName" select="'GoCertifyCompanyName'"/>
-		</xsl:call-template>
-	</xsl:variable>
-	
   <!--####################### Page Level Templates, can be overridden later. ##############################-->
   <!-- -->
 
@@ -438,13 +431,7 @@
         <!-- common css -->
         <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
 
-
-
-        <xsl:apply-templates select="." mode="headerOnlyJS"/>
-
         <xsl:if test="$GoogleTagManagerID!=''">
-
-
           <!-- Google Tag Manager -->
           <script cookie-consent="tracking">
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -454,8 +441,10 @@
             })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
           </script>
           <!-- End Google Tag Manager -->
-
         </xsl:if>
+
+		<xsl:apply-templates select="." mode="headerOnlyJS"/>
+		  
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
@@ -523,20 +512,6 @@
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
-
-		<!-- GoCertify Preload -->
-		<link rel="preload" href="https://assets.gocertify.me/assets/gocertify.js" as="script"/>
-
-		<!-- GoCertify Script -->
-		<script>
-			(function() {
-			var el = document.createElement("script");
-			el.setAttribute("src", "https://assets.gocertify.me/assets/gocertify.js");
-			el.setAttribute("data-brand", "<xsl:value-of select='$GoCertifyCompanyName'/>");
-			el.setAttribute("defer", "true");
-			document.head.appendChild(el);
-			})();
-		</script> 
 		  
       </head>
       <!-- Go build the Body of the HTML doc -->

@@ -747,7 +747,7 @@ namespace Protean
                             moMemProv = RetProv.Get(ref argmyWeb, moConfig["MembershipProvider"]);
                             RetProv = null;
                         }
-                        mnUserId = Convert.ToInt16(moMemProv.Activities.GetUserId(ref argmyWeb));
+                        mnUserId = Convert.ToInt64(moMemProv.Activities.GetUserId(ref argmyWeb));
                     }
                     // We need the userId placed into dbhelper.
                     moDbHelper.mnUserId = (long)mnUserId;
@@ -1401,7 +1401,7 @@ namespace Protean
                         moMemProv = RetProv.Get(ref argmyWeb, moConfig["MembershipProvider"]);
                         RetProv = null;
                     }
-                    mnUserId = Convert.ToInt16(moMemProv.Activities.GetUserSessionId(ref argmyWeb));
+                    mnUserId = Convert.ToInt64(moMemProv.Activities.GetUserSessionId(ref argmyWeb));
 
                     if (mnUserId > 0)
                     {
@@ -2224,7 +2224,7 @@ namespace Protean
                     mcEwSiteXsl = moConfig["SiteXsl"];
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageHTML", ex, sProcessInfo));
                 // returnException(msException, mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                moResponse.Write(msException);
+                //moResponse.Write(msException);
                 //Finalize();
             }
             finally
@@ -2519,6 +2519,9 @@ namespace Protean
 
                     if (!ibIndexMode)
                     {
+                     
+
+
                         CommonActions();
 
                         // TS commented out so Century can perform searches in admin mode
@@ -2596,7 +2599,13 @@ namespace Protean
                             moSession.Remove("RedirectReason");
                         }
                     }
+
+                    if (moRequest["ewCmd"] == "forceerror") {
+                        throw new Exception("Something went wrong");
+                    }
+
                     GetPageXMLRet = moPageXml;
+
                 }
             }
             catch (Exception ex)
@@ -3561,6 +3570,10 @@ namespace Protean
                                 {
                                     bUserValid = true; // set true for submitting review functionality
                                 }
+                                if (moRequest["type"].ToLower() == "faq")
+                                {
+                                    bUserValid = true; // set true for submitting FAQ functionality
+                                }
                             }
 
                             // We need to set this for version control
@@ -3578,7 +3591,7 @@ namespace Protean
                                             var tmp = moRequest;
                                             string argAlternateFormName = tmp["formName"];
                                             string zcReturnSchema = null;
-                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId:  argnReturnId,  zcReturnSchema, AlternateFormName:  argAlternateFormName, nVersionId: Convert.ToInt64("0" + moRequest["verId"]));
+                                            xFrmContent = moAdXfm.xFrmEditContent(nContentId, moRequest["type"], nPageId, moRequest["name"], false, nReturnId:  ref argnReturnId,  zcReturnSchema, AlternateFormName:  argAlternateFormName, nVersionId: Convert.ToInt64("0" + moRequest["verId"]));
                                             nContentId = argnReturnId;
                                             if (moAdXfm.valid)
                                             {

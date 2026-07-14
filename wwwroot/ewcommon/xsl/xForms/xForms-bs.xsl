@@ -1649,10 +1649,11 @@
 		<xsl:choose>
 			<!-- reCAPTCHA v3 -->
 			<xsl:when test="contains($recaptchaVersion, 'v3')">
-				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}">
+				<script src="https://www.google.com/recaptcha/api.js?render={$recaptchaKey}" defer="defer">
 					<xsl:text> </xsl:text>
 				</script>
 				<script>
+					window.addEventListener("load", function() {
 					var hiddenInput = document.getElementById('recaptcha-token');
 					var form = hiddenInput.closest('form');
 					form.addEventListener('submit', function(e) {
@@ -1662,6 +1663,7 @@
 					.then(function(token) {
 					hiddenInput.value = token;
 					form.submit();
+					});
 					});
 					});
 					});

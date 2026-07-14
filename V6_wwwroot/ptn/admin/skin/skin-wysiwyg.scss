@@ -309,7 +309,11 @@
 
     .editable > div.ptn-edit.options {
         position: relative;
+        pointer-events: none; /* let clicks pass through */
         z-index: 3;
+        a, button {
+            pointer-events: auto; /* re-enable clicks on links */
+        }
     }
 
     .accordion-module .editable > div.ptn-edit.options {

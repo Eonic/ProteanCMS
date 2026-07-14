@@ -99,9 +99,7 @@
 						<input bind="cContentImageTitle" class="long">
 							<label>Image Title</label>
 						</input>
-
 					</group>
-
 					<input bind="cContentDetail" class="short pickImage">
 						<label>Image</label>
 					</input>
