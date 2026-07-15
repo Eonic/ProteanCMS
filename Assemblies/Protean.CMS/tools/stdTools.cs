@@ -465,7 +465,7 @@ namespace Protean
                                 moResponse.StatusCode = 500;
                                 moResponse.Write(sReturnHtml);
                                 moResponse.Flush();
-                                moResponse.End();
+                                //moResponse.Write(sReturnHtml);
                             }
                             catch
                             {
