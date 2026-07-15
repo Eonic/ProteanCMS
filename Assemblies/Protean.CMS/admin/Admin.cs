@@ -2446,7 +2446,7 @@ namespace Protean
                             {
 
                                 sAdminLayout = mcEwCmd;
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt16("0" + myWeb.moRequest["parid"]), Convert.ToInt16("0" + myWeb.moRequest["id"])));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt64("0" + myWeb.moRequest["parid"]), Convert.ToInt64("0" + myWeb.moRequest["id"])));
                                 if (moAdXfm.valid)
                                 {
                                     oPageDetail.RemoveAll();
@@ -2463,7 +2463,7 @@ namespace Protean
                             {
 
                                 sAdminLayout = mcEwCmd;
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt16("0" + myWeb.moRequest["id"]), Convert.ToInt16("0" + myWeb.moRequest["parid"])));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt64("0" + myWeb.moRequest["id"]), Convert.ToInt64("0" + myWeb.moRequest["parid"])));
                                 if (moAdXfm.valid)
                                 {
                                     oPageDetail.RemoveAll();
@@ -2477,7 +2477,7 @@ namespace Protean
                         case "DeleteUserContact":
                             {
 
-                                myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, (long)Convert.ToInt16("0" + myWeb.moRequest["parid"]));
+                                myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, (long)Convert.ToInt64("0" + myWeb.moRequest["parid"]));
                                 mcEwCmd = "ListUserContacts";
                                 myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=Company&id=" + myWeb.moRequest["id"];
                                 goto ProcessFlow;
@@ -2485,13 +2485,13 @@ namespace Protean
                         case "DeleteContact":
                             {
 
-                                myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, (long)Convert.ToInt16("0" + myWeb.moRequest["id"]));
+                                myWeb.moDbHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, (long)Convert.ToInt64("0" + myWeb.moRequest["id"]));
                                 mcEwCmd = "ListUserContacts";
                                 goto ProcessFlow;
                             }
                         case "ListCompanies":
                             {
-                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Company", (long)Convert.ToInt16("0" + nParId)));
+                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Company", (long)Convert.ToInt64("0" + nParId)));
 
                                 sAdminLayout = "ListDirectory"; // "ListCompanies"
                                 myWeb.moSession["ewCmd"] = mcEwCmd;
@@ -2509,7 +2509,7 @@ namespace Protean
                                 {
                                     myWeb.moSession["DeptParId"] = (object)0;
                                 }
-                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Department", (long)Convert.ToInt16("0" + (myWeb.moSession["DeptParId"]?.ToString() ?? ""))));
+                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Department", (long)Convert.ToInt64("0" + (myWeb.moSession["DeptParId"]?.ToString() ?? ""))));
                                 sAdminLayout = "ListDirectory"; // "ListDepartments"
                                 myWeb.moSession["ewCmd"] = mcEwCmd;
                                 break;
@@ -2517,7 +2517,7 @@ namespace Protean
 
                         case "ListGroups":
                             {
-                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Group", (long)Convert.ToInt16("0" + myWeb.moRequest["parid"])));
+                                oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory("Group", (long)Convert.ToInt64("0" + myWeb.moRequest["parid"])));
                                 sAdminLayout = "ListDirectory"; // "ListGroups"
                                 myWeb.moSession["ewCmd"] = mcEwCmd;
                                 break;
