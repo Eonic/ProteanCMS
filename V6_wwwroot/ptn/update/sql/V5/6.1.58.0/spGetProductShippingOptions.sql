@@ -60,6 +60,13 @@ CREATE TABLE #GroupRestrictedMethods
     nShipOptId BIGINT PRIMARY KEY
 );
 
+-- Tracks methods explicitly denied (nRuleType = 0) for a category this
+-- product belongs to, so an explicit deny can override an allow rule.
+CREATE TABLE #DeniedMethods
+(
+    nShipOptId BIGINT PRIMARY KEY
+);
+
 CREATE TABLE #ShippingGroupList
 (
     nCatKey BIGINT,
@@ -151,10 +158,39 @@ INSERT INTO #GroupRestrictedMethods
 (
     nShipOptId
 )
+-- Only methods restricted to a category of @GroupType's schema count as
+-- "shipping group restricted" here; a method restricted to some unrelated
+-- category schema (e.g. Colour/Brand) must not be treated as such.
 SELECT DISTINCT
-    nShipOptId
-FROM tblCartShippingProductCategoryRelations
-WHERE nRuleType = 1;
+    CSPC.nShipOptId
+FROM tblCartShippingProductCategoryRelations CSPC
+INNER JOIN tblCartProductCategories cpc
+    ON cpc.nCatKey = CSPC.nCatId
+WHERE CSPC.nRuleType = 1
+  AND cpc.cCatSchemaName = @GroupType;
+
+-- Methods explicitly denied (nRuleType = 0) for a @GroupType category that
+-- this product belongs to. An explicit deny must override any allow rule.
+IF @ProductId > 0
+BEGIN
+
+    INSERT INTO #DeniedMethods
+    (
+        nShipOptId
+    )
+    SELECT DISTINCT
+        CSPC.nShipOptId
+    FROM tblCartShippingProductCategoryRelations CSPC
+    WHERE CSPC.nRuleType = 0
+    AND EXISTS
+    (
+        SELECT 1
+        FROM #ShippingGroupList sgl
+        WHERE sgl.cCatSchemaName = @GroupType
+          AND sgl.nCatKey = CSPC.nCatId
+    );
+
+END;
 
 
     ------------------------------------------------------------
@@ -447,6 +483,19 @@ AND
         )
     )
 )
+
+-- Explicit deny always wins over any allow rule for the shipping group.
+AND
+(
+    bm.bCollection = 1
+
+    OR NOT EXISTS
+    (
+        SELECT 1
+        FROM #DeniedMethods dm
+        WHERE dm.nShipOptId = bm.nShipOptKey
+    )
+)
 ;
 
     ------------------------------------------------------------
@@ -468,6 +517,9 @@ BEGIN
     SELECT 'GroupRestrictedMethods' AS DebugSet, *
     FROM #GroupRestrictedMethods;
 
+    SELECT 'DeniedMethods' AS DebugSet, *
+    FROM #DeniedMethods;
+
     SELECT 'BaseMethods' AS DebugSet, *
     FROM #BaseMethods;
  END;
@@ -476,9 +528,14 @@ BEGIN
 (
     SELECT
         *,
+        -- Only count a method toward _hasOverride if it is genuinely linked
+        -- to this product's shipping group (IsProductShippingGroupMethod=1).
+        -- A method flagged bOverrideForWholeOrder=1 with no real connection
+        -- to @ProductId must not suppress every other shipping option.
         MAX(
             CASE
                 WHEN ISNULL(bCollection,0) = 0
+                     AND IsProductShippingGroupMethod = 1
                 THEN CAST(ISNULL(bOverrideForWholeOrder,0) AS INT)
                 ELSE 0
             END
@@ -530,7 +587,7 @@ WHERE
     (
         bCollection = 1
         OR _hasOverride = 0
-        OR bOverrideForWholeOrder = 1
+        OR (bOverrideForWholeOrder = 1 AND IsProductShippingGroupMethod = 1)
     )
 ORDER BY
     nDisplayPriority,

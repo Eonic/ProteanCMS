@@ -91,12 +91,15 @@ BEGIN
     IF NULLIF(@CountryList,'') IS NOT NULL
     BEGIN
 
+-- Use enable_ordinal (1) so SortOrder reflects the actual position of each
+-- country code in @CountryList, since STRING_SPLIT does not otherwise
+-- guarantee row order.
 ;WITH CountryList AS
 (
     SELECT
         LTRIM(RTRIM(REPLACE(value,'''',''))) AS CountryCode,
-        ROW_NUMBER() OVER (ORDER BY (SELECT NULL)) AS SortOrder
-    FROM STRING_SPLIT(@CountryList, ',')
+        ROW_NUMBER() OVER (ORDER BY [ordinal]) AS SortOrder
+    FROM STRING_SPLIT(@CountryList, ',', 1)
 )
 INSERT INTO #CountryFilter
 (
@@ -106,7 +109,8 @@ INSERT INTO #CountryFilter
 SELECT
     CountryCode,
     SortOrder
-FROM CountryList;
+FROM CountryList
+WHERE NULLIF(CountryCode,'') IS NOT NULL;
 
     END;
 
@@ -180,7 +184,29 @@ FROM CountryList;
         nCatId BIGINT
     );
 
+    -- Tracks methods explicitly denied (nRuleType = 0) for a matched category,
+    -- so an explicit deny can override an allow rule from another category.
+    CREATE TABLE #CartShippingGroupDenyMethods
+    (
+        nShipOptId BIGINT,
+        nCatId BIGINT
+    );
+
     CREATE TABLE #CartShippingMethods
+    (
+        nShipOptId BIGINT PRIMARY KEY
+    );
+
+    CREATE TABLE #CartShippingDeniedMethods
+    (
+        nShipOptId BIGINT PRIMARY KEY
+    );
+
+    -- All shipping options restricted (nRuleType = 1) to ANY category of
+    -- @GroupType, regardless of whether that category is present in the cart.
+    -- Needed to correctly distinguish "unrestricted method" from
+    -- "restricted method whose required category isn't in this cart".
+    CREATE TABLE #AllGroupRestrictedMethods
     (
         nShipOptId BIGINT PRIMARY KEY
     );
@@ -245,6 +271,54 @@ FROM CountryList;
     SELECT DISTINCT
         nShipOptId
     FROM #CartShippingGroupMethods;
+
+    --------------------------------------------------------------------------
+    -- ALL METHODS RESTRICTED TO ANY CATEGORY OF @GroupType
+    -- (used to detect methods that require a group the cart does not have)
+    --------------------------------------------------------------------------
+
+    INSERT INTO #AllGroupRestrictedMethods
+    (
+        nShipOptId
+    )
+    SELECT DISTINCT
+        CSPC.nShipOptId
+    FROM tblCartShippingProductCategoryRelations CSPC
+    INNER JOIN tblCartProductCategories cpc
+        ON cpc.nCatKey = CSPC.nCatId
+    WHERE CSPC.nRuleType = 1
+      AND cpc.cCatSchemaName = @GroupType;
+
+    --------------------------------------------------------------------------
+    -- SHIPPING GROUP DENY METHODS
+    -- (nRuleType = 0 rows explicitly deny a shipping method for a category)
+    --------------------------------------------------------------------------
+
+    INSERT INTO #CartShippingGroupDenyMethods
+    (
+        nShipOptId,
+        nCatId
+    )
+    SELECT DISTINCT
+        CSPC.nShipOptId,
+        CSPC.nCatId
+    FROM tblCartShippingProductCategoryRelations CSPC
+    WHERE CSPC.nRuleType = 0
+    AND EXISTS
+    (
+        SELECT 1
+        FROM #CartShippingGroups CSG
+        WHERE CSG.cCatSchemaName = @GroupType
+          AND CSG.nCatKey = CSPC.nCatId
+    );
+
+    INSERT INTO #CartShippingDeniedMethods
+    (
+        nShipOptId
+    )
+    SELECT DISTINCT
+        nShipOptId
+    FROM #CartShippingGroupDenyMethods;
 
     --------------------------------------------------------------------------
     -- SHIPPING GROUP NAME
@@ -447,7 +521,7 @@ END
 FROM #PermissionStatus p;
 
 
-        CREATE TABLE #MethodEvaluation
+CREATE TABLE #MethodEvaluation
 (
     nShipOptId BIGINT,
 
@@ -467,7 +541,7 @@ FROM #PermissionStatus p;
     FinalMatch BIT
 );
 
-        INSERT INTO #MethodEvaluation
+INSERT INTO #MethodEvaluation
 (
     nShipOptId,
     QuantityMatch,
@@ -635,6 +709,15 @@ CASE
     WHEN b.bCollection = 1
         THEN 1
 
+    -- Explicit deny always wins over any allow rule for the shipping group.
+    WHEN EXISTS
+    (
+        SELECT 1
+        FROM #CartShippingDeniedMethods csdm
+        WHERE csdm.nShipOptId = me.nShipOptId
+    )
+        THEN 0
+
     WHEN @ExistShippingGroupCount > 0
     THEN
         CASE
@@ -648,13 +731,17 @@ CASE
             ELSE 0
         END
 
+    -- Cart has no item in @GroupType category. A method is only unrestricted
+    -- (and therefore allowed) if it is NOT tied to any @GroupType category at
+    -- all. If it requires a specific category that the cart doesn't have,
+    -- it must be excluded rather than defaulting to allowed.
     ELSE
         CASE
             WHEN EXISTS
             (
                 SELECT 1
-                FROM #CartShippingMethods csm
-                WHERE csm.nShipOptId = me.nShipOptId
+                FROM #AllGroupRestrictedMethods agrm
+                WHERE agrm.nShipOptId = me.nShipOptId
             )
             THEN 0
             ELSE 1
@@ -904,12 +991,25 @@ WHERE rn = 1;
 
 DECLARE @HasOverride BIT = 0;
 
+-- A method's bOverrideForWholeOrder=1 flag should only lock out all other
+-- (non-collection) shipping methods when it genuinely applies to this cart's
+-- contents — i.e. the method is linked (nRuleType = 1) to a @GroupType
+-- category that at least one cart item actually belongs to
+-- (#CartShippingMethods). Without this check, an override method that has no
+-- real connection to the cart's items could incorrectly suppress every other
+-- shipping option. Collection methods are exempt from the override entirely.
 IF EXISTS
 (
     SELECT 1
-    FROM #FinalMethodsDeduped
-    WHERE ISNULL(bCollection,0) = 0
-    AND ISNULL(bOverrideForWholeOrder,0) = 1
+    FROM #FinalMethodsDeduped fmd
+    WHERE ISNULL(fmd.bCollection,0) = 0
+    AND ISNULL(fmd.bOverrideForWholeOrder,0) = 1
+    AND EXISTS
+    (
+        SELECT 1
+        FROM #CartShippingMethods csm
+        WHERE csm.nShipOptId = fmd.nShipOptKey
+    )
 )
 BEGIN
     SET @HasOverride = 1;
@@ -949,19 +1049,28 @@ CREATE TABLE #FinalOutput
 );
 
 INSERT INTO #FinalOutput
-SELECT *
-FROM #FinalMethodsDeduped
+SELECT fmd.*
+FROM #FinalMethodsDeduped fmd
 WHERE
 (
     @HasOverride = 0
 )
 OR
 (
-    bCollection = 1
+    fmd.bCollection = 1
 )
 OR
 (
-    ISNULL(bOverrideForWholeOrder,0) = 1
+    -- Only genuinely cart-linked override methods pass through once an
+    -- override is active; a method flagged bOverrideForWholeOrder=1 but not
+    -- tied to any item in this cart must not ride along.
+    ISNULL(fmd.bOverrideForWholeOrder,0) = 1
+    AND EXISTS
+    (
+        SELECT 1
+        FROM #CartShippingMethods csm
+        WHERE csm.nShipOptId = fmd.nShipOptKey
+    )
 );
 
 --------------------------------------------------------------------------
@@ -1035,6 +1144,12 @@ BEGIN
 
         SELECT *
         FROM #CartShippingGroupMethods;
+
+        SELECT *
+        FROM #CartShippingGroupDenyMethods;
+
+        SELECT *
+        FROM #AllGroupRestrictedMethods;
 
 
         SELECT TOP 10 *

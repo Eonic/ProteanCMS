@@ -461,11 +461,13 @@ namespace Protean
                         {
                             try
                             {
-                                moResponse.ContentType = "text/html";
-                                moResponse.StatusCode = 500;
-                                moResponse.Write(sReturnHtml);
-                                moResponse.Flush();
+                                //TS we do this later.
+
+                                //moResponse.ContentType = "text/html";
+                                //moResponse.StatusCode = 500;
                                 //moResponse.Write(sReturnHtml);
+                                //moResponse.Flush();
+                               //moResponse.End();
                             }
                             catch
                             {
