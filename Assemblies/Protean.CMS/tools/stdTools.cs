@@ -383,7 +383,6 @@ namespace Protean
 
                                         }
                                     }
-
                                 }
                             }
                             catch (Exception ex)
@@ -470,11 +469,13 @@ namespace Protean
                         {
                             try
                             {
-                                moResponse.ContentType = "text/html";
-                                moResponse.StatusCode = 500;
-                                moResponse.Write(sReturnHtml);
-                                moResponse.Flush();
-                                moResponse.End();
+                                //TS we do this later.
+
+                                //moResponse.ContentType = "text/html";
+                                //moResponse.StatusCode = 500;
+                                //moResponse.Write(sReturnHtml);
+                                //moResponse.Flush();
+                               //moResponse.End();
                             }
                             catch
                             {
