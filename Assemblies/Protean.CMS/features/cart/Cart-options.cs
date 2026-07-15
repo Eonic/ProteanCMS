@@ -896,6 +896,23 @@ namespace Protean
                         param.Add("ProductPrice", nAmount);
                         oDS = moDBHelper.GetDataSet("spGetProductShippingOptions", "Option", "Shipping", false, param, CommandType.StoredProcedure);
                     }
+                    else if (myWeb.moDbHelper.checkDBObjectExists("spGetCartShippingOptions", Tools.Database.objectTypes.StoredProcedure))
+                    {
+                        // Call cart-based stored procedure (existing functionality)
+                        var param = new Hashtable();
+                        param.Add("CartOrderId", mnCartId);
+                        param.Add("Amount", nAmount);
+                        param.Add("Quantity", nQuantity);
+                        param.Add("Weight", nWeight);
+                        param.Add("Currency", mcCurrency);
+                        param.Add("userId", userId);
+                        param.Add("AuthUsers", (object)Cms.gnAuthUsers);
+                        param.Add("NonAuthUsers", (object)Cms.gnNonAuthUsers);
+                        param.Add("CountryList", sCountryList);
+                        param.Add("dValidDate", PublishExpireDate);
+                        param.Add("PromoCode", cPromoCode);
+                        oDS = moDBHelper.GetDataSet("spGetCartShippingOptions", "Option", "Shipping", false, param, CommandType.StoredProcedure);
+                    }
                     else if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
                     {
                         // Call cart-based stored procedure (existing functionality)
