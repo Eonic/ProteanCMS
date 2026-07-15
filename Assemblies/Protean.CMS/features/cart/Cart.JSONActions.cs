@@ -593,7 +593,7 @@ namespace Protean
 
                 public string SetContact(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    int nId;
+                    long nId;
                     try
                     {
                         int supplierId = (int)jObj["supplierId"];
@@ -798,12 +798,12 @@ namespace Protean
                     }
                 }
 
-                public int AddCartAddress(ref Protean.rest myApi, ref JObject jObj, string contactType, int cartId, string emailAddress = "", string telphone = "")
+                public long AddCartAddress(ref Protean.rest myApi, ref JObject jObj, string contactType, int cartId, string emailAddress = "", string telphone = "")
                 {
                     try
                     {
                         var contact = new Cms.model.Contact();
-                        int nId;
+                        long nId;
                         if (jObj != null)
                         {
                             contact.cContactEmail = emailAddress;

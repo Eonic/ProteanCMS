@@ -14796,7 +14796,7 @@ namespace Protean
                 }
             }
 
-            public int SetContact(ref Cms.model.Contact contact)
+            public long SetContact(ref Cms.model.Contact contact)
             {
                 if (contact.nContactKey > 0)
                 {
@@ -14810,7 +14810,7 @@ namespace Protean
                 return default;
             }
 
-            public int AddContact(ref Cms.model.Contact contact)
+            public long AddContact(ref Cms.model.Contact contact)
             {
                 PerfMonLog("DBHelper", "AddContact ([args])");
                 string sSql;
@@ -14829,13 +14829,13 @@ namespace Protean
 
                     }
 
-                    return Convert.ToInt16(nId);
+                    return Convert.ToInt64(nId);
                 }
 
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddContact", ex, cProcessInfo));
-                    return Convert.ToInt16(false);
+                    return Convert.ToInt64(false);
                 }
             }
 
