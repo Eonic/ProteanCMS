@@ -36,7 +36,7 @@ namespace Protean
 
                     var oObjType = new Cms.dbHelper.objectTypes();
                     var oTblName = default(Cms.dbHelper.TableNames);
-                    int nRContentId = 0;
+                    long nRContentId = 0;
 
                     try
                     {
@@ -151,7 +151,7 @@ namespace Protean
 
                                     // nRContentId = 0
                                     while (oDr.Read())
-                                        nRContentId = Convert.ToInt16(oDr[0]);
+                                        nRContentId = Convert.ToInt64(oDr[0]);
                                 }
 
                                 if (nRContentId > 0)
@@ -338,17 +338,17 @@ namespace Protean
 
                                             nRContentId = 0;
                                             while (oDr.Read())
-                                                nRContentId = Convert.ToInt16(oDr[0]);
+                                                nRContentId = Convert.ToInt64(oDr[0]);
 
                                             if (nRContentId > 0)
                                             {
-                                                nRContentId = Convert.ToInt16(moDbHelper.setObjectInstance(oObjType, (XmlElement)oInstance.FirstChild, (long)nRContentId));
+                                                nRContentId = Convert.ToInt64(moDbHelper.setObjectInstance(oObjType, (XmlElement)oInstance.FirstChild, (long)nRContentId));
                                                 moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentEdited, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, nRContentId, (int)pgid, "");
                                                 moDbHelper.setContentLocation(pgid, (long)nRContentId);
                                             }
                                             else
                                             {
-                                                nRContentId = Convert.ToInt16(moDbHelper.setObjectInstance(oObjType, (XmlElement)oInstance.FirstChild));
+                                                nRContentId = Convert.ToInt64(moDbHelper.setObjectInstance(oObjType, (XmlElement)oInstance.FirstChild));
                                                 moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.ContentAdded, myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, nRContentId, (int)pgid, "");
                                                 moDbHelper.setContentLocation(pgid, (long)nRContentId);
                                             }

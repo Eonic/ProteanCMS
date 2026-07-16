@@ -2339,7 +2339,7 @@ namespace Protean
                             {
 
                                 sAdminLayout = "Profile";
-                                oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML((long)Convert.ToInt16("0" + myWeb.moRequest["parid"]), true));
+                                oPageDetail.AppendChild(myWeb.moDbHelper.GetUserXML((long)Convert.ToInt64("0" + myWeb.moRequest["parid"]), true));
                                 break;
                             }
 
@@ -2347,7 +2347,7 @@ namespace Protean
                             {
 
                                 sAdminLayout = "EditUserContact";
-                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt16("0" + myWeb.moRequest["id"]), Convert.ToInt16("0" + myWeb.moRequest["parid"])));
+                                oPageDetail.AppendChild(moAdXfm.xFrmEditDirectoryContact((long)Convert.ToInt64("0" + myWeb.moRequest["id"]), Convert.ToInt64("0" + myWeb.moRequest["parid"])));
                                 if (moAdXfm.valid)
                                 {
                                     oPageDetail.RemoveAll();
@@ -2535,7 +2535,7 @@ namespace Protean
                             {
                                 if (mcEwCmd2 != null)
                                 {
-                                    oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory(mcEwCmd2, (long)Convert.ToInt16("0" + myWeb.moRequest["parid"])));
+                                    oPageDetail.AppendChild(myWeb.moDbHelper.listDirectory(mcEwCmd2, (long)Convert.ToInt64("0" + myWeb.moRequest["parid"])));
                                 }
 
                                 sAdminLayout = "ListDirectory"; // "ListRoles"
