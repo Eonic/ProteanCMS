@@ -115,4 +115,3 @@ BEGIN
     DROP TABLE #TotalContentCounts;
     
 END
-GO

@@ -2224,7 +2224,7 @@ namespace Protean
                     mcEwSiteXsl = moConfig["SiteXsl"];
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetPageHTML", ex, sProcessInfo));
                 // returnException(msException, mcModuleName, "getPageHtml", ex, gcEwSiteXsl, sProcessInfo, gbDebug)
-                //moResponse.Write(msException);
+                moResponse.Write(msException);
                 //Finalize();
             }
             finally

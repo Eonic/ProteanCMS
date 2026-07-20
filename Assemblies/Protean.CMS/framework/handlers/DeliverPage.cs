@@ -21,6 +21,8 @@ namespace Protean.Handlers
             {
                 using (oCms = new Cms())
                 {
+                    
+                    
                     oCms.InitializeVariables();
                     context.Response.ContentType = "text/html";
                     oCms.GetPageHTML();
@@ -28,13 +30,17 @@ namespace Protean.Handlers
             }
             catch (Exception ex)
             {
-                // Log error
-                System.Diagnostics.Trace.TraceError("DeliverPageHandler error: {0}", ex.ToString());
+                //ingore if error allready handled.
+                if (context.Response.StatusCode != 500) {
 
-                // Return appropriate error response
-                context.Response.StatusCode = 500;
-                context.Response.ContentType = "text/html";
-                context.Response.Write("<html><body><h1>ProteanCMS Handler Error</h1><P>" + ex.Message + "</P></body></html>");
+                    // Log error
+                    System.Diagnostics.Trace.TraceError("DeliverPageHandler error: {0}", ex.ToString());
+
+                    // Return appropriate error response
+                    context.Response.StatusCode = 500;
+                    context.Response.ContentType = "text/html";
+                    context.Response.Write("<html><body><h1>ProteanCMS Handler Error</h1><P>" + ex.Message + "</P></body></html>");
+                }
             }
             finally
             {
