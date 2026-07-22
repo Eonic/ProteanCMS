@@ -8873,15 +8873,22 @@ $(document).ready(function () {
                     </td>
                     <td>
                       <span class="btn-group-spaced">
+						  
                         <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-sm btn-outline-primary">
                           <i class="fa fa-edit">&#160;</i>&#160;View / Edit
                         </a>
+						  <a href="/{$appPath}?ewCmd=EditMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-sm btn-outline-primary">
+							  <i class="fa fa-cogs">&#160;</i>&#160;Settings
+						  </a>
                         <a href="/{$appPath}?ewCmd=CopyPage&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-sm btn-outline-primary">
                           <i class="fa fa-copy">&#160;</i>&#160;Copy
                         </a>
                         <a href="/{$appPath}?ewCmd=PreviewMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-sm btn-outline-primary">
                           <i class="fa fa-eye">&#160;</i>&#160;Preview
                         </a>
+						  <a href="/{$appPath}?contentType=email&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-sm btn-outline-primary">
+							  <i class="fa fa-link">&#160;</i>&#160;Link
+						  </a>
                         <a href="/{$appPath}?ewCmd=SendMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-sm btn-outline-primary">
                           <i class="fa fa-envelope">&#160;</i>&#160;Send
                         </a>

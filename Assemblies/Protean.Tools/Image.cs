@@ -435,31 +435,32 @@ namespace Protean.Tools
 
                     if (bNoStretch == false)
                     {
-                        // FIXED: Use the dimension that needs MORE shrinking (larger ratio)
-                        // This ensures both dimensions fit within max bounds
+                        // For cropping we want the image to fully COVER the target area,
+                        // so scale using the dimension that needs LESS shrinking (smaller ratio).
+                        // This ensures both dimensions are at least as large as the target,
+                        // so the larger dimension can then be cropped down (e.g. strip top/bottom).
                         if (nXCalc > yXCalc)
                         {
-                            Resize(nMaxWidth, 0);  // Width needs more shrinking
+                            Resize(0, nMaxHeight); // Height ratio is smaller, scale to height
                         }
                         else
                         {
-                            Resize(0, nMaxHeight); // Height needs more shrinking
+                            Resize(nMaxWidth, 0);  // Width ratio is smaller (or equal), scale to width
                         }
                     }
 
 
                     // If not Stretch
-                    // If both bigger, shrink
+                    // If both bigger, shrink (cover the target so CropImage can trim the excess)
                     else if (oImg.Width >= nMaxWidth & oImg.Height >= nMaxHeight)
                     {
-                        // FIXED: Use the dimension that needs MORE shrinking (larger ratio)
                         if (nXCalc > yXCalc)
                         {
-                            Resize(nMaxWidth, 0);  // Width needs more shrinking
+                            Resize(0, nMaxHeight); // Height ratio is smaller, scale to height
                         }
                         else
                         {
-                            Resize(0, nMaxHeight); // Height needs more shrinking
+                            Resize(nMaxWidth, 0);  // Width ratio is smaller (or equal), scale to width
                         }
                     }
                     // Else Shrink accordingly
@@ -946,21 +947,28 @@ namespace Protean.Tools
                     SKRect sourceRect;
                     SKRect destRect = new SKRect(0, 0, nMaxWidthCrop, nMaxHeightCrop);
 
-                    if (oImage.Width == nMaxWidthCrop && nMaxHeightCrop > 0)
+                    // Determine which axis actually has surplus to crop rather than relying on
+                    // exact equality (rounding in the prior cover-resize can make either
+                    // dimension a pixel or two short/over its target, which previously caused
+                    // the wrong axis to be cropped and produced whitespace padding instead).
+                    int widthDiff = oImage.Width - nMaxWidthCrop;
+                    int heightDiff = oImage.Height - nMaxHeightCrop;
+
+                    if (widthDiff <= heightDiff)
                     {
-                        // If the Width is perfect, crop the Height
-                        int nNewY = (oImage.Height - nMaxHeightCrop) / 2;
-                        sourceRect = new SKRect(0, nNewY, oImage.Width, nNewY + nMaxHeightCrop);
-                    }
-                    else if (nMaxWidthCrop > 0)
-                    {
-                        // Else crop the width
-                        int nNewW = (oImage.Width - nMaxWidthCrop) / 2;
-                        sourceRect = new SKRect(nNewW, 0, nNewW + nMaxWidthCrop, oImage.Height);
+                        // Width is the "perfect" (or smaller-surplus) dimension - crop the height
+                        int nNewY = Math.Max(0, heightDiff) / 2;
+                        int srcHeight = Math.Min(nMaxHeightCrop, oImage.Height);
+                        int srcWidth = Math.Min(nMaxWidthCrop, oImage.Width);
+                        sourceRect = new SKRect(0, nNewY, srcWidth, nNewY + srcHeight);
                     }
                     else
                     {
-                        sourceRect = new SKRect(0, 0, oImage.Width, oImage.Height);
+                        // Height is the "perfect" (or smaller-surplus) dimension - crop the width
+                        int nNewW = Math.Max(0, widthDiff) / 2;
+                        int srcWidth = Math.Min(nMaxWidthCrop, oImage.Width);
+                        int srcHeight = Math.Min(nMaxHeightCrop, oImage.Height);
+                        sourceRect = new SKRect(nNewW, 0, nNewW + srcWidth, srcHeight);
                     }
 
                     canvas.DrawBitmap(oImage, sourceRect, destRect, paint);
