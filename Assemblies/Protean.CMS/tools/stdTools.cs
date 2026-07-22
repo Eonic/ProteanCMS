@@ -201,7 +201,7 @@ namespace Protean
 
                     strErrorHtml = exceptionReport(oException, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo, httpContext);
                     strMessageHtml = "<div style=\"font-family:Verdana,Tahoma,Arial\"><h2>Unfortunately this site has experienced an error.</h2>" + "<h3>We take all errors very seriously.</h3>" + "<p>" + "This error has been recorded and details sent to <a href=\"http://eonic.com\">Eonic</a> who provide technical support for this website." + "</p>" + "<p>" + "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=\"mailto:support@eonic.co.uk\">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." + "</p>" + "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" + "<a href=\"javascript:history.back();\">Click Here to return to the previous page.</a></div>";
-
+                 
                     try
                     {
                         // bDebug = True
@@ -366,11 +366,19 @@ namespace Protean
 
                                             // Move the content up a level.
                                             foreach (XmlNode oContent in oExceptionXml.SelectNodes("/Page/Contents/Content")) {
-                                                foreach (XmlNode oAttr in oContent.SelectSingleNode("Content/*")) {
-                                                    XmlElement oContentElmt = (XmlElement)oContent;
-                                                    oContentElmt.SetAttribute(oAttr.Name, oAttr.Value);
+                                                //foreach (XmlNode oAttr in oContent.SelectSingleNode("Content/*")) {
+                                                //    XmlElement oContentElmt = (XmlElement)oContent;
+                                                //    oContentElmt.SetAttribute(oAttr.Name, oAttr.Value);
+                                                //}
+                                                // oContent.InnerXml = oContent.SelectSingleNode("Content").InnerXml;
+
+                                                XmlNode innerContent = oContent.SelectSingleNode("Content");
+                                                foreach (XmlAttribute attr in innerContent.Attributes)
+                                                {
+                                                    ((XmlElement)oContent).SetAttribute(attr.Name, attr.Value);
                                                 }
-                                                oContent.InnerXml = oContent.SelectSingleNode("Content").InnerXml;
+                                                oContent.InnerXml = innerContent.InnerXml;
+                                               
                                             }
 
                                         }

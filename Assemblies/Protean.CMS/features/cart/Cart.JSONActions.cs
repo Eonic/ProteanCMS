@@ -1,13 +1,17 @@
-﻿using System;
+﻿
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Protean.Providers.Messaging;
+using Protean.Providers.Payment;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net.Http;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
 using System.Xml;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using Protean.Providers.Payment;
 using static Protean.Tools.Xml;
 
 namespace Protean
@@ -28,7 +32,7 @@ namespace Protean
 
                 //public event OnErrorEventHandler OnError;
 
-              //  public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+                //  public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Cart.JSONActions";
                 private const string cContactType = "Venue";
                 private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
@@ -124,7 +128,7 @@ namespace Protean
                         // Output the new cart
                         var oDoc = new XmlDocument();
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
-                       // myCart.bNoClose = true;
+                        // myCart.bNoClose = true;
 
                         if (myCart.mnCartId < 1)
                         {
@@ -160,7 +164,7 @@ namespace Protean
                                     string sProductOptionName = "";
                                     double dProductOptionPrice = 0d;
                                     string[][] aProductOptions = null;
-                                    
+
                                     if (item.ContainsKey("UniqueProduct"))
                                     {
                                         bUnique = (bool)item["UniqueProduct"];
@@ -204,7 +208,7 @@ namespace Protean
                                     {
                                         myCart.myWeb.moSession["overridePriceSession"] = (string)jObj["overridePriceSession"];
                                     }
-                                   
+
                                     myCart.AddItem((long)item["contentId"], (long)item["qty"], aProductOptions, sProductName, cProductPrice, "", bUnique, sOverideURL, false, sProductOptionName, dProductOptionPrice);
 
                                 }
@@ -218,7 +222,7 @@ namespace Protean
                             myCart.GetCart(ref argoCartElmt);
                             CartXml = updateCartforJSON(CartXml);
                             // persist cart
-                          
+
                             myCart.close(bNoClose);
 
                             string jsonString = JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.None);
@@ -581,7 +585,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        RaiseOnError(   new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
                         return ex.Message;
                     }
                     //return JsonConvert.ToString(nId);
@@ -589,7 +593,7 @@ namespace Protean
 
                 public string SetContact(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    int nId;
+                    long nId;
                     try
                     {
                         int supplierId = (int)jObj["supplierId"];
@@ -631,7 +635,7 @@ namespace Protean
 
                     try
                     {
-                       
+
 
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
                         // myCart.GetCart(CartXml.FirstChild)
@@ -769,7 +773,7 @@ namespace Protean
 
                         long userId = Convert.ToInt64("0" + (myWeb.moSession["nUserId"]?.ToString() ?? "0"));
 
-                        if (myWeb.moDbHelper.checkUserRole( myCart.moCartConfig["AllowPriceUpdateRole"], "Role", userId))
+                        if (myWeb.moDbHelper.checkUserRole(myCart.moCartConfig["AllowPriceUpdateRole"], "Role", userId))
                         {
                             myCart.UpdateItemPrice(cartItemId, cProductPrice);
                         }
@@ -794,12 +798,12 @@ namespace Protean
                     }
                 }
 
-                public int AddCartAddress(ref Protean.rest myApi, ref JObject jObj, string contactType, int cartId, string emailAddress = "", string telphone = "")
+                public long AddCartAddress(ref Protean.rest myApi, ref JObject jObj, string contactType, int cartId, string emailAddress = "", string telphone = "")
                 {
                     try
                     {
                         var contact = new Cms.model.Contact();
-                        int nId;
+                        long nId;
                         if (jObj != null)
                         {
                             contact.cContactEmail = emailAddress;
@@ -951,7 +955,7 @@ namespace Protean
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
                         myCart.GetCart(ref argoCartElmt);
                         myCart.purchaseActions(CartXml);
-                       
+
                         CartXml = updateCartforJSON(CartXml);
                         // persist cart
                         myCart.close();
@@ -1229,22 +1233,54 @@ namespace Protean
                             IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, cProviderName);
                             cRefundPaymentReceipt = oPaymentProv.Activities.RefundPayment(nProviderReference.ToString(), nAmount);
 
-                            var xmlDoc = new XmlDocument();
-                            var xmlResponse = xmlDoc.CreateElement("Response");
-                            xmlResponse.InnerXml = "<RefundPaymentReceiptId>" + cRefundPaymentReceipt + "</RefundPaymentReceiptId>";
-                            xmlDoc.LoadXml(xmlResponse.InnerXml);
+                                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                                if (moMailConfig != null)
+                                {
 
-                            josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
-                            josResult = josResult.Replace("\"@", "\"_");
-                            josResult = josResult.Replace("#cdata-section", "cDataValue");
+                                    string sMessagingProvider = "";
 
-                            return josResult;
-                        }
+                                    if (moMailConfig != null)
+                                    {
+                                        sMessagingProvider = moMailConfig["MessagingProvider"];
+                                    }
+
+                                    if (!string.IsNullOrEmpty(sMessagingProvider))
+                                    {
+                                        Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                                        IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
+                                        String sSql = "select cCartXml from tblcartorder  where nPayMthdId in (select nPayMthdKey from tblCartPaymentMethod where cPayMthdProviderRef='" + nProviderReference + "')";
+                                        String scartXml = Convert.ToString(myWeb.moDbHelper.GetDataValue(sSql));
+
+                                        XmlDocument doc = new XmlDocument();
+                                        doc.LoadXml(scartXml);
+
+                                        XmlElement cartxml = doc.DocumentElement;
+                                        XmlNode orderNode = cartxml.SelectSingleNode("descendant-or-self::Order");
+
+
+                                        oMessaging.Activities.TrackRefundEvent(orderNode, nAmount);
+
+                                    }
+                                }
+                            }
+                        
+                        var xmlDoc = new XmlDocument();
+                        var xmlResponse = xmlDoc.CreateElement("Response");
+                        xmlResponse.InnerXml = "<RefundPaymentReceiptId>" + cRefundPaymentReceipt + "</RefundPaymentReceiptId>";
+                        xmlDoc.LoadXml(xmlResponse.InnerXml);
+
+                        josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
+                        josResult = josResult.Replace("\"@", "\"_");
+                        josResult = josResult.Replace("#cdata-section", "cDataValue");
+
                         return josResult;
                     }
+
+
+
                     catch (Exception ex)
                     {
-                        RaiseOnError(   new Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""));
                         return "Error"; // ex.Message
                     }
 
@@ -1345,7 +1381,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        RaiseOnError(   new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
                         return "Error"; // ex.Message
                     }
 
@@ -1366,12 +1402,12 @@ namespace Protean
                         bIsAuthorized = this.ValidateAPICall(Convert.ToString(cValidGroup));
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
-                        if(jObj["cEmailAddress"] != null && jObj["cEmailAddress"].ToString()!="")
+                        if (jObj["cEmailAddress"] != null && jObj["cEmailAddress"].ToString() != "")
                         {
                             var cEmailAddress = jObj["cEmailAddress"].ToString();
                             josResult = myCart.GDPRAnonomize(cEmailAddress);
                         }
-                       
+
                         return josResult;
                     }
                     catch (Exception ex)
@@ -1381,6 +1417,8 @@ namespace Protean
                     }
 
                 }
+
+               
                 #endregion
 
 
@@ -1452,13 +1490,13 @@ namespace Protean
                     else
                     {
                         WS = new epostcode.PostcodeServices13SoapClient();
-                       // WS.Timeout = 3000;
+                        // WS.Timeout = 3000;
 
                         // WriteToLog("Looking up postcode: """ & Postcode & """")
                         try
                         {
                             string msePostcodeAcctName = myCart.moCartConfig["ePostcodeAcctName"];
-                            string msePostcodeKey = myCart.moCartConfig["ePostcodeKey"]; 
+                            string msePostcodeKey = myCart.moCartConfig["ePostcodeKey"];
                             //addressPremises = WS.GetPremiseAddressesFromPostcodeAndHouseNumber(strPostcode, SelectedAddress, "100", msAccountNameDemo, msGUIDDemo, "");
                             addressPremises = WS.GetPremiseAddressesFromPostcodeAndHouseNumber(postcode, "", "100", msePostcodeAcctName, msePostcodeKey, "");
 
