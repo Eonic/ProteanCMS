@@ -117,30 +117,13 @@ BEGIN
 
         SET @HasShippingGroup = 1;
 
-        CREATE TABLE #ShippingGroupCatIDs
-        (
-            nCatId BIGINT PRIMARY KEY
-        );
-
-        INSERT INTO #ShippingGroupCatIDs
-        (
-            nCatId
-        )
-        SELECT DISTINCT
-            CSPC.nCatId
-        FROM tblCartShippingMethods opt
-        INNER JOIN tblCartShippingProductCategoryRelations CSPC
-            ON opt.nShipOptKey = CSPC.nShipOptId
-        INNER JOIN tblCartCatProductRelations cpr
-            ON CSPC.nCatId = cpr.nCatId
-        WHERE CSPC.nRuleType = 1
-        AND CSPC.nCatId IN
-        (
-            SELECT nCatKey
-            FROM #ShippingGroupList
-            WHERE cCatSchemaName = @GroupType
-        );
-
+        -- Directly derive the allowed methods from the product's own
+        -- shipping-group categories, matching the single-step approach used
+        -- by spGetCartShippingOptions (#CartShippingGroupMethods). The
+        -- previous two-step version required an additional, unnecessary
+        -- join through tblCartShippingMethods/tblCartCatProductRelations
+        -- that had no equivalent on the cart side and could silently
+        -- exclude valid allow-rule methods.
         INSERT INTO #ShippingGroups
         (
             nShipOptId
@@ -148,9 +131,14 @@ BEGIN
         SELECT DISTINCT
             CSPC.nShipOptId
         FROM tblCartShippingProductCategoryRelations CSPC
-        INNER JOIN #ShippingGroupCatIDs sg
-            ON sg.nCatId = CSPC.nCatId
-        WHERE CSPC.nRuleType = 1;
+        WHERE CSPC.nRuleType = 1
+        AND EXISTS
+        (
+            SELECT 1
+            FROM #ShippingGroupList sgl
+            WHERE sgl.cCatSchemaName = @GroupType
+              AND sgl.nCatKey = CSPC.nCatId
+        );
     END;
 END;
 

@@ -11561,15 +11561,30 @@ $(document).ready(function () {
         <xsl:value-of select="@versionid"/>
       </xsl:if>
     </xsl:variable>
+	  
+	  
     <td class="btn-group">
 
+		<xsl:choose>
+			<xsl:when test="@type='FAQ'">
+				<a href="{$appPath}?ewCmd=Normal&amp;artid={@ContentId}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+					<i class="fa fa-eye">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>Preview
+				</a>
 
-      <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-primary" title="Click here to edit this content">
-        <i class="fa fa-eye">
-          <xsl:text> </xsl:text>
-        </i>
-        <xsl:text> </xsl:text>Preview
-      </a>
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+					<i class="fa fa-eye">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>Preview
+				</a>
+
+			</xsl:otherwise>
+		</xsl:choose>
 
       <a href="{$appPath}?ewCmd=ContentVersions&amp;id={@id}{$versionId}" class="btn btn-xs btn-primary" title="Click here to edit this content">
         <i class="fa fa-history">

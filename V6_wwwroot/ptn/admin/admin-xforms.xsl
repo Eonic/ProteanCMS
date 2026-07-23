@@ -1083,11 +1083,25 @@
 
 	<!-- TinyMCE configuration templates -->
 	<xsl:template match="textarea" mode="tinymceGeneralOptions">
+
+
+		<xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']/node()"/>
+		
 		<xsl:text>script_url: '/ptn/libs/tinymce/tinymce.min.js',
 			mode: "exact",
 			theme: "silver",
-			width: "auto",
-			relative_urls: false,
+			width: "auto",</xsl:text>
+			<xsl:choose>
+						<xsl:when test="$ewCmd='EditMailContent'">
+							<xsl:text>
+							relative_urls: false,	
+							remove_script_host: false,
+							convert_urls: false,</xsl:text>
+						</xsl:when>
+				<xsl:otherwise>
+							<xsl:text>relative_urls: false,	</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose><xsl:text>
 			plugins: "table paste link image ptnimage media visualchars searchreplace emoticons anchor lists advlist code visualblocks contextmenu fullscreen searchreplace wordcount charmap",
 			entity_enconding: "numeric",
             image_advtab: true,

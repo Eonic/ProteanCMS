@@ -841,7 +841,7 @@
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h3 class="modal-title">Create new account</h3>
+								<h4 class="modal-title">Create new account</h4>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 									<xsl:text> </xsl:text>
 								</button>

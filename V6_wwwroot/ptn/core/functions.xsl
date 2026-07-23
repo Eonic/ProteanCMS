@@ -1105,8 +1105,8 @@
     </xsl:choose>
     <xsl:if test="$GoogleGA4MeasurementID!=''">
       <!-- GA4 Tag Manager -->
-      <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
-      <script id="GA4Code" cookie-consent="tracking">
+      <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}">&#160;</script>
+      <script id="GA4Code">
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
