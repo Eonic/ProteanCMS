@@ -26,6 +26,8 @@ namespace Protean
         public string msGnuPassphrase = "";
         public bool mbIsBodyHtml = true;
         public static string msException = "";
+        public bool mbLogEmail = false;
+
 
         public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
 
@@ -53,6 +55,11 @@ namespace Protean
                 goResponse = moCtx.Response;
                 goSession = moCtx.Session;
                 goServer = moCtx.Server;
+
+               if (goConfig["LogEmail"].ToLower() == "on")
+               {
+                   mbLogEmail = true;
+               }
             }
         }
         public Messaging(ref string sException)
@@ -62,6 +69,10 @@ namespace Protean
             goSession = moCtx.Session;
             goServer = moCtx.Server;
             msException = sException;
+            if (goConfig["LogEmail"].ToLower() == "on")
+            {
+                mbLogEmail = true;
+            }
         }
 
         public string Language
@@ -982,7 +993,7 @@ namespace Protean
                         }
                     }
 
-                    if ((goConfig["LogEmail"]).ToLower() == "on")
+                    if (mbLogEmail)
                     {
                         try
                         {
