@@ -3909,6 +3909,7 @@
 								</tr>
 								<tr>
 									<th>Name</th>
+									<th>Price</th>
 									<th>Publish Date</th>
 									<th>
 										Tick to Relate<br/>
@@ -4039,12 +4040,13 @@
 
 		<span class="advancedModeRow locate-content-row" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
 			<tr>
-				<td>
+				<td class="col-name">
 					<xsl:apply-templates select="." mode="ContentListName">
 						<xsl:with-param name="indent" select="$indent"/>
 					</xsl:apply-templates>
 
 				</td>
+				<td class="col-price"><xsl:value-of select="Prices/Price[@type='sale']"/></td>
 				<td>
 					<xsl:if test="@publishDate!=''">
 						<xsl:call-template name="DD_Mon_YYYY">

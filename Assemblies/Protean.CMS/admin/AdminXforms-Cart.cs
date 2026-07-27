@@ -1324,7 +1324,7 @@ namespace Protean
                         string cParentContentName = Xml.convertEntitiesToCodes(moDbHelper.getNameByKey(Cms.dbHelper.objectTypes.Content, Convert.ToInt64(nParentID)));
 
                         base.NewFrm("FindRelatedContent");
-                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
+                        base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection/><nSearchChildren/><nSearchInactive/><nIncludeRelated/><cParentContentName>" + cParentContentName + "</cParentContentName><redirect>" + redirect + "</redirect><cSearch/>";
 
                         // MyBase.submission("AddRelated", "?ewCmd=RelateSearch&Type=Document&xml=x", "post", "form_check(this)")
                         base.submission("AddRelated", "", "post", "form_check(this)");
@@ -1392,6 +1392,12 @@ namespace Protean
                             base.addBind("nIncludeRelated", "nIncludeRelated", oBindParent: ref argoBindParent6, "false()");
                         }
 
+                        // Search inactive pages
+                        oSelElmt2 = base.addSelect(ref oFrmElmt, "nSearchInactive", true, "", "", Protean.xForm.ApperanceTypes.Full);
+                        base.addOption(ref oSelElmt2, "In Active", 1.ToString());
+                        XmlElement argoBindParent7 = null;
+                        base.addBind("nSearchInactive", "nSearchInactive", oBindParent: ref argoBindParent7, "false()");
+
                         // search button
                         base.addSubmit(ref oFrmElmt, "Search", "Search", "ewSubmit");
 
@@ -1413,6 +1419,7 @@ namespace Protean
                                 bool bChilds = base.Instance.SelectSingleNode("nSearchChildren").InnerText == "1";
                                 string cExpression = base.Instance.SelectSingleNode("cSearch").InnerText;
                                 bool bIncRelated = base.Instance.SelectSingleNode("nIncludeRelated").InnerText == "1";
+                                bool binactive = base.Instance.SelectSingleNode("nSearchInactive").InnerText == "1";
 
                                 string sSQL = "Select " + cSelectField + " From " + cTableName + " WHERE " + cFilterField + " = " + nParId;
                                 using (var oDre = moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
@@ -1423,7 +1430,7 @@ namespace Protean
 
                                     if (!string.IsNullOrEmpty(cTmp))
                                         cTmp = cTmp.Substring(0, cTmp.Length - 1);
-                                    oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, Convert.ToInt32(nParId), bIgnoreParID ? 0 : Convert.ToInt32(nParId), cTmp.Split(','), bIncRelated));
+                                    oPageDetail.AppendChild(moDbHelper.RelatedContentSearch(nRoot, cContentType, bChilds, cExpression, Convert.ToInt32(nParId), bIgnoreParID ? 0 : Convert.ToInt32(nParId), cTmp.Split(','), bIncRelated, binactive));
 
                                 }
                             }
@@ -1433,11 +1440,11 @@ namespace Protean
                         {
                             if (myWeb.moRequest["pgid"] != null)
                             {
-                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>" + myWeb.moRequest["pgid"].ToString() + "</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
+                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>" + myWeb.moRequest["pgid"].ToString() + "</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<nSearchInactive>0</nSearchInactive>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
                             }
                             else
                             {
-                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>0</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
+                                base.Instance.InnerXml = "<nParentContentId>" + nParentID + "</nParentContentId>" + "<cSchemaName>" + cContentType + "</cSchemaName>" + "<cSection>0</cSection>" + "<nSearchChildren>1</nSearchChildren>" + "<nSearchInactive>0</nSearchInactive>" + "<cParentContentName>" + cParentContentName + "</cParentContentName>" + "<redirect>" + redirect + "</redirect><cSearch/>";
                             }
 
                             base.addValues();
