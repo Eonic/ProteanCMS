@@ -100,6 +100,7 @@
             }
         });
 
+
     }
 
     if ($("form#PayForm").exists()) {
@@ -141,7 +142,8 @@
     });
 
     initialiseProductSKUs();
-});
+
+    cartActionListeners();});
 
 
 $("#confirmterms_Agree").change(function () {
@@ -317,6 +319,68 @@ function incrementQuantityNum(inputName, operator, amount) {
         }
 
     }
+}
+
+
+/* Function to trigger listners for the cartListing */
+function cartActionListeners() {
+
+    /* Add to cart button action */
+    $('#addPromoCode').click(function (clicky) {
+        clicky.preventDefault();
+        addPromoCodeAPIUrl = '/ewapi/Cms.Cart/AddDiscountCode';
+        discountCode = $('#txtPromoCode').val();
+
+        // alert(discountCode);
+        var inputJson = {
+            Code: discountCode
+        };
+
+        $.ajax(addPromoCodeAPIUrl, {
+            data: JSON.stringify(inputJson),
+            contentType: 'application/json',
+            type: 'POST'
+        }).done(function (data) {
+            if (data === discountCode) {
+                location.reload();
+            }
+            else {
+                $('.promo-alert').remove();
+                $('.basket-promo').append('<div class="alert promo-alert">' + data + '</div>')
+            }
+        }
+        );
+        return false;
+    });
+
+    /* Add to cart button action */
+    $('#addClientNotes').click(function (clicky) {
+        clicky.preventDefault();
+        addClientNotesAPIUrl = '/ewapi/Cms.Cart/SaveClientNotes';
+        notesText = $('#txtClientNotes').val();
+        alert(notesText);
+        // alert(discountCode);
+        var inputJson = {
+            Notes: notesText
+        };
+
+        $.ajax(addClientNotesAPIUrl, {
+            data: JSON.stringify(inputJson),
+            contentType: 'application/json',
+            type: 'POST'
+        }).done(function (data) {
+            if (data === 'True') {
+                location.reload();
+            }
+            else {
+                alert('notes are not saved:');
+            }
+        }
+        );
+        return false;
+    });
+
+    // alert("listeners on");
 }
 
 

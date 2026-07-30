@@ -1112,6 +1112,35 @@ namespace Protean
                     }
                 }
 
+                public bool SaveClientNotes(ref Protean.rest myApi, ref JObject jObj)
+                {
+                    try
+                    {
+                        string cProcessInfo = string.Empty;
+                        string sSql;
+                        var myWeb = new Cms();
+                        var oCart = new Cart(ref myWeb);
+                        string message = jObj["Notes"].ToString();
+                        // Update Seller Notes:
+                        sSql = "select * from tblCartOrder where nCartOrderKey = " + oCart.mnCartId;
+                        DataSet oDs;
+                        oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                        foreach (DataRow oRow in oDs.Tables["Order"].Rows)
+                        {
+                            oRow["cClientNotes"] = message;
+                        }
+
+                        myWeb.moDbHelper.updateDataset(ref oDs, "Order");
+                        return true;
+                    }
+
+                    catch (Exception ex)
+                    {
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "SaveToSellerNotes", ex, ""));
+                        return Convert.ToBoolean(ex.Message);
+                    }
+                }
+
                 #region judopay functionality api functionality
                 // get county for selected country
                 public string PopulateCounty(Protean.rest myApi, JObject searchFilter)

@@ -3,54 +3,81 @@
   <!-- ## Google Ad Module ###########################################################################   -->
 
   <xsl:template match="Content[@type='Module' and @moduleType='GoogleAd']" mode="contentJS">
-    <script async="" src="https://securepubads.g.doubleclick.net/tag/js/gpt.js"></script>
+	  <xsl:choose>
+		  <xsl:when test="$page/@adminMode"></xsl:when>
+		  <xsl:otherwise>
+    <script defer="defer" src="https://securepubads.g.doubleclick.net/tag/js/gpt.js">&#160;</script>
     <script>
-      <xsl:text>window.googletag = window.googletag || {cmd: []};
-      googletag.cmd.push(function() {
-      googletag.defineSlot('</xsl:text>
-      <xsl:value-of select="@adName"/>
-      <xsl:text>', [</xsl:text>
+<xsl:text>
+function initAds() {
+window.googletag = window.googletag || {cmd: []};
+googletag.cmd.push(function() {
+
+  // Global config (single request mode)
+  googletag.setConfig({
+    singleRequest: true
+  });
+
+  // Responsive size mapping
+  var mapping = googletag.sizeMapping()
+    .addSize([768, 0], [[</xsl:text>
       <xsl:value-of select="@adWidth"/>
       <xsl:text>, </xsl:text>
       <xsl:value-of select="@adHeight"/>
-      <xsl:text>], '</xsl:text>
+      <xsl:text>]])</xsl:text>
+    <xsl:text>
+    .addSize([0, 0], [[</xsl:text>
+      <xsl:value-of select="@adWidthMob"/>
+      <xsl:text>, </xsl:text>
+      <xsl:value-of select="@adHeightMob"/>
+      <xsl:text>]])</xsl:text>
+    <xsl:text>
+    .build();
+
+  googletag.defineSlot('</xsl:text>
+    <xsl:value-of select="@adName"/>
+    <xsl:text>', [[</xsl:text>
+      <xsl:value-of select="@adWidth"/>
+      <xsl:text>, </xsl:text>
+      <xsl:value-of select="@adHeight"/>
+      <xsl:text>], [</xsl:text>
+      <xsl:value-of select="@adWidthMob"/>
+      <xsl:text>, </xsl:text>
+      <xsl:value-of select="@adHeightMob"/>
+      <xsl:text>]], '</xsl:text>
       <xsl:value-of select="@adPlacement"/>
-      <xsl:text>').addService(googletag.pubads());
-      googletag.pubads().enableSingleRequest();
-      googletag.enableServices();
-      });</xsl:text>
-    </script>
-    <script>
-      <xsl:text>googletag.cmd.push(function() { googletag.display("</xsl:text>
-      <xsl:value-of select="@adPlacement"/>
-      <xsl:text>"); });</xsl:text>
-    </script>
+      <xsl:text>')
+    .defineSizeMapping(mapping)
+    .addService(googletag.pubads());
+
+  googletag.enableServices();
+});
+});
+
+// Fire when banner loads
+window.addEventListener("cookieConsentUpdate", initAds);
+
+// Fire when user clicks accept/reject
+window.addEventListener("cookieConsent", 
+</xsl:text>
+    </script>   
+		  </xsl:otherwise>
+	  </xsl:choose>
   </xsl:template>
 
 
   <xsl:template match="Content[@type='Module' and @moduleType='GoogleAd']" mode="displayBrief">
     <xsl:variable name="GoogleAdManagerId" select="/Page/Contents/Content[@name='GoogleAdManagerId']/node()" />
     <div class="googleadvert singleAd">
-      <xsl:choose>
-        <!-- WHEN NO ID - ADD BUTTON -->
-        <xsl:when test="$GoogleAdManagerId=''">
-          <xsl:apply-templates select="/Page" mode="inlinePopupSingle">
-            <xsl:with-param name="type">PlainText</xsl:with-param>
-            <xsl:with-param name="text">Add Google Ad ID</xsl:with-param>
-            <xsl:with-param name="name">GoogleAdManagerId</xsl:with-param>
-          </xsl:apply-templates>
-        </xsl:when>
-        <!-- WHEN ID AND ADVERTS - INITIALISE and DISPLAY -->
-        <xsl:otherwise>
+
 
           <xsl:choose>
             <xsl:when test="$page/@adminMode">
+				<div class="adminBanner" style="width:{@adWidth}px;height:{@adHeight}px;">
               <p>
                 <xsl:text>Ad Name: '</xsl:text>
                 <xsl:value-of select="@adName"/>
-                <xsl:text>'</xsl:text>
-              </p>
-              <p>
+                <xsl:text>'</xsl:text>&#160;&#160;&#160;
                 <xsl:text>Website Placement: '</xsl:text>
                 <xsl:value-of select="@adPlacement"/>
                 <xsl:text>'</xsl:text>
@@ -58,6 +85,7 @@
               <p>
                 <em>Adverts are disabled in admin to avoid false impressions and clicks.</em>
               </p>
+					</div>
             </xsl:when>
             <xsl:otherwise>
               <!-- /43122906/Food_Analysis_300x600 -->
@@ -66,8 +94,6 @@
               </div>
             </xsl:otherwise>
           </xsl:choose>
-        </xsl:otherwise>
-      </xsl:choose>
     </div>
   </xsl:template>
   
