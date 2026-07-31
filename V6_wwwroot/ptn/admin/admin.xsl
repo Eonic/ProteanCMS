@@ -7254,8 +7254,14 @@ $(document).ready(function () {
                   Edit
                 </a>
                 <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/>
+				  <xsl:if test="Notes/node() !=''">
+					  <div class="alert alert-info">
+						  <small>Notes from customer:</small> <br/><xsl:value-of select="Notes"/>
+					  </div>
+				  </xsl:if>
               </div>
             </xsl:if>
+			 
             <xsl:if test="DeliveryDetails">
               <div id="carrier-info" class="col-lg-3">
                 <h4>Shipping Details</h4>

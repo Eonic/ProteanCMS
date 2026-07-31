@@ -358,8 +358,7 @@ function cartActionListeners() {
         clicky.preventDefault();
         addClientNotesAPIUrl = '/ewapi/Cms.Cart/SaveClientNotes';
         notesText = $('#txtClientNotes').val();
-        alert(notesText);
-        // alert(discountCode);
+        
         var inputJson = {
             Notes: notesText
         };

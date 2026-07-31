@@ -413,6 +413,11 @@
 										<xsl:with-param name="buttonTitle">Continue</xsl:with-param>
 									</xsl:apply-templates>
 								</div>
+
+								<div id='digital-wallets-buttons-container' >
+									<xsl:apply-templates select="Wallets/Wallet" mode="Wallet"/>
+								</div>
+								
 							</div>
 						</div>
 
@@ -905,6 +910,10 @@
 			};
 			});
 		</script>
+	</xsl:template>
+
+	<xsl:template match="Cart[Order[@cmd='Logon']]" mode="cartJS">
+		<xsl:apply-templates select="Order/Wallets/Wallet" mode="walletJS"/>
 	</xsl:template>
 
 	<xsl:template match="Order[@cmd='Logon']" mode="orderProcessSkipButton">
