@@ -3909,7 +3909,9 @@
 								</tr>
 								<tr>
 									<th>Name</th>
-									<th>Publish Date</th>
+									<th>Price</th>
+									<th>Status</th>
+									<!--<th>Publish Date</th>-->
 									<th>
 										Tick to Relate<br/>
 										<button type="button" name="CheckAll" value="Check All" onClick="checkAll(document.myform.list)" class="btn btn-sm btn-success">
@@ -4039,13 +4041,20 @@
 
 		<span class="advancedModeRow locate-content-row" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
 			<tr>
-				<td>
+				<td class="col-name">
 					<xsl:apply-templates select="." mode="ContentListName">
 						<xsl:with-param name="indent" select="$indent"/>
 					</xsl:apply-templates>
 
 				</td>
-				<td>
+				<td><xsl:value-of select="Prices/Price[@type='sale']"/></td>
+				<td> 
+					<xsl:choose>
+						<xsl:when test="@status='1'">Live</xsl:when>
+						<xsl:otherwise>Hidden</xsl:otherwise>
+					</xsl:choose>
+				</td>
+				<!--<td>
 					<xsl:if test="@publishDate!=''">
 						<xsl:call-template name="DD_Mon_YYYY">
 							<xsl:with-param name="date">
@@ -4054,7 +4063,7 @@
 							<xsl:with-param name="showTime">false</xsl:with-param>
 						</xsl:call-template>
 					</xsl:if>
-				</td>
+				</td>-->
 				<td class="relate">
 					<xsl:choose>
 						<xsl:when test="@related=1">

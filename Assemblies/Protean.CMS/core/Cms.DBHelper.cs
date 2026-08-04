@@ -11705,7 +11705,7 @@ namespace Protean
 
             }
 
-            public XmlElement RelatedContentSearch(int nRootNode, string cSchemaName, bool bChildren, string cSearchExpression, int nParentId, int nIgnoreID = 0, string[] oRelated = null, bool bIncRelated = false)
+            public XmlElement RelatedContentSearch(int nRootNode, string cSchemaName, bool bChildren, string cSearchExpression, int nParentId, int nIgnoreID = 0, string[] oRelated = null, bool bIncRelated = false, bool bShowHiddenAndLive = false)
             {
                 PerfMonLog("DBHelper", "RelatedContentSearch");
                 try
@@ -11736,11 +11736,12 @@ namespace Protean
                     // lets whip of the last and
                     sWhere = sWhere.Length >= 3 ? sWhere.Substring(0, sWhere.Length - 3) : sWhere;
 
+                    string cStatusFilter = bShowHiddenAndLive ? "" : " AND a.nStatus = 1 ";
 
                     if (nRootNode == 0)
                     {
                         // All
-                        cSQL = $"SELECT nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.dPublishDate AS publishDate FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId WHERE {sWhere} ORDER BY cContentName";
+                        cSQL = $"SELECT nContentKey as id, cContentForiegnRef as ref, cContentName as name, cContentSchemaName as type, cContentXmlBrief as content, a.dPublishDate AS publishDate, a.nStatus AS status FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId WHERE {sWhere} {cStatusFilter} ORDER BY cContentName";
 
 
 
@@ -11749,7 +11750,7 @@ namespace Protean
                     else if (nRootNode == -1)
                     {
                         // Orphans only
-                        cSQL = $"SELECT c.nContentKey as id, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, c.cContentXmlBrief as content, a.dPublishDate AS publishDate FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId LEFT OUTER JOIN tblContentLocation cl ON c.nContentKey = cl.nContentId WHERE ( {sWhere} ) AND (cl.nContentLocationKey IS NULL) ORDER BY c.cContentName";
+                        cSQL = $"SELECT c.nContentKey as id, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, c.cContentXmlBrief as content, a.dPublishDate AS publishDate, a.nStatus AS status FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId LEFT OUTER JOIN tblContentLocation cl ON c.nContentKey = cl.nContentId WHERE ( {sWhere} ) AND (cl.nContentLocationKey IS NULL) {cStatusFilter} ORDER BY c.cContentName";
 
 
 
@@ -11799,13 +11800,13 @@ namespace Protean
                         }
                         else
                         {
-                            cSubquerySQL = $"SELECT DISTINCT c.nContentKey AS id FROM tblContent c INNER JOIN tblContentLocation l ON c.nContentKey = l.nContentId WHERE ({sWhere}) AND NOT(c.nContentKey IN (0,{nIgnoreID})) AND l.nStructId IN ({cLocations}) ";
+                            cSubquerySQL = $"SELECT DISTINCT c.nContentKey AS id FROM tblContent c INNER JOIN tblContentLocation l ON c.nContentKey = l.nContentId WHERE ({sWhere}) AND NOT(c.nContentKey IN (0,{nIgnoreID})) AND l.nStructId IN ({cLocations})  UNION SELECT DISTINCT child.nContentKey AS id FROM tblContent parent INNER JOIN tblContentLocation l  ON parent.nContentKey = l.nContentId INNER JOIN tblContentRelation cr ON parent.nContentKey = cr.nContentParentId INNER JOIN tblContent child ON child.nContentKey = cr.nContentChildId WHERE ({sWhere.Replace("cContentSchemaName", "child.cContentSchemaName")}) AND NOT(child.nContentKey IN (0,{nIgnoreID})) AND l.nStructId IN ({cLocations})";
 
                         }
 
 
                         // No get more information
-                        cSQL = $"SELECT c.nContentKey AS id, c.cContentForiegnRef AS ref, c.cContentName AS name, c.cContentSchemaName AS type, c.cContentXmlBrief AS content, a.dPublishDate AS publishDate FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId INNER JOIN ({cSubquerySQL}) distinctlist ON c.nContentKey = distinctlist.id ORDER BY c.cContentName";
+                        cSQL = $"SELECT c.nContentKey AS id, c.cContentForiegnRef AS ref, c.cContentName AS name, c.cContentSchemaName AS type, c.cContentXmlBrief AS content, a.dPublishDate AS publishDate, a.nStatus AS status FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId INNER JOIN ({cSubquerySQL}) distinctlist ON c.nContentKey = distinctlist.id WHERE 1=1 {cStatusFilter} ORDER BY c.cContentName";
 
 
 
@@ -11827,7 +11828,8 @@ namespace Protean
                     oDs.Tables["Content"].Columns["name"].ColumnMapping = MappingType.Attribute;
                     oDs.Tables["Content"].Columns["type"].ColumnMapping = MappingType.Attribute;
                     oDs.Tables["Content"].Columns["publishDate"].ColumnMapping = MappingType.Attribute;
-                    oDs.Tables["Content"].Columns["content"].ColumnMapping = MappingType.SimpleContent;
+                    oDs.Tables["Content"].Columns["status"].ColumnMapping = MappingType.Attribute;
+                    oDs.Tables["Content"].Columns["content"].ColumnMapping = MappingType.SimpleContent;                   
 
                     oFullData = new XmlDocument();
                     oFullData.PreserveWhitespace = false;
@@ -11859,6 +11861,7 @@ namespace Protean
                             {
                                 oResults.AppendChild(moPageXml.ImportNode(oTempNode, true));
                                 // bFound = true;
+                                break;
                             }
                         }
                         if (bIncRelated)
@@ -11870,7 +11873,7 @@ namespace Protean
 
                     if (bIncRelated)
                     {
-                        cSQL = $"SELECT c.nContentKey AS id, distinctlist.parId, c.cContentForiegnRef AS ref, c.cContentName AS name, c.cContentSchemaName AS type, c.cContentXmlBrief AS content, a.dPublishDate AS publishDate FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId INNER JOIN (SELECT DISTINCT c.nContentKey AS id , rel.nContentParentId AS parId FROM tblContent c INNER JOIN tblContentRelation rel ON c.nContentKey = rel.nContentChildId WHERE (cContentSchemaName = 'Product' or cContentSchemaName = 'SKU' ) AND rel.nContentParentId IN ({idList})) distinctlist ON c.nContentKey = distinctlist.id ORDER BY c.cContentName";
+                        cSQL = $"SELECT c.nContentKey AS id, distinctlist.parId, c.cContentForiegnRef AS ref, c.cContentName AS name, c.cContentSchemaName AS type, c.cContentXmlBrief AS content, a.dPublishDate AS publishDate, a.nStatus AS status FROM tblContent c INNER JOIN tblAudit a ON a.nAuditKey = c.nAuditId INNER JOIN (SELECT DISTINCT c.nContentKey AS id , rel.nContentParentId AS parId FROM tblContent c INNER JOIN tblContentRelation rel ON c.nContentKey = rel.nContentChildId WHERE (cContentSchemaName = 'Product' or cContentSchemaName = 'SKU' ) AND rel.nContentParentId IN ({idList})) distinctlist ON c.nContentKey = distinctlist.id ORDER BY c.cContentName";
 
                         oDs = GetDataSet(cSQL, "Content", "SearchRelated");
                         oDs.EnforceConstraints = false;
