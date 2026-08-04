@@ -676,6 +676,7 @@ namespace Protean.Tools
                 {
                     if (oConn.State == System.Data.ConnectionState.Closed)
                         oConn.Open();
+                   
                     cProcessInfo = "Running Sql: " + sql;
                     nUpdateCount = oCmd.ExecuteNonQuery();
                 }
@@ -735,7 +736,34 @@ namespace Protean.Tools
             }
         }
 
-       
+        public int ExeProcessSql(string sql, int timeout)
+        {
+            int nUpdateCount = 0;
+            string cProcessInfo = "Running: " + sql;
+            try
+            {
+                using (SqlCommand oCmd = new SqlCommand(sql, oConn))
+                {
+                    oCmd.CommandTimeout = timeout;
+                    if (oConn.State == System.Data.ConnectionState.Closed)
+                        oConn.Open();
+
+                    cProcessInfo = "Running Sql: " + sql;
+                    nUpdateCount = oCmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "exeProcessSql", ex, cProcessInfo));
+            }
+            finally
+            {
+                CloseConnection();
+            }
+            return nUpdateCount;
+        }
+
+
 
         public int ExeProcessSqlfromFile(string filepath)
         {
