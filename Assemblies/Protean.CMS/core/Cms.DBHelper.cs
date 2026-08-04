@@ -11952,7 +11952,7 @@ namespace Protean
                                 }
                             }
                         }
-                    }
+                     }
 
                     return oResults;
                 }

@@ -4042,9 +4042,11 @@
 		<span class="advancedModeRow locate-content-row" onmouseover="this.className='rowOver'" onmouseout="this.className='advancedModeRow'">
 			<tr>
 				<td class="col-name">
+					<a href="{$appPath}?ewCmd=EditContent&amp;id={@id}" target="_blank" title="Click here to edit this content">
 					<xsl:apply-templates select="." mode="ContentListName">
 						<xsl:with-param name="indent" select="$indent"/>
 					</xsl:apply-templates>
+				</a>				
 
 				</td>
 				<td><xsl:value-of select="Prices/Price[@type='sale']"/></td>
