@@ -877,7 +877,10 @@
     "description": "<xsl:value-of select="$BodyTextStripped"/>",
     "sku": "<xsl:value-of select="StockCode"/>",
     "mpn": "<xsl:value-of select="StockCode/@mpn"/>",
-    <xsl:choose>
+	<xsl:if test="StockCode/@gtin!=''">
+	  "gtin": "<xsl:value-of select="StockCode/@gtin"/>",
+    </xsl:if>
+	  <xsl:choose>
       <xsl:when test="ShippingWeight/node()!=''">
         "weight":{
         "@type":"QuantitativeValue",

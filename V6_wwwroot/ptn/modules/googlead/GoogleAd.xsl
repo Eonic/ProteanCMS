@@ -6,6 +6,49 @@
 		<xsl:text>googletag.defineSlot('</xsl:text><xsl:value-of select="@adName"/><xsl:text>', [[</xsl:text><xsl:value-of select="@adWidth"/><xsl:text>, </xsl:text><xsl:value-of select="@adHeight"/><xsl:text>], [</xsl:text><xsl:value-of select="@adWidthMob"/><xsl:text>, </xsl:text><xsl:value-of select="@adHeightMob"/><xsl:text>]], '</xsl:text><xsl:value-of select="@adPlacement"/><xsl:text>').addService(googletag.pubads());
    </xsl:text>
 	</xsl:template>
+
+	<xsl:template match="Content[@type='Module' and @moduleType='GoogleAd']" mode="defineslot">
+		<xsl:text>
+var mapping_</xsl:text>
+		<xsl:value-of select="translate(@adPlacement,'-','_')"/>
+		<xsl:text> =
+    googletag.sizeMapping()
+        .addSize([768,0], [[</xsl:text>
+		<xsl:value-of select="@adWidth"/>
+		<xsl:text>,</xsl:text>
+		<xsl:value-of select="@adHeight"/>
+		<xsl:text>]])
+        .addSize([0,0], [[</xsl:text>
+		<xsl:value-of select="@adWidthMob"/>
+		<xsl:text>,</xsl:text>
+		<xsl:value-of select="@adHeightMob"/>
+		<xsl:text>]])
+        .build();
+
+googletag.defineSlot('</xsl:text>
+		<xsl:value-of select="@adName"/>
+		<xsl:text>',
+    [[</xsl:text>
+		<xsl:value-of select="@adWidth"/>
+		<xsl:text>,</xsl:text>
+		<xsl:value-of select="@adHeight"/>
+		<xsl:text>],
+    [</xsl:text>
+		<xsl:value-of select="@adWidthMob"/>
+		<xsl:text>,</xsl:text>
+		<xsl:value-of select="@adHeightMob"/>
+		<xsl:text>]],
+    '</xsl:text>
+		<xsl:value-of select="@adPlacement"/>
+		<xsl:text>')
+    .defineSizeMapping(mapping_</xsl:text>
+		<xsl:value-of select="translate(@adPlacement,'-','_')"/>
+		<xsl:text>)
+    .addService(googletag.pubads());
+
+</xsl:text>
+
+	</xsl:template>
 	
 	<xsl:template match="Content[@type='Module' and @moduleType='GoogleAd']" mode="displaySlot">
 			<xsl:text>googletag.cmd.push(function() { googletag.display('</xsl:text><xsl:value-of select="@adPlacement"/><xsl:text>'); });</xsl:text>
@@ -52,7 +95,7 @@ function initialiseAds() {
 	gpt.async = true;
 	gpt.src = 'https://securepubads.g.doubleclick.net/tag/js/gpt.js';
 
-document.head.appendChild(gpt);`
+document.head.appendChild(gpt);
 gpt.onload = function() {
   window.googletag = window.googletag || {cmd: []};
   googletag.cmd.push(function() {</xsl:text>
