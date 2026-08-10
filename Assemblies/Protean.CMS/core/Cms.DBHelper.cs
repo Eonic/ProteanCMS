@@ -14668,7 +14668,19 @@ namespace Protean
 
                     if (tableName == "tblContent")
                     {
-                        sSQL = "Select count(nContentKey) from tblContent where cContentSchemaName='" + SqlFmt(schemaName) + "' ";
+                        //sSQL = "Select count(nContentKey) from tblContent where cContentSchemaName='" + SqlFmt(schemaName) + "' ";
+
+                        //code change for MCV product stock code should be unique- passing schema like SKU,Product
+                        if (schemaName.Contains(","))
+                        {
+                            string schemaFilter = "'" + string.Join("','", schemaName.Split(',').Select(x => SqlFmt(x.Trim()))) + "'";
+
+                            sSQL = "Select count(nContentKey) from tblContent where cContentSchemaName IN (" + schemaFilter + ") ";
+                        }
+                        else
+                        {
+                            sSQL = "Select count(nContentKey) from tblContent where cContentSchemaName='" + SqlFmt(schemaName) + "' ";
+                        }
 
                         string columnFilter = "";
                         switch (columnName ?? "")
