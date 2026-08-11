@@ -5521,7 +5521,7 @@ namespace Protean
                         }
 
                         // Send the zipped up files
-                        if (documentPaths.Count > 0)
+                        if (documentPaths.Count > 1)
                         {
 
                             if (!string.IsNullOrEmpty(moRequest["filename"]))
@@ -5591,7 +5591,6 @@ namespace Protean
                             }
 
                         }
-                    }
 
                     else
                     {
@@ -5646,7 +5645,7 @@ namespace Protean
                                     // lets clear up the file name
                                     // check for paths both local and virtual
                                     strFileName = Tools.Text.filenameFromPath(strFilePath);
-                                    int dotIndex = strFilePath.LastIndexOf(".");
+                                    int dotIndex = strFileName.LastIndexOf(".");
                                     FileExt = dotIndex >= 0 ? strFileName.Substring(dotIndex + 1) : "";
                                     strFileType = Tools.FileHelper.GetMIMEType(FileExt);
 
@@ -5665,8 +5664,8 @@ namespace Protean
                                         var oFileStream = new FileStream(strFilePath, FileMode.Open);
                                         strFileSize = oFileStream.Length.ToString();
 
-                                        var Buffer = new byte[Convert.ToInt16(strFileSize) + 1];
-                                        oFileStream.Read(Buffer, 0, Convert.ToInt16(strFileSize));
+                                        var Buffer = new byte[Convert.ToInt32(strFileSize) + 1];
+                                        oFileStream.Read(Buffer, 0, Convert.ToInt32(strFileSize));
                                         oFileStream.Close();
 
                                         ctx.Response.Clear();
@@ -5766,6 +5765,7 @@ namespace Protean
                             }
                         }
 
+                    }
                     }
                 }
 
