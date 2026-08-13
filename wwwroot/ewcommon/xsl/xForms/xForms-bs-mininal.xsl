@@ -4386,7 +4386,7 @@
 			<xsl:text> </xsl:text>
 		</script>
 
-		<script type="text/javascript" defer="defer">
+		<script type="text/javascript">
 
 
 			
