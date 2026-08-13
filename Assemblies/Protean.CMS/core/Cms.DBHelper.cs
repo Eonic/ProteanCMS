@@ -8560,9 +8560,17 @@ namespace Protean
 
                         if (Tools.Number.IsNumeric(sReturn))
                         {
-                            // delete failed logon attempts record
-                            string sSql2 = "delete from tblActivityLog where nActivityType = " + Convert.ToString((int)dbHelper.ActivityType.LogonInvalidPassword) + " and nUserDirId=" + sReturn;
-                            myWeb.moDbHelper.ExeProcessSql(sSql2);
+                            try
+                            {
+                                // delete failed logon attempts record
+                                string sSql2 = "delete from tblActivityLog where nActivityType = " + Convert.ToString((int)dbHelper.ActivityType.LogonInvalidPassword) + " and nUserDirId=" + sReturn;
+                                myWeb.moDbHelper.ExeProcessSql(sSql2);
+
+                            }
+                            catch (SqlException ex)
+                            {
+                                // Ignore timeout for activity log cleanup
+                            }
 
                             // check mailinglist sync
 
