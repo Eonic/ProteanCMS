@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -957,7 +958,7 @@ namespace Protean
 
                                 }
 
-                                myWeb.PerfMon.Log("Cart", "InitializeVariables - check for cart start");
+                                myWeb.PerfMon.Log("Cart", "InitializeVariables - check for cart start"); 
                                 using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
                                 {
                                     myWeb.PerfMon.Log("Cart", "InitializeVariables - check for cart end");
@@ -3076,6 +3077,9 @@ namespace Protean
 
                         total -= (double)moDiscount.CheckDiscounts(oDs, oCartElmt, true, oNotes);
 
+                        //check non discountable products in cart or not
+                        SetDiscountMessaging( nCartIdUse, ref oCartElmt);
+
                         oXml = null;
                         oDs = null;
 
@@ -3602,6 +3606,40 @@ namespace Protean
                 }
                 return 0;
             }
+
+            private void SetDiscountMessaging( long cartId,  ref XmlElement oCartElmt)
+            {
+                string sql = $"EXEC spGetCartDiscountEligibility {cartId}";
+
+                using (SqlDataReader dr = myWeb.moDbHelper.getDataReaderDisposable(sql))
+                {
+                    if (dr == null || !dr.Read())
+                        return;
+
+                    string basketType = Convert.ToString(dr["BasketType"]);
+                    string productNames = Convert.ToString(dr["ProductNames"]);
+                    XmlElement oDiscountMessage = oCartElmt.OwnerDocument.CreateElement("DiscountMessage");
+
+                    switch (basketType)
+                    {
+                        case "AllNonDiscountable":
+                            moDiscount.RemoveDiscountCode();
+                            oCartElmt.SetAttribute("ShowNonDiscountablePopup","true");
+                            oCartElmt.SetAttribute("discountEligibility", "AllNonDiscountable");
+                            break;
+
+                        case "Mixed":                           
+                            
+                            if (!string.IsNullOrWhiteSpace(productNames))
+                            {
+                                oCartElmt.SetAttribute( "nonDiscountableProducts", productNames);
+                            }
+                            oCartElmt.SetAttribute("ShowPartialDiscountPopup", "true");                            
+                            break;
+                    }
+                }
+            }
+
             //this is a method to display wallet buttons on cart screen.
             //input parameter is CartElement which will have values in 
             //node with 'Wallets/Wallet with attributes to it
