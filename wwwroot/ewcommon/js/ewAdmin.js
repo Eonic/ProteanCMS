@@ -1890,6 +1890,18 @@ $(document).on("change", "#cStructName", function (event) {
 
 
 function ValidateProductForm(event) {
+    // Get selected Product Layout
+    var productLayout = $("input[name='productlayout']:checked").val();
+
+    // MCV validation
+    // var productLayout = $("#productlayout").val();
+
+    if (productLayout == "mcv") {
+        $("#cContentStockCode").addClass("required");
+    }
+    else {
+        $("#cContentStockCode").removeClass("required");
+    }
 
     if (form_check(event)) {
         var productId = this.getQueryStringParam('id');
@@ -1902,6 +1914,7 @@ function ValidateProductForm(event) {
         }
         else { return true; }
     }
+    return false;
 }
 //Edit Product
 const editProductElement = $(".ProductSub").length;

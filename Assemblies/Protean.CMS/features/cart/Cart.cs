@@ -2884,6 +2884,15 @@ namespace Protean
                             {
                                 if (oRow["price"] != DBNull.Value)
                                 {
+
+                                    double cartPrice = Convert.ToDouble(oRow["price"]);
+                                    double contentPrice = GetPriceFromContent(Convert.ToInt32(oRow["contentId"]));
+
+                                    if (contentPrice > 0 && cartPrice != contentPrice)
+                                    {
+                                        oRow["price"] = contentPrice;
+                                        UpdateItemPrice(Convert.ToInt64(oRow["id"]), contentPrice);
+                                    }
                                     // If oRow("price") <> 0 Then
                                     string discountSQL = "";
                                     if (Discount != 0d)
@@ -3570,6 +3579,25 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
+            }
+
+            private double GetPriceFromContent(int contentId)
+            {
+                try
+                {
+                    string sql = @"SELECT CAST(CAST(cContentXmlBrief AS XML).value('(/Content/Prices/Price[@type=""sale""]/text())[1]', 'decimal(18,2)') AS decimal(18,2)) FROM tblContent
+                     WHERE nContentKey = " + contentId;
+                    var result = moDBHelper.GetDataValue(sql);
+
+                    if (result != null && result != DBNull.Value)
+                    {
+                        return Convert.ToDouble(result);
+                    }
+                }
+                catch
+                {
+                }
+                return 0;
             }
 
             //this is a method to display wallet buttons on cart screen.
@@ -5518,7 +5546,15 @@ namespace Protean
                             XmlElement oRootElmt = (XmlElement)oContentXml.FirstChild;
                             oRootElmt.SetAttribute("overridePrice", "true");
 
+                            // Update SKU sale price in XML
+                            XmlNode oSalePriceNode = oContentXml.SelectSingleNode("/Content/Prices/Price[@type='sale']");
+                            if (oSalePriceNode != null)
+                            {
+                                oSalePriceNode.InnerText = nPrice.ToString("0.##");
+                            }
+
                             oRow["xItemXml"] = oContentXml.OuterXml;
+
 
 
                         }
