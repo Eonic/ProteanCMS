@@ -533,12 +533,18 @@ namespace Protean.Providers
                                 base.validate();
                                 if (base.valid)
                                 {
-
-                                    // changed to get from instance rather than direct from querysting / form.
                                     string username = base.Instance.SelectSingleNode("user/username").InnerText;
                                     string password = base.Instance.SelectSingleNode("user/password").InnerText;
+                                    if (myWeb.mnUserId > 0)
+                                    {
+                                        // overiden Xform allready logged on user. 
+                                        sValidResponse = myWeb.mnUserId.ToString();
+                                    }
+                                    else {
+                                        // changed to get from instance rather than direct from querysting / form.
 
-                                    sValidResponse = moDbHelper.validateUser(username, password);
+                                        sValidResponse = moDbHelper.validateUser(username, password);
+                                    }
 
                                     if (Tools.Number.IsNumeric(sValidResponse))
                                     {

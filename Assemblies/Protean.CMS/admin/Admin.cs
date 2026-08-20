@@ -6144,6 +6144,14 @@ from tblContentIndexDef";
 
                                 cSubCmd = "ManageCodes";
                                 goto restartProcess;
+
+                            case "DeleteCode":
+
+                               myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.Codes, Convert.ToInt64(myWeb.moRequest["subcodeid"]));
+
+                                cSubCmd = "ManageCodes";
+                                goto restartProcess;
+
                             case "ManageCodes":
                                 {
                                     moAdXfm.xFrmMemberCodeGenerator(nId);

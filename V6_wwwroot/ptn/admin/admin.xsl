@@ -11131,6 +11131,14 @@ $(document).ready(function () {
 							</span>
 						</a>
 					</xsl:if>
+
+					<xsl:if test="@Used_ref='0'">
+						<a href="/?ewCmd=MemberCodes&amp;pgid=1&amp;id={$page/@artid}&amp;subCmd=DeleteCode&amp;subcodeid={@id}">
+							<span class="btn btn-outline-danger btn-sm mt-1">
+								<i class="fa fa-trash fa-white">&#160;</i>&#160;Delete Code
+							</span>
+						</a>
+					</xsl:if>
 				</td>
 		</tr>
 	</xsl:template>
