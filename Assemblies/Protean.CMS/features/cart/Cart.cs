@@ -2673,6 +2673,7 @@ namespace Protean
                         var revisedPrice = default(double);
                         foreach (DataRow currentORow in oDs.Tables["Item"].Rows)
                         {
+                            bool bOverridePrice = false;
                             oRow = currentORow;
                             double Discount = 0d;
                             if (!oItemList.ContainsValue(oRow["contentId"]))
@@ -2681,8 +2682,7 @@ namespace Protean
                             }
                             if (Convert.ToInt32(moDBHelper.DBN2int(oRow["nParentId"])) == 0)
                             {
-                                long nTaxRate = 0L;
-                                bool bOverridePrice = false;
+                                long nTaxRate = 0L;                                
                                 if (!mbOveridePrice) // for openquote
                                 {
                                     if (myWeb.moSession["overridePriceSession"] != null & myWeb.moConfig["overridePriceKey"] != null)
@@ -2694,9 +2694,30 @@ namespace Protean
                                         string sSessionId = Convert.ToString(myWeb.moSession.SessionID);
                                         // generate the key with current session id
                                         string sEncryptedKey = Tools.Encryption.RC4.Encrypt(sSessionId, sKey);
-                                        if ((sEncryptedKey ?? "") == (sSessionKey ?? "")) // if both matches allow to overrdide price
+                                        //if ((sEncryptedKey ?? "") == (sSessionKey ?? "")) // if both matches allow to overrdide price
+                                        //{
+                                        //    bOverridePrice = true;
+                                        //}
+
+                                        if ((sEncryptedKey ?? "") == (sSessionKey ?? ""))
                                         {
                                             bOverridePrice = true;
+
+                                            if (!(oRow["productDetail"] is DBNull))
+                                            {
+                                                XmlDocument xml = new XmlDocument();
+                                                xml.LoadXml(Convert.ToString(oRow["productDetail"]));
+                                                XmlElement root = xml.DocumentElement;
+
+                                                if (root != null)
+                                                {
+                                                    root.SetAttribute("overridePrice", "true");
+                                                    root.SetAttribute("revalidateVoucher", "true");
+                                                    string updatedXml = xml.OuterXml.Replace("'", "''");
+                                                    string sql = "UPDATE tblCartItem " + "SET xItemXml = '" + updatedXml + "' " + "WHERE nCartItemKey = " + oRow["id"];
+                                                    moDBHelper.ExeProcessSql(sql);
+                                                }
+                                            }
                                         }
                                     }
                                     // Go get the lowest price based on user and group
@@ -2833,67 +2854,24 @@ namespace Protean
                                              );
                                 }
 
-
-                                // we do this later after we have applied discounts
-
-                                // Round( Price * Vat ) * Quantity
-                                // nUnitVat += Round((oRow("price") + nOpPrices) * (mnTaxRate / 100), , , mbRoundup) * oRow("quantity")
-                                // Round( ( Price * Quantity )* VAT )
-                                // nLineVat += Round((((oRow("price") + nOpPrices)) * oRow("quantity")) * (mnTaxRate / 100), , , mbRoundup)
-                            }
-                            // Dim ix As Integer
-                            // Dim xstr As String
-                            // For ix = 0 To oRow.Table.Columns.Count - 1
-                            // xstr &= oRow.Table.Columns(ix).ColumnName & "="
-                            // xstr &= oRow(ix) & ", "
-                            // Next
-
-
-                            // check if shipping group exists or not and then we set bydefault delivery option on cart
-
-                            //if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
-                            //{
-                            //if (nStatusId > 100) {
-
-                            //// Get Shipping Group from query if assigned to that product and add new node in order and use this node for displaying messages for x50 and t03 category.
-                            //if (moConfig["SelectShippingOptionForGroup"] != null)
-                            //{
-                            //    if ((moConfig["SelectShippingOptionForGroup"]) != "" && (moConfig["SelectShippingOptionForGroup"]).ToLower() == "on")
-                            //    {
-                            //        string sSqlShippingGroup = $"select csm.nShipOptKey,CPC.cCatName  from tblCartItem i left join tblContent p on i.nItemId = p.nContentKey left join tblAudit A ON p.nAuditId= A.nAuditKey left join tblCartCatProductRelations cpr on p.nContentKey = cpr.nContentId left join tblCartProductCategories CPC ON cpr.nCatId= cpc.nCatKey Left JOIN tblCartShippingProductCategoryRelations cspcr ON cpr.nCatId= cspcr.nCatId LEFT join tblCartShippingMethods csm on csm.nShipOptKey=cspcr.nShipOptId where nCartOrderId={nCartIdUse.ToString()} and nCartItemKey={oRow["id"].ToString()} and cCatSchemaName = 'Shipping' and csm.nShipOptKey is not null and nItemId <>0 and cspcr.nRuleType=1 order by nShipOptCost asc";
-
-                            //        using (SqlDataReader oDr = myWeb.moDbHelper.getDataReaderDisposable(sSqlShippingGroup))
-                            //        {
-                            //            if (oDr != null)
-                            //            {
-                            //                while (oDr.Read())
-                            //                {
-                            //                    ShippingOptionKey = Convert.ToInt64(oDr["nShipOptKey"]);
-                            //                    oRow["nShippingGroup"] = oDr["cCatName"];
-                            //                    oRow["nshippingType"] = ShippingOptionKey;
-                            //                    updateGCgetValidShippingOptionsDS(ShippingOptionKey.ToString());
-                            //                }
-                            //            }
-                            //        }
-                            //    }
-                            //}
-                            //}
-                            //}
-
+                            }                            
 
                             try
-                            {
-                                if (oRow["price"] != DBNull.Value)
+                            {                                
+
+                                if (oRow["price"] != DBNull.Value && Convert.ToDecimal(oRow["price"]) != 0m)
                                 {
-                                    //Nita Added new code to check existing product price
-
-                                    double cartPrice = Convert.ToDouble(oRow["price"]);
-                                    double contentPrice = GetPriceFromContent(Convert.ToInt32(oRow["contentId"]));
-
-                                    if (contentPrice > 0 && cartPrice != contentPrice)
+                                    //Added new code to check existing product price                                    
+                                    if (!bOverridePrice)
                                     {
-                                        oRow["price"] = contentPrice;
-                                        UpdateItemPrice(Convert.ToInt64(oRow["id"]), contentPrice);
+                                        double cartPrice = Convert.ToDouble(oRow["price"]);
+                                        double contentPrice = GetPriceFromContent(Convert.ToInt32(oRow["contentId"]));
+
+                                        if (contentPrice > 0 && cartPrice != contentPrice)
+                                        {
+                                            oRow["price"] = contentPrice;
+                                            UpdateItemPrice(Convert.ToInt64(oRow["id"]), contentPrice);
+                                        }
                                     }
 
                                     // If oRow("price") <> 0 Then
@@ -2925,7 +2903,7 @@ namespace Protean
                         }
 
 
-                        // moDBHelper.updateDataset(oDs, "Item", True)
+                       // moDBHelper.updateDataset(ref oDs, "Item");
 
                         // add to Cart XML
                         sSql = "Select nCartStatus from tblCartOrder where nCartOrderKey = " + nCartIdUse;
