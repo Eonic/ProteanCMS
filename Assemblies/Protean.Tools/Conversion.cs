@@ -653,7 +653,7 @@ namespace Protean.Tools
                             if (oResource is string)
                             {
                                 // Expected input is a filepath in the form of a string
-                                var path = System.Convert.ToString(oResource);
+                                var path = System.Convert.ToString(oResource).Replace(" ", "-");
                                 if (string.IsNullOrEmpty(path) || !File.Exists(path))
                                     bCheck = false;
                             }
@@ -812,7 +812,7 @@ namespace Protean.Tools
             var ds = new DataSet();
             try
             {
-                var spreadsheetDocument = SpreadsheetDocument.Open(filename, false);
+                var spreadsheetDocument = SpreadsheetDocument.Open(filename.Replace(" ","-"), false);
                 var workbookPart = spreadsheetDocument.WorkbookPart;
                 var sheetcollection = spreadsheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
                 int sheetCount = 0;

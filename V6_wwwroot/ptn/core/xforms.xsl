@@ -1493,7 +1493,7 @@
 	  <xsl:choose>
 		  <xsl:when test="alert">
 			  <div class="invalid-feedback">
-				  <xsl:copy-of select="alert/node()"/>
+				  <xsl:apply-templates select="alert" mode="inlineAlert"/>
 			  </div>
 		  </xsl:when>
 		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
@@ -2201,6 +2201,13 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
+	  <div>
+		  <xsl:attribute name="class">
+			  <xsl:text>input-group</xsl:text>
+			  <xsl:if test="alert">
+				  <xsl:text> is-invalid</xsl:text>
+			  </xsl:if>
+		  </xsl:attribute>
     <input type="password" name="{$ref}" id="{$ref}">
       <xsl:attribute name="class">
         <xsl:text>form-control</xsl:text>
@@ -2231,25 +2238,22 @@
           <xsl:text>required</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="contains(@class,'strongPassword')">
-        <!--<a id="passwordPolicy" href="#">
-          <i class="fa fa-circle-info">
-            <xsl:text> </xsl:text>
-          </i>
-          <span class="visually-hidden"> view our password policy</span>
-        </a>-->
-        <button type="button" class="btn-clean password-policy-btn" data-bs-toggle="popover" title="Password Policy" data-bs-content="All passwords must be at least 6 characters long, include a combination of uppercase and lowercase letters, at least one number, and can contain special characters.">
-          <i class="fa fa-circle-info">
-            <xsl:text> </xsl:text>
-          </i>
-          <span class="visually-hidden"> view our password policy</span>
-        </button>
-      </xsl:if>
+
     </input>
+		  <xsl:if test="contains(@class,'strongPassword')">
+           
+			  <button type="button" class="btn btn-default password-policy-btn" data-bs-toggle="popover" title="Password Policy" data-bs-content="All passwords must be at least 6 characters long, include a combination of uppercase and lowercase letters, at least one number, and can contain special characters.">
+				  <i class="fa-solid fa-circle-info">
+					  <xsl:text> </xsl:text>
+				  </i>
+				  <span class="visually-hidden"> view our password policy</span>
+			  </button>
+		  </xsl:if>
+		  </div>
 	  <xsl:choose>
 		  <xsl:when test="alert">
 			  <div class="invalid-feedback">
-				  <xsl:copy-of select="alert/node()"/>
+				  <xsl:apply-templates select="alert" mode="inlineAlert"/>
 			  </div>
 		  </xsl:when>
 		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
@@ -2358,7 +2362,7 @@
 	  <xsl:choose>
 		  <xsl:when test="alert">
 			  <div class="invalid-feedback">
-				  <xsl:copy-of select="alert/node()"/>
+				  <xsl:apply-templates select="alert" mode="inlineAlert"/>
 			  </div>
 		  </xsl:when>
 		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
@@ -2490,7 +2494,7 @@
 	 <xsl:choose>
         <xsl:when test="alert">
           <div class="invalid-feedback">
-            <xsl:copy-of select="alert/span/node()"/>			  
+			  <xsl:apply-templates select="alert" mode="inlineAlert"/>		  
           </div>
         </xsl:when>
 		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
@@ -3418,7 +3422,7 @@
       </xsl:when>
       <xsl:otherwise>
         <div class="input-group">
-          <input type="text" class="form-control" readonly="">
+          <input type="text" class="form-control">
             <xsl:for-each select="@*">
               <xsl:variable name="nodename" select="name()"/>
               <xsl:if test="starts-with($nodename,'data-fv')">

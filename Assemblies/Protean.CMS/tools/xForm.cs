@@ -1330,7 +1330,7 @@ namespace Protean
                         case "strongpassword":
                             {
                                 if (!strongPassword(sValue + ""))
-                                    cReturn = "<span class=\"msg-1005\">This password must be stronger</span>";
+                                    cReturn = "<span class=\"msg-1023\">This password must be stronger</span>";
                                 break;
                             }
                         case "fileupload":
