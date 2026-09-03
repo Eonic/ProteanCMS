@@ -5,8 +5,6 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Tools.Integration.Twitter;
 using static Protean.stdTools;
 
@@ -195,7 +193,7 @@ namespace Protean
             }
             else
             {
-                moDBH = new Cms.dbHelper(ref myWeb);
+                moDBH = new Cms.dbHelper(myWeb);
             }
 
         }
@@ -253,7 +251,7 @@ namespace Protean
 
                 XmlElement oStkList = (XmlElement)oListXML.SelectSingleNode("GetStockListResponse/GetStockListResult/*");
 
-                if (Conversions.ToDouble(oStkList.GetAttribute("ReturnedRecordCount")) > 0d)
+                if (Convert.ToDouble(oStkList.GetAttribute("ReturnedRecordCount")) > 0d)
                 {
                     cInfo = "1st Transform";
                     moTransform.XslTFile = goServer.MapPath(moSyncConfig["ImportXSL"]);
@@ -295,7 +293,7 @@ namespace Protean
                             // End If
 
                             // replaced with this which decided datatype based on fieldname
-                            switch (Strings.Left(oWhereElmts.Name, 1) ?? "")
+                            switch ((oWhereElmts.Name.Length > 0 ? oWhereElmts.Name.Substring(0, 1) : ""))
                             {
                                 case "c":
                                     {
@@ -330,7 +328,7 @@ namespace Protean
                         var oInstanceXML = new XmlDocument();
                         moDBH.moPageXml = oInstanceXML;
 
-                        int nId = Conversions.ToInteger(moDBT.GetDataValue(cSQL, CommandType.Text, null, 0));
+                        int nId = Convert.ToInt16(moDBT.GetDataValue(cSQL, CommandType.Text, null, 0));
 
                         var oInstance = oInstanceXML.CreateElement("OriginalInstance");
                         if (nId == 0)
@@ -675,10 +673,10 @@ namespace Protean
                 {
                     oSQLElmt = currentOSQLElmt1;
                     cProcessInfo = "error linking relation " + oSQLElmt.GetAttribute("name") + " to " + oSQLElmt.GetAttribute("ParentTable") + " on " + oSQLElmt.GetAttribute("Nested") + " with " + oSQLElmt.GetAttribute("ParentColumn");
-                    DataColumn[] parentColumns = moDBT.GetColumnArray(ref oDS, oSQLElmt.GetAttribute("ParentTable"), Strings.Split(oSQLElmt.GetAttribute("ParentColumn"), ","));
-                    DataColumn[] childColumns = moDBT.GetColumnArray(ref oDS, oSQLElmt.GetAttribute("ChildTable"), Strings.Split(oSQLElmt.GetAttribute("ChildColumn"), ","));
+                    DataColumn[] parentColumns = moDBT.GetColumnArray(ref oDS, oSQLElmt.GetAttribute("ParentTable"), oSQLElmt.GetAttribute("ParentColumn").Split(','));
+                    DataColumn[] childColumns = moDBT.GetColumnArray(ref oDS, oSQLElmt.GetAttribute("ChildTable"), oSQLElmt.GetAttribute("ChildColumn").Split(','));
                     oDS.Relations.Add(oSQLElmt.GetAttribute("name"), parentColumns, childColumns, false);
-                    oDS.Relations[oSQLElmt.GetAttribute("name")].Nested = Conversions.ToBoolean(oSQLElmt.GetAttribute("Nested"));
+                    oDS.Relations[oSQLElmt.GetAttribute("name")].Nested = Convert.ToBoolean(oSQLElmt.GetAttribute("Nested"));
                 }
                 cProcessInfo = "";
                 // Map all columns as attributes first
@@ -691,14 +689,14 @@ namespace Protean
                 foreach (XmlElement currentOSQLElmt2 in oQueryXML.DocumentElement.SelectNodes("Mapping"))
                 {
                     oSQLElmt = currentOSQLElmt2;
-                    MappingType oType = (MappingType)Conversions.ToInteger(Enum.Parse(typeof(MappingType), oSQLElmt.GetAttribute("Type")));
+                    MappingType oType = (MappingType)Convert.ToInt16(Enum.Parse(typeof(MappingType), oSQLElmt.GetAttribute("Type")));
                     oDS.Tables[oSQLElmt.GetAttribute("Table")].Columns[oSQLElmt.GetAttribute("Column")].ColumnMapping = oType;
                 }
                 // Now we have the dataset we can produce an Export XML
                 // and then send it using the original saop instance
                 var xmltemp = new XmlDocument();
                 xmltemp.InnerXml = oDS.GetXml();
-                oSoapXML.DocumentElement.FirstChild.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
+                oSoapXML.DocumentElement.FirstChild.InnerXml = oDS.GetXml().Replace("&gt;", ">").Replace("&lt;", "<");
                 Action = cAction;
                 var oFinishXML = new XmlDocument();
                 oFinishXML.AppendChild(oFinishXML.CreateElement("Finish"));
@@ -708,7 +706,7 @@ namespace Protean
                     return ExternalError(oFinishXML.OuterXml);
                 // do any tidying
                 moTransform.Xml = oFinishXML;
-                string cReturn = Strings.Replace(moTransform.Process(), "xmlns:", "exemelnamespace");
+                string cReturn = moTransform.Process().Replace("xmlns:", "exemelnamespace");
                 return cReturn;
             }
             catch (Exception ex)
@@ -726,7 +724,7 @@ namespace Protean
             string cContentType;
             string cDeleteMode;
             var oSoapBody = new XmlDocument();
-            var oDbt = new Cms.dbHelper(ref myWeb);
+            var oDbt = new Cms.dbHelper(myWeb);
 
             try
             {
@@ -756,7 +754,7 @@ namespace Protean
                 {
                     foreach (DataRow oRow in oDs.Tables["tblContent"].Rows)
                     {
-                        string cFRef = Conversions.ToString(oRow["cContentForiegnRef"]);
+                        string cFRef = Convert.ToString(oRow["cContentForiegnRef"]);
                         // CheckItemExists
                         switch (cDeleteMode ?? "")
                         {
@@ -791,7 +789,7 @@ namespace Protean
                         var oRecord = new XmlDocument();
                         Action = "CheckDeleted";
                         oRecord.AppendChild(oRecord.CreateElement("Result"));
-                        oRecord.DocumentElement.InnerXml = SendRequest(Strings.Replace(oRequest.OuterXml, "xmlns=\"\"", ""));
+                        oRecord.DocumentElement.InnerXml = SendRequest(oRequest.OuterXml.Replace("xmlns=\"\"", ""));
                         var nsmgr2 = new XmlNamespaceManager(oRecord.NameTable);
                         nsmgr2.AddNamespace("ews", "http://www.eonic.co.uk/ewcommon/Services");
                         foreach (XmlElement currentOElmt in oRecord.SelectNodes("descendant-or-self::Delete", nsmgr2))
@@ -838,7 +836,7 @@ namespace Protean
         #region Admin
         public string AdminProcess(string cEwCmd2)
         {
-            string[] oSyncItems = Strings.Split(moSyncConfig["Actions"], ",");
+            string[] oSyncItems = moSyncConfig["Actions"].Split(',');
             int i = 0;
             var oXForm = new Protean.xForm(ref myWeb.msException);
 
@@ -962,8 +960,8 @@ namespace Protean
                     }
                     cReturn += "</ul><br/>";
                 }
-                cReturn = Strings.Replace(cReturn, "&", "&amp;");
-                cReturn = Strings.Replace(cReturn, "&amp;amp;", "&amp;");
+                cReturn = cReturn.Replace("&", "&amp;");
+                cReturn = cReturn.Replace("&amp;amp;", "&amp;");
                 return cReturn;
             }
             catch (Exception ex)
@@ -1001,7 +999,7 @@ namespace Protean
                 }
                 cInfo = "Building Log";
                 var oLogElmt = oErrorXML.CreateElement("Error");
-                oLogElmt.SetAttribute("Time", Conversions.ToString(DateTime.Now));
+                oLogElmt.SetAttribute("Time", Convert.ToString(DateTime.Now));
                 oLogElmt.SetAttribute("Module", cModuleName);
                 oLogElmt.SetAttribute("Routine", cRoutineName);
                 oLogElmt.SetAttribute("Information", cFurtherInfo);
@@ -1107,9 +1105,9 @@ namespace Protean
                     cHTML = "";
                 }
 
-                cHTML = Strings.Replace(cHTML, Conversions.ToString('\r'), "<br/>");
+                cHTML = cHTML.Replace(Convert.ToString('\r'), "<br/>");
                 cHTML = Tools.Xml.convertEntitiesToCodes(cHTML);
-                cHTML = Strings.Replace(Strings.Replace(cHTML, "&gt;", ">"), "&lt;", "<");
+                cHTML = cHTML.Replace("&gt;", ">").Replace("&lt;", "<");
                 cHTML = "<p>" + cHTML + "</p>";
                 try
                 {
@@ -1119,8 +1117,8 @@ namespace Protean
                 {
                     XSLTError?.Invoke(ex.ToString());
                 }
-                cHTML = Strings.Replace(cHTML, "&#x0;", "");
-                cHTML = Strings.Replace(cHTML, " &#0;", "");
+                cHTML = cHTML.Replace("&#x0;", "");
+                cHTML = cHTML.Replace(" &#0;", "");
                 try
                 {
                     oXML.LoadXml(cHTML);
@@ -1149,9 +1147,9 @@ namespace Protean
             {
                 try
                 {
-                    if (Information.IsDate(sDate))
+                    if (DateTime.TryParse(sDate, out DateTime parsedDate))
                     {
-                        return Tools.Database.SqlDate(Conversions.ToDate(sDate));
+                        return Tools.Database.SqlDate(parsedDate);
                     }
                     else
                     {
@@ -1238,7 +1236,7 @@ namespace Protean
                     {
                         var oImage = new Tools.Image(goServer.MapPath(cVirtualPath));
                         // calculate the new filename
-                        newFilepath = Strings.Replace(cVirtualPath, ".jpg", sSuffix + ".jpg");
+                        newFilepath = cVirtualPath.Replace(".jpg", sSuffix + ".jpg");
                         if (!(VirtualFileExists(newFilepath) > 0))
                         {
                             oImage.KeepXYRelation = true;
@@ -1273,7 +1271,7 @@ namespace Protean
                     {
                         var oImage = new Tools.Image(goServer.MapPath(cVirtualPath));
                         // calculate the new filename
-                        newFilepath = Strings.Replace(cVirtualPath, ".jpg", sSuffix + ".jpg");
+                        newFilepath = cVirtualPath.Replace(".jpg", sSuffix + ".jpg");
                         if (!(VirtualFileExists(newFilepath) > 0))
                         {
                             oImage.KeepXYRelation = true;
@@ -1317,8 +1315,8 @@ namespace Protean
             {
                 try
                 {
-                    string[] cReplace = Strings.Split(replaceCSV, ",");
-                    string[] cReplaceWith = Strings.Split(replaceWithCSV, ",");
+                    string[] cReplace = replaceCSV.Split(',');
+                    string[] cReplaceWith = replaceWithCSV.Split(',');
                     for (int i = 0, loopTo = cReplace.Length - 1; i <= loopTo; i++)
                     {
                         string replaceWith = "";
@@ -1350,7 +1348,7 @@ namespace Protean
 
             public string LeftBeforeChr(string Text, int Chr)
             {
-                return LeftBefore(Text, Conversions.ToString(Strings.Chr(Chr)));
+                return LeftBefore(Text, ((char)Chr).ToString());
             }
 
             public string RightAfter(string Text, string Character)
@@ -1370,14 +1368,14 @@ namespace Protean
 
             public string RightAfterChr(string Text, int Chr)
             {
-                return RightAfter(Text, Conversions.ToString(Strings.Chr(Chr)));
+                return RightAfter(Text, ((char)Chr).ToString());
             }
 
             #endregion
 
             #region Eonicweb Specific
 
-            public int setContentLocationByRef(string cStructName, int nContentId, int bPrimary, int bCascade)
+            public long setContentLocationByRef(string cStructName, int nContentId, int bPrimary, int bCascade)
             {
                 try
                 {
@@ -1385,7 +1383,7 @@ namespace Protean
                     nID = Convert.ToString(myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.ContentStructure, cStructName));
                     if (string.IsNullOrEmpty(nID))
                         nID = 0.ToString();
-                    if (Conversions.ToDouble(nID) > 0d)
+                    if (Convert.ToDouble(nID) > 0d)
                     {
 
                         return myWeb.moDbHelper.setContentLocation(Convert.ToInt64(nID), nContentId, Convert.ToBoolean(bPrimary)? true: false, Convert.ToBoolean(bCascade), true);
@@ -1481,8 +1479,8 @@ namespace Protean
                 int i = 0;
                 try
                 {
-                    cValidStructNames = Strings.Replace(cValidStructNames, "'',", "");
-                    cValidStructNames = Strings.Replace(cValidStructNames, ",''", "");
+                    cValidStructNames = cValidStructNames.Replace("'',", "");
+                    cValidStructNames = cValidStructNames.Replace(",''", "");
                     // don't remove from pages with no foriegn ref's
                     cValidStructNames = cValidStructNames + ",''";
                     if (string.IsNullOrEmpty(cValidStructNames))
@@ -1511,8 +1509,8 @@ namespace Protean
                 int i = 0;
                 try
                 {
-                    cRemoveRefs = Strings.Replace(cRemoveRefs, "'',", "");
-                    cRemoveRefs = Strings.Replace(cRemoveRefs, ",''", "");
+                    cRemoveRefs = cRemoveRefs.Replace("'',", "");
+                    cRemoveRefs = cRemoveRefs.Replace(",''", "");
                     if (string.IsNullOrEmpty(cRemoveRefs))
                         return 0;
                     string cSQL = "SELECT tblContentLocation.nContentLocationKey FROM tblContentLocation INNER JOIN tblContentStructure ON tblContentLocation.nStructId = tblContentStructure.nStructKey";
@@ -1548,8 +1546,8 @@ namespace Protean
                 int i = 0;
                 try
                 {
-                    cValidContentNames = Strings.Replace(cValidContentNames, "'',", "");
-                    cValidContentNames = Strings.Replace(cValidContentNames, ",''", "");
+                    cValidContentNames = cValidContentNames.Replace("'',", "");
+                    cValidContentNames = cValidContentNames.Replace(",''", "");
                     if (string.IsNullOrEmpty(cValidContentNames))
                         return 0;
                     string cSQL = "SELECT Rel.nContentRelationKey, Rel.nContentParentId, Rel.nContentChildId, Childs.cContentForiegnRef" + " FROM tblContent Childs INNER JOIN" + " tblContentRelation Rel ON Childs.nContentKey = Rel.nContentChildId INNER JOIN" + " tblContent Parents ON Rel.nContentParentId = Parents.nContentKey WHERE" + " (((Rel.nContentParentId = " + nContentId + ") AND (NOT (Childs.cContentForiegnRef IN (" + cValidContentNames + ")))) OR" + " ((Rel.nContentChildId  = " + nContentId + ") AND (NOT (Childs.cContentForiegnRef IN (" + cValidContentNames + "))))) AND " + " (Childs.cContentSchemaName = '" + cContentTypeToRemove + "' AND  Parents.cContentSchemaName = '" + cContentTypeToRemove + "')";
@@ -1575,7 +1573,7 @@ namespace Protean
             {
                 int i = 0;
                 string cSQL;
-                string[] oRef = Strings.Split(RelatedRefArr, ",");
+                string[] oRef = RelatedRefArr.Split(',');
                 bool DelFlag;
                 bool AddFlag;
                 try
@@ -1612,12 +1610,12 @@ namespace Protean
                         while (oDR.Read())
                         {
                             DelFlag = true;
-                            var loopTo = Information.UBound(oRef);
+                            var loopTo = oRef.Length - 1;
                             for (i = 0; i <= loopTo; i++)
                             {
                                 if (!string.IsNullOrEmpty(oRef[i].Trim()))
                                 {
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oRef[i], oDR["cContentForiegnRef"], false)))
+                                    if (oRef[i].Equals(oDR["cContentForiegnRef"]))
                                     {
                                         DelFlag = false;
                                     }
@@ -1634,7 +1632,7 @@ namespace Protean
                         }
 
                         // Step through ref array and add those not found in the oRs
-                        var loopTo1 = Information.UBound(oRef);
+                        var loopTo1 = oRef.Length - 1;
                         for (i = 0; i <= loopTo1; i++)
                         {
                             if (!string.IsNullOrEmpty(oRef[i].Trim()))
@@ -1642,7 +1640,7 @@ namespace Protean
                                 AddFlag = true;
                                 while (oDR.Read())
                                 {
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oRef[i].Trim(), oDR["cContentForiegnRef"], false)))
+                                    if (oRef[i].Trim().Equals(oDR["cContentForiegnRef"]))
                                     {
                                         AddFlag = false;
                                     }

@@ -1,0 +1,29 @@
+<Discount>
+	<nDiscountKey>37218</nDiscountKey>
+	<nDiscountForeignRef/>
+	<cDiscountName>WOODWARD20 - 20% off for unhappy cust 2412260549</cDiscountName>
+	
+	<cDiscountCode>WOODWARD20</cDiscountCode>
+	<nDiscountCat>1</nDiscountCat>
+	<bDiscountIsPercent>1</bDiscountIsPercent>
+	<nDiscountValue>20</nDiscountValue>
+	<nDiscountMinPrice>10</nDiscountMinPrice>
+	<nDiscountMinQuantity>1</nDiscountMinQuantity>
+	<cAdditionalXML>
+		<cDescription />
+		<cTerms />
+		<Images>
+			<img src="" width="" height="" class="thumbnail" alt="" />
+			<img src="" width="" height="" class="display" alt="" />
+			<img src="" width="" height="" class="detail" alt="" />
+		</Images>
+		<bFreeGiftBox></bFreeGiftBox>
+		<bApplyToOrder></bApplyToOrder>
+		<cFreeShippingMethods></cFreeShippingMethods>
+		<nMinimumOrderValue></nMinimumOrderValue>
+		<nMaximumOrderValue></nMaximumOrderValue>
+		<nDiscountMaxPrice>250</nDiscountMaxPrice>
+	</cAdditionalXML>
+	<cDiscountUserCode>WOODWARD20</cDiscountUserCode>
+	<nDiscountCodeType>1</nDiscountCodeType>
+</Discount>

@@ -1,5 +1,4 @@
 using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Providers.Filter;
 using System;
 using System.Collections;
@@ -10,19 +9,24 @@ using System.Linq;
 using System.Xml;
 using static Protean.xForm;
 
+using Protean.Providers.Filter;
+
 namespace Protean.Providers
 {
 
     namespace Filters
     {
 
-        public class PriceBandFilter : DefaultFilter
+        public class PriceBandFilter : DefaultFilter, IContentFilter
         {
 
             public event OnErrorEventHandler OnError;
 
             public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
-            public override void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql)
+
+           
+
+            public void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Cms.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql)
             {
                 string cProcessInfo = "AddControl";
                 try
@@ -141,9 +145,9 @@ namespace Protean.Providers
                         {
                             while (oDr.Read())
                             {
-                                nMinPriceBandProduct = Conversions.ToInteger(oDr["MinPrice"]);
+                                nMinPriceBandProduct = Convert.ToInt16(oDr["MinPrice"]);
                                 string sText= string.Empty;
-                                nMaxPriceBandProduct = Conversions.ToInteger(oDr["MaxPrice"]);
+                                nMaxPriceBandProduct = Convert.ToInt16(oDr["MaxPrice"]);
                                 sProductCount = Convert.ToString(oDr["PriceBandContentCount"]);
                                 cProductCountList = cProductCountList + cnt.ToString() + ":" + sProductCount + ",";
                                 if(nMinPriceBandProduct== nMaxPriceBandProduct)
@@ -239,7 +243,7 @@ namespace Protean.Providers
                 }
             }
 
-            public override string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget)
+            public string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Cms.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget)
             {
                 string cProcessInfo = "ApplyFilter";
                 string cPriceBandCond = string.Empty;

@@ -89,6 +89,8 @@
   <xsl:variable name="boxpad" select="'15'"/>
   <xsl:variable name="colpad" select="'20'"/>
   <xsl:variable name="jqueryVer" select="'1.11'"/>
+  <xsl:variable name="jqueryUIVer" select="'1.11.1'"/>
+  <xsl:variable name="bsVer" select="'3'"/>
   <!-- Dates -->
   <xsl:variable name="today" select="/Page/Request/ServerVariables/Item[@name='Date']/node()"/>
   <xsl:variable name="currentYear" select="substring($today,1,4)"/>
@@ -300,7 +302,12 @@
       </xsl:call-template>
     </xsl:if>
   </xsl:variable>
-
+  <xsl:variable name="KlaviyoTrackingKey">
+    <xsl:call-template name="getXmlSettings">
+      <xsl:with-param name="sectionName" select="'web'"/>
+      <xsl:with-param name="valueName" select="'KlaviyoTrackingKey'"/>
+    </xsl:call-template>
+  </xsl:variable>
   <xsl:variable name="GoogleOptimizeID">
     <xsl:if test="not(/Page/@adminMode) and not(/Page/@previewMode='true')">
       <xsl:call-template name="getXmlSettings">
@@ -429,13 +436,7 @@
         <!-- common css -->
         <xsl:apply-templates select="/Page" mode="headerCommonStyle"/>
 
-
-
-        <xsl:apply-templates select="." mode="headerOnlyJS"/>
-
         <xsl:if test="$GoogleTagManagerID!=''">
-
-
           <!-- Google Tag Manager -->
           <script cookie-consent="tracking">
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -445,8 +446,10 @@
             })(window,document,'script','dataLayer','<xsl:value-of select="$GoogleTagManagerID"/>');
           </script>
           <!-- End Google Tag Manager -->
-
         </xsl:if>
+
+		<xsl:apply-templates select="." mode="headerOnlyJS"/>
+		  
         <xsl:if test="$GoogleOptimizeID!=''">
           <script src="https://www.googleoptimize.com/optimize.js?id={$GoogleOptimizeID}" cookie-consent="functionality">&#160;</script>
         </xsl:if>
@@ -514,6 +517,7 @@
         <xsl:if test="$ScriptAtBottom!='on' and not($adminMode)">
           <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
+		  
       </head>
       <!-- Go build the Body of the HTML doc -->
       <xsl:apply-templates select="." mode="bodyBuilder"/>
@@ -860,8 +864,16 @@
         <xsl:text>~/ewcommon/js/jquery/jquery-migrate-1.2.1.min.js,</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:text>~/ewcommon/js/jquery/ui/1.11.1/jquery-ui.min.js,</xsl:text>
-    <xsl:text>~/ewcommon/bs3/js/bootstrap.js,</xsl:text>
+	  <xsl:choose>
+		  <xsl:when test="$jqueryUIVer='1.13.2'">
+			  <xsl:text>~/ewcommon/js/jquery/ui/1.13.2/jquery-ui.min.js,</xsl:text>
+		  </xsl:when>
+			  <xsl:otherwise>
+                <xsl:text>~/ewcommon/js/jquery/ui/1.11.1/jquery-ui.min.js,</xsl:text>
+			  </xsl:otherwise>
+		  </xsl:choose>
+    <xsl:text>~/ewcommon/bs</xsl:text><xsl:value-of select="$bsVer"/>
+	  <xsl:text>/js/bootstrap.js,</xsl:text>
     <xsl:text>~/ewcommon/js/jquery/colorpickersliders/tinycolor.js,</xsl:text>
     <xsl:text>~/ewcommon/js/jquery/colorpickersliders/bootstrap.colorpickersliders.min.js,</xsl:text>
     <xsl:text>~/ewcommon/js/jquery/jquery.matchHeight.js,</xsl:text>
@@ -2878,7 +2890,8 @@
 				window.uetq.push('event', 'PRODUCT_PURCHASE', {
 				'ecomm_prodid': '<xsl:value-of select="productDetail/StockCode"/>',
 				'revenue_value': '<xsl:value-of select="@itemTotal"/>',
-		        'currency': '<xsl:value-of select="Cart/Order/@currency"/>'
+				
+		        'currency': '<xsl:value-of select="Page/Cart/Order/@currency"/>'
 		        });
 	    </xsl:for-each>
 
@@ -9083,7 +9096,12 @@
     <xsl:param name="startPos" />
     <xsl:param name="parentClass" />
     <xsl:param name="sort" select="@sortBy"/>
-    <xsl:param name="order" select="@order"/>
+	  <xsl:param name="order">
+		  <xsl:choose>
+			  <xsl:when test="contains(@order,'ascending')">ascending</xsl:when>
+			  <xsl:otherwise>descending</xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:param>
     <xsl:param name="sort-data-type">
       <xsl:call-template name="ordering-data-type">
         <xsl:with-param name="field" select="@sortBy"/>
@@ -9188,9 +9206,7 @@
     <xsl:param name="sort" select="@sortBy"/>
     <xsl:param name="order">
       <xsl:choose>
-        <xsl:when test="@order!=''">
-          <xsl:value-of select="@order"/>
-        </xsl:when>
+		<xsl:when test="contains(@order,'ascending')">ascending</xsl:when>
         <xsl:otherwise>descending</xsl:otherwise>
       </xsl:choose>
     </xsl:param>
@@ -9242,14 +9258,12 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-    <xsl:param name="order">
-      <xsl:choose>
-        <xsl:when test="@order!=''">
-          <xsl:value-of select="@order"/>
-        </xsl:when>
-        <xsl:otherwise>descending</xsl:otherwise>
-      </xsl:choose>
-    </xsl:param>
+	  <xsl:param name="order">
+		  <xsl:choose>
+			  <xsl:when test="contains(@order,'ascending')">ascending</xsl:when>
+			  <xsl:otherwise>descending</xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:param>
     <xsl:param name="stepCount" select="'0'"/>
     <xsl:param name="endPos">
       <xsl:choose>
@@ -9300,7 +9314,12 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-    <xsl:param name="order" select="@order"/>
+	  <xsl:param name="order">
+		  <xsl:choose>
+			  <xsl:when test="contains(@order,'ascending')">ascending</xsl:when>
+			  <xsl:otherwise>descending</xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:param>
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="maxDisplay">
       <xsl:choose>
@@ -9360,16 +9379,12 @@
       </xsl:call-template>
     </xsl:param>
     <xsl:param name="sort" select="@sortBy"/>
-    <xsl:param name="order">
-      <xsl:choose>
-        <xsl:when test="@order = ''">
-          <xsl:text>ascending</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@order"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:param>
+	  <xsl:param name="order">
+		  <xsl:choose>
+			  <xsl:when test="contains(@order,'descending')">descending</xsl:when>
+			  <xsl:otherwise>ascending</xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:param>
     <xsl:param name="stepCount" select="@stepCount"/>
     <xsl:param name="endPos">
       <xsl:choose>
@@ -9441,16 +9456,12 @@
     </xsl:param>
     <xsl:param name="link" select="@pageLink" />
     <xsl:param name="sort" select="@sortBy" />
-    <xsl:param name="order">
-      <xsl:choose>
-        <xsl:when test="@order = ''">
-          <xsl:text>ascending</xsl:text>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:value-of select="@order"/>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:param>
+	  <xsl:param name="order">
+		  <xsl:choose>
+			  <xsl:when test="contains(@order,'descending')">descending</xsl:when>
+			  <xsl:otherwise>ascending</xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:param>
     <xsl:param name="stepCount" select="@stepCount" />
     <xsl:param name="parentPage" select="//MenuItem[@id=$link]"/>
     <xsl:param name="endPos">

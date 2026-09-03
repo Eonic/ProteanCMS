@@ -1,26 +1,25 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+﻿
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Net.Http;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
 using static Protean.Tools.Xml;
 
 namespace Protean
 {
-
-
-
     public partial class Cms
     {
-
         public partial class Cart
         {
-
             #region JSON Actions
             public class LocationList
             {
@@ -28,28 +27,31 @@ namespace Protean
                 public string Value { get; set; }
             }
 
-            public class JSONActions : Protean.rest.JsonActions
+            public class JSONActions : Protean.rest.JSONActions
             {
 
-                public event OnErrorEventHandler OnError;
+                //public event OnErrorEventHandler OnError;
 
-                public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
+                //  public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Cart.JSONActions";
                 private const string cContactType = "Venue";
-                private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
+                private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
                 private Cms myWeb;
                 private Cart myCart;
+                public bool bNoClose;
 
-
-                public JSONActions()
+                public JSONActions(Cms.dbHelper.utils.APILog ApiLog)
                 {
                     // string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
                     myWeb.InitializeVariables();
                     myWeb.Open();
                     myCart = new Cart(ref myWeb);
+                    this.apiLog = ApiLog;
 
                 }
+
+
 
                 private XmlElement updateCartforJSON(XmlElement CartXml)
                 {
@@ -111,7 +113,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -126,7 +128,7 @@ namespace Protean
                         // Output the new cart
                         var oDoc = new XmlDocument();
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
-
+                        // myCart.bNoClose = true;
 
                         if (myCart.mnCartId < 1)
                         {
@@ -141,11 +143,13 @@ namespace Protean
                             }
                             myCart.mnProcessId = (short)1;
                         }
-                        if ((int)myCart.mnProcessId > 4)
+                        var cBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(cBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
-
                         else
                         {
                             if (jObj["Item"] != null)
@@ -159,6 +163,8 @@ namespace Protean
                                     string sOverideURL = "";
                                     string sProductOptionName = "";
                                     double dProductOptionPrice = 0d;
+                                    string[][] aProductOptions = null;
+
                                     if (item.ContainsKey("UniqueProduct"))
                                     {
                                         bUnique = (bool)item["UniqueProduct"];
@@ -180,22 +186,44 @@ namespace Protean
                                     {
                                         sProductOptionName = (string)item["productOption"];
                                     }
+                                    if (item.ContainsKey("productOptions"))
+                                    {
+                                        string productOptionsString = (string)item["productOptions"];
+                                        if (!string.IsNullOrEmpty(productOptionsString))
+                                        {
+                                            string[] optionPairs = productOptionsString.Split(',');
+                                            aProductOptions = new string[optionPairs.Length][];
+                                            for (int i = 0; i < optionPairs.Length; i++)
+                                            {
+                                                aProductOptions[i] = optionPairs[i].Split('_');
+                                            }
+                                        }
+                                    }
+
                                     if (item.ContainsKey("productOptionPrice"))
                                     {
                                         dProductOptionPrice = (double)item["productOptionPrice"];
                                     }
+                                    if (jObj.ContainsKey("overridePriceSession"))
+                                    {
+                                        myCart.myWeb.moSession["overridePriceSession"] = (string)jObj["overridePriceSession"];
+                                    }
 
-                                    myCart.AddItem((long)item["contentId"], (long)item["qty"], null, sProductName, cProductPrice, "", bUnique, sOverideURL, false, sProductOptionName, dProductOptionPrice);
+                                    myCart.AddItem((long)item["contentId"], (long)item["qty"], aProductOptions, sProductName, cProductPrice, "", bUnique, sOverideURL, false, sProductOptionName, dProductOptionPrice);
 
                                 }
                             }
+
+                            //Reset the cart shipping option so new value is calculated
+                            myCart.updateOrderShippingOption(myCart.mnCartId, 0);
 
                             // Output the new cart
                             XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
                             myCart.GetCart(ref argoCartElmt);
                             CartXml = updateCartforJSON(CartXml);
                             // persist cart
-                            myCart.close();
+
+                            myCart.close(bNoClose);
 
                             string jsonString = JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.None);
                             jsonString = jsonString.Replace("\"@", "\"_");
@@ -206,7 +234,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
 
@@ -216,7 +244,9 @@ namespace Protean
                 {
                     try
                     {
-                        if ((int)myCart.mnProcessId > 4)
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -244,6 +274,9 @@ namespace Protean
                                 myCart.EndSession();
                             }
 
+
+                            //Reset the cart shipping option so new value is calculated
+                            myCart.updateOrderShippingOption(myCart.mnCartId, 0);
                             // Output the new cart   
                             XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
                             XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
@@ -260,7 +293,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
 
@@ -317,7 +350,8 @@ namespace Protean
                             myCart.QuitCart();
                             myCart.EndSession();
                         }
-
+                        //Reset the cart shipping option so new value is calculated
+                        myCart.updateOrderShippingOption(myCart.mnCartId, 0);
                         // Output the new cart
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
                         myCart.GetCart(ref argoCartElmt);
@@ -333,10 +367,21 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
 
+                }
+
+                public string UpdateShippingOption(Protean.rest myApi, Newtonsoft.Json.Linq.JObject jObj)
+                {
+                    Newtonsoft.Json.Linq.JObject json = jObj;
+                    Protean.Cms.Cart.JSONActions jSONActions = new Protean.Cms.Cart.JSONActions(apiLog);
+                    long nCartOrderId = Convert.ToInt64(json.SelectToken("CartOrderId"));
+                    int nShippingKey = Convert.ToInt32(json.SelectToken("ShipOptKey").ToString());
+                    myCart.updateOrderShippingOption(nCartOrderId, nShippingKey);
+
+                    return jSONActions.GetCart(ref myApi, ref jObj);
                 }
 
                 public string GetShippingOptions(ref Protean.rest myApi, ref JObject jObj)
@@ -415,7 +460,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetShippingOptions", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetShippingOptions", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -447,7 +492,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdatedCartShippingOptions", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdatedCartShippingOptions", ex, ""));
                         return ex.Message;
                     }
 
@@ -455,7 +500,9 @@ namespace Protean
 
                 public string UpdateDeliveryOptionByCountry(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    if ((int)myCart.mnProcessId > 4)
+                    string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                    if ((int)myCart.mnProcessId > 4 &&
+                        !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase) && !string.IsNullOrWhiteSpace(mcBlockCartUpdate))
                     {
                         return "";
                     }
@@ -506,14 +553,14 @@ namespace Protean
                         string dirId = (string)jObj["dirId"];
                         // Dim offerId As String = jObj("offerId")
 
-                        object userContacts = myWeb.moDbHelper.GetUserContactsXml(Conversions.ToInteger(dirId));
+                        object userContacts = myWeb.moDbHelper.GetUserContactsXml(Convert.ToInt32(dirId));
                         JsonResult = JsonConvert.SerializeObject(userContacts);
                         return JsonResult;
                     }
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -538,7 +585,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetLocations", ex, ""));
                         return ex.Message;
                     }
                     //return JsonConvert.ToString(nId);
@@ -546,11 +593,11 @@ namespace Protean
 
                 public string SetContact(ref Protean.rest myApi, ref JObject jObj)
                 {
-                    int nId;
+                    long nId;
                     try
                     {
                         int supplierId = (int)jObj["supplierId"];
-                        var contact = jObj["venue"].ToObject<modal.Contact>();
+                        var contact = jObj["venue"].ToObject<model.Contact>();
                         contact.cContactType = cContactType;
                         contact.cContactForeignRef = string.Format("SUP-{0}", supplierId);
 
@@ -558,7 +605,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddContact", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "AddContact", ex, ""));
                         return ex.Message;
                     }
                     return JsonConvert.ToString(nId);
@@ -570,34 +617,35 @@ namespace Protean
                     try
                     {
                         string cContactKey = (string)jObj["nContactKey"];
-                        int argnContactKey = Conversions.ToInteger(cContactKey);
+                        int argnContactKey = Convert.ToInt32(cContactKey);
                         isSuccess = myWeb.moDbHelper.DeleteContact(ref argnContactKey);
                         cContactKey = argnContactKey.ToString();
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteContact", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "DeleteContact", ex, ""));
                         return ex.Message;
                     }
                     return JsonConvert.ToString(isSuccess);
                 }
 
-                public string AddProductOption(ref Protean.rest myApi, ref JObject jObj)
+                public string AddProductOption(Protean.rest myApi, JObject jObj)
                 {
                     string jsonString = string.Empty;
 
                     try
                     {
 
+
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
                         // myCart.GetCart(CartXml.FirstChild)
 
                         // add product option
-                        myCart.AddProductOption(ref jObj);
+                        myCart.AddProductOption(jObj);
                         // myCart.UpdatePackagingANdDeliveryType()
                         // myCart.GetCart(CartXml.FirstChild)   //Comment out this extra called method because this code already added in UpdatePackagingDeliveryOptions method - change on 5th jan 23
                         /// persist cart
-                        myCart.close();
+                        //myCart.close();
 
                         // CartXml = updateCartforJSON(CartXml)
 
@@ -637,8 +685,10 @@ namespace Protean
                     string strMessage = string.Empty;
                     try
                     {
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
 
-                        if ((int)myCart.mnProcessId > 4)
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -683,7 +733,10 @@ namespace Protean
                     string jsonString = string.Empty;
                     try
                     {
-                        if ((int)myCart.mnProcessId > 4)
+                        var cBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+
+                        if ((int)myCart.mnProcessId > 4 &&
+                            !string.Equals(cBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -718,11 +771,11 @@ namespace Protean
                         double cProductPrice = (double)jObj["itemPrice"];
                         long cartItemId = (long)jObj["itemId"];
 
-                        if (myWeb.moDbHelper.checkUserRole(myCart.moCartConfig["AllowPriceUpdateRole"], "Role", Conversions.ToLong(Operators.ConcatenateObject("0", myWeb.moSession["nUserId"]))))
+                        long userId = Convert.ToInt64("0" + (myWeb.moSession["nUserId"]?.ToString() ?? "0"));
+
+                        if (myWeb.moDbHelper.checkUserRole(myCart.moCartConfig["AllowPriceUpdateRole"], "Role", userId))
                         {
-
                             myCart.UpdateItemPrice(cartItemId, cProductPrice);
-
                         }
 
                         XmlElement CartXml = (XmlElement)myWeb.moCart.CreateCartElement(myWeb.moPageXml);
@@ -745,12 +798,12 @@ namespace Protean
                     }
                 }
 
-                public int AddCartAddress(ref Protean.rest myApi, ref JObject jObj, string contactType, int cartId, string emailAddress = "", string telphone = "")
+                public long AddCartAddress(ref Protean.rest myApi, ref JObject jObj, string contactType, int cartId, string emailAddress = "", string telphone = "")
                 {
                     try
                     {
-                        var contact = new Cms.modal.Contact();
-                        int nId;
+                        var contact = new Cms.model.Contact();
+                        long nId;
                         if (jObj != null)
                         {
                             contact.cContactEmail = emailAddress;
@@ -816,7 +869,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        return Conversions.ToInteger(ex.Message);
+                        return Convert.ToInt32(ex.Message);
                     }
                 }
 
@@ -901,11 +954,11 @@ namespace Protean
 
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;
                         myCart.GetCart(ref argoCartElmt);
-                        myCart.purchaseActions(ref CartXml);
+                        myCart.purchaseActions(CartXml);
+
+                        CartXml = updateCartforJSON(CartXml);
                         // persist cart
                         myCart.close();
-                        CartXml = updateCartforJSON(CartXml);
-
                         string jsonString = JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented);
                         jsonString = jsonString.Replace("\"@", "\"_");
                         jsonString = jsonString.Replace("#cdata-section", "cDataValue");
@@ -1043,15 +1096,48 @@ namespace Protean
                         DataSet oDs;
                         oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
                         foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                            oRow["cSellerNotes"] = Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cSellerNotes"], Constants.vbLf), DateTime.Today), " "), DateAndTime.TimeOfDay), ": "), errorMessage), "'");
+                        {
+                            oRow["cSellerNotes"] = (oRow["cSellerNotes"]?.ToString() ?? "") + Environment.NewLine + DateTime.Today.ToString("d") + " " + DateTime.Now.ToString("T") + ": " + errorMessage + "'";
+                        }
+
+                        myWeb.moDbHelper.updateDataset(ref oDs, "Order");
+
+                        return true;
+                    }
+
+                    catch (Exception ex)
+                    {
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "SaveToSellerNotes", ex, ""));
+                        return Convert.ToBoolean(ex.Message);
+                    }
+                }
+
+                public bool SaveClientNotes(ref Protean.rest myApi, ref JObject jObj)
+                {
+                    try
+                    {
+                        string cProcessInfo = string.Empty;
+                        string sSql;
+                        var myWeb = new Cms();
+                        var oCart = new Cart(ref myWeb);
+                        string message = jObj["Notes"].ToString();
+                        // Update Seller Notes:
+                        sSql = "select * from tblCartOrder where nCartOrderKey = " + oCart.mnCartId;
+                        DataSet oDs;
+                        oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
+                        foreach (DataRow oRow in oDs.Tables["Order"].Rows)
+                        {
+                            oRow["cClientNotes"] = message;
+                        }
+
                         myWeb.moDbHelper.updateDataset(ref oDs, "Order");
                         return true;
                     }
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "SaveToSellerNotes", ex, ""));
-                        return Conversions.ToBoolean(ex.Message);
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "SaveToSellerNotes", ex, ""));
+                        return Convert.ToBoolean(ex.Message);
                     }
                 }
 
@@ -1093,7 +1179,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "PopulateCounty", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "PopulateCounty", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -1155,8 +1241,8 @@ namespace Protean
                     {
 
                         bool bIsAuthorized = false;
-                        var validGroup = Interaction.IIf(jObj["validGroup"] != null, (string)jObj["validGroup"], "");
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(validGroup));
+                        string validGroup = jObj["validGroup"] != null ? (string)jObj["validGroup"] : "";
+                        bIsAuthorized = this.ValidateAPICall(Convert.ToString(validGroup));
 
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
@@ -1165,33 +1251,65 @@ namespace Protean
                         var oCart = new Cart(ref myWeb);
                         oCart.moPageXml = myWeb.moPageXml;
 
-                        var nProviderReference = Interaction.IIf(jObj["nProviderReference"] != null, (long)jObj["nProviderReference"], 0);
-                        decimal nAmount = Convert.ToDecimal(Interaction.IIf(jObj["nAmount"] != null, (decimal)jObj["nAmount"], "0"));
-                        var cProviderName = Interaction.IIf(jObj["sProviderName"] != null, (string)jObj["sProviderName"], "");
+                        long nProviderReference = jObj["nProviderReference"] != null ? (long)jObj["nProviderReference"] : 0;
+                        decimal nAmount = jObj["nAmount"] != null ? Convert.ToDecimal(jObj["nAmount"]) : 0m;
+                        string cProviderName = jObj["sProviderName"] != null ? (string)jObj["sProviderName"] : "";
                         object cRefundPaymentReceipt = "";
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
+
+                        if (!string.IsNullOrEmpty(cProviderName))
                         {
-                            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, cProviderName);
                             cRefundPaymentReceipt = oPaymentProv.Activities.RefundPayment(nProviderReference.ToString(), nAmount);
 
-                            var xmlDoc = new XmlDocument();
-                            var xmlResponse = xmlDoc.CreateElement("Response");
-                            xmlResponse.InnerXml = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("<RefundPaymentReceiptId>", cRefundPaymentReceipt), "</RefundPaymentReceiptId>"));
-                            xmlDoc.LoadXml(xmlResponse.InnerXml.ToString());
-                            josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
+                                System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                                if (moMailConfig != null)
+                                {
 
-                            josResult = josResult.Replace("\"@", "\"_");
-                            josResult = josResult.Replace("#cdata-section", "cDataValue");
+                                    string sMessagingProvider = "";
 
-                            return josResult;
-                        }
+                                    if (moMailConfig != null)
+                                    {
+                                        sMessagingProvider = moMailConfig["MessagingProvider"];
+                                    }
+
+                                    if (!string.IsNullOrEmpty(sMessagingProvider))
+                                    {
+                                        Protean.Providers.Messaging.ReturnProvider RetProv = new Protean.Providers.Messaging.ReturnProvider();
+                                        IMessagingProvider oMessaging = RetProv.Get(ref myWeb, sMessagingProvider);
+                                        String sSql = "select cCartXml from tblcartorder  where nPayMthdId in (select nPayMthdKey from tblCartPaymentMethod where cPayMthdProviderRef='" + nProviderReference + "')";
+                                        String scartXml = Convert.ToString(myWeb.moDbHelper.GetDataValue(sSql));
+
+                                        XmlDocument doc = new XmlDocument();
+                                        doc.LoadXml(scartXml);
+
+                                        XmlElement cartxml = doc.DocumentElement;
+                                        XmlNode orderNode = cartxml.SelectSingleNode("descendant-or-self::Order");
+
+
+                                        oMessaging.Activities.TrackRefundEvent(orderNode, nAmount);
+
+                                    }
+                                }
+                            }
+                        
+                        var xmlDoc = new XmlDocument();
+                        var xmlResponse = xmlDoc.CreateElement("Response");
+                        xmlResponse.InnerXml = "<RefundPaymentReceiptId>" + cRefundPaymentReceipt + "</RefundPaymentReceiptId>";
+                        xmlDoc.LoadXml(xmlResponse.InnerXml);
+
+                        josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
+                        josResult = josResult.Replace("\"@", "\"_");
+                        josResult = josResult.Replace("#cdata-section", "cDataValue");
+
                         return josResult;
                     }
+
+
+
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "RefundOrder", ex, ""));
                         return "Error"; // ex.Message
                     }
 
@@ -1209,28 +1327,28 @@ namespace Protean
                     {
                         string josResult = "";
                         bool bIsAuthorized = false;
-                        var validGroup = Interaction.IIf(jObj["validGroup"] != null, (string)jObj["validGroup"], "");
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(validGroup));
+                        string validGroup = jObj["validGroup"] != null ? (string)jObj["validGroup"] : "";
+                        bIsAuthorized = this.ValidateAPICall(Convert.ToString(validGroup));
 
                         // If bIsAuthorized = False Then Return "Error -Authorization Failed"
 
                         // method name UpdateOrderWithPaymentResponse
                         string receiptID = jObj["AuthNumber"].ToString();
-                        var cProviderName = Interaction.IIf(jObj["sProviderName"] != null, (string)jObj["sProviderName"], "");
+                        string cProviderName = jObj["sProviderName"] != null ? (string)jObj["sProviderName"] : "";
                         object strConsumerRef = "";
-                        if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false), Operators.ConditionalCompareObjectNotEqual(receiptID, 0, false))))
+                        if (!string.IsNullOrEmpty(cProviderName) && !string.IsNullOrEmpty(receiptID))
                         {
                             // var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Convert.ToString(cProviderName));
                             strConsumerRef = oPaymentProv.Activities.UpdateOrderWithPaymentResponse(receiptID);
-                            josResult = Conversions.ToString(strConsumerRef);
+                            josResult = Convert.ToString(strConsumerRef);
                         }
                         return josResult;
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateOrderWithPaymentResponse", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "UpdateOrderWithPaymentResponse", ex, ""));
                         return "Error"; // ex.Message
                     }
 
@@ -1248,7 +1366,7 @@ namespace Protean
                     {
                         bool bIsAuthorized = false;
                         string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
+                        bIsAuthorized = this.ValidateAPICall(Convert.ToString(cValidGroup));
 
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
@@ -1273,12 +1391,12 @@ namespace Protean
 
                         string cPaymentReceipt = "";
                         string josResult = "";
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
+                        if (!string.IsNullOrEmpty(cProviderName))
                         {
                             //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
-                            cPaymentReceipt = Conversions.ToString(oPaymentProv.Activities.ProcessNewPayment(nOrderId, nAmount, cCardNumber, cCV2, dExpiryDate, dStartDate, cCardHolderName, cAddress1, cAddress2, cTown, cPostCode, cCounty, cCountry, cValidGroup));
+                            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Convert.ToString(cProviderName));
+                            cPaymentReceipt = Convert.ToString(oPaymentProv.Activities.ProcessNewPayment(nOrderId, nAmount, cCardNumber, cCV2, dExpiryDate, dStartDate, cCardHolderName, cAddress1, cAddress2, cTown, cPostCode, cCounty, cCountry, cValidGroup));
                             var xmlDoc = new XmlDocument();
                             var xmlResponse = xmlDoc.CreateElement("Response");
                             xmlResponse.InnerXml = "<PaymentReceiptId>" + cPaymentReceipt + "</PaymentReceiptId>";
@@ -1292,7 +1410,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
                         return "Error"; // ex.Message
                     }
 
@@ -1310,71 +1428,356 @@ namespace Protean
                         string josResult = "";
                         bool bIsAuthorized = false;
                         string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
-                        bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
+                        bIsAuthorized = this.ValidateAPICall(Convert.ToString(cValidGroup));
                         if (bIsAuthorized == false)
                             return "Error -Authorization Failed";
-                        if(jObj["cEmailAddress"] != null && jObj["cEmailAddress"].ToString()!="")
+                        if (jObj["cEmailAddress"] != null && jObj["cEmailAddress"].ToString() != "")
                         {
                             var cEmailAddress = jObj["cEmailAddress"].ToString();
                             josResult = myCart.GDPRAnonomize(cEmailAddress);
                         }
-                       
+
                         return josResult;
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AnonymizeGDPRData", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "AnonymizeGDPRData", ex, ""));
                         return "Error"; // ex.Message
                     }
 
                 }
 
-
-                //public string GetPaymentSession(ref Protean.rest myApi, ref JObject jObj)
-                //{
-                //    try
-                //    {
-                //        //bool bIsAuthorized = false;
-                //        //string cValidGroup = (jObj["validGroup"] != null) ? (string)jObj["validGroup"] : "";
-                //        //bIsAuthorized = this.ValidateAPICall(ref myWeb, Conversions.ToString(cValidGroup));
-
-
-                //        //if (bIsAuthorized == false)
-                //        //    return "Error -Authorization Failed";
-                //        string nOrderId = (jObj["orderId"] != null) ? jObj["orderId"].ToString() : "0";
-                //        decimal nAmount = (jObj["amount"] != null) ? Convert.ToDecimal(jObj["amount"]) : 0;
-                //        string cProviderName = (jObj["sProviderName"] != null) ? jObj["sProviderName"].ToString() : "";
-                //        var oCart = new Cart(ref myWeb);
-                //        string cPaymentSession = "";
-                //        string josResult = "";
-                //        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(cProviderName, "", false)))
-                //        {
-                //            //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, Conversions.ToString(cProviderName));
-                //            Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
-                //            IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, Conversions.ToString(cProviderName));
-                //            cPaymentSession = Conversions.ToString(oPaymentProv.Activities.GetPaymentSession(nOrderId, nAmount));
-                //            var xmlDoc = new XmlDocument();
-                //            var xmlResponse = xmlDoc.CreateElement("Response");
-                //            xmlResponse.InnerXml = "<PaymentReceiptId>" + cPaymentSession + "</PaymentReceiptId>";
-                //            xmlDoc.LoadXml(xmlResponse.InnerXml.ToString());
-                //            josResult = JsonConvert.SerializeXmlNode(xmlDoc.DocumentElement, Newtonsoft.Json.Formatting.Indented);
-                //            josResult = josResult.Replace("\"@", "\"_");
-                //            josResult = josResult.Replace("#cdata-section", "cDataValue");
-                //        }
-                //        return josResult;
-                //    }
-                //    catch (Exception ex)
-                //    {
-                //        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ProcessNewPayment", ex, ""));
-                //        return "Error";
-
-                //    }
-                //}
-
+               
                 #endregion
 
-            }
 
+
+
+                // Address Lookup for postcode functionality
+                public class PostcodeSearchAddressResult
+                {
+                    public string Status { get; set; }
+                    public string Message { get; set; }
+                    public List<PostcodeSearchAddress> Addresses { get; set; }
+                }
+
+                public class PostcodeSearchAddress
+                {
+                    public string Organisation { get; set; }
+                    public string BuildingName { get; set; }
+                    public string SubBuildingName { get; set; }
+
+                    public string Address1 { get; set; }
+                    public string Address2 { get; set; }
+                    public string Address3 { get; set; }
+                    public string TownCity { get; set; }
+                    public string Postcode { get; set; }
+                    public string DependentLocality { get; set; }
+
+                    public string CountyTraditional { get; set; }
+                    public string CountyFormerPostal { get; set; }
+                    public string CountyAdministrative { get; set; }
+
+                    public string FullAddress { get; set; }
+                }
+
+                public string AddressLookup(Protean.rest myApi, Newtonsoft.Json.Linq.JObject searchFilter)
+                {
+                    try
+                    {
+                        string JsonResult = "";
+                        string strPostcode = searchFilter["strPostcode"].ToObject<string>();
+                        string SelectedAddress = searchFilter["SelectedAddress"]?.ToObject<string>();
+                        var SearchPostcodedetails = DoSearch(strPostcode, SelectedAddress);
+                        JsonResult = JsonConvert.SerializeObject(SearchPostcodedetails);
+                        return JsonResult;
+                    }
+                    catch (Exception ex)
+                    {
+                        RaiseOnError(new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "AddressDetails", ex, ""));
+                        return ex.Message;
+                    }
+                }
+
+                private PostcodeSearchAddressResult DoSearch(string postcode, string nameNumber)
+                {
+
+                    epostcode.PostcodeServices13SoapClient WS = null;
+                    epostcode.ListAllAddressPremises addressPremises = null;
+
+                    bool ErrorFlag = false;
+                    string sTmp = string.Empty;
+
+                    PostcodeSearchAddressResult result = new PostcodeSearchAddressResult();
+
+                    if (string.IsNullOrEmpty(postcode))
+                    {
+                        // WriteToLog("Blank postcode")
+                        //result.Status = "err";
+                        //result.Message = "blank postcode";
+                    }
+                    else
+                    {
+                        WS = new epostcode.PostcodeServices13SoapClient();
+                        // WS.Timeout = 3000;
+
+                        // WriteToLog("Looking up postcode: """ & Postcode & """")
+                        try
+                        {
+                            string msePostcodeAcctName = myCart.moCartConfig["ePostcodeAcctName"];
+                            string msePostcodeKey = myCart.moCartConfig["ePostcodeKey"];
+                            //addressPremises = WS.GetPremiseAddressesFromPostcodeAndHouseNumber(strPostcode, SelectedAddress, "100", msAccountNameDemo, msGUIDDemo, "");
+                            addressPremises = WS.GetPremiseAddressesFromPostcodeAndHouseNumber(postcode, "", "100", msePostcodeAcctName, msePostcodeKey, "");
+
+
+                        }
+                        catch (Exception ex)
+                        {
+                            // WriteToLog("Caught WS error - " & ex.Message)
+                            //result.Status = "err";
+                            //result.Message = "WS error 1"; // helpful message...
+                            RaiseOnError(new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "DoSearch", ex, ""));
+                            ErrorFlag = true;
+                        }
+
+                        if (!ErrorFlag)
+                        {
+                            if (addressPremises == null)
+                            {
+                                // think this might be an error,  mais tant pis...
+                                //WriteToLog("addresses = null")
+                                result.Status = "not found";
+                                result.Message = "";
+                            }
+                            else
+                            {
+                                if (addressPremises.IsError)
+                                {
+                                    // WriteToLog("WS IsError = " & addressPremises.ErrorMessage)
+                                    result.Status = "err";
+                                    result.Message = "WS error 2";
+                                }
+                                else
+                                {
+                                    // WriteToDebugLog("Addresses.list.length=" & addressPremises.List.Length)
+                                    if (addressPremises.List.Length == 0)
+                                    {
+                                        // WriteToDebugLog("Addresses.list.length=0: Nothing found")
+                                        result.Status = "not found";
+                                        result.Message = "";
+                                    }
+                                    else if ((addressPremises.List.Length == 1) && (addressPremises.List[0].Return_Code == "0"))
+                                    {
+                                        // WriteToDebugLog("Address.list.length=1 + Return_Code=0: Nothing found")
+                                        result.Status = "not found";
+                                        result.Message = "";
+                                    }
+                                    else
+                                    {
+                                        Regex re = new Regex(@"\s{2,}");
+                                        result.Status = "OK";
+                                        result.Message = "";
+                                        result.Addresses = new List<PostcodeSearchAddress>();
+                                        foreach (epostcode.AddressPremise a in addressPremises.List)
+                                        {
+
+
+                                            if ((!string.IsNullOrEmpty(nameNumber?.Trim())))
+                                            {
+                                                if ((a.FullAddress.ToString().Contains(nameNumber.Trim())))
+                                                {
+                                                    PostcodeSearchAddress address = new PostcodeSearchAddress();
+                                                    if (a.Organisation.Length > 0)
+                                                    {
+
+                                                        address.Organisation = a.Organisation;
+                                                    }
+
+                                                    if (a.Sub_Building_Name.Length > 0)
+                                                    {
+                                                        //	"Flat 10"
+                                                        //	Prepend this to the building name
+                                                        if (a.Building_Name.Length == 0)
+                                                            a.Building_Name = a.Sub_Building_Name;
+                                                        else
+                                                            a.Building_Name = a.Sub_Building_Name + ", " + a.Building_Name;
+                                                    }
+
+                                                    if (a.Building_Name.Length > 0)
+                                                    {
+                                                        // Check if this building name is just a number,  e.g. "9-17".  In which case,  if the Number is empty,  use this as the number
+                                                        if (Regex.IsMatch(a.Building_Name, @"^[\d\-\s]+$"))
+                                                        {
+                                                            // it's just a number...
+                                                            if (a.Number.Length > 0)
+                                                            {
+                                                                // But they're using a number too.  So treat this building name as a building name
+                                                                address.BuildingName = a.Building_Name;
+                                                            }
+                                                            else
+                                                                a.Number = a.Building_Name;
+                                                        }
+                                                        else
+                                                            address.BuildingName = a.Building_Name;
+                                                    }
+
+                                                    if (a.Number.Length + a.Street.Length > 0)
+                                                    {
+                                                        if (a.Number.Length == 0)
+                                                            address.Address1 = a.Street;
+                                                        else
+                                                        {
+                                                            if (a.Street.Length == 0)
+                                                                address.Address1 = a.Number;
+                                                            else
+                                                                address.Address1 = a.Number + " " + a.Street;
+
+                                                        }
+                                                    }
+
+
+                                                    if (a.County_FormerPostal.Length > 0) address.CountyFormerPostal = a.County_FormerPostal;
+                                                    if (a.County_Traditional.Length > 0) address.CountyTraditional = a.County_Traditional;
+
+                                                    if (a.Post_Town.Length > 0 && a.County_Administrative.Length > 0 && a.Post_Town == a.County_Administrative)
+                                                        address.TownCity = a.Post_Town; // '		London, Manchester, etc. - don't add the county
+                                                    else
+                                                    {
+                                                        if (a.Post_Town.Length > 0)
+                                                            address.TownCity = a.Post_Town;
+
+                                                        if (a.County_Administrative.Length > 0)
+                                                            address.CountyAdministrative = a.County_Administrative;
+                                                    }
+
+                                                    if (a.Postcode.Length > 0)
+                                                    {
+                                                        address.Postcode = a.Postcode;
+                                                    }
+
+                                                    var tmp = string.Empty;
+                                                    if (!string.IsNullOrWhiteSpace(address.BuildingName))
+                                                        tmp = address.BuildingName;
+                                                    if (!string.IsNullOrWhiteSpace(address.SubBuildingName))
+                                                    {
+                                                        tmp = (tmp.Length > 0 ? tmp + ", " + address.SubBuildingName : address.SubBuildingName);
+                                                    }
+                                                    if (!string.IsNullOrWhiteSpace(address.Address1))
+                                                    {
+                                                        tmp = (tmp.Length > 0 ? tmp + ", " + address.Address1 : address.Address1);
+                                                    }
+                                                    address.Address1 = tmp; // merge the building and street into line 1.
+
+                                                    address.FullAddress = Regex.Replace(a.FullAddress, @"(^\\r\\n)|(\\r\\n$)|(\\r\\n\s+(?=\\r))", "");
+                                                    address.FullAddress = Regex.Replace(address.FullAddress, @"\\r\\n", ", ");
+
+                                                    result.Addresses.Add(address);
+                                                }
+                                                //break;
+                                            }
+                                            else
+                                            {
+
+
+
+                                                PostcodeSearchAddress address = new PostcodeSearchAddress();
+                                                if (a.Organisation.Length > 0)
+                                                {
+
+                                                    address.Organisation = a.Organisation;
+                                                }
+
+                                                if (a.Sub_Building_Name.Length > 0)
+                                                {
+                                                    //	"Flat 10"
+                                                    //	Prepend this to the building name
+                                                    if (a.Building_Name.Length == 0)
+                                                        a.Building_Name = a.Sub_Building_Name;
+                                                    else
+                                                        a.Building_Name = a.Sub_Building_Name + ", " + a.Building_Name;
+                                                }
+
+                                                if (a.Building_Name.Length > 0)
+                                                {
+                                                    // Check if this building name is just a number,  e.g. "9-17".  In which case,  if the Number is empty,  use this as the number
+                                                    if (Regex.IsMatch(a.Building_Name, @"^[\d\-\s]+$"))
+                                                    {
+                                                        // it's just a number...
+                                                        if (a.Number.Length > 0)
+                                                        {
+                                                            // But they're using a number too.  So treat this building name as a building name
+                                                            address.BuildingName = a.Building_Name;
+                                                        }
+                                                        else
+                                                            a.Number = a.Building_Name;
+                                                    }
+                                                    else
+                                                        address.BuildingName = a.Building_Name;
+                                                }
+
+                                                if (a.Number.Length + a.Street.Length > 0)
+                                                {
+                                                    if (a.Number.Length == 0)
+                                                        address.Address1 = a.Street;
+                                                    else
+                                                    {
+                                                        if (a.Street.Length == 0)
+                                                            address.Address1 = a.Number;
+                                                        else
+                                                            address.Address1 = a.Number + " " + a.Street;
+
+                                                    }
+                                                }
+
+
+                                                if (a.County_FormerPostal.Length > 0) address.CountyFormerPostal = a.County_FormerPostal;
+                                                if (a.County_Traditional.Length > 0) address.CountyTraditional = a.County_Traditional;
+
+                                                if (a.Post_Town.Length > 0 && a.County_Administrative.Length > 0 && a.Post_Town == a.County_Administrative)
+                                                    address.TownCity = a.Post_Town; // '		London, Manchester, etc. - don't add the county
+                                                else
+                                                {
+                                                    if (a.Post_Town.Length > 0)
+                                                        address.TownCity = a.Post_Town;
+
+                                                    if (a.County_Administrative.Length > 0)
+                                                        address.CountyAdministrative = a.County_Administrative;
+                                                }
+
+                                                if (a.Postcode.Length > 0)
+                                                {
+                                                    address.Postcode = a.Postcode;
+                                                }
+
+                                                var tmp = string.Empty;
+                                                if (!string.IsNullOrWhiteSpace(address.BuildingName))
+                                                    tmp = address.BuildingName;
+                                                if (!string.IsNullOrWhiteSpace(address.SubBuildingName))
+                                                {
+                                                    tmp = (tmp.Length > 0 ? tmp + ", " + address.SubBuildingName : address.SubBuildingName);
+                                                }
+                                                if (!string.IsNullOrWhiteSpace(address.Address1))
+                                                {
+                                                    tmp = (tmp.Length > 0 ? tmp + ", " + address.Address1 : address.Address1);
+                                                }
+                                                address.Address1 = tmp; // merge the building and street into line 1.
+
+                                                address.FullAddress = Regex.Replace(a.FullAddress, @"(^\\r\\n)|(\\r\\n$)|(\\r\\n\s+(?=\\r))", "");
+                                                address.FullAddress = Regex.Replace(address.FullAddress, @"\\r\\n", ", ");
+
+                                                result.Addresses.Add(address);
+                                            }
+                                        }
+
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    return result;
+                }
+            }
             #endregion
         }
 

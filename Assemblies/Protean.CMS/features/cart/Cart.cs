@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+﻿using Newtonsoft.Json.Linq;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Protean.Providers.Payment;
@@ -7,15 +6,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Web;
 using System.Web.Configuration;
 using System.Xml;
+using static Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
-using VB = Microsoft.VisualBasic;
 
 namespace Protean
 {
@@ -24,13 +25,17 @@ namespace Protean
     public partial class Cms
     {
 
-        public partial class Cart
+        public partial class Cart : IDisposable
         {
             #region Declarations
 
 
             public System.Collections.Specialized.NameValueCollection moCartConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/cart");
             public System.Collections.Specialized.NameValueCollection moConfig;
+
+            //XmlElement moPaymentCfg = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/payment");
+
+
             private System.Web.HttpServerUtility moServer;
 
             public XmlDocument moPageXml;
@@ -41,6 +46,7 @@ namespace Protean
             public string mcEwDataConn;
             public string mcEwSiteDomain;
             public bool mbEwMembership;
+           
 
             public XmlElement oShippingOptions;
 
@@ -62,10 +68,10 @@ namespace Protean
             public string mcSiteURL; // Site Identifier, used for User Cookie Name
             public string mcCartURL; // Site Identifier, used for User Cookie Name
 
-            public int mnCartId; // Unique Id refering to this session cart
+            public long mnCartId; // Unique Id refering to this session cart
             public string mcSessionId; // Session ID - Unique for each client browser
                                        // private string mcRefSessionId; // Referrer Site Session ID - The session ID from the referrer site, if passed.
-            public int mnEwUserId; // User Id for Membership integration
+            public long mnEwUserId; // User Id for Membership integration
             public string mmcOrderType; // The order type associated with the current cart
             public string mcItemOrderType; // The order type associated with the current page (if provided)
             public XmlElement moCartXml;
@@ -94,7 +100,7 @@ namespace Protean
             private string promocodeFromExternalRef = "";
             public string mcPersistCart = "";
             public string mcPagePath;
-            public int mnPaymentId = 0; // to be populated by payment prvoider to pass to subscriptions
+            public long mnPaymentId = 0; // to be populated by payment prvoider to pass to subscriptions
 
             public bool bFullCartOption;
             public bool mbAddItemWithNoPrice; // Switch to allow enquiries of items with no price
@@ -183,6 +189,7 @@ namespace Protean
             public bool mbQuitOnShowInvoice = true;
             private bool mbDepositOnly = false;
             public bool mbBlockCartCmd = false; // Used for reseting payment on subscripitions
+            public string mcBlockCartUpdate;
 
 
             public enum cartError
@@ -236,6 +243,8 @@ namespace Protean
                     cOrderNoPrefix = value;
                 }
             }
+
+
             #endregion
 
             #region Classes
@@ -519,10 +528,37 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
             }
 
+
+            public string GetBlockCartUpdatesConfig()
+            {
+
+                string mcBlockCartUpdate = "";
+                string paymentMethod = myWeb?.moSession?["mcPaymentMethod"] as string;
+
+                if (!string.IsNullOrEmpty(paymentMethod))
+                {
+                    Protean.Cms.Cart.PaymentProviders oEwProv = new Protean.Cms.Cart.PaymentProviders(ref myWeb);
+
+                    XmlElement oProvider = oEwProv.GetValidPaymentProviders();
+                    XmlNode oPaymentProviderCfg = oProvider.SelectSingleNode("provider[@name='" + paymentMethod + "']");
+
+
+                    if (oPaymentProviderCfg != null)
+                    {
+                        XmlNode allowNode = oPaymentProviderCfg.SelectSingleNode("BlockCartUpdates");
+
+                        if (allowNode != null && allowNode.Attributes["value"] != null)
+                        {
+                            mcBlockCartUpdate = allowNode.Attributes["value"].Value;
+                        }
+                    }
+                }
+                return mcBlockCartUpdate;
+            }
 
 
             public void InitializeVariables()
@@ -541,7 +577,7 @@ namespace Protean
                 cOrderReference = "";
                 mcModuleName = "Protean.Cart";
 
-                string cProcessInfo = Conversions.ToString(string.IsNullOrEmpty("initialise variables"));
+                string cProcessInfo = Convert.ToString(string.IsNullOrEmpty("initialise variables"));
                 try
                 {
 
@@ -559,7 +595,7 @@ namespace Protean
                             mcCartURL = moCartConfig["SecureURL"];
                         }
 
-                        if (Strings.LCase(myWeb.moRequest["ewCmd"]) == "logoff")
+                        if ((myWeb.moRequest["ewCmd"]?.ToLower() ?? "") == "logoff")
                         {
                             EndSession();
                         }
@@ -645,7 +681,7 @@ namespace Protean
                         if (moCartConfig["DisplayPrice"] == "off")
                             mbDisplayPrice = false;
 
-                        mcDeposit = Strings.LCase(moCartConfig["Deposit"]);
+                        mcDeposit = (moCartConfig["Deposit"]?.ToString() ?? "").ToLower();
                         mcDepositAmount = moCartConfig["DepositAmount"];
                         mcNotesXForm = moCartConfig["NotesXForm"];
                         mcBillingAddressXform = moCartConfig["BillingAddressXForm"];
@@ -662,12 +698,12 @@ namespace Protean
                             mcPriorityCountries = "United Kingdom,United States";
                         }
 
-                        mnTaxRate = Conversions.ToDouble(moCartConfig["TaxRate"]);
+                        mnTaxRate = Convert.ToDouble(moCartConfig["TaxRate"]);
                         if (myWeb.moSession != null)
                         {
                             if (myWeb.moSession["nTaxRate"] != null)
                             {
-                                mnTaxRate = Conversions.ToDouble("0" + myWeb.moSession["nTaxRate"] ?? "");
+                                mnTaxRate = Convert.ToDouble("0" + myWeb.moSession["nTaxRate"] ?? "");
                             }
                         }
                         if (!string.IsNullOrEmpty(myWeb.moRequest.Form["url"]))
@@ -681,11 +717,11 @@ namespace Protean
                         }
                         if (myWeb.moSession != null)
                         {
-                            mcReturnPage = Conversions.ToString(myWeb.moSession["returnPage"]);
+                            mcReturnPage = Convert.ToString(myWeb.moSession["returnPage"]);
 
                             if (myWeb.moSession["nEwUserId"] != null)
                             {
-                                mnEwUserId = Conversions.ToInteger(Operators.ConcatenateObject("0", myWeb.moSession["nEwUserId"]));
+                                mnEwUserId = Convert.ToInt16((myWeb.moSession["nEwUserId"]?.ToString() ?? "0"));
                             }
                             else
                             {
@@ -702,7 +738,7 @@ namespace Protean
                         if (myWeb.mnUserId > 0 & mnEwUserId == 0)
                             mnEwUserId = myWeb.mnUserId;
                         // MEMB - eEDIT
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moCtx.Application["bFullCartOption"], true, false)))
+                        if ((myWeb.goApp["bFullCartOption"] as bool?) == true)
                         {
                             bFullCartOption = true;
                         }
@@ -712,29 +748,29 @@ namespace Protean
                         }
                         if (myWeb.moRequest.Form["cartId"] != null)
                         {
-                            if (Operators.ConditionalCompareObjectNotEqual(myWeb.moSession["CartId"], 0, false))
+                            if ((myWeb.moSession["CartId"] as long?) != 0)
                             {
                                 string CurrentCartId = myWeb.moRequest.Form["cartId"];
-                                if ((CurrentCartId ?? "") != (myWeb.moSession["CartId"].ToString() ?? ""))
+                                if ((CurrentCartId ?? "") != (Convert.ToString(myWeb.moSession["CartId"]) ?? ""))
                                 {
-                                    myWeb.moSession["CartId"] = (object)int.Parse(CurrentCartId);
+                                    myWeb.moSession["CartId"] = Convert.ToString(CurrentCartId);
                                     mcReEstablishSession = "true";
                                 }
                             }
                         }
-                        string newCartId = (String)myWeb.moSession["CartId"];
+                        string newCartId = Convert.ToString(myWeb.moSession["CartId"]);
 
                         if (myWeb.moSession["CartId"] is null)
                         {
                             mnCartId = 0;
                         }
-                        else if (Conversions.ToBoolean(Operators.OrObject(!Information.IsNumeric(myWeb.moSession["CartId"]), Operators.ConditionalCompareObjectLessEqual(myWeb.moSession["CartId"], 0, false))))
+                        else if (!Tools.Number.IsNumeric(myWeb.moSession["CartId"]) || ((myWeb.moSession["CartId"] as int?) <= 0))
                         {
                             mnCartId = 0;
                         }
                         else
                         {
-                            mnCartId = Conversions.ToInteger(myWeb.moSession["CartId"]);
+                            mnCartId = Convert.ToInt64(myWeb.moSession["CartId"]) as long? ?? 0;
                         }
 
                         if (myWeb.moRequest["refSessionId"] != null)
@@ -744,7 +780,7 @@ namespace Protean
                         }
                         else if (myWeb.moSession["refSessionId"] != null)
                         {
-                            mcSessionId = Conversions.ToString(myWeb.moSession["refSessionId"]);
+                            mcSessionId = Convert.ToString(myWeb.moSession["refSessionId"]);
                         }
                         else
                         {
@@ -753,8 +789,8 @@ namespace Protean
                         // session id is assigned
                         // add logic if same seession id is present or not in db if we have then generate diff session id
 
-                        if (Information.IsNumeric(myWeb.moRequest.QueryString["cartErr"]))
-                            mnProcessError = (short)Conversions.ToInteger(myWeb.moRequest.QueryString["cartErr"]);
+                        if (Tools.Number.IsNumeric(myWeb.moRequest.QueryString["cartErr"]))
+                            mnProcessError = (short)Convert.ToInt16(myWeb.moRequest.QueryString["cartErr"]);
 
                         if (mbBlockCartCmd == false)
                         {
@@ -764,8 +800,8 @@ namespace Protean
                                 mcCartCmd = myWeb.moRequest.Form["cartCmd"];
                             }
                         }
-                        mcPaymentMethod = Conversions.ToString(myWeb.moSession["mcPaymentMethod"]);
-                        mmcOrderType = Conversions.ToString(myWeb.moSession["mmcOrderType"]);
+                        mcPaymentMethod = Convert.ToString(myWeb.moSession["mcPaymentMethod"]);
+                        mmcOrderType = Convert.ToString(myWeb.moSession["mmcOrderType"]);
                         mcItemOrderType = myWeb.moRequest.Form["ordertype"];
 
                         // MsgBox "Item: " & mcItemOrderType & vbCrLf & "Order: " & mmcOrderType
@@ -783,10 +819,13 @@ namespace Protean
                             {
                                 writeSessionCookie(); // write the cookie to persist the cart
                             }
+
                             if (!string.IsNullOrEmpty(mcReEstablishSession))
                             {
-                                sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + myWeb.moRequest["id"] + "And cCartSessionId Like '%" + mcReEstablishSession + "'";
-                                // sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + mnCartId + "And cCartSessionId Like '%" + mcSessionId + "'";
+                                if (mnCartId == 0) {
+                                    mnCartId = Convert.ToInt64(myWeb.moRequest["CartId"]);
+                                }
+                                sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + mnCartId + " and cCartSessionId Like '%" + mcReEstablishSession + "'";
                             }
                             else
                             {
@@ -799,16 +838,16 @@ namespace Protean
                                 {
                                     while (oDr.Read())
                                     {
-                                        mnGiftListId = Conversions.ToInteger(oDr["nGiftListId"]);
-                                        mnTaxRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oDr["nTaxRate"]));
-                                        mnProcessId = (short)Conversions.ToLong(Operators.ConcatenateObject("0", oDr["nCartStatus"]));
+                                        mnGiftListId = Convert.ToInt16(oDr["nGiftListId"]);
+                                        mnTaxRate = Convert.ToDouble(oDr["nTaxRate"]?.ToString() ?? "0");
+                                        mnProcessId = (short)Convert.ToInt64(oDr["nCartStatus"]?.ToString() ?? "0");
                                         cartXmlFromDatabase = oDr["cCartXml"].ToString();
                                         // Check for deposit and earlier stages
                                         if (mcDeposit == "on")
                                         {
                                             if (!(oDr["nAmountReceived"] is DBNull))
                                             {
-                                                if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectGreater(oDr["nAmountReceived"], 0, false), mnProcessId < (int)cartProcess.Confirmed)))
+                                                if ((oDr["nAmountReceived"] as double? > 0) && mnProcessId < (int)cartProcess.Confirmed)
                                                 {
                                                     mnProcessId = (short)cartProcess.SettlementInitiated;
                                                     moDBHelper.ExeProcessSql("update tblCartOrder set nCartStatus = '" + mnProcessId + "' where nCartOrderKey = " + mnCartId);
@@ -840,7 +879,7 @@ namespace Protean
                             string cSessionFromSessionCookie = "";
                             if (mcPersistCart == "on")
                             {
-                                string cSessionCookieName = "ewSession" + myWeb.mnUserId.ToString();
+                                string cSessionCookieName = "ewSession_" + myWeb.moSession.SessionID;
                                 if (myWeb.moRequest.Cookies[cSessionCookieName] is null)
                                 {
                                     writeSessionCookie();
@@ -907,13 +946,15 @@ namespace Protean
                                     }
                                     if (mnCartId > 0)
                                     {
-                                        // sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '" & SqlFmt(mcSessionId) & "'"
-                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("select Top 1* from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '", SqlFmt(mcSessionId)), "' and o.nCartOrderKey='"), Convert.ToString(mnCartId)), "' order by o.nCartOrderKey desc "));
+                                        sSql = "select Top 1 * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId " +
+                                               "where o.cCartSchemaName='Order' and o.cCartSessionId = '" + SqlFmt(mcSessionId) +
+                                               "' and o.nCartOrderKey='" + mnCartId + "' order by o.nCartOrderKey desc";
                                     }
                                     else
                                     {
-                                        sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId where o.cCartSchemaName='Order' and o.cCartSessionId = '", SqlFmt(mcSessionId)), "'"));
-                                        // logic needs here to check cart id if we have car id then pull wiith session id
+                                        sSql = "select * from tblCartOrder o inner join tblAudit a on a.nAuditKey=o.nAuditId " +
+                                               "where o.cCartSchemaName='Order' and o.cCartSessionId = '" + SqlFmt(mcSessionId) + "'";
+                                        // logic needed here to check cart id; if we have a cart id, then pull with session id
                                     }
 
                                 }
@@ -927,10 +968,10 @@ namespace Protean
                                     {
                                         while (oDr.Read())
                                         {
-                                            mnGiftListId = Conversions.ToInteger(oDr["nGiftListId"]);
-                                            mnCartId = Conversions.ToInteger(oDr["nCartOrderKey"]); // get cart id
-                                            mnProcessId = Conversions.ToShort(oDr["nCartStatus"]); // get cart status
-                                            mnTaxRate = Conversions.ToDouble(oDr["nTaxRate"]);
+                                            mnGiftListId = Convert.ToInt16(oDr["nGiftListId"]);
+                                            mnCartId = Convert.ToInt32(oDr["nCartOrderKey"]); // get cart id
+                                            mnProcessId = Convert.ToInt16(oDr["nCartStatus"]); // get cart status
+                                            mnTaxRate = Convert.ToDouble(oDr["nTaxRate"]);
                                             if (myWeb.moRequest["settlementRef"] != null | myWeb.moRequest["settlementRef"] != null)
                                             {
 
@@ -938,7 +979,7 @@ namespace Protean
                                                 // mnProcessId = cartProcess.SettlementInitiated
 
                                                 // If a cart has been found, we need to update the session ID in it.
-                                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cCartSessionId"], mcSessionId, false)))
+                                                if ((oDr["cCartSessionId"]?.ToString() ?? "") != mcSessionId)
                                                 {
                                                     moDBHelper.ExeProcessSql("update tblCartOrder set cCartSessionId = '" + mcSessionId + "' where nCartOrderKey = " + mnCartId);
                                                     // if mnCartId is not null then pull both otherwise pull session id
@@ -957,7 +998,7 @@ namespace Protean
                                                 mnProcessId = 0;
                                                 mcCartCmd = "";
                                             }
-                                            mcCurrencyRef = Conversions.ToString(oDr["cCurrency"]);
+                                            mcCurrencyRef = Convert.ToString(oDr["cCurrency"]);
                                             cartXmlFromDatabase = oDr["cCartXml"].ToString();
                                         }
                                     }
@@ -997,25 +1038,24 @@ namespace Protean
                             promocodeFromExternalRef = myWeb.moRequest["promocode"].ToString();
                         }
 
-                        else if (myWeb.moSession != null && Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(myWeb.moSession["promocode"], "", false)))
+                        else if (myWeb.moSession != null && !string.IsNullOrEmpty(myWeb.moSession["promocode"] as string))
                         {
-
                             // Set the value from the session.
                             promocodeFromExternalRef = myWeb.moSession["promocode"].ToString();
 
                         }
 
-                        mbVatAtUnit = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(moCartConfig["VatAtUnit"]) == "yes" | Strings.LCase(moCartConfig["VatAtUnit"]) == "on", true, false));
-                        mbVatOnLine = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(moCartConfig["VatOnLine"]) == "yes" | Strings.LCase(moCartConfig["VatOnLine"]) == "on", true, false));
+                        mbVatAtUnit = (moCartConfig["VatAtUnit"]?.ToString().ToLower() == "yes" || moCartConfig["VatAtUnit"]?.ToString().ToLower() == "on");
+                        mbVatOnLine = (moCartConfig["VatOnLine"]?.ToString().ToLower() == "yes" || moCartConfig["VatOnLine"]?.ToString().ToLower() == "on");
 
-                        mbRoundup = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(moCartConfig["Roundup"]) == "yes" | Strings.LCase(moCartConfig["Roundup"]) == "on", true, false));
-                        mbRoundDown = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(moCartConfig["Roundup"]) == "down", true, false));
+                        mbRoundup = (moCartConfig["Roundup"]?.ToString().ToLower() == "yes" || moCartConfig["Roundup"]?.ToString().ToLower() == "on");
+                        mbRoundDown = (moCartConfig["Roundup"]?.ToString().ToLower() == "down");
 
-                        mbDiscountsOn = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(moCartConfig["Discounts"]) == "yes" | Strings.LCase(moCartConfig["Discounts"]) == "on", true, false));
-                        mbOveridePrice = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(moCartConfig["OveridePrice"]) == "yes" | Strings.LCase(moCartConfig["OveridePrice"]) == "on", true, false));
+                        mbDiscountsOn = (moCartConfig["Discounts"]?.ToString().ToLower() == "yes" || moCartConfig["Discounts"]?.ToString().ToLower() == "on");
+                        mbOveridePrice = (moCartConfig["OveridePrice"]?.ToString().ToLower() == "yes" || moCartConfig["OveridePrice"]?.ToString().ToLower() == "on");
 
                         if (string.IsNullOrEmpty(mcCurrencyRef))
-                            mcCurrencyRef = Conversions.ToString(myWeb.moSession["cCurrency"]);
+                            mcCurrencyRef = Convert.ToString(myWeb.moSession["cCurrency"]);
                         if (string.IsNullOrEmpty(mcCurrencyRef) | mcCurrencyRef is null)
                             mcCurrencyRef = moCartConfig["currencyRef"]; // Setting Deprecated
                         if (string.IsNullOrEmpty(mcCurrencyRef) | mcCurrencyRef is null)
@@ -1028,16 +1068,16 @@ namespace Protean
                             sSql = "SELECT nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + mnCartId;
                             string cRes = moDBHelper.ExeProcessSqlScalar(sSql);
 
-                            if (Information.IsNumeric(cRes) && Conversions.ToDouble(cRes) > 0d)
+                            if (Tools.Number.IsNumeric(cRes) && Convert.ToDouble(cRes) > 0d)
                             {
-                                myWeb.mnUserId = Conversions.ToInteger(cRes);
+                                myWeb.mnUserId = Convert.ToInt64(cRes);
                                 mnEwUserId = myWeb.mnUserId;
                                 myWeb.moSession["nUserId"] = cRes;
 
                                 string cRequestPage = myWeb.moRequest["pgid"];
-                                if (Information.IsNumeric(cRequestPage) && Conversions.ToDouble(cRequestPage) > 0d)
+                                if (Tools.Number.IsNumeric(cRequestPage) && Convert.ToDouble(cRequestPage) > 0d)
                                 {
-                                    myWeb.mnPageId = Conversions.ToInteger(myWeb.moRequest["pgid"]);
+                                    myWeb.mnPageId = Convert.ToInt64(myWeb.moRequest["pgid"]);
                                 }
                             }
                         }
@@ -1062,10 +1102,9 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "InitializeVariables", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "InitializeVariables", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
             }
-
 
 
             public void writeSessionCookie()
@@ -1073,10 +1112,11 @@ namespace Protean
                 // writes the session cookie to persist the cart
                 if (mcPersistCart == "on")
                 {
-                    // make or update the session cookie
-                    var cookieEwSession = new System.Web.HttpCookie("ewSession" + myWeb.mnUserId.ToString());
+                    // Use session ID instead of user ID for cookie name
+                    string cookieName = "ewSession_" + myWeb.moSession.SessionID;
+                    var cookieEwSession = new System.Web.HttpCookie(cookieName);
                     cookieEwSession.Value = mcSessionId.ToString();
-                    cookieEwSession.Expires = DateAndTime.DateAdd(DateInterval.Month, 1d, DateTime.Now);
+                    cookieEwSession.Expires = DateTime.Now.AddMonths(1);
                     myWeb.moResponse.Cookies.Add(cookieEwSession);
                 }
             }
@@ -1084,7 +1124,7 @@ namespace Protean
             private void clearSessionCookie()
             {
 
-                string cSessionCookieName = "ewSession" + myWeb.mnUserId.ToString();
+                string cSessionCookieName = "ewSession_" + myWeb.moSession.SessionID;
 
                 if (myWeb.moResponse.Cookies[cSessionCookieName] != null)
                 {
@@ -1093,23 +1133,10 @@ namespace Protean
                     var cookieEwSession = new System.Web.HttpCookie(cSessionCookieName);
                     cookieEwSession.Expires = DateTime.Now.AddDays(-1);
                     myWeb.moResponse.Cookies.Add(cookieEwSession);
-                    cookieEwSession.Expires = DateAndTime.DateAdd(DateInterval.Month, 1d, DateTime.Now);
+                    cookieEwSession.Expires = DateTime.Now.AddMonths(1);
                 }
             }
 
-            public void close()
-            {
-                myWeb.PerfMon.Log("Cart", "close");
-                string cProcessInfo = "";
-                try
-                {
-                    PersistVariables();
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
-                }
-            }
 
             public virtual void PersistVariables()
             {
@@ -1136,7 +1163,10 @@ namespace Protean
                         }
                         else
                         {
-                            myWeb.moSession["CartId"] = mnCartId.ToString();
+                            if (mnCartId > 0)
+                            {
+                                myWeb.moSession["CartId"] = mnCartId.ToString();
+                            }
                         }
                         // oResponse.Cookies(mcSiteURL & "CartId").Domain = mcSiteURL
                         // oSession("nCartOrderId") = mnCartId    '   session attribute holds Cart ID
@@ -1145,7 +1175,7 @@ namespace Protean
                     if (mnCartId > 0)
                     {
                         // Only update the process if less than 6 we don't ever want to change the status of a completed order other than within the admin system. Boo Yah!
-                        int currentStatus = Conversions.ToInteger(moDBHelper.ExeProcessSqlScalar("select nCartStatus from tblCartOrder where nCartOrderKey = " + mnCartId));
+                        int currentStatus = Convert.ToInt16(moDBHelper.ExeProcessSqlScalar("select nCartStatus from tblCartOrder where nCartOrderKey = " + mnCartId));
                         if (currentStatus < 6 | currentStatus == 10 & mnProcessId == 6)
                         {
                             // If we have a cart, update its status in the db
@@ -1178,7 +1208,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "PersistVariables", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -1272,7 +1302,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "checkButtons", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "checkButtons", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -1307,13 +1337,11 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", "CreateCartElement", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, myWeb.moCtx, "", "CreateCartElement", gbDebug);
                     return null;
                 }
 
             }
-
-
 
             public virtual void apply()
             {
@@ -1402,8 +1430,7 @@ namespace Protean
                     if (mnProcessId == (int)cartProcess.Complete & mcCartCmd != "Quit" & mcCartCmd != "ShowCallBackInvoice")
                         mcCartCmd = "ShowInvoice";
 
-                    cProcessInfo = Conversions.ToString(cProcessInfo + Operators.ConcatenateObject(Interaction.IIf(string.IsNullOrEmpty(mcCartCmd), "", ", "), mcCartCmd));
-
+                    cProcessInfo = cProcessInfo + (string.IsNullOrEmpty(mcCartCmd) ? "" : ", ") + mcCartCmd;
                     if (!string.IsNullOrEmpty(mcCartCmd))
                     {
                         // ensure the client is not able to hit the back button and go back to the page without refreshing.
@@ -1417,7 +1444,7 @@ namespace Protean
                         case "Update":
                             {
                                 string argcSuccessfulCartCmd = "Currency";
-                                mcCartCmd = Conversions.ToString(updateCart(ref argcSuccessfulCartCmd));
+                                mcCartCmd = Convert.ToString(updateCart(ref argcSuccessfulCartCmd));
                                 goto processFlow;
                             }
                         case "Remove": // take away an item and set the command to display the cart
@@ -1441,11 +1468,11 @@ namespace Protean
                                 // Check we are adding a quantity (we need to catch any adds that don't have a specified quantity and create empty carts)
                                 foreach (string oItem1 in myWeb.moRequest.Form) // Loop for getting products/quants
                                 {
-                                    if (Strings.InStr(Conversions.ToString(oItem1), "qty_") == 1) // check for getting productID and quantity (since there will only be one of these per item submitted)
+                                    if ((oItem1?.ToString() ?? "").StartsWith("qty_"))
                                     {
-                                        if (Information.IsNumeric(myWeb.moRequest.Form.Get(oItem1)))
+                                        if (Tools.Number.IsNumeric(myWeb.moRequest.Form.Get(oItem1)))
                                         {
-                                            nQuantity = Conversions.ToLong(myWeb.moRequest.Form.Get(oItem1));
+                                            nQuantity = Convert.ToInt64(myWeb.moRequest.Form.Get(oItem1));
                                         }
 
                                         // replacementName
@@ -1559,8 +1586,10 @@ namespace Protean
                                         if (myWeb.moRequest["redirect"].StartsWith("/"))
                                             mcReturnPage = myWeb.moRequest["redirect"];
                                     }
-                                    myWeb.msRedirectOnEnd = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(mcSiteURL + mcReturnPage, Interaction.IIf((mcSiteURL + mcReturnPage).Contains("?"), "&", "?")), "cartCmd=finish"));
-                                    // myWeb.moResponse.Redirect(mcSiteURL & mcReturnPage & IIf((mcSiteURL & mcReturnPage).Contains("?"), "&", "?") & "cartCmd=finish")
+                                    myWeb.msRedirectOnEnd =
+     mcSiteURL + mcReturnPage +
+     ((mcSiteURL + mcReturnPage).Contains("?") ? "&" : "?") +
+     "cartCmd=finish";
                                 }
 
                                 break;
@@ -1583,6 +1612,14 @@ namespace Protean
 
                                 // info to display the cart
                                 GetCart(ref oElmt);
+                                if (Convert.ToString(oElmt.Attributes["statusId"].Value) == "6")
+                                {
+                                    mnProcessId = 6;
+                                    // addDateAndRef(ref oElmt);
+                                    // purchaseActions(oContentElmt,true);
+                                    mcCartCmd = "ShowInvoice";
+                                    goto processFlow;
+                                }
                                 GetWalletDetails(ref oElmt);
                                 break;
                             }
@@ -1634,9 +1671,9 @@ namespace Protean
                                     // form needs to have this <form method="post" action="http://www.thissite.com" id="cart" onsubmit="pageTracker._linkByPost(this)">
                                     // the action URL is important
                                     // each querystring item in the google tracking code start with __utm
-                                    if (Strings.InStr(Conversions.ToString(item), "__utm") == 1)
+                                    if ((item?.ToString() ?? "").StartsWith("__utm"))
                                     {
-                                        cGoogleTrackingCode = cGoogleTrackingCode + "&" + Conversions.ToString(item) + "=" + myWeb.moRequest.QueryString[Conversions.ToString(item)];
+                                        cGoogleTrackingCode = cGoogleTrackingCode + "&" + Convert.ToString(item) + "=" + myWeb.moRequest.QueryString[Convert.ToString(item)];
                                     }
                                 }
                                 if (mnCartId > 0)
@@ -1664,8 +1701,9 @@ namespace Protean
                                 if (mcReturnPage is null)
                                     mcReturnPage = "";
 
-                                myWeb.msRedirectOnEnd = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(mcSiteURL + mcReturnPage, Interaction.IIf((mcSiteURL + mcReturnPage).Contains("?"), "&", "?")), "cartCmd=finish"));
+                                myWeb.msRedirectOnEnd = mcSiteURL + mcReturnPage + ((mcSiteURL + mcReturnPage).Contains("?") ? "&" : "?") + "cartCmd=finish";
                                 break;
+
                             }
 
                         case "Logon":
@@ -1694,14 +1732,14 @@ namespace Protean
                                         IMembershipAdminXforms oRegXform = oMembershipProv.AdminXforms;
                                         oRegXform.open(moPageXml);
                                         XmlElement argIntanceAppend = null;
-                                        oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend, (long)myWeb.mnUserId, "User", (long)Conversions.ToInteger("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
+                                        oRegXform.xFrmEditDirectoryItem(IntanceAppend: ref argIntanceAppend, myWeb.mnUserId, "User", Convert.ToInt64("0" + moCartConfig["DefaultSubscriptionGroupId"]), "CartRegistration");
                                         if (oRegXform.valid)
                                         {
                                             string sReturn = moDBHelper.validateUser(myWeb.moRequest["cDirName"], myWeb.moRequest["cDirPassword"]);
-                                            if (Information.IsNumeric(sReturn))
+                                            if (Tools.Number.IsNumeric(sReturn))
                                             {
-                                                myWeb.mnUserId = (int)Conversions.ToLong(sReturn);
-                                                var oUserElmt = moDBHelper.GetUserXML((long)myWeb.mnUserId);
+                                                myWeb.mnUserId = (int)Convert.ToInt64(sReturn);
+                                                var oUserElmt = moDBHelper.GetUserXML(myWeb.mnUserId);
 
                                                 var oMembership = new Membership(ref myWeb);
                                                 oMembership.RegistrationActions();
@@ -1850,7 +1888,7 @@ namespace Protean
                                             oContentsElmt = moPageXml.CreateElement("Contents");
                                             if (moPageXml.DocumentElement is null)
                                             {
-                                                Information.Err().Raise(1004, "addressSubProcess", " PAGE IS NOT CREATED");
+                                                throw new Exception("PAGE IS NOT CREATED");
                                             }
                                             else
                                             {
@@ -1904,19 +1942,33 @@ namespace Protean
                         case "EnterPaymentDetails":
                         case "SubmitPaymentDetails": // confirm order and submit for payment
                             {
+                                GetCart(ref oElmt);
+
+                                if (Convert.ToString(oElmt.Attributes["statusId"].Value) == cartProcess.Complete.ToString())
+                                {
+                                    mnProcessId = (short)cartProcess.Complete;
+                                    //  purchaseActions(oContentElmt, true);
+                                    mcCartCmd = "ShowInvoice";
+                                    goto processFlow;
+                                }
+
                                 mnProcessId = 5;
+
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["PaymentMethod"]))
                                 {
                                     mcPaymentMethod = myWeb.moRequest["PaymentMethod"];
                                 }
-                                if (oElmt.FirstChild is null)
-                                {
-                                    GetCart(ref oElmt);
-                                }
+
+                                //if (oElmt.FirstChild is null)
+                                //{
+                                //    GetCart(ref oElmt);
+                                //}
 
                                 // Add the date and reference to the cart
-
-                                addDateAndRef(ref oElmt);
+                                if (oElmt != null)
+                                {
+                                    addDateAndRef(ref oElmt);
+                                }
 
                                 if (mcPaymentMethod == "No Charge")
                                 {
@@ -1933,7 +1985,7 @@ namespace Protean
                                 var cmsCart = this;
                                 ccPaymentXform = (Protean.xForm)oPaymentProv.Activities.GetPaymentForm(ref myWeb, ref cmsCart, ref oElmt);
 
-                                if (Strings.InStr(mcPaymentMethod, "Repeat_") > 0)
+                                if ((mcPaymentMethod ?? "").Contains("Repeat_"))
                                 {
                                     if (ccPaymentXform.valid == true)
                                     {
@@ -1987,13 +2039,13 @@ namespace Protean
                                 }
                                 else
                                 {
-
-
                                     moPageXml.SelectSingleNode("/Page/Contents").AppendChild(ccPaymentXform.moXformElmt);
                                 }
 
                                 break;
                             }
+
+
                         // oEwProv = Nothing
 
                         case "ShowInvoice":
@@ -2009,90 +2061,21 @@ namespace Protean
                                 }
                                 else
                                 {
+                                    GetCart(ref oElmt);
 
-                                    PersistVariables();
-
-                                    if (oElmt.FirstChild is null)
+                                    if (oElmt != null && Convert.ToString(oElmt.Attributes["statusId"].Value) != "6")
                                     {
-                                        GetCart(ref oElmt);
+                                        CompleteOrder(oCartXML, ref oContentElmt, ref oElmt);
                                     }
-
-                                    if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
+                                    else
                                     {
-
-                                        if (moCartConfig["StockControl"] == "on")
+                                        if (mnProcessId == (int)cartProcess.Complete | mnProcessId == (int)cartProcess.DepositPaid | mnProcessId == (int)cartProcess.AwaitingPayment)
                                         {
-                                            UpdateStockLevels(ref oElmt);
+
+                                            addDateAndRef(ref oElmt);
+                                            // purchaseActions(oContentElmt);
                                         }
-                                        UpdateGiftListLevels();
-                                        addDateAndRef(ref oElmt);
-                                        if (myWeb.mnUserId > 0)
-                                        {
-                                            var userXml = myWeb.moDbHelper.GetUserXML((long)myWeb.mnUserId, false);
-                                            if (userXml != null)
-                                            {
-                                                XmlElement cartElement = (XmlElement)oContentElmt.SelectSingleNode("Cart");
-                                                if (cartElement != null)
-                                                {
-                                                    cartElement.AppendChild(cartElement.OwnerDocument.ImportNode(userXml, true));
-                                                }
-                                            }
-                                        }
-
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["Settlement"], "true", false)))
-                                        {
-                                            // modifiy the cartXml in line with settlement
-                                            if (mnProcessId == (int)cartProcess.DepositPaid)
-                                            {
-                                                mnProcessId = (short)cartProcess.Complete;
-
-                                            }
-                                            myWeb.moSession["Settlement"] = (object)null;
-                                        }
-
-
-
-                                        if (mnProcessId == (int)cartProcess.DepositPaid)
-                                        {
-                                            AddToLists("Deposit", ref oContentElmt);
-                                        }
-                                        else
-                                        {
-                                            AddToLists("Invoice", ref oContentElmt);
-                                        }
-
-                                        purchaseActions(ref oContentElmt);
-                                        // update the cart if purchase actions have changed it
-                                        // GetCart(oElmt)
-                                        // done for ammerdown as we have removed a product.
-
-
-
-                                        if (myWeb.mnUserId > 0)
-                                        {
-                                            if (moSubscription != null)
-                                            {
-                                                moSubscription.AddUserSubscriptions(mnCartId, myWeb.mnUserId, ref oContentElmt, mnPaymentId);
-                                            }
-                                        }
-
-                                        if (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] != null)
-                                        {
-                                            if ((oElmt.GetAttribute("statusId") ?? "") != (moCartConfig["SendReceiptEmailForAwaitingPaymentStatusId"] ?? ""))
-                                            {
-                                                emailReceipts(ref oContentElmt);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            emailReceipts(ref oContentElmt);
-                                        }
-
-
-                                        moDiscount.DisablePromotionalDiscounts();
-
                                     }
-
 
 
                                     if (mbQuitOnShowInvoice)
@@ -2129,9 +2112,9 @@ namespace Protean
 
                         case "List":
                             {
-                                int nI = 0;
+                                long nI = 0;
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["OrderID"]))
-                                    nI = Conversions.ToInteger(myWeb.moRequest["OrderID"]);
+                                    nI = Convert.ToInt64(myWeb.moRequest["OrderID"]);
                                 GetCartSummary(ref oElmt);
                                 XmlElement argoPageDetail = null;
                                 ListOrders(nI.ToString(), false, 0, oPageDetail: ref argoPageDetail);
@@ -2140,9 +2123,9 @@ namespace Protean
 
                         case "MakeCurrent":
                             {
-                                int nI = 0;
+                                long nI = 0;
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["OrderID"]))
-                                    nI = Conversions.ToInteger(myWeb.moRequest["OrderID"]);
+                                    nI = Convert.ToInt64(myWeb.moRequest["OrderID"]);
                                 if (!(nI == 0))
                                     MakeCurrent(nI);
                                 mcCartCmd = "Cart";
@@ -2154,7 +2137,7 @@ namespace Protean
                             {
                                 int nI = 0;
                                 if (!string.IsNullOrEmpty(myWeb.moRequest["OrderID"]))
-                                    nI = Conversions.ToInteger(myWeb.moRequest["OrderID"]);
+                                    nI = Convert.ToInt16(myWeb.moRequest["OrderID"]);
                                 if (!(nI == 0))
                                     DeleteCart(nI);
                                 mcCartCmd = "List";
@@ -2166,7 +2149,7 @@ namespace Protean
                                 // Continue shopping
                                 // go to the cart url
                                 string cPage = moCartConfig["ContinuePath"];
-                                if (!!string.IsNullOrEmpty(Strings.LCase(moCartConfig["ContinuePath"])))
+                                if (!string.IsNullOrEmpty(moCartConfig["ContinuePath"]?.ToString().ToLower()))
                                 {
                                     cPage = myWeb.moRequest["pgid"];
                                     if (string.IsNullOrEmpty(cPage) | cPage is null)
@@ -2226,7 +2209,7 @@ namespace Protean
                     // do nothing
                     else
                     {
-                        stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, "", cProcessInfo, gbDebug);
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "apply", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                     }
 
                 }
@@ -2252,7 +2235,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddCartElement", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddCartElement", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
             }
 
@@ -2262,7 +2245,7 @@ namespace Protean
                 try
                 {
 
-                    switch (Strings.LCase(moCartConfig["AddBehaviour"]) ?? "")
+                    switch ((moCartConfig["AddBehaviour"]?.ToString().ToLower()) ?? "")
                     {
                         case "discounts":
                             {
@@ -2295,7 +2278,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddBehavior", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddBehavior", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -2305,321 +2288,6 @@ namespace Protean
 
                 var oEwProv = new PaymentProviders(ref myWeb);
                 return oEwProv;
-
-            }
-            public virtual void emailReceipts(ref XmlElement oCartElmt)
-            {
-                emailReceipts(ref oCartElmt, "");
-            }
-            public virtual void emailReceipts(ref XmlElement oCartElmt, string ccCustomerEmail = "")
-            {
-                myWeb.PerfMon.Log("Cart", "emailReceipts");
-                string sMessageResponse;
-                string cProcessInfo = "";
-                try
-                {
-                    if (Strings.LCase(moCartConfig["EmailReceipts"]) != "off")
-                    {
-                        // Default subject line
-                        string cSubject = moCartConfig["OrderEmailSubject"];
-                        if (string.IsNullOrEmpty(cSubject))
-                            cSubject = "Website Order";
-
-                        string CustomerEmailTemplatePath = "/xsl/Cart/mailOrderCustomer.xsl";
-                        string MerchantEmailTemplatePath = "/xsl/Cart/mailOrderMerchant.xsl";
-                        if (myWeb.bs5)
-                        {
-                            CustomerEmailTemplatePath = "/features/cart/email/order-customer.xsl";
-                            MerchantEmailTemplatePath = "/features/cart/email/order-merchant.xsl";
-                        }
-                        if (!string.IsNullOrEmpty(moCartConfig["CustomerEmailTemplatePath"]))
-                        {
-                            CustomerEmailTemplatePath = moCartConfig["CustomerEmailTemplatePath"];
-                        }
-                        if (!string.IsNullOrEmpty(moCartConfig["MerchantEmailTemplatePath"]))
-                        {
-                            MerchantEmailTemplatePath = moCartConfig["MerchantEmailTemplatePath"];
-                        }
-
-                        // send to customer
-                        sMessageResponse = Conversions.ToString(emailCart(ref oCartElmt, CustomerEmailTemplatePath, moCartConfig["MerchantName"], moCartConfig["MerchantEmail"], oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, cSubject, cAttachementTemplatePath: moCartConfig["CustomerAttachmentTemplatePath"], cCCEmail: ccCustomerEmail));
-
-                        // Send to merchant
-                        sMessageResponse = Conversions.ToString(emailCart(ref oCartElmt, MerchantEmailTemplatePath, oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText, oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, moCartConfig["MerchantEmail"], cSubject, false, moCartConfig["MerchantAttachmentTemplatePath"], moCartConfig["MerchantEmailBcc"]));
-
-                        XmlElement oElmtEmail;
-                        oElmtEmail = moPageXml.CreateElement("Reciept");
-                        oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oElmtEmail, true));
-                        oElmtEmail.InnerText = sMessageResponse;
-
-                        if (sMessageResponse == "Message Sent")
-                        {
-                            oElmtEmail.SetAttribute("status", "sent");
-                        }
-                        else
-                        {
-                            oElmtEmail.SetAttribute("status", "failed");
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "emailReceipts", ex, "", cProcessInfo, gbDebug);
-                }
-
-            }
-
-            public object AddPayment(double amountPaid, string Description)
-            {
-                string cProcessInfo = "";
-                string sSql;
-                try
-                {
-                    var nAmountReceived = default(double);
-                    // Get the amount received so far
-                    sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                    using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
-                    {
-                        if (oDr.HasRows)
-                        {
-                            while (oDr.Read())
-                                nAmountReceived = Conversions.ToDouble(Operators.ConcatenateObject(0, oDr["nAmountReceived"]));
-                        }
-                    }
-                    nAmountReceived = nAmountReceived + amountPaid;
-
-                    sSql = "update tblCartOrder set nAmountReceived = " + nAmountReceived + " where nCartOrderKey = " + mnCartId;
-                    moDBHelper.ExeProcessSql(sSql);
-
-                    mnPaymentId = moDBHelper.savePayment(mnCartId, (long)myWeb.mnUserId, "", "", Description, (XmlElement)null, DateTime.Now, false, amountPaid, "deduction");
-                    return null;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug);
-                    return null;
-                }
-                finally
-                {
-                    // oDr = Nothing
-                }
-            }
-
-
-            public object ConfirmPayment(ref XmlElement oCartElmt, ref XmlElement PaymentDetailXml, string providerPaymentRef, string providerName, double amountPaid)
-            {
-                string cProcessInfo = "ConfirmPayment";
-                try
-                {
-                    string PayableType = oCartElmt.GetAttribute("payableType");
-
-                    // Add processing for deposits.
-                    switch (PayableType ?? "")
-                    {
-                        case "deposit":
-                            {
-                                mcDepositAmount = Conversions.ToDouble("0" + oCartElmt.GetAttribute("payableAmount")).ToString();
-                                double outstandingAmount;
-                                if (Conversions.ToDouble(mcDepositAmount) == 0d)
-                                {
-                                    // no deposit payment paid in full
-                                    outstandingAmount = 0d;
-                                }
-                                else
-                                {
-                                    outstandingAmount = Conversions.ToDouble("0" + oCartElmt.GetAttribute("total")) - Conversions.ToDouble(mcDepositAmount);
-                                }
-
-                                // Let's update the cart element
-                                oCartElmt.SetAttribute("paymentMade", mcDepositAmount);
-                                oCartElmt.SetAttribute("outstandingAmount", Strings.FormatNumber(outstandingAmount, 2, TriState.True, TriState.False, TriState.False));
-
-                                // Let's create a unique link for settlement
-                                // Make a unique link
-                                string cUniqueLink = "";
-                                while (string.IsNullOrEmpty(cUniqueLink))
-                                {
-                                    object testLink = Guid.NewGuid().ToString();
-                                    string sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("select * from tblCartOrder where cSettlementID = '", testLink), "'"));
-                                    using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
-                                    {
-                                        if (!oDr.HasRows)
-                                            cUniqueLink = Conversions.ToString(testLink);
-                                    }
-                                }
-                                if (outstandingAmount == 0d)
-                                {
-                                    PayableType = "full";
-                                    oCartElmt.SetAttribute("transStatus", "Paid In Full");
-                                    mnProcessId = 6;
-                                }
-                                else
-                                {
-                                    oCartElmt.SetAttribute("settlementID", cUniqueLink);
-                                    oCartElmt.SetAttribute("transStatus", "Deposit Paid");
-                                    mnProcessId = 10;
-                                }
-
-                                UpdateCartDeposit(ref oCartElmt, amountPaid, PayableType);
-                                break;
-                            }
-
-
-                        case "settlement":
-                            {
-                                mnProcessId = 6;
-                                double totalPaid = Conversions.ToDouble(oCartElmt.GetAttribute("paymentMade"));
-                                totalPaid = totalPaid + amountPaid;
-                                double outstandingAmount = Conversions.ToDouble("0" + oCartElmt.GetAttribute("total")) - totalPaid;
-                                oCartElmt.SetAttribute("paymentMade", amountPaid.ToString());
-                                oCartElmt.SetAttribute("outstandingAmount", outstandingAmount.ToString());
-                                oCartElmt.SetAttribute("payableAmount", outstandingAmount.ToString());
-                                oCartElmt.SetAttribute("transStatus", "Settlement Paid");
-                                oCartElmt.SetAttribute("status", "Settlement Paid");
-                                oCartElmt.SetAttribute("statusId", mnProcessId.ToString());
-                                UpdateCartDeposit(ref oCartElmt, amountPaid, PayableType);
-                                break;
-                            }
-
-                        default:
-                            {
-                                PayableType = "full";
-                                UpdateCartDeposit(ref oCartElmt, amountPaid, PayableType);
-                                oCartElmt.SetAttribute("transStatus", "Paid In Full");
-                                mnProcessId = 6;
-                                break;
-                            }
-                    }
-
-                    mnPaymentId = moDBHelper.savePayment(mnCartId, (long)myWeb.mnUserId, providerName, providerPaymentRef, providerName, PaymentDetailXml, DateTime.Now, false, amountPaid, PayableType);
-                    return null;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ConfirmPayment", ex, "", cProcessInfo, gbDebug);
-                    return null;
-                }
-                finally
-                {
-                    // oDr = Nothing
-                }
-            }
-
-            public virtual void purchaseActions(ref XmlElement oCartElmt)
-            {
-                myWeb.PerfMon.Log("Cart", "purchaseActions");
-                // Dim sMessageResponse As String
-                string cProcessInfo = "";
-
-                try
-                {
-
-                    if (!string.IsNullOrEmpty(moCartConfig["AccountingProvider"]))
-                    {
-                        object providerName = moCartConfig["AccountingProvider"];
-                        Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/accountingProviders");
-                        var assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName.ToString()].Type.ToString());
-                        Type calledType;
-                        string classPath = Conversions.ToString(moPrvConfig.Providers[providerName.ToString()].Parameters["rootClass"]);
-
-                        string passCMS = Conversions.ToString(moPrvConfig.Providers[providerName.ToString()].Parameters["passCMS"]);
-
-                        string methodName = "ProcessOrder";
-                        calledType = assemblyInstance.GetType(classPath, true);
-                        var o = Activator.CreateInstance(calledType);
-
-                        var args = new object[1];
-
-                        if (passCMS == "true")
-                        {
-                            args = new object[2];
-                            args[0] = myWeb;
-                            args[1] = oCartElmt;
-                        }
-                        else
-                        {
-                            args[0] = oCartElmt;
-                        }
-
-                        if (oCartElmt.FirstChild.SelectSingleNode("Notes/PromotionalCode") != null)
-                        {
-                            moDiscount.RecordDiscountUsage(ref oCartElmt);
-                        }
-                        calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
-                    }
-
-
-                    foreach (XmlElement ocNode in oCartElmt.SelectNodes("descendant-or-self::Order/Item/productDetail[@purchaseAction!='']"))
-                    {
-                        string classPath = ocNode.GetAttribute("purchaseAction");
-                        string assemblyName = ocNode.GetAttribute("assembly");
-                        string providerName = ocNode.GetAttribute("providerName");
-                        string assemblyType = ocNode.GetAttribute("assemblyType");
-
-                        string methodName = Strings.Right(classPath, Strings.Len(classPath) - classPath.LastIndexOf(".") - 1);
-
-                        classPath = Strings.Left(classPath, classPath.LastIndexOf("."));
-
-                        if (!string.IsNullOrEmpty(classPath))
-                        {
-                            try
-                            {
-                                Type calledType;
-
-                                if (!string.IsNullOrEmpty(assemblyName))
-                                {
-                                    classPath = classPath + ", " + assemblyName;
-                                }
-                                // Dim oModules As New Protean.Cms.Membership.Modules
-
-                                if (!string.IsNullOrEmpty(providerName))
-                                {
-                                    // case for external Providers
-                                    Protean.ProviderSectionHandler moPrvConfig = (Protean.ProviderSectionHandler)WebConfigurationManager.GetWebApplicationSection("protean/messagingProviders");
-                                    var assemblyInstance = Assembly.Load(moPrvConfig.Providers[providerName].Type);
-                                    calledType = assemblyInstance.GetType(classPath, true);
-                                }
-
-                                else if (!string.IsNullOrEmpty(assemblyType))
-                                {
-                                    // case for external DLL's
-                                    var assemblyInstance = Assembly.Load(assemblyType);
-                                    calledType = assemblyInstance.GetType(classPath, true);
-                                }
-                                else
-                                {
-                                    // case for methods within ProteanCMS Core DLL
-                                    calledType = Type.GetType(classPath, true);
-                                }
-
-                                var o = Activator.CreateInstance(calledType);
-
-                                var args = new object[2];
-                                args[0] = myWeb;
-                                args[1] = ocNode;
-
-                                calledType.InvokeMember(methodName, BindingFlags.InvokeMethod, null, o, args);
-                            }
-
-                            // Error Handling ?
-                            // Object Clearup ?
-
-
-                            catch (Exception)
-                            {
-                                // OnComponentError(Me, New Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ContentActions", ex, sProcessInfo))
-                                cProcessInfo = classPath + "." + methodName + " not found";
-                                ocNode.InnerXml = "<Content type=\"error\"><div>" + cProcessInfo + "</div></Content>";
-                            }
-                        }
-
-                    }
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
-                }
 
             }
 
@@ -2672,14 +2340,30 @@ namespace Protean
                             {
                                 bOptOut = Convert.ToBoolean(oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut").InnerText);
                             }
-
-                            foreach (XmlAttribute Attribute in oCartElmt.Attributes)
+                            else
                             {
-                                if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
+                                if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nOptOutKey"))
                                 {
-                                    valDict.Add(Attribute.Name, Attribute.Value);
+                                    if (!string.IsNullOrEmpty(Email))
+                                    {
+                                        string cSQL = $"Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '{Email}')";
+                                        string cSQLStatusCheck = $"Select top 1 nStatus FROM tblOptOutAddresses WHERE (EmailAddress = '{Email}') order by dOptOut desc";
+
+                                        bool bstatus = Convert.ToBoolean(moDBHelper.ExeProcessSqlScalar(cSQLStatusCheck));
+                                        bOptOut = bstatus;
+                                    }
+                                      
+                                   
+
                                 }
                             }
+                                foreach (XmlAttribute Attribute in oCartElmt.Attributes)
+                                {
+                                    if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
+                                    {
+                                        valDict.Add(Attribute.Name, Attribute.Value);
+                                    }
+                                }
                             string[] fullName = Name.Split(' ');
                             string firstName = "";
                             string lastName = "";
@@ -2757,7 +2441,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "purchaseActions", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "purchaseActions", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -2786,7 +2470,7 @@ namespace Protean
                 valDict = XmltoDictionary(xListElement, true);
                 return valDict;
             }
-            private void RemoveDeliveryOption(int nOrderId)
+            private void RemoveDeliveryOption(long nOrderId)
             {
                 try
                 {
@@ -2795,7 +2479,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "RemoveDeliveryOption", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "RemoveDeliveryOption", ex, myWeb.moCtx, "", "", gbDebug);
                 }
             }
 
@@ -2806,12 +2490,12 @@ namespace Protean
             /// <param name="oCartElmt"></param>
             /// <param name="nSelCartId"></param>
             /// <remarks></remarks>
-            public void GetCartSummary(ref XmlElement oCartElmt, int nSelCartId = 0)
+            public void GetCartSummary(ref XmlElement oCartElmt, long nSelCartId = 0)
             {
                 // Sets content for the XML to be displayed in the small summary plugin attached
                 // to the current content page
                 myWeb.PerfMon.Log("Cart", "GetCartSummary");
-                int nCartIdUse;
+                long nCartIdUse;
                 if (nSelCartId > 0)
                 {
                     nCartIdUse = nSelCartId;
@@ -2831,7 +2515,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCartSummary", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCartSummary", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -2845,11 +2529,11 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, myWeb.moCtx, "", "", gbDebug);
                 }
             }
 
-            public void GetCart(ref XmlElement oCartElmt, int nSelCartId = 0)
+            public void GetCart(ref XmlElement oCartElmt, long nSelCartId = 0)
             {
                 oCartElmt.InnerXml = "";
                 myWeb.PerfMon.Log("Cart", "GetCart");
@@ -2885,7 +2569,7 @@ namespace Protean
                 object bCheckSubscriptions = false;
                 string cOptionGroupName = "";
 
-                int nCartIdUse;
+                long nCartIdUse;
                 if (nSelCartId > 0)
                 {
                     nCartIdUse = nSelCartId;
@@ -2896,7 +2580,7 @@ namespace Protean
                 }
 
                 long oldCartId = mnCartId;
-                long ShippingOptionKey = Conversions.ToLong(moCartConfig["DefaultShippingMethod"]);
+                long ShippingOptionKey = Convert.ToInt64(moCartConfig["DefaultShippingMethod"]);
                 // Dim cCartType As String = String.Empty
 
                 string cProcessInfo = "CartId=" + nCartIdUse;
@@ -2950,13 +2634,13 @@ namespace Protean
 
                         ReceiptDeliveryType = 0;
                         // Process promo code from external refs.
-                        if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectNotEqual(myWeb.moSession["promocode"], "", false), !string.IsNullOrEmpty(myWeb.moRequest["promocode"]))))
+                        if ((!string.IsNullOrEmpty(myWeb.moSession["promocode"] as string)) || !string.IsNullOrEmpty(myWeb.moRequest["promocode"]))
                         {
                             if (!string.IsNullOrEmpty(myWeb.moRequest["promocode"]))
                             {
                                 promocodeFromExternalRef = myWeb.moRequest["promocode"].ToString();
                             }
-                            else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(myWeb.moSession["promocode"], "", false)))
+                            else if (!string.IsNullOrEmpty(myWeb.moSession["promocode"] as string))
                             {
                                 promocodeFromExternalRef = myWeb.moSession["promocode"].ToString();
                             }
@@ -2996,7 +2680,7 @@ namespace Protean
                             {
                                 oItemList.Add(oItemList.Count, oRow["contentId"]);
                             }
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moDBHelper.DBN2int(oRow["nParentId"]), 0, false)))
+                            if (Convert.ToInt32(moDBHelper.DBN2int(oRow["nParentId"])) == 0)
                             {
                                 long nTaxRate = 0L;
                                 bool bOverridePrice = false;
@@ -3021,14 +2705,18 @@ namespace Protean
                                     {
 
                                         var oProd = moPageXml.CreateElement("product");
-                                        oProd.InnerXml = Conversions.ToString(oRow["productDetail"]);
+                                        oProd.InnerXml = Convert.ToString(oRow["productDetail"]);
                                         if (oProd.SelectSingleNode("Content[@overridePrice='true']") is null && oProd.SelectSingleNode("Content[contains(@action,'VariableSubscription')]") is null)
                                         {
-                                            oCheckPrice = getContentPricesNode(oProd, Conversions.ToString(Operators.ConcatenateObject(oRow["unit"], "")), Conversions.ToLong(oRow["quantity"]));
-                                            cProcessInfo = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Error getting price for unit:", oRow["unit"]), " and Quantity:"), oRow["quantity"]), " and Currency "), mcCurrencyRef), " Check that a price is available for this quantity and a group for this current user."));
+                                            oCheckPrice = getContentPricesNode(oProd, oRow["unit"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"]));
+
+                                            cProcessInfo = "Error getting price for unit:" + (oRow["unit"]?.ToString() ?? "") +
+                                                           " and Quantity:" + oRow["quantity"] +
+                                                           " and Currency " + mcCurrencyRef +
+                                                           " Check that a price is available for this quantity and a group for this current user.";
                                             if (oCheckPrice != null)
                                             {
-                                                nCheckPrice = Conversions.ToDouble(oCheckPrice.InnerText);
+                                                nCheckPrice = Convert.ToDouble(oCheckPrice.InnerText);
                                                 // TS moved to the end when calcuating deposit totals as we need non deposit items to have discounts calculated allready.
                                                 // If moDBHelper.checkTableColumnExists("tblCartItem", "nDepositAmount") Then
                                                 // If CDbl("0" & oRow("nDepositAmount").ToString()) > 0 Then
@@ -3041,20 +2729,19 @@ namespace Protean
                                                 nTaxRate = (long)Math.Round(getProductTaxRate(oCheckPrice));
                                             }
                                             // nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
-
-                                            if (moSubscription != null & Conversions.ToString(Operators.ConcatenateObject(oRow["contentType"], "")) == "Subscription")
+                                            if (moSubscription != null && (oRow["contentType"]?.ToString() ?? "") == "Subscription")
                                             {
                                                 if (moSubscription.mbOveridePrices == false)
                                                 {
                                                     // TS added when subscription when initial cost is changed in by external logic we should not refer back to the stored content.
-                                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(oRow["contentId"], 0, false)))
+                                                    if ((oRow["contentId"] as int? ?? 0) > 0)
                                                     {
-                                                        revisedPrice = moSubscription.CartSubscriptionPrice(Conversions.ToInteger(oRow["contentId"]), myWeb.mnUserId);
+                                                        revisedPrice = moSubscription.CartSubscriptionPrice(Convert.ToInt16(oRow["contentId"]), myWeb.mnUserId);
                                                     }
                                                     else
                                                     {
-                                                        oCheckPrice = getContentPricesNode(oProd, Conversions.ToString(Operators.ConcatenateObject(oRow["unit"], "")), Conversions.ToLong(oRow["quantity"]), "SubscriptionPrices");
-                                                        nCheckPrice = Conversions.ToDouble(oCheckPrice.InnerText);
+                                                        oCheckPrice = getContentPricesNode(oProd, oRow["unit"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"]), "SubscriptionPrices");
+                                                        nCheckPrice = Convert.ToDouble(oCheckPrice.InnerText);
                                                         nTaxRate = (long)Math.Round(getProductTaxRate(oCheckPrice));
                                                     }
                                                     if (revisedPrice < nCheckPrice)
@@ -3074,12 +2761,13 @@ namespace Protean
                                     }
                                     if (!bOverridePrice)
                                     {
-                                        if (Conversions.ToBoolean(Operators.AndObject(nCheckPrice > 0d, Operators.ConditionalCompareObjectNotEqual(nCheckPrice, oRow["price"], false))))
+                                        if (nCheckPrice > 0d && !nCheckPrice.Equals(oRow["price"]))
                                         {
                                             // If price is lower, then update the item price field
                                             oRow["price"] = nCheckPrice;
                                         }
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oRow["taxRate"], nTaxRate, false)))
+
+                                        if (!nTaxRate.Equals(oRow["taxRate"]))
                                         {
                                             oRow["taxRate"] = nTaxRate;
                                         }
@@ -3092,8 +2780,8 @@ namespace Protean
                                 {
                                     if (!mbOveridePrice) // for openquote
                                     {
-                                        decimal nNPrice = (decimal)getOptionPricesByXml(Conversions.ToString(oRow["productDetail"]), Conversions.ToInteger(oRow["nItemOptGrpIdx"]), Conversions.ToInteger(oRow["nItemOptIdx"]));
-                                        if (Conversions.ToBoolean(Operators.AndObject(nNPrice > 0m, Operators.ConditionalCompareObjectNotEqual(nNPrice, oOpRow["price"], false))))
+                                        decimal nNPrice = (decimal)getOptionPricesByXml(Convert.ToString(oRow["productDetail"]), Convert.ToInt16(oRow["nItemOptGrpIdx"]), Convert.ToInt16(oRow["nItemOptIdx"]));
+                                        if (nNPrice > 0m && !nNPrice.Equals(oOpRow["price"]))
                                         {
                                             nOpPrices += nNPrice;
                                             // oOpRow.BeginEdit()
@@ -3103,41 +2791,47 @@ namespace Protean
 
                                         else if (moCartConfig["ProductOptionOverideQuantity"] == "on")
                                         {
-                                            nOpPrices = Conversions.ToDecimal(nOpPrices + Convert.ToDecimal(Operators.MultiplyObject(oOpRow["price"], oOpRow["quantity"])));
+                                            nOpPrices += Convert.ToDecimal(oOpRow["price"]) * Convert.ToDecimal(oOpRow["quantity"]);
                                         }
                                         else
                                         {
-                                            nOpPrices = Conversions.ToDecimal(nOpPrices + Convert.ToDecimal(oOpRow["price"]));
+                                            nOpPrices = Convert.ToDecimal(nOpPrices + Convert.ToDecimal(oOpRow["price"]));
 
                                         }
                                     }
-                                    else if (Conversions.ToBoolean(Operators.AndObject(moCartConfig["ProductOptionOverideQuantity"] == "on", Operators.ConditionalCompareObjectGreater(oOpRow["quantity"], 1, false))))
+                                    else if ((moCartConfig["ProductOptionOverideQuantity"]?.ToString() == "on") && Convert.ToInt32(oOpRow["quantity"]) > 1)
                                     {
-                                        nOpPrices = Conversions.ToDecimal(nOpPrices + Convert.ToDecimal(Operators.MultiplyObject(oOpRow["price"], oOpRow["quantity"])));
-                                        // Else
-                                        // nOpPrices += (oOpRow("price"))
+                                        nOpPrices += Convert.ToDecimal(oOpRow["price"]) * Convert.ToDecimal(oOpRow["quantity"]);
                                     }
                                 }
 
                                 // Apply stock control
                                 if (mbStockControl)
-                                    CheckStock(ref oCartElmt, Conversions.ToString(oRow["productDetail"]), Conversions.ToString(oRow["quantity"]));
+                                    CheckStock(ref oCartElmt, Convert.ToString(oRow["productDetail"]), Convert.ToString(oRow["quantity"]));
                                 // Apply quantity control
                                 if (!(oRow["productDetail"] is DBNull))
                                 {
                                     // not sure why the product has no detail but if it not we skip this, suspect it was old test data that raised this issue.
-                                    CheckQuantities(ref oCartElmt, Conversions.ToString(Operators.ConcatenateObject(oRow["productDetail"], "")), Conversions.ToLong(Operators.ConcatenateObject("0", oRow["quantity"])).ToString());
+                                    CheckQuantities(ref oCartElmt, oRow["productDetail"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"]?.ToString() ?? "0").ToString());
                                 }
 
                                 weight += Convert.ToInt32(oRow["weight"]) * Convert.ToInt32(oRow["quantity"]);
                                 quant += Convert.ToInt32(oRow["quantity"]);
                                 if (moCartConfig["ProductOptionOverideQuantity"] == "on")
                                 {
-                                    total = total + Conversions.ToDouble(Operators.AddObject(Operators.MultiplyObject(oRow["quantity"], Round(oRow["price"], bForceRoundup: mbRoundup)), Round(nOpPrices, bForceRoundup: mbRoundup)));
+                                    total += Convert.ToDouble(oRow["quantity"]) *
+                                             Convert.ToDouble(Round(Convert.ToDouble(oRow["price"]), bForceRoundup: mbRoundup))
+                                             + Convert.ToDouble(Round(Convert.ToDouble(nOpPrices), bForceRoundup: mbRoundup));
                                 }
                                 else
                                 {
-                                    total = total + Conversions.ToDouble(Operators.MultiplyObject(oRow["quantity"], Round(Operators.AddObject(oRow["price"], nOpPrices), bForceRoundup: mbRoundup)));
+                                    total += Convert.ToDouble(oRow["quantity"]) *
+                                             Convert.ToDouble(
+                                                 Round(
+                                                     Convert.ToDouble(oRow["price"]) + Convert.ToDouble(nOpPrices),
+                                                     bForceRoundup: mbRoundup
+                                                 )
+                                             );
                                 }
 
 
@@ -3190,7 +2884,7 @@ namespace Protean
 
                             try
                             {
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oRow["price"], null, false)))
+                                if (oRow["price"] != DBNull.Value)
                                 {
                                     // If oRow("price") <> 0 Then
                                     string discountSQL = "";
@@ -3198,7 +2892,7 @@ namespace Protean
                                     {
                                         // discountSQL = ", nDiscountValue = " & Discount & " "
                                     }
-                                    string cUpdtSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartItem Set nPrice = ", oRow["price"]), discountSQL), " WHERE nCartItemKey = "), oRow["id"]));
+                                    string cUpdtSQL = "UPDATE tblCartItem Set nPrice = " + oRow["price"] + discountSQL + " WHERE nCartItemKey = " + oRow["id"];
                                     moDBHelper.ExeProcessSql(cUpdtSQL);
                                     // End If
                                 }
@@ -3225,7 +2919,7 @@ namespace Protean
 
                         // add to Cart XML
                         sSql = "Select nCartStatus from tblCartOrder where nCartOrderKey = " + nCartIdUse;
-                        nStatusId = Conversions.ToLong(moDBHelper.DBN2Str(moDBHelper.ExeProcessSqlScalar(sSql), false, false));
+                        nStatusId = Convert.ToInt64(moDBHelper.DBN2Str(moDBHelper.ExeProcessSqlScalar(sSql), false, false));
                         // moCartConfig("OrderPaymentStatusId") = nStatusId
                         oCartElmt.SetAttribute("statusId", nStatusId.ToString());
                         oCartElmt.SetAttribute("status", getProcessName((cartProcess)nStatusId));
@@ -3233,6 +2927,17 @@ namespace Protean
                         oCartElmt.SetAttribute("weight", weight.ToString());
                         oCartElmt.SetAttribute("orderType", mmcOrderType + "");
 
+                        mcBlockCartUpdate = GetBlockCartUpdatesConfig();
+
+                        if (!string.IsNullOrEmpty(mcBlockCartUpdate)
+                            && mcBlockCartUpdate.Trim().ToLower() == "on")
+                        {
+                            oCartElmt.SetAttribute("BlockCartUpdate", "on");
+                        }
+                        else
+                        {
+                            oCartElmt.SetAttribute("BlockCartUpdate", "off");
+                        }
                         if (nStatusId == 6L)
                         {
                             oCartElmt.SetAttribute("complete", "True");
@@ -3317,7 +3022,7 @@ namespace Protean
                                 {
                                     cOptionGroupName = oElmt.SelectSingleNode("Content/Options/OptGroup[" + nGroupIndex + "]/@name").InnerText;
                                 }
-                                if (Conversions.ToDouble(nOptionIndex) >= 0d)
+                                if (Convert.ToDouble(nOptionIndex) >= 0d)
                                 {
                                     oElmt2 = (XmlElement)oElmt.SelectSingleNode("Content/Options/OptGroup[" + nGroupIndex + "]/Option[" + nOptionIndex + "]");
                                     if (oElmt2 != null)
@@ -3396,10 +3101,10 @@ namespace Protean
                         foreach (DataRow currentORow1 in oDs.Tables["Order"].Rows)
                         {
                             oRow = currentORow1;
-                            shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShippingCost"]));
-                            oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRow["nShippingMethodId"], "")));
-                            oCartElmt.SetAttribute("shippingCost", shipCost + "");
-                            oCartElmt.SetAttribute("shippingDesc", Conversions.ToString(Operators.ConcatenateObject(oRow["cShippingDesc"], "")));
+                            shipCost = Convert.ToDouble(Convert.IsDBNull(oRow["nShippingCost"]) ? 0.0 : Convert.ToDouble(oRow["nShippingCost"]));
+                            oCartElmt.SetAttribute("shippingType", oRow["nShippingMethodId"]?.ToString() ?? "");
+                            oCartElmt.SetAttribute("shippingCost", shipCost.ToString());
+                            oCartElmt.SetAttribute("shippingDesc", oRow["cShippingDesc"]?.ToString() ?? "");
 
                             if (moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType"))
                             {
@@ -3409,7 +3114,7 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    ReceiptDeliveryType = Conversions.ToShort(oRow["nReceiptType"]);
+                                    ReceiptDeliveryType = Convert.ToInt16(oRow["nReceiptType"]);
                                 }
                                 oCartElmt.SetAttribute("ReceiptType", ReceiptDeliveryType.ToString());
 
@@ -3463,7 +3168,8 @@ namespace Protean
                                         {
 
 
-                                            shipCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRowSO["nShipOptCost"]));
+                                            // Robust, null/DBNull-safe one-liner replacement
+                                            shipCost = Convert.ToDouble(oRowSO["nShipOptCost"]?.ToString() ?? "0");
                                             if (lowestShipCost == 0)
                                             {
                                                 lowestShipCost = shipCost;
@@ -3472,7 +3178,7 @@ namespace Protean
                                             bool bCollection = false;
                                             if (!(oRowSO["bCollection"] is DBNull))
                                             {
-                                                bCollection = Conversions.ToBoolean(oRowSO["bCollection"]);
+                                                bCollection = Convert.ToBoolean(oRowSO["bCollection"]);
                                             }
                                             if (oRowSO.Table.Columns.Contains("nShippingGroup"))
                                             {
@@ -3491,12 +3197,14 @@ namespace Protean
                                                     {
                                                         if (Convert.ToString(oRowSO["nShipOptKey"]) == Convert.ToString(ShippingOptionKey))
                                                         {
-
+                                                            string shipOptName = oRowSO["cShipOptName"] == DBNull.Value ? "" : Convert.ToString(oRowSO["cShipOptName"]);
+                                                            // Compact Convert variant with DBNull guard
+                                                            string shipOptCarrier = oRowSO["cShipOptCarrier"] == DBNull.Value ? "" : Convert.ToString(oRowSO["cShipOptCarrier"]);
                                                             oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                             oCartElmt.SetAttribute("shippingType", ShippingOptionKey + "");
                                                             oCartElmt.SetAttribute("shippingCost", shipCost + "");
-                                                            oCartElmt.SetAttribute("shippingDesc", Conversions.ToString(Operators.ConcatenateObject(oRowSO["cShipOptName"], "")));
-                                                            oCartElmt.SetAttribute("shippingCarrier", Conversions.ToString(Operators.ConcatenateObject(oRowSO["cShipOptCarrier"], "")));
+                                                            oCartElmt.SetAttribute("shippingDesc", Convert.ToString(shipOptName));
+                                                            oCartElmt.SetAttribute("shippingCarrier", Convert.ToString(shipOptCarrier));
                                                             // oCartElmt.SetAttribute("cCatSchemaName", cCartType & "")
                                                         }
                                                     }
@@ -3505,11 +3213,14 @@ namespace Protean
                                                 {
                                                     if (Convert.ToString(oRowSO["nShipOptKey"]) == moCartConfig["DefaultShippingMethod"])
                                                     {
+                                                        string shipOptName = oRowSO["cShipOptName"] == DBNull.Value ? "" : Convert.ToString(oRowSO["cShipOptName"]);
+                                                        // Compact Convert variant with DBNull guard
+                                                        string shipOptCarrier = oRowSO["cShipOptCarrier"] == DBNull.Value ? "" : Convert.ToString(oRowSO["cShipOptCarrier"]);
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
                                                         oCartElmt.SetAttribute("shippingType", moCartConfig["DefaultShippingMethod"] + "");
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
-                                                        oCartElmt.SetAttribute("shippingDesc", Conversions.ToString(Operators.ConcatenateObject(oRowSO["cShipOptName"], "")));
-                                                        oCartElmt.SetAttribute("shippingCarrier", Conversions.ToString(Operators.ConcatenateObject(oRowSO["cShipOptCarrier"], "")));
+                                                        oCartElmt.SetAttribute("shippingDesc", Convert.ToString(shipOptName));
+                                                        oCartElmt.SetAttribute("shippingCarrier", Convert.ToString(shipOptCarrier));
                                                     }
                                                 }
                                                 // Add extra condition only when promocode is valid
@@ -3518,26 +3229,37 @@ namespace Protean
                                                 {
                                                     if (oCartElmt.GetAttribute("freeShippingMethods").Contains(oCartElmt.GetAttribute("shippingType")))
                                                     {
+                                                        string shipOptName = oRowSO["cShipOptName"] == DBNull.Value ? "" : Convert.ToString(oRowSO["cShipOptName"]);
+                                                        // Compact Convert variant with DBNull guard
+                                                        string shipOptCarrier = oRowSO["cShipOptCarrier"] == DBNull.Value ? "" : Convert.ToString(oRowSO["cShipOptCarrier"]);
                                                         oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
-                                                        oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
+                                                        // Safe, DBNull-aware replacement using DataRow.Field<T>() which returns null for DBNull
+                                                        oCartElmt.SetAttribute("shippingType", oRowSO.Field<object>("nShipOptKey")?.ToString() ?? "");
                                                         oCartElmt.SetAttribute("shippingCost", shipCost + "");
-                                                        oCartElmt.SetAttribute("shippingDesc", Conversions.ToString(Operators.ConcatenateObject(oRowSO["cShipOptName"], "")));
-                                                        oCartElmt.SetAttribute("shippingCarrier", Conversions.ToString(Operators.ConcatenateObject(oRowSO["cShipOptCarrier"], "")));
-                                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oRowSO["NonDiscountedShippingCost"], "0", false)))
+                                                        oCartElmt.SetAttribute("shippingDesc", Convert.ToString(shipOptName));
+                                                        oCartElmt.SetAttribute("shippingCarrier", Convert.ToString(shipOptCarrier));
+                                                        //if (Convert.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oRowSO["NonDiscountedShippingCost"], "0", false)))
+                                                        //{
+                                                        //    oCartElmt.SetAttribute("NonDiscountedShippingCost", Convert.ToString(Operators.ConcatenateObject(oRowSO["NonDiscountedShippingCost"], "")));
+                                                        //}
+                                                        if ((oRowSO["NonDiscountedShippingCost"]?.ToString() ?? "0") != "0")
                                                         {
-                                                            oCartElmt.SetAttribute("NonDiscountedShippingCost", Conversions.ToString(Operators.ConcatenateObject(oRowSO["NonDiscountedShippingCost"], "")));
+                                                            oCartElmt.SetAttribute("NonDiscountedShippingCost", oRowSO["NonDiscountedShippingCost"]?.ToString() ?? "");
                                                         }
                                                     }
                                                 }
                                             }
                                             else if ((shipCost == -1 || shipCost <= lowestShipCost) & bCollection == false)
                                             {
+                                                string shipOptName = oRowSO["cShipOptName"] == DBNull.Value ? "" : Convert.ToString(oRowSO["cShipOptName"]);
+                                                // Compact Convert variant with DBNull guard
+                                                string shipOptCarrier = oRowSO["cShipOptCarrier"] == DBNull.Value ? "" : Convert.ToString(oRowSO["cShipOptCarrier"]);
                                                 lowestShipCost = shipCost;
                                                 oCartElmt.SetAttribute("shippingDefaultDestination", moCartConfig["DefaultCountry"]);
-                                                oCartElmt.SetAttribute("shippingType", Conversions.ToString(Operators.ConcatenateObject(oRowSO["nShipOptKey"], "")));
+                                                oCartElmt.SetAttribute("shippingType", oRowSO.Field<object>("nShipOptKey")?.ToString() ?? "");
                                                 oCartElmt.SetAttribute("shippingCost", shipCost + "");
-                                                oCartElmt.SetAttribute("shippingDesc", Conversions.ToString(Operators.ConcatenateObject(oRowSO["cShipOptName"], "")));
-                                                oCartElmt.SetAttribute("shippingCarrier", Conversions.ToString(Operators.ConcatenateObject(oRowSO["cShipOptCarrier"], "")));
+                                                oCartElmt.SetAttribute("shippingDesc", Convert.ToString(shipOptName));
+                                                oCartElmt.SetAttribute("shippingCarrier", Convert.ToString(shipOptCarrier));
                                                 // oCartElmt.SetAttribute("cCatSchemaName", "" & "")
                                             }
 
@@ -3563,9 +3285,9 @@ namespace Protean
                             }
 
 
-                            if (Conversions.ToDouble(oCartElmt.GetAttribute("shippingType")) > 0d)
+                            if (Convert.ToDouble(oCartElmt.GetAttribute("shippingType")) > 0d)
                             {
-                                getShippingDetailXml(ref oCartElmt, Conversions.ToLong(oCartElmt.GetAttribute("shippingType")));
+                                getShippingDetailXml(ref oCartElmt, Convert.ToInt64(oCartElmt.GetAttribute("shippingType")));
                             }
 
                             vatAmt = updateTotals(ref oCartElmt, total, shipCost, oCartElmt.GetAttribute("shippingType"));
@@ -3585,7 +3307,7 @@ namespace Protean
                                     if (!string.IsNullOrEmpty(mcDepositAmount))
                                     {
                                         // we defer to calculating the deposit by line about
-                                        if (Conversions.ToDouble(mcDepositAmount) == 0d)
+                                        if (Convert.ToDouble(mcDepositAmount) == 0d)
                                         {
 
                                             nPayableAmount = 0d;
@@ -3595,11 +3317,11 @@ namespace Protean
                                                 {
                                                     if (oItem.SelectSingleNode("nDepositAmount") is null)
                                                     {
-                                                        nPayableAmount = nPayableAmount + Conversions.ToDouble(oItem.GetAttribute("itemTotal")) * Conversions.ToLong(oItem.GetAttribute("quantity"));
+                                                        nPayableAmount = nPayableAmount + Convert.ToDouble(oItem.GetAttribute("itemTotal")) * Convert.ToInt64(oItem.GetAttribute("quantity"));
                                                     }
                                                     else
                                                     {
-                                                        nPayableAmount = nPayableAmount + Conversions.ToDouble(oItem.SelectSingleNode("nDepositAmount").InnerText) * Conversions.ToLong(oItem.GetAttribute("quantity"));
+                                                        nPayableAmount = nPayableAmount + Convert.ToDouble(oItem.SelectSingleNode("nDepositAmount").InnerText) * Convert.ToInt64(oItem.GetAttribute("quantity"));
                                                     }
                                                 }
                                             }
@@ -3608,15 +3330,17 @@ namespace Protean
                                             nPayable = nPayableAmount;
                                         }
 
-                                        else if (Strings.Right(mcDepositAmount, 1) == "%")
+                                        else if (!string.IsNullOrWhiteSpace(mcDepositAmount) && mcDepositAmount.Trim().EndsWith("%"))
                                         {
-                                            if (Information.IsNumeric(Strings.Left(mcDepositAmount, Strings.Len(mcDepositAmount) - 1)))
+                                            // remove '%' and parse the remaining text as a number (invariant culture)
+                                            string pctText = mcDepositAmount.Trim().Substring(0, mcDepositAmount.Trim().Length - 1).Trim();
+                                            if (double.TryParse(pctText, System.Globalization.NumberStyles.Float | System.Globalization.NumberStyles.AllowThousands, System.Globalization.CultureInfo.InvariantCulture, out double pct))
                                             {
-                                                nPayable = nTotalAmount * Conversions.ToDouble(Strings.Left(mcDepositAmount, Strings.Len(mcDepositAmount) - 1)) / 100d;
+                                                nPayable = nTotalAmount * (pct / 100.0);
                                             }
                                         }
-                                        else if (Information.IsNumeric(mcDepositAmount))
-                                            nPayable = Conversions.ToDouble(mcDepositAmount);
+                                        else if (Tools.Number.IsNumeric(mcDepositAmount))
+                                            nPayable = Convert.ToDouble(mcDepositAmount);
 
                                         if (nPayable > nTotalAmount)
                                             nPayable = nTotalAmount;
@@ -3625,18 +3349,18 @@ namespace Protean
                                         if (nPayable > 0d & nPayable < nTotalAmount)
                                         {
                                             oCartElmt.SetAttribute("payableType", "deposit");
-                                            oCartElmt.SetAttribute("payableAmount", Strings.FormatNumber(nPayable, 2, TriState.True, TriState.False, TriState.False));
+                                            oCartElmt.SetAttribute("payableAmount", nPayable.ToString("F2", CultureInfo.CurrentCulture));
                                             oCartElmt.SetAttribute("paymentMade", "0");
                                         }
 
                                     }
                                 }
                                 // A deposit has been paid - should I check if it's the same as the total amount?
-                                else if (Information.IsNumeric(oRow["nAmountReceived"]))
+                                else if (Tools.Number.IsNumeric(oRow["nAmountReceived"]))
                                 {
-                                    nPayable = nTotalAmount - Conversions.ToDouble(oRow["nAmountReceived"]);
-                                    oCartElmt.SetAttribute("payableAmount", Strings.FormatNumber(nPayable, 2, TriState.True, TriState.False, TriState.False));
-                                    oCartElmt.SetAttribute("outstandingAmount", Strings.FormatNumber(nPayable, 2, TriState.True, TriState.False, TriState.False));
+                                    nPayable = nTotalAmount - Convert.ToDouble(oRow["nAmountReceived"]);
+                                    oCartElmt.SetAttribute("payableAmount", nPayable.ToString("F2", System.Globalization.CultureInfo.CurrentCulture));
+                                    oCartElmt.SetAttribute("outstandingAmount", nPayable.ToString("F2", System.Globalization.CultureInfo.CurrentCulture));
 
                                     if (nPayable > 0d)
                                     {
@@ -3648,12 +3372,12 @@ namespace Protean
                                         nStatusId = 6L;
                                         mnProcessId = 6;
                                     }
-                                    oCartElmt.SetAttribute("paymentMade", Strings.FormatNumber(Conversions.ToDouble(oRow["nAmountReceived"]), 2, TriState.True, TriState.False, TriState.False));
+                                    oCartElmt.SetAttribute("paymentMade", Convert.ToDouble(oRow["nAmountReceived"]).ToString("N2"));
                                     oCartElmt.SetAttribute("payableType", "settlement");
                                 }
 
                                 // Set the payableType 
-                                if (!Information.IsNumeric(oRow["nAmountReceived"]) && nStatusId != 10L)
+                                if (!Tools.Number.IsNumeric(oRow["nAmountReceived"]) && nStatusId != 10L)
                                 {
                                     oCartElmt.SetAttribute("payableType", "deposit");
                                 }
@@ -3663,12 +3387,12 @@ namespace Protean
                                 }
 
                                 // TS added for additional orders not sure if this will break elsewhere.
-                                if (!Information.IsNumeric(oRow["nAmountReceived"]) && nStatusId == 10L)
+                                if (!Tools.Number.IsNumeric(oRow["nAmountReceived"]) && nStatusId == 10L)
                                 {
                                     oCartElmt.SetAttribute("payableType", "deposit");
                                 }
 
-                                if (nPayable == 0d | nPayable == Conversions.ToDouble(oCartElmt.GetAttribute("total")))
+                                if (nPayable == 0d | nPayable == Convert.ToDouble(oCartElmt.GetAttribute("total")))
                                 {
                                     oCartElmt.SetAttribute("payableType", "full");
                                 }
@@ -3683,7 +3407,7 @@ namespace Protean
                             if (oRow["cClientNotes"] != System.DBNull.Value || oRow["cClientNotes"].ToString() != "")
                             {
                                 oElmt = moPageXml.CreateElement("Notes");
-                                oElmt.InnerXml = Conversions.ToString(oRow["cClientNotes"]);                               
+                                oElmt.InnerXml = Convert.ToString(oRow["cClientNotes"]);
                                 if (Convert.ToString(oElmt.FirstChild) != "")
                                 {
                                     if (oElmt.FirstChild.Name == "Notes")
@@ -3699,18 +3423,18 @@ namespace Protean
                             }
 
                             // Add the payment details if we have them
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(oRow["nPayMthdId"], 0, false)))
+                            if (oRow.Field<int?>("nPayMthdId") > 0)
                             {
-                                sSql = Conversions.ToString(Operators.ConcatenateObject("Select * from tblCartPaymentMethod where nPayMthdKey=", oRow["nPayMthdId"]));
+                                sSql = "Select * from tblCartPaymentMethod where nPayMthdKey=" + oRow["nPayMthdId"];
                                 oDs2 = moDBHelper.GetDataSet(sSql, "Payment", "Cart");
                                 oElmt = moPageXml.CreateElement("PaymentDetails");
                                 foreach (DataRow currentORow2 in oDs2.Tables["Payment"].Rows)
                                 {
                                     oRow2 = currentORow2;
-                                    oElmt.InnerXml = Conversions.ToString(oRow2["cPayMthdDetailXml"]);
-                                    oElmt.SetAttribute("provider", Conversions.ToString(oRow2["cPayMthdProviderName"]));
-                                    oElmt.SetAttribute("ref", Conversions.ToString(oRow2["cPayMthdProviderRef"]));
-                                    oElmt.SetAttribute("acct", Conversions.ToString(oRow2["cPayMthdAcctName"]));
+                                    oElmt.InnerXml = Convert.ToString(oRow2["cPayMthdDetailXml"]);
+                                    oElmt.SetAttribute("provider", Convert.ToString(oRow2["cPayMthdProviderName"]));
+                                    oElmt.SetAttribute("ref", Convert.ToString(oRow2["cPayMthdProviderRef"]));
+                                    oElmt.SetAttribute("acct", Convert.ToString(oRow2["cPayMthdAcctName"]));
                                 }
                                 oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oElmt, true));
                             }
@@ -3724,9 +3448,9 @@ namespace Protean
                                 {
                                     oRow2 = currentORow21;
                                     oElmt = moPageXml.CreateElement("DeliveryDetails");
-                                    oElmt.SetAttribute("carrierName", Conversions.ToString(oRow2["cCarrierName"]));
-                                    oElmt.SetAttribute("ref", Conversions.ToString(oRow2["cCarrierRef"]));
-                                    oElmt.SetAttribute("notes", Conversions.ToString(oRow2["cCarrierNotes"]));
+                                    oElmt.SetAttribute("carrierName", Convert.ToString(oRow2["cCarrierName"]));
+                                    oElmt.SetAttribute("ref", Convert.ToString(oRow2["cCarrierRef"]));
+                                    oElmt.SetAttribute("notes", Convert.ToString(oRow2["cCarrierNotes"]));
                                     oElmt.SetAttribute("deliveryDate", XmlDate(oRow2["dExpectedDeliveryDate"]));
                                     oElmt.SetAttribute("collectionDate", XmlDate(oRow2["dCollectionDate"]));
                                     oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oElmt, true));
@@ -3743,7 +3467,7 @@ namespace Protean
                                 {
                                     if (itemElmt.SelectSingleNode("productDetail/StartDate") != null)
                                     {
-                                        eventDate = Conversions.ToDate(itemElmt.SelectSingleNode("productDetail/StartDate").InnerText);
+                                        eventDate = Convert.ToDateTime(itemElmt.SelectSingleNode("productDetail/StartDate").InnerText);
                                         if (dDueDate == default)
                                         {
                                             dDueDate = eventDate;
@@ -3759,9 +3483,9 @@ namespace Protean
                                     double DateInterval = 30d;
                                     if (!string.IsNullOrEmpty(moCartConfig["SettlementDays"]))
                                     {
-                                        DateInterval = Conversions.ToDouble(moCartConfig["SettlementDays"]);
+                                        DateInterval = Convert.ToDouble(moCartConfig["SettlementDays"]);
                                     }
-                                    dDueDate = DateAndTime.DateAdd(VB.DateInterval.Day, DateInterval * -1, dDueDate);
+                                    dDueDate = dDueDate.AddDays(DateInterval * -1);
                                     oCartElmt.SetAttribute("settlementDueDate", dDueDate.ToString());
                                 }
 
@@ -3801,17 +3525,18 @@ namespace Protean
                     if (!((object)mnProcessError is DBNull))
                         oCartElmt.SetAttribute("errorMsg", mnProcessError.ToString());
                     // Save the data
-                    if (Conversions.ToBoolean(bCheckSubscriptions))
+                    if (Convert.ToBoolean(bCheckSubscriptions))
                     {
                         moSubscription.UpdateSubscriptionsTotals(ref oCartElmt);
                     }
-                 
-                    mnCartId = (int)oldCartId;
-                  
-                    if (myWeb.moRequest["refresh"] == "true") {
-                        mnCartId = nCartIdUse;                        
-                    }
 
+                    mnCartId = (int)oldCartId;
+
+                    if (myWeb.moRequest["refresh"] == "true")
+                    {
+                        mnCartId = nCartIdUse;
+                    }
+                   
                     //mnCartId = (int)oldCartId;
                     SaveCartXML(oCartElmt);
                     // mnCartId = nCartIdUse
@@ -3820,7 +3545,7 @@ namespace Protean
                     {
                         var oRelatedElmt = oCartElmt.OwnerDocument.CreateElement("RelatedItems");
                         for (int i = 0, loopTo = oItemList.Count - 1; i <= loopTo; i++)
-                            myWeb.moDbHelper.addRelatedContent(ref oRelatedElmt, Conversions.ToInteger(oItemList[i]), false);
+                            myWeb.moDbHelper.addRelatedContent(ref oRelatedElmt, Convert.ToInt16(oItemList[i]), false);
                         foreach (XmlElement oRelElmt in oRelatedElmt.SelectNodes("Content"))
                         {
                             if (oItemList.ContainsValue(oRelElmt.GetAttribute("id")))
@@ -3832,20 +3557,19 @@ namespace Protean
                             oCartElmt.AppendChild(oRelatedElmt);
                     }
 
-                    // sonalis code for session set
-                    if (System.Web.HttpContext.Current.Request.Cookies["Flag"] is null)
+                   // Save cookieFirst consent flag
+                    if (mnCartId > 0)
                     {
-
-                        var flagCookie = new System.Web.HttpCookie("Flag");
-                        flagCookie.Value = "1";
-                        System.Web.HttpContext.Current.Response.Cookies.Add(flagCookie);
-
+                       
+                            saveCookiesConsent();
+                        
                     }
                 }
 
+
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetCart", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -3862,7 +3586,7 @@ namespace Protean
                 {
 
 
-                    decimal nPaymentAmount = Conversions.ToDecimal("0" + oCartElmt.GetAttribute("total"));
+                    decimal nPaymentAmount = Convert.ToDecimal("0" + oCartElmt.GetAttribute("total"));
                     if (nPaymentAmount <= 0)
                     {
                         return false;
@@ -3878,14 +3602,22 @@ namespace Protean
 
                         foreach (XmlElement opElmt in xElmtPaymentProvider)
                         {
-
+                            //if (opElmt.GetAttribute("name") == "Pay360")
+                            //{
+                            //    // Pay360 Google Pay is NOT a wallet provider
+                            //    // It is just a payment method inside Pay360
+                            //    continue; // Skip wallet logic entirely
+                            //}
                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();
                             IPaymentProvider oPaymentProv = oPayProv.Get(ref myWeb, opElmt.GetAttribute("name"));
                             XmlElement oWallets = oPaymentProv.Activities.GetWalletPaymentDetails(opElmt);
                             //just check if wallets object is empty.
-                            if (oWallets.InnerXml != string.Empty)
+                            if (oWallets != null)
                             {
-                                oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oWallets, true));
+                                if (oWallets.InnerXml != string.Empty)
+                                {
+                                    oCartElmt.AppendChild(oCartElmt.OwnerDocument.ImportNode(oWallets, true));
+                                }
                             }
                         }
 
@@ -3895,6 +3627,7 @@ namespace Protean
                 }
                 catch (Exception ex)
                 {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "GetWalletDetails", ex, myWeb.moCtx, "", "", gbDebug);
                     return false;
                 }
 
@@ -3918,18 +3651,18 @@ namespace Protean
                             // get the prices of options to calculate vat
                             // AG - I think this is a mistake: For Each oElmt2 In oCartElmt.SelectNodes("/Item")
                             foreach (XmlElement oElmt2 in oElmt.SelectNodes("Item"))
-                                nOpPrices = (long)Math.Round(nOpPrices + Conversions.ToDouble(oElmt2.GetAttribute("price")));
+                                nOpPrices = (long)Math.Round(nOpPrices + Convert.ToDouble(oElmt2.GetAttribute("price")));
                             double nItemDiscount = 0d;
 
                             double nLineTaxRate = mnTaxRate;
                             if (mbVatOnLine)
                             {
-                                nLineTaxRate = Conversions.ToDouble(oElmt.GetAttribute("taxRate"));
+                                nLineTaxRate = Convert.ToDouble(oElmt.GetAttribute("taxRate"));
                             }
                             if (oElmt.SelectSingleNode("productDetail[@overideTaxRate!='']") != null)
                             {
                                 XmlElement detailElmt = (XmlElement)oElmt.SelectSingleNode("productDetail");
-                                nLineTaxRate = Conversions.ToDouble(detailElmt.GetAttribute("overideTaxRate"));
+                                nLineTaxRate = Convert.ToDouble(detailElmt.GetAttribute("overideTaxRate"));
                             }
 
 
@@ -3946,13 +3679,13 @@ namespace Protean
                                 if (oElmt.SelectSingleNode("Discount[@nDiscountCat='4' and @bDiscountIsPercent='1' and  number(@nDiscountValue)=100]") != null)
                                 {
                                     // checks for a 100% off discount
-                                    nLineVat = (double)Round((Conversions.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup) * Conversions.ToDouble(oDiscItem.GetAttribute("Units"));
+                                    nLineVat = (double)Round((Convert.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup) * Convert.ToDouble(oDiscItem.GetAttribute("Units"));
                                 }
                                 else
                                 {
                                     // nLineVat = Round((oElmt.GetAttribute("price") - nItemDiscount + nOpPrices) * (mnTaxRate / 100), , , mbRoundup) * oDiscItem.GetAttribute("Units")
 
-                                    nLineVat = (double)Round(Conversions.ToDouble(oDiscItem.GetAttribute("Total")) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown);
+                                    nLineVat = (double)Round(Convert.ToDouble(oDiscItem.GetAttribute("Total")) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown);
 
                                     // nLineVat = 5000
                                 }
@@ -3968,12 +3701,12 @@ namespace Protean
                             else if (mbVatAtUnit)
                             {
                                 // Round( Price * Vat ) * Quantity
-                                nLineVat = (double)Round((Conversions.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown) * Conversions.ToDouble(oElmt.GetAttribute("quantity"));
+                                nLineVat = (double)Round((Convert.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown) * Convert.ToDouble(oElmt.GetAttribute("quantity"));
                             }
                             else
                             {
                                 // Round( ( Price * Quantity )* VAT )
-                                nLineVat = (double)Round((Conversions.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * Conversions.ToDouble(oElmt.GetAttribute("quantity")) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown);
+                                nLineVat = (double)Round((Convert.ToDouble(oElmt.GetAttribute("price")) - nItemDiscount + nOpPrices) * Convert.ToDouble(oElmt.GetAttribute("quantity")) * (nLineTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown);
                             }
 
 
@@ -3981,28 +3714,28 @@ namespace Protean
                             vatAmt += nLineVat;
                         }
 
-                        if (!(Strings.LCase(moCartConfig["DontTaxShipping"]) == "on"))
+                        if ((moCartConfig["DontTaxShipping"]?.ToString().ToLower() ?? "") != "on")
                         {
                             vatAmt = (double)(Round(shipCost * (mnTaxRate / 100d), bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown) + Round(vatAmt, bForceRoundup: mbRoundup, bForceRoundDown: mbRoundDown));
                         }
 
-                        oCartElmt.SetAttribute("totalNet", Strings.FormatNumber(total + shipCost, 2, TriState.True, TriState.False, TriState.False));
+                        oCartElmt.SetAttribute("totalNet", (total + shipCost).ToString("F2", CultureInfo.CurrentCulture));
                         oCartElmt.SetAttribute("vatRate", mnTaxRate.ToString());
                         oCartElmt.SetAttribute("shippingType", ShipMethodId + "");
-                        oCartElmt.SetAttribute("shippingCost", Strings.FormatNumber(shipCost, 2, TriState.True, TriState.False, TriState.False));
-                        oCartElmt.SetAttribute("vatAmt", Strings.FormatNumber(vatAmt, 2, TriState.True, TriState.False, TriState.False));
-                        oCartElmt.SetAttribute("total", Strings.FormatNumber(total + shipCost + vatAmt, 2, TriState.True, TriState.False, TriState.False));
+                        oCartElmt.SetAttribute("shippingCost", shipCost.ToString("F2", CultureInfo.CurrentCulture));
+                        oCartElmt.SetAttribute("vatAmt", vatAmt.ToString("F2", CultureInfo.CurrentCulture));
+                        oCartElmt.SetAttribute("total", (total + shipCost + vatAmt).ToString("F2", CultureInfo.CurrentCulture));
                         oCartElmt.SetAttribute("currency", mcCurrencyCode);
                         oCartElmt.SetAttribute("currencySymbol", mcCurrencySymbol);
                     }
                     else
                     {
-                        oCartElmt.SetAttribute("totalNet", Strings.FormatNumber(total + shipCost, 2, TriState.True, TriState.False, TriState.False));
+                        oCartElmt.SetAttribute("totalNet", (total + shipCost).ToString("F2", CultureInfo.CurrentCulture));
                         oCartElmt.SetAttribute("vatRate", 0.0d.ToString());
                         oCartElmt.SetAttribute("shippingType", ShipMethodId + "");
-                        oCartElmt.SetAttribute("shippingCost", Strings.FormatNumber(shipCost, 2, TriState.True, TriState.False, TriState.False));
+                        oCartElmt.SetAttribute("shippingCost", shipCost.ToString("F2", CultureInfo.CurrentCulture));
                         oCartElmt.SetAttribute("vatAmt", 0.0d.ToString());
-                        oCartElmt.SetAttribute("total", Strings.FormatNumber(total + shipCost, 2, TriState.True, TriState.False, TriState.False));
+                        oCartElmt.SetAttribute("total", (total + shipCost).ToString("F2", CultureInfo.CurrentCulture));
                         oCartElmt.SetAttribute("currency", mcCurrencyCode);
                         oCartElmt.SetAttribute("currencySymbol", mcCurrencySymbol);
                     }
@@ -4012,7 +3745,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateTotals", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateTotals", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
                 return default;
@@ -4039,7 +3772,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getShippingDetailXml", ex, "", cProcessInfo, gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getShippingDetailXml", ex, myWeb.moCtx, "", cProcessInfo, gbDebug);
                 }
 
             }
@@ -4058,9 +3791,9 @@ namespace Protean
 
                     double nPrice = 0.0d;
 
-                    if (Information.IsNumeric(oThePrice.InnerText))
+                    if (Tools.Number.IsNumeric(oThePrice.InnerText))
                     {
-                        nPrice = Conversions.ToDouble(oThePrice.InnerText);
+                        nPrice = Convert.ToDouble(oThePrice.InnerText);
                     }
 
                     return nPrice;
@@ -4068,7 +3801,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductPricesByXml", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductPricesByXml", ex, myWeb.moCtx, "", "", gbDebug);
                 }
 
                 return default;
@@ -4093,7 +3826,7 @@ namespace Protean
                                 {
                                     return 0d;
                                 }
-                            case var @case when @case == (Strings.LCase("s") ?? ""):
+                            case "s":
                                 {
                                     return mnTaxRate;
                                 }
@@ -4112,7 +3845,7 @@ namespace Protean
 
                 catch (Exception ex)
                 {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductTaxRate", ex, "", "", gbDebug);
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getProductTaxRate", ex, myWeb.moCtx, "", "", gbDebug);
                     return (double)default;
                 }
             }
@@ -4136,7 +3869,7 @@ namespace Protean
                         cGroups += "default,all";
                     else
                         cGroups += ",default,all";
-                    cGroups = " and ( contains(@validGroup,\"" + Strings.Replace(cGroups, ",", "\") or contains(@validGroup,\"");
+                    cGroups = " and ( contains(@validGroup,\"" + cGroups.Replace(",", "\") or contains(@validGroup,\"");
                     cGroups += "\") or not(@validGroup) or @validGroup=\"\")";
 
                     if (!string.IsNullOrEmpty(cUnit))
@@ -4177,8 +3910,17 @@ namespace Protean
                             {
                                 bHasSplits = true;
                                 // has a split
-                                int nThisMin = Conversions.ToInteger(Interaction.IIf(string.IsNullOrEmpty(oPNode.GetAttribute("min")), 1, oPNode.GetAttribute("min")));
-                                int nThisMax = Conversions.ToInteger(Interaction.IIf(string.IsNullOrEmpty(oPNode.GetAttribute("max")), 0, oPNode.GetAttribute("max")));
+                                int nThisMin;
+                                if (!int.TryParse(oPNode.GetAttribute("min"), NumberStyles.Integer, CultureInfo.InvariantCulture, out nThisMin))
+                                {
+                                    nThisMin = 1;
+                                }
+
+                                int nThisMax;
+                                if (!int.TryParse(oPNode.GetAttribute("max"), NumberStyles.Integer, CultureInfo.InvariantCulture, out nThisMax))
+                                {
+                                    nThisMax = 0;
+                                }
                                 if (nThisMin <= nQuantity & (nThisMax >= nQuantity | nThisMax == 0))
                                 {
                                     // now we know it is a valid split
@@ -4188,15 +3930,15 @@ namespace Protean
                         }
                         if (oThePrice != null)
                         {
-                            if (Information.IsNumeric(oThePrice.InnerText))
+                            if (Tools.Number.IsNumeric(oThePrice.InnerText))
                             {
                                 // this selects the cheapest price for this user assuming not free
-                                if (Information.IsNumeric(oPNode.InnerText))
+                                if (Tools.Number.IsNumeric(oPNode.InnerText))
                                 {
                                     // if OverrideCheapestPrice is "on" - we will ensure that when sales price is greater than rrp - highest(sales) price is considered.
                                     if (!(moCartConfig["OverrideCheapestPrice"] == null) & moCartConfig["OverrideCheapestPrice"] == "on")
                                     {
-                                        if (Conversions.ToDouble(oPNode.InnerText) < Conversions.ToDouble(oThePrice.InnerText) & Conversions.ToLong(oPNode.InnerText) != 0L)
+                                        if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText) & Convert.ToDouble(oPNode.InnerText) != 0L)
                                         {
                                             string oThePriceType = oThePrice.GetAttribute("type");
                                             string oPNodeType = oPNode.GetAttribute("type");
@@ -4207,7 +3949,7 @@ namespace Protean
                                             }
                                         }
                                     }
-                                    else if (Conversions.ToDouble(oPNode.InnerText) < Conversions.ToDouble(oThePrice.InnerText) & Conversions.ToLong(oPNode.InnerText) != 0L)
+                                    else if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText) & Convert.ToDouble(oPNode.InnerText) != 0L)
                                     {
                                         oThePrice = oPNode;
                                     }
@@ -4259,7 +4001,7 @@ namespace Protean
                         cGroups += "default,all";
                     else
                         cGroups += ",default,all";
-                    cGroups = " and ( contains(@validGroup,\"" + Strings.Replace(cGroups, ",", "\") or contains(@validGroup,\"");
+                    cGroups = " and ( contains(@validGroup,\"" + cGroups.Replace(",", "\") or contains(@validGroup,\"");
                     cGroups += "\") or not(@validGroup) or @validGroup=\"\")";
 
                     string cxpath = "Content/Options/OptGroup[" + nGroupIndex + "]/option[" + nOptionIndex + "]/Prices/Price[(@currency=\"" + mcCurrency + "\") " + cGroups + " ]";
@@ -4279,26 +4021,26 @@ namespace Protean
                         // End If
                         if (oThePrice != null)
                         {
-                            if (Information.IsNumeric(oThePrice.InnerText))
+                            if (Tools.Number.IsNumeric(oThePrice.InnerText))
                             {
-                                if (Conversions.ToDouble(oPNode.InnerText) < Conversions.ToDouble(oThePrice.InnerText))
+                                if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText))
                                 {
                                     oThePrice = oPNode;
-                                    nPrice = Conversions.ToDouble(oThePrice.InnerText);
+                                    nPrice = Convert.ToDouble(oThePrice.InnerText);
                                 }
                             }
                             else
                             {
                                 oThePrice = oPNode;
-                                nPrice = Conversions.ToDouble(oThePrice.InnerText);
+                                nPrice = Convert.ToDouble(oThePrice.InnerText);
                             }
                         }
                         else
                         {
                             oThePrice = oPNode;
-                            if (Information.IsNumeric(oThePrice.InnerText))
+                            if (Tools.Number.IsNumeric(oThePrice.InnerText))
                             {
-                                nPrice = Conversions.ToDouble(oThePrice.InnerText);
+                                nPrice = Convert.ToDouble(oThePrice.InnerText);
                             }
                         }
                     }
@@ -4333,11 +4075,11 @@ namespace Protean
                     // Set the error node
                     oError = (XmlElement)oCartElmt.SelectSingleNode("error");
 
-                    if (Information.IsNumeric(cItemQuantity))
+                    if (Tools.Number.IsNumeric(cItemQuantity))
                     {
 
                         // Check minimum value
-                        if (Conversions.ToLong(cItemQuantity) < Conversions.ToLong(getNodeValueByType(ref oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, 0)))
+                        if (Convert.ToInt64(cItemQuantity) < Convert.ToInt64(getNodeValueByType(ref oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, 0)))
                         {
                             // Minimum has not been matched
 
@@ -4356,13 +4098,17 @@ namespace Protean
                             }
 
                             // Add product specific msg
-                            oMsg = addElement(ref oError, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ")), "</strong> requires a quantity equal to or above <em>"), getNodeValueByType(ref oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true);
+                            oMsg = addElement(ref oError, "msg", "<strong>" + getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ") +
+     "</strong> requires a quantity equal to or above <em>" +
+     getNodeValueByType(ref oProd, "//Quantities/Minimum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).") +
+     "</em>",
+     true
+ );
                             oMsg.SetAttribute("type", "quantity_min_detail");
-
                         }
 
                         // Check maximum value
-                        if (Conversions.ToLong(cItemQuantity) > Conversions.ToLong(getNodeValueByType(ref oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, int.MaxValue)))
+                        if (Convert.ToInt64(cItemQuantity) > Convert.ToInt64(getNodeValueByType(ref oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, int.MaxValue)))
                         {
                             // Maximum has not been matched
 
@@ -4381,14 +4127,25 @@ namespace Protean
                             }
 
                             // Add product specific msg
-                            oMsg = addElement(ref oError, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ")), "</strong> requires a quantity equal to or below <em>"), getNodeValueByType(ref oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true);
+                            oMsg = addElement(
+     ref oError,
+     "msg",
+     "<strong>" +
+     getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ") +
+     "</strong> requires a quantity equal to or below <em>" +
+     getNodeValueByType(ref oProd, "//Quantities/Maximum", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).") +
+     "</em>",
+     true
+ );
+
                             oMsg.SetAttribute("type", "quantity_max_detail");
+
 
                         }
 
                         // Check bulkunit value
-                        int cBulkUnit = Conversions.ToInteger(getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 0));
-                        if (Conversions.ToLong(cItemQuantity) % Conversions.ToLong(getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 1)) != 0L)
+                        int cBulkUnit = Convert.ToInt16(getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 0));
+                        if (Convert.ToInt64(cItemQuantity) % Convert.ToInt64(getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, 1)) != 0L)
                         {
                             // Bulk Unit has not been matched
                             // Check for existence of error node
@@ -4406,7 +4163,7 @@ namespace Protean
                             }
 
                             // Add product specific msg
-                            oMsg = addElement(ref oError, "msg", Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("<strong>", getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ")), "</strong> can only be bought in lots of <em>"), getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).")), "</em>")), true);
+                            oMsg = addElement(ref oError, "msg", "<strong>" + getNodeValueByType(ref oProd, "/Content/Name", XmlDataType.TypeString, "A product below ") + "</strong> can only be bought in lots of <em>" + getNodeValueByType(ref oProd, "//Quantities/BulkUnit", XmlDataType.TypeNumber, "an undetermined value (please call for assistance).") + "</em>", true);
                             oMsg.SetAttribute("type", "quantity_mod_detail");
                         }
                     }
@@ -4448,9 +4205,9 @@ namespace Protean
                             oStock = oProd.SelectSingleNode("//Stock");
                             if (oStock != null)
                             {
-                                if (Information.IsNumeric(oStock.InnerText))
+                                if (Tools.Number.IsNumeric(oStock.InnerText))
                                 {
-                                    StockLevel = Conversions.ToLong(oStock.InnerText);
+                                    StockLevel = Convert.ToInt64(oStock.InnerText);
                                 }
                             }
                         }
@@ -4460,11 +4217,11 @@ namespace Protean
                             foreach (XmlNode currentOStock in oProd.SelectNodes("//Stock/Location"))
                             {
                                 oStock = currentOStock;
-                                if (Information.IsNumeric(oStock.InnerText))
+                                if (Tools.Number.IsNumeric(oStock.InnerText))
                                 {
                                     if (StockLevel == default)
                                         StockLevel = 0L;
-                                    StockLevel = StockLevel + Conversions.ToLong(oStock.InnerText);
+                                    StockLevel = StockLevel + Convert.ToInt64(oStock.InnerText);
                                 }
                             }
                         }
@@ -4472,7 +4229,7 @@ namespace Protean
                         if (StockLevel != default)
                         {
                             // If the requested quantity is greater than the stock level, add a warning to the cart - only check tihs on an active cart.
-                            if (Conversions.ToLong(cItemQuantity) > StockLevel & mnProcessId < 6)
+                            if (Convert.ToInt64(cItemQuantity) > StockLevel & mnProcessId < 6)
                             {
                                 if (oCartElmt.SelectSingleNode("error") is null)
                                     oCartElmt.AppendChild(oCartElmt.OwnerDocument.CreateElement("error"));
@@ -4513,9 +4270,9 @@ namespace Protean
                             foreach (DataRow oRow in oDs.Tables["Item"].Rows)
                             {
                                 //if this is empty it is not a real product like a donation therefore stock control is not relevent.
-                                if (Conversions.ToString(oRow["cContentXmlDetail"]) != "")
+                                if (Convert.ToString(oRow["cContentXmlDetail"]) != "")
                                 {
-                                    oProd.InnerXml = Conversions.ToString(oRow["cContentXmlDetail"]);
+                                    oProd.InnerXml = Convert.ToString(oRow["cContentXmlDetail"]);
                                     oStock = oProd.SelectSingleNode("//Stock/Location[@name='Default']");
                                     if (oStock is null)
                                     {
@@ -4527,9 +4284,9 @@ namespace Protean
                                 if (oStock != null)
                                 {
                                     // Ignore non-numeric nodes
-                                    if (Information.IsNumeric(oStock.InnerText))
+                                    if (Tools.Number.IsNumeric(oStock.InnerText))
                                     {
-                                        nStockLevel = Conversions.ToInteger(oStock.InnerText) - Conversions.ToInteger(oItem.GetAttribute("quantity"));
+                                        nStockLevel = Convert.ToInt16(oStock.InnerText) - Convert.ToInt16(oItem.GetAttribute("quantity"));
                                         // Remember to delete the XmlCache
                                         moDBHelper.DeleteXMLCache();
 
@@ -4543,7 +4300,7 @@ namespace Protean
                                 }
 
                                 // For Brief
-                                oProd.InnerXml = Conversions.ToString(oRow["cContentXmlBrief"]);
+                                oProd.InnerXml = Convert.ToString(oRow["cContentXmlBrief"]);
 
                                 oStock = null;
                                 oStock = oProd.SelectSingleNode("//Stock/Location[@name='Default']");
@@ -4556,7 +4313,7 @@ namespace Protean
                                 if (oStock != null)
                                 {
                                     // Ignore non-numeric nodes
-                                    if (Information.IsNumeric(oStock.InnerText))
+                                    if (Tools.Number.IsNumeric(oStock.InnerText))
                                     {
                                         oStock.InnerText = nStockLevel.ToString();
                                         oRow["cContentXmlBrief"] = oProd.InnerXml;
@@ -4621,19 +4378,20 @@ namespace Protean
                         foreach (DataRow oRow in oDs.Tables["tblCartItem"].Rows)
                         {
 
-                            nNewQty = Conversions.ToDecimal(oRow["nQuantity"]);
+                            nNewQty = Convert.ToDecimal(oRow["nQuantity"]);
 
-                            sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("select * from tblCartItem where nCartOrderId=" + mnGiftListId + " and nItemId =" + oRow["nItemId"].ToString() + " and cItemOption1='", SqlFmt(oRow["cItemOption1"].ToString())), "' and cItemOption2='"), SqlFmt(oRow["cItemOption2"].ToString())), "'"));
-                            using (var oDr2 = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                            sSql = "select * from tblCartItem where nCartOrderId=" + mnGiftListId + " and nItemId =" + oRow["nItemId"] + " and cItemOption1='" + SqlFmt(oRow["cItemOption1"]?.ToString() ?? "") + "' and cItemOption2='" + SqlFmt(oRow["cItemOption2"]?.ToString() ?? "") + "'";
+
+                            using (var oDr2 = moDBHelper.getDataReaderDisposable(sSql)) // Done by nita on 6/7/22
                             {
                                 while (oDr2.Read())
-                                    nNewQty = Conversions.ToDecimal(Operators.SubtractObject(oDr2["nQuantity"], oRow["nQuantity"]));
+                                {
+                                    nNewQty = Convert.ToDecimal(oDr2["nQuantity"]) - Convert.ToDecimal(oRow["nQuantity"]);
+                                }
 
-                                sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Update tblCartItem set nQuantity = " + nNewQty.ToString() + " where nCartOrderId=" + mnGiftListId + " and nItemId =" + oRow["nItemId"].ToString() + " and cItemOption1='", SqlFmt(oRow["cItemOption1"].ToString())), "' and cItemOption2='"), SqlFmt(oRow["cItemOption2"].ToString())), "'"));
+                                sSql = "Update tblCartItem set nQuantity = " + nNewQty + " where nCartOrderId=" + mnGiftListId + " and nItemId =" + oRow["nItemId"] + " and cItemOption1='" + SqlFmt(oRow["cItemOption1"]?.ToString() ?? "") + "' and cItemOption2='" + SqlFmt(oRow["cItemOption2"]?.ToString() ?? "") + "'";
                                 moDBHelper.ExeProcessSql(sSql);
                             }
-
-
                         }
 
                     }
@@ -4668,8 +4426,8 @@ namespace Protean
                     if (oDs.Tables["Groups"].Rows.Count > 0)
                     {
                         foreach (DataRow oDr in oDs.Tables["Groups"].Rows)
-                            cReturn = Conversions.ToString(Operators.ConcatenateObject(cReturn + ",", oDr["cDirName"]));
-                        cReturn = Strings.Mid(cReturn, 2);
+                            cReturn += "," + (oDr["cDirName"]?.ToString() ?? "");
+                        cReturn = cReturn.Length > 1 ? cReturn.Substring(1) : "";
                     }
 
                     return cReturn;
@@ -4680,2993 +4438,6 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "getGroupsByName", ex, "", cProcessInfo, gbDebug);
                     return null;
                 }
-            }
-
-            public virtual void addressSubProcess(ref XmlElement oCartElmt, string cAddressType)
-            {
-
-                Cms.xForm oContactXform;
-                string submitPrefix = "cartBill";
-                string cProcessInfo = submitPrefix;
-                PaymentProviders oPay;
-                string buttonRef = "";
-                bool bSubmitPaymentMethod = false;
-
-                try
-                {
-                    myWeb.moSession["tempInstance"] = null;
-
-
-                    if (cAddressType.Contains("Delivery"))
-                        submitPrefix = "cartDel";
-                    if (mbEwMembership == true & myWeb.mnUserId != 0 & submitPrefix != "cartDel")
-                    {
-                        // we now only need this on delivery.
-                        oContactXform = pickContactXform(cAddressType, submitPrefix, cCmdAction: mcCartCmd);
-                        GetCart(ref oCartElmt);
-                    }
-                    else
-                    {
-                        oContactXform = contactXform(cAddressType, "submit", "cartCmd", mcCartCmd);
-
-                        if (moPay is null)
-                        {
-                            oPay = new PaymentProviders(ref myWeb);
-                        }
-                        else
-                        {
-                            oPay = moPay;
-                        }
-                        oPay.mcCurrency = mcCurrency;
-
-                        GetCart(ref oCartElmt);
-                        if (Strings.LCase(moCartConfig["PaymentTypeButtons"]) == "on")
-                        {
-                            if (oCartElmt.SelectSingleNode("Shipping") != null & string.IsNullOrEmpty(moCartConfig["TermsContentId"]) & string.IsNullOrEmpty(moCartConfig["TermsAndConditions"]))
-                            {
-                                // we already have shipping selected threfore we can skip Options Xform
-                                XmlElement oSubmitBtn = (XmlElement)oContactXform.moXformElmt.SelectSingleNode("descendant-or-self::submit[@submission='SubmitAdd']");
-                                buttonRef = oSubmitBtn.GetAttribute("ref");
-                                double PaymentAmount = Conversions.ToDouble("0" + oCartElmt.GetAttribute("total"));
-                                XmlElement xmlParentNodeElmt = (XmlElement)oSubmitBtn.ParentNode;
-                                oPay.getPaymentMethodButtons(ref oContactXform, ref xmlParentNodeElmt, PaymentAmount);
-                                bSubmitPaymentMethod = true;
-                            }
-                        }
-                    }
-
-                    if (oContactXform.valid == false)
-                    {
-                        // show the form
-                        XmlElement oContentElmt = (XmlElement)moPageXml.SelectSingleNode("/Page/Contents");
-                        if (oContentElmt is null)
-                        {
-                            oContentElmt = moPageXml.CreateElement("Contents");
-                            if (moPageXml.DocumentElement is null)
-                            {
-                                Information.Err().Raise(1004, "addressSubProcess", " PAGE IS NOT CREATED");
-                            }
-                            else
-                            {
-                                moPageXml.DocumentElement.AppendChild(oContentElmt);
-                            }
-                        }
-                        oContentElmt.AppendChild(oContactXform.moXformElmt);
-                    }
-                    else
-                    {
-                        if (!cAddressType.Contains("Delivery"))
-                        {
-
-                            // Valid Form, let's adjust the Vat rate
-                            // AJG By default the tax rate is picked up from the billing address, unless otherwise specified.
-                            // 
-                            if (moCartConfig["TaxFromDeliveryAddress"] != "on" | myWeb.moRequest["cIsDelivery"] == "True" & moCartConfig["TaxFromDeliveryAddress"] == "on")
-                            {
-                                if (oContactXform.Instance.SelectSingleNode("tblCartContact[@type='Billing Address']") != null)
-                                {
-                                    if (oCartElmt.SelectSingleNode("Contact[@type='Billing Address']") != null)
-                                    {
-                                        string argcContactCountry = oCartElmt.SelectSingleNode("Contact[@type='Billing Address']/Country").InnerText;
-                                        UpdateTaxRate(ref argcContactCountry);
-                                        oCartElmt.SelectSingleNode("Contact[@type='Billing Address']/Country").InnerText = argcContactCountry;
-                                    }
-                                }
-                            }
-
-                            // to allow for single form with multiple addresses.
-                            if (moCartConfig["TaxFromDeliveryAddress"] == "on" & oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']") != null)
-                            {
-                                string argcContactCountry1 = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText;
-                                UpdateTaxRate(ref argcContactCountry1);
-                                oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText = argcContactCountry1;
-                            }
-
-                            // Skip Delivery if:
-                            // - Deliver to this address is selected
-                            // - mbNoDeliveryAddress is True
-                            // - the order is part of a giftlist (the delivery address is pre-determined)
-                            // - we have submitted the delivery address allready
-                            if (myWeb.moRequest["cIsDelivery"] == "True" | mbNoDeliveryAddress | mnGiftListId > 0 | oContactXform.Instance.SelectSingleNode("tblCartContact[cContactType/node()='Delivery Address']") != null | oContactXform.moXformElmt.GetAttribute("cartCmd") == "ChoosePaymentShippingOption")
-
-
-
-
-                            {
-
-                                if (bSubmitPaymentMethod)
-                                {
-                                    // we have payment method buttons on the form.
-                                    mcPaymentMethod = myWeb.moRequest[buttonRef];
-                                }
-
-                                mcCartCmd = "ChoosePaymentShippingOption";
-                                mnProcessId = 3;
-                            }
-
-                            else
-                            {
-                                // If mbEwMembership = True And myWeb.mnUserId <> 0 Then
-                                // 'all handled in pick form
-                                // Else
-                                long BillingAddressID = setCurrentBillingAddress((long)myWeb.mnUserId, 0L);
-                                if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "editAddress" + BillingAddressID]))
-                                {
-                                    // we are editing an address form the pick address form so lets go back.
-                                    mcCartCmd = "Billing";
-                                    mnProcessId = 2;
-                                }
-                                else
-                                {
-                                    mcCartCmd = "Delivery";
-                                }
-
-
-
-                                // End If
-                                // billing address is saved, so up cart status if needed
-                                // If mnProcessId < 2 Then mnProcessId = 2
-                                // If mnProcessId > 2 Then
-                                // mcCartCmd = "ChoosePaymentShippingOption"
-                                // mnProcessId = 3
-                                // End If
-
-                            }
-                            if (myWeb.mnUserId > 0)
-                            {
-                                setCurrentBillingAddress((long)myWeb.mnUserId, 0L);
-                            }
-                        }
-
-
-                        else // Case for Delivery
-                        {
-
-                            // AJG If specified, the tax rate can be picked up from the delivery address
-                            if (moCartConfig["TaxFromDeliveryAddress"] == "on")
-                            {
-                                string argcContactCountry2 = oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText;
-                                UpdateTaxRate(ref argcContactCountry2);
-                                oCartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText = argcContactCountry2;
-                            }
-
-                            // TS if we don't have a billing address we need one
-                            DataSet oDs2;
-                            oDs2 = moDBHelper.GetDataSet("select * from tblCartContact where nContactCartId = " + mnCartId.ToString() + " and cContactType = 'Billing Address'", "tblCartContact");
-                            if (oDs2.Tables["tblCartContact"].Rows.Count > 0)
-                            {
-                                mcCartCmd = "ChoosePaymentShippingOption";
-                                mnProcessId = 3;
-                            }
-
-                            else if (myWeb.mnUserId > 0)
-                            {
-                                long BillingAddressID = setCurrentBillingAddress((long)myWeb.mnUserId, 0L);
-
-                                if (BillingAddressID > 0L)
-                                {
-                                    // set the billing address
-                                    string sSql = "Select nContactKey from tblCartContact where cContactType = 'Delivery Address' and nContactCartid=" + mnCartId;
-                                    string DeliveryAddressID = moDBHelper.ExeProcessSqlScalar(sSql);
-                                    useSavedAddressesOnCart(BillingAddressID, Conversions.ToLong(DeliveryAddressID), null);
-
-                                    mcPaymentMethod = myWeb.moRequest[buttonRef];
-
-                                    mcCartCmd = "ChoosePaymentShippingOption";
-                                    mnProcessId = 3;
-                                }
-                                else
-                                {
-                                    mcCartCmd = "Billing";
-                                    mnProcessId = 2;
-                                }
-                            }
-                            else
-                            {
-                                mcCartCmd = "Billing";
-                                mnProcessId = 2;
-
-
-                            }
-
-                        }
-
-                        // save address against the user
-                        if (mbEwMembership == true & myWeb.mnUserId > 0 & oContactXform.valid)
-                        {
-
-                            if (!(oContactXform.moXformElmt.GetAttribute("persistAddress") == "false"))
-                            {
-                                cProcessInfo = "UpdateExistingUserAddress for : " + myWeb.mnUserId;
-                                UpdateExistingUserAddress(ref oContactXform);
-                            }
-
-                        }
-
-                    }
-                    oContactXform = (Cms.xForm)null;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug);
-                }
-
-            }
-
-            public virtual bool usePreviousAddress(ref XmlElement oCartElmt)
-            {
-                string cProcessInfo = "usePreviousAddress";
-                string sSql;
-                long billingAddId = 0L;
-                long deliveryAddId = 0L;
-                DataSet oDs;
-                try
-                {
-                    if (mbEwMembership == true & myWeb.mnUserId != 0)
-                    {
-                        if (Strings.LCase(moCartConfig["UsePreviousAddress"]) == "on")
-                        {
-
-                            sSql = "select nContactKey, cContactType, nAuditKey from tblCartContact inner join tblAudit a on nAuditId = a.nAuditKey where nContactCartId = 0 and nContactDirId =" + myWeb.mnUserId.ToString();
-                            oDs = moDBHelper.GetDataSet(sSql, "tblCartContact");
-
-                            foreach (DataRow odr in oDs.Tables["tblCartContact"].Rows)
-                            {
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(odr["cContactType"], "Billing Address", false)))
-                                {
-                                    billingAddId = Conversions.ToLong(odr["nContactKey"]);
-                                }
-                                if (mbNoDeliveryAddress)
-                                {
-                                    deliveryAddId = billingAddId;
-                                }
-                                else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(odr["cContactType"], "Delivery Address", false)))
-                                {
-                                    deliveryAddId = Conversions.ToLong(odr["nContactKey"]);
-                                }
-                            }
-                            if (deliveryAddId != 0L & billingAddId != 0L)
-                            {
-                                useSavedAddressesOnCart(billingAddId, deliveryAddId, null);
-                                // skip
-                                mcCartCmd = "ChoosePaymentShippingOption";
-                                return true;
-                            }
-                            else
-                            {
-                                // we don't have the addresses we need so we need to go to address step anyhow
-                                return false;
-                            }
-                        }
-
-                        else
-                        {
-                            // Use previous address functionality turned off
-                            return false;
-                        }
-                    }
-                    else
-                    {
-                        // User not logged on or membership is off
-                        return false;
-                    }
-                }
-
-
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addressSubProcess", ex, "", cProcessInfo, gbDebug);
-                    return false;
-                }
-
-            }
-
-
-            public virtual Cms.xForm contactXform(string cAddressType, string cSubmitName = "submit", string cCmdType = "cartCmd", string cCmdAction = "")
-            {
-
-                return contactXform(cAddressType, cSubmitName, cCmdType, cCmdAction, false);
-
-            }
-
-
-            public virtual Cms.xForm contactXform(string cAddressType, string cSubmitName, string cCmdType, string cCmdAction, bool bDontPopulate, long ContactId = 0L, string cmd2 = "")
-            {
-                myWeb.PerfMon.Log("Cart", "contactXform");
-                xForm oXform = new xForm(ref myWeb.msException);
-                XmlElement oGrpElmt;
-                DataSet oDs;
-                XmlElement oElmt;
-                string cWhere;
-                string cProcessInfo = "";
-                string cXformLocation = "";
-                bool bIsBespokeXform = false;
-                var bGetInstance = default(bool);
-                string sSql;
-
-                try
-                {
-
-                    // Build the xform
-                    oXform.moPageXML = moPageXml;
-                    oXform.NewFrm(cAddressType);
-
-                    // Check for bespoke xform
-                    switch (cAddressType ?? "")
-                    {
-                        case "Billing Address":
-                            {
-                                cXformLocation = mcBillingAddressXform;
-                                break;
-                            }
-                        case "Delivery Address":
-                            {
-                                cXformLocation = mcDeliveryAddressXform;
-                                break;
-                            }
-                    }
-
-                    // Test that a bespoke form exists and is a valid filename
-                    bIsBespokeXform = File.Exists(myWeb.goServer.MapPath(cXformLocation)) & Strings.LCase(Strings.Right(cXformLocation, 4)) == ".xml";
-
-                    // :::::::::::::::::::::::::::::::::::::::::::::::
-                    // :::: CONTACT XFORM :: GROUP and BIND BUILD ::::
-                    // :::::::::::::::::::::::::::::::::::::::::::::::
-
-                    if (bIsBespokeXform)
-                    {
-                        // Load the bespoke form
-                        oXform.load(cXformLocation);
-
-                        // select the first group element for adding delivery checkbox
-                        oGrpElmt = (XmlElement)oXform.moXformElmt.SelectSingleNode("group[1]");
-                        if (ContactId > 0L)
-                        {
-                            bGetInstance = true;
-                        }
-                    }
-                    else
-                    {
-                        // Build the xform because file not specified
-                        bGetInstance = true;
-
-                        oXform.addGroup(ref oXform.moXformElmt, "address", sLabel: cAddressType);
-                        oGrpElmt = (XmlElement)oXform.moXformElmt.LastChild;
-
-                        oXform.addInput(ref oGrpElmt, cCmdType, true, cCmdType, "hidden");
-                        XmlElement argoBindParent = null;
-                        oXform.addBind(cCmdType, cCmdType, oBindParent: ref argoBindParent);
-
-                        oXform.addInput(ref oGrpElmt, "cContactType", true, "Type", "hidden");
-                        XmlElement argoBindParent1 = null;
-                        oXform.addBind("cContactType", "tblCartContact/cContactType", oBindParent: ref argoBindParent1);
-
-                        oXform.addInput(ref oGrpElmt, "cContactName", true, "Name", "textbox required");
-                        XmlElement argoBindParent2 = null;
-                        oXform.addBind("cContactName", "tblCartContact/cContactName", oBindParent: ref argoBindParent2, "true()", "string");
-
-                        oXform.addInput(ref oGrpElmt, "cContactCompany", true, "Company", "textbox");
-                        XmlElement argoBindParent3 = null;
-                        oXform.addBind("cContactCompany", "tblCartContact/cContactCompany", oBindParent: ref argoBindParent3, "false()");
-
-                        oXform.addInput(ref oGrpElmt, "cContactAddress", true, "Address", "textbox required");
-                        XmlElement argoBindParent4 = null;
-                        oXform.addBind("cContactAddress", "tblCartContact/cContactAddress", oBindParent: ref argoBindParent4, "true()", "string");
-
-                        oXform.addInput(ref oGrpElmt, "cContactCity", true, "City", "textbox required");
-                        XmlElement argoBindParent5 = null;
-                        oXform.addBind("cContactCity", "tblCartContact/cContactCity", oBindParent: ref argoBindParent5, "true()");
-
-                        oXform.addInput(ref oGrpElmt, "cContactState", true, "County/State", "textbox");
-                        XmlElement argoBindParent6 = null;
-                        oXform.addBind("cContactState", "tblCartContact/cContactState", oBindParent: ref argoBindParent6);
-
-                        oXform.addInput(ref oGrpElmt, "cContactZip", true, "Postcode/Zip", "textbox required");
-                        XmlElement argoBindParent7 = null;
-                        oXform.addBind("cContactZip", "tblCartContact/cContactZip", oBindParent: ref argoBindParent7, "true()", "string");
-
-                        oXform.addSelect1(ref oGrpElmt, "cContactCountry", true, "Country", "dropdown required");
-                        XmlElement argoBindParent8 = null;
-                        oXform.addBind("cContactCountry", "tblCartContact/cContactCountry", oBindParent: ref argoBindParent8, "true()", "string");
-
-                        oXform.addInput(ref oGrpElmt, "cContactTel", true, "Tel", "textbox");
-                        XmlElement argoBindParent9 = null;
-                        oXform.addBind("cContactTel", "tblCartContact/cContactTel", oBindParent: ref argoBindParent9);
-
-                        oXform.addInput(ref oGrpElmt, "cContactFax", true, "Fax", "textbox");
-                        XmlElement argoBindParent10 = null;
-                        oXform.addBind("cContactFax", "tblCartContact/cContactFax", oBindParent: ref argoBindParent10);
-
-                        // Only show email address for Billing
-                        if (cAddressType == "Billing Address" | mnGiftListId > 0)
-                        {
-                            oXform.addInput(ref oGrpElmt, "cContactEmail", true, "Email", "textbox required");
-                            XmlElement argoBindParent11 = null;
-                            oXform.addBind("cContactEmail", "tblCartContact/cContactEmail", oBindParent: ref argoBindParent11, "true()", "email");
-                        }
-                        if (myWeb.moConfig["cssFramework"] == "bs3")
-                        {
-                            oXform.addSubmit(ref oGrpElmt, "Submit" + Strings.Replace(cAddressType, " ", ""), "Submit");
-                        }
-                        else
-                        {
-                            oXform.addSubmit(ref oGrpElmt, "Submit" + Strings.Replace(cAddressType, " ", ""), "Submit", cSubmitName + Strings.Replace(cAddressType, " ", ""));
-                        }
-                        oXform.submission("Submit" + Strings.Replace(cAddressType, " ", ""), Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(cCmdAction), "", "?" + cCmdType + "=" + cCmdAction)), "POST", "return form_check(this);");
-                    }
-
-                    // Add the countries list to the form
-                    foreach (XmlElement currentOElmt in oXform.moXformElmt.SelectNodes("descendant-or-self::select1[contains(@class, 'country') or @bind='cContactCountry']"))
-                    {
-                        oElmt = currentOElmt;
-                        string cThisAddressType;
-                        if (oElmt.ParentNode.SelectSingleNode("input[@bind='cContactType' or @bind='cDelContactType']/value") is null)
-                        {
-                            cThisAddressType = cAddressType;
-                        }
-                        else
-                        {
-                            cThisAddressType = oElmt.ParentNode.SelectSingleNode("input[@bind='cContactType' or @bind='cDelContactType']/value").InnerText;
-                        }
-                        if (mbNoDeliveryAddress)
-                        {
-                            cThisAddressType = "Delivery Address";
-                        }
-
-                        populateCountriesDropDown(ref oXform, ref oElmt, cThisAddressType);
-                    }
-
-                    // Add the Delivery Checkbox if needed
-
-                    if (cAddressType == "Billing Address" & mnProcessId < 2 & !mbNoDeliveryAddress & !(mnGiftListId > 0))
-                    {
-                        // this can be optionally turned off in the xform, by the absence of cIsDelivery in the instance.
-                        if (oXform.Instance.SelectSingleNode("tblCartContact[@type='Delivery Address']") is null & oXform.Instance.SelectSingleNode("//bDisallowDeliveryCheckbox") is null)
-                        {
-                            // shoppers have the option to send to same address as the billing with a checkbox
-                            oXform.addSelect(ref oGrpElmt, "cIsDelivery", true, "Deliver to This Address", "checkbox", Protean.xForm.ApperanceTypes.Minimal);
-                            XmlElement argoSelectNode = (XmlElement)oGrpElmt.LastChild;
-                            oXform.addOption(ref argoSelectNode, "", "True");
-                            XmlElement argoBindParent12 = null;
-                            oXform.addBind("cIsDelivery", "tblCartContact/cIsDelivery", oBindParent: ref argoBindParent12);
-                        }
-                    }
-
-                    if (moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
-                    {
-                        // Add Collection options
-                        XmlElement oIsDeliverySelect = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::select[@bind='cIsDelivery']");
-                        if (oIsDeliverySelect != null)
-                        {
-
-                            // Create duplicate select as select1
-                            var newElmt = moPageXml.CreateElement("select1");
-                            foreach (XmlAttribute oAtt in oIsDeliverySelect.Attributes)
-                                newElmt.SetAttribute(oAtt.Name, oAtt.Value);
-                            foreach (XmlNode oNode in oIsDeliverySelect.ChildNodes)
-                                newElmt.AppendChild(oNode.CloneNode(true));
-
-                            var delBillingElmt = oXform.addOption(ref newElmt, "Deliver to Billing Address", "false");
-
-                            bool bCollection = false;
-                            bool bOverrideCollection = false;
-                            // Get the collection delivery options
-                            // Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
-                            // Add one key in config for running functionality of bCollection - OverrideCollection
-                            if (moConfig["OverrideCollection"] != null)
-                            {
-                                if ((moConfig["OverrideCollection"]) != "" && (moConfig["OverrideCollection"]).ToLower() == "true")
-                                {
-                                    bOverrideCollection = true;
-                                }
-                            }
-                            if (bOverrideCollection == false)
-                            {
-                                using (var oDrCollectionOptions = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1"))  // Done by nita on 6/7/22
-                                {
-                                    while (oDrCollectionOptions.Read())
-                                    {
-                                        string OptLabel = "<span class=\"opt-name\">" + oDrCollectionOptions["cShipOptName"].ToString() + "</span>";
-                                        OptLabel = OptLabel + "<span class=\"opt-carrier\">" + oDrCollectionOptions["cShipOptCarrier"].ToString() + "</span>";
-                                        oXform.addOption(ref newElmt, OptLabel, oDrCollectionOptions["nShipOptKey"].ToString(), true);
-                                        bCollection = true;
-                                    }
-                                    // Only change this if collection shipping options exist.
-                                    if (bCollection)
-                                    {
-                                        oIsDeliverySelect.ParentNode.ReplaceChild(newElmt, oIsDeliverySelect);
-                                    }
-                                    else
-                                    {
-                                        // this was all for nuffin
-                                        newElmt = null;
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(cmd2))
-                    {
-                        oXform.addInput(ref oGrpElmt, cmd2, true, cmd2, "hidden");
-                        XmlElement argoBindParent13 = null;
-                        oXform.addBind(cmd2, "cmd2", oBindParent: ref argoBindParent13);
-                    }
-
-                    // :::::::::::::::::::::::::::::::::::::::::::::::
-                    // :::: CONTACT XFORM :: CREATE/LOAD INSTANCE ::::
-                    // :::::::::::::::::::::::::::::::::::::::::::::::
-
-                    // When there is no match this will get the default instance based on the table schema.  
-                    // This will override any form that we have loaded in, so we need to put exceptions in.
-                    if (bGetInstance)
-                    {
-                        oXform.Instance.InnerXml = moDBHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartContact, ContactId);
-                        if (ContactId > 0L)
-                        {
-                            bDontPopulate = false;
-                        }
-                    }
-
-                    // if the instance is empty fill these values
-                    bool bAddIds = false;
-
-                    // catch for sites where nContactKey is not specified.
-                    if (oXform.Instance.SelectSingleNode("*/nContactKey") is null)
-                    {
-                        bAddIds = true;
-                    }
-                    else if (string.IsNullOrEmpty(oXform.Instance.SelectSingleNode("*/nContactKey").InnerText))
-                    {
-                        bAddIds = true;
-                    }
-
-                    if (bAddIds)
-                    {
-                        foreach (XmlElement currentOElmt1 in oXform.Instance.SelectNodes("*/nContactDirId"))
-                        {
-                            oElmt = currentOElmt1;
-                            oElmt.InnerText = myWeb.mnUserId.ToString();
-                        }
-                        foreach (XmlElement currentOElmt2 in oXform.Instance.SelectNodes("*/nContactCartId"))
-                        {
-                            oElmt = currentOElmt2;
-                            oElmt.InnerText = mnCartId.ToString();
-                        }
-                        foreach (XmlElement currentOElmt3 in oXform.Instance.SelectNodes("*/cContactType"))
-                        {
-                            oElmt = currentOElmt3;
-                            if (string.IsNullOrEmpty(oElmt.InnerText))
-                                oElmt.InnerText = cAddressType;
-                        }
-                    }
-
-                    // make sure we don't show a random address.
-                    if (mnCartId == 0)
-                        bDontPopulate = true;
-
-                    if (bDontPopulate == false)
-                    {
-                        // if we have addresses in the cart insert them
-                        sSql = "select nContactKey, cContactType from tblCartContact where nContactCartId = " + mnCartId.ToString();
-                        oDs = moDBHelper.GetDataSet(sSql, "tblCartContact");
-                        foreach (DataRow oDr in oDs.Tables["tblCartContact"].Rows)
-                        {
-                            var tempInstance = moPageXml.CreateElement("TempInstance");
-                            tempInstance.InnerXml = moDBHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartContact, Conversions.ToLong(oDr["nContactKey"]));
-                            XmlElement instanceAdd = (XmlElement)oXform.Instance.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("tblCartContact[cContactType/node()='", oDr["cContactType"]), "']")));
-                            if (instanceAdd != null)
-                            {
-                                instanceAdd.ParentNode.ReplaceChild(tempInstance.FirstChild, instanceAdd);
-                                instanceAdd = (XmlElement)oXform.Instance.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("tblCartContact[cContactType/node()='", oDr["cContactType"]), "']")));
-                                if (instanceAdd != null)
-                                {
-                                    instanceAdd.SetAttribute("type", Conversions.ToString(oDr["cContactType"]));
-                                }
-                            }
-                        }
-                        oDs = null;
-                        // set the isDelivery Value
-                        // remember the delivery address setting.
-                        XmlElement delivElmt = (XmlElement)oXform.Instance.SelectSingleNode("tblCartContact[cContactType/node()='Delivery Address']");
-                        if (delivElmt != null)
-                        {
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["isDelivery"], "", false)))
-                            {
-                                delivElmt.SetAttribute("isDelivery", "false");
-                            }
-                            else
-                            {
-                                delivElmt.SetAttribute("isDelivery", Conversions.ToString(myWeb.moSession["isDelivery"]));
-                            }
-                        }
-
-                    }
-
-                    // Dim bGetInstance As Boolean = True
-                    // If bIsBespokeXform Then
-                    // ' There is a bespoke form, let's check for the presence of an item in the contact table
-                    // Dim oCartContactInDB As Object = moDBHelper.GetDataValue("SELECT COUNT(*) As FoundCount FROM tblCartContact " & ssql)
-                    // If Not (oCartContactInDB > 0) Then bGetInstance = False ' No Item so do not get the instance
-                    // End If
-
-
-
-                    // If membership is on and the user is logged on, we need to check if this is an existing address in the user's list of addresses
-                    if (mbEwMembership == true & myWeb.mnUserId > 0)
-                    {
-
-                        // If we are using the Pick Address list to EDIT an address, there will be a hidden control of userAddId
-                        if (!string.IsNullOrEmpty(myWeb.moRequest["userAddId"]))
-                        {
-                            oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("nUserAddressId"));
-                            oXform.Instance.LastChild.InnerText = myWeb.moRequest["userAddId"];
-                            oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("nUserAddressType"));
-                            oXform.Instance.LastChild.InnerText = myWeb.moRequest["userAddType"];
-                        }
-                        else
-                        {
-                            // Holy large where statement, Batman!  But how on earth else do we tell is a cart address is the same as a user address?
-                            string value = string.Empty;
-                            XmlElement contact = (XmlElement)oXform.Instance.SelectSingleNode("tblCartContact");
-                            cWhere = "";
-                            if (Tools.Xml.NodeState(ref contact, "cContactName", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactName='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactCompany", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCompany='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactAddress", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactAddress='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactCity", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCity='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactState", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactState='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactZip", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactZip='", SqlFmt(value)), "' "));
-                            if (Tools.Xml.NodeState(ref contact, "cContactCountry", "", "", XmlNodeState.IsEmpty, null, "", value, bCheckTrimmedInnerText: false) != XmlNodeState.NotInstantiated)
-                                cWhere = Conversions.ToString(cWhere + Operators.ConcatenateObject(Operators.ConcatenateObject("  and cContactCountry='", SqlFmt(value)), "' "));
-
-                            // cWhere = " and cContactName='" & SqlFmt(oXform.Instance.SelectSingleNode("tblCartContact/cContactName").InnerText) & "' " & _
-                            // "and cContactCompany='" & SqlFmt(oXform.Instance.SelectSingleNode("tblCartContact/cContactCompany").InnerText) & "' " & _
-                            // "and cContactAddress='" & SqlFmt(oXform.Instance.SelectSingleNode("tblCartContact/cContactAddress").InnerText) & "' " & _
-                            // "and cContactCity='" & SqlFmt(oXform.Instance.SelectSingleNode("tblCartContact/cContactCity").InnerText) & "' " & _
-                            // "and cContactState='" & SqlFmt(oXform.Instance.SelectSingleNode("tblCartContact/cContactState").InnerText) & "' " & _
-                            // "and cContactZip='" & SqlFmt(oXform.Instance.SelectSingleNode("tblCartContact/cContactZip").InnerText) & "' " & _
-                            // "and cContactCountry='" & SqlFmt(oXform.Instance.SelectSingleNode("tblCartContact/cContactCountry").InnerText) & "' "
-                            oDs = moDBHelper.GetDataSet("select * from tblCartContact where nContactDirId = " + myWeb.mnUserId.ToString() + cWhere, "tblCartContact");
-                            if (oDs.Tables["tblCartContact"].Rows.Count > 0)
-                            {
-                                oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("nUserAddressId"));
-                                oXform.Instance.LastChild.InnerText = Conversions.ToString(oDs.Tables["tblCartContact"].Rows[0]["nContactKey"]);
-                                oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("nUserAddressType"));
-                                oXform.Instance.LastChild.InnerText = Conversions.ToString(oDs.Tables["tblCartContact"].Rows[0]["cContactType"]);
-                            }
-                        }
-                    }
-
-
-                    // add some proceedual fields to instance
-                    oElmt = oXform.moPageXML.CreateElement(cCmdType);
-                    oXform.Instance.AppendChild(oElmt);
-
-                    oElmt = oXform.moPageXML.CreateElement("cIsDelivery");
-                    oXform.Instance.AppendChild(oElmt);
-
-                    if (!string.IsNullOrEmpty(cmd2))
-                    {
-                        oElmt = oXform.moPageXML.CreateElement("cmd2");
-                        oElmt.InnerText = "True";
-                        oXform.Instance.AppendChild(oElmt);
-                    }
-
-
-                    // If oXform.isSubmitted And cAddressType = myWeb.moRequest.Form("cContactType") Then
-
-                    if (oXform.isSubmitted())
-                    {
-                        oXform.updateInstanceFromRequest();
-                        oXform.validate();
-
-                        myWeb.moSession["isDelivery"] = myWeb.moRequest["isDelivery"];
-
-                        // Catch for space as country
-                        if (myWeb.moRequest["cContactCountry"] != default)
-                        {
-                            if (string.IsNullOrEmpty(myWeb.moRequest["cContactCountry"].Trim()))
-                            {
-                                oXform.valid = false;
-                                oXform.addNote("cContactCountry", Protean.xForm.noteTypes.Alert, "Please select a country", true);
-                            }
-                        }
-
-                        if (oXform.valid)
-                        {
-                            // the form is valid so update it - add a check for timed out session (mnCartId = 0)
-                            if (ContactId > 0L)
-                            {
-                                // ID is specified so we simply update ignore relation to the cart
-                                moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, oXform.Instance, ContactId);
-                            }
-                            else if (mnCartId > 0)
-                            {
-                                // test if we have a address of this type against the order..!
-                                // ssql = "Select nContactKey from tblCartContact where cContactType = '" & cAddressType & "' and nContactCartid=" & mnCartId
-                                // Dim sContactKey1 As String = moDBHelper.ExeProcessSqlScalar(ssql)
-                                // moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, oXform.Instance, sContactKey1)
-
-                                // Step through for multiple addresses
-                                bool bSavedDelivery = false;
-
-
-
-                                // check for collection options
-                                if (Information.IsNumeric(myWeb.moRequest["cIsDelivery"]))
-                                {
-                                    // Save the delivery method allready
-                                    string cSqlUpdate = "";
-                                    // Dim oDrCollectionOptions2 As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where nShipOptKey = " & myWeb.moRequest("cIsDelivery"))
-                                    using (var oDrCollectionOptions2 = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where nShipOptKey = " + myWeb.moRequest["cIsDelivery"]))  // Done by nita on 6/7/22
-                                    {
-                                        while (oDrCollectionOptions2.Read())
-                                        {
-                                            string cShippingDesc = oDrCollectionOptions2["cShipOptName"].ToString() + "-" + oDrCollectionOptions2["cShipOptCarrier"].ToString() + "</span>";
-                                            double nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oDrCollectionOptions2["nShipOptCost"]));
-
-                                            cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", SqlFmt(cShippingDesc)), "', nShippingCost="), SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), myWeb.moRequest["cIsDelivery"]), " WHERE nCartOrderKey="), mnCartId));
-                                        }
-
-                                        moDBHelper.ExeProcessSql(cSqlUpdate);
-                                        bSavedDelivery = true;
-                                    }
-                                }
-                                // If it exists and we are here means we may have changed the Delivery address country
-
-                                else if (Strings.LCase(moCartConfig["BlockRemoveDelivery"]) != "on")
-                                {
-                                    RemoveDeliveryOption(mnCartId);
-
-                                }
-
-                                if (moDBHelper.checkTableColumnExists("tblCartOrder", "nReceiptType"))
-                                {
-                                    if (myWeb.moRequest["cIsDelivery"] == "true" & myWeb.moRequest["cIsPaperRecieptForDelAddress"] == "true")
-                                    {
-                                        // check flag condition
-                                        string cSqlUpdate = "UPDATE tblCartOrder SET nReceiptType=2 WHERE nCartOrderKey=" + mnCartId;
-                                        moDBHelper.ExeProcessSql(cSqlUpdate);
-                                    }
-
-                                    else
-                                    {
-                                        // check flag condition
-                                        string cSqlUpdate = "UPDATE tblCartOrder SET nReceiptType=1 WHERE nCartOrderKey=" + mnCartId;
-                                        moDBHelper.ExeProcessSql(cSqlUpdate);
-                                    }
-                                }
-                                foreach (XmlElement currentOElmt4 in oXform.Instance.SelectNodes("tblCartContact"))
-                                {
-                                    oElmt = currentOElmt4;
-                                    string cThisAddressType = oElmt.SelectSingleNode("cContactType").InnerText;
-                                    sSql = "Select nContactKey from tblCartContact where cContactType = '" + cThisAddressType + "' and nContactCartid=" + mnCartId;
-                                    string sContactKey1 = moDBHelper.ExeProcessSqlScalar(sSql);
-                                    var saveInstance = moPageXml.CreateElement("instance");
-                                    saveInstance.AppendChild(oElmt.Clone());
-                                    moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, saveInstance, Conversions.ToLong(sContactKey1));
-                                    if (cThisAddressType == "Delivery Address")
-                                        bSavedDelivery = true;
-                                }
-
-                                // if the option save Delivery is true then
-                                if (bSavedDelivery == false)
-                                {
-                                    if (myWeb.moRequest["cIsDelivery"] == "True" | mbNoDeliveryAddress & cAddressType == "Billing Address")
-                                    {
-                                        if (myWeb.moRequest["cIsDelivery"] == "True" & mnShippingRootId > 0)
-                                        {
-                                            // mnShippingRootId
-                                            // check if the submitted country matches one in the delivery list
-                                            var oCheckElmt = moPageXml.CreateElement("ValidCountries");
-                                            ListShippingLocations(ref oCheckElmt);
-                                            string cCountry = oXform.Instance.SelectSingleNode("tblCartContact/cContactCountry").InnerText;
-                                            if (oCheckElmt.SelectSingleNode("descendant-or-self::TreeItem[@Name='" + cCountry + "' or @name='" + cCountry + "' or @nameShort='" + cCountry + "']") is null)
-                                            {
-                                                oXform.valid = false;
-                                                oXform.addNote("cContactCountry", Protean.xForm.noteTypes.Alert, "Cannot Deliver to this country. please select another.", true);
-                                            }
-                                        }
-                                        if (oXform.valid)
-                                        {
-                                            sSql = "Select nContactKey from tblCartContact where cContactType = 'Delivery Address' and nContactCartid=" + mnCartId;
-                                            string sContactKey2 = moDBHelper.ExeProcessSqlScalar(sSql);
-                                            oXform.Instance.SelectSingleNode("tblCartContact/cContactType").InnerText = "Delivery Address";
-                                            moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, oXform.Instance, Conversions.ToLong(sContactKey2));
-                                            // going to set it back to a billing address
-                                            oXform.Instance.SelectSingleNode("tblCartContact/cContactType").InnerText = "Billing Address";
-                                        }
-                                    }
-                                }
-                                if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail") != null)
-                                {
-                                    if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nOptOutKey"))
-                                    {
-                                        if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut") != null)
-                                        {
-                                            sSql = "Select nContactKey from tblCartContact where cContactType = 'Billing Address' and nContactCartid=" + mnCartId;
-                                            string sContactKey3 = moDBHelper.ExeProcessSqlScalar(sSql);
-                                            moDBHelper.AddOptOutEmail(oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText, sContactKey3, oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail/@optOut").InnerText);
-
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (oXform.Instance.SelectSingleNode("tblCartContact/cContactEmail[@optOut='true']") != null)
-                                        {
-                                            moDBHelper.AddInvalidEmail(oXform.Instance.SelectSingleNode("tblCartContact/cUserId[@optOut='true']").InnerText);
-
-                                        }
-                                    }
-                                }
-                            }
-
-                            else
-                            {
-                                // Throw an error to indicate that the user has timed out
-                                mnProcessError = 4;
-                            }
-                            if (!string.IsNullOrEmpty(myWeb.moRequest["cContactOpt-In"]))
-                            {
-                                this.AddToLists("Newsletter", ref moCartXml, myWeb.moRequest["cContactName"], myWeb.moRequest["cContactEmail"]);
-                            }
-
-                        }
-
-                    }
-
-
-
-                    oXform.addValues();
-
-                    return oXform;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "contactXform", ex, "", cProcessInfo, gbDebug);
-                    return (Cms.xForm)null;
-                }
-
-            }
-
-
-
-
-            public virtual Cms.xForm pickContactXform(string cAddressType, string submitPrefix = "", string cCmdType = "cartCmd", string cCmdAction = "")
-            {
-                myWeb.PerfMon.Log("Cart", "pickContactXform");
-                var oXform = new Cms.xForm(ref myWeb.msException);
-
-                Cms.xForm oReturnForm;
-                XmlElement oGrpElmt;
-                DataSet oDs;
-                DataSet oDs2;
-                DataRow oDr;
-                string cSql = "";
-                // Dim sAddressHtml As String
-                string cProcessInfo = "";
-                long contactId = 0L;
-                long billingAddId = 0L;
-                Cms.xForm oContactXform = (Cms.xForm)null;
-                bool bDontPopulate = false;
-                bool bBillingSet = false;
-                string newSubmitPrefix = submitPrefix;
-                string newAddressType = cAddressType;
-                string contactFormCmd2 = "";
-                try
-                {
-                    myWeb.moSession["tempInstance"] = null;
-                    // Get any existing addresses for user
-                    // Changed this so it gets any
-
-                    // Check if updated primiary billing address, (TS added order by reverse order added)
-                    cSql = "select * from tblCartContact where nContactDirId = " + myWeb.mnUserId.ToString() + " and nContactCartId = 0 and (cContactType = 'Billing Address' or cContactType = 'Delivery Address')  order by cContactType ASC, nContactKey DESC";
-                    oDs = moDBHelper.GetDataSet(cSql, "tblCartContact");
-                    foreach (DataRow currentODr in oDs.Tables["tblCartContact"].Rows)
-                    {
-                        oDr = currentODr;
-                        if (billingAddId == 0L)
-                            billingAddId = Conversions.ToLong(oDr["nContactKey"]);
-
-                        if (!string.IsNullOrEmpty(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject("cartDeleditAddress", oDr["nContactKey"]))]))
-                        {
-                            submitPrefix = "cartDel";
-                            cAddressType = "Delivery Address";
-
-                            newSubmitPrefix = "cartDel";
-                            newAddressType = "Delivery Address";
-
-                            // ensure we hit this next time through...
-                            cCmdAction = "Delivery";
-                            contactFormCmd2 = Conversions.ToString(Operators.ConcatenateObject("cartDeleditAddress", oDr["nContactKey"]));
-                        }
-
-
-                        else if (!string.IsNullOrEmpty(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "addDelivery", oDr["nContactKey"]))]))
-                        {
-                            bDontPopulate = true;
-                            newSubmitPrefix = "cartDel";
-                            newAddressType = "Delivery Address";
-                            cCmdAction = "Delivery";
-                        }
-                        else if (!string.IsNullOrEmpty(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "editAddress", oDr["nContactKey"]))]))
-                        {
-                            if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(billingAddId, oDr["nContactKey"], false)))
-                            {
-                                newSubmitPrefix = "cartDel";
-                                newAddressType = "Delivery Address";
-                            }
-                            else
-                            {
-                                // we are editing a billing address and want to ensure we dont get a double form.
-                                if (myWeb.bs5)
-                                {
-                                    if (mcBillingAddressXform.Contains("both-addresses.xml"))
-                                    {
-                                        mcBillingAddressXform = mcBillingAddressXform.Replace("both-addresses.xml", "billing-address.xml");
-                                    }
-                                }
-                                else {
-                                    if (mcBillingAddressXform.Contains("BillingAndDeliveryAddress.xml"))
-                                    {
-                                        mcBillingAddressXform = mcBillingAddressXform.Replace("BillingAndDeliveryAddress.xml", "BillingAddress.xml");
-                                    }
-                                }
-
-                                
-                                // ensure we hit this next time through...
-                                cCmdAction = "Billing";
-                                contactFormCmd2 = Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "editAddress", oDr["nContactKey"]));
-                                bDontPopulate = true;
-                                // we specifiy a contactID to ensure we don't update the cart addresses just the ones on file.
-                                contactId = Conversions.ToLong(oDr["nContactKey"]);
-                            }
-                        }
-                        else if (!string.IsNullOrEmpty(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "useBilling", oDr["nContactKey"]))]))
-                        {
-                            contactId = setCurrentBillingAddress((long)myWeb.mnUserId, Conversions.ToLong(oDr["nContactKey"]));
-                            bBillingSet = true;
-                        }
-                    }
-
-                    if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
-                    {
-                        contactId = 0L;
-                        bDontPopulate = true;
-                    }
-
-                    oContactXform = contactXform(newAddressType, newSubmitPrefix + "Address", cCmdType, cCmdAction, bDontPopulate, contactId, contactFormCmd2);
-
-                    // Build the xform
-                    oXform.moPageXML = moPageXml;
-                    string cPickAddressXform = moCartConfig["PickAddressXForm"];
-
-                    if (!string.IsNullOrEmpty(cPickAddressXform))
-                    {
-                        if (!oXform.load(cPickAddressXform))
-                        {
-                            oXform.NewFrm(cAddressType);
-                        }
-                    }
-                    else
-                    {
-                        oXform.NewFrm(cAddressType);
-                    }
-                    oXform.valid = false;
-
-                    // oReturnForm is going to be the form returned at the end of the function.
-                    oReturnForm = oXform;
-
-                    if (!bBillingSet)
-                    {
-                        contactId = setCurrentBillingAddress((long)myWeb.mnUserId, 0L);
-                    }
-                    else
-                    {
-                        cSql = "Select * from tblCartContact where nContactDirId = " + myWeb.mnUserId.ToString() + " And nContactCartId = 0 And (cContactType='Billing Address' or cContactType='Delivery Address') order by cContactType ASC";
-                        oDs = moDBHelper.GetDataSet(cSql, "tblCartContact");
-                    }
-
-                    if (oDs.Tables["tblCartContact"].Rows.Count > 0)
-                    {
-
-                        // Create the instance
-                        oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("cContactId"));
-
-                        // Add a value if an address has been selected
-                        oDs2 = moDBHelper.GetDataSet("select * from tblCartContact where nContactCartId = " + mnCartId.ToString() + " and cContactType = '" + cAddressType + "'", "tblCartContact");
-                        if (oDs2.Tables["tblCartContact"].Rows.Count > 0)
-                        {
-                            oXform.Instance.SelectSingleNode("cContactId").InnerText = Conversions.ToString(oDs2.Tables["tblCartContact"].Rows[0]["nContactKey"]);
-                        }
-
-                        oXform.Instance.AppendChild(oXform.moPageXML.CreateElement("cIsDelivery"));
-                        oXform.submission("contact", mcPagePath + cCmdType + "=" + cCmdAction, "POST");
-
-                        oGrpElmt = oXform.addGroup(ref oXform.moXformElmt, "address", sLabel: "");
-
-                        oXform.addInput(ref oGrpElmt, "addType", false, "", "hidden");
-                        oGrpElmt.LastChild.AppendChild(oGrpElmt.OwnerDocument.CreateElement("value"));
-                        oGrpElmt.LastChild.FirstChild.InnerText = cAddressType;
-
-                        // oXform.addSelect1(oGrpElmt, "cContactId", True, "Select", "multiline", xForm.ApperanceTypes.Full)
-                        // oXform.addBind("cContactId", "cContactId")
-
-                        // Add Collection Options
-
-                        if (moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
-                        {
-                            // Add Collection options
-                            // Get the collection delivery options
-                            // Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
-                            using (var oDrCollectionOptions = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1"))  // Done by nita on 6/7/22
-                            {
-                                if (oDrCollectionOptions.HasRows)
-                                {
-                                    XmlElement oCollectionGrp;
-                                    oCollectionGrp = oXform.addGroup(ref oGrpElmt, "CollectionOptions", "collection-options", "");
-
-                                    while (oDrCollectionOptions.Read())
-                                    {
-
-                                        string OptLabel = oDrCollectionOptions["cShipOptName"].ToString() + " - " + oDrCollectionOptions["cShipOptCarrier"].ToString();
-
-                                        oXform.addSubmit(ref oCollectionGrp, "collect", OptLabel, "CollectionID_" + oDrCollectionOptions["nShipOptKey"].ToString(), "collect btn-success principle", "fa-truck");
-                                    }
-                                }
-                            }
-                        }
-
-                        foreach (DataRow currentODr1 in oDs.Tables["tblCartContact"].Rows)
-                        {
-                            oDr = currentODr1;
-                            XmlElement oAddressGrp;
-                            oAddressGrp = oXform.addGroup(ref oGrpElmt, Conversions.ToString(Operators.ConcatenateObject("addressGrp-", oDr["nContactKey"])), "addressGrp", "");
-                            oXform.addDiv(ref oAddressGrp, moDBHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartContact, Conversions.ToLong(oDr["nContactKey"])), "pickAddress");
-
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(billingAddId, oDr["nContactKey"], false)))
-                            {
-                                oXform.addSubmit(ref oAddressGrp, "editAddress", "Edit", Conversions.ToString(Operators.ConcatenateObject("cartDeleditAddress", oDr["nContactKey"])), "btn-default edit", "fa-pencil");
-                                oXform.addSubmit(ref oAddressGrp, "removeAddress", "Del", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "deleteAddress", oDr["nContactKey"])), "btn-default delete", "fa-trash-o");
-                            }
-                            else
-                            {
-                                oXform.addSubmit(ref oAddressGrp, "editAddress", "Edit", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "editAddress", oDr["nContactKey"])), "btn-default edit", "fa-pencil");
-                                // oXform.addSubmit(oAddressGrp, "removeAddress", "Delete", submitPrefix & "deleteAddress" & oDr.Item("nContactKey"), "delete")
-                            }
-
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["cContactType"], "Billing Address", false)))
-                            {
-                                oXform.addSubmit(ref oAddressGrp, Conversions.ToString(oDr["nContactKey"]), "Use as Billing", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "useBilling", oDr["nContactKey"])), "setAsBilling");
-                            }
-                            else
-                            {
-
-                                if (mbNoDeliveryAddress)
-                                {
-                                    oXform.addSubmit(ref oAddressGrp, "addNewAddress", "Add New Address", submitPrefix + "addNewAddress", "btn-default addnew", "fa-plus");
-                                }
-                                else
-                                {
-                                    oXform.addSubmit(ref oAddressGrp, "addNewAddress", "Add New Billing Address", submitPrefix + "addNewAddress", "btn-default addnew", "fa-plus");
-                                }
-
-                                if (mbNoDeliveryAddress == false)
-                                {
-                                    oXform.addSubmit(ref oGrpElmt, Conversions.ToString(oDr["nContactKey"]), "New Delivery Address", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "addDelivery", oDr["nContactKey"])), "setAsBilling btn-success principle", "fa-plus");
-                                }
-
-                            }
-
-                            if (mbNoDeliveryAddress)
-                            {
-                                oXform.addSubmit(ref oAddressGrp, Conversions.ToString(oDr["nContactKey"]), "Use This Address", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "contact", oDr["nContactKey"])), "deliver-here principle", "fas fa-truck");
-                            }
-                            else
-                            {
-                                oXform.addSubmit(ref oAddressGrp, Conversions.ToString(oDr["nContactKey"]), "Deliver To This Address", Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "contact", oDr["nContactKey"])), "deliver-here principle", "fas fa-truck");
-                            }
-                        }
-                        // Check if the form has been submitted
-                        if (oXform.isSubmitted())
-                        {
-                            oXform.updateInstanceFromRequest();
-                            // bool forCollection = false;
-                            if (moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
-                            {
-                                object bCollectionSelected = false;
-                                // Dim oDrCollectionOptions As SqlDataReader = moDBHelper.getDataReader("select * from tblCartShippingMethods where bCollection = 1")
-                                using (var oDrCollectionOptions = moDBHelper.getDataReaderDisposable("select * from tblCartShippingMethods where bCollection = 1"))  // Done by nita on 6/7/22
-                                {
-                                    if (oDrCollectionOptions.HasRows)
-                                    {
-                                        while (oDrCollectionOptions.Read())
-                                        {
-                                            if (!string.IsNullOrEmpty(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject("CollectionID_", oDrCollectionOptions["nShipOptKey"]))]))
-                                            {
-                                                bCollectionSelected = true;
-                                                // Set the shipping option
-                                                string cShippingDesc = oDrCollectionOptions["cShipOptName"].ToString() + "-" + oDrCollectionOptions["cShipOptCarrier"].ToString();
-                                                double nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oDrCollectionOptions["nShipOptCost"]));
-                                                string cSqlUpdate;
-                                                cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", SqlFmt(cShippingDesc)), "', nShippingCost="), SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), oDrCollectionOptions["nShipOptKey"]), " WHERE nCartOrderKey="), mnCartId));
-                                                moDBHelper.ExeProcessSql(cSqlUpdate);
-                                                // forCollection = true;
-                                                oXform.valid = true;
-                                                oContactXform.valid = true;
-                                                mbNoDeliveryAddress = true;
-
-                                                var NewInstance = moPageXml.CreateElement("instance");
-                                                var delXform = contactXform("Delivery Address");
-
-                                                NewInstance.InnerXml = delXform.Instance.SelectSingleNode("tblCartContact").OuterXml;
-                                                // dissassciate from user so not shown again
-                                                NewInstance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = "";
-                                                NewInstance.SelectSingleNode("tblCartContact/cContactName").InnerText = oDrCollectionOptions["cShipOptName"].ToString();
-                                                NewInstance.SelectSingleNode("tblCartContact/cContactCompany").InnerText = oDrCollectionOptions["cShipOptCarrier"].ToString();
-                                                NewInstance.SelectSingleNode("tblCartContact/cContactCountry").InnerText = moCartConfig["DefaultDeliveryCountry"];
-
-                                                string billingContactXml = null;
-                                                string collectionContactID;
-
-                                                collectionContactID = moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, NewInstance);
-
-                                                useSavedAddressesOnCart(billingAddId, Conversions.ToInteger(collectionContactID), billingContactXml);
-                                                return oReturnForm;
-                                            }
-                                        }
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(bCollectionSelected, false, false)))
-                                        {
-                                            RemoveDeliveryOption(mnCartId);
-                                        }
-                                    }
-                                }
-                            }
-
-                            foreach (DataRow currentODr2 in oDs.Tables["tblCartContact"].Rows)
-                            {
-                                oDr = currentODr2;
-                                if (!string.IsNullOrEmpty(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "contact", oDr["nContactKey"]))]))
-                                {
-                                    contactId = Conversions.ToLong(oDr["nContactKey"]);
-                                    // Save Behaviour
-                                    oXform.valid = true;
-                                }
-                                else if (!string.IsNullOrEmpty(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "addDelivery", oDr["nContactKey"]))]))
-                                {
-                                    contactId = Conversions.ToLong(oDr["nContactKey"]);
-                                    oXform.valid = false;
-                                    oContactXform.valid = false;
-                                }
-                                else if (!string.IsNullOrEmpty(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "editAddress", oDr["nContactKey"]))]))
-                                {
-                                    contactId = Conversions.ToLong(oDr["nContactKey"]);
-                                }
-                                // edit Behavior
-                                else if (!string.IsNullOrEmpty(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "deleteAddress", oDr["nContactKey"]))]))
-                                {
-                                    contactId = Conversions.ToLong(oDr["nContactKey"]);
-                                    // delete Behavior
-                                    moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, contactId);
-                                    // remove from form
-                                    oXform.moXformElmt.SelectSingleNode("descendant-or-self::group[@ref='addressGrp-" + contactId + "']").ParentNode.RemoveChild(oXform.moXformElmt.SelectSingleNode("descendant-or-self::group[@ref='addressGrp-" + contactId + "']"));
-                                    oXform.valid = false;
-                                }
-                                else if (!string.IsNullOrEmpty(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject(submitPrefix + "useBilling", oDr["nContactKey"]))]))
-                                {
-                                    // we have handled this at the top
-                                    oXform.valid = false;
-                                }
-                            }
-
-                            // Check if the contactID is populated
-                            if (contactId == 0L)
-                            {
-                                oXform.addNote("address", Protean.xForm.noteTypes.Alert, "You must select an address from the list");
-                            }
-                            else
-                            {
-
-                                // Get the selected address
-                                DataRow[] oMatches = oDs.Tables["tblCartContact"].Select("nContactKey = " + contactId);
-                                if (oMatches != null)
-                                {
-                                    var oMR = oMatches[0];
-
-                                    if (!bDontPopulate)
-                                    {
-
-                                        // Update the contactXform with the address
-                                        oContactXform.Instance.SelectSingleNode("tblCartContact/cContactType").InnerText = newAddressType;
-                                        oContactXform.Instance.SelectSingleNode("tblCartContact/cContactName").InnerText = Conversions.ToString(Operators.ConcatenateObject(oMR["cContactName"], ""));
-                                        oContactXform.Instance.SelectSingleNode("tblCartContact/cContactCompany").InnerText = Conversions.ToString(Operators.ConcatenateObject(oMR["cContactCompany"], ""));
-                                        oContactXform.Instance.SelectSingleNode("tblCartContact/cContactAddress").InnerText = Conversions.ToString(Operators.ConcatenateObject(oMR["cContactAddress"], ""));
-                                        oContactXform.Instance.SelectSingleNode("tblCartContact/cContactCity").InnerText = Conversions.ToString(Operators.ConcatenateObject(oMR["cContactCity"], ""));
-                                        oContactXform.Instance.SelectSingleNode("tblCartContact/cContactState").InnerText = Conversions.ToString(Operators.ConcatenateObject(oMR["cContactState"], ""));
-                                        oContactXform.Instance.SelectSingleNode("tblCartContact/cContactZip").InnerText = Conversions.ToString(Operators.ConcatenateObject(oMR["cContactZip"], ""));
-                                        oContactXform.Instance.SelectSingleNode("tblCartContact/cContactCountry").InnerText = Conversions.ToString(Operators.ConcatenateObject(oMR["cContactCountry"], ""));
-                                        oContactXform.Instance.SelectSingleNode("tblCartContact/cContactTel").InnerText = Conversions.ToString(Operators.ConcatenateObject(oMR["cContactTel"], ""));
-                                        oContactXform.Instance.SelectSingleNode("tblCartContact/cContactFax").InnerText = Conversions.ToString(Operators.ConcatenateObject(oMR["cContactFax"], ""));
-                                        oContactXform.Instance.SelectSingleNode("tblCartContact/cContactEmail").InnerText = Conversions.ToString(Operators.ConcatenateObject(oMR["cContactEmail"], ""));
-                                        oContactXform.Instance.SelectSingleNode("cIsDelivery").InnerText = oXform.Instance.SelectSingleNode("cIsDelivery").InnerText;
-
-                                        oContactXform.resetXFormUI();
-                                        oContactXform.addValues();
-
-                                        // Add hidden values for the parent address
-                                        if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "editAddress" + contactId]))
-                                        {
-
-                                            oGrpElmt = (XmlElement)oContactXform.moXformElmt.SelectSingleNode("group");
-                                            oContactXform.addInput(ref oGrpElmt, "userAddId", false, "", "hidden");
-                                            oGrpElmt.LastChild.AppendChild(oGrpElmt.OwnerDocument.CreateElement("value"));
-                                            oGrpElmt.LastChild.FirstChild.InnerText = contactId.ToString(); // oMR.Item("nContactKey")
-
-                                            oContactXform.addInput(ref oGrpElmt, "userAddType", false, "", "hidden");
-                                            oGrpElmt.LastChild.AppendChild(oGrpElmt.OwnerDocument.CreateElement("value"));
-                                            oGrpElmt.LastChild.FirstChild.InnerText = newAddressType; // oMR.Item("cContactType")
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        oXform.addValues();
-
-                    }
-
-                    if (oContactXform.valid == false & oXform.valid == false)
-                    {
-                        // both forms are invalid so we need to output one of the forms.
-                        if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "editAddress" + contactId]) | !string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addDelivery" + contactId]) | oContactXform.isSubmitted())
-                        {
-                            // we are editing an address so show the contactXform or a contactXform has been submitted to 
-                            oReturnForm = oContactXform;
-                        }
-                        // We need to show the pick list if and only if :
-                        // 1. It has addresses in it
-                        // 2. There is no request to Add
-
-                        else if (oXform.moXformElmt.SelectSingleNode("/model/instance").HasChildNodes & !!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
-                        {
-                            oReturnForm = oXform;
-                        }
-                        else
-                        {
-                            // Add address needs to clear out the existing xForm
-                            if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addNewAddress"]))
-                            {
-                                oContactXform.resetXFormUI();
-                                oContactXform.addValues();
-                            }
-                            oReturnForm = oContactXform;
-                        }
-                    }
-                    else
-                    {
-                        // If pick address has been submitted, then we have a contactXform that has not been submitted, and therefore not saved.  Let's save it.
-                        if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "contact" + contactId]))
-                        {
-                            string billingContactXml = null;
-                            if (!string.IsNullOrEmpty(cPickAddressXform))
-                            {
-                                billingContactXml = oXform.Instance.SelectSingleNode("tblCartContact/cContactXml").InnerXml;
-                            }
-
-                            useSavedAddressesOnCart(billingAddId, contactId, billingContactXml);
-                            // skip delivery
-                            oContactXform.moXformElmt.SetAttribute("cartCmd", "ChoosePaymentShippingOption");
-                        }
-
-                        if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "addDelivery" + contactId]))
-                        {
-                            // remove the deliver from the instance if it is there
-                            useSavedAddressesOnCart(billingAddId, 0L, null);
-                            foreach (XmlNode oNode in oContactXform.Instance.SelectNodes("tblCartContact[cContactType='Delivery Address']"))
-                                oNode.ParentNode.RemoveChild(oNode);
-                        }
-
-                        if (oContactXform.valid == false)
-                        {
-                            oContactXform.valid = true;
-                            oContactXform.moXformElmt.SetAttribute("persistAddress", "false");
-                        }
-
-                        if (!string.IsNullOrEmpty(myWeb.moRequest[submitPrefix + "editAddress" + billingAddId]) & oContactXform.valid)
-                        {
-                            // We have edited a billing address and need to output the pickForm
-                            oReturnForm = oXform;
-                        }
-                        else
-                        {
-                            // pass through the xform to make transparent
-                            oReturnForm = oContactXform;
-                        }
-
-
-
-
-                    }
-
-                    // TS not sure if required after rewrite, think it is deleting addresses unessesarily.
-
-                    // If Not (oReturnForm Is Nothing) AndAlso oReturnForm.valid AndAlso oReturnForm.isSubmitted Then
-                    // ' There seems to be an issue with duplicate addresses being submitted by type against an order.
-                    // '  This script finds the duplciates and nullifies them (i.e. sets their cartid to be 0).
-                    // cSql = "UPDATE tblCartContact SET nContactCartId = 0 " _
-                    // & "FROM (SELECT nContactCartId id, cContactType type, MAX(nContactKey) As latest FROM dbo.tblCartContact WHERE nContactCartId <> 0 GROUP BY nContactCartId, cContactType HAVING COUNT(*) >1) dup " _
-                    // & "INNER JOIN tblCartContact c ON c.nContactCartId = dup.id AND c.cContactType = dup.type AND c.nContactKey <> dup.latest"
-                    // cProcessInfo = "Clear Duplicate Addresses: " & cSql
-                    // moDBHelper.ExeProcessSql(cSql)
-                    // End If
-
-                    return oReturnForm;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "pickContactXform", ex, "", cProcessInfo, gbDebug);
-                    return (Cms.xForm)null;
-                }
-
-            }
-
-
-            /// <summary>
-            /// Each user need only have a single active billing address
-            /// </summary>
-            /// <param name="UserId"></param>
-            /// <param name="ContactId"></param>
-            /// <returns>If Contact ID = 0 then uses last updated</returns>
-            /// <remarks></remarks>
-            public long setCurrentBillingAddress(long UserId, long ContactId)
-            {
-                string cProcessInfo = "";
-                string cSql;
-                DataSet oDS;
-
-                try
-                {
-                    if (myWeb.mnUserId > 0)
-                    {
-
-                        if (ContactId != 0L)
-                        {
-                            moDBHelper.updateInstanceField(Cms.dbHelper.objectTypes.CartContact, (int)ContactId, "cContactType", "Billing Address");
-                        }
-
-                        // Check for othersss
-                        cSql = "select c.* from tblCartContact c inner JOIN tblAudit a on a.nAuditKey = c.nAuditId where nContactDirId = " + myWeb.mnUserId.ToString() + " and nContactCartId = 0  and cContactType='Billing Address' order by a.dUpdateDate DESC";
-                        oDS = moDBHelper.GetDataSet(cSql, "tblCartContact");
-
-                        foreach (DataRow oDr in oDS.Tables["tblCartContact"].Rows)
-                        {
-                            if (ContactId == Conversions.ToDouble("0"))
-                            {
-                                // gets the top one
-                                ContactId = Conversions.ToLong(oDr["nContactKey"]);
-                            }
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDr["nContactKey"], ContactId, false)))
-                            {
-                                moDBHelper.ExeProcessSql(Conversions.ToString(Operators.ConcatenateObject("update tblCartContact set cContactType='Previous Billing Address' where nContactKey=", oDr["nContactKey"])));
-                            }
-                        }
-
-                        return ContactId;
-                    }
-
-                    else
-                    {
-                        return 0L;
-                    }
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "setCurrentBillingAddress", ex, "", cProcessInfo, gbDebug);
-                    return default;
-                }
-            }
-
-            public void useSavedAddressesOnCart(long billingId, long deliveryId, string billingContactXml)
-            {
-                string cProcessInfo = "";
-                DataSet oDs;
-                try
-                {
-                    // get id's of addresses allready assoicated with this cart they are being replaced
-                    string sSql;
-                    sSql = "select nContactKey, cContactType, nAuditKey from tblCartContact inner join tblAudit a on nAuditId = a.nAuditKey where nContactCartId = " + mnCartId.ToString();
-                    oDs = moDBHelper.GetDataSet(sSql, "tblCartContact");
-                    string savedBillingId = "";
-                    string savedDeliveryId = "";
-                    string savedBillingAuditId = "";
-                    string savedDeliveryAuditId = "";
-                    foreach (DataRow odr in oDs.Tables["tblCartContact"].Rows)
-                    {
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(odr["cContactType"], "Billing Address", false)))
-                        {
-                            if (!string.IsNullOrEmpty(savedBillingId))
-                            {
-                                // delete any duplicates
-                                moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, Conversions.ToLong(odr["nContactKey"]));
-                            }
-                            else
-                            {
-                                savedBillingId = Conversions.ToString(odr["nContactKey"]);
-                                savedBillingAuditId = Conversions.ToString(odr["nAuditKey"]);
-                            }
-                        }
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(odr["cContactType"], "Delivery Address", false)))
-                        {
-                            if (!string.IsNullOrEmpty(savedDeliveryId))
-                            {
-                                // delete any duplicates
-                                moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartContact, Conversions.ToLong(odr["nContactKey"]));
-                            }
-                            else
-                            {
-                                savedDeliveryId = Conversions.ToString(odr["nContactKey"]);
-                                savedDeliveryAuditId = Conversions.ToString(odr["nAuditKey"]);
-                            }
-                        }
-                    }
-                    oDs = null;
-
-                    // this should update the billing address
-                    var billInstance = myWeb.moPageXml.CreateElement("Instance");
-                    billInstance.InnerXml = moDBHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartContact, billingId);
-                    billInstance.SelectSingleNode("*/nContactKey").InnerText = savedBillingId;
-                    billInstance.SelectSingleNode("*/nContactCartId").InnerText = mnCartId.ToString();
-                    billInstance.SelectSingleNode("*/cContactType").InnerText = "Billing Address";
-                    billInstance.SelectSingleNode("*/nAuditId").InnerText = savedBillingAuditId;
-                    billInstance.SelectSingleNode("*/nAuditKey").InnerText = savedBillingAuditId;
-                    if (billingContactXml != null)
-                    {
-                        billInstance.SelectSingleNode("*/cContactXml    ").InnerXml = billingContactXml;
-                    }
-
-                    moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, billInstance);
-
-                    // now get the submitted delivery id instance
-                    if (!(deliveryId == 0L))
-                    {
-                        var delInstance = myWeb.moPageXml.CreateElement("Instance");
-                        delInstance.InnerXml = moDBHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartContact, deliveryId);
-                        delInstance.SelectSingleNode("*/nContactKey").InnerText = savedDeliveryId;
-                        delInstance.SelectSingleNode("*/nContactCartId").InnerText = mnCartId.ToString();
-                        delInstance.SelectSingleNode("*/cContactType").InnerText = "Delivery Address";
-                        delInstance.SelectSingleNode("*/nAuditId").InnerText = savedDeliveryAuditId;
-                        delInstance.SelectSingleNode("*/nAuditKey").InnerText = savedDeliveryAuditId;
-                        moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, delInstance);
-                    }
-                }
-
-                // here we should update the current instance so we can calculate the shipping later
-
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "useAddressesOnCart", ex, "", cProcessInfo, gbDebug);
-                }
-            }
-
-            protected void UpdateExistingUserAddress(ref Cms.xForm oContactXform)
-            {
-                myWeb.PerfMon.Log("Cart", "UpdateExistingUserAddress");
-                // Check if it exists - if it does then update the nContactKey node
-                var oTempCXform = new Cms.xForm(ref myWeb.msException);
-                string cProcessInfo = "";
-                string sSql;
-                long nCount;
-                XmlElement oElmt2;
-                try
-                {
-
-                    foreach (XmlElement oAddElmt in oContactXform.Instance.SelectNodes("tblCartContact"))
-                    {
-                        if (oAddElmt.GetAttribute("saveToUser") != "false")
-                        {
-
-                            // does this address allready exist?
-                            sSql = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("select count(nContactKey) from tblCartContact where nContactDirId = " + myWeb.mnUserId + " and nContactCartId = 0 " + " and cContactName = '", SqlFmt(oAddElmt.SelectSingleNode("cContactName").InnerText)), "'"), " and cContactCompany = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactCompany").InnerText)), "'"), " and cContactAddress = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactAddress").InnerText)), "'"), " and cContactCity = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactCity").InnerText)), "'"), " and cContactState = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactState").InnerText)), "'"), " and cContactZip = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactZip").InnerText)), "'"), " and cContactCountry = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactCountry").InnerText)), "'"), " and cContactTel = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactTel").InnerText)), "'"), " and cContactFax = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactFax").InnerText)), "'"), " and cContactEmail = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactEmail").InnerText)), "'"), " and cContactXml = '"), SqlFmt(oAddElmt.SelectSingleNode("cContactXml").InnerXml)), "'"));
-
-                            nCount = Conversions.ToLong(moDBHelper.ExeProcessSqlScalar(sSql));
-
-                            if (nCount == 0L)
-                            {
-
-                                oTempCXform.NewFrm("tblCartContact");
-                                oTempCXform.Instance.InnerXml = oAddElmt.OuterXml;
-                                var tempInstance = moPageXml.CreateElement("instance");
-                                string ContactType = oTempCXform.Instance.SelectSingleNode("tblCartContact/cContactType").InnerText;
-                                // Update/add the address to the table
-                                // make sure we are inserting by reseting the key
-
-                                if (!string.IsNullOrEmpty(myWeb.moRequest["userAddId"]) & (ContactType ?? "") == (myWeb.moRequest["userAddType"] ?? ""))
-                                {
-                                    // get the id we are updating
-                                    long updateId = Conversions.ToLong(myWeb.moRequest["userAddId"]);
-
-                                    oTempCXform.Instance.SelectSingleNode("tblCartContact/nContactKey").InnerText = updateId.ToString();
-                                    // We need to populate the auditId feilds
-                                    tempInstance.InnerXml = moDBHelper.getObjectInstance(Cms.dbHelper.objectTypes.CartContact, updateId);
-                                    // update with the fields specified
-                                    foreach (XmlElement oElmt in oTempCXform.Instance.SelectNodes("tblCartContact/*[node()!='']"))
-                                    {
-                                        if (!(oElmt.Name == "nAuditId" | oElmt.Name == "nAuditKey"))
-                                        {
-                                            oElmt2 = (XmlElement)tempInstance.SelectSingleNode("tblCartContact/" + oElmt.Name);
-                                            oElmt2.InnerXml = oElmt.InnerXml;
-                                        }
-                                    }
-                                    oTempCXform.Instance = tempInstance;
-                                }
-
-                                else
-                                {
-                                    oTempCXform.Instance.SelectSingleNode("tblCartContact/nContactKey").InnerText = "0";
-                                    oTempCXform.Instance.SelectSingleNode("tblCartContact/nAuditId").InnerText = "";
-                                    oTempCXform.Instance.SelectSingleNode("tblCartContact/nAuditKey").InnerText = "";
-                                }
-
-                                // separate from cart
-                                oTempCXform.Instance.SelectSingleNode("tblCartContact/nContactCartId").InnerText = "0";
-                                // link to user
-                                oTempCXform.Instance.SelectSingleNode("tblCartContact/nContactDirId").InnerText = myWeb.mnUserId.ToString();
-                                moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartContact, oTempCXform.Instance);
-
-                            }
-                        }
-                    }
-
-                    setCurrentBillingAddress((long)myWeb.mnUserId, 0L);
-                }
-
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateExistingUserAddress", ex, "", cProcessInfo, gbDebug);
-                }
-                finally
-                {
-                    oTempCXform = (Cms.xForm)null;
-                }
-            }
-
-            public virtual string discountsProcess(XmlElement oElmt)
-            {
-                string sCartCmd = mcCartCmd;
-                string cProcessInfo = "";
-                bool bAlwaysAskForDiscountCode = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(moCartConfig["AlwaysAskForDiscountCode"]) == "on", true, false));
-                bool bSkipDiscountCode = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(moCartConfig["SkipDiscountCode"]) == "on", true, false));
-                try
-                {
-
-                    myWeb.moSession["cLogonCmd"] = "";
-                    GetCart(ref oElmt);
-                    if (bSkipDiscountCode)
-                    {
-                        oElmt.RemoveAll();
-                        sCartCmd = "RedirectSecure";
-                    }
-                    else if (moDiscount.bHasPromotionalDiscounts | bAlwaysAskForDiscountCode)
-                    {
-                        var oDiscountsXform = this.discountsXform("discountsForm", "?pgid=" + myWeb.mnPageId + "&cartCmd=Discounts");
-                        if (oDiscountsXform.valid == false)
-                        {
-                            moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oDiscountsXform.moXformElmt);
-                        }
-
-                        else
-                        {
-                            oElmt.RemoveAll();
-                            sCartCmd = "RedirectSecure";
-                        }
-                    }
-                    else
-                    {
-                        oElmt.RemoveAll();
-                        sCartCmd = "RedirectSecure";
-                    }
-
-
-                    // if this returns Notes then we display for otherwise we goto processflow
-                    return sCartCmd;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "discountsProcess", ex, "", cProcessInfo, gbDebug);
-                    return "";
-                }
-
-            }
-
-
-            public virtual Cms.xForm discountsXform(string formName = "notesForm", string action = "?cartCmd=Discounts")
-            {
-                myWeb.PerfMon.Log("Cart", "discountsXform");
-                // this function is called for the collection from a form and addition to the database
-                // of address information.
-
-                DataSet oDs;
-                string sSql;
-                XmlElement oFormGrp;
-                string sXmlContent;
-                XmlElement promocodeElement = null;
-                bool usedPromocodeFromExternalRef = false;
-
-                string cProcessInfo = "";
-                try
-                {
-                    // Get notes XML
-                    var oXform = new Cms.xForm(ref myWeb.msException);
-                    oXform.moPageXML = moPageXml;
-                    // oXform.NewFrm(formName)
-                    string cDiscountsXform = moCartConfig["DiscountsXform"];
-
-                    if (!string.IsNullOrEmpty(cDiscountsXform))
-                    {
-                        if (!oXform.load(cDiscountsXform))
-                        {
-                            oXform.NewFrm(formName);
-                            oFormGrp = oXform.addGroup(ref oXform.moXformElmt, "discounts", sLabel: "Missing File: " + mcNotesXForm);
-                        }
-                        else
-                        {
-                            // add missing submission or submit buttons
-                            if (oXform.moXformElmt.SelectSingleNode("model/submission") is null)
-                            {
-                                // If oXform.moXformElmt.SelectSingleNode("model/instance/submission") Is Nothing Then
-                                oXform.submission(formName, action, "POST", "return form_check(this);");
-                            }
-                            if (oXform.moXformElmt.SelectSingleNode("descendant-or-self::submit") is null)
-                            {
-                                oXform.addSubmit(ref oXform.moXformElmt, "Submit", "Continue");
-                            }
-
-                            XmlElement oSubmit = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::submit");
-                            if (oSubmit != null)
-                            {
-                                oFormGrp = (XmlElement)oSubmit.ParentNode;
-                            }
-                            else
-                            {
-                                oFormGrp = oXform.addGroup(ref oXform.moXformElmt, "Promo", sLabel: "Enter Promotional Code");
-                            }
-                            if (oXform.Instance.SelectSingleNode("descendant-or-self::PromotionalCode") is null)
-                            {
-                                if (oXform.Instance.FirstChild.SelectSingleNode("Notes") is null)
-                                {
-                                    oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"));
-                                }
-                                promocodeElement = (XmlElement)oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"));
-                                oXform.addInput(ref oFormGrp, "Notes/PromotionalCode", false, "Promotional Code", "");
-                            }
-
-                        }
-                    }
-                    else
-                    {
-                        oXform.NewFrm(formName);
-                        oXform.submission(formName, action, "POST", "return form_check(this);");
-                        oXform.Instance.InnerXml = "<Notes/>";
-                        oFormGrp = oXform.addGroup(ref oXform.moXformElmt, "notes", sLabel: "");
-
-                        if (oXform.Instance.FirstChild.SelectSingleNode("Notes") is null)
-                        {
-                            oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"));
-                        }
-
-                        promocodeElement = (XmlElement)oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"));
-                        oXform.addInput(ref oFormGrp, "Notes/PromotionalCode", false, "Promotional Code", "");
-                        oXform.addSubmit(ref oFormGrp, "Submit", "Continue");
-
-                    }
-                    // Open database for reading and writing
-
-
-                    // External promo code checks
-                    if (promocodeElement != null & !string.IsNullOrEmpty(promocodeFromExternalRef))
-                    {
-
-                        usedPromocodeFromExternalRef = true;
-                    }
-
-                    sSql = "select * from tblCartOrder where nCartOrderKey=" + mnCartId;
-                    oDs = moDBHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                    foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                    {
-                        // load existing notes from Cart
-                        sXmlContent = Conversions.ToString(Operators.ConcatenateObject(oRow["cClientNotes"], ""));
-                        if (!string.IsNullOrEmpty(sXmlContent))
-                        {
-                            oXform.Instance.InnerXml = sXmlContent;
-                        }
-
-                        // If this xform is being submitted
-                        bool isSubmitted = oXform.isSubmitted();
-                        if (isSubmitted | myWeb.moRequest["Submit"] == "Continue" | myWeb.moRequest["Submit"] == "Search")
-                        {
-                            oXform.updateInstanceFromRequest();
-                            oXform.validate();
-                            if (oXform.valid == true)
-                            {
-                                oRow["cClientNotes"] = oXform.Instance.InnerXml;
-                                mcCartCmd = "RedirectSecure";
-                            }
-                        }
-                        else if (!isSubmitted & usedPromocodeFromExternalRef)
-                        {
-                            // If an external promo code is in the system then save it, even before it has been submitted
-                            promocodeElement = (XmlElement)oXform.Instance.SelectSingleNode("//PromotionalCode");
-                            if (promocodeElement != null)
-                            {
-                                promocodeElement.InnerText = promocodeFromExternalRef;
-                                oRow["cClientNotes"] = oXform.Instance.InnerXml;
-                                // Promo code is officially in the process, so we can ditch any transitory variables.
-                                promocodeFromExternalRef = "";
-                            }
-                        }
-                    }
-                    moDBHelper.updateDataset(ref oDs, "Order", true);
-
-                    oDs.Clear();
-                    oDs = null;
-                    oXform.addValues();
-
-                    return oXform;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "discountsXform", ex, "", cProcessInfo, gbDebug);
-                    return (Cms.xForm)null;
-                }
-
-            }
-
-
-            public virtual string notesProcess(XmlElement oElmt)
-            {
-                string sCartCmd = mcCartCmd;
-                string cProcessInfo = "";
-                try
-                {
-
-                    // should never get this far for subscriptions unless logged on.
-
-                    if (moSubscription != null)
-                    {
-                        if (!moSubscription.CheckCartForSubscriptions(mnCartId, myWeb.mnUserId))
-                        {
-                            if (myWeb.mnUserId == 0)
-                            {
-                                sCartCmd = "LogonSubs";
-                            }
-                        }
-                    }
-
-                    myWeb.moSession["cLogonCmd"] = "";
-
-                    GetCart(ref oElmt);
-
-                    if (!string.IsNullOrEmpty(mcNotesXForm))
-                    {
-                        var oNotesXform = notesXform("notesForm", mcPagePath + "cartCmd=Notes", oElmt);
-                        if (oNotesXform.valid == false)
-                        {
-                            moPageXml.SelectSingleNode("/Page/Contents").AppendChild(oNotesXform.moXformElmt);
-                        }
-                        else
-                        {
-                            oElmt.RemoveAll();
-                            sCartCmd = "SkipAddress";
-                        }
-                    }
-                    else
-                    {
-                        oElmt.RemoveAll();
-                        sCartCmd = "SkipAddress";
-                    }
-
-                    // if this returns Notes then we display for otherwise we goto processflow
-                    return sCartCmd;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "notesProcess", ex, "", cProcessInfo, gbDebug);
-                    return "";
-                }
-
-
-
-
-            }
-
-
-
-
-
-
-            public virtual Cms.xForm notesXform(string formName = "notesForm", string action = "?cartCmd=Notes", XmlElement oCart = null)
-            {
-                Cms.xForm notesXformRet = default;
-                myWeb.PerfMon.Log("Cart", "notesXform");
-                // this function is called for the collection from a form and addition to the database
-                // of address information.
-
-                DataSet oDs;
-                string sSql;
-                XmlElement oFormGrp;
-                string sXmlContent;
-                XmlElement promocodeElement = null;
-                string cProcessInfo = "";
-                try
-                {
-                    // Get notes XML
-                    var oXform = new Cms.xForm(ref myWeb.msException);
-                    oXform.moPageXML = moPageXml;
-                    // 
-
-                    switch (Strings.LCase(mcNotesXForm) ?? "")
-                    {
-                        case "default":
-                            {
-                                oXform.NewFrm(formName);
-                                oXform.submission(formName, action, "POST", "return form_check(this);");
-                                oXform.Instance.InnerXml = "<Notes><Notes/></Notes>";
-                                oFormGrp = oXform.addGroup(ref oXform.moXformElmt, "notes", "term4051", "Please enter any comments on your order here");
-                                string argsClass = "";
-                                int argnRows = 0;
-                                int argnCols = 0;
-                                oXform.addTextArea(ref oFormGrp, "Notes/Notes", false, "", ref argsClass, nRows: ref argnRows, nCols: ref argnCols);
-                                if (moDiscount.bHasPromotionalDiscounts)
-                                {
-                                    // If oXform.Instance.FirstChild.SelectSingleNode("Notes") Is Nothing Then
-                                    XmlElement localfirstElement1() { var argoElement = oXform.Instance; var ret = Tools.Xml.firstElement(ref argoElement); oXform.Instance = argoElement; return ret; }
-
-                                    if (localfirstElement1().SelectSingleNode("Notes") is null)
-                                    {
-                                        // oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
-                                        // Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
-                                        XmlElement localfirstElement() { XmlElement argoElement1 = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance"); var ret = firstElement(ref argoElement1); return ret; }
-
-                                        localfirstElement().AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"));
-                                    }
-                                    // oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
-                                    // Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
-                                    XmlElement localfirstElement2() { XmlElement argoElement2 = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance"); var ret = firstElement(ref argoElement2); return ret; }
-
-                                    promocodeElement = (XmlElement)localfirstElement2().AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"));
-                                    oXform.addInput(ref oFormGrp, "Notes/PromotionalCode", false, "Promotional Code", "");
-                                }
-                                oXform.addSubmit(ref oFormGrp, "Submit", "Continue");
-                                break;
-                            }
-                        case "productspecific":
-                            {
-                                XmlElement oMasterFormXml = null;
-                                foreach (XmlElement oOrderLine in oCart.SelectNodes("Item"))
-                                {
-                                    // get any Xform related to cart items
-                                    long contentId = Conversions.ToLong(oOrderLine.GetAttribute("contentId"));
-                                    sSql = "select nContentKey from tblContent c inner join tblContentRelation cr on cr.nContentChildId = c.nContentKey where c.cContentSchemaName = 'xform' and cr.nContentParentId = " + contentId;
-                                    long FormId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue(sSql));
-                                    if (FormId != default)
-                                    {
-                                        var oFormXml = moPageXml.CreateElement("NewXform");
-                                        oFormXml.InnerXml = myWeb.moDbHelper.getContentBrief((int)FormId);
-
-                                        if (oMasterFormXml is null)
-                                        {
-                                            // Duplication the items for each qty in cart
-                                            int n = 1;
-                                            XmlElement oItem = (XmlElement)oFormXml.SelectSingleNode("descendant-or-self::Item");
-                                            oItem.SetAttribute("name", oOrderLine.SelectSingleNode("Name").InnerText);
-                                            oItem.SetAttribute("stockCode", oOrderLine.SelectSingleNode("productDetail/StockCode").InnerText);
-                                            oItem.SetAttribute("number", n.ToString());
-
-                                            int i;
-                                            var loopTo = Conversions.ToInteger(oOrderLine.GetAttribute("quantity"));
-                                            for (i = 2; i <= loopTo; i++)
-                                            {
-                                                n = n + 1;
-                                                XmlElement newItem = (XmlElement)oItem.CloneNode(true);
-                                                newItem.SetAttribute("number", n.ToString());
-                                                oItem.ParentNode.InsertAfter(newItem, oItem.ParentNode.LastChild);
-                                            }
-                                            oMasterFormXml = oFormXml;
-                                        }
-                                        else
-                                        {
-                                            // behaviour for appending additioanl product forms
-                                            int n = 1;
-                                            XmlElement oItem = (XmlElement)oFormXml.SelectSingleNode("descendant-or-self::Item");
-                                            oItem.SetAttribute("name", oOrderLine.SelectSingleNode("Name").InnerText);
-                                            oItem.SetAttribute("stockCode", oOrderLine.SelectSingleNode("productDetail/StockCode").InnerText);
-                                            oItem.SetAttribute("number", n.ToString());
-
-                                            int i;
-                                            var loopTo1 = Conversions.ToInteger(oOrderLine.GetAttribute("quantity"));
-                                            for (i = 1; i <= loopTo1; i++)
-                                            {
-                                                XmlElement newItem = (XmlElement)oItem.CloneNode(true);
-                                                newItem.SetAttribute("number", n.ToString());
-                                                n = n + 1;
-                                                XmlElement AddAfterNode = (XmlElement)oMasterFormXml.SelectSingleNode("Content/model/instance/Notes/Item[last()]");
-                                                AddAfterNode.ParentNode.InsertAfter(newItem, AddAfterNode);
-                                            }
-                                        }
-                                    }
-
-                                }
-                                // Load with repeats.
-                                if (oMasterFormXml != null)
-                                {
-                                    var argoNode = oMasterFormXml.SelectSingleNode("descendant-or-self::Content");
-                                    oXform.load(ref argoNode, true);
-                                }
-
-                                if (moDiscount.bHasPromotionalDiscounts)
-                                {
-
-                                    XmlElement oNotesRoot = (XmlElement)oXform.Instance.SelectSingleNode("Notes");
-                                    if (oNotesRoot.SelectSingleNode("PromotionalCode") is null)
-                                    {
-                                        promocodeElement = (XmlElement)oNotesRoot.AppendChild(oMasterFormXml.OwnerDocument.CreateElement("PromotionalCode"));
-                                    }
-
-                                    oFormGrp = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::group[1]");
-                                    oXform.addInput(ref oFormGrp, "Notes/PromotionalCode", false, "Promotional Code", "");
-
-                                }
-
-                                if (oXform.moXformElmt != null)
-                                {
-                                    // add missing submission or submit buttons
-                                    if (oXform.moXformElmt.SelectSingleNode("model/submission") is null)
-                                    {
-                                        // If oXform.moXformElmt.SelectSingleNode("model/instance/submission") Is Nothing Then
-                                        oXform.submission(formName, action, "POST", "return form_check(this);");
-                                    }
-                                    if (oXform.moXformElmt.SelectSingleNode("descendant-or-self::submit") is null)
-                                    {
-                                        oXform.addSubmit(ref oXform.moXformElmt, "Submit", "Continue");
-                                    }
-                                    oXform.moXformElmt.SetAttribute("type", "xform");
-                                    oXform.moXformElmt.SetAttribute("name", "notesForm");
-                                }
-                                else
-                                {
-                                    oXform.NewFrm(formName);
-                                    oFormGrp = oXform.addGroup(ref oXform.moXformElmt, "notes", sLabel: "Missing File: Product has no form request ");
-                                    // force to true so we move on.
-                                    oXform.valid = true;
-                                }
-
-                                break;
-                            }
-
-                        default:
-                            {
-                                if (!oXform.load(mcNotesXForm))
-                                {
-                                    oXform.NewFrm(formName);
-                                    oFormGrp = oXform.addGroup(ref oXform.moXformElmt, "notes", sLabel: "Missing File: " + mcNotesXForm);
-                                }
-                                else
-                                {
-                                    string cTicketTypes = moCartConfig["TicketTypes"];
-                                    // 'Modify the notes for dependant on tickets
-                                    int totalAttendees = 0;
-                                    if (!string.IsNullOrEmpty(cTicketTypes))
-                                    {
-                                        if (!(moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType!='']]").Count == 0))
-                                        {
-                                            string ticketType;
-                                            // For Each ticketType In Split(cTicketTypes, ",")
-                                            XmlElement oNotesRoot = (XmlElement)oXform.Instance.SelectSingleNode("Notes/Notes");
-                                            XmlElement oBindRoot = (XmlElement)oXform.model.SelectSingleNode("bind");
-                                            XmlElement oControlRoot = (XmlElement)oXform.moXformElmt.SelectSingleNode("group");
-
-                                            // Case for Run
-                                            XmlElement newElmt2;
-                                            int nCount = 0;
-                                            int i = 0;
-
-                                            // For Each oItemElmt In moCartXml.SelectNodes("Order/Item[productDetail/Name[@ticketType='" & ticketType & "']]")
-                                            foreach (XmlElement oItemElmt in moCartXml.SelectNodes("Order/Item"))
-                                            {
-
-                                                ticketType = oItemElmt.SelectSingleNode("productDetail/Name/@ticketType").InnerText;
-
-                                                XmlElement blankElmt = (XmlElement)oXform.Instance.SelectSingleNode("Notes/Notes/Attendee[@type='" + ticketType + "'][1]");
-                                                XmlElement blankBind = (XmlElement)oXform.model.SelectSingleNode("bind/bind[@nodeset='Attendee' and @class='" + ticketType + "'][1]");
-                                                XmlElement blankControl = (XmlElement)oXform.moXformElmt.SelectSingleNode("group/group[contains(@class,'" + ticketType + "')][1]");
-
-                                                var loopTo2 = Conversions.ToInteger(oItemElmt.GetAttribute("quantity"));
-                                                for (i = 1; i <= loopTo2; i++)
-                                                {
-                                                    totalAttendees = totalAttendees + 1;
-                                                    // Update the instance
-                                                    oNotesRoot.AppendChild(blankElmt.CloneNode(true));
-                                                    XmlElement newElmt = (XmlElement)oNotesRoot.LastChild;
-                                                    newElmt.SelectSingleNode("AttTicketType").InnerText = oItemElmt.SelectSingleNode("Name").InnerText + " - " + moCartConfig["TicketAttendeeLabel"] + " " + i;
-                                                    newElmt.SetAttribute("id", ticketType + nCount);
-                                                    newElmt.SetAttribute("itemId", oItemElmt.GetAttribute("id"));
-
-                                                    newElmt = null;
-
-                                                    // Update the binds
-                                                    oBindRoot.AppendChild(blankBind.CloneNode(true));
-                                                    newElmt = (XmlElement)oBindRoot.LastChild;
-                                                    newElmt.SetAttribute("nodeset", "Attendee[@id='" + ticketType + nCount + "']");
-                                                    foreach (XmlElement currentNewElmt2 in newElmt.SelectNodes("descendant-or-self::*"))
-                                                    {
-                                                        newElmt2 = currentNewElmt2;
-                                                        if (!string.IsNullOrEmpty(newElmt2.GetAttribute("id")))
-                                                        {
-                                                            newElmt2.SetAttribute("id", newElmt2.GetAttribute("id") + "-" + ticketType + nCount);
-                                                        }
-                                                        // remove lead booker from all subsequent tickets
-                                                        if (totalAttendees > 1 & newElmt2.GetAttribute("lead-booker-only") == "true")
-                                                        {
-                                                            newElmt2.SetAttribute("required", "false()");
-                                                        }
-                                                    }
-                                                    newElmt = null;
-                                                    // Update the controls
-                                                    if (blankControl != null)
-                                                    {
-                                                        blankControl.SetAttribute("id", "ticket-form-" + totalAttendees);
-                                                        oControlRoot.AppendChild(blankControl.CloneNode(true));
-                                                    }
-                                                    newElmt = (XmlElement)oControlRoot.LastChild;
-
-                                                    var labelElmt = moPageXml.CreateElement("label");
-                                                    labelElmt.InnerText = oItemElmt.SelectSingleNode("Name").InnerText + " - " + moCartConfig["TicketAttendeeLabel"] + " " + i;
-                                                    newElmt.InsertBefore(labelElmt, newElmt.FirstChild);
-
-                                                    foreach (XmlElement currentNewElmt21 in newElmt.SelectNodes("descendant-or-self::*[@bind]"))
-                                                    {
-                                                        newElmt2 = currentNewElmt21;
-                                                        if (!string.IsNullOrEmpty(newElmt2.GetAttribute("bind")))
-                                                        {
-                                                            if (i != Conversions.ToDouble(oItemElmt.GetAttribute("quantity")))
-                                                            {
-                                                                // remove all but the last delcarations
-                                                                if (newElmt2.GetAttribute("bind").StartsWith("AttDeclaration"))
-                                                                {
-                                                                    // newElmt2.ParentNode.RemoveChild(newElmt2.PreviousSibling)
-                                                                    XmlElement delGroup = (XmlElement)newElmt2.ParentNode;
-                                                                    delGroup.SetAttribute("delete", Conversions.ToString(true));
-                                                                }
-                                                            }
-
-                                                            newElmt2.SetAttribute("bind", newElmt2.GetAttribute("bind") + "-" + ticketType + nCount);
-                                                        }
-                                                    }
-                                                    if (totalAttendees > 1)
-                                                    {
-                                                        foreach (XmlElement currentNewElmt22 in newElmt.SelectNodes("descendant-or-self::*[@lead-booker-only='true']"))
-                                                        {
-                                                            newElmt2 = currentNewElmt22;
-                                                            // remove lead booker from all subsequent tickets
-                                                            newElmt2.ParentNode.RemoveChild(newElmt2);
-                                                        }
-                                                    }
-
-                                                    newElmt = null;
-                                                    nCount = nCount + 1;
-                                                }
-
-                                            }
-
-                                            // remove the blanks
-                                            foreach (XmlElement currentNewElmt23 in oControlRoot.SelectNodes("descendant-or-self::*[@delete]"))
-                                            {
-                                                newElmt2 = currentNewElmt23;
-                                                newElmt2.ParentNode.RemoveChild(newElmt2);
-                                            }
-
-
-                                            foreach (var currentTicketType in cTicketTypes.Split(','))
-                                            {
-                                                ticketType = currentTicketType;
-                                                // remove the initial versions
-                                                XmlElement blankElmt = (XmlElement)oXform.Instance.SelectSingleNode("Notes/Notes/Attendee[@type='" + ticketType + "'][1]");
-                                                XmlElement blankBind = (XmlElement)oXform.model.SelectSingleNode("bind/bind[@nodeset='Attendee' and @class='" + ticketType + "'][1]");
-                                                XmlElement blankControl = (XmlElement)oXform.moXformElmt.SelectSingleNode("group/group[contains(@class,'" + ticketType + "')][1]");
-
-                                                blankElmt.ParentNode.RemoveChild(blankElmt);
-                                                blankBind.ParentNode.RemoveChild(blankBind);
-                                                blankControl.ParentNode.RemoveChild(blankControl);
-                                            }
-
-
-
-                                        }
-                                    }
-
-
-                                    // add missing submission or submit buttons
-                                    if (oXform.moXformElmt.SelectSingleNode("model/submission") is null)
-                                    {
-                                        // If oXform.moXformElmt.SelectSingleNode("model/instance/submission") Is Nothing Then
-                                        oXform.submission(formName, action, "POST", "return form_check(this);");
-                                    }
-                                    if (oXform.moXformElmt.SelectSingleNode("descendant-or-self::submit") is null)
-                                    {
-                                        oXform.addSubmit(ref oXform.moXformElmt, "Submit", "Continue");
-                                    }
-                                    if (moDiscount.bHasPromotionalDiscounts)
-                                    {
-                                        XmlElement oSubmit = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::submit");
-                                        if (oSubmit != null)
-                                        {
-                                            oFormGrp = (XmlElement)oSubmit.ParentNode;
-                                        }
-                                        else
-                                        {
-                                            oFormGrp = oXform.addGroup(ref oXform.moXformElmt, "Promo", sLabel: "Enter Promotional Code");
-                                        }
-                                        if (oXform.Instance.SelectSingleNode("descendant-or-self::PromotionalCode") is null)
-                                        {
-                                            // If oXform.Instance.FirstChild.SelectSingleNode("Notes") Is Nothing Then
-                                            XmlElement localfirstElement4() { var argoElement3 = oXform.Instance; var ret = Tools.Xml.firstElement(ref argoElement3); oXform.Instance = argoElement3; return ret; }
-
-                                            if (localfirstElement4().SelectSingleNode("Notes") is null)
-                                            {
-                                                // ocNode.AppendChild(moPageXml.ImportNode(Protean.Tools.Xml.firstElement(newXml.DocumentElement), True))
-                                                // oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
-                                                // Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"))
-                                                XmlElement localfirstElement3() { XmlElement argoElement4 = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance"); var ret = firstElement(ref argoElement4); return ret; }
-
-                                                localfirstElement3().AppendChild(oXform.Instance.OwnerDocument.CreateElement("Notes"));
-                                            }
-                                            // oXform.Instance.FirstChild.AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
-                                            // Protean.Tools.Xml.firstElement(oXform.Instance).AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"))
-                                            XmlElement localfirstElement5() { XmlElement argoElement5 = (XmlElement)oXform.moXformElmt.SelectSingleNode("descendant-or-self::instance"); var ret = firstElement(ref argoElement5); return ret; }
-
-                                            promocodeElement = (XmlElement)localfirstElement5().AppendChild(oXform.Instance.OwnerDocument.CreateElement("PromotionalCode"));
-                                            oXform.addInput(ref oFormGrp, "Notes/PromotionalCode", false, "Promotional Code", "");
-                                        }
-                                    }
-                                }
-
-                                break;
-                            }
-                    }
-
-                    // External promo code checks
-                    if (promocodeElement != null & !string.IsNullOrEmpty(promocodeFromExternalRef))
-                    {
-                        promocodeElement.InnerText = promocodeFromExternalRef;
-                        // Promo code is officially in the process, so we can ditch any transitory variables.
-                        promocodeFromExternalRef = "";
-                    }
-
-                    // Open database for reading and writing
-
-                    sSql = "select * from tblCartOrder where nCartOrderKey=" + mnCartId;
-                    oDs = moDBHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                    foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                    {
-                        // load existing notes from Cart
-                        sXmlContent = Conversions.ToString(Operators.ConcatenateObject(oRow["cClientNotes"], ""));
-                        if (!string.IsNullOrEmpty(sXmlContent))
-                        {
-
-                            var savedInstance = moPageXml.CreateElement("instance");
-                            moPageXml.PreserveWhitespace = false;
-                            savedInstance.InnerXml = sXmlContent;
-
-                            if (oXform.Instance.SelectNodes("*/*/*").Count > savedInstance.SelectNodes("*/*/*").Count)
-                            {
-                                // we have a greater amount of childnodes we need to merge....
-
-                                // Dim oStepElmtCount As Integer = 0
-
-                                // step through each child element and replace where attributes match, leaving final
-                                foreach (XmlElement oStepElmt in oXform.Instance.SelectNodes("*/*/*"))
-                                {
-
-                                    XmlElement replacementNode = (XmlElement)savedInstance.SelectSingleNode("*/*/*[@id='" + oStepElmt.GetAttribute("id") + "']");
-
-                                    if (replacementNode != null)
-                                    {
-                                        oStepElmt.ParentNode.ReplaceChild(replacementNode.CloneNode(true), oStepElmt);
-                                    }
-
-
-                                    // Dim attXpath As String = oStepElmt.Name
-                                    // Dim attElmt As XmlAttribute
-                                    // Dim bfirst As Boolean = True
-                                    // For Each attElmt In oStepElmt.Attributes
-                                    // If bfirst Then attXpath = attXpath & "["
-                                    // If Not bfirst Then attXpath = attXpath & " and "
-                                    // attXpath = attXpath + "@" & attElmt.Name & "='" & attElmt.Value & "'"
-                                    // bfirst = False
-                                    // Next
-                                    // If Not bfirst Then attXpath = attXpath & "]"
-
-                                    // If Not savedInstance.SelectSingleNode("*/*/" & attXpath) Is Nothing Then
-                                    // oStepElmt.ParentNode.ReplaceChild(savedInstance.SelectSingleNode("*/*/" & attXpath).CloneNode(True), oStepElmt)
-                                    // End If
-                                    // oStepElmtCount = oStepElmtCount + 1
-                                }
-                            }
-
-                            else
-                            {
-                                oXform.Instance.InnerXml = sXmlContent;
-                            }
-
-                        }
-
-                        // If this xform is being submitted
-
-                        if (oXform.isSubmitted() | myWeb.moRequest["Submit"] == "Continue" | myWeb.moRequest["Submit"] == "Search")
-                        {
-                            oXform.updateInstanceFromRequest();
-                            oXform.validate();
-                            if (!string.IsNullOrEmpty(moCartConfig["NotesToContactsXSL"]))
-                            {
-
-                                oXform.Instance.SetAttribute("userId", mnEwUserId.ToString());
-                                oXform.Instance.SetAttribute("cartId", mnCartId.ToString());
-
-                                var oInstanceDoc = new XmlDocument();
-                                oInstanceDoc.LoadXml(oXform.Instance.OuterXml);
-
-                                var oTransform = new Protean.XmlHelper.Transform(ref myWeb, moServer.MapPath(moCartConfig["NotesToContactsXSL"]), false);
-                                var ImportElmt = oTransform.ProcessDocument(oInstanceDoc).DocumentElement;
-
-                                moDBHelper.importObjects(ImportElmt, mnCartId.ToString(), "");
-
-                                oTransform = (Protean.XmlHelper.Transform)null;
-
-                            }
-                            if (oXform.valid == true)
-                            {
-                                oRow["cClientNotes"] = oXform.Instance.InnerXml;
-                                // if we are useing the notes as a search facility for products
-                                if (myWeb.moRequest["Submit"] == "Search")
-                                {
-                                    mcCartCmd = "Search";
-                                }
-                                else
-                                {
-                                    mcCartCmd = "SkipAddress";
-                                }
-                            }
-                        }
-                    }
-                    moDBHelper.updateDataset(ref oDs, "Order", true);
-
-                    oDs.Clear();
-                    oDs = null;
-                    oXform.addValues();
-                    notesXformRet = oXform;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "notesXform", ex, "", cProcessInfo, gbDebug);
-                    return (Cms.xForm)null;
-                }
-
-                return notesXformRet;
-
-            }
-
-            public virtual Cms.xForm optionsXform(ref XmlElement cartElmt)
-            {
-
-                myWeb.PerfMon.Log("Cart", "optionsXform");
-                DataSet ods;
-                DataSet ods2;
-                DataRow oRow;
-
-                string sSql;
-                string sSql2;
-
-                XmlElement oGrpElmt;
-
-                short nQuantity;
-                double nAmount;
-                double nWeight;
-                string cDestinationCountry;
-                string cDestinationPostalCode = "";
-                var nShippingCost = default(double);
-                string cShippingDesc = "";
-
-                string cHidden = string.Empty;
-                bool bHideDelivery = false;
-                bool bHidePayment = false;
-                bool bFirstRow = true;
-
-                // Dim oElmt As XmlElement
-
-                string sProcessInfo = string.Empty;
-                bool bForceValidation = false;
-                bool bAdjustTitle = true;
-
-                // Dim cFormURL As String
-                // Dim cExternalGateway As String
-                // Dim cBillingAddress As String
-                // Dim cPaymentResponse As String
-                string cProcessInfo = "";
-                bool bAddTerms = false;
-                PaymentProviders oPay;
-                bool bDeny = false;
-                var AllowedPaymentMethods = new System.Collections.Specialized.StringCollection();
-
-                if (moPay is null)
-                {
-                    oPay = new PaymentProviders(ref myWeb);
-                }
-                else
-                {
-                    oPay = moPay;
-                }
-
-                oPay.mcCurrency = mcCurrency;
-                string cDenyFilter = string.Empty;
-
-                try
-                {
-
-                    if (moDBHelper.checkTableColumnExists("tblCartShippingPermission", "nPermLevel"))
-                    {
-                        bDeny = true;
-                        cDenyFilter = " and nPermLevel <> 0";
-                    }
-
-                    if (string.IsNullOrEmpty(moCartConfig["TermsContentId"]) & string.IsNullOrEmpty(moCartConfig["TermsAndConditions"]))
-                        bAddTerms = false;
-
-                    nQuantity = (short)Conversions.ToInteger("0" + cartElmt.GetAttribute("itemCount"));
-                    nAmount = Conversions.ToDouble("0" + cartElmt.GetAttribute("totalNet")) - Conversions.ToDouble("0" + cartElmt.GetAttribute("shippingCost"));
-                    nWeight = Conversions.ToDouble("0" + cartElmt.GetAttribute("weight"));
-
-                    double nRepeatAmount = Conversions.ToDouble("0" + cartElmt.GetAttribute("repeatPrice"));
-
-                    int nShippingMethodId = (int)Math.Round(Conversions.ToDouble("0" + cartElmt.GetAttribute("shippingType")));
-
-                    if (cartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country") is null)
-                    {
-                        sProcessInfo = "Destination Country not specified in Delivery Address";
-                        cDestinationCountry = "";
-                        string sTarget = "";
-                        foreach (XmlElement oAddressElmt in cartElmt.SelectSingleNode("Contact[@type='Delivery Address']/*"))
-                        {
-                            if (!string.IsNullOrEmpty(sTarget))
-                                sTarget = sTarget + ", ";
-                            sTarget = sTarget + oAddressElmt.InnerText;
-                        }
-                        Information.Err().Raise(1004, "getParentCountries", sTarget + " Destination Country not specified in Delivery Address.");
-                    }
-                    else
-                    {
-                        cDestinationCountry = cartElmt.SelectSingleNode("Contact[@type='Delivery Address']/Country").InnerText;
-                        cDestinationPostalCode = cartElmt.SelectSingleNode("Contact[@type='Delivery Address']/PostalCode").InnerText;
-                    }
-                    if (string.IsNullOrEmpty(cDestinationCountry))
-                        cDestinationCountry = moCartConfig["DefaultCountry"];
-                    // Go and collect the valid shipping options available for this order
-                    ods = getValidShippingOptionsDS(cDestinationCountry, cDestinationPostalCode, nAmount, nQuantity, nWeight, "", 0);
-
-                    var oOptXform = new Cms.xForm(ref myWeb.msException);
-                    oOptXform.moPageXML = moPageXml;
-
-                    if (!oOptXform.load("/xforms/Cart/Options.xml"))
-                    {
-                        string notesXml = "";
-                        if (cartElmt.SelectSingleNode("Notes") != null)
-                        {
-                            notesXml = cartElmt.SelectSingleNode("Notes").OuterXml;
-                        }
-                        oOptXform.NewFrm("optionsForm");
-                        oOptXform.Instance.InnerXml = "<nShipOptKey/><cPaymentMethod/><terms/><confirmterms>No</confirmterms><tblCartOrder><cShippingDesc/><cClientNotes>" + notesXml + "</cClientNotes></tblCartOrder>";
-                        if (!(string.IsNullOrEmpty(moCartConfig["TermsContentId"]) & string.IsNullOrEmpty(moCartConfig["TermsAndConditions"])))
-                        {
-                            bAddTerms = true;
-                        }
-                    }
-                    else
-                    {
-                        bAdjustTitle = false;
-                        bForceValidation = true;
-                        if (!(string.IsNullOrEmpty(moCartConfig["TermsContentId"]) & string.IsNullOrEmpty(moCartConfig["TermsAndConditions"])))
-                        {
-                            bAddTerms = true;
-                        }
-                    }
-
-                    // If there is already a submit item in the form, then maintain the event node
-                    // Would rather that this whole form obeyed xform validation, but hey-ho. Ali
-                    string cEvent = "";
-                    XmlElement oSub = (XmlElement)oOptXform.model.SelectSingleNode("submission");
-                    if (oSub is null)
-                    {
-                        cEvent = "return form_check(this);";
-                    }
-                    else
-                    {
-                        cEvent = oSub.GetAttribute("event");
-
-                        // now remove the origional submit node coz we are going to add another. TS.
-                        oSub.ParentNode.RemoveChild(oSub);
-                    }
-
-                    oOptXform.submission("optionsForm", mcPagePath + "cartCmd=ChoosePaymentShippingOption", "POST", cEvent);
-
-                    string cUserGroups = "";
-
-                    long rowCount = ods.Tables["Option"].Rows.Count;
-
-                    if (bDeny)
-                    {
-                        // remove denied delivery methods
-                        if (myWeb.mnUserId > 0)
-                        {
-                            foreach (XmlElement grpElmt in moPageXml.SelectNodes("/Page/User/Group[@isMember='yes']"))
-                                cUserGroups = cUserGroups + grpElmt.GetAttribute("id") + ",";
-                            cUserGroups = cUserGroups + Cms.gnAuthUsers;
-                        }
-                        else
-                        {
-                            cUserGroups = Cms.gnNonAuthUsers.ToString();
-                        }
-
-                        foreach (DataRow currentORow in ods.Tables["Option"].Rows)
-                        {
-                            oRow = currentORow;
-                            int denyCount = 0;
-                            if (bDeny)
-                            {
-                                string permSQL;
-                                // check option is not denied
-                                if (!string.IsNullOrEmpty(cUserGroups))
-                                {
-                                    permSQL = Conversions.ToString(Operators.ConcatenateObject("select count(*) from tblCartShippingPermission where nPermLevel = 0 and nDirId IN (" + cUserGroups + ") and nShippingMethodId = ", oRow["nShipOptKey"]));
-                                    denyCount = Conversions.ToInteger(moDBHelper.ExeProcessSqlScalar(permSQL));
-                                }
-                            }
-                            if (denyCount > 0)
-                            {
-                                oRow.Delete();
-                                rowCount = rowCount - 1L;
-                            }
-                        }
-                    }
-
-                    if (rowCount == 0L)
-                    {
-
-                        oOptXform.addGroup(ref oOptXform.moXformElmt, "options");
-                        cartElmt.SetAttribute("errorMsg", 3.ToString());
-                    }
-
-                    else
-                    {
-
-                        // Build the Payment Options
-                        // if the root group element exists i.e. we have loaded a form in.
-                        oGrpElmt = (XmlElement)oOptXform.moXformElmt.SelectSingleNode("group");
-                        if (oGrpElmt is null)
-                        {
-                            oGrpElmt = oOptXform.addGroup(ref oOptXform.moXformElmt, "options", "", "Select Payment Method");
-                        }
-
-
-                        // Even if there is only 1 option we still want to display it, if it is a non-zero value - the visitor should know the description of their delivery option
-                        if (ods.Tables["Option"].Rows.Count == 1)
-                        {
-                            foreach (DataRow currentORow1 in ods.Tables["Option"].Rows)
-                            {
-                                oRow = currentORow1;
-                                bool bCollection = false;
-                                if (!(oRow["bCollection"] is DBNull))
-                                {
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow["bCollection"], "1", false)))
-                                        bCollection = true;
-                                }
-                                if (oRow["nShippingTotal"] is DBNull)
-                                {
-                                    cHidden = " hidden";
-                                    bHideDelivery = true;
-                                }
-                                else if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oRow["nShippingTotal"], 0, false), !bCollection)))
-                                {
-                                    cHidden = " hidden";
-                                    bHideDelivery = true;
-                                }
-                                else
-                                {
-
-                                    // Calculate any shipping cost overage
-                                    nShippingCost = Conversions.ToDouble(Strings.FormatNumber(Conversions.ToDouble(oRow["nShippingTotal"]), 2, TriState.True, TriState.False, TriState.False));
-                                    double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
-                                    double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
-                                    double overageWeightMax = Conversions.ToDouble(oRow["nShipOptWeightMax"]);
-                                    nShippingCost = calcShippingCost(nShippingCost, overageUnit, overageRate, nWeight, overageWeightMax);
-
-                                    oOptXform.addInput(ref oGrpElmt, "nShipOptKey", false, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"])), "hidden");
-                                    oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = Conversions.ToString(oRow["nShipOptKey"]);
-
-                                    var DelInputElmt = oOptXform.addInput(ref oGrpElmt, "tblCartOrder/cShippingDesc", false, "Delivery", "readonly term4047");
-                                    XmlElement DelInputElmtLabel = (XmlElement)DelInputElmt.SelectSingleNode("label");
-                                    DelInputElmtLabel.SetAttribute("name", Conversions.ToString(oRow["cShipOptName"]));
-                                    DelInputElmtLabel.SetAttribute("carrier", Conversions.ToString(oRow["cShipOptCarrier"]));
-                                    DelInputElmtLabel.SetAttribute("cost", Strings.FormatNumber(nShippingCost, 2));
-
-                                    XmlElement DescElement = (XmlElement)oOptXform.Instance.SelectSingleNode("tblCartOrder/cShippingDesc");
-                                    DescElement.InnerText = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"]), ": "), mcCurrencySymbol), Strings.FormatNumber(nShippingCost, 2)));
-                                    DescElement.SetAttribute("name", Conversions.ToString(oRow["cShipOptName"]));
-                                    DescElement.SetAttribute("carrier", Conversions.ToString(oRow["cShipOptCarrier"]));
-                                    DescElement.SetAttribute("cost", Strings.FormatNumber(nShippingCost, 2));
-                                }
-                            }
-                        }
-                        else
-                        {
-                            oOptXform.addSelect1(ref oGrpElmt, "nShipOptKey", false, "Select Delivery", "radios multiline", Protean.xForm.ApperanceTypes.Full);
-                            bFirstRow = true;
-                            int nLastID = 0;
-
-                            // If selected shipping method is still in those available (because we now )
-                            if (nShippingMethodId != 0)
-                            {
-                                bool bIsAvail = false;
-                                foreach (DataRow currentORow2 in ods.Tables["Option"].Rows)
-                                {
-                                    oRow = currentORow2;
-                                    if (!(oRow.RowState == DataRowState.Deleted))
-                                    {
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(nShippingMethodId, oRow["nShipOptKey"], false)))
-                                        {
-                                            bIsAvail = true;
-                                        }
-                                    }
-                                }
-                                // If not then strip it out.
-                                if (bIsAvail == false)
-                                {
-                                    nShippingMethodId = 0;
-                                    cartElmt.SetAttribute("shippingType", "0");
-                                    cartElmt.SetAttribute("shippingCost", "");
-                                    cartElmt.SetAttribute("shippingDesc", "");
-                                    string cSqlUpdate = "UPDATE tblCartOrder SET cShippingDesc= null, nShippingCost=null, nShippingMethodId = 0 WHERE nCartOrderKey=" + mnCartId;
-                                    moDBHelper.ExeProcessSql(cSqlUpdate);
-                                }
-                            }
-
-                            // If shipping option selected is collection don't change
-                            bool bCollectionSelected = false;
-                            foreach (DataRow currentORow3 in ods.Tables["Option"].Rows)
-                            {
-                                oRow = currentORow3;
-                                if (!(oRow.RowState == DataRowState.Deleted))
-                                {
-                                    if (!(oRow["bCollection"] is DBNull))
-                                    {
-                                        if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(oRow["nShipOptKey"], nShippingMethodId, false), Operators.ConditionalCompareObjectEqual(oRow["bCollection"], true, false))))
-                                        {
-                                            bCollectionSelected = true;
-                                        }
-                                    }
-                                }
-                            }
-
-                            foreach (DataRow currentORow4 in ods.Tables["Option"].Rows)
-                            {
-                                oRow = currentORow4;
-                                if (!(oRow.RowState == DataRowState.Deleted))
-                                {
-                                    if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(oRow["nShipOptKey"], nLastID, false)))
-                                    {
-
-                                        if (bCollectionSelected)
-                                        {
-                                            // if collection allready selected... Show only this option
-                                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(nShippingMethodId, oRow["nShipOptKey"], false)))
-                                            {
-                                                oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = Conversions.ToString(oRow["nShipOptKey"]);
-                                                nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShippingTotal"]));
-                                                nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
-
-                                                XmlElement argoSelectNode = (XmlElement)oGrpElmt.LastChild;
-                                                var optElmt = oOptXform.addOption(ref argoSelectNode, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"]), ": "), mcCurrencySymbol), Strings.FormatNumber(nShippingCost, 2))), Conversions.ToString(oRow["nShipOptKey"]));
-                                                XmlElement optLabel = (XmlElement)optElmt.SelectSingleNode("label");
-                                                optLabel.SetAttribute("name", Conversions.ToString(oRow["cShipOptName"]));
-                                                optLabel.SetAttribute("carrier", Conversions.ToString(oRow["cShipOptCarrier"]));
-                                                optLabel.SetAttribute("cost", Strings.FormatNumber(nShippingCost, 2));
-                                            }
-                                        }
-                                        else
-                                        {
-                                            bool bShowMethod = true;
-                                            // Don't show if a collection method
-                                            if (moDBHelper.checkTableColumnExists("tblCartShippingMethods", "bCollection"))
-                                            {
-                                                if (!(oRow["bCollection"] is DBNull))
-                                                {
-                                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow["bCollection"], true, false)))
-                                                    {
-                                                        bShowMethod = false;
-                                                    }
-                                                }
-                                            }
-                                            if (bShowMethod)
-                                            {
-                                                if (bFirstRow)
-                                                    oOptXform.Instance.SelectSingleNode("nShipOptKey").InnerText = Conversions.ToString(oRow["nShipOptKey"]);
-                                                nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShippingTotal"]));
-                                                nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
-
-                                                XmlElement argoSelectNode1 = (XmlElement)oGrpElmt.LastChild;
-                                                var optElmt = oOptXform.addOption(ref argoSelectNode1, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"]), ": "), mcCurrencySymbol), Strings.FormatNumber(nShippingCost, 2))), Conversions.ToString(oRow["nShipOptKey"]));
-                                                XmlElement optLabel = (XmlElement)optElmt.SelectSingleNode("label");
-                                                optLabel.SetAttribute("name", Conversions.ToString(oRow["cShipOptName"]));
-                                                optLabel.SetAttribute("carrier", Conversions.ToString(oRow["cShipOptCarrier"]));
-                                                optLabel.SetAttribute("cost", Strings.FormatNumber(nShippingCost, 2));
-                                                bFirstRow = false;
-                                                nLastID = Conversions.ToInteger(oRow["nShipOptKey"]);
-                                            }
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        }
-
-                        ods = null;
-
-                        if (Strings.LCase(moCartConfig["NotesOnOptions"]) == "on")
-                        {
-
-                            // Dim oNotesGrp As XmlElement = oOptXform.addGroup(oOptXform.moXformElmt, "notes", "term4051", "Please add any details for the delivery here")
-                            string argsClass = "";
-                            int argnRows = 0;
-                            int argnCols = 0;
-                            oOptXform.addTextArea(ref oGrpElmt, "tblCartOrder/cClientNotes/Notes/Notes", false, "Please add any details for the delivery here", ref argsClass, nRows: ref argnRows, nCols: ref argnCols);
-                            // oGrpElmt.AppendChild(oNotesGrp)
-
-                        }
-
-
-
-                        // Allow to Select Multiple Payment Methods or just one
-                        XmlNode oPaymentCfg;
-
-                        oPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
-                        // more than one..
-
-                        bool bPaymentTypeButtons = false;
-                        if (Strings.LCase(moCartConfig["PaymentTypeButtons"]) == "on")
-                            bPaymentTypeButtons = true;
-
-                        bFirstRow = true;
-                        if (oPaymentCfg != null)
-                        {
-                            if (nAmount == 0d & nRepeatAmount == 0d)
-                            {
-                                if (!bPaymentTypeButtons)
-                                {
-                                    oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = "No Charge";
-                                    var oSelectElmt = oOptXform.addSelect1(ref oGrpElmt, "cPaymentMethod", false, "Payment Method", "radios multiline", Protean.xForm.ApperanceTypes.Full);
-                                    oOptXform.addOption(ref oSelectElmt, "No Charge", "No Charge");
-                                    bHidePayment = false;
-                                    AllowedPaymentMethods.Add("No Charge");
-                                }
-                            }
-
-                            else if (oPaymentCfg.SelectNodes("provider").Count > 1)
-                            {
-
-                                if (!bPaymentTypeButtons)
-                                {
-                                    XmlElement oSelectElmt;
-                                    oSelectElmt = (XmlElement)oOptXform.moXformElmt.SelectSingleNode("descendant-or-self::select1[@ref='cPaymentMethod']");
-                                    if (oSelectElmt is null)
-                                    {
-                                        oSelectElmt = oOptXform.addSelect1(ref oGrpElmt, "cPaymentMethod", false, "Payment Method", "radios multiline", Protean.xForm.ApperanceTypes.Full);
-                                    }
-                                    int nOptCount = oPay.getPaymentMethods(ref oOptXform, ref oSelectElmt, nAmount, ref mcPaymentMethod);
-
-                                    // Code Moved to Get PaymentMethods
-
-                                    if (nOptCount == 0)
-                                    {
-                                        oOptXform.valid = false;
-                                        //XmlNode argoNode1 = oGrpElmt;
-                                        oOptXform.addNote(ref oGrpElmt, Protean.xForm.noteTypes.Alert, "There is no method of payment available for your account - please contact the site administrator.");
-                                        //oGrpElmt = (XmlElement)argoNode1;
-                                    }
-                                    else if (nOptCount == 1)
-                                    {
-                                        // hide the options
-                                        oSelectElmt.SetAttribute("class", "hidden");
-
-                                        // step throught the payment methods to set as allowed.
-                                    }
-                                    foreach (XmlElement oOptElmt in oSelectElmt.SelectNodes("item"))
-                                        AllowedPaymentMethods.Add(oOptElmt.SelectSingleNode("value").InnerText);
-                                }
-                            }
-
-
-
-
-                            else if (oPaymentCfg.SelectNodes("provider").Count == 1)
-                            {
-                                // or just one
-                                if (!bPaymentTypeButtons)
-                                {
-                                    if (Convert.ToBoolean(oPay.HasRepeatPayments()))
-                                    {
-                                        var oSelectElmt = oOptXform.addSelect1(ref oGrpElmt, "cPaymentMethod", false, "Payment Method", "radios multiline", Protean.xForm.ApperanceTypes.Full);
-                                        oPay.ReturnRepeatPayments(oPaymentCfg.SelectSingleNode("provider/@name").InnerText, ref oOptXform, ref oSelectElmt);
-
-                                        oOptXform.addOption(ref oSelectElmt, oPaymentCfg.SelectSingleNode("provider/description").Attributes["value"].Value, oPaymentCfg.SelectSingleNode("provider").Attributes["name"].Value);
-                                        bHidePayment = false;
-                                        AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText);
-                                    }
-                                    else
-                                    {
-                                        bHidePayment = true;
-                                        oOptXform.addInput(ref oGrpElmt, "cPaymentMethod", false, oPaymentCfg.SelectSingleNode("provider/@name").InnerText, "hidden");
-                                        oOptXform.Instance.SelectSingleNode("cPaymentMethod").InnerText = oPaymentCfg.SelectSingleNode("provider/@name").InnerText;
-                                        AllowedPaymentMethods.Add(oPaymentCfg.SelectSingleNode("provider/@name").InnerText);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                oOptXform.valid = false;
-                                //XmlNode argoNode = oGrpElmt;
-                                oOptXform.addNote(ref oGrpElmt, Protean.xForm.noteTypes.Alert, "There is no method of payment setup on this site - please contact the site administrator.");
-                                //oGrpElmt = (XmlElement)argoNode;
-                            }
-                        }
-                        else
-                        {
-                            oOptXform.valid = false;
-                            //XmlNode argoNode2 = oGrpElmt;
-                            oOptXform.addNote(ref oGrpElmt, Protean.xForm.noteTypes.Alert, "There is no method of payment setup on this site - please contact the site administrator.");
-                            //oGrpElmt = (XmlElement)argoNode2;
-                        }
-
-                        string cTermsTitle = "Terms and Conditions";
-
-                        // Adjust the group title
-                        if (bAdjustTitle)
-                        {
-                            string cGroupTitle = "Select Delivery and Payment Option";
-                            if (bHideDelivery & bHidePayment)
-                                cGroupTitle = "Terms and Conditions";
-                            if (bHideDelivery & !bHidePayment)
-                                cGroupTitle = "Select Payment Option";
-                            if (!bHideDelivery & bHidePayment)
-                                cGroupTitle = "Select Shipping Option";
-                            XmlElement labelElmt = (XmlElement)oGrpElmt.SelectSingleNode("label");
-                            labelElmt.InnerText = cGroupTitle;
-                            labelElmt.SetAttribute("class", "term3019");
-
-                            // Just so we don't show the terms and conditions title twice
-
-                            if (cGroupTitle == "Terms and Conditions")
-                            {
-                                cTermsTitle = "";
-                            }
-                        }
-
-                        if (bAddTerms)
-                        {
-
-                            if (oGrpElmt.SelectSingleNode("*[@ref='terms']") is null)
-                            {
-                                string argsClass1 = "readonly terms-and-conditons";
-                                int argnRows1 = 0;
-                                int argnCols1 = 0;
-                                oOptXform.addTextArea(ref oGrpElmt, "terms", false, cTermsTitle, ref argsClass1, nRows: ref argnRows1, nCols: ref argnCols1);
-                            }
-
-                            if (oGrpElmt.SelectSingleNode("*[@ref='confirmterms']") is null)
-                            {
-                                oOptXform.addSelect(ref oGrpElmt, "confirmterms", false, "&#160;", "", Protean.xForm.ApperanceTypes.Full);
-                                XmlElement argoSelectNode2 = (XmlElement)oGrpElmt.LastChild;
-                                oOptXform.addOption(ref argoSelectNode2, "I agree to the Terms and Conditions", "Agree");
-                            }
-
-                            if (Conversions.ToInteger("0" + moCartConfig["TermsContentId"]) > 0)
-                            {
-                                var termsElmt = new XmlDocument();
-                                termsElmt.LoadXml(moDBHelper.getContentBrief(Conversions.ToInteger(moCartConfig["TermsContentId"])));
-                                mcTermsAndConditions = termsElmt.DocumentElement.InnerXml;
-                            }
-                            else
-                            {
-                                mcTermsAndConditions = moCartConfig["TermsAndConditions"];
-                            }
-
-                            if (mcTermsAndConditions is null)
-                                mcTermsAndConditions = "";
-
-                            oOptXform.Instance.SelectSingleNode("terms").InnerXml = mcTermsAndConditions;
-
-                        }
-
-                        oOptXform.addSubmit(ref oGrpElmt, "optionsForm", "Make Secure Payment");
-
-                        if (bPaymentTypeButtons)
-                        {
-                            XmlElement xmlXfromGroup = (XmlElement)oOptXform.moXformElmt.SelectSingleNode("group");
-
-                            // added by TS, if you need just the product amount without VAT or shipping we need to talk.
-                            double totalAmount = Convert.ToDouble(cartElmt.GetAttribute("total"));
-                            oPay.getPaymentMethodButtons(ref oOptXform, ref xmlXfromGroup, totalAmount);
-
-                            foreach (XmlElement oSubmitBtn in oOptXform.moXformElmt.SelectNodes("descendant-or-self::submit"))
-                                AllowedPaymentMethods.Add(oSubmitBtn.GetAttribute("value"));
-
-                            if (nAmount == 0d & nRepeatAmount == 0d)
-                            {
-                                // oOptXform.addSubmit(oGrpElmt, "optionsForm", "Complete Order")
-                                AllowedPaymentMethods.Add("No Charge");
-                                oOptXform.addSubmit(ref oGrpElmt, "No Charge", "Complete Order", "submit", "pay-button pay-nothing", "fas fa-check", "No Charge");
-
-                            }
-
-                        }
-                    }
-
-                    oOptXform.valid = false;
-
-                    string submittedPaymentMethod = myWeb.moRequest["submit"];
-                    if (submittedPaymentMethod == "Make Secure Payment")
-                    {
-                        submittedPaymentMethod = myWeb.moRequest["cPaymentMethod"];
-                    }
-
-                    if (AllowedPaymentMethods.Contains(submittedPaymentMethod)) // equates to is submitted
-                    {
-
-                        // Save notes to cart
-
-                        if (Strings.LCase(moCartConfig["NotesOnOptions"]) == "on")
-                        {
-                            // If myWeb.moRequest("tblCartOrder/cClientNotes/Notes/Notes") <> "" Then
-                            this.AddClientNotes(myWeb.moRequest["tblCartOrder/cClientNotes/Notes/Notes"]);
-                            // End If
-                        }
-
-                        if (myWeb.moRequest["confirmterms"] == "Agree" | !bAddTerms)
-                        {
-
-                            mcPaymentMethod = submittedPaymentMethod;
-
-                            // if we have a profile split it out, allows for more than one set of settings for each payment method, only done for SecPay right now.
-                            if (Conversions.ToBoolean(Strings.InStr(mcPaymentMethod, "-")))
-                            {
-                                string[] aPayMth = Strings.Split(mcPaymentMethod, "-");
-                                mcPaymentMethod = aPayMth[0];
-                                mcPaymentProfile = aPayMth[1];
-                            }
-
-                            sSql2 = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                            ods2 = moDBHelper.GetDataSet(sSql2, "Order", "Cart");
-                            string cSqlUpdate;
-                            foreach (DataRow oRow2 in ods2.Tables["Order"].Rows)
-                            {
-                                long nShipOptKey;
-
-                                if (myWeb.moRequest["nShipOptKey"] != null)
-                                {
-                                    oRow2["nShippingMethodId"] = myWeb.moRequest["nShipOptKey"];
-                                }
-                                nShipOptKey = Conversions.ToLong(oRow2["nShippingMethodId"]);
-                                sSql = "select * from tblCartShippingMethods ";
-                                sSql = sSql + " where nShipOptKey = " + nShipOptKey;
-                                ods = moDBHelper.GetDataSet(sSql, "Order", "Cart");
-
-                                foreach (DataRow currentORow5 in ods.Tables["Order"].Rows)
-                                {
-                                    oRow = currentORow5;
-                                    cShippingDesc = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(oRow["cShipOptName"], "-"), oRow["cShipOptCarrier"]));
-                                    nShippingCost = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptCost"]));
-                                    cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder SET cShippingDesc='", SqlFmt(cShippingDesc)), "', nShippingCost="), SqlFmt(nShippingCost.ToString())), ", nShippingMethodId = "), nShipOptKey), " WHERE nCartOrderKey="), mnCartId));
-                                    moDBHelper.ExeProcessSql(cSqlUpdate);
-                                }
-
-                                // update the cart xml
-
-                                updateTotals(ref cartElmt, nAmount, nShippingCost, nShipOptKey.ToString());
-
-                                ods2 = null;
-
-                                if (bForceValidation)
-                                {
-                                    oOptXform.updateInstanceFromRequest();
-                                    oOptXform.validate();
-                                }
-                                else
-                                {
-                                    oOptXform.valid = true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            oOptXform.addNote("confirmterms", Protean.xForm.noteTypes.Alert, "You must agree to the terms and conditions to proceed");
-                        }
-                    }
-
-                    if (oOptXform.valid)
-                    {
-                        // If we have any order notes we save them
-                        if (oOptXform.Instance.SelectSingleNode("Notes") != null)
-                        {
-                            // Open database for reading and writing
-                            sSql = "select * from tblCartOrder where nCartOrderKey=" + mnCartId;
-                            ods = moDBHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                            foreach (DataRow currentORow6 in ods.Tables["Order"].Rows)
-                            {
-                                oRow = currentORow6;
-                                oRow["cClientNotes"] = oOptXform.Instance.SelectSingleNode("Notes").OuterXml;
-                                moDBHelper.updateDataset(ref ods, "Order", true);
-                            }
-                            ods.Clear();
-                            ods = null;
-                        }
-                    }
-                    oOptXform.addValues();
-
-                    return oOptXform;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "optionsXform", ex, "", cProcessInfo, gbDebug);
-                    return (Cms.xForm)null;
-                }
-
             }
 
 
@@ -7698,35 +4469,36 @@ namespace Protean
                             {
                                 var arrLoc = new string[4];
 
-                                arrLoc[0] = Conversions.ToString(Operators.ConcatenateObject(oDr["nLocationParId"], ""));
+                                arrLoc[0] = oDr["nLocationParId"]?.ToString() ?? string.Empty;
 
-                                if (oDr["nLocationTaxRate"] is DBNull | !Information.IsNumeric(oDr["nLocationTaxRate"]))
+                                if (oDr["nLocationTaxRate"] is DBNull | !Tools.Number.IsNumeric(oDr["nLocationTaxRate"]))
                                 {
                                     arrLoc[2] = 0.ToString();
                                 }
                                 else
                                 {
-                                    arrLoc[2] = Conversions.ToString(oDr["nLocationTaxRate"]);
+                                    arrLoc[2] = Convert.ToString(oDr["nLocationTaxRate"]);
                                 }
 
                                 if (oDr["cLocationNameShort"] is DBNull | oDr["cLocationNameShort"] == null)
                                 {
-                                    arrLoc[1] = Conversions.ToString(oDr["cLocationNameFull"]);
+                                    arrLoc[1] = Convert.ToString(oDr["cLocationNameFull"]);
                                 }
                                 else
                                 {
-                                    arrLoc[1] = Conversions.ToString(oDr["cLocationNameShort"]);
+                                    arrLoc[1] = Convert.ToString(oDr["cLocationNameShort"]);
                                 }
-                                nLocKey = Conversions.ToInteger(oDr["nLocationKey"]);
+                                nLocKey = Convert.ToInt16(oDr["nLocationKey"]);
                                 oLocations[nLocKey] = arrLoc;
 
                                 arrLoc = null;
-
-                                // if (Conversions.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameShort"]) is DBNull, "", (oDr["cLocationNameShort"])), Strings.LCase(Strings.Trim(sTarget)), false), Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameFull"]) is DBNull, "", (oDr["cLocationNameFull"])), Strings.LCase(Strings.Trim(sTarget)), false))))
-                                if (oDr["cLocationNameShort"].ToString() == Strings.Trim(sTarget) || oDr["cLocationNameFull"].ToString() == Strings.Trim(sTarget))
+                                string target = (sTarget ?? "").Trim();
+                                // if (Convert.ToBoolean(Operators.OrObject(Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameShort"]) is DBNull, "", (oDr["cLocationNameShort"])), Strings.LCase(Strings.Trim(sTarget)), false), Operators.ConditionalCompareObjectEqual(Interaction.IIf((oDr["cLocationNameFull"]) is DBNull, "", (oDr["cLocationNameFull"])), Strings.LCase(Strings.Trim(sTarget)), false))))
+                                if (oDr["cLocationNameShort"].ToString() == target || oDr["cLocationNameFull"].ToString() == target)
                                 {
-                                    nTargetId = Conversions.ToInteger(oDr["nLocationKey"]);
+                                    nTargetId = Convert.ToInt16(oDr["nLocationKey"]);
                                 }
+
                             }
 
                             // Iterate through the country list
@@ -7734,7 +4506,7 @@ namespace Protean
                             {
                                 // Get country names
                                 sCountryList = iterateCountryList(ref oLocations, ref nTargetId, ref nIndex);
-                                sCountryList = "(" + Strings.Right(sCountryList, Strings.Len(sCountryList) - 1) + ")";
+                                sCountryList = "(" + sCountryList.Substring(1) + ")";
                             }
 
                             oLocations = null;
@@ -7770,7 +4542,7 @@ namespace Protean
                     {
                         arrTmp = (string[])oDict[nParent];
                         sListReturn = ",'" + SqlFmt(arrTmp[nIndex].ToString()) + "'"; // Adding this line here allows the top root location to be added
-                        if (!(Information.IsDBNull(arrTmp[0]) | arrTmp[0] == null))
+                        if (arrTmp[0] != null && !Convert.IsDBNull(arrTmp[0]))
                         {
                             if (Int32.Parse("0" + arrTmp[0]) != nParent)
                             {
@@ -7792,39 +4564,6 @@ namespace Protean
 
             }
 
-            public void addDateAndRef(ref XmlElement oCartElmt, DateTime invoiceDate = default, long nCartId = 0L)
-            {
-                myWeb.PerfMon.Log("Cart", "addDateAndRef");
-                // adds current date and an invoice reference number to the cart object.
-                // so the cart now contains all details needed for an invoice
-                string cProcessInfo = "";
-                if (nCartId == 0L)
-                    nCartId = mnCartId;
-                try
-                {
-                    if (invoiceDate == default)
-                        invoiceDate = DateTime.Now;
-                    if (nCartId == 0L)
-                        nCartId = Conversions.ToLong(oCartElmt.GetAttribute("cartId"));
-                    oCartElmt.SetAttribute("InvoiceDate", niceDate(invoiceDate));
-                    oCartElmt.SetAttribute("InvoiceDateTime", XmlDate(invoiceDate, true));
-                    oCartElmt.SetAttribute("InvoiceRef", OrderNoPrefix + nCartId.ToString());
-                    if (!string.IsNullOrEmpty(mcVoucherNumber))
-                    {
-                        oCartElmt.SetAttribute("payableType", "Voucher");
-                        oCartElmt.SetAttribute("voucherNumber", mcVoucherNumber);
-                        oCartElmt.SetAttribute("voucherValue", mcVoucherValue);
-                        oCartElmt.SetAttribute("voucherExpires", mcVoucherExpires);
-                    }
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "addDateAndRef", ex, "", cProcessInfo, gbDebug);
-                }
-
-            }
-
             public long CreateNewCart(ref XmlElement oCartElmt, string cCartSchemaName = "Order")
             {
                 myWeb.PerfMon.Log("Cart", "CreateNewCart");
@@ -7837,7 +4576,7 @@ namespace Protean
                 try
                 {
                     // stop carts being added by robots
-                    if (Conversions.ToBoolean(!Operators.ConditionalCompareObjectEqual(myWeb.moSession["previousPage"], "", false)))
+                    if (!string.IsNullOrEmpty(myWeb.moSession["previousPage"]?.ToString()))
                     {
 
                         oInstance.AppendChild(oInstance.CreateElement("instance"));
@@ -7891,13 +4630,13 @@ namespace Protean
                         addNewTextNode("cShippingDesc", ref argoNode13, moCartConfig["DefaultShippingDesc"]);
                         oElmt = (XmlElement)argoNode13;
                         XmlNode argoNode14 = oElmt;
-                        addNewTextNode("nShippingCost", ref argoNode14, Conversions.ToLong(moCartConfig["DefaultShippingCost"] + "0").ToString());
+                        addNewTextNode("nShippingCost", ref argoNode14, Convert.ToInt64(moCartConfig["DefaultShippingCost"] + "0").ToString());
                         oElmt = (XmlElement)argoNode14;
                         XmlNode argoNode15 = oElmt;
                         addNewTextNode("cClientNotes", ref argoNode15, cOrderReference);
                         oElmt = (XmlElement)argoNode15;
                         XmlNode argoNode16 = oElmt;
-                        addNewTextNode("cSellerNotes", ref argoNode16, Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("referer:", myWeb.moSession["previousPage"]), "/n")));
+                        addNewTextNode("cSellerNotes", ref argoNode16, "referer:" + myWeb.moSession["previousPage"]?.ToString() + "\n");
                         oElmt = (XmlElement)argoNode16;
                         if (moPageXml.SelectSingleNode("/Page/Request/GoogleCampaign") != null)
                         {
@@ -7920,7 +4659,7 @@ namespace Protean
                             oElmt = (XmlElement)argoNode20;
                         }
 
-                        mnCartId = Conversions.ToInteger(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement));
+                        mnCartId = Convert.ToInt64(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement));
                         return mnCartId;
                     }
                     else
@@ -7965,30 +4704,6 @@ namespace Protean
                 }
             }
 
-            public void SetClientNotes(string Notes)
-            {
-                string sSql = "";
-                DataSet oDs;
-                string cProcessInfo = "SetClientNotes";
-                try
-                {
-                    if (mnCartId > 0)
-                    {
-                        // Update Seller Notes:
-                        sSql = "select * from tblCartOrder where nCartOrderKey = " + mnCartId;
-                        oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                        foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                            oRow["cClientNotes"] = Notes;
-                        myWeb.moDbHelper.updateDataset(ref oDs, "Order");
-                    }
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "UpdateSellerNotes", ex, "", cProcessInfo, gbDebug);
-                }
-
-            }
 
             public bool AddItem(long nProductId, long nQuantity, string[][] oProdOptions, string cProductText = "", double nPrice = 0d, string ProductXml = "", bool UniqueProduct = false, string overideUrl = "", bool bDepositOnly = false, string cProductOption = "", double dProductOptionPrice = 0d)
             {
@@ -7997,7 +4712,7 @@ namespace Protean
                 var oDS = new DataSet();
                 DataRow oDR1; // Parent Rows
                               // Child Rows
-                int nItemID = 0; // ID of the cart item record
+                long nItemID = 0; // ID of the cart item record
                 int nCountExOptions; // number of matching options in the old cart item
                 string cProcessInfo = "";
                 int NoOptions; // the number of options for the item
@@ -8011,13 +4726,15 @@ namespace Protean
                 {
                     if (!string.IsNullOrEmpty(moCartConfig["ItemLimit"]))
                     {
-                        itemLimit = (short)Conversions.ToInteger(moCartConfig["ItemLimit"]);
+                        itemLimit = (short)Convert.ToInt16(moCartConfig["ItemLimit"]);
                     }
 
                     if (nQuantity < itemLimit)
                     {
 
-                        if (mnProcessId < 5)
+                        mcBlockCartUpdate = GetBlockCartUpdatesConfig();
+
+                        if (mnProcessId < 5 || string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             oDS = moDBHelper.getDataSetForUpdate(cSQL, "CartItems", "Cart");
                             oDS.EnforceConstraints = false;
@@ -8045,15 +4762,14 @@ namespace Protean
                                 foreach (DataRow currentODR1 in oDS.Tables["CartItems"].Rows)
                                 {
                                     oDR1 = currentODR1;
-                                    if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectEqual(moDBHelper.DBN2int(oDR1["nParentId"]), 0, false), Operators.ConditionalCompareObjectEqual(oDR1["nItemId"], nProductId, false)))) // (oDR1.Item("nParentId") = 0 Or IsDBNull(oDR1.Item("nParentId"))) And oDR1.Item("nItemId") = nProductId Then
+                                    if (Convert.ToInt32(moDBHelper.DBN2int(oDR1["nParentId"])) == 0 && oDR1["nItemId"] != null && Convert.ToInt32(oDR1["nItemId"]) == nProductId)
                                     {
                                         nCountExOptions = 0;
                                         NoOptions = 0;
                                         // loop through the children(options) and count how many are the same
                                         foreach (var oDr2 in oDR1.GetChildRows("Rel1"))
                                         {
-                                            var loopTo = Information.UBound(oProdOptions) - 1;
-                                            for (i = 0; i <= loopTo; i++)
+                                            for (i = 0; i <= oProdOptions.Length - 2; i++)
                                             {
                                                 string cProdOpt1 = "";
                                                 if (oProdOptions[i].Length > 1)
@@ -8064,8 +4780,10 @@ namespace Protean
                                                 if (oProdOptions[i].Count() < 1)
                                                 {
                                                     // Case for text option with no index
-                                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oProdOptions[i][0], Conversions.ToString(oDr2["nItemOptGrpIdx"]), false)))
+                                                    if (oProdOptions[i][0]?.ToString() == oDr2["nItemOptGrpIdx"]?.ToString())
+                                                    {
                                                         nCountExOptions += 1;
+                                                    }
                                                 }
                                                 else if ((oProdOptions[i][0].ToString() != oDr2["nItemOptGrpIdx"].ToString()) && (cProdOpt1.ToString() != oDr2["nItemOptIdx"].ToString()))
                                                     nCountExOptions += 1;
@@ -8075,15 +4793,15 @@ namespace Protean
                                         if (oProdOptions != null)
                                         {
                                             // if they are all the same then we have the correct record so it is an update
-                                            if (nCountExOptions == Information.UBound(oProdOptions) & NoOptions == Information.UBound(oProdOptions))
+                                            if (nCountExOptions == oProdOptions.Length - 1 && NoOptions == oProdOptions.Length - 1)
                                             {
-                                                nItemID = Conversions.ToInteger(oDR1["NCartItemKey"]); // ok, got the bugger
-                                                break; // exit the loop other wise we might go through some other ones
+                                                nItemID = Convert.ToInt64(oDR1["NCartItemKey"]); // ok, got the bugger
+                                                break; // exit the loop otherwise we might go through some other ones
                                             }
                                         }
 
                                         else if (NoOptions == 0)
-                                            nItemID = Conversions.ToInteger(oDR1["NCartItemKey"]);
+                                            nItemID = Convert.ToInt64(oDR1["NCartItemKey"]);
                                     }
                                 }
                             }
@@ -8162,12 +4880,12 @@ namespace Protean
                                     if (oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" + mcCurrency + "']") != null)
                                     {
                                         string strDiscount1 = oProdXml.SelectSingleNode("/Content/Prices/Discount[@currency='" + mcCurrency + "']").InnerText;
-                                        addNewTextNode("nDiscountValue", ref oElmt, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strDiscount1), strDiscount1, 0)));
+                                        addNewTextNode("nDiscountValue", ref oElmt, Tools.Number.IsNumeric(strDiscount1) ? strDiscount1 : "0");
                                     }
 
                                     if (oProdXml.SelectSingleNode("/Content/ShippingWeight") != null)
                                     {
-                                        nWeight = (long)Math.Round(Conversions.ToDouble("0" + oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText));
+                                        nWeight = (long)Math.Round(Convert.ToDouble("0" + oProdXml.SelectSingleNode("/Content/ShippingWeight").InnerText));
                                     }
 
                                     // If (UniqueProduct) Then
@@ -8186,12 +4904,19 @@ namespace Protean
                                         // Then we need to add the Xml for the ParentProduct.
                                         string sSQL2 = "select TOP 1 nContentParentId from tblContentRelation as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where nContentChildId =" + nProductId + "Order by nContentParentId desc";
 
-                                        long nParentId = Conversions.ToLong(moDBHelper.ExeProcessSqlScalar(sSQL2));
+                                        long nParentId = Convert.ToInt64(moDBHelper.ExeProcessSqlScalar(sSQL2));
                                         XmlNode argoNode7 = oProdXml.DocumentElement;
                                         var ItemParent = addNewTextNode("ParentProduct", ref argoNode7, "");
                                         XmlElement parentElmt = moDBHelper.GetContentDetailXml(nParentId, true);
                                         if (parentElmt != null)
                                         {
+                                            // ItemParent.InnerXml = parentElmt.OuterXml;
+                                            if (nPrice != 0)
+                                            {
+                                                //parentElmt.SetAttribute("overridePrice", "true");
+                                                //parentElmt.SelectSingleNode("/Content/Prices/Price[@type='sale']").InnerText = Convert.ToString(nPrice);
+                                                parentElmt.SelectSingleNode("Prices/Price[@type='sale']").InnerText = Convert.ToString(nPrice);
+                                            }
                                             ItemParent.InnerXml = parentElmt.OuterXml;
                                         }
                                     }
@@ -8218,12 +4943,12 @@ namespace Protean
 
                                 if (mbOveridePrice)
                                 {
-                                    if (Conversions.ToDouble(myWeb.moRequest["price_" + nProductId]) > 0d)
+                                    if (Convert.ToDouble(myWeb.moRequest["price_" + nProductId]) > 0d)
                                     {
                                         strPrice1 = myWeb.moRequest["price_" + nProductId];
                                     }
                                 }
-                                addNewTextNode("nPrice", ref oElmt, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice1), strPrice1, 0)));
+                                addNewTextNode("nPrice", ref oElmt, Tools.Number.IsNumeric(strPrice1) ? strPrice1 : "0");
                                 addNewTextNode("nShpCat", ref oElmt, (-1).ToString());
                                 addNewTextNode("nTaxRate", ref oElmt, nTaxRate.ToString());
                                 addNewTextNode("nQuantity", ref oElmt, nQuantity.ToString());
@@ -8232,7 +4957,7 @@ namespace Protean
                                 if (bDepositOnly)
                                 {
                                     XmlNode argoNode18 = oElmt;
-                                    addNewTextNode("nDepositAmount", ref argoNode18, Conversions.ToString(Interaction.IIf(Information.IsNumeric(oPrice.GetAttribute("deposit")), oPrice.GetAttribute("deposit"), 0)));
+                                    addNewTextNode("nDepositAmount", ref argoNode18, Tools.Number.IsNumeric(oPrice.GetAttribute("deposit")) ? oPrice.GetAttribute("deposit") : "0");
                                     oElmt = (XmlElement)argoNode18;
                                 }
 
@@ -8241,7 +4966,7 @@ namespace Protean
                                 oElmt = (XmlElement)argoNode19;
                                 ProductXmlElmt.InnerXml = oProdXml.DocumentElement.OuterXml;
 
-                                nItemID = Conversions.ToInteger(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement));
+                                nItemID = Convert.ToInt32(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement));
 
                                 // Options
                                 if (oProdOptions != null)
@@ -8280,7 +5005,7 @@ namespace Protean
                                                 cOptName = cStockCode;
                                                 bTextOption = true;
                                             }
-                                            else if (Information.IsNumeric(oProdOptions[i][0]) & Information.IsNumeric(opt2ndval))
+                                            else if (Tools.Number.IsNumeric(oProdOptions[i][0]) & Tools.Number.IsNumeric(opt2ndval))
                                             {
                                                 // add the stock code from the option
                                                 if (oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/StockCode") != null)
@@ -8318,6 +5043,9 @@ namespace Protean
                                             addNewTextNode("nItemId", ref oElmt, nProductId.ToString());
                                             addNewTextNode("cItemURL", ref oElmt, myWeb.mcOriginalURL);
                                             addNewTextNode("cItemName", ref oElmt, cOptName);
+                                            XmlElement oItemXml = oElmt.OwnerDocument.CreateElement("xItemXml");
+                                            oItemXml.InnerXml = oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]").OuterXml;
+                                            oElmt.AppendChild(oItemXml);
                                             if (bTextOption)
                                             {
                                                 // save the option index as -1 for text option
@@ -8328,17 +5056,17 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                addNewTextNode("nItemOptGrpIdx", ref oElmt, Conversions.ToString(oProdOptions[i][0]));
-                                                addNewTextNode("nItemOptIdx", ref oElmt, Conversions.ToString(opt2ndval));
+                                                addNewTextNode("nItemOptGrpIdx", ref oElmt, Convert.ToString(oProdOptions[i][0]));
+                                                addNewTextNode("nItemOptIdx", ref oElmt, Convert.ToString(opt2ndval));
                                                 XmlElement oPriceElmt = (XmlElement)oProdXml.SelectSingleNode($"/Content/Options/OptGroup[{oProdOptions[i][0]}]/option[{opt2ndval}]/Prices/Price[@currency='{mcCurrency}']");
                                                 string strPrice2 = 0.ToString();
                                                 if (oPriceElmt != null)
                                                     strPrice2 = oPriceElmt.InnerText;
-                                                addNewTextNode("nPrice", ref oElmt, Conversions.ToString(Interaction.IIf(Information.IsNumeric(strPrice2), strPrice2, 0)));
+                                                addNewTextNode("nPrice", ref oElmt, Tools.Number.IsNumeric(strPrice2) ? strPrice2 : "0");
                                             }
                                             addNewTextNode("nShpCat", ref oElmt, (-1).ToString());
                                             addNewTextNode("nTaxRate", ref oElmt, 0.ToString());
-                                            addNewTextNode("nQuantity", ref oElmt, 1.ToString());
+                                            addNewTextNode("nQuantity", ref oElmt, nQuantity.ToString());
                                             addNewTextNode("nWeight", ref oElmt, 0.ToString());
                                             addNewTextNode("nParentId", ref oElmt, nItemID.ToString());
                                             moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
@@ -8348,7 +5076,7 @@ namespace Protean
                                 // 
                                 if (myWeb.moRequest["OptionName_" + nProductId] != null)
                                 {
-                                    this.AddProductOption(nItemID, myWeb.moRequest["OptionName_" + nProductId], Conversions.ToDouble(myWeb.moRequest["OptionValue_" + nProductId]));
+                                    this.AddProductOption(nItemID, myWeb.moRequest["OptionName_" + nProductId], Convert.ToDouble(myWeb.moRequest["OptionValue_" + nProductId]));
                                 }
                                 else if (!string.IsNullOrEmpty(cProductOption))
                                 {
@@ -8369,17 +5097,19 @@ namespace Protean
                                     foreach (DataRow currentODR11 in oDS.Tables["CartItems"].Rows)
                                     {
                                         oDR1 = currentODR11;
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR1["nCartItemKey"], nItemID, false)))
+                                        if (oDR1["nCartItemKey"] != null && Convert.ToInt64(oDR1["nCartItemKey"]).Equals(nItemID))
                                         {
                                             oDR1.BeginEdit();
-                                            if (Strings.LCase(moCartConfig["OverwriteItemQuantity"]) == "on")
+
+                                            if (moCartConfig["OverwriteItemQuantity"]?.ToString().ToLower() == "on")
                                             {
                                                 oDR1["nQuantity"] = nQuantity;
                                             }
-                                            else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectLess(Operators.AddObject(oDR1["nQuantity"], nQuantity), itemLimit, false)))
+                                            else if (oDR1["nQuantity"] != null && Convert.ToInt32(oDR1["nQuantity"]) + nQuantity < itemLimit)
                                             {
                                                 oDR1["nQuantity"] = Convert.ToInt32(oDR1["nQuantity"]) + nQuantity;
                                             }
+
                                             oDR1.EndEdit();
                                             break;
                                         }
@@ -8428,17 +5158,17 @@ namespace Protean
                 int qtyAdded = 0;
                 try
                 {
-                    if (Strings.LCase(moCartConfig["ClearOnAdd"]) == "on")
+                    if ((moCartConfig["ClearOnAdd"]).ToLower() == "on")
                     {
                         cSql = "select nCartItemKey from tblCartItem where nCartOrderId = " + mnCartId;
                         oDs = moDBHelper.GetDataSet(cSql, "Item");
                         if (oDs.Tables["Item"].Rows.Count > 0)
                         {
                             foreach (DataRow oRow in oDs.Tables["Item"].Rows)
-                                moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, Conversions.ToLong(oRow["nCartItemKey"]));
+                                moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, Convert.ToInt64(oRow["nCartItemKey"]));
                         }
                     }
-                    if ((Strings.LCase(mmcOrderType) ?? "") == (Strings.LCase(mcItemOrderType) ?? "")) // test for order?
+                    if ((mmcOrderType?.ToLower() ?? "") == (mcItemOrderType?.ToLower() ?? "")) // test for order?
                     {
                         foreach (string oItem1 in myWeb.moRequest.Form) // Loop for getting products/quants
                         {
@@ -8449,15 +5179,14 @@ namespace Protean
                             oOptions = null;
                             cReplacementName = "";
                             // begin
-                            if (Strings.InStr(Conversions.ToString(oItem1), "qty_") == 1) // check for getting productID and quantity (since there will only be one of these per item submitted)
+                            if (oItem1?.ToString().StartsWith("qty_") == true) // check for getting productID and quantity
                             {
-
-                                if (Strings.InStr(Conversions.ToString(oItem1), "qty_deposit_") == 1)
+                                if (oItem1.ToString().StartsWith("qty_deposit_"))
                                 {
-                                    cProductKey = Strings.Replace(Conversions.ToString(oItem1), "qty_deposit_", "");
-                                    if (Information.IsNumeric(cProductKey))
+                                    cProductKey = oItem1.ToString().Replace("qty_deposit_", "");
+                                    if (Tools.Number.IsNumeric(cProductKey))
                                     {
-                                        nProductKey = Conversions.ToLong(cProductKey);
+                                        nProductKey = Convert.ToInt64(cProductKey);
                                     }
                                     else
                                     {
@@ -8469,10 +5198,10 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    cProductKey = Strings.Replace(Conversions.ToString(oItem1), "qty_", "");
-                                    if (Information.IsNumeric(cProductKey))
+                                    cProductKey = oItem1?.ToString().Replace("qty_", "");
+                                    if (Tools.Number.IsNumeric(cProductKey))
                                     {
-                                        nProductKey = Conversions.ToLong(cProductKey);
+                                        nProductKey = Convert.ToInt64(cProductKey);
                                     }
                                     else
                                     {
@@ -8482,11 +5211,11 @@ namespace Protean
                                     }
                                 }
 
-                                cProcessInfo = Conversions.ToString(Operators.ConcatenateObject(oItem1.ToString() + " = ", myWeb.moRequest.Form.Get(oItem1)));
+                                cProcessInfo = oItem1 + " = " + myWeb.moRequest.Form.Get(oItem1.ToString());
 
-                                if (Information.IsNumeric(myWeb.moRequest.Form.Get(oItem1)))
+                                if (Tools.Number.IsNumeric(myWeb.moRequest.Form.Get(oItem1)))
                                 {
-                                    nQuantity = Conversions.ToLong(myWeb.moRequest.Form.Get(oItem1));
+                                    nQuantity = Convert.ToInt64(myWeb.moRequest.Form.Get(oItem1));
                                 }
 
                                 // replacementName
@@ -8497,7 +5226,7 @@ namespace Protean
                                     string sBlockCartAddMsg = string.Empty;
                                     if (moSubscription != null)
                                     {
-                                        if (Strings.LCase(moCartConfig["SubsExclusiveOrder"]) == "on")
+                                        if (moCartConfig["SubsExclusiveOrder"]?.ToLower() == "on")
                                         {
 
                                             // get contentType to be added
@@ -8523,17 +5252,19 @@ namespace Protean
                                             // else
                                         }
                                     }
-                                    if (!(Strings.InStr(strAddedProducts, "'" + nProductKey + "'") > 0)) // double check we havent added this product (dont really need but good just in case)
+                                    if (!strAddedProducts.Contains("'" + nProductKey + "'")) // double check we havent added this product
                                     {
                                         foreach (string oItem2 in myWeb.moRequest.Form) // loop through again checking for options
                                         {
-                                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oItem2, "replacementName_" + nProductKey, false)))
-                                                cReplacementName = Conversions.ToString(myWeb.moRequest.Form.Get(oItem2));
-                                            if (Strings.InStr(Conversions.ToString(oItem2), "_") > 0)
+                                            if (oItem2 == "replacementName_" + nProductKey)
+                                                cReplacementName = myWeb.moRequest.Form.Get(oItem2);
+
+                                            if (oItem2.Contains("_"))
                                             {
-                                                if ((Strings.Split(Conversions.ToString(oItem2), "_")[0] + "_" + Strings.Split(Conversions.ToString(oItem2), "_")[1] ?? "") == ("opt_" + nProductKey ?? "")) // check it is an option
+                                                var parts = oItem2.Split('_');
+                                                if (parts.Length > 1 && parts[0] + "_" + parts[1] == "opt_" + nProductKey) // check it is an option
                                                 {
-                                                    oCurOpt = Strings.Split(Conversions.ToString(myWeb.moRequest.Form.Get(oItem2)), ","); // get array of option in "1_2" format
+                                                    oCurOpt = myWeb.moRequest.Form.Get(oItem2)?.Split(','); // get array of option in "1_2" format
                                                     for (nI = 0; nI < oCurOpt.Length; nI++) // loop through current options to split into another array
                                                     {
                                                         Array.Resize(ref oOptions, nCurOptNo + 1); // redim the array to new length while preserving the current data
@@ -8547,7 +5278,7 @@ namespace Protean
                                           // Add Item
                                         if (!string.IsNullOrEmpty(myWeb.moRequest.Form.Get("donationAmount")))
                                         {
-                                            if (Information.IsNumeric(myWeb.moRequest.Form.Get("donationAmount")))
+                                            if (Tools.Number.IsNumeric(myWeb.moRequest.Form.Get("donationAmount")))
                                             {
                                                 string CartItemName = "Donation";
                                                 string CartItemXml = "";
@@ -8560,7 +5291,7 @@ namespace Protean
                                                     CartItemXml = "<donation><message>" + myWeb.moRequest.Form.Get("donationMessage") + "</message></donation>";
                                                 }
 
-                                                if (!AddItem(nProductKey, nQuantity, oOptions, CartItemName, Conversions.ToDouble(myWeb.moRequest.Form.Get("donationAmount")), CartItemXml))
+                                                if (!AddItem(nProductKey, nQuantity, oOptions, CartItemName, Convert.ToDouble(myWeb.moRequest.Form.Get("donationAmount")), CartItemXml))
                                                 {
                                                     qtyAdded = 0;
                                                 }
@@ -8602,7 +5333,10 @@ namespace Protean
 
             public int RemoveItem(long nItemId = 0L, long nContentId = 0L)
             {
-                if (mnProcessId > 4)
+
+                mcBlockCartUpdate = GetBlockCartUpdatesConfig();
+
+                if (mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                 {
                     return 1;
                 }
@@ -8616,8 +5350,8 @@ namespace Protean
                     DataSet oDs;
                     string cProcessInfo = "";
                     var itemCount = default(long);
-                    if (Information.IsNumeric(myWeb.moRequest["id"]))
-                        nItemId = Conversions.ToLong(myWeb.moRequest["id"]);
+                    if (Tools.Number.IsNumeric(myWeb.moRequest["id"]))
+                        nItemId = Convert.ToInt64(myWeb.moRequest["id"]);
                     try
                     {
                         // If myWeb.moRequest("id") <> "" Then
@@ -8636,7 +5370,7 @@ namespace Protean
                         if (oDs.Tables["Item"].Rows.Count > 0)
                         {
                             foreach (DataRow oRow in oDs.Tables["Item"].Rows)
-                                moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, Conversions.ToLong(oRow["nCartItemKey"]));
+                                moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, Convert.ToInt64(oRow["nCartItemKey"]));
                         }
 
 
@@ -8648,7 +5382,7 @@ namespace Protean
                             if (oDr.HasRows)
                             {
                                 while (oDr.Read())
-                                    itemCount = Conversions.ToInteger(oDr["ItemCount"]);
+                                    itemCount = Convert.ToInt16(oDr["ItemCount"]);
                             }
 
                             // oDr.Close()
@@ -8680,7 +5414,7 @@ namespace Protean
                 try
                 {
 
-                    if (Strings.LCase(moCartConfig["ClearOnAdd"]) == "on")
+                    if ((moCartConfig["ClearOnAdd"]).ToLower() == "on")
                     {
                         string cSql = "select nCartItemKey from tblCartItem where nCartOrderId = " + mnCartId;
                         oDs = moDBHelper.GetDataSet(cSql, "Item");
@@ -8689,7 +5423,7 @@ namespace Protean
                             foreach (DataRow currentORow in oDs.Tables["Item"].Rows)
                             {
                                 oRow = currentORow;
-                                moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, Conversions.ToLong(oRow["nCartItemKey"]));
+                                moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, Convert.ToInt64(oRow["nCartItemKey"]));
                             }
                         }
                     }
@@ -8743,7 +5477,7 @@ namespace Protean
                         if (oDr.HasRows)
                         {
                             while (oDr.Read())
-                                itemCount = Conversions.ToInteger(oDr["ItemCount"]);
+                                itemCount = Convert.ToInt16(oDr["ItemCount"]);
                         }
 
                     }
@@ -8782,7 +5516,7 @@ namespace Protean
 
                             var oContentXml = new XmlDocument();
 
-                            oContentXml.LoadXml(Conversions.ToString(oRow["xItemXml"]));
+                            oContentXml.LoadXml(Convert.ToString(oRow["xItemXml"]));
                             XmlElement oRootElmt = (XmlElement)oContentXml.FirstChild;
                             oRootElmt.SetAttribute("overridePrice", "true");
 
@@ -8826,7 +5560,7 @@ namespace Protean
                         if (oDr.HasRows)
                         {
                             while (oDr.Read())
-                                moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, Conversions.ToLong(oDr["nCartItemKey"]));
+                                moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.CartItem, Convert.ToInt64(oDr["nCartItemKey"]));
                         }
 
                     }
@@ -8868,9 +5602,10 @@ namespace Protean
                                 {
                                     while (oDr.Read())
                                     {
-                                        nAmountReceived = Conversions.ToDouble(Operators.ConcatenateObject("0", oDr["nAmountReceived"]));
-                                        cUniqueLink = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(", cSettlementID='OLD_", oDr["cSettlementID"]), "' "));
+                                        nAmountReceived = Convert.ToDouble("0" + oDr["nAmountReceived"]);
+                                        cUniqueLink = ", cSettlementID='OLD_" + oDr["cSettlementID"] + "' ";
                                     }
+
                                 }
                             }
                         }
@@ -8913,7 +5648,7 @@ namespace Protean
 
                     sSql = "update tblCartOrder set nCartStatus = 11 where nCartOrderKey = " + mnCartId;
                     moDBHelper.ExeProcessSql(sSql);
-                    mnTaxRate = Conversions.ToDouble(moCartConfig["TaxRate"]);
+                    mnTaxRate = Convert.ToDouble(moCartConfig["TaxRate"]);
 
                     myWeb.moSession["mcPaymentMethod"] = (object)null;
                     myWeb.moSession["mmcOrderType"] = (object)null;
@@ -8941,7 +5676,7 @@ namespace Protean
                     mmcOrderType = "";
                     mnCartId = 0;
                     myWeb.moSession["CartId"] = (object)null;
-                    mnTaxRate = Conversions.ToDouble(moCartConfig["TaxRate"]);
+                    mnTaxRate = Convert.ToDouble(moCartConfig["TaxRate"]);
                     mcPaymentMethod = null;
                     myWeb.moSession["mcPaymentMethod"] = (object)null;
                 }
@@ -8985,40 +5720,57 @@ namespace Protean
                         oRow = currentORow;
                         if (!(oRow.RowState == DataRowState.Deleted))
                         {
-                            bNullParentId = false;
-                            if (ReferenceEquals(oRow["nParentId"], DBNull.Value))
-                            {
-                                bNullParentId = true;
-                            }
-                            else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oRow["nParentId"], 0, false)))
-                            {
-                                bNullParentId = true;
-                            }
-                            if (bNullParentId) // for options
+
+                            if (ReferenceEquals(oRow["nParentId"], DBNull.Value) || Convert.ToInt32(oRow["nParentId"]) == 0)
                             {
                                 nItemCount = nItemCount + 1;
                                 // First check if the quantity is numeric (if not ignore it)
-                                if (Information.IsNumeric(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject("itemId-", oRow["nCartItemKey"]))]))
+                                string key = "itemId-" + oRow["nCartItemKey"];
+
+                                if (Tools.Number.IsNumeric(myWeb.moRequest[key]))
                                 {
-                                    // It's numeric - let's see if it's positive (i.e. update it, if not delete it)
-                                    if (Conversions.ToInteger(myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject("itemId-", oRow["nCartItemKey"]))]) > 0)
+                                    short qty = Convert.ToInt16(myWeb.moRequest[key]);
+
+                                    if (qty > 0)
                                     {
-                                        oRow["nQuantity"] = myWeb.moRequest[Conversions.ToString(Operators.ConcatenateObject("itemId-", oRow["nCartItemKey"]))];
+                                        oRow["nQuantity"] = qty;
                                     }
                                     else
                                     {
-                                        // delete options first
                                         DataRow[] oCRows = oRow.GetChildRows("Rel1");
-                                        int nDels;
-                                        var loopTo = Information.UBound(oCRows);
-                                        for (nDels = 0; nDels <= loopTo; nDels++)
+                                        for (int nDels = 0; nDels <= oCRows.GetUpperBound(0); nDels++)
                                             oCRows[nDels].Delete();
-                                        // end delete options
+
                                         oRow.Delete();
-                                        nItemCount = nItemCount - 1;
+                                        nItemCount--;
                                     }
                                 }
+
+
                             } // for options
+                            else
+                            {
+                                // ensure any product options keep the same quantity as parent.
+                                string parkey = "itemId-" + oRow["nParentId"];
+                                if (Tools.Number.IsNumeric(myWeb.moRequest[parkey]))
+                                {
+                                    short qty = Convert.ToInt16(myWeb.moRequest[parkey]);
+
+                                    if (qty > 0)
+                                    {
+                                        oRow["nQuantity"] = qty;
+                                    }
+                                    else
+                                    {
+                                        DataRow[] oCRows = oRow.GetChildRows("Rel1");
+                                        for (int nDels = 0; nDels <= oCRows.GetUpperBound(0); nDels++)
+                                            oCRows[nDels].Delete();
+
+                                        oRow.Delete();
+                                        nItemCount--;
+                                    }
+                                }
+                            }
                         }
                     }
                     moDBHelper.updateDataset(ref oDs, "Item");
@@ -9036,7 +5788,7 @@ namespace Protean
                             oRow = currentORow1;
                             oRow.BeginEdit();
                             // update the "cart last update" date
-                            moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.Audit, nKey: Conversions.ToLong(oRow["nAuditId"]));
+                            moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.Audit, nKey: Convert.ToInt64(oRow["nAuditId"]));
 
                             // Update the Client notes, only if no separate form
                             if (string.IsNullOrEmpty(mcNotesXForm) & !string.IsNullOrEmpty(myWeb.moRequest["cClientNotes"]))
@@ -9049,7 +5801,7 @@ namespace Protean
                             oRow["cCartSchemaName"] = mcOrderType;
                             // oRow("cClientNotes") = cOrderReference
                             // ----------------------------------
-                            if (!Conversions.ToString(oRow["cSellerNotes"]).Contains("Referrer: " + myWeb.Referrer) & !string.IsNullOrEmpty(myWeb.Referrer))
+                            if (!Convert.ToString(oRow["cSellerNotes"]).Contains("Referrer: " + myWeb.Referrer) & !string.IsNullOrEmpty(myWeb.Referrer))
                             {
                                 oRow["cSellerNotes"] += "/n" + "Referrer: " + myWeb.Referrer + "/n";
                             }
@@ -9078,295 +5830,6 @@ namespace Protean
                     return null;
                 }
             }
-
-            public void ListOrders(ref XmlElement oContentsXML, cartProcess ProcessId)
-            {
-                myWeb.PerfMon.Log("Cart", "ListOrders");
-                XmlElement oRoot;
-                XmlElement oElmt;
-                string sSql;
-                DataSet oDs;
-                string cProcessInfo = "";
-                try
-                {
-
-                    oRoot = moPageXml.CreateElement("Content");
-                    oRoot.SetAttribute("type", "listTree");
-                    oRoot.SetAttribute("template", "default");
-                    oRoot.SetAttribute("name", "Orders - " + ProcessId.GetType().ToString());
-
-                    sSql = "SELECT nCartOrderKey as id, c.cContactName as name, c.cContactEmail as email, a.dUpdateDate from tblCartOrder inner join tblAudit a on nAuditId = a.nAuditKey left outer join tblCartContact c on (nCartOrderKey = c.nContactCartId and cContactType = 'Billing Address') where nCartStatus = " + ((int)ProcessId).ToString();
-
-                    oDs = moDBHelper.GetDataSet(sSql, "Order", "List");
-
-                    if (oDs.Tables[0].Rows.Count > 0)
-                    {
-                        oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[1].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[2].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[3].ColumnMapping = MappingType.Attribute;
-
-                        // load existing data into the instance
-                        oElmt = moPageXml.CreateElement("List");
-                        oElmt.InnerXml = oDs.GetXml();
-
-                        oContentsXML.AppendChild(oElmt);
-                    }
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug);
-                }
-            }
-
-            public void ListShippingLocations(ref XmlElement oContentsXML, long OptId = 0L)
-            {
-                myWeb.PerfMon.Log("Cart", "ListShippingLocations");
-                XmlElement oRoot;
-                XmlElement oElmt;
-                string sSql;
-                DataSet oDs;
-                string cProcessInfo = "";
-                try
-                {
-
-                    oRoot = moPageXml.CreateElement("Content");
-                    oRoot.SetAttribute("type", "listTree");
-                    oRoot.SetAttribute("template", "default");
-                    if (OptId != 0L)
-                    {
-                        oRoot.SetAttribute("name", "Shipping Locations Form");
-                        sSql = "SELECT nLocationKey as id, nLocationType as type, nLocationParId as parid, cLocationNameFull as Name, cLocationNameShort as nameShort, (SELECT COUNT(*) from tblCartShippingRelations r where r.nShpLocId = n.nLocationKey and r.nShpOptId = " + OptId + ") As selected from tblCartShippingLocations n ";
-                    }
-                    else
-                    {
-                        oRoot.SetAttribute("name", "Shipping Locations");
-                        sSql = "SELECT nLocationKey as id, nLocationType as type, nLocationParId as parid, cLocationNameFull as Name, cLocationNameShort as nameShort, (SELECT COUNT(*) from tblCartShippingRelations r where r.nShpLocId = n.nLocationKey) As nOptCount from tblCartShippingLocations n ";
-                    }
-
-                    // NOTE : This SQL is NOT the same as the equivalent function in the EonicWeb component.
-                    // It adds a count of shipping option relations for each location
-
-                    oDs = moDBHelper.GetDataSet(sSql, "TreeItem", "Tree");
-
-                    oDs.Relations.Add("rel01", oDs.Tables[0].Columns["id"], oDs.Tables[0].Columns["parId"], false);
-                    oDs.Relations["rel01"].Nested = true;
-
-                    if (oDs.Tables[0].Rows.Count > 0)
-                    {
-                        oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[1].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[2].ColumnMapping = MappingType.Hidden;
-                        oDs.Tables[0].Columns[3].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[4].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[5].ColumnMapping = MappingType.Attribute;
-
-                        // load existing data into the instance
-                        oElmt = moPageXml.CreateElement("Tree");
-                        oElmt.InnerXml = oDs.GetXml();
-
-
-                        XmlElement oCheckElmt = null;
-                        oCheckElmt = (XmlElement)oElmt.SelectSingleNode("descendant-or-self::TreeItem[@id='" + mnShippingRootId + "']");
-                        if (oCheckElmt != null)
-                            oElmt = oCheckElmt;
-
-                        oContentsXML.AppendChild(oElmt);
-                    }
-                }
-
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListShippingLocations", ex, "", cProcessInfo, gbDebug);
-                }
-            }
-
-            public void ListDeliveryMethods(ref XmlElement oContentsXML)
-            {
-                myWeb.PerfMon.Log("Cart", "ListDeliveryMethods");
-                XmlElement oElmt;
-                string sSql;
-                DataSet oDs;
-                string cProcessInfo = "";
-                try
-                {
-
-                    sSql = "select a.nStatus as status, nShipOptKey as id, cShipOptName as name, cShipOptCarrier as carrier, a.dPublishDate as startDate, a.dExpireDate as endDate, tblCartShippingMethods.cCurrency from tblCartShippingMethods left join tblAudit a on a.nAuditKey = nAuditId order by nDisplayPriority";
-                    oDs = moDBHelper.GetDataSet(sSql, "ListItem", "List");
-
-                    if (oDs.Tables[0].Rows.Count > 0)
-                    {
-                        oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[1].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[2].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[3].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[4].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[5].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[6].ColumnMapping = MappingType.Attribute;
-                        // load existing data into the instance
-                        oElmt = moPageXml.CreateElement("List");
-                        oElmt.InnerXml = oDs.GetXml();
-
-                        oContentsXML.AppendChild(oElmt.FirstChild);
-                    }
-                }
-
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListDeliveryMethods", ex, "", cProcessInfo, gbDebug);
-                }
-            }
-
-
-            public void ListCarriers(ref XmlElement oContentsXML)
-            {
-                myWeb.PerfMon.Log("Cart", "ListDeliveryMethods");
-                XmlElement oElmt;
-                string sSql;
-                DataSet oDs;
-                string cProcessInfo = "";
-                try
-                {
-
-                    sSql = "select a.nStatus as status, nCarrierKey as id, cCarrierName as name, cCarrierTrackingInstructions as info, a.dPublishDate as startDate, a.dExpireDate as endDate from tblCartCarrier left join tblAudit a on a.nAuditKey = nAuditId";
-                    oDs = moDBHelper.GetDataSet(sSql, "Carrier", "Carriers");
-
-                    if (oDs.Tables[0].Rows.Count > 0)
-                    {
-                        oDs.Tables[0].Columns[0].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[1].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[4].ColumnMapping = MappingType.Attribute;
-                        oDs.Tables[0].Columns[5].ColumnMapping = MappingType.Attribute;
-                        // load existing data into the instance
-                        oElmt = moPageXml.CreateElement("Carriers");
-                        oElmt.InnerXml = oDs.GetXml();
-
-                        oContentsXML.AppendChild(oElmt.FirstChild);
-                    }
-                }
-
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListCarriers", ex, "", cProcessInfo, gbDebug);
-                }
-            }
-
-            public void ListPaymentProviders(ref XmlElement oContentsXML)
-            {
-                myWeb.PerfMon.Log("Cart", "ListPaymentProviders");
-                XmlElement oElmt;
-                XmlElement oElmt2;
-                string cProcessInfo = "";
-                XmlNode oPaymentCfg;
-                string ptnFolder = "/ewcommon/xforms/PaymentProvider/";
-                string localFolder = "/xforms/PaymentProvider/";
-                FileInfo fi;
-                string ProviderName;
-                if (myWeb.bs5)
-                {
-                    ptnFolder = "/ptn/providers/payment/";
-                    localFolder = "/providers/payment/";
-                }
-                try
-                {
-
-                    oPaymentCfg = (XmlNode)WebConfigurationManager.GetWebApplicationSection("protean/payment");
-                    oElmt = moPageXml.CreateElement("List");
-
-
-                    if (myWeb.bs5)
-                    {
-                        var dir = new DirectoryInfo(moServer.MapPath(ptnFolder));
-                        if (dir.Exists)
-                        {
-                            DirectoryInfo[] dirs;
-                            dirs = dir.GetDirectories();
-                            foreach (var dir2 in dirs)
-                            {
-                                ProviderName = dir2.Name;
-                                XmlNode argoNode = oElmt;
-                                oElmt2 = Protean.Tools.Xml.addNewTextNode("Provider", ref argoNode, Strings.Replace(ProviderName, "-", " "));
-                                oElmt = (XmlElement)argoNode;
-                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") != null)
-                                {
-                                    oElmt2.SetAttribute("active", "true");
-                                }
-                            }
-                        }
-                        dir = new DirectoryInfo(moServer.MapPath(localFolder));
-                        if (dir.Exists)
-                        {
-                            DirectoryInfo[] dirs;
-                            dirs = dir.GetDirectories();
-                            foreach (var dir2 in dirs)
-                            {
-                                ProviderName = dir2.Name;
-                                XmlNode argoNode1 = oElmt;
-                                oElmt2 = Protean.Tools.Xml.addNewTextNode("Provider", ref argoNode1, Strings.Replace(ProviderName, "-", " "));
-                                oElmt = (XmlElement)argoNode1;
-                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") != null)
-                                {
-                                    oElmt2.SetAttribute("active", "true");
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        var dir = new DirectoryInfo(moServer.MapPath(ptnFolder));
-                        FileInfo[] files = dir.GetFiles();
-                        foreach (var currentFi in files)
-                        {
-                            fi = currentFi;
-                            if (fi.Extension == ".xml")
-                            {
-                                ProviderName = Strings.Replace(fi.Name, fi.Extension, "");
-                                XmlNode argoNode2 = oElmt;
-                                oElmt2 = Protean.Tools.Xml.addNewTextNode("Provider", ref argoNode2, Strings.Replace(ProviderName, "-", " "));
-                                oElmt = (XmlElement)argoNode2;
-                                if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") != null)
-                                {
-                                    oElmt2.SetAttribute("active", "true");
-                                }
-                            }
-                        }
-                        dir = new DirectoryInfo(moServer.MapPath(localFolder));
-                        if (dir.Exists)
-                        {
-                            files = dir.GetFiles();
-                            foreach (var currentFi1 in files)
-                            {
-                                fi = currentFi1;
-                                if (fi.Extension == ".xml")
-                                {
-                                    ProviderName = Strings.Replace(fi.Name, fi.Extension, "");
-                                    XmlNode argoNode3 = oElmt;
-                                    oElmt2 = Protean.Tools.Xml.addNewTextNode("Provider", ref argoNode3, Strings.Replace(ProviderName, "-", " "));
-                                    oElmt = (XmlElement)argoNode3;
-                                    if (oPaymentCfg.SelectSingleNode("/payment/provider[@name='" + Strings.Replace(ProviderName, "-", "") + "']") != null)
-                                    {
-                                        oElmt2.SetAttribute("active", "true");
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-
-                    oContentsXML.AppendChild(oElmt);
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListPaymentProviders", ex, "", cProcessInfo, gbDebug);
-                }
-            }
-
-
 
 
             private void AddDeliveryFromGiftList(string nGiftListId)
@@ -9403,7 +5866,7 @@ namespace Protean
                     }
 
                     // OK now add the GiftList Id to the cart
-                    mnGiftListId = Conversions.ToInteger(nGiftListId);
+                    mnGiftListId = Convert.ToInt16(nGiftListId);
 
                     oDs.Dispose();
                     oDs = null;
@@ -9446,7 +5909,7 @@ namespace Protean
                     // First check if the user is in a tax exclusion group
                     XmlNodeState localNodeState() { var argoNode = myWeb.moPageXml.DocumentElement; var ret = Tools.Xml.NodeState(ref argoNode, "/Page/User/*[@id='" + cVatExclusionGroup + "']"); return ret; }
 
-                    if (Information.IsNumeric(cVatExclusionGroup) && Conversions.ToInteger(cVatExclusionGroup) > 0 && Conversions.ToBoolean(localNodeState()))
+                    if (Tools.Number.IsNumeric(cVatExclusionGroup) && Convert.ToInt16(cVatExclusionGroup) > 0 && Convert.ToBoolean(localNodeState()))
 
                     {
                         cProcessInfo = "User is in Tax Rate exclusion group";
@@ -9466,9 +5929,8 @@ namespace Protean
                         else
                         {
 
-                            sCountryList = Strings.Mid(sCountryList, 3, Strings.Len(sCountryList) - 4);
-
-                            aVatRates = Strings.Split(sCountryList, "','");
+                            sCountryList = sCountryList.Substring(2, sCountryList.Length - 4);
+                            aVatRates = sCountryList.Split(new[] { "','" }, StringSplitOptions.None);
                             Array.Reverse(aVatRates);
 
                             // go backwards through the list, and use the last non-zero tax rate
@@ -9476,9 +5938,9 @@ namespace Protean
 
                             foreach (var cVatRate in aVatRates)
                             {
-                                if (Conversions.ToDouble(cVatRate) > 0d)
+                                if (Convert.ToDouble(cVatRate) > 0d)
                                 {
-                                    nUpdateTaxRate = Conversions.ToDouble(cVatRate);
+                                    nUpdateTaxRate = Convert.ToDouble(cVatRate);
                                     bAllZero = false;
                                 }
                             }
@@ -9490,7 +5952,7 @@ namespace Protean
                             if (string.IsNullOrWhiteSpace(sCountryList) & !string.IsNullOrEmpty(cDefaultCountry))
                             {
                                 sSql = $"SELECT nLocationTaxRate FROM tblCartShippingLocations WHERE cLocationNameFull='{cDefaultCountry}' OR cLocationNameShort='{cDefaultCountry}'";
-                                nUpdateTaxRate = Conversions.ToDouble(moDBHelper.ExeProcessSqlScalar(sSql));
+                                nUpdateTaxRate = Convert.ToDouble(moDBHelper.ExeProcessSqlScalar(sSql));
                             }
                             else
                             {
@@ -9525,10 +5987,10 @@ namespace Protean
                 // Dim oDr As SqlDataReader
                 XmlElement oLoctree;
                 XmlElement oLocation;
-                string[] arrPreLocs = Strings.Split(mcPriorityCountries, ",");
+                string[] arrPreLocs = mcPriorityCountries.Split(',');
                 int arrIdx;
                 var bPreSelect = default(bool);
-                string cProcessInfo = Conversions.ToString(string.IsNullOrEmpty(oCountriesDropDown.OuterXml));
+                string cProcessInfo = Convert.ToString(string.IsNullOrEmpty(oCountriesDropDown.OuterXml));
                 try
                 {
 
@@ -9539,16 +6001,16 @@ namespace Protean
                                 // Delivery countries are restricted
                                 // Go and build a tree of all locations - this will allow us to detect whether or not a country is in iteself or in a zone that has a Shipping Option
                                 oLoctree = moPageXml.CreateElement("Contents");
-                                ListShippingLocations(ref oLoctree, Conversions.ToLong(false));
+                                ListShippingLocations(ref oLoctree, Convert.ToInt64(false));
 
                                 // Add any priority countries
-                                var loopTo = Information.UBound(arrPreLocs);
-                                for (arrIdx = 0; arrIdx <= loopTo; arrIdx++)
+                                for (arrIdx = 0; arrIdx < arrPreLocs.Length; arrIdx++)
                                 {
                                     oLocation = (XmlElement)oLoctree.SelectSingleNode("//TreeItem[@nameShort='" + arrPreLocs[arrIdx] + "']/ancestor-or-self::*[@nOptCount!='0']");
+
                                     if (oLocation != null)
                                     {
-                                        oXform.addOption(ref oCountriesDropDown, Strings.Trim(arrPreLocs[arrIdx]), Strings.Trim(arrPreLocs[arrIdx]));
+                                        oXform.addOption(ref oCountriesDropDown, arrPreLocs[arrIdx].Trim(), arrPreLocs[arrIdx].Trim());
                                         bPreSelect = true;
                                     }
                                 }
@@ -9568,9 +6030,13 @@ namespace Protean
                                         // Let's find the country node
                                         // XPath says "Get the context node for the location I'm looking at.  Does it or its ancestors have an OptCount > 0?
 
-                                        if (oLoctree.SelectSingleNode(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("//TreeItem[@nameShort=\"", oDr["cLocationNameShort"]), "\"]/ancestor-or-self::*[@nOptCount!='0']"))) != null)
+                                        if (oLoctree.SelectSingleNode("//TreeItem[@nameShort=\"" + oDr["cLocationNameShort"] + "\"]/ancestor-or-self::*[@nOptCount!='0']") != null)
                                         {
-                                            oXform.addOption(ref oCountriesDropDown, Conversions.ToString(oDr["cLocationNameShort"]), Conversions.ToString(oDr["cLocationNameShort"]));
+                                            oXform.addOption(
+                                                ref oCountriesDropDown,
+                                                oDr["cLocationNameShort"].ToString(),
+                                                oDr["cLocationNameShort"].ToString()
+                                            );
                                         }
                                     }
 
@@ -9580,14 +6046,21 @@ namespace Protean
 
                                 break;
                             }
-
+                        case "ISOa2":
+                            {
+                                sSql = "SELECT DISTINCT cLocationNameShort as name, cLocationISOa2 as value FROM tblCartShippingLocations WHERE nLocationType = 2 ORDER BY cLocationNameShort";
+                                using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
+                                {
+                                    oXform.addOptionsFromSqlDataReader(oCountriesDropDown, oDr);
+                                }
+                                break;
+                            }
                         default:
                             {
                                 // Not restricted by delivery address - add all countries.
-                                var loopTo1 = Information.UBound(arrPreLocs);
-                                for (arrIdx = 0; arrIdx <= loopTo1; arrIdx++)
+                                for (arrIdx = 0; arrIdx < arrPreLocs.Length; arrIdx++)
                                 {
-                                    oXform.addOption(ref oCountriesDropDown, Strings.Trim(arrPreLocs[arrIdx]), Strings.Trim(arrPreLocs[arrIdx]));
+                                    oXform.addOption(ref oCountriesDropDown, arrPreLocs[arrIdx].Trim(), arrPreLocs[arrIdx].Trim());
                                     bPreSelect = true;
                                 }
 
@@ -9606,8 +6079,7 @@ namespace Protean
                                 }
                                 using (var oDr = moDBHelper.getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
                                 {
-                                    var argoDr = oDr;
-                                    oXform.addOptionsFromSqlDataReader(ref oCountriesDropDown, ref argoDr);
+                                    oXform.addOptionsFromSqlDataReader(oCountriesDropDown, oDr);
                                     // this closes the oDr too
                                 }
 
@@ -9621,87 +6093,6 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "populateCountriesDropDown", ex, "", cProcessInfo, gbDebug);
                 }
             }
-
-            public object emailCart(ref XmlElement oCartXML, string xsltPath, string fromName, string fromEmail, string recipientEmail, string SubjectLine, bool bEncrypt = false, string cAttachementTemplatePath = "", string cBCCEmail = "", string cCCEmail = "")
-            {
-                myWeb.PerfMon.Log("Cart", "emailCart");
-                var oXml = new XmlDocument();
-                string cProcessInfo = "emailCart";
-                try
-                {
-                    // check file path
-
-                    var ofs = new Protean.fsHelper();
-
-                    oXml.LoadXml(oCartXML.OuterXml);
-                    xsltPath = ofs.checkCommonFilePath(moConfig["ProjectPath"] + xsltPath);
-
-                    oCartXML.SetAttribute("lang", myWeb.mcPageLanguage);
-
-                    var oMsg = new Protean.Messaging(ref myWeb.msException);
-                    if (string.IsNullOrEmpty(cAttachementTemplatePath))
-                    {
-
-                        Cms.dbHelper argodbHelper = null;
-                        cProcessInfo = Conversions.ToString(oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper, "Message Sent", "Message Failed", ccRecipient: cCCEmail, bccRecipient: cBCCEmail));
-                    }
-                    else
-                    {
-                        cAttachementTemplatePath = moServer.MapPath(cAttachementTemplatePath);
-                        string cFontPath = moServer.MapPath("/fonts");
-                        var oPDF = new Tools.PDF();
-
-                        // create the xmlFO document
-                        Protean.XmlHelper.Transform oTransform;
-
-                        string styleFile = cAttachementTemplatePath;
-                        myWeb.PerfMon.Log("Web", "ReturnPageHTML - loaded Style");
-                        oTransform = new Protean.XmlHelper.Transform(ref myWeb, styleFile, false);
-
-                        myWeb.msException = "";
-
-                        oTransform.mbDebug = gbDebug;
-                        TextWriter oTW = new StringWriter();
-                        XmlWriter icXmlWriter = XmlWriter.Create(oTW);
-                        var OrderDoc = new XmlDocument();
-                        OrderDoc.LoadXml(oCartXML.OuterXml);
-
-                        XmlReader oXMLReaderInstance = new XmlNodeReader(oCartXML);
-
-                        oTransform.ProcessTimed(oXMLReaderInstance, ref icXmlWriter);
-                        OrderDoc = null;
-
-                        string foNetXml = oTW.ToString();
-                        string FileName = "Attachment.pdf";
-
-                        var FoDoc = new XmlDocument();
-                        FoDoc.LoadXml(foNetXml);
-                        var nsMgr = new XmlNamespaceManager(FoDoc.NameTable);
-                        nsMgr.AddNamespace("fo", "http://www.w3.org/1999/XSL/Format");
-                        if (FoDoc.DocumentElement.SelectSingleNode("descendant::fo:title", nsMgr) != null)
-                        {
-                            FileName = FoDoc.DocumentElement.SelectSingleNode("descendant::fo:title", nsMgr).InnerText.Replace(" ", "-") + ".pdf";
-                        }
-                        FoDoc = null;
-
-                        oMsg.addAttachment(oPDF.GetPDFstream(foNetXml, cFontPath), FileName);
-                        Cms.dbHelper argodbHelper1 = null;
-                        cProcessInfo = Conversions.ToString(oMsg.emailer(oCartXML, xsltPath, fromName, fromEmail, recipientEmail, SubjectLine, odbHelper: ref argodbHelper1, "Message Sent", "Message Failed", ccRecipient: cCCEmail, bccRecipient: cBCCEmail));
-
-                    }
-                    oMsg = (Protean.Messaging)null;
-
-                    return cProcessInfo;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "emailCart", ex, "", cProcessInfo, gbDebug);
-                    return null;
-                }
-
-            }
-
             public void DoNotesItem(string cAction)
             {
                 myWeb.PerfMon.Log("Cart", "DoNotesItem");
@@ -9761,18 +6152,22 @@ namespace Protean
                     // now to get on and create our nodes
                     foreach (string oItem in myWeb.moRequest.Form)
                     {
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oItem, "node", false)))
+                        if (oItem?.ToString() == "node")
                         {
                             // this is the basic node text
-                            cNotes = Conversions.ToString(myWeb.moRequest.Form.Get(oItem));
+                            cNotes = myWeb.moRequest.Form.Get(oItem.ToString());
                         }
                         else
                         {
                             // this is the rest of the submitted form data
                             // going to be saved as attributes
-                            Array.Resize(ref oAttribs, Information.UBound(oAttribs) + 1 + 1);
-                            oAttribs[Information.UBound(oAttribs) - 1] = new FormResult(Conversions.ToString(oItem), Conversions.ToString(myWeb.moRequest.Form.Get(oItem)));
+                            Array.Resize(ref oAttribs, oAttribs.Length + 1);
+                            oAttribs[oAttribs.Length - 1] = new FormResult(
+                                oItem.ToString(),
+                                myWeb.moRequest.Form.Get(oItem.ToString())
+                            );
                         }
+
                     }
                     // creating a temporary xml document so we can turn the notes string
                     // into actual xml
@@ -9788,7 +6183,7 @@ namespace Protean
                     // and create an xpath excluding the quantity field to see if we have an identical node
                     string cIncludeList = myWeb.moRequest.Form["InputList"];
 
-                    var loopTo = Information.UBound(oAttribs) - 1;
+                    int loopTo = oAttribs.Length - 2;
                     for (i = 0; i <= loopTo; i++)
                     {
                         if (cIncludeList.Contains(oAttribs[i].Name) | string.IsNullOrEmpty(cIncludeList))
@@ -9802,7 +6197,7 @@ namespace Protean
                             }
                             else
                             {
-                                nQuantity = Conversions.ToInteger(oAttribs[i].Value);
+                                nQuantity = Convert.ToInt16(oAttribs[i].Value);
                             }
                         }
                     }
@@ -9842,9 +6237,9 @@ namespace Protean
                                 if (cVAs is null | string.IsNullOrEmpty(cVAs))
                                     cVAs = myWeb.moRequest.Form["Custom_VARating"];
                                 int nTotalVA = 0;
-                                if (Information.IsNumeric(cVAs))
+                                if (Tools.Number.IsNumeric(cVAs))
                                 {
-                                    nTotalVA = (int)Math.Round(Conversions.ToDecimal(oTmpElements.GetAttribute("qty")) * Conversions.ToDecimal(cVAs));
+                                    nTotalVA = (int)Math.Round(Convert.ToDecimal(oTmpElements.GetAttribute("qty")) * Convert.ToDecimal(cVAs));
                                     if (nTotalVA > 0)
                                         oTmpElements.SetAttribute("TotalVA", nTotalVA.ToString());
                                 }
@@ -9853,15 +6248,15 @@ namespace Protean
                             else if (!(nQuantity == -1))
                             {
                                 // its an Add
-                                oTmpElements.SetAttribute("qty", (Conversions.ToInteger(oTmpElements.GetAttribute("qty")) + nQuantity).ToString());
+                                oTmpElements.SetAttribute("qty", (Convert.ToInt16(oTmpElements.GetAttribute("qty")) + nQuantity).ToString());
                                 // Complete Bodge for keysource
                                 string cVAs = myWeb.moRequest.Form["VA"];
                                 if (cVAs is null | string.IsNullOrEmpty(cVAs))
                                     cVAs = myWeb.moRequest.Form["Custom_VARating"];
                                 int nTotalVA = 0;
-                                if (Information.IsNumeric(cVAs))
+                                if (Tools.Number.IsNumeric(cVAs))
                                 {
-                                    nTotalVA = (int)Math.Round(Conversions.ToDecimal(oTmpElements.GetAttribute("qty")) * Conversions.ToDecimal(cVAs));
+                                    nTotalVA = (int)Math.Round(Convert.ToDecimal(oTmpElements.GetAttribute("qty")) * Convert.ToDecimal(cVAs));
                                     if (nTotalVA > 0)
                                         oTmpElements.SetAttribute("TotalVA", nTotalVA.ToString());
                                 }
@@ -9883,9 +6278,9 @@ namespace Protean
                     if (cVAsN is null | string.IsNullOrEmpty(cVAsN))
                         cVAsN = myWeb.moRequest.Form["Custom_VARating"];
                     int nTotalVAN = 0;
-                    if (Information.IsNumeric(cVAsN))
+                    if (Tools.Number.IsNumeric(cVAsN))
                     {
-                        nTotalVAN = (int)Math.Round(nQuantity * Conversions.ToDecimal(cVAsN));
+                        nTotalVAN = (int)Math.Round(nQuantity * Convert.ToDecimal(cVAsN));
                         if (nTotalVAN > 0)
                             oNoteElmt.SetAttribute("TotalVA", nTotalVAN.ToString());
                     }
@@ -9909,298 +6304,7 @@ namespace Protean
                 }
             }
 
-            public void ListOrders(string sOrderID, bool bListAllQuotes, int ProcessId, ref XmlElement oPageDetail, bool bForceRefresh = false, long nUserId = 0L)
-            {
-                myWeb.PerfMon.Log("Cart", "ListOrders");
-                if (myWeb.mnUserId == 0)
-                    return; // if not logged in, dont bother
-                            // For listing a users previous orders/quotes
-
-                var oDs = new DataSet();
-                string cSQL;
-                string cWhereSQL = "";
-                string cProcessInfo = "";
-                // Paging variables
-                int nStart = 0;
-                int nRows = 100;
-
-                int nCurrentRow = 0;
-                XmlElement moPaymentCfg = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/payment");
-
-                try
-                {
-
-                    // Set the paging variables, if provided.
-                    if (myWeb.moRequest["startPos"] != null && Information.IsNumeric(myWeb.moRequest["startPos"]))
-                        nStart = Conversions.ToInteger(myWeb.moRequest["startPos"]);
-                    if (myWeb.moRequest["rows"] != null && Information.IsNumeric(myWeb.moRequest["rows"]))
-                        nRows = Conversions.ToInteger(myWeb.moRequest["rows"]);
-
-                    if (nStart < 0)
-                        nStart = 0;
-                    if (nRows < 1)
-                        nRows = 100;
-
-                    if (!(nUserId == 0L))
-                    {
-                        cWhereSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE nCartUserDirId = " + nUserId, Interaction.IIf(sOrderID != "0", " AND nCartOrderKey IN (" + sOrderID + ")", "")), " AND cCartSchemaName = '"), mcOrderType), "'"));
-                    }
-                    else if (!myWeb.mbAdminMode)
-                    {
-                        cWhereSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE nCartUserDirId = " + myWeb.mnUserId, Interaction.IIf(sOrderID != "0", " AND nCartOrderKey IN (" + sOrderID + ")", "")), " AND cCartSchemaName = '"), mcOrderType), "'"));
-                    }
-                    else
-                    {
-                        cWhereSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(" WHERE ", Interaction.IIf(sOrderID != "0", "  nCartOrderKey IN (" + sOrderID + ") AND ", "")), " cCartSchemaName = '"), mcOrderType), "' "));
-                        // if nCartStatus = " & ProcessId
-                        if (!(ProcessId == 0))
-                        {
-                            cWhereSQL += " and nCartStatus = " + ProcessId;
-                        }
-                    }
-
-                    // Quick call to get the total number of records
-                    cSQL = "SELECT COUNT(*) As Count FROM tblCartOrder " + cWhereSQL;
-                    long nTotal = Conversions.ToLong(moDBHelper.GetDataValue(cSQL));
-
-                    if (nTotal > 0L)
-                    {
-
-                        // Initial paging option is limit the the rows returned
-                        cSQL = "SELECT TOP " + (nStart + nRows) + " * FROM tblCartOrder ";
-                        cSQL += cWhereSQL + " ORDER BY nCartOrderKey Desc";
-
-                        oDs = moDBHelper.GetDataSet(cSQL, mcOrderType, mcOrderType + "List");
-
-                        if (oDs.Tables.Count > 0)
-                        {
-
-
-                            XmlElement oContentDetails;
-                            // Get the content Detail element
-                            if (oPageDetail is null)
-                            {
-                                oContentDetails = (XmlElement)moPageXml.SelectSingleNode("Page/ContentDetail");
-                                if (oContentDetails is null)
-                                {
-                                    oContentDetails = moPageXml.CreateElement("ContentDetail");
-                                    if (!string.IsNullOrEmpty(moPageXml.InnerXml))
-                                    {
-                                        moPageXml.FirstChild.AppendChild(oContentDetails);
-                                    }
-                                    else
-                                    {
-                                        oPageDetail.AppendChild(oContentDetails);
-                                    }
-
-                                }
-                            }
-                            else
-                            {
-                                oContentDetails = oPageDetail;
-                            }
-
-                            oContentDetails.SetAttribute("start", nStart.ToString());
-                            oContentDetails.SetAttribute("total", nTotal.ToString());
-                            bool bSingleRecord = false;
-                            if (oDs.Tables[mcOrderType].Rows.Count == 1)
-                                bSingleRecord = true;
-
-                            // go through each cart
-                            foreach (DataRow oDR in oDs.Tables[mcOrderType].Rows)
-                            {
-                                // Only add the relevant rows (page selected)
-                                nCurrentRow += 1;
-                                if (nCurrentRow > nStart)
-                                {
-                                    var oContent = moPageXml.CreateElement("Content");
-                                    oContent.SetAttribute("type", mcOrderType);
-                                    oContent.SetAttribute("id", Conversions.ToString(oDR["nCartOrderKey"]));
-                                    oContent.SetAttribute("statusId", Conversions.ToString(oDR["nCartStatus"]));
-                                    oContent.SetAttribute("cartForiegnRef", (oDR["cCartForiegnRef"] == null) ? string.Empty : (string)oDR["cCartForiegnRef"]);
-                                    // Get Date
-                                    cSQL = Conversions.ToString(Operators.ConcatenateObject("Select dInsertDate from tblAudit where nAuditKey =", oDR["nAuditId"]));
-                                    using (var oDRe = moDBHelper.getDataReaderDisposable(cSQL))  // Done by nita on 6/7/22
-                                    {
-                                        while (oDRe.Read())
-                                            oContent.SetAttribute("created", Tools.Xml.XmlDate(oDRe.GetValue(0), true));
-                                    }
-
-                                    // Get stored CartXML
-                                    if (Conversions.ToBoolean(Operators.AndObject(!Operators.ConditionalCompareObjectEqual(oDR["cCartXML"], "", false), bForceRefresh == false)))
-                                    {
-                                        try
-                                        {
-                                            // if we have a badly saved xml we get a new one.
-                                            oContent.InnerXml = Conversions.ToString(oDR["cCartXML"]);
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            cProcessInfo = ex.Message;
-                                            mnCartId = Convert.ToInt32(oDR["nCartOrderKey"]);
-                                            GetCart(ref oContent, mnCartId);
-                                            mnCartId = 0;
-                                        }
-                                        if (oContent.InnerXml.Contains("\n"))
-                                        {
-                                            oContent.InnerXml = oContent.InnerXml.TrimStart('\n');
-                                        }
-                                        XmlElement oCartElmt = (XmlElement)oContent.FirstChild;
-
-                                        // check for invoice date etc.
-                                        if (Conversions.ToLong("0" + oContent.GetAttribute("statusId")) >= 6L & (string.IsNullOrEmpty(oCartElmt.GetAttribute("InvoiceDate")) | !oCartElmt.GetAttribute("InvoiceDateTime").Contains("T")))
-                                        {
-                                            // fix for any items that have lost the invoice date and ref.
-                                            // also fix when datetime no stored in XML format.
-                                            long cartId = Conversions.ToLong(oDR["nCartOrderKey"]);
-                                            oCartElmt.SetAttribute("statusId", oContent.GetAttribute("statusId"));
-                                            string insertDate = moDBHelper.ExeProcessSqlScalar("SELECT a.dInsertDate FROM tblCartOrder inner join tblAudit a on nAuditId = nAuditKey where nCartOrderKey = " + cartId);
-                                            addDateAndRef(ref oCartElmt, Conversions.ToDate(insertDate), cartId);
-                                            SaveCartXML(oCartElmt, cartId);
-                                        }
-
-                                    }
-
-                                    if (bForceRefresh)
-                                    {
-                                        var oCartListElmt = moPageXml.CreateElement("Order");
-                                        GetCart(ref oCartListElmt, Conversions.ToInteger(oDR["nCartOrderKey"]));
-                                        oContent.InnerXml = oCartListElmt.OuterXml;
-                                    }
-
-                                    XmlElement orderNode = (XmlElement)oContent.FirstChild;
-                                    // Add values not stored in cartXml
-                                    if (orderNode != null)
-                                    {
-                                        orderNode.SetAttribute("statusId", Conversions.ToString(oDR["nCartStatus"]));
-                                    }
-                                    if (Conversions.ToBoolean(Operators.OrObject(oDR["cCurrency"] is null, Operators.ConditionalCompareObjectEqual(oDR["cCurrency"], "", false))))
-                                    {
-                                        oContent.SetAttribute("currency", mcCurrency);
-                                        oContent.SetAttribute("currencySymbol", mcCurrencySymbol);
-                                    }
-                                    else
-                                    {
-                                        oContent.SetAttribute("currency", Conversions.ToString(oDR["cCurrency"]));
-                                        XmlElement thisCurrencyNode = (XmlElement)moPaymentCfg.SelectSingleNode("currencies/Currency[@ref='" + oDR["cCurrency"] + "']");
-                                        if (thisCurrencyNode != null)
-                                        {
-                                            oContent.SetAttribute("currencySymbol", thisCurrencyNode.GetAttribute("symbol"));
-                                        }
-                                        else
-                                        {
-                                            oContent.SetAttribute("currencySymbol", mcCurrencySymbol);
-                                        }
-                                    }
-                                    oContent.SetAttribute("type", Strings.LCase(mcOrderType));
-
-                                    // oContent.SetAttribute("currency", mcCurrency)
-                                    // oContent.SetAttribute("currencySymbol", mcCurrencySymbol)
-
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oDR["nCartUserDirId"], 0, false)))
-                                    {
-                                        oContent.SetAttribute("userId", Conversions.ToString(oDR["nCartUserDirId"]));
-                                    }
-
-                                    // TS: Removed because it gives a massive overhead when Listing loads of orders.
-                                    if (bSingleRecord)
-                                    {
-                                        if (myWeb.mbAdminMode & Conversions.ToInteger(Operators.ConcatenateObject("0", oDR["nCartUserDirId"])) > 0)
-                                        {
-                                            oContent.AppendChild(moDBHelper.GetUserXML((long)Conversions.ToInteger(oDR["nCartUserDirId"]), false));
-                                        }
-
-                                        string[] aSellerNotes = Strings.Split(Conversions.ToString(oDR["cSellerNotes"]), "/n");
-                                        string cSellerNotesHtml = "<ul>";
-                                        for (int snCount = 0, loopTo = Information.UBound(aSellerNotes); snCount <= loopTo; snCount++)
-                                            cSellerNotesHtml = cSellerNotesHtml + "<li>" + convertEntitiesToCodes(aSellerNotes[snCount]) + "</li>";
-                                        var argoNode = oContent.FirstChild;
-                                        var sellerNode = Protean.Tools.Xml.addNewTextNode("SellerNotes", ref argoNode, "");
-                                        try
-                                        {
-                                            sellerNode.InnerXml = cSellerNotesHtml + "</ul>";
-                                        }
-                                        catch (Exception)
-                                        {
-                                            sellerNode.InnerXml = stdTools.tidyXhtmlFrag(cSellerNotesHtml + "</ul>");
-                                        }
-
-                                        // Add the Delivery Details
-                                        // Add Delivery Details
-                                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR["nCartStatus"], 9, false)))
-                                        {
-                                            string sSql = Conversions.ToString(Operators.ConcatenateObject("Select * from tblCartOrderDelivery where nOrderId=", oDR["nCartOrderKey"]));
-                                            DataSet oDs2 = moDBHelper.GetDataSet(sSql, "Delivery", "Details");
-                                            foreach (DataRow oRow2 in oDs2.Tables["Delivery"].Rows)
-                                            {
-                                                var oElmt = moPageXml.CreateElement("DeliveryDetails");
-                                                oElmt.SetAttribute("carrierName", Conversions.ToString(oRow2["cCarrierName"]));
-                                                oElmt.SetAttribute("ref", Conversions.ToString(oRow2["cCarrierRef"]));
-                                                oElmt.SetAttribute("notes", Conversions.ToString(oRow2["cCarrierNotes"]));
-                                                oElmt.SetAttribute("deliveryDate", XmlDate(oRow2["dExpectedDeliveryDate"]));
-                                                oElmt.SetAttribute("collectionDate", XmlDate(oRow2["dCollectionDate"]));
-                                                oContent.AppendChild(oElmt);
-                                            }
-                                        }
-                                        // Add Payment History
-                                        string argsTableName = "tblCartPayment";
-                                        if (Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectGreater(oDR["nCartStatus"], 5, false), moDBHelper.doesTableExist(ref argsTableName))))
-                                        {
-                                            DataSet oDs3 = new DataSet();
-                                            string sSql = Conversions.ToString(Operators.ConcatenateObject("Select p.*, pm.*, a.dInsertDate from tblCartPayment p inner join tblCartPaymentMethod pm on p.nCartPaymentMethodId = pm.nPayMthdKey left outer join tblAudit a on a.nAuditKey = p.nAuditId where nCartOrderId=", oDR["nCartOrderKey"]));
-                                            oDs3 = moDBHelper.GetDataSet(sSql, "Payment", "Details");
-                                            oDs3.Tables["Payment"].Columns["cPayMthdDetailXml"].ColumnMapping = MappingType.Element;
-                                            var oXML2 = new XmlDocument();
-                                            oXML2.InnerXml = Strings.Replace(Strings.Replace(Conversions.ToString(oDs3.GetXml()), "&gt;", ">"), "&lt;", "<");
-                                            var oPaymentNode = oContent.OwnerDocument.CreateElement("Payments");
-                                            oPaymentNode.InnerXml = oXML2.InnerXml;
-                                            foreach (XmlElement oElmt in oPaymentNode.FirstChild.SelectNodes("*"))
-                                                oContent.FirstChild.AppendChild(oPaymentNode.FirstChild.FirstChild);
-                                        }
-
-                                    }
-
-                                    XmlElement oTestNode = (XmlElement)oContentDetails.SelectSingleNode("Content[@id=" + oContent.GetAttribute("id") + " and @type='" + Strings.LCase(mcOrderType) + "']");
-                                    if (mcOrderType == "Cart" | mcOrderType == "Order")
-                                    {
-                                        // If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) And oTestNode Is Nothing Then
-
-                                        oContentDetails.AppendChild(oContent);
-                                    }
-
-                                    // End If
-                                    else if (oTestNode is null)
-                                    {
-                                        if (bListAllQuotes)
-                                        {
-                                            oContentDetails.AppendChild(oContent);
-                                        }
-                                        else
-                                        {
-                                            // If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) Then
-                                            oContentDetails.AppendChild(oContent);
-                                            // End If
-                                        }
-                                    }
-
-
-
-                                    // If (Not oContent.FirstChild.Attributes("itemCount").Value = 0) And oTestNode Is Nothing Then
-                                    // oContentDetails.AppendChild(oContent)
-                                    // End If
-                                }
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "ListOrders", ex, "", cProcessInfo, gbDebug);
-                }
-            }
-
-
-            public virtual void MakeCurrent(int nOrderID)
+            public virtual void MakeCurrent(long nOrderID)
             {
                 myWeb.PerfMon.Log("Cart", "MakeCurrent");
                 // procedure to make a selected historical
@@ -10214,7 +6318,7 @@ namespace Protean
 
                     if (myWeb.mnUserId == 0)
                         return;
-                    if (!(Conversions.ToDouble(moDBHelper.ExeProcessSqlScalar("Select nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + nOrderID)) == (double)mnEwUserId))
+                    if (!(Convert.ToDouble(moDBHelper.ExeProcessSqlScalar("Select nCartUserDirId FROM tblCartOrder WHERE nCartOrderKey = " + nOrderID.ToString())) == (double)mnEwUserId))
                     {
                         return; // else we carry on
                     }
@@ -10229,59 +6333,65 @@ namespace Protean
                     }
                     // now add the details to it
 
-                    oDS = moDBHelper.GetDataSet("Select * From tblCartItem WHERE nCartOrderID = " + nOrderID, "CartItems");
-                    int nParentID;
+                    oDS = moDBHelper.GetDataSet("Select * From tblCartItem WHERE nCartOrderID = " + nOrderID.ToString(), "CartItems");
+                    long nParentID;
                     string sSQL;
 
                     moDBHelper.ReturnNullsEmpty(ref oDS);
 
                     foreach (DataRow oDR1 in oDS.Tables["CartItems"].Rows)
                     {
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR1["nParentId"], 0, false)))
+                        if (Convert.ToInt32(oDR1["nParentId"]) == 0)
                         {
                             sSQL = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " + "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " + "nTaxRate, nQuantity, nWeight, nAuditId) VALUES (";
                             sSQL += mnCartId + ",";
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nItemId"] is DBNull, "Null", oDR1["nItemId"]), ","));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nParentId"] is DBNull, "Null", oDR1["nParentId"]), ","));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["cItemRef"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR1["cItemRef"])), "',"));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["cItemURL"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR1["cItemURL"])), "',"));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["cItemName"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR1["cItemName"])), "',"));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nItemOptGrpIdx"] is DBNull, "Null", oDR1["nItemOptGrpIdx"]), ","));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nItemOptIdx"] is DBNull, "Null", oDR1["nItemOptIdx"]), ","));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nPrice"] is DBNull, "Null", oDR1["nPrice"]), ","));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nShpCat"] is DBNull, "Null", oDR1["nShpCat"]), ","));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nDiscountCat"] is DBNull, "Null", oDR1["nDiscountCat"]), ","));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nDiscountValue"] is DBNull, "Null", oDR1["nDiscountValue"]), ","));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nTaxRate"] is DBNull, "Null", oDR1["nTaxRate"]), ","));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nQuantity"] is DBNull, "Null", oDR1["nQuantity"]), ","));
-                            sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR1["nWeight"] is DBNull, "Null", oDR1["nWeight"]), ","));
+                            sSQL += (oDR1["nItemId"] is DBNull ? "Null" : oDR1["nItemId"].ToString()) + ",";
+                            sSQL += (oDR1["nParentId"] is DBNull ? "Null" : oDR1["nParentId"].ToString()) + ",";
+                            sSQL += (oDR1["cItemRef"] is DBNull ? "Null" : "'" + oDR1["cItemRef"] + "'") + ",";
+                            sSQL += (oDR1["cItemURL"] is DBNull ? "Null" : "'" + oDR1["cItemURL"] + "'") + ",";
+                            sSQL += (oDR1["cItemName"] is DBNull ? "Null" : "'" + oDR1["cItemName"] + "'") + ",";
+                            sSQL += (oDR1["nItemOptGrpIdx"] is DBNull ? "Null" : oDR1["nItemOptGrpIdx"].ToString()) + ",";
+                            sSQL += (oDR1["nItemOptIdx"] is DBNull ? "Null" : oDR1["nItemOptIdx"].ToString()) + ",";
+                            sSQL += (oDR1["nPrice"] is DBNull ? "Null" : oDR1["nPrice"].ToString()) + ",";
+                            sSQL += (oDR1["nShpCat"] is DBNull ? "Null" : oDR1["nShpCat"].ToString()) + ",";
+                            sSQL += (oDR1["nDiscountCat"] is DBNull ? "Null" : oDR1["nDiscountCat"].ToString()) + ",";
+                            sSQL += (oDR1["nDiscountValue"] is DBNull ? "Null" : oDR1["nDiscountValue"].ToString()) + ",";
+                            sSQL += (oDR1["nTaxRate"] is DBNull ? "Null" : oDR1["nTaxRate"].ToString()) + ",";
+                            sSQL += (oDR1["nQuantity"] is DBNull ? "Null" : oDR1["nQuantity"].ToString()) + ",";
+                            sSQL += (oDR1["nWeight"] is DBNull ? "Null" : oDR1["nWeight"].ToString()) + ",";
                             sSQL += moDBHelper.getAuditId() + ")";
-                            nParentID = Conversions.ToInteger(moDBHelper.GetIdInsertSql(sSQL));
+
+                            nParentID = Convert.ToInt64(moDBHelper.GetIdInsertSql(sSQL));
                             // now for any children
                             foreach (DataRow oDR2 in oDS.Tables["CartItems"].Rows)
                             {
-                                if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDR2["nParentId"], oDR1["nCartItemKey"], false)))
+                                if (Convert.ToInt64(oDR2["nParentId"]) == Convert.ToInt64(oDR1["nCartItemKey"]))
                                 {
-                                    sSQL = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " + "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " + "nTaxRate, nQuantity, nWeight, nAuditId) VALUES (";
-                                    sSQL += mnCartId + ",";
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nItemId"] is DBNull, "Null", oDR2["nItemId"]), ","));
-                                    sSQL += nParentID + ",";
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["cItemRef"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR2["cItemRef"])), "',"));
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["cItemURL"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR2["cItemURL"])), "',"));
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["cItemName"] is DBNull, "Null", Operators.ConcatenateObject("'", oDR2["cItemName"])), "',"));
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nItemOptGrpIdx"] is DBNull, "Null", oDR2["nItemOptGrpIdx"]), ","));
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nItemOptIdx"] is DBNull, "Null", oDR2["nItemOptIdx"]), ","));
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nPrice"] is DBNull, "Null", oDR2["nPrice"]), ","));
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nShpCat"] is DBNull, "Null", oDR2["nShpCat"]), ","));
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nDiscountCat"] is DBNull, "Null", oDR2["nDiscountCat"]), ","));
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nDiscountValue"] is DBNull, "Null", oDR2["nDiscountValue"]), ","));
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nTaxRate"] is DBNull, "Null", oDR2["nTaxRate"]), ","));
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nQuantity"] is DBNull, "Null", oDR2["nQuantity"]), ","));
-                                    sSQL = Conversions.ToString(sSQL + Operators.ConcatenateObject(Interaction.IIf(oDR2["nWeight"] is DBNull, "Null", oDR2["nWeight"]), ","));
-                                    sSQL += moDBHelper.getAuditId() + ")";
+                                    sSQL = "INSERT INTO tblCartItem (nCartOrderId, nItemId, nParentId, cItemRef, cItemURL, " +
+                                           "cItemName, nItemOptGrpIdx, nItemOptIdx, nPrice, nShpCat, nDiscountCat, nDiscountValue, " +
+                                           "nTaxRate, nQuantity, nWeight, nAuditId) VALUES (" +
+                                           mnCartId + "," +
+                                           (oDR2["nItemId"] is DBNull ? "Null" : oDR2["nItemId"].ToString()) + "," +
+                                           nParentID + "," +
+                                           (oDR2["cItemRef"] is DBNull ? "Null" : "'" + oDR2["cItemRef"] + "'") + "," +
+                                           (oDR2["cItemURL"] is DBNull ? "Null" : "'" + oDR2["cItemURL"] + "'") + "," +
+                                           (oDR2["cItemName"] is DBNull ? "Null" : "'" + oDR2["cItemName"] + "'") + "," +
+                                           (oDR2["nItemOptGrpIdx"] is DBNull ? "Null" : oDR2["nItemOptGrpIdx"].ToString()) + "," +
+                                           (oDR2["nItemOptIdx"] is DBNull ? "Null" : oDR2["nItemOptIdx"].ToString()) + "," +
+                                           (oDR2["nPrice"] is DBNull ? "Null" : oDR2["nPrice"].ToString()) + "," +
+                                           (oDR2["nShpCat"] is DBNull ? "Null" : oDR2["nShpCat"].ToString()) + "," +
+                                           (oDR2["nDiscountCat"] is DBNull ? "Null" : oDR2["nDiscountCat"].ToString()) + "," +
+                                           (oDR2["nDiscountValue"] is DBNull ? "Null" : oDR2["nDiscountValue"].ToString()) + "," +
+                                           (oDR2["nTaxRate"] is DBNull ? "Null" : oDR2["nTaxRate"].ToString()) + "," +
+                                           (oDR2["nQuantity"] is DBNull ? "Null" : oDR2["nQuantity"].ToString()) + "," +
+                                           (oDR2["nWeight"] is DBNull ? "Null" : oDR2["nWeight"].ToString()) + "," +
+                                           moDBHelper.getAuditId() + ")";
+
                                     moDBHelper.GetIdInsertSql(sSQL);
+
                                     // now for any children
                                 }
+
                             }
                         }
                     }
@@ -10303,7 +6413,7 @@ namespace Protean
                 }
             }
 
-            public bool DeleteCart(int nOrderID)
+            public bool DeleteCart(long nOrderID)
             {
                 myWeb.PerfMon.Log("Cart", "DeleteCart");
                 if (myWeb.mnUserId == 0)
@@ -10321,8 +6431,8 @@ namespace Protean
                         var nOwner = default(int);
                         while (oDR.Read())
                         {
-                            nStat = Conversions.ToInteger(oDR.GetValue(0));
-                            nOwner = Conversions.ToInteger(oDR.GetValue(1));
+                            nStat = Convert.ToInt16(oDR.GetValue(0));
+                            nOwner = Convert.ToInt16(oDR.GetValue(1));
                         }
 
                         // If (nOwner = myWeb.mnUserId And (nStat = 7 Or nStat < 4)) Then moDBHelper.DeleteObject(dbHelper.objectTypes.CartOrder, nOrderID)
@@ -10355,7 +6465,7 @@ namespace Protean
                     if (nCartId > 0L)
                     {
                         cartXML.SetAttribute("cartId", nCartId.ToString());
-                        string sSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Update tblCartOrder SET cCartXML ='", SqlFmt(cartXML.OuterXml.ToString())), "' WHERE nCartOrderKey = "), nCartId));
+                        string sSQL = "Update tblCartOrder SET cCartXML ='" + SqlFmt(cartXML.OuterXml) + "' WHERE nCartOrderKey = " + nCartId;
                         moDBHelper.ExeProcessSql(sSQL);
                     }
                 }
@@ -10412,17 +6522,12 @@ namespace Protean
                     else
                     {
                         cProcessInfo = "Check to see if already used";
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["bCurrencySelected"], true, false)))
+                        if (myWeb.moSession["bCurrencySelected"] is true)
                         {
                             if (mcCartCmd == "Currency")
                             {
                                 mcCartCmd = "Cart";
                             }
-                            else
-                            {
-                                mcCartCmd = mcCartCmd;
-                            }
-
                             return true;
                         }
                     }
@@ -10548,9 +6653,9 @@ namespace Protean
 
                         mnShippingRootId = -1;
 
-                        if (Information.IsNumeric(oCurrency.GetAttribute("ShippingRootId")))
+                        if (Tools.Number.IsNumeric(oCurrency.GetAttribute("ShippingRootId")))
                         {
-                            mnShippingRootId = Conversions.ToInteger(oCurrency.GetAttribute("ShippingRootId"));
+                            mnShippingRootId = Convert.ToInt16(oCurrency.GetAttribute("ShippingRootId"));
                         }
 
                         mcCurrency = mcCurrencyCode;
@@ -10591,833 +6696,7 @@ namespace Protean
 
             }
 
-            public XmlElement CartReportsDownload(DateTime dBegin, DateTime dEnd, string cCurrencySymbol, string cOrderType, int nOrderStage, bool updateDatesWithStartAndEndTimes = true)
-            {
-                try
-                {
-                    string cSQL = "exec ";
-                    string cCustomParam = string.Empty;
-                    string cReportType = "CartDownload";
-
-                    // Set the times for each date
-                    if (updateDatesWithStartAndEndTimes)
-                    {
-                        dBegin = dBegin.Date;
-                        dEnd = dEnd.Date.AddHours(23d).AddMinutes(59d).AddSeconds(59d);
-                    }
-
-
-                    cSQL += moDBHelper.getDBObjectNameWithBespokeCheck("spOrderDownload") + " ";
-                    cSQL += Tools.Database.SqlDate(dBegin, true) + ",";
-                    cSQL += Tools.Database.SqlDate(dEnd, true) + ",";
-                    cSQL += "'" + cOrderType + "',";
-                    cSQL += nOrderStage.ToString();
-
-                    var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
-
-                    if (oDS.Tables["Item"].Columns.Contains("cCartXML"))
-                    {
-                        oDS.Tables["Item"].Columns["cCartXML"].ColumnMapping = MappingType.Element;
-                    }
-                    var oRptElmt = myWeb.moPageXml.CreateElement("Content");
-                    oRptElmt.SetAttribute("type", "Report");
-                    oRptElmt.SetAttribute("name", "CartDownloads");
-                    // NB editing this line to add in &'s
-                    oRptElmt.InnerXml = oDS.GetXml();
-                    foreach (XmlElement oElmt in oRptElmt.SelectNodes("Report/Item/cCartXml"))
-                        oElmt.InnerXml = oElmt.InnerText;
-
-                    // oRptElmt.InnerXml = Replace(Replace(Replace(Replace(oDS.GetXml, "&amp;", "&"), "&gt;", ">"), "&lt;", "<"), " xmlns=""""", "")
-                    // oRptElmt.InnerXml = Replace(Replace(Replace(oDS.GetXml, "&gt;", ">"), "&lt;", "<"), " xmlns=""""", "")
-                    XmlElement oReturnElmt = (XmlElement)oRptElmt.FirstChild;
-                    oReturnElmt.SetAttribute("cReportType", cReportType);
-                    oReturnElmt.SetAttribute("dBegin", Conversions.ToString(dBegin));
-                    oReturnElmt.SetAttribute("dEnd", Conversions.ToString(dEnd));
-                    oReturnElmt.SetAttribute("cCurrencySymbol", cCurrencySymbol);
-                    oReturnElmt.SetAttribute("cOrderType", cOrderType);
-                    oReturnElmt.SetAttribute("nOrderStage", nOrderStage.ToString());
-
-                    return oRptElmt;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-            }
-
-            public XmlElement CartReports(DateTime dBegin, DateTime dEnd, int bSplit = 0, string cProductType = "", int nProductId = 0, string cCurrencySymbol = "", string nOrderStatus = "6,9,17", string cOrderType = "ORDER")
-            {
-                try
-                {
-                    string cSQL = "exec ";
-                    string cCustomParam = "";
-                    string cReportType = "";
-                    if (nProductId > 0)
-                    {
-                        // Low Level
-                        cSQL += "spCartActivityLowLevel ";
-                        cCustomParam = nProductId.ToString();
-                        cReportType = "Item Totals";
-                    }
-                    else if (!string.IsNullOrEmpty(cProductType))
-                    {
-                        // Med Level
-                        cSQL += "spCartActivityMedLevel ";
-                        cCustomParam = "'" + cProductType + "'";
-                        cReportType = "Type Totals";
-                    }
-                    else
-                    {
-                        // HighLevel
-                        cSQL += "spCartActivityTopLevel ";
-                        cCustomParam = bSplit.ToString();
-                        cReportType = "All Totals";
-                    }
-                    cSQL += Tools.Database.SqlDate(dBegin) + ",";
-                    cSQL += Tools.Database.SqlDate(dEnd) + ",";
-                    cSQL += cCustomParam + ",";
-                    cSQL += "'" + cCurrencySymbol + "','";
-                    cSQL += nOrderStatus + "',";
-                    cSQL += "'" + cOrderType + "'";
-
-                    var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
-
-                    if (oDS.Tables["Item"].Columns.Contains("cCartXML"))
-                    {
-                        oDS.Tables["Item"].Columns["cCartXML"].ColumnMapping = MappingType.Element;
-                    }
-                    var oRptElmt = myWeb.moPageXml.CreateElement("Content");
-                    oRptElmt.SetAttribute("type", "Report");
-                    oRptElmt.SetAttribute("name", "Cart Activity");
-                    oRptElmt.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
-                    XmlElement oReturnElmt = (XmlElement)oRptElmt.FirstChild;
-                    oReturnElmt.SetAttribute("cReportType", cReportType);
-
-                    oReturnElmt.SetAttribute("dBegin", Conversions.ToString(dBegin));
-                    oReturnElmt.SetAttribute("dEnd", Conversions.ToString(dEnd));
-                    oReturnElmt.SetAttribute("bSplit", Conversions.ToString(Interaction.IIf(Conversions.ToBoolean(bSplit), 1, 0)));
-                    oReturnElmt.SetAttribute("cProductType", cProductType);
-                    oReturnElmt.SetAttribute("nProductId", nProductId.ToString());
-                    oReturnElmt.SetAttribute("cCurrencySymbol", cCurrencySymbol);
-                    oReturnElmt.SetAttribute("nOrderStatus", nOrderStatus);
-                    oReturnElmt.SetAttribute("cOrderType", cOrderType);
-                    return oRptElmt;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-            }
-
-            public XmlElement CartReportsDrilldown(string cGrouping = "Page", int nYear = 0, int nMonth = 0, int nDay = 0, string cCurrencySymbol = "", int nOrderStatus1 = 6, int nOrderStatus2 = 9, string cOrderType = "ORDER")
-            {
-                try
-                {
-                    string cSQL = "exec spCartActivityGroupsPages ";
-                    bool bPage = false;
-                    string cReportType = "";
-
-                    cSQL += "'" + cGrouping + "',";
-                    cSQL += nYear + ",";
-                    cSQL += nMonth + ",";
-                    cSQL += nDay + ",";
-                    cSQL += "'" + cCurrencySymbol + "',";
-                    cSQL += nOrderStatus1 + ",";
-                    cSQL += nOrderStatus2 + ",";
-                    cSQL += "'" + cOrderType + "'";
-
-                    var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
-                    // For Grouped by page is going to be bloody hard
-                    if (oDS.Tables["Item"].Columns.Contains("nStructId"))
-                    {
-                        bPage = true;
-                        cSQL = "EXEC getContentStructure @userId=" + myWeb.mnUserId + ", @bAdminMode=1, @dateNow=" + Tools.Database.SqlDate(DateTime.Now) + ", @authUsersGrp = " + Cms.gnAuthUsers;
-                        myWeb.moDbHelper.addTableToDataSet(ref oDS, cSQL, "MenuItem");
-                        // oDS.Tables("MenuItem").Columns.Add(New DataColumn("PageQuantity", GetType(Double)))
-                        // oDS.Tables("MenuItem").Columns.Add(New DataColumn("PageCost", GetType(Double)))
-                        // oDS.Tables("MenuItem").Columns.Add(New DataColumn("DecendantQuantity", GetType(Double)))
-                        // oDS.Tables("MenuItem").Columns.Add(New DataColumn("DecendantCost", GetType(Double)))
-                        foreach (DataColumn oDC in oDS.Tables["MenuItem"].Columns)
-                        {
-                            string cValid = "id,parid,name"; // ,PageQuantity,PageCost,DecendantQuantity,DecendantCost"
-                            if (!cValid.Contains(oDC.ColumnName))
-                            {
-                                oDC.ColumnMapping = MappingType.Hidden;
-                            }
-                            else
-                            {
-                                oDC.ColumnMapping = MappingType.Attribute;
-                            }
-                        }
-                        foreach (DataColumn oDC in oDS.Tables["Item"].Columns)
-                            oDC.ColumnMapping = MappingType.Attribute;
-                        oDS.Relations.Add("Rel01", oDS.Tables["MenuItem"].Columns["id"], oDS.Tables["MenuItem"].Columns["parId"], false);
-                        oDS.Relations["Rel01"].Nested = true;
-                        oDS.Relations.Add(new DataRelation("Rel02", oDS.Tables["MenuItem"].Columns["id"], oDS.Tables["Item"].Columns["nStructId"], false));
-                        oDS.Relations["Rel02"].Nested = true;
-                    }
-
-
-
-                    var oRptElmt = myWeb.moPageXml.CreateElement("Content");
-                    oRptElmt.SetAttribute("type", "Report");
-                    oRptElmt.SetAttribute("name", "Cart Activity");
-                    oRptElmt.InnerXml = oDS.GetXml();
-                    XmlElement oReturnElmt = (XmlElement)oRptElmt.FirstChild;
-                    oReturnElmt.SetAttribute("cReportType", cReportType);
-
-                    oReturnElmt.SetAttribute("nYear", nYear.ToString());
-                    oReturnElmt.SetAttribute("nMonth", nMonth.ToString());
-                    oReturnElmt.SetAttribute("nDay", nDay.ToString());
-                    oReturnElmt.SetAttribute("cGrouping", cGrouping);
-                    oReturnElmt.SetAttribute("cCurrencySymbol", cCurrencySymbol);
-                    oReturnElmt.SetAttribute("nOrderStatus1", nOrderStatus1.ToString());
-                    oReturnElmt.SetAttribute("nOrderStatus2", nOrderStatus2.ToString());
-                    oReturnElmt.SetAttribute("cOrderType", cOrderType);
-
-                    if (bPage)
-                    {
-                        // Page Totals
-                        foreach (XmlElement oElmt in oReturnElmt.SelectNodes("descendant-or-self::MenuItem"))
-                        {
-                            int nQ = 0;
-                            double nC = 0d;
-                            foreach (XmlElement oItemElmt in oElmt.SelectNodes("Item"))
-                            {
-                                nQ = (int)Math.Round(nQ + Conversions.ToDouble(oItemElmt.GetAttribute("nQuantity")));
-                                nC += Conversions.ToDouble(oItemElmt.GetAttribute("nLinePrice"));
-                            }
-                            oElmt.SetAttribute("PageQuantity", nQ.ToString());
-                            oElmt.SetAttribute("PageCost", nC.ToString());
-                        }
-                        // loop through each node and then each item and see how many of each
-                        // item it has and its decendants
-                        foreach (XmlElement oElmt in oReturnElmt.SelectNodes("descendant-or-self::MenuItem"))
-                        {
-                            var oHN = new Hashtable(); // Number found
-                            var oHQ = new Hashtable(); // Quantity
-                            var oHC = new Hashtable(); // Cost
-                            foreach (XmlElement oItem in oElmt.SelectNodes("descendant-or-self::Item"))
-                            {
-                                string cKey = "I" + oItem.GetAttribute("nCartItemKey");
-                                if (!oHN.ContainsKey(cKey))
-                                {
-                                    oHN.Add(cKey, 1);
-                                    oHQ.Add(cKey, oItem.GetAttribute("nQuantity"));
-                                    oHC.Add(cKey, oItem.GetAttribute("nLinePrice"));
-                                }
-                                else
-                                {
-                                    oHN[cKey] += Convert.ToString(1);
-                                }
-                            }
-                            int nQ = 0;
-                            double nC = 0d;
-                            foreach (string ci in oHN.Keys)
-                            {
-                                nQ = Conversions.ToInteger(nQ + Convert.ToInt32(oHQ[ci]));
-                                nC = Conversions.ToDouble(nC + Convert.ToInt32(oHC[ci]));
-                            }
-                            oElmt.SetAttribute("PageAndDescendantQuantity", nQ.ToString());
-                            oElmt.SetAttribute("PageAndDescendantCost", nC.ToString());
-                        }
-
-
-
-                    }
-
-
-                    if (bPage & Cms.gnTopLevel > 0)
-                    {
-                        XmlElement oElmt = (XmlElement)oRptElmt.SelectSingleNode("descendant-or-self::MenuItem[@id=" + Cms.gnTopLevel + "]");
-                        if (oElmt != null)
-                        {
-                            oRptElmt.FirstChild.InnerXml = oElmt.OuterXml;
-                        }
-                        else
-                        {
-                            oRptElmt.FirstChild.InnerXml = "";
-                        }
-                    }
-
-                    return oRptElmt;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-            }
-
-            public XmlElement CartReportsPeriod(string cGroup = "Month", int nYear = 0, int nMonth = 0, int nWeek = 0, string cCurrencySymbol = "", string nOrderStatus = "", string cOrderType = "ORDER")
-            {
-                try
-                {
-                    string cSQL = "exec spCartActivityPagesPeriod ";
-                    //bool bPage = false;
-                    string cReportType = "";
-                    if (nYear == 0)
-                        nYear = DateTime.Now.Year;
-                    cSQL += "@Group='" + cGroup + "'";
-                    cSQL += ",@nYear=" + nYear;
-                    cSQL += ",@nMonth=" + nMonth;
-                    cSQL += ",@nWeek=" + nWeek;
-                    cSQL += ",@cCurrencySymbol='" + cCurrencySymbol + "'";
-                    cSQL += ",@nOrderStatus='" + nOrderStatus + "'";
-                    // cSQL += ",@nOrderStatus2=" + nOrderStatus2;
-                    cSQL += ",@cOrderType='" + cOrderType + "'";
-
-                    var oDS = myWeb.moDbHelper.GetDataSet(cSQL, "Item", "Report");
-                    // For Grouped by page is going to be bloody hard
-
-                    var oRptElmt = myWeb.moPageXml.CreateElement("Content");
-                    oRptElmt.SetAttribute("type", "Report");
-                    oRptElmt.SetAttribute("name", "Cart Activity");
-                    oRptElmt.InnerXml = oDS.GetXml();
-                    XmlElement oReturnElmt = (XmlElement)oRptElmt.FirstChild;
-                    oReturnElmt.SetAttribute("cReportType", cReportType);
-
-                    oReturnElmt.SetAttribute("nYear", nYear.ToString());
-                    oReturnElmt.SetAttribute("nMonth", nMonth.ToString());
-                    oReturnElmt.SetAttribute("nWeek", nWeek.ToString());
-                    oReturnElmt.SetAttribute("cGroup", cGroup);
-                    oReturnElmt.SetAttribute("cCurrencySymbol", cCurrencySymbol);
-                    oReturnElmt.SetAttribute("nOrderStatus", nOrderStatus.ToString());
-                    // oReturnElmt.SetAttribute("nOrderStatus2", nOrderStatus2.ToString());
-                    oReturnElmt.SetAttribute("cOrderType", cOrderType);
-
-                    return oRptElmt;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "CartReports", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-            }
-
-
-            public void AddShippingCosts(ref XmlElement xmlProduct, string nPrice, string nWeight)
-            {
-                try
-                {
-                    //long nQuantity = 1L;
-                    xmlProduct.SetAttribute("test1", "1");
-                    var xmlShippingOptions = makeShippingOptionsXML();
-
-                    // 'step through oShipping Options and add to oElmt those options 
-                    // 'that are valid for our price and weight.
-                    var xmlShippingOptionsValid = moPageXml.CreateElement("ShippingOptions");
-
-                    var strXpath = new System.Text.StringBuilder();
-                    strXpath.Append("Method[ ");
-                    strXpath.Append("(WeightMin=0 or WeightMin<=" + nWeight.ToString() + ") ");
-                    strXpath.Append(" and ");
-                    strXpath.Append("(WeightMax=0 or WeightMax>=" + nWeight.ToString() + ") ");
-                    strXpath.Append(" and ");
-                    strXpath.Append("(PriceMin=0 or PriceMin<=" + nPrice.ToString() + ") ");
-                    strXpath.Append(" and ");
-                    strXpath.Append("(PriceMax=0 or PriceMax>=" + nPrice.ToString() + ") ");
-                    strXpath.Append(" ]");
-
-
-                    // add filtered list to xmlShippingOptionsValid
-                    XmlElement xmlMethod;
-                    foreach (XmlElement currentXmlMethod in xmlShippingOptions.SelectNodes(strXpath.ToString()))
-                    {
-                        xmlMethod = currentXmlMethod;
-                        // add to 
-                        xmlShippingOptionsValid.AppendChild(xmlMethod.CloneNode(true));
-                    }
-
-                    // itterate though xmlShippingOptionsValid and get cheapest for each Location
-                    string cShippingLocation = "";
-                    string cShippingLocationPrev = "";
-
-                    foreach (XmlElement currentXmlMethod1 in xmlShippingOptionsValid.SelectNodes("Method"))
-                    {
-                        xmlMethod = currentXmlMethod1;
-                        try
-                        {
-                            cShippingLocation = xmlMethod.SelectSingleNode("Location").InnerText;
-                            if (!string.IsNullOrEmpty(cShippingLocationPrev) & (cShippingLocationPrev ?? "") == (cShippingLocation ?? ""))
-                            {
-                                xmlShippingOptionsValid.RemoveChild(xmlMethod);
-                            }
-
-                            cShippingLocationPrev = cShippingLocation; // set cShippingLocationPrev for next loop
-                        }
-                        catch (Exception ex)
-                        {
-                            //xmlMethod = xmlMethod;
-                            //xmlProduct = xmlProduct;
-                            stdTools.returnException(ref myWeb.msException, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                        }
-
-                    }
-
-                    // add to product XML
-                    xmlProduct.AppendChild(xmlShippingOptionsValid.CloneNode(true));
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddShippingCosts", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-
-                }
-
-
-
-            }
-
-            public DataSet getValidShippingOptionsDS(string cDestinationCountry, double nAmount, long nQuantity, double nWeight)
-            {
-                try
-                {
-                    var dsShippingOption = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, string.Empty, 0);
-                    return dsShippingOption;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-            }
-            public DataSet getValidShippingOptionsDS(string cDestinationCountry, double nAmount, long nQuantity, double nWeight, int ProductId)
-            {
-                try
-                {
-                    var dsShippingOption = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, string.Empty, ProductId);
-                    return dsShippingOption;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-            }
-            public DataSet getValidShippingOptionsDS(string cDestinationCountry, double nAmount, long nQuantity, double nWeight, string cPromoCode)
-            {
-                try
-                {
-                    var dsShippingOption = getValidShippingOptionsDS(cDestinationCountry, nAmount, nQuantity, nWeight, cPromoCode, 0);
-                    return dsShippingOption;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-            }
-
-            public DataSet getValidShippingOptionsDS(string cDestinationCountry, double nAmount, long nQuantity, double nWeight, string cPromoCode, int ProductId)
-            {
-                try
-                {
-                    var dsShippingOption = getValidShippingOptionsDS(cDestinationCountry, "", nAmount, nQuantity, nWeight, cPromoCode, ProductId);
-                    return dsShippingOption;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-            }
-            public DataSet getValidShippingOptionsDS(string cDestinationCountry, string cDestinationPostalCode, double nAmount, long nQuantity, double nWeight, string cPromoCode, int ProductId)
-            {
-
-                try
-                {
-                    int userId = 0;
-                    if (myWeb.moSession != null)
-                    {
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(myWeb.moSession["nUserId"], 0, false)))
-                        {
-                            userId = Conversions.ToInteger(myWeb.moSession["nUserId"]);
-                        }
-                        else
-                        {
-                            userId = myWeb.mnUserId;
-                        }
-                    }
-                    else
-                    {
-                        userId = myWeb.mnUserId;
-
-                    }
-                    int argnIndex = 1;
-                    string sCountryList = "";
-                    // Add code for checking shipping group is included/Excluded for delievry methods
-                    var PublishExpireDate = DateTime.Now;
-                    if (moCartConfig["ShippingPostcodes"] == "on" && cDestinationPostalCode != "")
-                    {
-                        try
-                        {
-                            string PostcodePrefix = System.Text.RegularExpressions.Regex.Split(cDestinationPostalCode, "(?m)^([A-Z0-9]{2,4})(?:\\s*[A-Z0-9]{3})?$")[1];
-                            sCountryList = getParentCountries(ref PostcodePrefix, ref argnIndex);
-                        }
-                        catch
-                        {
-                            sCountryList = "";
-                        }
-
-                    }
-
-                    if (sCountryList == "")
-                    {
-                        sCountryList = getParentCountries(ref cDestinationCountry, ref argnIndex);
-                    }
-
-                    DataSet oDS;
-                    if (myWeb.moDbHelper.checkDBObjectExists("spGetValidShippingOptions", Tools.Database.objectTypes.StoredProcedure))
-                    {
-                        // ' call stored procedure else existing code.
-                        // ' Passing parameter: nCartId
-
-                        var param = new Hashtable();
-                        param.Add("CartOrderId", mnCartId);
-                        param.Add("Amount", nAmount);
-                        param.Add("Quantity", nQuantity);
-                        param.Add("Weight", nWeight);
-                        param.Add("Currency", mcCurrency);
-                        param.Add("userId", userId);
-                        param.Add("AuthUsers", (object)Cms.gnAuthUsers);
-                        param.Add("NonAuthUsers", (object)Cms.gnNonAuthUsers);
-                        param.Add("CountryList", sCountryList);
-                        param.Add("dValidDate", PublishExpireDate);
-                        param.Add("PromoCode", cPromoCode);
-                        param.Add("ProductId", ProductId);
-                        oDS = moDBHelper.GetDataSet("spGetValidShippingOptions", "Option", "Shipping", false, param, CommandType.StoredProcedure);
-                    }
-                    // End If
-                    else
-                    {
-
-                        string sSql;
-
-                        sSql = "select opt.*, dbo.fxn_shippingTotal(opt.nShipOptKey," + nAmount + "," + nQuantity + "," + nWeight + ") as nShippingTotal  from tblCartShippingLocations Loc ";
-                        sSql = sSql + "Inner Join tblCartShippingRelations rel ON Loc.nLocationKey = rel.nShpLocId ";
-                        sSql = sSql + "Inner Join tblCartShippingMethods opt ON rel.nShpOptId = opt.nShipOptKey ";
-                        sSql += "INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey";
-
-                        sSql = sSql + " WHERE (nShipOptQuantMin <= 0 or nShipOptQuantMin <= " + nQuantity + ") and (nShipOptQuantMax <= 0 or nShipOptQuantMax >= " + nQuantity + ") and ";
-                        sSql = sSql + "(nShipOptPriceMin <= 0 or nShipOptPriceMin <= " + nAmount + ") and (nShipOptPriceMax <= 0 or nShipOptPriceMax >= " + nAmount + ") and ";
-                        sSql = sSql + "(nShipOptWeightMin <= 0 or nShipOptWeightMin <= " + nWeight + ") and (nShipOptWeightMax <= 0 or nShipOptWeightMax >= " + nWeight + ") ";
-
-                        sSql += " and ((opt.cCurrency Is Null) or (opt.cCurrency = '') or (opt.cCurrency = '" + mcCurrency + "'))";
-                        // If myWeb.mnUserId > 0 Then
-                        // ' if user in group then return it
-                        // sSql &= " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
-                        // " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
-                        // "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 1) > 0"
-                        // sSql &= " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" &
-                        // " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" &
-                        // "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " & myWeb.mnUserId & " and perm.nPermLevel = 0) > 0)"
-                        if (userId > 0)
-                        {
-                            // if user in group then return it
-                            sSql += " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" + " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" + "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " + userId + " and perm.nPermLevel = 1) > 0";
-                            sSql += " and not((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" + " Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId" + "  where perm.nShippingMethodId = opt.nShipOptKey and PermGroup.nDirChildId = " + userId + " and perm.nPermLevel = 0) > 0)";
-                            // method allowed for authenticated or imporsonating CS users.
-                            string shippingGroupCondition;
-
-                            shippingGroupCondition = "perm.nDirId = " + Cms.gnAuthUsers;
-
-                            sSql += " Or (SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" + "  where perm.nShippingMethodId = opt.nShipOptKey And " + shippingGroupCondition + " And perm.nPermLevel = 1) > 0";
-
-                            // if no group exists return it.
-                            sSql += " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)";
-
-                            sSql += @" And opt.nShipOptKey not in ( select nShippingMethodId
-                                from tblCartShippingPermission perm 
-                                Inner join tblDirectoryRelation PermGroup ON perm.nDirId = PermGroup.nDirParentId  
-                                 and  nPermLevel = 0  and PermGroup.nDirChildId =" + userId + ")";
-                        }
-
-                        else
-                        {
-                            long nonAuthID = (long)Cms.gnNonAuthUsers;
-                            long AuthID = (long)Cms.gnAuthUsers;
-                            // method allowed for non-authenticated
-                            sSql += " and ((SELECT COUNT(perm.nCartShippingPermissionKey) from tblCartShippingPermission perm" + "  where perm.nShippingMethodId = opt.nShipOptKey and perm.nDirId = " + Cms.gnNonAuthUsers + "  and perm.nPermLevel = 1) > 0";
-                            // method has no group 
-                            sSql += " or (SELECT COUNT(*) from tblCartShippingPermission perm where opt.nShipOptKey = perm.nShippingMethodId and perm.nPermLevel = 1) = 0)";
-
-                        }
-                        // Restrict the shipping options by looking at the delivery country currently selected.  
-                        // Of course, if we are hiding the delivery address then this can be ignored.
-
-                        if (!string.IsNullOrEmpty(sCountryList))
-                        {
-                            sSql = sSql + " and ((loc.cLocationNameShort IN " + sCountryList + ") or (loc.cLocationNameFull IN " + sCountryList + ")) ";
-                        }
-
-                        // Active methods
-
-                        sSql += " AND (tblAudit.nStatus >0)";
-                        sSql += " AND ((tblAudit.dPublishDate = 0) or (tblAudit.dPublishDate Is Null) or (tblAudit.dPublishDate <= " + Tools.Database.SqlDate(DateTime.Now) + "))";
-                        sSql += " AND ((tblAudit.dExpireDate = 0) or (tblAudit.dExpireDate Is Null) or (tblAudit.dExpireDate >= " + Tools.Database.SqlDate(DateTime.Now) + "))";
-                        // Build Form
-
-                        // Go and collect the valid shipping options available for this order
-                        oDS = moDBHelper.GetDataSet(sSql + " order by opt.nDisplayPriority, nShippingTotal", "Option", "Shipping");
-                    }
-
-                    //// fix for bOverrideForWholeOrder mot required as SP now does this.
-                    //if (oDS.Tables["Option"].Columns["bOverrideForWholeOrder"] != null)
-                    //{
-                    //    bool hasOverideForWholeOrder = false;
-                    //    foreach (DataRow oRow in oDS.Tables["Option"].Rows)
-                    //    {
-                    //        if (Convert.ToInt16(oRow["bOverrideForWholeOrder"]) == 1) {
-                    //            hasOverideForWholeOrder = true;
-                    //        }
-                    //    }
-                    //    if (hasOverideForWholeOrder) {
-                    //        foreach (DataRow oRow in oDS.Tables["Option"].Rows)
-                    //        {
-                    //            if (Convert.ToInt16(oRow["bOverrideForWholeOrder"]) != 1)
-                    //            {
-                    //                oRow.Delete();
-                    //            }
-                    //        }
-                    //    }
-                    //}
-
-                    if (oDS.Tables["Option"].Columns["cLocationNameShort"] != null)
-                    {
-                        string overiddenLocations = "";
-                        foreach (DataRow oRow in oDS.Tables["Option"].Rows)
-                        {
-
-                            // Calculate any shipping cost overage
-                            double nShippingCost = Conversions.ToDouble(Strings.FormatNumber(Conversions.ToDouble(oRow["nShippingTotal"]), 2, TriState.True, TriState.False, TriState.False));
-                            double overageUnit = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageUnit"]));
-                            double overageRate = Conversions.ToDouble(Operators.ConcatenateObject("0", oRow["nShipOptWeightOverageRate"]));
-                            double overageWeightMax = Conversions.ToDouble(oRow["nShipOptWeightMax"]);
-                            nShippingCost = calcShippingCost(nShippingCost, overageUnit, overageRate, nWeight, overageWeightMax);
-
-                            oRow["nShipOptCost"] = nShippingCost;
-
-                            // TODO delete any parent relations /  or remove if allready have child
-                            string delLocation = oRow["cLocationNameShort"].ToString();
-                            if (overiddenLocations.Contains("'" + delLocation + "'") == false && sCountryList != "")
-                            {
-                                Int32 startPos = sCountryList.IndexOf(delLocation) + delLocation.Length + 1;
-                                Int32 endPos = sCountryList.Length - sCountryList.IndexOf(delLocation) - delLocation.Length - 1;
-                                overiddenLocations = sCountryList.Substring(startPos, endPos);
-                            }
-                        }
-                        if (overiddenLocations != "")
-                        {
-                            foreach (DataRow oRow in oDS.Tables["Option"].Rows)
-                            {
-                                string delLocation = oRow["cLocationNameShort"].ToString();
-                                if (overiddenLocations.Contains("'" + delLocation + "'"))
-                                {
-                                    oRow.Delete();
-                                }
-                            }
-                        }
-                    }
-
-                    oDS.AcceptChanges();
-                    return oDS;
-
-
-                }
-
-                catch (Exception ex)
-                {
-
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "getValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-
-            }
-
-            private double calcShippingCost(double baseCost, double overageUnit, double overageRate, double nWeight, double nWeightMax)
-            {
-                try
-                {
-                    double nShippingCost = baseCost;
-                    nShippingCost = Conversions.ToDouble(Strings.FormatNumber(nShippingCost, 2, TriState.True, TriState.False, TriState.False));
-
-                    if (overageUnit > 0)
-                    {
-                        double multiplier = 0;
-                        if (nWeight > nWeightMax)
-                        {
-                            multiplier = Math.Ceiling(nWeight - nWeightMax);
-                        }
-                        nShippingCost = nShippingCost + ((multiplier / overageUnit) * overageRate);
-                    }
-
-                    return nShippingCost;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "calcShippingCost", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return 0;
-                }
-            }
-
-            private XmlElement makeShippingOptionsXML()
-            {
-
-                try
-                {
-
-
-                    if (oShippingOptions is null)
-                    {
-
-                        XmlElement xmlTemp;
-
-                        // create XML of all possible shipping methods and add it to the page XML
-                        oShippingOptions = moPageXml.CreateElement("oShippingOptions");
-
-
-                        // get all the shipping options for a given shipping weight and price
-                        var strSql = new System.Text.StringBuilder();
-                        strSql.Append("SELECT opt.cShipOptCarrier as Carrier, opt.cShipOptTime AS ShippingTime, ");
-                        strSql.Append("opt.nShipOptCost AS Cost, ");
-                        strSql.Append("tblCartShippingLocations.cLocationNameShort as Location, tblCartShippingLocations.cLocationISOa2 as LocationISOa2, ");
-                        strSql.Append("opt.nShipOptWeightMin AS WeightMin, opt.nShipOptWeightMax AS WeightMax,  ");
-                        strSql.Append("opt.nShipOptPriceMin AS PriceMin, opt.nShipOptPriceMax AS PriceMax,  ");
-                        strSql.Append("opt.nShipOptQuantMin AS QuantMin, opt.nShipOptQuantMax AS QuantMax, ");
-                        strSql.Append("tblCartShippingLocations.nLocationType, tblCartShippingLocations.cLocationNameFull, opt.cShipOptName,opt.nShipOptKey ");
-                        strSql.Append("FROM tblCartShippingLocations ");
-                        strSql.Append("INNER JOIN tblCartShippingRelations ON tblCartShippingLocations.nLocationKey = tblCartShippingRelations.nShpLocId ");
-                        strSql.Append("RIGHT OUTER JOIN tblCartShippingMethods AS opt ");
-                        strSql.Append("INNER JOIN tblAudit ON opt.nAuditId = tblAudit.nAuditKey ON tblCartShippingRelations.nShpOptId = opt.nShipOptKey ");
-
-                        strSql.Append("WHERE (tblAudit.nStatus > 0) ");
-                        strSql.Append("AND (tblAudit.dPublishDate = 0 OR tblAudit.dPublishDate IS NULL OR tblAudit.dPublishDate <= " + Tools.Database.SqlDate(DateTime.Now) + ") ");
-                        strSql.Append("AND (tblAudit.dExpireDate = 0 OR tblAudit.dExpireDate IS NULL OR tblAudit.dExpireDate >= " + Tools.Database.SqlDate(DateTime.Now) + ") ");
-                        strSql.Append("AND (tblCartShippingLocations.cLocationNameShort IS NOT NULL) ");
-                        strSql.Append("ORDER BY tblCartShippingLocations.cLocationNameShort, opt.nShipOptCost ");
-
-
-
-                        var oDs = moDBHelper.GetDataSet(strSql.ToString(), "Method", "ShippingMethods");
-                        oShippingOptions.InnerXml = oDs.GetXml();
-
-                        // move all the shipping methods up a level
-                        foreach (XmlElement currentXmlTemp in oShippingOptions.SelectNodes("ShippingMethods/Method"))
-                        {
-                            xmlTemp = currentXmlTemp;
-                            oShippingOptions.AppendChild(xmlTemp);
-                        }
-
-                        foreach (XmlElement currentXmlTemp1 in oShippingOptions.SelectNodes("ShippingMethods"))
-                        {
-                            xmlTemp = currentXmlTemp1;
-                            oShippingOptions.RemoveChild(xmlTemp);
-                        }
-
-                    }
-
-                    return oShippingOptions;
-                }
-
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "makeShippingOptionsXML", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-
-            }
-
-            public string updatePackagingForFreeGiftDiscount(string nCartItemKey, decimal AmountToDiscount)
-            {
-                try
-                {
-                    string cSqlUpdate;
-                    // cSqlUpdate = " update tblCartItem set nPrice=0.00, nDiscountValue=" & AmountToDiscount & ", cItemName =  '" & moConfig("GiftPack") & "' where  nitemid=0 and nParentid = " & nCartItemKey
-                    cSqlUpdate = " update tblCartItem set nPrice=" + AmountToDiscount + ", nDiscountValue=" + AmountToDiscount + ", cItemName =  '" + moConfig["GiftPack"] + "' where  nitemid=0 and nParentid = " + nCartItemKey;
-                    moDBHelper.ExeProcessSql(cSqlUpdate);
-                    return null;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-            }
-
-            private string updatePackagingForRemovingFreeGiftDiscount(string nCartOrderId, decimal AmountToDiscount)
-            {
-                try
-                {
-                    string cSqlUpdate;
-                    cSqlUpdate = " update tblCartItem set nDiscountValue=" + AmountToDiscount + " where  nitemid=0 and nCartOrderId = " + nCartOrderId;
-                    moDBHelper.ExeProcessSql(cSqlUpdate);
-                    return null;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updatePackagingForFreeGiftDiscount", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-            }
-
-            public string updateGCgetValidShippingOptionsDS(string nShipOptKey)
-            {
-                try
-                {
-                    //tidy up this logic
-                    // Dim ods As DataSet
-                    // Dim oRow As DataRow
-                    string sSql;
-                    string cShippingDesc;
-                    string nShippingCost;
-                    string cSqlUpdate;
-
-                    sSql = "select * from tblCartShippingMethods ";
-                    sSql = sSql + " where nShipOptKey in ( " + nShipOptKey + ")";
-                    // ods = moDBHelper.GetDataSet(sSql, "Order", "Cart")
-
-                    // Check if shipping option contains multiple option then get lowest 
-                    if (Strings.InStr(1, nShipOptKey, ",") > 0)
-                    {
-                        nShipOptKey = nShipOptKey.Split(',')[0];
-                    }
-                    // For Each oRow In ods.Tables("Order").Rows
-
-                    // cShippingDesc = oRow("cShipOptName") & "-" & oRow("cShipOptCarrier")
-                    // nShippingCost = oRow("nShipOptCost")
-                    // cSqlUpdate = "UPDATE tblCartOrder Set cShippingDesc='" & SqlFmt(cShippingDesc) & "', nShippingCost=" & SqlFmt(nShippingCost) & ", nShippingMethodId = " & nShipOptKey & " WHERE nCartOrderKey=" & mnCartId
-                    // moDBHelper.ExeProcessSql(cSqlUpdate)
-                    // Next
-
-                    using (var oDr = myWeb.moDbHelper.getDataReaderDisposable(sSql))
-                    {
-                        if (oDr != null)
-                        {
-                            while (oDr.Read())
-                            {
-                                cShippingDesc = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(oDr["cShipOptName"], "-"), oDr["cShipOptCarrier"]));
-                                nShippingCost = Conversions.ToString(oDr["nShipOptCost"]);
-                                cSqlUpdate = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("UPDATE tblCartOrder Set cShippingDesc='", SqlFmt(cShippingDesc)), "', nShippingCost="), SqlFmt(nShippingCost)), ", nShippingMethodId = "), nShipOptKey), " WHERE nCartOrderKey="), mnCartId));
-                                moDBHelper.ExeProcessSql(cSqlUpdate);
-                            }
-                        }
-                    }
-                    return null;
-                }
-                catch (Exception ex)
-                {
-
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "updateGCgetValidShippingOptionsDS", ex, vstrFurtherInfo: "", bDebug: gbDebug);
-                    return null;
-                }
-            }
-
-
-            public void AddProductOption(ref Newtonsoft.Json.Linq.JObject jObj)
+            public void AddProductOption(Newtonsoft.Json.Linq.JObject jObj)
             {
 
                 try
@@ -11428,6 +6707,7 @@ namespace Protean
                     oItemInstance.AppendChild(oItemInstance.CreateElement("instance"));
                     XmlNode argoNode = oItemInstance.DocumentElement;
                     oelmt = addNewTextNode("tblCartItem", ref argoNode);
+
 
                     var json = jObj;
 
@@ -11493,8 +6773,13 @@ namespace Protean
                     XmlNode argoNode18 = oelmt;
                     addNewTextNode("xItemXml", ref argoNode18, (string)json.SelectToken("ItemXml"));
                     oelmt = (XmlElement)argoNode18;
+                    XmlNode argoNode19 = oelmt;
+                    addNewTextNode("nDepositAmount", ref argoNode19, (string)json.SelectToken("DepositAmount"));
+                    oelmt = (XmlElement)argoNode19;
 
                     moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartItem, oItemInstance.DocumentElement);
+
+
                 }
                 // UpdatePackagingANdDeliveryType(mnCartId, ShippingKey)
                 catch (Exception)
@@ -11502,7 +6787,7 @@ namespace Protean
                 }
             }
 
-            public void AddProductOption(int nCartItemId, string cOptionName, double nOptionCost)
+            public void AddProductOption(long nCartItemId, string cOptionName, double nOptionCost)
             {
 
                 try
@@ -11587,57 +6872,6 @@ namespace Protean
 
             }
 
-            public string AddClientNotes(string sNotesText)
-            {
-                string cProcessInfo = "AddClientNotes";
-                string sSql;
-                DataSet oDs;
-                string sXmlContent;
-                try
-                {
-                    // myCart.moCartXml
-                    if (mnCartId > 0)
-                    {
-                        sSql = "select * from tblCartOrder where nCartOrderKey=" + mnCartId;
-                        oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                        foreach (DataRow oRow in oDs.Tables["Order"].Rows)
-                        {
-                            // load existing notes from Cart
-                            sXmlContent = Conversions.ToString(Operators.ConcatenateObject(oRow["cClientNotes"], ""));
-                            if (string.IsNullOrEmpty(sXmlContent))
-                            {
-                                sXmlContent = "<Notes><Notes/><PromotionalCode/></Notes>";
-                            }
-                            var NotesXml = new XmlDocument();
-                            NotesXml.LoadXml(sXmlContent);
-
-                            if (NotesXml.SelectSingleNode("Notes/Notes") is null)
-                            {
-                                NotesXml.DocumentElement.AppendChild(NotesXml.CreateElement("Notes"));
-                            }
-
-                            NotesXml.SelectSingleNode("Notes/Notes").InnerText = sNotesText;
-
-                            oRow["cClientNotes"] = NotesXml.OuterXml;
-                        }
-                        myWeb.moDbHelper.updateDataset(ref oDs, "Order", true);
-                        oDs.Clear();
-                        oDs = null;
-
-                        return sNotesText;
-                    }
-                    else
-                    {
-
-                        return "";
-                    }
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, mcModuleName, "AddDiscountCode", ex, "", cProcessInfo, gbDebug);
-                    return null;
-                }
-            }
 
             // check whether promocode is applier for delivery option
             public string CheckPromocodeAppliedForDelivery()
@@ -11657,7 +6891,7 @@ namespace Protean
 
                     foreach (DataRow oRow in oDs.Tables["Order"].Rows)
                     {
-                        xmlDoc.LoadXml(Conversions.ToString(oRow["cClientNotes"]));
+                        xmlDoc.LoadXml(Convert.ToString(oRow["cClientNotes"]));
                         xmlNotes = (XmlElement)xmlDoc.SelectSingleNode("Notes/PromotionalCode");
                     }
                     if (xmlNotes != null)
@@ -11669,7 +6903,7 @@ namespace Protean
                     oDs = myWeb.moDbHelper.GetDataSet(sSql.ToString(), "Discount", "Discounts");
                     if (oDs.Tables["Discount"].Rows.Count > 0)
                     {
-                        string additionalInfo = Conversions.ToString(Operators.AddObject(Operators.AddObject("<additionalXml>", oDs.Tables["Discount"].Rows[0]["cAdditionalXML"]), "</additionalXml>"));
+                        string additionalInfo = "<additionalXml>" + oDs.Tables["Discount"].Rows[0]["cAdditionalXML"] + "</additionalXml>";
                         doc.LoadXml(additionalInfo);
 
                         if (doc.InnerXml.Contains("cFreeShippingMethods"))
@@ -11708,7 +6942,7 @@ namespace Protean
                     var nCheckPrice = default(double);
                     XmlElement oCheckPrice;
 
-                    int nCartIdUse;
+                    long nCartIdUse;
                     nCartIdUse = mnCartId;
 
                     if (moDBHelper.checkTableColumnExists("tblCartItem", "xItemXml"))
@@ -11735,8 +6969,8 @@ namespace Protean
                         {
                             oItemList.Add(oItemList.Count, oRow["contentId"]);
                         }
-
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(moDBHelper.DBN2int(oRow["nParentId"]), 0, false)))
+                        long parentId = Convert.ToInt64(moDBHelper.DBN2int(oRow["nParentId"]));
+                        if (parentId == 0)
                         {
                             long nTaxRate = 0L;
                             bool bOverridePrice = false;
@@ -11747,38 +6981,43 @@ namespace Protean
                                 {
 
                                     var oProd = moPageXml.CreateElement("product");
-                                    oProd.InnerXml = Conversions.ToString(oRow["productDetail"]);
+                                    oProd.InnerXml = Convert.ToString(oRow["productDetail"]);
                                     if (oProd.SelectSingleNode("Content[@overridePrice='true']") is null)
                                     {
-                                        oCheckPrice = getContentPricesNode(oProd, Conversions.ToString(Operators.ConcatenateObject(oRow["unit"], "")), Conversions.ToLong(oRow["quantity"]));
-                                        cProcessInfo = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Error getting price for unit:", oRow["unit"]), " and Quantity:"), oRow["quantity"]), " and Currency "), mcCurrencyRef), " Check that a price is available for this quantity and a group for this current user."));
+                                        oCheckPrice = getContentPricesNode(oProd, oRow["unit"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"]));
+
+                                        cProcessInfo = "Error getting price for unit:" + oRow["unit"] +
+                                                       " and Quantity:" + oRow["quantity"] +
+                                                       " and Currency " + mcCurrencyRef +
+                                                       " Check that a price is available for this quantity and a group for this current user.";
+
                                         if (oCheckPrice != null)
                                         {
-                                            nCheckPrice = Conversions.ToDouble(oCheckPrice.InnerText);
+                                            nCheckPrice = Convert.ToDouble(oCheckPrice.InnerText);
                                             nTaxRate = (long)Math.Round(getProductTaxRate(oCheckPrice));
                                         }
                                         // nCheckPrice = getProductPricesByXml(oRow("productDetail"), oRow("unit") & "", oRow("quantity"))
 
-                                        if (moSubscription != null & Conversions.ToString(Operators.ConcatenateObject(oRow["contentType"], "")) == "Subscription")
+                                        if (moSubscription != null && (oRow["contentType"]?.ToString() ?? "") == "Subscription")
                                         {
-                                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(oRow["contentId"], 0, false)))
+                                            if (Convert.ToInt32(oRow["contentId"]) > 0)
                                             {
-                                                revisedPrice = moSubscription.CartSubscriptionPrice(Conversions.ToInteger(oRow["contentId"]), myWeb.mnUserId);
+                                                revisedPrice = moSubscription.CartSubscriptionPrice(Convert.ToInt16(oRow["contentId"]), myWeb.mnUserId);
                                             }
                                             else
                                             {
-                                                oCheckPrice = getContentPricesNode(oProd, Conversions.ToString(Operators.ConcatenateObject(oRow["unit"], "")), Conversions.ToLong(oRow["quantity"]), "SubscriptionPrices");
-                                                nCheckPrice = Conversions.ToDouble(oCheckPrice.InnerText);
+                                                oCheckPrice = getContentPricesNode(oProd, oRow["unit"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"]), "SubscriptionPrices");
+                                                nCheckPrice = Convert.ToDouble(oCheckPrice.InnerText);
                                                 nTaxRate = (long)Math.Round(getProductTaxRate(oCheckPrice));
                                             }
+
                                             if (revisedPrice < nCheckPrice)
                                             {
-                                                // nCheckPrice = revisedPrice
                                                 Discount = nCheckPrice - revisedPrice;
                                                 nCheckPrice = revisedPrice;
                                             }
-
                                         }
+
                                     }
                                     else
                                     {
@@ -11788,16 +7027,14 @@ namespace Protean
                                 }
                                 if (!bOverridePrice)
                                 {
-                                    if (Conversions.ToBoolean(Operators.AndObject(nCheckPrice > 0d, Operators.ConditionalCompareObjectNotEqual(nCheckPrice, oRow["price"], false))))
+                                    if (nCheckPrice > 0d && Convert.ToDouble(oRow["price"]) != nCheckPrice)
                                     {
                                         // If price is lower, then update the item price field
-                                        // oRow.BeginEdit()
                                         oRow["price"] = nCheckPrice;
-                                        // oRow("taxRate") = nTaxRate
-                                        // oRow.EndEdit()
+                                        // oRow["taxRate"] = nTaxRate; // optional if needed here
                                     }
 
-                                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(oRow["taxRate"], nTaxRate, false)))
+                                    if (Convert.ToDouble(oRow["taxRate"]) != nTaxRate)
                                     {
                                         oRow["taxRate"] = nTaxRate;
                                     }
@@ -11810,8 +7047,8 @@ namespace Protean
                             {
                                 if (!mbOveridePrice) // for openquote
                                 {
-                                    decimal nNPrice = (decimal)getOptionPricesByXml(Conversions.ToString(oRow["productDetail"]), Conversions.ToInteger(oRow["nItemOptGrpIdx"]), Conversions.ToInteger(oRow["nItemOptIdx"]));
-                                    if (Conversions.ToBoolean(Operators.AndObject(nNPrice > 0m, Operators.ConditionalCompareObjectNotEqual(nNPrice, oOpRow["price"], false))))
+                                    decimal nNPrice = (decimal)getOptionPricesByXml(Convert.ToString(oRow["productDetail"]), Convert.ToInt16(oRow["nItemOptGrpIdx"]), Convert.ToInt16(oRow["nItemOptIdx"]));
+                                    if (nNPrice > 0m && Convert.ToDecimal(oOpRow["price"]) != nNPrice)
                                     {
                                         nOpPrices += nNPrice;
                                         // oOpRow.BeginEdit()
@@ -11821,25 +7058,28 @@ namespace Protean
                                     // oOpRow.EndEdit()
                                     else
                                     {
-                                        nOpPrices = Conversions.ToDecimal(nOpPrices + Convert.ToDecimal(oOpRow["price"]));
+                                        nOpPrices = Convert.ToDecimal(nOpPrices + Convert.ToDecimal(oOpRow["price"]));
                                     }
                                 }
                             }
 
                             // Apply stock control
                             if (mbStockControl)
-                                CheckStock(ref oCartElmt, Conversions.ToString(oRow["productDetail"]), Conversions.ToString(oRow["quantity"]));
+                                CheckStock(ref oCartElmt, Convert.ToString(oRow["productDetail"]), Convert.ToString(oRow["quantity"]));
                             // Apply quantity control
-                            if (!(oRow["productDetail"] is DBNull))
+                            if (oRow["productDetail"] != DBNull.Value)
                             {
                                 // not sure why the product has no detail but if it not we skip this, suspect it was old test data that raised this issue.
-                                CheckQuantities(ref oCartElmt, Conversions.ToString(Operators.ConcatenateObject(oRow["productDetail"], "")), Conversions.ToLong(Operators.ConcatenateObject("0", oRow["quantity"])).ToString());
+                                CheckQuantities(ref oCartElmt, oRow["productDetail"]?.ToString() ?? "", Convert.ToInt64(oRow["quantity"] ?? 0).ToString());
                             }
 
-                            weight = Conversions.ToDouble(Operators.AddObject(weight, Operators.MultiplyObject(oRow["weight"], oRow["quantity"])));
-                            quant = Conversions.ToLong(Operators.AddObject(quant, oRow["quantity"]));
+                            decimal weightDecimal = Convert.ToDecimal(oRow["weight"]) * Convert.ToDecimal(oRow["quantity"]);
+                            decimal totalDecimal = Convert.ToDecimal(oRow["quantity"]) * Round(Convert.ToDecimal(oRow["price"]) + Convert.ToDecimal(nOpPrices), bForceRoundup: mbRoundup);
+                            quant += Convert.ToInt64(oRow["quantity"]);
 
-                            total = Conversions.ToDouble(Operators.AddObject(total, Operators.MultiplyObject(oRow["quantity"], Round(Operators.AddObject(oRow["price"], nOpPrices), bForceRoundup: mbRoundup))));
+                            weight += (double)weightDecimal; // if weight must remain double
+                            total += (double)totalDecimal;   // if total must remain double
+
                         }
                     }
 
@@ -11869,10 +7109,10 @@ namespace Protean
                             if (bChangedDelivery)
                             {
                                 // If (cOrderofDeliveryOption = oRowSO("nShipOptKey")) Then
-                                updateGCgetValidShippingOptionsDS(Conversions.ToString(oRowSO["nShipOptKey"]));
-                                DeliveryOption = Conversions.ToString(oRowSO["cShipOptName"]);
+                                updateGCgetValidShippingOptionsDS(Convert.ToString(oRowSO["nShipOptKey"]));
+                                DeliveryOption = Convert.ToString(oRowSO["cShipOptName"]);
                                 // pass total item cost including packaging amount
-                                DeliveryOption = Conversions.ToString(Operators.ConcatenateObject(DeliveryOption + "#" + total + "#", oRowSO["nShipOptKey"]));
+                                DeliveryOption = DeliveryOption + "#" + total.ToString() + "#" + oRowSO["nShipOptKey"]?.ToString();
                                 bChangedDelivery = false;
                                 // End If
                             }
@@ -11890,15 +7130,12 @@ namespace Protean
             }
 
 
-
-
-
             // creating the duplicate order from old order
-            public string CreateDuplicateOrder(XmlDocument oldCartxml, int nOrderId, string cMethodName, string cNewAuthNumber)
+            public string CreateDuplicateOrder(XmlDocument oldCartxml, long nOrderId, string cMethodName, string cNewAuthNumber)
             {
                 try
                 {
-                    string cResult = "Success";
+                    // string cResult = "Success";
                     var oCartListElmt = moPageXml.CreateElement("Order");
                     //GetCart(ref oCartListElmt, nOrderId);
                     // Insert code into tblcartOrder
@@ -11990,7 +7227,7 @@ namespace Protean
                         oElmt = (XmlElement)argoNode20;
                     }
 
-                    mnCartId = Conversions.ToInteger(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement));
+                    mnCartId = Convert.ToInt64(moDBHelper.setObjectInstance(Cms.dbHelper.objectTypes.CartOrder, oInstance.DocumentElement));
 
                     mnProcessId = 1;
                     string oOptionName = string.Empty;
@@ -12009,7 +7246,7 @@ namespace Protean
 
                                 string sSQL2 = "select TOP 1 nCartItemKey  from tblCartItem  as a inner join tblAudit as b on a.nAuditId=b.nAuditKey where b.nStatus=1 and nParentId=0 and nCartOrderId =" + mnCartId.ToString() + "Order by nCartItemKey desc";
 
-                                long nCartItemId = Conversions.ToLong(moDBHelper.ExeProcessSqlScalar(sSQL2));
+                                long nCartItemId = Convert.ToInt64(moDBHelper.ExeProcessSqlScalar(sSQL2));
 
                                 foreach (XmlElement oOption in oItem.SelectNodes("Item"))
                                 {
@@ -12020,7 +7257,7 @@ namespace Protean
                                     }
                                     if (oOption.Attributes["nPrice"] != null)
                                     {
-                                        oOptionValue = Conversions.ToDouble(oOption.Attributes["nPrice"].Value);
+                                        oOptionValue = Convert.ToDouble(oOption.Attributes["nPrice"].Value);
                                     }
                                     AddProductOption((int)nCartItemId, oOptionName, oOptionValue);
                                 }
@@ -12028,24 +7265,25 @@ namespace Protean
                         }
                     }
 
-                    int deliveryAddId = 0;
-                    int billingAddId = 0;
+                    long deliveryAddId = 0;
+                    long billingAddId = 0;
                     string sSql = "select nContactKey, cContactType, nAuditKey from tblCartContact inner join tblAudit a on nAuditId = a.nAuditKey where nContactCartId = " + nOrderId.ToString();
                     using (var oDr = moDBHelper.getDataReaderDisposable(sSql))
                     {
                         while (oDr.Read())
                         {
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDr["cContactType"], "Billing Address", false)))
+                            if ((oDr["cContactType"]?.ToString() ?? "") == "Billing Address")
                             {
-                                billingAddId = Conversions.ToInteger(oDr["nContactKey"]);
+                                billingAddId = Convert.ToInt64(oDr["nContactKey"]);
                             }
+
                             if (mbNoDeliveryAddress)
                             {
                                 deliveryAddId = billingAddId;
                             }
-                            else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(oDr["cContactType"], "Delivery Address", false)))
+                            else if ((oDr["cContactType"]?.ToString() ?? "") == "Delivery Address")
                             {
-                                deliveryAddId = Conversions.ToInteger(oDr["nContactKey"]);
+                                deliveryAddId = Convert.ToInt64(oDr["nContactKey"]);
                             }
                         }
 
@@ -12056,15 +7294,20 @@ namespace Protean
                     {
                         useSavedAddressesOnCart(billingAddId, deliveryAddId, null);
                     }
-                    XmlElement instanceNode = (XmlElement)oePaymentDetailsInstanceElmt.SelectSingleNode("//PaymentDetails/instance");
+                    XmlElement instanceNode = (XmlElement)oePaymentDetailsInstanceElmt
+                             .SelectSingleNode("//PaymentDetails/instance");
 
-                    if (instanceNode != null)
-                    {
-                        ConfirmPayment(ref oCartListElmt, ref instanceNode, cNewAuthNumber, cMethodName, Amount);
-                        GetCart(ref oCartListElmt, mnCartId);
-                        oCartListElmt.ToString().Replace(ReceiptId, cNewAuthNumber);
-                        SaveCartXML(oCartListElmt, mnCartId);
-                    }
+
+                    XmlElement targetNode = instanceNode ?? oePaymentDetailsInstanceElmt;
+
+                    ConfirmPayment(ref oCartListElmt, ref targetNode, cNewAuthNumber, cMethodName, Amount);
+
+                    GetCart(ref oCartListElmt, mnCartId);
+
+                    oCartListElmt.InnerXml = oCartListElmt.InnerXml.Replace(ReceiptId, cNewAuthNumber);
+
+                    SaveCartXML(oCartListElmt, mnCartId);
+
                     return mnCartId.ToString();
                 }
                 catch (Exception ex)
@@ -12080,8 +7323,8 @@ namespace Protean
                 string result = "";
                 try
                 {
-                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper(ref myWeb);
-                    Protean.Cms.modal.Contact contact = new Cms.modal.Contact();
+                    Protean.Cms.dbHelper dbHelper = new Cms.dbHelper(myWeb);
+                    Protean.Cms.model.Contact contact = new Cms.model.Contact();
                     if (!string.IsNullOrEmpty(cEmailAddress))
                     {
                         DataSet oDS;
@@ -12172,7 +7415,7 @@ namespace Protean
                                 //        oOptOutRow = currentRow;
                                 //        if(oOptOutRow["nOptOutKey"]!=null)
                                 //        {
-                                //            moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.OptOutAddresses, Conversions.ToLong(oOptOutRow["nOptOutKey"]));
+                                //            moDBHelper.DeleteObject(Cms.dbHelper.objectTypes.OptOutAddresses, Convert.ToInt64(oOptOutRow["nOptOutKey"]));
                                 //            result += " Removed from tblOptOutAddresses.";
                                 //        }
 
@@ -12194,6 +7437,212 @@ namespace Protean
                     return result;
                 }
             }
+
+            public void saveCookiesConsent()
+            {
+                if (moDBHelper.checkTableColumnExists("tblCartOrder", "bCookieConsentEnabled") && (myWeb.moRequest.Cookies["bCookieConsentEnabled"] == null))
+                {
+                    int isCookieConsentEnabled = 0; // default = disabled
+
+                    var request = HttpContext.Current?.Request;
+
+                    if (request != null)
+                    {
+                        HttpCookie consentCookie = myWeb.moRequest.Cookies["cookiefirst-consent"];
+                        HttpCookie cookieId = request.Cookies["cookiefirst-id"];
+
+                        if (consentCookie != null && !string.IsNullOrWhiteSpace(consentCookie.Value))
+                        {
+                            string cookieValue = HttpUtility.UrlDecode(consentCookie.Value);
+
+                            try
+                            {
+                                JObject consentJson = JObject.Parse(cookieValue);
+
+                                bool preferences = consentJson.Value<bool?>("preferences") == true;
+                                bool statistics = consentJson.Value<bool?>("statistics") == true;
+                                bool advertising = consentJson.Value<bool?>("advertising") == true;
+
+
+                                if (preferences || statistics || advertising)
+                                {
+                                    isCookieConsentEnabled = 1;
+                                }
+                            }
+                            catch
+                            {
+                                isCookieConsentEnabled = 0;
+                            }
+                        }
+
+
+                        string sSqlupdate = "UPDATE tblCartOrder SET bCookieConsentEnabled = " + isCookieConsentEnabled + " WHERE nCartOrderKey = " + mnCartId;
+
+                        moDBHelper.ExeProcessSql(sSqlupdate);
+                    }
+                }
+            }
+
+            #region IDisposable Implementation
+
+            private bool disposedValue = false; // To detect redundant calls
+
+            // IDisposable
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        try
+                        {
+                            // ====================
+                            // 1. DISPOSE CHILD COMPONENTS
+                            // ====================
+
+                            // Discount engine
+                            if (moDiscount != null)
+                            {
+                                try
+                                {
+                                    if (moDiscount is IDisposable disposableDiscount)
+                                    {
+                                        disposableDiscount.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moDiscount: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moDiscount = null;
+                                }
+                            }
+
+                            // Subscription engine
+                            if (moSubscription != null)
+                            {
+                                try
+                                {
+                                    if (moSubscription is IDisposable disposableSubscription)
+                                    {
+                                        disposableSubscription.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moSubscription: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moSubscription = null;
+                                }
+                            }
+
+                            // Payment provider
+                            if (moPay != null)
+                            {
+                                try
+                                {
+                                    if (moPay is IDisposable disposablePay)
+                                    {
+                                        disposablePay.Dispose();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing moPay: {ex.Message}");
+                                }
+                                finally
+                                {
+                                    moPay = null;
+                                }
+                            }
+
+                            // Database helper (DO NOT dispose - owned by parent Cms object)
+                            // moDBHelper is a reference to myWeb.moDbHelper, not owned by Cart
+                            moDBHelper = null;
+
+                            // ====================
+                            // 2. NULL OUT LARGE OBJECTS
+                            // ====================
+                            moPageXml = null;
+                            moCartXml = null;
+                            oShippingOptions = null;
+
+                            // ====================
+                            // 3. NULL OUT REFERENCES
+                            // ====================
+                            myWeb = null;
+                            moConfig = null;
+                            moCartConfig = null;
+                            moServer = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log disposal errors but don't throw
+                            System.Diagnostics.Debug.WriteLine(
+                                $"Error in Cart.Dispose: {ex.Message}");
+                        }
+                    }
+
+                    // Free unmanaged resources (if any)
+
+                    disposedValue = true;
+                }
+            }
+
+            // Finalizer
+            ~Cart()
+            {
+                Dispose(false);
+            }
+
+            // Public Dispose method
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+
+            public void close(bool bNoClose=false)
+            {
+                myWeb.PerfMon.Log("Cart", "close");
+                string cProcessInfo = "";
+                try
+                {
+                    //This allows us to run jsonactions from within other functions like AddProductOption without closing dbhelper object.
+                    if (bNoClose == false)
+                    {
+                        PersistVariables();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    stdTools.returnException(ref myWeb.msException, mcModuleName, "Close", ex, "", cProcessInfo, gbDebug);
+                }
+                finally
+                {
+                   
+                        Dispose(!bNoClose);
+                }
+            }
+
+            // Helper method to prevent use after disposal
+            protected void ThrowIfDisposed()
+            {
+                if (disposedValue)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+            }
+
+            #endregion
         }
     }
 }

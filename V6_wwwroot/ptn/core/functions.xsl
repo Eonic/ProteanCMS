@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
-	<xsl:import href="../core/localisation.xsl"/>
+  <xsl:import href="../core/localisation.xsl"/>
 
-	<xsl:strip-space elements="*"/>
-	<!-- localisation moved here because it contains templates used in functions, so you can load just functions in without compile error - moved from core.xsl -->
+  <xsl:strip-space elements="*"/>
+  <!-- localisation moved here because it contains templates used in functions, so you can load just functions in without compile error - moved from core.xsl -->
 
 
-	<!-- -->
+  <!-- -->
   <!-- ## GLOBAL VARIABLES ########################################################################   -->
   <!-- ## Variables for all EonicWeb XSLT   #######################################################   -->
 
@@ -40,7 +40,7 @@
   <xsl:variable name="GutterWidth" select="'20'"/>
   <xsl:variable name="GutterWidthLg" select="'30'"/>
   <xsl:variable name="responsiveImageSizes">off</xsl:variable>
-
+	<xsl:variable name="non-display-name">false</xsl:variable>
 
   <xsl:variable name="siteURL">
     <xsl:variable name="baseUrl">
@@ -614,11 +614,11 @@
   <xsl:template match="Page" mode="alternatePages">
     <xsl:choose>
       <xsl:when test="$currentPage/PageVersion[@verType='0']">
-        <link rel="alternate" href="{$currentPage/PageVersion[@verType='0']/@url}" hreflang="x-default" />
+        <link rel="alternate" href="{$currentPage/PageVersion[@verType='0']/@url}" hreflang="{@lang}" />
       </xsl:when>
       <xsl:otherwise>
         <xsl:if test="$currentPage/PageVersion[@verType='3']">
-          <link rel="alternate" href="{$currentPage/@url}" hreflang="x-default" />
+          <link rel="alternate" href="{$currentPage/@url}" hreflang="{@lang}" />
         </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
@@ -1105,8 +1105,8 @@
     </xsl:choose>
     <xsl:if test="$GoogleGA4MeasurementID!=''">
       <!-- GA4 Tag Manager -->
-      <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}" cookie-consent="tracking">&#160;</script>
-      <script id="GA4Code" cookie-consent="tracking">
+      <script async="async" src="https://www.googletagmanager.com/gtag/js?id={$GoogleGA4MeasurementID}">&#160;</script>
+      <script id="GA4Code">
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
@@ -2831,7 +2831,8 @@
 
   <xsl:template match="MenuItem" mode="breadcrumb">
     <xsl:param name="separator">&gt;</xsl:param>
-
+    <!--<xsl:param name="non-display-name" select="$non-display-name" />-->
+    <xsl:param name="non-display-name" >true</xsl:param>
     <!-- if not excluded from Nav -->
     <xsl:if test="not(DisplayName/@exclude='true')">
 
@@ -2848,6 +2849,7 @@
     <!-- Self calling template to get the next MenuItem -->
     <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="breadcrumb">
       <xsl:with-param name="separator" select="$separator"/>
+      <xsl:with-param name="non-display-name" select="$non-display-name" />
     </xsl:apply-templates>
 
     <!-- IF currentPage && In Content Detail -->
@@ -2881,6 +2883,7 @@
     <!-- Self calling template to get the next MenuItem -->
     <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="breadcrumb">
       <xsl:with-param name="separator" select="$separator"/>
+      <xsl:with-param name="non-display-name" select="$non-display-name" />
     </xsl:apply-templates>
 
     <!-- IF currentPage && In Content Detail -->
@@ -2894,16 +2897,21 @@
   </xsl:template>
 
   <xsl:template match="MenuItem" mode="breadcrumb">
+    <xsl:param name="non-display-name" select="$non-display-name" />
     <xsl:param name="separator"></xsl:param>
 
     <!-- if not excluded from Nav -->
     <xsl:if test="not(DisplayName/@exclude='true') and @name!='Information'">
-      <xsl:apply-templates select="." mode="breadcrumbLink"/>
+      <xsl:apply-templates select="." mode="breadcrumbLink">
+
+        <xsl:with-param name="non-display-name" select="$non-display-name"/>
+      </xsl:apply-templates>
     </xsl:if>
 
     <!-- Self calling template to get the next MenuItem -->
     <xsl:apply-templates select="MenuItem[descendant-or-self::MenuItem[@id=/Page/@id]]" mode="breadcrumb">
       <xsl:with-param name="separator" select="$separator"/>
+      <xsl:with-param name="non-display-name" select="$non-display-name"/>
     </xsl:apply-templates>
 
     <!-- IF currentPage && In Content Detail -->
@@ -2912,7 +2920,9 @@
         <xsl:value-of select="concat(' ', $separator, ' ')"/>
       </xsl:if>
       <li class="breadcrumb-item active">
-        <xsl:apply-templates select="//ContentDetail/Content" mode="getDisplayName"/>
+        <xsl:apply-templates select="//ContentDetail/Content" mode="getDisplayName">
+          <xsl:with-param name="non-display-name" select="$non-display-name"/>
+        </xsl:apply-templates>
       </li>
     </xsl:if>
 
@@ -2920,6 +2930,7 @@
 
   <xsl:template match="MenuItem" mode="breadcrumbLink">
     <xsl:param name="span" select="false()"/>
+    <xsl:param name="non-display-name" select="$non-display-name" />
     <li itemprop="itemListElement" itemscope="" itemtype="http://schema.org/ListItem" class="breadcrumb-item">
       <xsl:choose>
         <xsl:when test="self::MenuItem[@id=/Page/@id] and not(//ContentDetail)">
@@ -2948,7 +2959,10 @@
           </xsl:choose>
           <!-- output page name -->
           <span itemprop="name">
-            <xsl:apply-templates select="." mode="getDisplayName"/>
+            <xsl:apply-templates select="." mode="getDisplayName">
+
+              <xsl:with-param name="non-display-name" select="$non-display-name"/>
+            </xsl:apply-templates>
           </span>
           <meta itemprop="position" content="{count(parent::MenuItem)+1}">
             <xsl:text> </xsl:text>
@@ -2996,7 +3010,11 @@
             </xsl:choose>
             <!-- output page name -->
             <span itemprop="name">
-              <xsl:apply-templates select="." mode="getDisplayName"/>
+              <xsl:apply-templates select="." mode="getDisplayName">
+
+
+                <xsl:with-param name="non-display-name" select="$non-display-name"/>
+              </xsl:apply-templates>
             </span>
             <meta itemprop="position" content="{count(parent::MenuItem)+1}" >
               <xsl:text> </xsl:text>
@@ -3606,7 +3624,13 @@
   <!--   ################################################   Menu & Content display name  ##############################################   -->
   <!-- Display Name for a Page -->
   <xsl:template match="MenuItem | PageVersion" mode="getDisplayName">
+    <xsl:param name="non-display-name" />
+	  <xsl:param name="nocount" />
+
     <xsl:choose>
+      <xsl:when test="$non-display-name='true'">
+        <xsl:value-of select="@name"/>
+      </xsl:when>
       <xsl:when test="DisplayName/node()='_'">
       </xsl:when>
       <xsl:when test="normalize-space(DisplayName/node())!=''">
@@ -3616,7 +3640,9 @@
         <xsl:value-of select="@name"/>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:apply-templates select="." mode="getContentCount"/>
+	  <xsl:if test="not($nocount='true')">
+		  <xsl:apply-templates select="." mode="getContentCount"/>
+	  </xsl:if>
   </xsl:template>
 
   <xsl:template match="MenuItem" mode="getContentCount">
@@ -3792,16 +3818,16 @@
               <xsl:call-template name="getSiteURL"/>!!
             </xsl:when>
             <xsl:otherwise>
-				<xsl:choose>
-					<xsl:when test="not($lang!='en-gb')">
-						<xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
-					</xsl:when>
-					<xsl:otherwise>
-						<xsl:apply-templates select="$menu/descendant-or-self::MenuItem/PageVersion[@id=$contentParId]/parent::MenuItem" mode="getHref"/>
-					</xsl:otherwise>
-				</xsl:choose>
+              <xsl:choose>
+                <xsl:when test="not($lang!='en-gb')">
+                  <xsl:apply-templates select="$menu/descendant-or-self::MenuItem[@id=$contentParId]" mode="getHref"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:apply-templates select="$menu/descendant-or-self::MenuItem/PageVersion[@id=$contentParId]/parent::MenuItem" mode="getHref"/>
+                </xsl:otherwise>
+              </xsl:choose>
 
-			</xsl:otherwise>
+            </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
@@ -3898,6 +3924,7 @@
   <xsl:template match="MenuItem" mode="menuLink">
     <xsl:param name="span" select="false()"/>
     <xsl:param name="class"/>
+    <xsl:param name="non-display-name"/>
     <a>
 
       <!-- get the href -->
@@ -3912,7 +3939,7 @@
           </xsl:otherwise>
         </xsl:choose>
       </xsl:attribute>
-      
+
       <xsl:if test="DisplayName/@externalNewWindow='true'">
         <xsl:attribute name="target">
           <xsl:text>_blank</xsl:text>
@@ -3989,23 +4016,29 @@
                 <img src="{DisplayName/@uploadIcon}" alt="icon"/>
               </span>
             </xsl:if>
-            <xsl:apply-templates select="." mode="getDisplayName"/>
+            <xsl:apply-templates select="." mode="getDisplayName">
+              <xsl:with-param name="non-display-name" select="$non-display-name"/>
+            </xsl:apply-templates>
           </span>
         </xsl:when>
         <xsl:otherwise>
           <xsl:choose>
             <xsl:when test="$span">
               <span>
-                <xsl:apply-templates select="." mode="getDisplayName"/>
+                <xsl:apply-templates select="." mode="getDisplayName">
+                  <xsl:with-param name="non-display-name" select="$non-display-name"/>
+                </xsl:apply-templates>
               </span>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:apply-templates select="." mode="getDisplayName"/>
+              <xsl:apply-templates select="." mode="getDisplayName">
+                <xsl:with-param name="non-display-name" select="$non-display-name"/>
+              </xsl:apply-templates>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
-    
+
     </a>
 
   </xsl:template>
@@ -4137,6 +4170,7 @@
     <xsl:param name="level2"/>
     <xsl:param name="level3"/>
     <xsl:param name="menu-back"/>
+    <xsl:param name="featured"/>
     <xsl:variable name="level-checker">2</xsl:variable>
     <xsl:variable name="liClass">
       <xsl:text>nav-item </xsl:text>
@@ -4254,7 +4288,16 @@
                 <img src="{DisplayName/@uploadIcon}" alt="icon"/>
               </span>
             </xsl:if>
-            <xsl:apply-templates select="." mode="getDisplayName"/>
+            <xsl:choose>
+              <xsl:when test="$span='true'">
+                <span>
+                  <xsl:apply-templates select="." mode="getDisplayName"/>
+                </span>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="." mode="getDisplayName"/>
+              </xsl:otherwise>
+            </xsl:choose>
           </button>
         </xsl:when>
         <xsl:otherwise>
@@ -4296,8 +4339,8 @@
       </xsl:choose>
       <xsl:if test="$mobileDD='true'">
         <span class="mobile-dd-control">
-          <i class="fa fa-angle-down"> </i>
-          <i class="fa fa-angle-up"> </i>
+          <i class="fa fa-angle-down">&#160;</i>
+          <i class="fa fa-angle-up">&#160;</i>
         </span>
       </xsl:if>
       <ul class="dropdown-menu" aria-labelledby="mainNavDD{@id}">
@@ -4368,6 +4411,7 @@
           <xsl:with-param name="level3" select="$level3"/>
           <xsl:with-param name="menu-back" select="$menu-back"/>
           <xsl:with-param name="level-checker" select="$level-checker + 1"/>
+          <xsl:with-param name="featured" select="$featured"/>
         </xsl:apply-templates>
         <xsl:if test="$menu-back='end'">
           <li class="xs-only nav-item menu-back">
@@ -4568,6 +4612,7 @@
     <xsl:param name="level3"/>
     <xsl:param name="menu-back"/>
     <xsl:param name="level-checker"/>
+    <xsl:param name="featured"/>
     <li>
       <xsl:attribute name="class">
         <xsl:value-of select="$li-class"/>
@@ -4805,72 +4850,75 @@
             </xsl:when>
             <xsl:otherwise>
               <a class="btn btn-custom {$class}">
-				  <xsl:if test="$tabindex!=''">
-                    <xsl:attribute name="tabindex">
-                      <xsl:value-of select="$tabindex"/>
-                      <xsl:text> </xsl:text>
+                <xsl:if test="$tabindex!=''">
+                  <xsl:attribute name="tabindex">
+                    <xsl:value-of select="$tabindex"/>
+                    <xsl:text> </xsl:text>
+                  </xsl:attribute>
+                </xsl:if>
+                <xsl:choose>
+                  <xsl:when test="$numbertest = 'number'">
+                    <xsl:variable name="pageId" select="@link"/>
+                    <xsl:attribute name="href">
+                      <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
                     </xsl:attribute>
-                  </xsl:if> <xsl:choose>
-                    <xsl:when test="$numbertest = 'number'">
-                      <xsl:variable name="pageId" select="@link"/>
-                      <xsl:attribute name="href">
-                        <xsl:apply-templates select="/Page/Menu/descendant-or-self::MenuItem[@id=$pageId]" mode="getHref"/>
-                      </xsl:attribute>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:choose>
-                        <xsl:when test="contains($link,'#')">
-                          <xsl:attribute name="class">
-                            <xsl:text>btn btn-custom scroll-to-anchor </xsl:text>
-                            <xsl:value-of select="class"/>
-                          </xsl:attribute>
-                          <xsl:attribute name="href">
-                            <xsl:value-of select="$link"/>
-                          </xsl:attribute>
-                        </xsl:when>
-                        <xsl:when test="(contains($link,'http') or contains($link,'tel:'))">
-                          <xsl:attribute name="href">
-                            <xsl:value-of select="$link"/>
-                          </xsl:attribute>
-                          <xsl:attribute name="rel">external</xsl:attribute>
-                          <xsl:attribute name="target">
-                            <xsl:value-of select="$linkWindow"/>
-                          </xsl:attribute>
-                        </xsl:when>
-                        <xsl:otherwise>
-                          <xsl:attribute name="href">
-                            <xsl:text>http://</xsl:text>
-                            <xsl:value-of select="$link"/>
-                          </xsl:attribute>
-                          <xsl:attribute name="rel">external</xsl:attribute>
-                          <xsl:attribute name="target">
-                            <xsl:value-of select="$linkWindow"/>
-                          </xsl:attribute>
-                        </xsl:otherwise>
-                      </xsl:choose>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:choose>
+                      <xsl:when test="contains($link,'#')">
+                        <xsl:attribute name="class">
+                          <xsl:text>btn btn-custom scroll-to-anchor </xsl:text>
+                          <xsl:value-of select="class"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$link"/>
+                        </xsl:attribute>
+                      </xsl:when>
+                      <xsl:when test="(contains($link,'http') or contains($link,'tel:'))">
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="$link"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="rel">external</xsl:attribute>
+                        <xsl:attribute name="target">
+                          <xsl:value-of select="$linkWindow"/>
+                        </xsl:attribute>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <xsl:attribute name="href">
+                          <xsl:text>http://</xsl:text>
+                          <xsl:value-of select="$link"/>
+                        </xsl:attribute>
+                        <xsl:attribute name="rel">external</xsl:attribute>
+                        <xsl:attribute name="target">
+                          <xsl:value-of select="$linkWindow"/>
+                        </xsl:attribute>
+                      </xsl:otherwise>
+                    </xsl:choose>
 
-                    </xsl:otherwise>
-                  </xsl:choose><xsl:if test="$stretchLink='true'">
-                    <xsl:attribute name="class">
-                      <xsl:if test="not($accessibleText='true')">btn btn-custom </xsl:if>
-                      <xsl:text> stretched-link</xsl:text>
-                    </xsl:attribute>
-                    <xsl:if test="$stretchLink='true'"></xsl:if>
-                    <span class="visually-hidden">
-                      <xsl:value-of select="@linkText"/>
-                    </span>
-                  </xsl:if>    <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
-                    <xsl:attribute name="onclick">
-                      <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
-                      <xsl:value-of select="$link"/>
-                      <xsl:text>');</xsl:text>
-                    </xsl:attribute>
-                  </xsl:if>
+                  </xsl:otherwise>
+                </xsl:choose>
+                <xsl:if test="$stretchLink='true'">
+                  <xsl:attribute name="class">
+                    <xsl:if test="not($accessibleText='true')">btn btn-custom </xsl:if>
+                    <xsl:text> stretched-link</xsl:text>
+                  </xsl:attribute>
+                  <xsl:if test="$stretchLink='true'"></xsl:if>
+                  <span class="visually-hidden">
+                    <xsl:value-of select="@linkText"/>
+                  </span>
+                </xsl:if>
+                <xsl:if test="$GoogleAnalyticsUniversalID!='' and contains($link,'.pdf')">
+                  <xsl:attribute name="onclick">
+                    <xsl:text>ga('send', 'event', 'Document', 'download', 'document-</xsl:text>
+                    <xsl:value-of select="$link"/>
+                    <xsl:text>');</xsl:text>
+                  </xsl:attribute>
+                </xsl:if>
                 <span>
-              
-                 
-                  
-              
+
+
+
+
                   <xsl:if test="not(@accessibleText='true')">
                     <xsl:value-of select="@linkText"/>
                   </xsl:if>
@@ -5481,7 +5529,7 @@
             </xsl:variable>
             <li class="page-item previous">
               <a class="page-link" href="{$origURL}">
-                <i class="fa-solid fa-chevron-left"> </i> Back
+                <i class="fa-solid fa-chevron-left">&#160;</i> Back
               </a>
             </li>
           </xsl:when>
@@ -5489,14 +5537,14 @@
           <xsl:when test="$startPos &gt; ($noPerPage - 1)">
             <li class="page-item previous">
               <a class="page-link" href="{$thisURL}={$startPos - $noPerPage}">
-                <i class="fa-solid fa-chevron-left"> </i> Back
+                <i class="fa-solid fa-chevron-left">&#160;</i> Back
               </a>
             </li>
           </xsl:when>
           <xsl:otherwise>
             <li class="page-item previous disabled">
               <span class="page-link" href="#">
-                <i class="fa-solid fa-chevron-left"> </i> Back
+                <i class="fa-solid fa-chevron-left">&#160;</i> Back
               </span>
             </li>
           </xsl:otherwise>
@@ -5525,7 +5573,7 @@
           <xsl:when test="$totalCount &gt; ($startPos +$noPerPage)">
             <li class="page-item next">
               <a class="page-link" href="{$thisURL}={$startPos+$noPerPage}">
-                Next <i class="fa-solid fa-chevron-right"> </i>
+                Next <i class="fa-solid fa-chevron-right">&#160;</i>
               </a>
             </li>
           </xsl:when>
@@ -5533,7 +5581,7 @@
             <li class="page-item next disabled">
               <span class="page-link">
                 Next <span class="pager-arrow">
-                  <i class="fa-solid fa-chevron-right"> </i>
+                  <i class="fa-solid fa-chevron-right">&#160;</i>
                 </span>
               </span>
             </li>
@@ -6255,14 +6303,14 @@
   <xsl:template match="Content[@type='Module']" mode="moduleTitle">
     <xsl:variable name="title">
       <span>
-		  <xsl:choose>
-			  <xsl:when test="Content[@lang!='']">
-				  <xsl:value-of select="Content[@lang=$lang]/@title"/> 
-			  </xsl:when>
-			  <xsl:otherwise>
-				  <xsl:value-of select="@title"/>
-			  </xsl:otherwise>
-		  </xsl:choose>
+        <xsl:choose>
+          <xsl:when test="Content[@lang!='']">
+            <xsl:value-of select="Content[@lang=$lang]/@title"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="@title"/>
+          </xsl:otherwise>
+        </xsl:choose>
         <xsl:text> </xsl:text>
       </span>
     </xsl:variable>
@@ -6339,10 +6387,8 @@
             </div>
           </xsl:if>
           <xsl:if test="@title!=''">
-            <span>
               <xsl:copy-of select="ms:node-set($title)" />
               <xsl:text> </xsl:text>
-            </span>
           </xsl:if>
         </div>
       </xsl:when>
@@ -6394,10 +6440,8 @@
             </div>
           </xsl:if>
           <xsl:if test="@title!=''">
-            <span>
               <xsl:copy-of select="ms:node-set($title)" />
               <xsl:text> </xsl:text>
-            </span>
           </xsl:if>
         </div>
       </xsl:when>
@@ -6454,10 +6498,8 @@
             </span>
           </xsl:if>
           <xsl:if test="@title!=''">
-            <span>
               <xsl:copy-of select="ms:node-set($title)" />
               <xsl:text> </xsl:text>
-            </span>
           </xsl:if>
         </div>
       </xsl:when>
@@ -6531,8 +6573,11 @@
     <xsl:param name="forceResize"/>
     <xsl:param name="class"/>
     <xsl:param name="style"/>
+	<xsl:param name="watermarktext"/>
+	<xsl:param name="copyright"/>
 
-    <xsl:variable name="src">
+
+	  <xsl:variable name="src">
       <xsl:choose>
         <!-- IF Thumbnail use that -->
         <xsl:when test="Images/img[@class='thumbnail']/@src!=''">
@@ -6658,6 +6703,8 @@
         <xsl:with-param name="forceResize" select="$forceResize"/>
         <xsl:with-param name="class" select="$class"/>
         <xsl:with-param name="style" select="$style"/>
+		  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+		  <xsl:with-param name="copyright" select="$copyright"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
@@ -6682,8 +6729,14 @@
     <xsl:param name="forceResize"/>
     <xsl:param name="class"/>
     <xsl:param name="style"/>
+	<xsl:param name="watermarktext"/>
+	<xsl:param name="copyright"/>
     <xsl:param name="imageUrl"/>
     <xsl:param name="altText"/>
+	<xsl:param name="quality"/>
+	  
+	  
+	  
     <!-- IF SO THAT we don't get empty tags if NO IMAGE -->
     <xsl:if test="$imageUrl!=''">
       <!-- SRC VALUE -->
@@ -6726,6 +6779,15 @@
         <xsl:value-of select="$height"/>
       </xsl:variable>
 
+	  <xsl:variable name="quality-loc">
+		  <xsl:choose>
+		  <xsl:when test="$quality!=''">
+			  <xsl:value-of select="$quality"/>
+		  </xsl:when>
+		  <xsl:otherwise>0</xsl:otherwise>
+		  </xsl:choose>
+	  </xsl:variable>
+
       <xsl:choose>
         <xsl:when test="$EnableRetina='on' ">
           <!-- IF Image to resize -->
@@ -6749,10 +6811,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+                <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6779,10 +6843,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6805,10 +6871,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6831,10 +6899,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6857,10 +6927,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6883,10 +6955,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6909,10 +6983,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6935,10 +7011,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6961,10 +7039,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -6987,10 +7067,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7013,10 +7095,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7039,10 +7123,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7065,10 +7151,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7080,20 +7168,20 @@
             <xsl:variable name="image">
               <picture>
 
-                <xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc,$forceResize)"/>
-                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$forceResize)"/>
-                <xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2,$forceResize)"/>
-                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$forceResize)"/>
-                <xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2,$forceResize)"/>
-                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$forceResize)"/>
-                <xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2,$forceResize)"/>
-                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$forceResize)"/>
-                <xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2,$forceResize)"/>
-                <xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl,$forceResize)"/>
-                <xsl:variable name="newSrc-xl-x2-webp" select="ew:CreateWebP($newSrc-xl-x2,$forceResize)"/>
-                <xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl,$forceResize)"/>
-                <xsl:variable name="newSrc-xxl-x2-webp" select="ew:CreateWebP($newSrc-xxl-x2,$forceResize)"/>
-                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$forceResize)"/>
+                <xsl:variable name="newSrc-webp" select="ew:CreateWebP($newSrc,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xs-x2-webp" select="ew:CreateWebP($newSrc-xs-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-sm-x2-webp" select="ew:CreateWebP($newSrc-sm-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-md-x2-webp" select="ew:CreateWebP($newSrc-md-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-lg-x2-webp" select="ew:CreateWebP($newSrc-lg-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xl-x2-webp" select="ew:CreateWebP($newSrc-xl-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xxl-x2-webp" select="ew:CreateWebP($newSrc-xxl-x2,$forceResize,$quality-loc)"/>
+                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$forceResize,$quality-loc)"/>
 
 
                 <!--WebP Images-->
@@ -7286,10 +7374,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7316,10 +7406,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7342,10 +7434,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7368,10 +7462,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7394,10 +7490,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7420,10 +7518,12 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
 
@@ -7446,22 +7546,24 @@
                   </xsl:if>
                 </xsl:with-param>
                 <xsl:with-param name="file-suffix" select="''"/>
-                <xsl:with-param name="quality" select="100"/>
+				  <xsl:with-param name="quality" select="$quality-loc"/>
                 <xsl:with-param name="crop" select="$cropvar" />
                 <xsl:with-param name="no-stretch" select="$no-stretch" />
                 <xsl:with-param name="forceResize" select="$forceResize" />
+				  <xsl:with-param name="watermarktext" select="$watermarktext"/>
+				  <xsl:with-param name="copyright" select="$copyright"/>
               </xsl:call-template>
             </xsl:variable>
             <xsl:variable name="image">
               <picture>
 
-                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$forceResize)"/>
-                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$forceResize)"/>
-                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$forceResize)"/>
-                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$forceResize)"/>
-                <xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl,$forceResize)"/>
-                <xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl,$forceResize)"/>
-                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$forceResize)"/>
+                <xsl:variable name="newSrc-xs-webp" select="ew:CreateWebP($newSrc-xs,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-sm-webp" select="ew:CreateWebP($newSrc-sm,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-md-webp" select="ew:CreateWebP($newSrc-md,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-lg-webp" select="ew:CreateWebP($newSrc-lg,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xl-webp" select="ew:CreateWebP($newSrc-xl,$forceResize,$quality-loc)"/>
+                <xsl:variable name="newSrc-xxl-webp" select="ew:CreateWebP($newSrc-xxl,$forceResize,$quality-loc)"/>
+                <xsl:variable name="placeholder-webp" select="ew:CreateWebP($lazyplaceholder,$forceResize,$quality-loc)"/>
 
 
                 <!--WebP Images-->
@@ -9236,7 +9338,7 @@
           </xsl:when>
           <xsl:otherwise>
             <span class="rrpPrice">
-				<xsl:call-template name="formatPrice">
+              <xsl:call-template name="formatPrice">
                 <xsl:with-param name="price" select="$rrp"/>
                 <xsl:with-param name="currency" select="$page/Cart/@currencySymbol"/>
               </xsl:call-template>
@@ -9643,6 +9745,8 @@
     <xsl:param name="crop" select="false()"/>
     <xsl:param name="no-stretch" select="true()"/>
     <xsl:param name="forceResize"/>
+	<xsl:param name="watermarktext"/>
+	<xsl:param name="copyright"/>
 
     <xsl:variable name="max-width-calc">
       <xsl:choose>
@@ -9678,10 +9782,10 @@
       </xsl:choose-->
     <xsl:choose>
       <xsl:when test="$forceResize">
-        <xsl:value-of select="ew:ResizeImage2($path,$max-width-calc,$max-height-calc,$file-prefix,$file-suffix,$quality,$no-stretch,$crop,1)"/>
+        <xsl:value-of select="ew:ResizeImage2($path,$max-width-calc,$max-height-calc,$file-prefix,$file-suffix,$quality,$no-stretch,$crop,1,$watermarktext,$copyright)"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:value-of select="ew:ResizeImage($path,$max-width-calc,$max-height-calc,$file-prefix,$file-suffix,$quality,$no-stretch,$crop)"/>
+        <xsl:value-of select="ew:ResizeImage($path,$max-width-calc,$max-height-calc,$file-prefix,$file-suffix,$quality,$no-stretch,$crop,0,$watermarktext,$copyright)"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -10224,9 +10328,11 @@
     <xsl:param name="comma-separated-files"/>
     <xsl:param name="bundle-path"/>
     <xsl:param name="async"/>
+	<xsl:param name="defer"/>
     <xsl:call-template name="render-js-files">
       <xsl:with-param name="list" select="ew:BundleJS($comma-separated-files,$bundle-path)"/>
       <xsl:with-param name="async" select="$async"/>
+	  <xsl:with-param name="defer" select="$defer"/>
     </xsl:call-template>
   </xsl:template>
 
@@ -10251,6 +10357,7 @@
       <xsl:call-template name="render-js-files">
         <xsl:with-param name="list" select="$remaining" />
         <xsl:with-param name="async" select="$async"/>
+		<xsl:with-param name="defer" select="$defer"/>
       </xsl:call-template>
     </xsl:if>
   </xsl:template>
@@ -10478,11 +10585,11 @@
 
   </xsl:template>
 
-	<xsl:template name="GetLatLong">
-		<xsl:param name="address"/>
-		<xsl:if test="$address!=''">
-			<xsl:value-of select="ew:GetLatLong($address)"/>
-		</xsl:if>
-	</xsl:template>
+  <xsl:template name="GetLatLong">
+    <xsl:param name="address"/>
+    <xsl:if test="$address!=''">
+      <xsl:value-of select="ew:GetLatLong($address)"/>
+    </xsl:if>
+  </xsl:template>
 
 </xsl:stylesheet>

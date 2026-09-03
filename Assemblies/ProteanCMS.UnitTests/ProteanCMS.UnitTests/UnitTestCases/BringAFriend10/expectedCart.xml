@@ -1,0 +1,37 @@
+<Order cartId="1048738" session="bargdoru4nyq0kcp3xgkwfql" statusId="1" status="Unknown Process ID" itemCount="1" weight="0" orderType="" BlockCartUpdate="off" complete="True" bDiscountIsPercent="1" discountTotal="8.90" showDiscountCodeBox="true" shippingType="65" shippingCost="3.95" shippingDesc="First Class (Royal Mail)-" ReceiptType="0" totalNet="84.05" vatRate="0" vatAmt="0" total="84.05" currency="" currencySymbol="£" errorMsg="0" cmd="Cart" sessionId="bargdoru4nyq0kcp3xgkwfql" siteUrl="https://demo2019.intotheblue.co.uk/" cartUrl="https://demo2019.intotheblue.co.uk/">
+	<Item id="3023445" contentId="25098" price="80.10" taxRate="0" quantity="1" shippingLevel="-1" discount="8.90" weight="0" parId="" originalPrice="89.00" itemTotal="80.10" unitSaving="8.90" itemSaving="8.90">
+		<Name>Clay Shooting Lesson for Two</Name>
+		
+		<nItemOptGrpIdx>0</nItemOptGrpIdx>
+		<nItemOptIdx>0</nItemOptIdx>
+		<nParentId>0</nParentId>
+		<contentType>SKU</contentType>
+		<ProductStatus>1</ProductStatus>
+		<nShippingGroup/>
+		<nshippingType/>
+		
+		<Discount nDiscountKey="414" nDiscountForeignRef="" cDiscountName="BRINGAFRIEND10" cDiscountCode="BRINGAFRIEND10" bDiscountIsPercent="1" nDiscountValue="10" nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1" nDiscountCodeType="1" cDiscountUserCode="BRINGAFRIEND10" Applied="1" AppliedToCart="1">
+			<cDescription>
+				<p>Bring a friend 10% Discount</p>
+			</cDescription>
+			<cTerms/>
+			<Images>
+				<img src="" width="" height="" class="thumbnail" alt=""/>
+				<img src="" width="" height="" class="display" alt=""/>
+				<img src="" width="" height="" class="detail" alt=""/>
+			</Images>
+			<bFreeGiftBox/>
+			<bApplyToOrder/>
+			<nMinimumOrderValue/>
+			<nMaximumOrderValue>250</nMaximumOrderValue>
+		</Discount>
+		<DiscountPrice OriginalUnitPrice="89.00" UnitPrice="80.10" Units="1" Total="80.1" UnitSaving="8.90000000000001" TotalSaving="8.90000000000001">
+			<DiscountPriceLine nDiscountKey="414" PriceOrder="1" UnitPrice="80.10" Total="80.1" UnitSaving="8.90000000000001" TotalSaving="0"/>
+		</DiscountPrice>
+	</Item>
+	<Shipping>
+		<Name>First Class (Royal Mail)</Name>
+		<Carrier/>
+		<DeliveryTime>Immediate</DeliveryTime>
+	</Shipping>	
+</Order>

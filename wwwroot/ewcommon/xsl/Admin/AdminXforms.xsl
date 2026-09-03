@@ -209,7 +209,7 @@
 	</xsl:template>
 
 
-	<xsl:template match="Content[ancestor::Page[@adminMode='true'] and @name='UserLogon']" mode="xform">
+	<xsl:template match="Content[ancestor::Page[@adminMode='true'] and (@name='UserLogon' or @name='AdminLogon')]" mode="xform">
 		<form method="{model/submission/@method}" action="">
 			<xsl:attribute name="class">
 				<xsl:text>ewXform panel panel-default</xsl:text>
@@ -239,13 +239,18 @@
 			<xsl:if test="descendant::upload">
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 			</xsl:if>
+
 			<xsl:for-each select="group">
 				<div class="panel-body">
 					<xsl:apply-templates select="label" mode="legend"/>
-					<p>Welcome back, please sign in to your account</p>	
+<p>Welcome back, please sign in to your account</p>
 					<xsl:apply-templates select="parent::*/alert" mode="xform"/>
 					<xsl:apply-templates select="group | repeat | input | secret | select | select1 | range | textarea | upload | hint | help | alert | div | submit" mode="xform"/>
-				</div>				
+
+
+
+				</div>
+				
 			</xsl:for-each>
 		</form>
 		<xsl:apply-templates select="descendant-or-self::*" mode="xform_modal"/>
@@ -848,6 +853,7 @@
 	<!-- TinyMCE configuration -->
 	<xsl:template match="textarea" mode="xform_control_script">
 		<script type="text/javascript">
+			window.addEventListener("load", function()  {
 			$('#<xsl:apply-templates select="." mode="getRefOrBind"/>').tinymce({
 			<xsl:apply-templates select="." mode="tinymceGeneralOptions"/>,
 			theme_modern_buttons1: "<xsl:apply-templates select="." mode="tinymceButtons1"/>",
@@ -855,6 +861,7 @@
 			theme_modern_buttons3: "<xsl:apply-templates select="." mode="tinymceButtons3"/>",
 			theme_modern_blockformats : "p,h1,h2,h3,h4,h5,h6,blockquote,div,dt,dd,code,samp",
 			valid_elements: <xsl:apply-templates select="." mode="tinymceValidElements"/>
+			});
 			});
 		</script>
 	</xsl:template>
@@ -977,6 +984,7 @@
 			<xsl:apply-templates select="." mode="getRefOrBind"/>
 		</xsl:variable>
 		<script type="text/javascript">
+			window.addEventListener("load", function() {
 			var editor = CodeMirror.fromTextArea('<xsl:value-of select="$ref"/>', {
 			height: "<xsl:value-of select="number(@rows) * 25"/>px",
 			parserfile: "parsexml.js",
@@ -987,6 +995,7 @@
 			reindentOnLoad: true,
 			textWrapping: true,
 			matchClosing: true
+			});
 			});
 		</script>
 	</xsl:template>
@@ -3396,4 +3405,52 @@
 			<xsl:text> </xsl:text>
 		</div>	
 	</xsl:template>
+
+
+	<xsl:template match="div[@class='orderNotes']" mode="xform">
+		<div>
+			<xsl:if test="./@class">
+				<xsl:attribute name="class">
+					<xsl:value-of select="./@class"/>
+				</xsl:attribute>
+			</xsl:if>
+
+			<div class="panel">
+				<div class="panel-body">
+					<xsl:for-each select="ul/li">
+						<xsl:variable name="wordcount">
+							<xsl:call-template name="word-count">
+								<xsl:with-param name="data" select="node()"/>
+								<xsl:with-param name="num" select="'0'"/>
+							</xsl:call-template>
+						</xsl:variable>
+						<div>
+
+							<xsl:choose>
+								<xsl:when test="$wordcount > 20">
+									<xsl:call-template name="firstWords">
+										<xsl:with-param name="value" select="node()"/>
+										<xsl:with-param name="count" select="'20'"/>
+									</xsl:call-template>
+									<a data-toggle="collapse" href="#ordernote-{position()}" role="button" aria-expanded="false" aria-controls="collapseExample">
+										&#160;more...
+									</a>
+									<div class="collapse" id="ordernote-{position()}">
+										<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+									</div>
+								</xsl:when>
+								<xsl:otherwise>
+
+									<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+
+								</xsl:otherwise>
+							</xsl:choose>
+						</div>
+
+					</xsl:for-each>
+				</div>
+			</div>
+		</div>
+	</xsl:template>
+
 </xsl:stylesheet>

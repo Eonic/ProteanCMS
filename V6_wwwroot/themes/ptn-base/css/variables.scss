@@ -66,6 +66,7 @@ $focus-ring-opacity: .25 !default;
 $focus-ring-color: rgba($primary, $focus-ring-opacity) !default;
 $focus-ring-offset: 5px;
 
+$input-focus-border-color: $focus-ring-color;
 /*################### NAVIGATION #####################*/
 $navbar-light-color: $body-color;
 $nav-link-hover-color: $primary;
@@ -75,8 +76,6 @@ $main-nav-size: 1.1rem;
 //$navbar-font:$headings-font-family;
 $nav-padding-y: 8px;
 $nav-padding-x: 1rem;
-$info-nav-spacing: $nav-padding-x;
-
 
 //$dropdown-font-size: $font-size-base !default;
 //$dropdown-color: var(--#{$prefix}body-color) !default;
@@ -93,12 +92,18 @@ $mobile-dd-background: #fff;
 $mobile-dd-color: $body-color;
 $mobile-dd-active: $primary;
 
+$info-nav-spacing: $nav-padding-x;
+$info-nav-color: #fff;
+$info-nav-hover: $primary;
+$info-nav-active: $info-nav-hover;
+$info-nav-size: 0.9rem;
 /*##################### HEADER #######################*/
 $header-menu: "header-menu-right";
 $header-bg: transparent;
-$header-color: $body-color;
+$header-above: $info;
+$header-color: #fff;
 $header-icon-color: $header-color;
-$header-spacing: $nav-padding-x;
+$header-spacing: 1.5rem;
 $header-icon-size: 1.3rem;
 $nav-breakpoint: lg;
 $fixed-height-xs: 100px;

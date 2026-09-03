@@ -1,0 +1,38 @@
+<Order cartId="1048737" session="bargdoru4nyq0kcp3xgkwfql" statusId="1" status="Unknown Process ID" itemCount="1" weight="0" orderType="" BlockCartUpdate="off" complete="True" bDiscountIsPercent="1" discountTotal="25.80" showDiscountCodeBox="true" shippingType="65" shippingCost="3.95" shippingDesc="First Class (Royal Mail)-" ReceiptType="0" totalNet="107.15" vatRate="0" vatAmt="0" total="107.15" currency="" currencySymbol="£" errorMsg="0" cmd="Cart" sessionId="bargdoru4nyq0kcp3xgkwfql" siteUrl="https://demo2019.intotheblue.co.uk/" cartUrl="https://demo2019.intotheblue.co.uk/">
+	<Item id="3023439" contentId="84538" price="103.20" taxRate="0" quantity="1" shippingLevel="-1" discount="25.80" weight="0" parId="" originalPrice="129.00" itemTotal="103.20" unitSaving="25.80" itemSaving="25.80">
+		<Name>Half Day for One</Name>
+		
+		<nItemOptGrpIdx>0</nItemOptGrpIdx>
+		<nItemOptIdx>0</nItemOptIdx>
+		<nParentId>0</nParentId>
+		<contentType>SKU</contentType>
+		<ProductStatus>1</ProductStatus>
+		<nShippingGroup/>
+		<nshippingType/>
+		
+		<Discount nDiscountKey="417" cDiscountName="Angela 20% Discount" cDiscountCode="AG20" bDiscountIsPercent="1" nDiscountValue="20" nDiscountMinPrice="" nDiscountMinQuantity="" nDiscountCat="1" nDiscountCodeType="1" cDiscountUserCode="AG20" Applied="1" AppliedToCart="1">
+			<cDescription>
+				<p>Angela 20% Discount</p>
+			</cDescription>
+			<cTerms/>
+			<Images>
+				<img src="" width="" height="" class="thumbnail" alt=""/>
+				<img src="" width="" height="" class="display" alt=""/>
+				<img src="" width="" height="" class="detail" alt=""/>
+			</Images>
+			<bFreeGiftBox/>
+			<bApplyToOrder/>
+			<nMinimumOrderValue/>
+			<nMaximumOrderValue/>
+		</Discount>
+		<DiscountPrice OriginalUnitPrice="129.00" UnitPrice="103.20" Units="1" Total="103.2" UnitSaving="25.8" TotalSaving="25.8">
+			<DiscountPriceLine nDiscountKey="417" PriceOrder="1" UnitPrice="103.20" Total="103.2" UnitSaving="25.8" TotalSaving="0"/>
+		</DiscountPrice>
+	</Item>
+	<Shipping>
+		<Name>First Class (Royal Mail)</Name>
+		<Carrier/>
+		<DeliveryTime>Immediate</DeliveryTime>
+	</Shipping>
+	
+</Order>

@@ -2,9 +2,9 @@
 // $Library:     Protean.Providers.messaging.base
 // $Revision:    3.1  
 // $Date:        2010-03-02
-// $Author:      Trevor Spink (trevor@eonic.co.uk)
-// &Website:     www.eonic.co.uk
-// &Licence:     All Rights Reserved.
+// $Author:      Trevor Spink (trevor@eonic.digital)
+// &Website:     eonic.digital
+// &Licence:     Apache-2.0 license
 // $Copyright:   Copyright (c) 2002 - 2010 Eonic Ltd.
 // ***********************************************************************
 
@@ -13,8 +13,6 @@ using System;
 using System.Reflection;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Tools.Integration.Twitter;
 using static Protean.Cms;
 using static Protean.Cms.Cart;
@@ -22,6 +20,7 @@ using static Protean.stdTools;
 using static Protean.Tools.Xml;
 using System.Dynamic;
 using Protean.Providers.Membership;
+using Protean.Providers.Payment;
 
 namespace Protean.Providers
 {
@@ -50,6 +49,8 @@ namespace Protean.Providers
             string GetMethodDetail(ref Cms oWeb, ref string nPaymentProviderRef);
             bool AddPaymentButton(ref Cms myWeb, ref Protean.Cms.Cart oCart, ref Cms.xForm oOptXform, ref XmlElement oFrmElmt, XmlElement configXml, double nPaymentAmount, string submissionValue, string refValue);
             void ValidatePaymentByCart(int nCartId, bool bValid);
+
+            bool CheckReceiptIdExists(string cReceiptId);
             string RefundPayment(string providerPaymentReference, decimal amount, string validGroup = "");
             string CancelPayments(ref Cms oWeb, ref string nPaymentProviderRef);
             string CollectPayment(ref Cms myWeb, long nPaymentMethodId, double Amount, string CurrencyCode, string PaymentDescription, ref Cms.Cart oCart);
@@ -57,6 +58,10 @@ namespace Protean.Providers
             string ProcessNewPayment(string orderId, decimal amount, string cardNumber, string cV2, string expiryDate, String startDate, String cardHolderName, string address1, string address2, string town, string postCode, string cCounty = "", string cCountry = "", string validGroup = "");
 
             XmlElement GetWalletPaymentDetails(XmlElement opElmt);
+
+            object ProcessGooglePayPayment(ref Cms myWeb, ref Protean.Cms.Cart oCart, ref XmlElement oOrder, string googlePayToken);
+            object ValidateApplePayMerchant(string validationURL);
+            object ProcessApplePayPayment(XmlDocument orderXml, string applePayToken);
         }
         public class ReturnProvider
         {
@@ -234,7 +239,7 @@ namespace Protean.Providers
                     try
                     {
 
-                        oEwProv.mcCurrency =Convert.ToString(Interaction.IIf(oCart.mcCurrencyCode == "", oCart.mcCurrency, oCart.mcCurrencyCode));
+                        oEwProv.mcCurrency = string.IsNullOrEmpty(oCart.mcCurrencyCode) ? oCart.mcCurrency : oCart.mcCurrencyCode;
                         oEwProv.mcCurrencySymbol = oCart.mcCurrencySymbol;
                         if (string.IsNullOrEmpty(oOrder.GetAttribute("payableType")))
                         {
@@ -254,8 +259,7 @@ namespace Protean.Providers
                             oEwProv.mcPaymentType = oOrder.GetAttribute("payableType");
                         }
                         oEwProv.mnCartId = oCart.mnCartId;
-                        oEwProv.mcPaymentOrderDescription = "Ref:" + oCart.OrderNoPrefix + oCart.mnCartId + " An online purchase from: " + oCart.mcSiteURL + " on " + niceDate(DateTime.Now) + " " + DateAndTime.TimeValue(Conversions.ToString(DateTime.Now));
-
+                        oEwProv.mcPaymentOrderDescription = "Ref:" + oCart.OrderNoPrefix + oCart.mnCartId + " An online purchase from: " + oCart.mcSiteURL +  " on " + niceDate(DateTime.Now) + " " + DateTime.Now.ToString("HH:mm:ss");
                         if (oOrder.SelectSingleNode("Contact[@type='Billing Address']/GivenName") != null)
                         {
                             oEwProv.mcCardHolderName = oOrder.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText;
@@ -267,14 +271,14 @@ namespace Protean.Providers
                         //object localgetNodeValueByType2() { XmlNode argoParent2 = oOrder; var ret = getNodeValueByType(ref argoParent2, "Contact[@type='Billing Address']/State"); oOrder = (XmlElement)argoParent2; return ret; }
                         //object localgetNodeValueByType3() { XmlNode argoParent3 = oOrder; var ret = getNodeValueByType(ref argoParent3, "Contact[@type='Billing Address']/Country"); oOrder = (XmlElement)argoParent3; return ret; }
 
-                        //cBillingAddress = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(localgetNodeValueByType(), Constants.vbLf), localgetNodeValueByType1()), Constants.vbLf), localgetNodeValueByType2()), Constants.vbLf), localgetNodeValueByType3()), Constants.vbLf));
+                        //cBillingAddress = Convert.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(localgetNodeValueByType(), Constants.vbLf), localgetNodeValueByType1()), Constants.vbLf), localgetNodeValueByType2()), Constants.vbLf), localgetNodeValueByType3()), Constants.vbLf));
 
                         //Build the billing address string
                         XmlNode xmloOrder = oOrder;
-                        cBillingAddress = getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/Street") + Constants.vbLf +
-                            getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/City") + Constants.vbLf +
-                            getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/State") + Constants.vbLf +
-                            getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/Country") + Constants.vbLf;
+                        cBillingAddress = getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/Street") + "\n" +
+                  getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/City") + "\n" +
+                  getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/State") + "\n" +
+                  getNodeValueByType(ref xmloOrder, "Contact[@type='Billing Address']/Country") + "\n";
 
                         oEwProv.mcCardHolderAddress = cBillingAddress;
                         oEwProv.moBillingContact = (XmlElement)oOrder.SelectSingleNode("Contact[@type='Billing Address']");
@@ -288,9 +292,9 @@ namespace Protean.Providers
                         var dFulfillment = DateTime.Now;
                         foreach (XmlNode oNode in oOrder.SelectNodes("Item/productDetail/FulfillmentDate[node()!='']"))
                         {
-                            if (Conversions.ToDate(oNode.InnerText) > dFulfillment)
+                            if (Convert.ToDateTime(oNode.InnerText) > dFulfillment)
                             {
-                                dFulfillment = Conversions.ToDate(oNode.InnerText);
+                                dFulfillment = Convert.ToDateTime(oNode.InnerText);
                             }
                         }
 
@@ -299,7 +303,7 @@ namespace Protean.Providers
                         {
                             if (oOrder.SelectSingleNode(moCartConfig["FullfillmentDateXpath"]) is null)
                             {
-                                Information.Err().Raise(1009, "invalidFullfilmentXpath", moCartConfig["FullfillmentDateXpath"] + " is invalid.");
+                                throw new InvalidOperationException($"Error 1009: {moCartConfig["FullfillmentDateXpath"]} is invalid.");
                             }
                             else
                             {
@@ -354,14 +358,14 @@ namespace Protean.Providers
 
                             default:
                                 {
-                                    if (Strings.InStr(mcPaymentMethod, "Repeat_") > 0)
+                                    if (mcPaymentMethod?.Contains("Repeat_") == true)
                                     {
                                         // get repeat id
                                         string cOld = "";
                                         string cNew = "";
                                         int i = 1;
-                                        int nStart = Strings.InStr(mcPaymentMethod, "Repeat_") + 6;
-                                        while (!(!Information.IsNumeric(cNew) & !string.IsNullOrEmpty(cNew) | nStart + (i - 1) >= mcPaymentMethod.Length))
+                                        int nStart = mcPaymentMethod?.IndexOf("Repeat_") + 7 ?? 0; // +7 because C# is 0-based
+                                        while (!(!Tools.Number.IsNumeric(cNew) & !string.IsNullOrEmpty(cNew) | nStart + (i - 1) >= mcPaymentMethod.Length))
                                         {
                                             cOld = cNew;
                                             cNew = mcPaymentMethod.Substring(nStart, i);
@@ -451,9 +455,9 @@ namespace Protean.Providers
 
                         foreach (var item in myWeb.moRequest.Form)
                         {
-                            XmlNode newInput = oXform.addInput(ref oFrmGroup, Conversions.ToString(item), false, Conversions.ToString(item), "hidden");
+                            XmlNode newInput = oXform.addInput(ref oFrmGroup, Convert.ToString(item), false, Convert.ToString(item), "hidden");
                             XmlElement newInputElmt = (XmlElement)newInput;
-                            oXform.addValue(ref newInputElmt, myWeb.moRequest.Form[Conversions.ToString(item)]);
+                            oXform.addValue(ref newInputElmt, myWeb.moRequest.Form[Convert.ToString(item)]);
 
                         }
 
@@ -568,7 +572,7 @@ namespace Protean.Providers
                         // get the audit id 
                         string cSQL = "SELECT tblAudit.nAuditKey FROM tblCartOrder INNER JOIN tblCartPaymentMethod ON tblCartOrder.nPayMthdId = tblCartPaymentMethod.nPayMthdKey INNER JOIN tblAudit ON tblCartPaymentMethod.nAuditId = tblAudit.nAuditKey WHERE tblCartOrder.nCartOrderKey = " + nCartId;
                         string nAuditId = myWeb.moDbHelper.ExeProcessSqlScalar(cSQL);
-                        if (Information.IsNumeric(nAuditId))
+                        if (Tools.Number.IsNumeric(nAuditId))
                         {
 
                             var oXml = new XmlDocument();
@@ -578,7 +582,7 @@ namespace Protean.Providers
                             addNewTextNode("nAuditKey", ref argoNode, nAuditId);
                             oElmt = (XmlElement)argoNode;
                             XmlNode argoNode1 = oElmt;
-                            addNewTextNode("nStatus", ref argoNode1, Conversions.ToString(Interaction.IIf(bValid, 1, 0)));
+                            addNewTextNode("nStatus", ref argoNode1, bValid ? "1" : "0");
                             oElmt = (XmlElement)argoNode1;
                             oInstance.AppendChild(oElmt);
 
@@ -621,6 +625,28 @@ namespace Protean.Providers
                 {
                     //throw new NotImplementedException();
                     return null;
+                }
+
+               
+                public object ProcessGooglePayPayment(ref Cms myWeb, ref Cart oCart, ref XmlElement oOrder, string googlePayToken)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public object ProcessApplePayPayment(XmlDocument orderXml, string applePayToken)
+                {
+                    throw new NotImplementedException();
+                }
+
+                
+                public object ValidateApplePayMerchant(string validationURL)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public bool CheckReceiptIdExists(string cReceiptId)
+                {
+                    throw new NotImplementedException();
                 }
             }
         }

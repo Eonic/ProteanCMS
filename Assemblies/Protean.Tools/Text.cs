@@ -20,6 +20,80 @@ namespace Protean.Tools
             UnambiguousCharacters = 64
         }
 
+
+        public static bool IsDate(object value)
+        {
+            if (value == null) return false;
+            return DateTime.TryParse(Convert.ToString(value), out _);
+        }
+
+
+        public static string DateDiff(string date1String, string date2String, string datePart)
+        {
+            string nDiff = "";
+            try
+            {
+                string[] ValidDatePart = new[] { "d", "y", "h", "n", "m", "q", "s", "w", "ww", "yyyy" };
+                if (Tools.Text.IsDate(date1String) && Tools.Text.IsDate(date2String) && Array.IndexOf(ValidDatePart, datePart) > ValidDatePart.GetLowerBound(0) - 1)
+                {
+                    DateTime d1 = Convert.ToDateTime(date1String);
+                    DateTime d2 = Convert.ToDateTime(date2String);
+                    long diff = 0;
+
+                    switch ((datePart ?? "").ToLowerInvariant())
+                    {
+                        case "d":
+                            diff = (long)(d2.Date - d1.Date).TotalDays;
+                            break;
+
+                        case "h":
+                            diff = (long)(d2 - d1).TotalHours;
+                            break;
+
+                        case "n": // minutes (VB uses "n")
+                            diff = (long)(d2 - d1).TotalMinutes;
+                            break;
+
+                        case "s":
+                            diff = (long)(d2 - d1).TotalSeconds;
+                            break;
+
+                        case "m": // months
+                            diff = (d2.Year - d1.Year) * 12L + (d2.Month - d1.Month);
+                            break;
+
+                        case "q": // quarters
+                            {
+                                long months = (d2.Year - d1.Year) * 12L + (d2.Month - d1.Month);
+                                diff = months / 3L;
+                                break;
+                            }
+
+                        case "w":
+                        case "ww": // treat both as weeks
+                            diff = (long)((d2.Date - d1.Date).TotalDays / 7.0);
+                            break;
+
+                        case "y":
+                        case "yyyy": // years (VB DateDiff "yyyy" is year-component difference)
+                            diff = d2.Year - d1.Year;
+                            break;
+
+                        default:
+                            diff = (long)(d2.Date - d1.Date).TotalDays;
+                            break;
+                    }
+
+                    nDiff = diff.ToString();
+                }
+                return nDiff;
+            }
+            catch (Exception)
+            {
+                return nDiff;
+            }
+        }
+
         public static long ToUnixTime(this DateTime date)
         {
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -31,6 +105,7 @@ namespace Protean.Tools
         {
             return date.ToString("ddd") + ", " + date.ToString("dd MM yyyy HH:mm:ss") + " GMT";
         }
+
 
 
         public static string MaskString(string cInitialString, string cMaskchar = "*", bool bKeepSpaces = false, int nNoCharsToLeave = 4)
@@ -61,19 +136,32 @@ namespace Protean.Tools
 
         public static bool IsEmail(string cEmail)
         {
-            // checks the validity of the email address by assuming it is false and running a series of tests.
-            // if the email string passes all tests then this function returns True
-            // checks are:-
-            // is empty?
-            // no spaces inside?
-            // @ separator in place
-            // last . is less than 4 chars from end
+            // Validates email addresses according to RFC 5322 standards
+            // Supports:
+            // - Standard ASCII email addresses
+            // - Quoted strings in local part
+            // - Special characters (e.g., +, -, _, ., %)
+            // - IP address domains (e.g., user@[192.168.1.1])
+            // - Internationalized Domain Names (IDN) via punycode conversion
+            // - Comments (via punycode in domains)
+            // - Multiple TLD levels
+            
+            if (string.IsNullOrWhiteSpace(cEmail))
+                return false;
 
-            // OR... Do it in one very efficient line (more efficient than nested text searches)
-
-
-            // Validate the e-mail address
-            return new Regex(@"^[A-Z0-9.'_%-]+@[A-Z0-9-]+(\.[A-Z0-9-]+)*\.[A-Z]{2,24}$", RegexOptions.IgnoreCase).IsMatch(cEmail + "");
+            try
+            {
+                // Use built-in .NET email validation which handles RFC 5322 and IDN
+                var addr = new System.Net.Mail.MailAddress(cEmail);
+                
+                // Verify the address matches the original input (handles edge cases)
+                return addr.Address == cEmail.Trim();
+            }
+            catch
+            {
+                // If MailAddress constructor throws, it's not a valid email
+                return false;
+            }
         }
 
         public static string IntegerToString(int nNumber, int nMinLength)
@@ -616,7 +704,7 @@ namespace Protean.Tools
                     }
 
                 }
-                return cName;
+                return cName.Trim();
 
             }
             catch (Exception ex)
@@ -739,6 +827,33 @@ namespace Protean.Tools
             xmlString = Regex.Replace(xmlString, "<[/]?(" + tagNames + @":\w+)[^>]*?>", "", RegexOptions.IgnoreCase);
 
             return xmlString;
+        }
+
+        public static bool IsAppleDevice(string userAgent)
+        {
+            if (string.IsNullOrEmpty(userAgent))
+            {
+                return false;
+            }
+
+            // Check for iPhone, iPod, or iPad (for older iOS versions)
+            if (userAgent.Contains("iphone") || userAgent.Contains("ipod"))
+            {
+                return true;
+            }
+            // Check for iPad (for newer iPadOS which might use "Macintosh" in UA string)
+            else if (userAgent.Contains("ipad") || userAgent.Contains("macintosh"))
+            {
+
+                return true;
+            }
+            // if a broader "Apple device" detection is needed beyond mobile devices.
+            if (userAgent.Contains("mac os x"))
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

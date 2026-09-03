@@ -6,8 +6,6 @@ using System.Diagnostics;
 using System.Web.Configuration;
 using System.Xml;
 using CardinalCommerce;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Protean.Tools.Integration.Twitter;
 using static Protean.Cms.Cart;
 using static Protean.stdTools;

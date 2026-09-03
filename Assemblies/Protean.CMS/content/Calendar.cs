@@ -1,17 +1,13 @@
 ﻿using System;
+using System.Globalization;
 using System.Xml;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using static Protean.Tools.Xml;
 
 namespace Protean
 {
-
-
     public partial class Cms
     {
-
-        public class Calendar
+        public class Calendar : IDisposable
         {
 
             #region    Error Handling
@@ -26,6 +22,7 @@ namespace Protean
             #endregion
 
             #region    Declarations
+            private bool disposedValue = false; // To detect redundant calls
 
             private const string mcModuleName = "Eonic.Calendar";
             private System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
@@ -87,8 +84,8 @@ namespace Protean
                     {
 
 
-                        int cGetMonth = Conversions.ToInteger(oCalContent.SelectSingleNode("DisplaySettings/Months").InnerText);
-                        bool bSDateAsToday = Conversions.ToBoolean(Interaction.IIf(oCalContent.SelectSingleNode("DisplaySettings/StartDateAsToday").InnerText == "true", true, false));
+                        int cGetMonth = Convert.ToInt16(oCalContent.SelectSingleNode("DisplaySettings/Months").InnerText);
+                        bool bSDateAsToday = string.Equals(oCalContent.SelectSingleNode("DisplaySettings/StartDateAsToday")?.InnerText, "true",StringComparison.OrdinalIgnoreCase);
                         string cSDateinMonths = oCalContent.SelectSingleNode("DisplaySettings/StartDateInMonths").InnerText;
                         string sContentTypes = oCalContent.SelectSingleNode("ContentTypes").InnerText;
                         XmlElement xmloCalContent = oCalContent;
@@ -146,14 +143,12 @@ namespace Protean
                     else
                     {
                         // the start date is cSDateinMonths months ahead of the current date
-                        dCalendarStart = DateAndTime.DateAdd(DateInterval.Month, Conversions.ToInteger(cSDateinMonths), dCalendarEnd);
+                        dCalendarStart = dCalendarEnd.AddMonths(Convert.ToInt32(cSDateinMonths));
                     }
 
 
                     // end date is always cGetMonths on from the start date
-                    dCalendarEnd = DateAndTime.DateAdd(DateInterval.Month, cMonthsToGet, dCalendarStart);
-                    dCalendarEnd = DateAndTime.DateAdd(DateInterval.Day, -1, dCalendarEnd);
-
+                    dCalendarEnd = dCalendarStart.AddMonths(cMonthsToGet).AddDays(-1);
 
                     // get xml for calendar element within these dates
                     var oCalendar = new Tools.Calendar(dCalendarStart, dCalendarEnd);
@@ -225,7 +220,7 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
-                    return Conversions.ToDate("01" + " " + DateAndTime.MonthName(dInput.Month) + " " + dInput.Year);
+                    return new DateTime(dInput.Year, dInput.Month, 1);
                 }
                 catch (Exception ex)
                 {
@@ -254,11 +249,14 @@ namespace Protean
                     }
                     strDate.Append(" ");
 
-                    strDate.Append(DateAndTime.MonthName(Conversions.ToInteger(cInput.Substring(4, 2)))); // month
-                    strDate.Append(" ");
-                    strDate.Append(cInput.Substring(0, 4)); // year
+                    int month = int.Parse(cInput.Substring(4, 2));
+                    int year = int.Parse(cInput.Substring(0, 4));
 
-                    return Conversions.ToDate(strDate.ToString());
+                    strDate.Append(CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month));
+                    strDate.Append(" ");
+                    strDate.Append(year);
+
+                    return Convert.ToDateTime(strDate.ToString());
                 }
 
                 catch (Exception ex)
@@ -523,13 +521,15 @@ namespace Protean
                        // string sProcessInfo = "Begin Calendar";
                         moCalendar = new Calendar(ref myWeb);
 
-                        int cGetMonth = Conversions.ToInteger(oContentNode.GetAttribute("months"));
-                        bool bSDateAsToday = Conversions.ToBoolean(Interaction.IIf(oContentNode.GetAttribute("startDateAsToday") == "true", true, false));
+                        int cGetMonth = Convert.ToInt16(oContentNode.GetAttribute("months"));
+                        bool bSDateAsToday;
+                        bool.TryParse(oContentNode.GetAttribute("startDateAsToday"), out bSDateAsToday);
                         string cSDateinMonths = oContentNode.GetAttribute("startDateInMonths");
                         string cContentTypes = oContentNode.GetAttribute("contentTypes");
 
                         moCalendar.add(ref oContentNode, cGetMonth, bSDateAsToday, cSDateinMonths, cContentTypes);
 
+                        moCalendar?.Dispose();
                         moCalendar = null;
                         //sProcessInfo = "End Calendar";
                     }
@@ -540,6 +540,82 @@ namespace Protean
                     }
                 }
             }
+
+            #region IDisposable Implementation
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        try
+                        {
+                            // ====================
+                            // 1. UNSUBSCRIBE EVENT HANDLERS
+                            // ====================
+                            if (OnError != null)
+                            {
+                                foreach (var handler in OnError.GetInvocationList())
+                                {
+                                    OnError -= (OnErrorEventHandler)handler;
+                                }
+                            }
+
+                            // ====================
+                            // 2. CLEAR REFERENCES (NOT OWNED - DO NOT DISPOSE)
+                            // ====================
+
+                            // Parent reference - owned by parent Cms object
+                            myWeb = null;
+
+                            // Database helper - owned by parent
+                            moDB = null;
+
+                            // XML document - owned by parent
+                            moPageXml = null;
+
+                            // Context - owned by parent
+                            moCtx = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log disposal errors but don't throw
+                            System.Diagnostics.Debug.WriteLine(
+                                $"Error in Calendar.Dispose: {ex.Message}");
+                        }
+                    }
+
+                    // Free unmanaged resources (if any)
+                    // No unmanaged resources to free
+
+                    disposedValue = true;
+                }
+            }
+
+            // Finalizer
+            ~Calendar()
+            {
+                Dispose(false);
+            }
+
+            // Public Dispose method
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            // Helper method to prevent use after disposal
+            protected void ThrowIfDisposed()
+            {
+                if (disposedValue)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+            }
+
+            #endregion
         }
 
     }

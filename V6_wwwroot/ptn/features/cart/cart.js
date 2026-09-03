@@ -100,6 +100,7 @@
             }
         });
 
+
     }
 
     if ($("form#PayForm").exists()) {
@@ -141,7 +142,8 @@
     });
 
     initialiseProductSKUs();
-});
+
+    cartActionListeners();});
 
 
 $("#confirmterms_Agree").change(function () {
@@ -317,4 +319,132 @@ function incrementQuantityNum(inputName, operator, amount) {
         }
 
     }
+}
+
+
+/* Function to trigger listners for the cartListing */
+function cartActionListeners() {
+
+    /* Add to cart button action */
+    $('#addPromoCode').click(function (clicky) {
+        clicky.preventDefault();
+        addPromoCodeAPIUrl = '/ewapi/Cms.Cart/AddDiscountCode';
+        discountCode = $('#txtPromoCode').val();
+
+        // alert(discountCode);
+        var inputJson = {
+            Code: discountCode
+        };
+
+        $.ajax(addPromoCodeAPIUrl, {
+            data: JSON.stringify(inputJson),
+            contentType: 'application/json',
+            type: 'POST'
+        }).done(function (data) {
+            if (data === discountCode) {
+                location.reload();
+            }
+            else {
+                $('.promo-alert').remove();
+                $('.basket-promo').append('<div class="alert promo-alert">' + data + '</div>')
+            }
+        }
+        );
+        return false;
+    });
+
+    /* Add to cart button action */
+    $('#addClientNotes').click(function (clicky) {
+        clicky.preventDefault();
+        addClientNotesAPIUrl = '/ewapi/Cms.Cart/SaveClientNotes';
+        notesText = $('#txtClientNotes').val();
+        
+        var inputJson = {
+            Notes: notesText
+        };
+
+        $.ajax(addClientNotesAPIUrl, {
+            data: JSON.stringify(inputJson),
+            contentType: 'application/json',
+            type: 'POST'
+        }).done(function (data) {
+            if (data === 'True') {
+                location.reload();
+            }
+            else {
+                alert('notes are not saved:');
+            }
+        }
+        );
+        return false;
+    });
+
+    // alert("listeners on");
+}
+
+
+// Helper function for non-blocking logging to seller notes
+// Returns a promise that resolves when logging is complete (or immediately for sendBeacon)
+function logToSellerNotes(data) {
+    // Convert string to message object
+    if (typeof data === 'string') {
+        data = { message: data };
+    }
+
+    return new Promise(function (resolve, reject) {
+        try {
+            var jsonData = JSON.stringify(data);
+            var dataSize = new Blob([jsonData]).size;
+
+            // sendBeacon has ~64KB limit, use 60KB to be safe
+            var maxBeaconSize = 60 * 1024; // 60KB
+
+            if (navigator.sendBeacon && dataSize <= maxBeaconSize) {
+                // Send as JSON blob - non-blocking, guaranteed delivery
+                var blob = new Blob([jsonData], { type: 'application/json' });
+                var sent = navigator.sendBeacon('/ewapi/Cms.Cart/SaveToSellerNotes', blob);
+
+                // sendBeacon is fire-and-forget, resolve immediately
+                resolve();
+
+                // If sendBeacon failed (returns false), fall back to AJAX
+                if (!sent && typeof $ !== 'undefined' && $.ajax) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/ewapi/Cms.Cart/SaveToSellerNotes",
+                        contentType: "application/json",
+                        data: jsonData,
+                        async: true
+                    });
+                }
+            } else {
+                // Payload too large for sendBeacon or browser doesn't support it
+                // Use async AJAX and wait for it to complete
+                if (typeof $ !== 'undefined' && $.ajax) {
+                    // Log size warning if over limit
+                    if (dataSize < maxBeaconSize) {
+                        //console.warn('Payload size ' + dataSize + ' bytes exceeds sendBeacon limit, using AJAX');
+                    }
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/ewapi/Cms.Cart/SaveToSellerNotes",
+                        contentType: "application/json",
+                        data: jsonData,
+                        async: true
+                    }).done(function () {
+                        resolve(); // Wait for AJAX to complete
+                    }).fail(function (jqXHR, textStatus, errorThrown) {
+                        //console.error('Failed to log to seller notes:', textStatus, errorThrown);
+                        resolve(); // Resolve anyway, don't block form submission on error
+                    });
+                } else {
+                    resolve(); // No AJAX available, resolve immediately
+                }
+            }
+        } catch (ex) {
+            //console.error('Error logging to seller notes:', ex);
+            resolve(); // Resolve anyway, don't block form submission on error
+        }
+    });
 }

@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
@@ -231,7 +229,7 @@ namespace Protean.Providers
                         int itemQty = Convert.ToInt32(eligibleItem.Attributes["quantity"]?.Value ?? "0");
                         double itemCost = itemPrice * itemQty;
 
-                        // 🔥 Double-check price range per item here
+                        // Double-check price range per item here
                         bool withinPriceRange = dMaxPrice > 0
                             ? (itemCost >= dMinPrice && itemCost <= dMaxPrice)
                             : (itemCost >= dMinPrice);
@@ -239,19 +237,28 @@ namespace Protean.Providers
                         if (!withinPriceRange)
                             continue; // skip items not matching this discount’s range
 
-                        XmlElement itemCopy = (XmlElement)oFinalDiscounts.ImportNode(eligibleItem, true);
+                        // BEFORE appending, check if item already exists
+                        string eligibleItemId = eligibleItem.Attributes["id"]?.Value ?? "";
+                        XmlElement existingItem = (XmlElement)oFinalDiscounts.SelectSingleNode($"/Discounts/Item[@id='{eligibleItemId}']");
 
-                        // Remove existing discounts if necessary
-                        foreach (XmlNode existingDiscount in itemCopy.SelectNodes("Discount").Cast<XmlNode>().ToList())
+                        if (existingItem != null)
                         {
-                            itemCopy.RemoveChild(existingDiscount);
+                            // item already exists - just append the discount node to existing item
+                            XmlNode importedDiscount = oFinalDiscounts.ImportNode(discountEl, true);
+                            existingItem.AppendChild(importedDiscount);
                         }
-
-                        // Attach only the correct discount
-                        XmlNode importedDiscount = oFinalDiscounts.ImportNode(discountEl, true);
-                        itemCopy.AppendChild(importedDiscount);
-
-                        oFinalDiscounts.DocumentElement.AppendChild(itemCopy);
+                        else
+                        {
+                            // item doesn't exist - create new as normal
+                            XmlElement itemCopy = (XmlElement)oFinalDiscounts.ImportNode(eligibleItem, true);
+                            foreach (XmlNode existingDiscount in itemCopy.SelectNodes("Discount").Cast<XmlNode>().ToList())
+                            {
+                                itemCopy.RemoveChild(existingDiscount);
+                            }
+                            XmlNode importedDiscount = oFinalDiscounts.ImportNode(discountEl, true);
+                            itemCopy.AppendChild(importedDiscount);
+                            oFinalDiscounts.DocumentElement.AppendChild(itemCopy);
+                        }
                     }
                 }
 
@@ -421,9 +428,9 @@ namespace Protean.Providers
                         decimal nLineTotalSaving = 0m;
 
                         // Collect savings already set by ApplyDiscount
-                        if (oItemElmt.HasAttribute("itemSaving") && Information.IsNumeric(oItemElmt.GetAttribute("itemSaving")))
+                        if (oItemElmt.HasAttribute("itemSaving") && Tools.Number.IsNumeric(oItemElmt.GetAttribute("itemSaving")))
                         {
-                            nLineTotalSaving = Conversions.ToDecimal(oItemElmt.GetAttribute("itemSaving"));
+                            nLineTotalSaving = Convert.ToDecimal(oItemElmt.GetAttribute("itemSaving"));
                         }
 
                         // Accumulate order-level saving
@@ -436,17 +443,17 @@ namespace Protean.Providers
                             oItemElmt.AppendChild(clone);
 
                             // Collect deletion IDs for special categories
-                            if (Information.IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")) &&
-                                Conversions.ToDouble(oDiscountItemTest.GetAttribute("nDiscountCat")) == 4d)
+                            if (Tools.Number.IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")) &&
+                                Convert.ToDouble(oDiscountItemTest.GetAttribute("nDiscountCat")) == 4d)
                             {
                                 if (nDelIDs[0] == 0)
                                 {
-                                    nDelIDs[0] = Conversions.ToInteger(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                    nDelIDs[0] = Convert.ToInt32(oDiscountItemTest.GetAttribute("nDiscountKey"));
                                 }
                                 else
                                 {
-                                    Array.Resize(ref nDelIDs, Information.UBound(nDelIDs) + 1 + 1);
-                                    nDelIDs[Information.UBound(nDelIDs)] = Conversions.ToInteger(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                    Array.Resize(ref nDelIDs, nDelIDs.Length + 1);
+                                    nDelIDs[nDelIDs.Length - 1] = Convert.ToInt32(oDiscountItemTest.GetAttribute("nDiscountKey"));
                                 }
                             }
                         }
@@ -470,7 +477,7 @@ namespace Protean.Providers
                     if (!(nDelIDs[0] == 0))
                     {
                         int nIX;
-                        var loopTo = Information.UBound(nDelIDs);
+                        var loopTo = nDelIDs.Length - 1;
                         for (nIX = 0; nIX <= loopTo; nIX++)
                         {
                             foreach (XmlElement nDelElmt in oCartXML.SelectNodes("descendant-or-self::DiscountItem[@nDiscountKey=" + nDelIDs[nIX] + "] | descendant-or-self::Discount[@nDiscountKey=" + nDelIDs[nIX] + "]"))
@@ -555,7 +562,7 @@ namespace Protean.Providers
             {
                 try
                 {
-                    if (!Information.IsNumeric(nNumber))
+                    if (!Tools.Number.IsNumeric(nNumber))
                         return 0m;
 
                     decimal value = Convert.ToDecimal(nNumber);

@@ -187,7 +187,7 @@
 			<xsl:with-param name="bundle-path">
 				<xsl:text>~/Bundles/Admin</xsl:text>
 			</xsl:with-param>
-			<xsl:with-param name="async" select="true()"/>
+			<xsl:with-param name="defer" select="true()"/>
 		</xsl:call-template>
 		<xsl:apply-templates select="." mode="siteAdminJs"/>
 		<xsl:apply-templates select="." mode="LayoutAdminJs"/>
@@ -290,7 +290,10 @@
 			</div>
 			<xsl:apply-templates select="." mode="adminFooter"/>
 			<xsl:apply-templates select="." mode="footerJs"/>
-			<script>keepAlive();</script>
+			<script type="defer">
+				window.addEventListener("load", function()  {
+				keepAlive();
+			}</script>
 			<div class="modal fade" id="AdminAlertModal" role="dialog" style ="padding-top:15%!important">
 				<div class="modal-dialog">
 					<div class="modal-content  alert alert-danger" role="alert">
@@ -390,7 +393,7 @@
 		</div>
 	</xsl:template>
 
-	<xsl:template match="label[ancestor::Content[@name='UserLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
+	<xsl:template match="label[ancestor::Content[@name='UserLogon' or @name='AdminLogon'] and parent::group/@ref='UserDetails' and  ancestor::Page/@adminMode='true']" mode="legend">
 
 		<xsl:choose>
 			<xsl:when test="$page/Settings/add[@key='web.eonicwebProductName']/@value!=''">
@@ -4298,6 +4301,23 @@
 			<xsl:value-of select="StockCode/node()"/>
 		</xsl:if>
 	</xsl:template>
+
+	<xsl:template match="Content[@type='Product']" mode="ContentListName">
+		<xsl:param name="indent"/>
+		<xsl:value-of select="$indent"/>
+		<xsl:choose>
+			<xsl:when test="Name/node()!=''">
+				<xsl:copy-of select="Name/node()"/>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:value-of select="@name"/>
+			</xsl:otherwise>
+		</xsl:choose>
+		<xsl:if test="StockCode/node()">
+			<xsl:text> - </xsl:text>
+			<xsl:value-of select="StockCode/node()"/>
+		</xsl:if>
+	</xsl:template>
 	<!-- -->
 	<!-- BJR -->
 	<!--   ##################  Discount Rules   ##############################   -->
@@ -4825,11 +4845,7 @@
 						<xsl:with-param name="name">ExitModal</xsl:with-param>
 						<xsl:with-param name="type">Module</xsl:with-param>
 					</xsl:call-template>
-					<xsl:call-template name="editNamedContent">
-						<xsl:with-param name="desc">Critical Path CSS</xsl:with-param>
-						<xsl:with-param name="name">criticalPathCSS</xsl:with-param>
-						<xsl:with-param name="type">PlainText</xsl:with-param>
-					</xsl:call-template>
+					
 					<xsl:call-template name="editNamedContent">
 						<xsl:with-param name="desc">Meta Refresh</xsl:with-param>
 						<xsl:with-param name="name">metaRefresh</xsl:with-param>
@@ -4882,6 +4898,11 @@
 						<xsl:with-param name="desc">Organisation</xsl:with-param>
 						<xsl:with-param name="name">MetaOrganisation</xsl:with-param>
 						<xsl:with-param name="type">Organisation</xsl:with-param>
+					</xsl:call-template>
+        <xsl:call-template name="editNamedContent">
+						<xsl:with-param name="desc">Critical Path CSS</xsl:with-param>
+						<xsl:with-param name="name">criticalPathCSS</xsl:with-param>
+						<xsl:with-param name="type">PlainText</xsl:with-param>
 					</xsl:call-template>
 				</table>
 			</div>
@@ -5509,31 +5530,31 @@
 
 	<xsl:template match="Page[@ewCmd='EditContent' or @ewCmd='AddContent' or @ewCmd='EditPage' or @ewCmd='AddPage' or @ewCmd='AddModule'  or @ewCmd='EditMailContent' or @ewCmd='AddMailModule' or @ewCmd='WebSettings']" mode="LayoutAdminJs">
 		<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The basic File Upload plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The File Upload processing plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The File Upload image preview & resize plugin -->
-		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">
+		<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 		<!-- The Image Lazy load plugin-->
-		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">
+		<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js" defer="defer">
 			<xsl:text> </xsl:text>
 		</script>
 	</xsl:template>
@@ -5599,31 +5620,31 @@
 		</xsl:variable>
 		<xsl:if test="not(contains(/Page/Request/QueryString/Item[@name='contentType'],'popup'))">
 			<!-- The Load Image plugin is included for the preview images and image resizing functionality -->
-			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/load-image.all.min.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The Canvas to Blob plugin is included for image resizing functionality -->
-			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/loadimage/vendor/canvas-to-blob.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.iframe-transport.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The basic File Upload plugin -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The File Upload processing plugin -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-process.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The File Upload image preview & resize plugin -->
-			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js">
+			<script src="/ewcommon/js/jQuery/fileUploader/9.9.3/js/jquery.fileupload-image.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 			<!-- The Image Lazy load plugin -->
-			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js">
+			<script src="/ewcommon/js/jQuery/lazy/jquery.lazy.min.js" defer="defer">
 				<xsl:text> </xsl:text>
 			</script>
 		</xsl:if>
@@ -5634,7 +5655,7 @@
 				$(".modal-backdrop").remove();
 			}-->
 			<xsl:text>
-       
+       window.addEventListener("load", function()  {
         var uploadUrl = '/?ewCmd=</xsl:text><xsl:value-of select="$page/@ewCmd"/>\u0026<xsl:text>ewCmd2=FileUpload</xsl:text>\u0026<xsl:text>storageRoot=</xsl:text><xsl:value-of select="$targetPath"/><xsl:text>'
 
         $('#fileupload').fileupload({
@@ -5742,11 +5763,14 @@
 			);
 			}
 			});
+			});
 		</script>
 
 		<script>
+			window.addEventListener("load", function()  {
 			$(function() {
 			$('.lazy').lazy();
+			});
 			});
 		</script>
 
@@ -7683,7 +7707,16 @@
 	</xsl:template>
 
 	<xsl:template match="Contact" mode="AdminListContact">
-		<xsl:variable name="dirid" select="/Page/Request/QueryString/Item[@name='id']"/>
+		<xsl:variable name="dirid">
+			<xsl:choose>
+				<xsl:when test="/Page/Request/QueryString/Item[@name='id']!=''">
+					<xsl:value-of select="/Page/Request/QueryString/Item[@name='id']"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="/Page/Request/QueryString/Item[@name='parid']"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
 		<div class="col-md-6">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -8431,7 +8464,30 @@
 										<xsl:value-of select="local-name()"/>
 									</dt>
 									<dd>
-										<xsl:value-of select="node()"/>
+										
+										<xsl:variable name="wordcount">
+											<xsl:call-template name="word-count">
+												<xsl:with-param name="data" select="node()"/>
+												<xsl:with-param name="num" select="'0'"/>
+											</xsl:call-template>
+										</xsl:variable>
+										<div>
+											<xsl:choose>
+												<xsl:when test="$wordcount > 20">
+													
+													<a data-toggle="collapse" href="#paymentNotes{position()}" role="button" aria-expanded="false" aria-controls="collapseExample">
+														&#160;detail >
+													</a>
+													<div class="collapse" id="paymentNotes{position()}">
+														<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+													</div>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:apply-templates select="node()" mode="cleanXhtml"/>
+												</xsl:otherwise>
+											</xsl:choose>
+							
+							</div>
 									</dd>
 								</xsl:for-each>
 							</dl>
@@ -8681,7 +8737,37 @@
 					<tr>
 						<td colspan="6">
 							Seller Notes:<br/>
-							<xsl:copy-of select="SellerNotes/node()"/>
+							<div class="panel">
+								<div class="panel-body">
+										<xsl:variable name="wordcount">
+											<xsl:call-template name="word-count">
+												<xsl:with-param name="data" select="SellerNotes/node()"/>
+												<xsl:with-param name="num" select="'0'"/>
+											</xsl:call-template>
+										</xsl:variable>
+										<div>
+											<xsl:choose>
+												<xsl:when test="$wordcount > 20">
+													<xsl:call-template name="firstWords">
+														<xsl:with-param name="value" select="SellerNotes/node()"/>
+														<xsl:with-param name="count" select="'20'"/>
+													</xsl:call-template>
+													<a data-toggle="collapse" href="#sellerNotes" role="button" aria-expanded="false" aria-controls="collapseExample">
+														&#160;more...
+													</a>
+													<div class="collapse" id="sellerNotes">
+														<xsl:apply-templates select="SellerNotes/node()" mode="cleanXhtml"/>
+													</div>
+												</xsl:when>
+												<xsl:otherwise>
+													<xsl:apply-templates select="SellerNotes/node()" mode="cleanXhtml"/>
+												</xsl:otherwise>
+											</xsl:choose>
+										</div>
+
+								</div>
+							</div>
+							
 						</td>
 					</tr>
 				</table>
@@ -11072,7 +11158,7 @@
 					<table class="table">
 						<tr>
 							<th>Name</th>
-							<th>Usernane</th>
+							<th>Username</th>
 							<th>Subscription Name</th>
 							<th>Active</th>
 							<th>Start Date</th>
@@ -11254,6 +11340,11 @@
 								</xsl:choose>
 
 								<xsl:choose>
+									<xsl:when test="tblCartPaymentMethod/cPayMthdDescription='Awaiting Activation' and @providerName='GoCardless'">
+										<div class="alert alert-success">
+											We are awaiting for this to be authorised by GoCardless before we can collect.
+										</div>
+									</xsl:when>
 									<xsl:when test="tblCartPaymentMethod/nStatus!='0' or @cancelDate!=''">
 										<xsl:choose>
 											<xsl:when test="@paymentStatus='cancelled' and @providerName='GoCardless' ">
@@ -11261,6 +11352,7 @@
 													The customer has canceled their GoCardless Direct Debit payment directly with their bank.
 												</div>
 											</xsl:when>
+
 											<xsl:when test="tblCartPaymentMethod/nStatus='1' or @paymentStatus='Manual' ">
 												<div class="alert alert-success">
 													<xsl:choose>
@@ -11486,7 +11578,7 @@
 					<table class="table">
 						<tr>
 							<th>User</th>
-							<th>Usernane</th>
+							<th>Username</th>
 							<th>Subscription</th>
 							<th>Rate</th>
 							<th>Status</th>
@@ -11624,7 +11716,7 @@
 		<table class="table">
 			<tr>
 				<th>User</th>
-				<th>Usernane</th>
+				<th>Username</th>
 				<th>Subscription</th>
 				<th>Rate</th>
 				<th>Status</th>
@@ -14845,4 +14937,190 @@
 
 		</xsl:if>
 	</xsl:template>
+
+<!--404 product report-->
+<xsl:template match="Page[@layout='404ProductReport']" mode="Admin">
+
+    <!-- Read Params -->
+    <xsl:variable name="currentPage" select="number(ContentDetail/HiddenProducts/Products/Params/Param[@name='Page']/@value)" />
+    <xsl:variable name="pageSize" select="number(ContentDetail/HiddenProducts/Products/Params/Param[@name='PageSize']/@value)" />
+   <xsl:variable name="totalCount" select="number(ContentDetail/HiddenProducts/Products/Params/Param[@name='Total']/@value)" />
+  
+    <!-- Default Page -->
+    <xsl:variable name="page">
+        <xsl:choose>
+            <xsl:when test="$currentPage &gt; 0">
+                <xsl:value-of select="$currentPage" />
+            </xsl:when>
+            <xsl:otherwise>1</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <!-- Default PageSize -->
+    <xsl:variable name="size">
+        <xsl:choose>
+            <xsl:when test="$pageSize &gt; 0">
+                <xsl:value-of select="$pageSize" />
+            </xsl:when>
+            <xsl:otherwise>100</xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    
+   <xsl:variable name="allProducts" 
+              select="ContentDetail/HiddenProducts/Products/Product" />
+
+    <!-- Count -->
+    <!--<xsl:variable name="totalCount" select="$productTotalCount" />-->
+
+    <!-- Start index -->
+    <xsl:variable name="start" select="(($page - 1) * $size) + 1" />
+
+    <!-- End index -->
+    <xsl:variable name="end">
+        <xsl:choose>
+            <xsl:when test="($page * $size) &lt; $totalCount">
+                <xsl:value-of select="$page * $size" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$totalCount" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <!-- ========================================================= -->
+    <!-- HEADER BAR WITH PAGINATION -->
+    <!-- ========================================================= -->
+
+    <div class="row" style="background:#dde4eb; padding:15px; margin:0;">
+        <div class="col-md-6">
+            <span style="font-size:18px; font-weight:600;">404 Products</span>
+        </div>
+
+        <div class="col-md-6" style="text-align:right;">
+            <xsl:call-template name="HeaderPagination">
+                <xsl:with-param name="page" select="$page" />
+                <xsl:with-param name="pageSize" select="$size" />
+                <xsl:with-param name="total" select="$totalCount" />
+            </xsl:call-template>
+        </div>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- TABLE -->
+    <!-- ========================================================= -->
+
+    <div class="container" style="width:100%; margin-top:20px;">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Product Id</th>
+                    <th>Schema</th>
+                    <th>Product Name</th>
+                    <th>Product URL</th>
+                </tr>
+            </thead>
+
+            <tbody>
+               <xsl:apply-templates
+    select="$allProducts"
+    mode="hiddenProducts" />
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ========================================================= -->
+    <!-- FOOTER PAGINATION -->
+    <!-- ========================================================= -->
+
+    <div style="margin-top:20px; text-align:right;margin-bottom: 20px;">
+        <xsl:call-template name="HeaderPagination">
+            <xsl:with-param name="page" select="$page" />
+            <xsl:with-param name="pageSize" select="$size" />
+            <xsl:with-param name="total" select="$totalCount" />
+        </xsl:call-template>
+    </div>
+
+</xsl:template>
+
+
+<xsl:template match="Product" mode="hiddenProducts">
+    <tr>
+        <td><xsl:value-of select="nContentKey"/></td>
+        <td><xsl:value-of select="cContentSchemaName"/></td>
+        <td><xsl:value-of select="cContentName"/></td>
+        <td> <a href="?ewCmd=EditContent&amp;id={nContentKey}"
+               style="margin-top:5px; margin-left:5px;"
+               target="_blank"
+               title="Open Product (Internal)">
+                <i class="fa fa-external-link fa-white"></i> <xsl:value-of select="ProductUrl"/>
+            </a></td>
+    </tr>
+</xsl:template>
+
+
+<xsl:template name="HeaderPagination">
+    <xsl:param name="page"/>
+    <xsl:param name="pageSize"/>
+    <xsl:param name="total"/>
+
+    <!-- Start -->
+    <xsl:variable name="start" select="(($page - 1) * $pageSize) + 1" />
+
+    <!-- End -->
+    <xsl:variable name="end">
+        <xsl:choose>
+            <xsl:when test="($page * $pageSize) &lt; $total">
+                <xsl:value-of select="$page * $pageSize"/>
+            </xsl:when>
+            <xsl:otherwise><xsl:value-of select="$total"/></xsl:otherwise>
+        </xsl:choose>
+    </xsl:variable>
+
+    <!-- Total pages -->
+    <xsl:variable name="totalPages" select="floor(($total + $pageSize - 1) div $pageSize)" />
+
+    <span style="margin-right:20px; font-size:15px; ">
+        <xsl:value-of select="$start"/> to <xsl:value-of select="$end"/>
+        of <xsl:value-of select="$total"/> Products
+    </span>
+
+    <!-- Back -->
+    <xsl:choose>
+        <xsl:when test="$page &gt; 1">
+            <a href="?ewCmd=404ProductReport&amp;Page={$page - 1}&amp;PageSize={$pageSize}"
+               style="background:#61b0e9; color:white; padding:8px 14px; 
+                      border-radius:4px; text-decoration:none; margin-right:5px;">
+                &#x2039; Back
+            </a>
+        </xsl:when>
+        <xsl:otherwise>
+            <span style="background:#aacde6; color:white; padding:8px 14px;
+                          border-radius:4px; opacity:0.6; margin-right:5px;">
+                &#x2039; Back
+            </span>
+        </xsl:otherwise>
+    </xsl:choose>
+
+    <!-- Next -->
+    <xsl:choose>
+        <xsl:when test="$page &lt; $totalPages">
+            <a href="?ewCmd=404ProductReport&amp;Page={$page + 1}&amp;PageSize={$pageSize}"
+               style="background:#61b0e9; color:white; padding:8px 14px;
+                      border-radius:4px; text-decoration:none;">
+                Next &#x203A;
+            </a>
+        </xsl:when>
+        <xsl:otherwise>
+            <span style="background:#aacde6; color:white; padding:8px 14px;
+                          border-radius:4px; opacity:0.6;">
+                Next &#x203A;
+            </span>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
+
+
+
 </xsl:stylesheet>

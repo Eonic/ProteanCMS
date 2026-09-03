@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-          <Content adName="" adPlacement="" adWidth="" adHeight="" position="" moduleType="GoogleAd" box=""/>
+          <Content adName="" adPlacement="" adWidth="" adHeight="" adWidthMob="" adHeightMob="" position="" moduleType="GoogleAd" box=""/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -36,6 +36,8 @@
       <bind id="cContentAdPlacement" nodeset="@adPlacement" required="true()" type="string"/>
       <bind id="cContentAdWidth" nodeset="@adWidth" required="true()" type="string"/>
       <bind id="cContentAdHeight" nodeset="@adHeight" required="true()" type="string"/>
+			<bind id="cContentAdWidthMob" nodeset="@adWidthMob" required="true()" type="string"/>
+			<bind id="cContentAdHeightMob" nodeset="@adHeightMob" required="true()" type="string"/>
 		</bind>
 		<bind id="cContentImage" nodeset="tblContent/cContentXmlBrief/Content/img" required="false()" type="xml-replace"/>
 		<bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
@@ -119,6 +121,12 @@
         <input bind="cContentAdHeight" class="long required" suffix="px">
           <label>Height</label>
         </input>
+		  <input bind="cContentAdWidthMob" class="long required" suffix="px">
+			  <label>Mobile Width</label>
+		  </input>
+		  <input bind="cContentAdHeight" class="long required" suffix="px">
+			  <label>Mobile Height</label>
+		  </input>
   		</group>
     </group>
 	</group>

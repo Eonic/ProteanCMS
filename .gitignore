@@ -24,8 +24,7 @@ wwwroot/images/**
 wwwroot/ewcommon/bin/**
 
 V6_wwwroot/bin/**
-V6_wwwroot/images/**
-V6_wwwroot/ptn/Bin/**
+V6_wwwroot/ewCache/**
 
 Assemblies/Protean.CMS/bin/**
 Assemblies/Protean.CMS/obj/**
@@ -40,3 +39,10 @@ Assemblies/Protean.Tools.UnitTests/obj/**
 /.vs/ProteanCMS-V6/v17/.suo
 /V6_wwwroot/ewCache
 /.vs/ProteanCMSInstaller/CopilotIndices/17.14.995.13737
+/.vs/CopilotSnapshots
+/.vs/ProjectEvaluation/proteancms-v6.metadata.v10.bin
+/.vs/ProjectEvaluation/proteancms-v6.projects.v10.bin
+/.vs/ProjectEvaluation/proteancms-v6.strings.v10.bin
+/.vs/ProteanCMS-V6/DesignTimeBuild/.dtbcache.v2
+/.vs/ProteanCMS-V6/v18/fileList.bin
+/Assemblies/Protean.CMS/obj/Debug/Protean.CMS.csproj.FileListAbsolute.txt

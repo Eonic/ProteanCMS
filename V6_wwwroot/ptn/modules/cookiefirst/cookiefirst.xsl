@@ -3,6 +3,19 @@
 
 	<xsl:template match="Content[@type='CookieFirst']" mode="headerOnlyContentJS">
 		<xsl:if test="not($adminMode)">
+			<script>
+				window.dataLayer = window.dataLayer || [];
+				function gtag(){dataLayer.push(arguments);}
+
+				gtag('consent', 'default', {
+				ad_storage: 'denied',
+				ad_user_data: 'denied',
+				ad_personalization: 'denied',
+				analytics_storage: 'denied',
+				wait_for_update: 500
+				});
+			</script>
+
 			<script src="https://consent.cookiefirst.com/sites/{SiteUrl/node()}-{ApiKey/node()}/consent.js">&#160;</script>
 		</xsl:if>
 	</xsl:template>

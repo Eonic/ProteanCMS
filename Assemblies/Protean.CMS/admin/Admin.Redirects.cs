@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Xml;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Protean
 {
@@ -39,7 +38,7 @@ namespace Protean
                     moDbHelper = myWeb.moDbHelper;
                 }
 
-                public string CreateRedirect(ref string redirectType, ref string OldUrl, ref string NewUrl, string hiddenOldUrl = "", int pageId = 0, string isParentPage = "false")
+                public string CreateRedirect(ref string redirectType, ref string OldUrl, ref string NewUrl, string hiddenOldUrl = "", long pageId = 0, string isParentPage = "false")
                 {
 
                     try
@@ -577,11 +576,11 @@ namespace Protean
                     string Result = "";
                     if (pageId > 0)
                     {
-                        Result = Conversions.ToString(moDbHelper.isParent(pageId));
+                        Result = Convert.ToString(moDbHelper.isParent(pageId));
                     }
-                    return Conversions.ToBoolean(Result);
+                    return Convert.ToBoolean(Result);
                 }
-                public string RedirectPage(ref string sRedirectType, ref string sOldUrl, ref string sNewUrl, ref string sPageUrl, bool bRedirectChildPage = false, string sType = "", int nPageId = 0)
+                public string RedirectPage(ref string sRedirectType, ref string sOldUrl, ref string sNewUrl, ref string sPageUrl, bool bRedirectChildPage = false, string sType = "", long nPageId = 0)
                 {
 
                     string result = "success";
@@ -665,13 +664,13 @@ namespace Protean
                             case "301Redirect":
                                 {
 
-                                    CreateRedirect(ref sRedirectType, ref sOldUrl, ref sNewUrl, "", nPageId, Conversions.ToString(bRedirectChildPage));
+                                    CreateRedirect(ref sRedirectType, ref sOldUrl, ref sNewUrl, "", nPageId, Convert.ToString(bRedirectChildPage));
                                     break;
                                 }
 
                             case "302Redirect":
                                 {
-                                    CreateRedirect(ref sRedirectType, ref sOldUrl, ref sNewUrl, "", nPageId, Conversions.ToString(bRedirectChildPage));
+                                    CreateRedirect(ref sRedirectType, ref sOldUrl, ref sNewUrl, "", nPageId, Convert.ToString(bRedirectChildPage));
                                     break;
                                 }
 

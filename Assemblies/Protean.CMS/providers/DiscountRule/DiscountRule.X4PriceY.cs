@@ -1,6 +1,4 @@
 ﻿using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Providers.Authentication;
@@ -74,7 +72,7 @@ namespace Protean.Providers
                             oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString());
                             // oPriceElmt.SetAttribute("UnitPrice", oItemLoop.GetAttribute("price"))
                             oPriceElmt.SetAttribute("Units", oItemLoop.GetAttribute("quantity"));
-                            oPriceElmt.SetAttribute("Total", ((double)nPrice * Conversions.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
+                            oPriceElmt.SetAttribute("Total", ((double)nPrice * Convert.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
                             // oPriceElmt.SetAttribute("Total", oItemLoop.GetAttribute("price") * oItemLoop.GetAttribute("quantity"))
                             oPriceElmt.SetAttribute("UnitSaving", 0.ToString());
                             oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
@@ -82,8 +80,8 @@ namespace Protean.Providers
                         }
                         if (oCartItem != null)
                         {
-                            double baseUnitPrice = Conversions.ToDouble(oItemLoop.GetAttribute("price"));
-                            int baseQty = Conversions.ToInteger(oItemLoop.GetAttribute("quantity"));
+                            double baseUnitPrice = Convert.ToDouble(oItemLoop.GetAttribute("price"));
+                            int baseQty = Convert.ToInt16(oItemLoop.GetAttribute("quantity"));
                             double baseTotal = baseUnitPrice * baseQty;
                             oCartItem.SetAttribute("originalPrice", baseUnitPrice.ToString("0.00"));   // original unit price
                             oCartItem.SetAttribute("price", baseUnitPrice.ToString("0.00"));           // keep unit price attribute consistent
@@ -101,9 +99,9 @@ namespace Protean.Providers
                             int nTotalQOff; // total number of units we need to deduct
                             int nQ; // Total Quanity
 
-                            nQX = Conversions.ToInteger(oDiscountLoop.GetAttribute("nDiscountMinQuantity"));
-                            nQY = Conversions.ToInteger(oDiscountLoop.GetAttribute("nDiscountValue"));
-                            nQ = Conversions.ToInteger(oItemLoop.GetAttribute("quantity"));
+                            nQX = Convert.ToInt16(oDiscountLoop.GetAttribute("nDiscountMinQuantity"));
+                            nQY = Convert.ToInt16(oDiscountLoop.GetAttribute("nDiscountValue"));
+                            nQ = Convert.ToInt16(oItemLoop.GetAttribute("quantity"));
                             int nQtotal = nQ;
                             string ItemId = oItemLoop.GetAttribute("contentId");
 
@@ -112,10 +110,10 @@ namespace Protean.Providers
                             if (oItemLoop.SelectNodes("./preceding-sibling::Item[@contentId='" + ItemId + "' and Discount[@nDiscountCat=3 and not(@Applied='1')]]").Count > 0)
                             {
                                 foreach (XmlElement preceedingItems in oItemLoop.SelectNodes("./preceding-sibling::Item[@contentId='" + ItemId + "' and Discount[@nDiscountCat=3 and not(@Applied='1')]]"))
-                                    nQtotal = (int)Math.Round(nQtotal + Conversions.ToDouble(preceedingItems.GetAttribute("quantity")));
+                                    nQtotal = (int)Math.Round(nQtotal + Convert.ToDouble(preceedingItems.GetAttribute("quantity")));
                             }
 
-                            //nTotalQOff = (int)Math.Round(Conversions.ToDouble(Strings.Split((nQtotal / (double)nQX).ToString(), ".")[0]) * (nQX - nQY));
+                            //nTotalQOff = (int)Math.Round(Convert.ToDouble(Strings.Split((nQtotal / (double)nQX).ToString(), ".")[0]) * (nQX - nQY));
                             int groups = nQtotal / nQX; // integer division floors automatically
                             nTotalQOff = groups * (nQX - nQY);
                             if (nTotalQOff > 0)
@@ -126,19 +124,19 @@ namespace Protean.Providers
                                 oDiscount.SetAttribute("oldUnits", oPriceElmt.GetAttribute("Units")); // Original Charged Units
                                 oDiscount.SetAttribute("Units", (nQ - nTotalQOff).ToString()); // Now charged Units
                                 oDiscount.SetAttribute("oldTotal", oPriceElmt.GetAttribute("Total")); // original total
-                                oDiscount.SetAttribute("Total", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString()); // Now total
-                                oDiscount.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("Total")) - Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString()); // total saving
+                                oDiscount.SetAttribute("Total", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString()); // Now total
+                                oDiscount.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("Total")) - Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString()); // total saving
 
                                 oItemLoop.AppendChild(oDiscount);
                                 //same way need to update the DiscountPrice element
 
                                 // Adjust DiscountPrice to match X-for-Y calculation
                                 oPriceElmt.SetAttribute("Units", (nQ - nTotalQOff).ToString());
-                                oPriceElmt.SetAttribute("Total", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString());
-                                oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oItemLoop.GetAttribute("quantity")) * Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice"))
-                                    - (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff))).ToString());
+                                oPriceElmt.SetAttribute("Total", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString());
+                                oPriceElmt.SetAttribute("TotalSaving", (Convert.ToDouble(oItemLoop.GetAttribute("quantity")) * Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice"))
+                                    - (Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff))).ToString());
 
-                                double unitPrice = Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice"));
+                                double unitPrice = Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice"));
                                 double fullTotal = nQ * unitPrice;
                                 double discountedTotal = (nQ - nTotalQOff) * unitPrice;
                                 double saving = fullTotal - discountedTotal;

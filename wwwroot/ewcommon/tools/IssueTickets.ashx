@@ -38,7 +38,7 @@ Public Class IssueTickets : Implements IHttpHandler, IRequiresSessionState
 
         End If
 
-        context.Response.Redirect("/?ewCmd=Orders&ewCmd2=Display&id=" & OrderId)
+        context.Response.Redirect("/?ewCmd=Orders&ewCmd2=Display&id=" & OrderId, False)
 
     End Sub
 

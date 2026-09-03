@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic.CompilerServices;
 
 namespace Protean
 {
@@ -11,7 +10,7 @@ namespace Protean
         public partial class Cart
         {
 
-            #region JSON Actions
+            #region Purchase Actions
 
             public class PurchaseAction
             {
@@ -40,25 +39,39 @@ namespace Protean
                     try
                     {
                         XmlElement cartItem = (XmlElement)oCartItemProductDetailXml.ParentNode;
-                        short CartItemId = (short)Conversions.ToInteger(cartItem.GetAttribute("id"));
+                        short CartItemId = (short)Convert.ToInt16(cartItem.GetAttribute("id"));
 
                         if (oCartItemProductDetailXml.SelectSingleNode("IssueCodes") != null)
                         {
                             foreach (XmlNode codeNode in oCartItemProductDetailXml.SelectNodes("IssueCodes/code"))
                             {
+                                // if additional codes are defined in product options
+                                short extraCodes = 0;
                                 XmlElement codeElmt = (XmlElement)codeNode;
-
-                                short CodeSetId = (short)Conversions.ToInteger("0" + codeElmt.GetAttribute("codeBank"));
-                                short Quantity = (short)(Conversions.ToInteger(cartItem.GetAttribute("quantity")) + Conversions.ToInteger(codeElmt.GetAttribute("noOfCodes")));
-                                string SetName = cartItem.GetAttribute("name");
+                                foreach (XmlNode optionNode in oCartItemProductDetailXml.ParentNode.SelectNodes("Item"))
+                                {
+                                    XmlNode extraCodesNode = optionNode.SelectSingleNode("productDetail/option/@extraCodes");
+                                    if (extraCodesNode != null && !string.IsNullOrEmpty(extraCodesNode.Value))
+                                    {
+                                        if (short.TryParse(extraCodesNode.Value, out short parsedValue))
+                                        {
+                                            extraCodes = (short)(extraCodes + parsedValue);
+                                        }
+                                    }
+                                }
+                                //Add Codes to the order based on product settings
+                                short CodeSetId = (short)Convert.ToInt16("0" + codeElmt.GetAttribute("codeBank"));
+                                short noOfCodes = (short)Convert.ToInt16("0" + codeElmt.GetAttribute("noOfCodes"));
+                                if (noOfCodes == 0) { noOfCodes = 1; }; // default to 1 if noOfCodes is not specified
+                                short Quantity = (short)((short)Convert.ToInt16(cartItem.GetAttribute("quantity")) * (short)(noOfCodes + extraCodes));
+                                string SetName = codeElmt.GetAttribute("name");
                                 AddCode(ref oCartItemProductDetailXml, CartItemId, CodeSetId, Quantity, SetName);
                             }
                         }
                         else
                         {
-
-                            short CodeSetId = (short)Conversions.ToInteger("0" + oCartItemProductDetailXml.GetAttribute("codeBank"));
-                            short Quantity = (short)Conversions.ToInteger(cartItem.GetAttribute("quantity"));
+                            short CodeSetId = (short)Convert.ToInt16("0" + oCartItemProductDetailXml.GetAttribute("codeBank"));
+                            short Quantity = (short)Convert.ToInt16(cartItem.GetAttribute("quantity"));
                             AddCode(ref oCartItemProductDetailXml, CartItemId, CodeSetId, Quantity, "");
                         }
                         myWeb.moCart.SaveCartXML((XmlElement)cartItem.ParentNode);
@@ -67,7 +80,7 @@ namespace Protean
                     catch (Exception ex)
                     {
                         OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "IssueTickets", ex, ""));
-                        return Conversions.ToBoolean(ex.Message);
+                        return Convert.ToBoolean(ex.Message);
                     }
 
                     return default;
@@ -88,7 +101,7 @@ namespace Protean
                                 string Code = myWeb.moDbHelper.IssueCode((int)CodeSetId, (int)CartItemId, false, (XmlElement)null);
                                 var TicketElement = ProductXml.OwnerDocument.CreateElement("Ticket");
                                 TicketElement.SetAttribute("code", Code);
-                                TicketElement.SetAttribute("code", codeName);
+                                TicketElement.SetAttribute("name", codeName);
                                 ProductXml.AppendChild(TicketElement);
                             }
                         }
@@ -103,7 +116,7 @@ namespace Protean
                     catch (Exception ex)
                     {
                         OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddCode", ex, ""));
-                        // return Conversions.ToBoolean(ex.Message);
+                        // return Convert.ToBoolean(ex.Message);
                     }
 
                 }

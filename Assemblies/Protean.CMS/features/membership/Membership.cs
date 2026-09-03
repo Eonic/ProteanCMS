@@ -1,8 +1,4 @@
-﻿using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Protean.Providers.Membership;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
@@ -18,6 +14,10 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI.WebControls;
 using System.Xml;
+using DocumentFormat.OpenXml.Bibliography;
+using Microsoft.Ajax.Utilities;
+using Protean.Providers.Membership;
+using Protean.Providers.Messaging;
 using static Protean.Cms;
 using static Protean.Cms.Admin;
 using static Protean.stdTools;
@@ -57,16 +57,16 @@ namespace Protean
                 }
             }
 
-            public string AccountResetLink(int AccountID)
+            public string AccountResetLink(long AccountID)
             {
                 try
                 {
                     // RJP 7 Nov 2012. Added LCase to MembershipEncryption.
-                    string cLink = Strings.Trim(Tools.Encryption.HashString(Strings.UCase(Conversions.ToString(DateTime.Now)), Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true));
-                    string cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cLink + "' WHERE nDirKey = " + AccountID;
+                    string cLink = Tools.Encryption.HashString( DateTime.Now.ToString().ToUpper(), myWeb.moConfig["MembershipEncryption"]?.ToString() ?? ""?.ToLower(), true).Trim();
+                    string cSQL = $"UPDATE tblDirectory SET cDirPassword = '{cLink}' WHERE nDirKey = {AccountID}";
                     cLink = Tools.Text.AscString(cLink);
                     Debug.WriteLine(cLink);
-                    if (Information.IsNumeric((object)myWeb.moDbHelper.ExeProcessSql(cSQL)))
+                    if (Tools.Number.IsNumeric((object)myWeb.moDbHelper.ExeProcessSql(cSQL)))
                     {
                         return cLink;
                     }
@@ -89,7 +89,7 @@ namespace Protean
             /// <returns></returns>
             /// <remarks>Cannot store in password field because we need this, We could store in the audit description, allthough don't think this is indexed. Storing in the userXml would be inefficient to search however it could be useful because it is contained in the email</remarks>
 
-            public string AccountActivateLink(int AccountID)
+            public string AccountActivateLink(long AccountID)
             {
                 try
                 {
@@ -119,14 +119,14 @@ namespace Protean
                 }
             }
 
-            public int DecryptResetLink(int AccountID, string EncryptedString)
+            public long DecryptResetLink(int AccountID, string EncryptedString)
             {
                 try
                 {
                     EncryptedString = Tools.Text.DeAscString(EncryptedString);
 
-                    string cSQL = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirPassword = '", SqlFmt(EncryptedString)), "' AND nDirKey = "), AccountID));
-                    return Conversions.ToInteger(myWeb.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
+                    string cSQL = "SELECT tblDirectory.nDirKey FROM tblDirectory " + "INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey " + "WHERE cDirPassword = '" + SqlFmt(EncryptedString) + "' AND nDirKey = " + AccountID;
+                    return Convert.ToInt64(myWeb.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
                 }
                 catch (Exception ex)
                 {
@@ -142,7 +142,7 @@ namespace Protean
                 try
                 {
 
-                    if (Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "md5salt")
+                    if (myWeb.moConfig["MembershipEncryption"]?.ToLower() == "md5salt")
                     {
                         string cSalt = Tools.Encryption.generateSalt();
                         string inputPassword = string.Concat(cSalt, cPassword); // Take the users password and add the salt at the front
@@ -154,7 +154,7 @@ namespace Protean
                     else
                     {
 
-                        cPassword = Tools.Encryption.HashString(cPassword, Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true);
+                        cPassword = Tools.Encryption.HashString(cPassword, myWeb.moConfig["MembershipEncryption"]?.ToLower(), true);
 
                     } // plain - md5 - sha1
 
@@ -166,7 +166,7 @@ namespace Protean
 
                     XmlElement moPolicy;
                     moPolicy = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy");
-                    int nHistoricPasswordCount = Conversions.ToInteger("0" + moPolicy.FirstChild.SelectSingleNode("blockHistoricPassword").InnerText);
+                    int nHistoricPasswordCount = Convert.ToInt16("0" + moPolicy.FirstChild.SelectSingleNode("blockHistoricPassword").InnerText);
 
                     string sSql2 = "select cActivityDetail as password, dDatetime from tblActivityLog where nActivityType=" + ((int)Cms.dbHelper.ActivityType.HistoricPassword).ToString() + " and nUserDirId = " + AccountID + " Order By dDateTime Desc";
 
@@ -174,7 +174,7 @@ namespace Protean
                     {
                         while (oDr.Read())
                         {
-                            if (Conversions.ToBoolean(Operators.AndObject(nHistoricPasswordCount > 0, Operators.ConditionalCompareObjectEqual(cPassword, oDr["password"], false))))
+                            if (nHistoricPasswordCount > 0 && (cPassword?.ToString() ?? "") == (oDr["password"]?.ToString() ?? ""))
                             {
                                 valid = false;
                             }
@@ -193,7 +193,7 @@ namespace Protean
 
 
 
-            public bool ReactivateAccount(int AccountID, string cPassword)
+            public bool ReactivateAccount(long AccountID, string cPassword)
             {
                 try
                 {
@@ -203,7 +203,7 @@ namespace Protean
                     // RJP 7 Nov 2012. Added LCase to MembershipEncryption. Note leave the value below for md5Password hard coded as md5.
                    
                     
-                    if (Strings.LCase(myWeb.moConfig["MembershipEncryption"]) == "md5salt")
+                    if (myWeb.moConfig["MembershipEncryption"]?.ToLower() == "md5salt")
                     {
                         string cSalt = Tools.Encryption.generateSalt();
                         string inputPassword = string.Concat(cSalt, cPassword); // Take the users password and add the salt at the front
@@ -220,7 +220,7 @@ namespace Protean
                     }
                     else
                     {
-                        cPassword = Tools.Encryption.HashString(cPassword, Strings.LCase(myWeb.moConfig["MembershipEncryption"]), true);
+                        cPassword = Tools.Encryption.HashString(cPassword, myWeb.moConfig["MembershipEncryption"]?.ToLower(), true);
                     } // plain - md5 - sha1
 
                     // ensure the password is XML safe
@@ -231,15 +231,15 @@ namespace Protean
 
                     XmlElement moPolicy;
                     moPolicy = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/PasswordPolicy");
-                    int nHistoricPasswordCount = Conversions.ToInteger("0" + moPolicy.FirstChild.SelectSingleNode("blockHistoricPassword").InnerText);
+                    int nHistoricPasswordCount = Convert.ToInt16("0" + moPolicy.FirstChild.SelectSingleNode("blockHistoricPassword").InnerText);
                     if (nHistoricPasswordCount > 0)
                     {
                         myWeb.moDbHelper.logActivity(Cms.dbHelper.ActivityType.HistoricPassword, (long)AccountID, 0L, 0L, cPassword, cForiegnRef: "");
                     }
 
-                    string cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cPassword + "' WHERE nDirKey = " + AccountID;
+                    string cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cPassword + "' WHERE nDirKey = " + AccountID.ToString();
                     if (savedSalt != "") {
-                        cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cPassword + "', cDirSalt = '" + savedSalt + "' WHERE nDirKey = " + AccountID;
+                        cSQL = "UPDATE tblDirectory SET cDirPassword = '" + cPassword + "', cDirSalt = '" + savedSalt + "' WHERE nDirKey = " + AccountID.ToString();
                     }
                     if (myWeb.moDbHelper.ExeProcessSql(cSQL) > 0)
                     {
@@ -266,7 +266,7 @@ namespace Protean
 
                     // lets get the userId form the hash supplied
                     string cSQL = "SELECT tblDirectory.nDirKey FROM tblDirectory INNER JOIN tblAudit ON tblDirectory.nAuditId = tblAudit.nAuditKey WHERE cDirXml LIKE '%<ActivationKey>" + cLink + "</ActivationKey>%'";
-                    userId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
+                    userId = Convert.ToInt64(myWeb.moDbHelper.GetDataValue(cSQL, CommandType.Text, null, (object)0));
 
                     if (userId > 0L) {
                         myWeb.moDbHelper.logActivity(dbHelper.ActivityType.ActivateAccount, userId, 0, 0, 0, cLink);
@@ -276,7 +276,7 @@ namespace Protean
                         Thread.Sleep(2000);
                         string cSQL2 = "SELECT nUserDirId FROM tblActivitylog WHERE cActivityDetail LIKE  '" + cLink + "' AND dDateTime >= DATEADD(SECOND, -10, GETDATE())";
                         // myWeb.moDbHelper.logActivity(dbHelper.ActivityType.ActivateAccount, userId, 0, 0, 0, cSQL2);
-                        userId = Conversions.ToLong(myWeb.moDbHelper.GetDataValue(cSQL2, CommandType.Text, null, (object)0));
+                        userId = Convert.ToInt64(myWeb.moDbHelper.GetDataValue(cSQL2, CommandType.Text, null, (object)0));
                         myWeb.moDbHelper.logActivity(dbHelper.ActivityType.ActivateAccount, userId, 0, 0, 0, cSQL2);
                         bDoUpdate = false;
                         return true;
@@ -362,7 +362,7 @@ namespace Protean
                     var Cookie = myWeb.moResponse.Cookies[Name];
                     if (Cookie is null)
                         Cookie = new System.Web.HttpCookie(Name);
-                    Cookie.Value = Conversions.ToString(Value);
+                    Cookie.Value = Convert.ToString(Value);
                     if (!string.IsNullOrEmpty(myWeb.moConfig["SecureMembershipDomain"]))
                     {
                         Cookie.Domain = myWeb.moConfig["SecureMembershipDomain"];
@@ -407,18 +407,18 @@ namespace Protean
                 try
                 {
                     // Variables
-                    string ASPSessionName = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(myWeb.moConfig["ASPSessionName"]), "ASP.NET_SessionId", myWeb.moConfig["ASPSessionName"]));
-                    string UserCookieName = Conversions.ToString(Interaction.IIf(string.IsNullOrEmpty(myWeb.moConfig["UserCookieName"]), "nUserId", myWeb.moConfig["UserCookieName"]));
+                    string ASPSessionName = string.IsNullOrEmpty(myWeb.moConfig["ASPSessionName"]?.ToString()) ? "ASP.NET_SessionId" : myWeb.moConfig["ASPSessionName"].ToString();
+                    string UserCookieName = string.IsNullOrEmpty(myWeb.moConfig["UserCookieName"]?.ToString()) ? "nUserId" : myWeb.moConfig["UserCookieName"].ToString();
                     string SecureMembershipAddress = (myWeb.moConfig["SecureMembershipAddress"]?? "").ToString();
                     string SecureMembershipDomain = (myWeb.moConfig["SecureMembershipDomain"] ?? "").ToString();
 
 
 
                     // Session Cookie
-                    System.Web.HttpContext.Current.Response.Cookies[ASPSessionName].Value = System.Web.HttpContext.Current.Session.SessionID;
+                    myWeb.moResponse.Cookies[ASPSessionName].Value = myWeb.moSession.SessionID;
                     if (!string.IsNullOrEmpty(SecureMembershipDomain))
                     {
-                        System.Web.HttpContext.Current.Response.Cookies[ASPSessionName].Domain = SecureMembershipDomain;
+                        myWeb.moResponse.Cookies[ASPSessionName].Domain = SecureMembershipDomain;
                     }
                     // Path
                     string cPath = "" + myWeb.moRequest.QueryString["path"];
@@ -431,13 +431,13 @@ namespace Protean
                         }
                     }
                     // Check Request Cookie first
-                    int nCookieUser = Conversions.ToInteger(CookieValue(UserCookieName, -1));
+                    int nCookieUser = Convert.ToInt16(CookieValue(UserCookieName, -1));
                     // Check what we are doing
-                    if (Strings.LCase(cForceCommand) == "logoff")
+                    if ((cForceCommand ?? "").ToLower() == "logoff")
                     {
                         // redirect to the logoff with no cookie
                         SetCookie(UserCookieName, 0, DateTime.Now.AddMinutes(-20));
-                        if (!Strings.LCase(cPath).Contains(Strings.LCase("ewCmd=LogOff")))
+                        if (!(cPath).ToLower().Contains("ewCmd=LogOff"?.ToLower()))
                         {
                             if (cPath.Contains("?"))
                             {
@@ -455,7 +455,7 @@ namespace Protean
                         myWeb.mnUserId = 0;
                         myWeb.msRedirectOnEnd = myWeb.moConfig["SecureMembershipAddress"] + myWeb.moConfig["ProjectPath"] + "/";
                     }
-                    else if (Strings.LCase(cForceCommand) == "logoffimpersonate")
+                    else if (cForceCommand?.ToLower() == "logoffimpersonate")
                     {
                         // redirect to the logoff with no cookie
                         SetCookie(UserCookieName, 0, DateTime.Now.AddMinutes(-20));
@@ -469,7 +469,7 @@ namespace Protean
                     }
 
                     // Check to see if we need to do a redirect
-                    string cHost = Conversions.ToString(Operators.ConcatenateObject(Interaction.IIf(myWeb.moRequest.ServerVariables["HTTPS"] == "on", "https://", "http://"), myWeb.moRequest.ServerVariables["HTTP_HOST"]));
+                    string cHost = (myWeb.moRequest.ServerVariables["HTTPS"] == "on" ? "https://" : "http://") + (myWeb.moRequest.ServerVariables["HTTP_HOST"] ?? "");
                     var oVariants = new Hashtable();
                     oVariants.Add("0", cHost);
                     oVariants.Add("1", cHost + "/");
@@ -483,15 +483,17 @@ namespace Protean
                     // If Left(cPath, 1) = "/" And Right(myWeb.moConfig("HomeUrl"), 1) = "/" Then cPath = cPath.Remove(0, 1)
                     // myWeb.moResponse.Redirect(myWeb.moConfig("HomeUrl") & cPath)
                     // Else
-                    if (!oVariants.ContainsValue(SecureMembershipAddress) & (myWeb.mnUserId > 0 | myWeb.mbAdminMode | Strings.LCase(myWeb.moRequest["ewCmd"]) == "ar"))
+                    if (!oVariants.ContainsValue(SecureMembershipAddress) & (myWeb.mnUserId > 0 | myWeb.mbAdminMode | myWeb.moRequest["ewCmd"]?.ToLower() == "ar"))
                     {
                         if (!string.IsNullOrEmpty(SecureMembershipDomain))
                         {
                             SetCookie(UserCookieName, (object)myWeb.mnUserId, DateTime.Now.AddMinutes(20d));
-                            if (!(Strings.Right(SecureMembershipAddress, 1) == "/"))
+                            if (!SecureMembershipAddress.EndsWith("/"))
                                 SecureMembershipAddress += "/";
-                            if (Strings.Left(cPath, 1) == "/" & Strings.Right(SecureMembershipAddress, 1) == "/")
-                                cPath = cPath.Remove(0, 1);
+
+                            if (cPath.StartsWith("/") && SecureMembershipAddress.EndsWith("/"))
+                                cPath = cPath.Substring(1);
+
                             if (cPath.StartsWith("&"))
                                 cPath = "?" + cPath.Substring(1);
                             myWeb.msRedirectOnEnd = SecureMembershipAddress + cPath;
@@ -544,21 +546,27 @@ namespace Protean
                             Type calledType;
                             Assembly assemblyInstance;
 
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectNotEqual(ourProvider["path"], "", false)))
+                            if (!string.IsNullOrEmpty(ourProvider["path"]?.ToString()))
                             {
-                                assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Conversions.ToString(ourProvider["path"])));
+                                assemblyInstance = Assembly.LoadFrom(myWeb.goServer.MapPath(Convert.ToString(ourProvider["path"])));
                             }
                             else
                             {
                                 assemblyInstance = Assembly.Load(ourProvider.GetType().ToString());
                             }
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(ourProvider["rootClass"], "", false)))
+                            if (string.IsNullOrEmpty(ourProvider["rootClass"]?.ToString()))
                             {
-                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject("Protean.Providers.Membership.", ourProvider["Name"]), "Tools.Actions")), true);
+                                calledType = assemblyInstance.GetType(
+                                    $"Protean.Providers.Membership.{ourProvider["Name"]}Tools.Actions",
+                                    true
+                                );
                             }
                             else
                             {
-                                calledType = assemblyInstance.GetType(Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(ourProvider["rootClass"], ".Providers.Membership."), ourProvider["Name"]), "Tools.Actions")), true);
+                                calledType = assemblyInstance.GetType(
+                                    $"{ourProvider["rootClass"]}.Providers.Membership.{ourProvider["Name"]}Tools.Actions",
+                                    true
+                                );
                             }
 
                             var o = Activator.CreateInstance(calledType);
@@ -566,7 +574,7 @@ namespace Protean
                             var args = new object[1];
                             args[0] = myWeb;
 
-                            calledType.InvokeMember(Conversions.ToString(ourProvider[actionName]), BindingFlags.InvokeMethod, null, o, args);
+                            calledType.InvokeMember(Convert.ToString(ourProvider[actionName]), BindingFlags.InvokeMethod, null, o, args);
 
                         }
                     }
@@ -581,8 +589,8 @@ namespace Protean
 
 
             public void RegistrationActions(string cmdPrefix = "") {
-                string cProcessInfo = "";
-                ReturnProvider RetProv;
+              string cProcessInfo = "RegistrationActions";
+                Protean.Providers.Membership.ReturnProvider RetProv;
                 IMembershipProvider moMemProv;
                 try
                 {
@@ -592,7 +600,7 @@ namespace Protean
                     {
                         case "validateByEmail":
                             {
-                              
+
                                 // first wmyWebe set the user account to be pending
                                 myWeb.moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.Directory, Cms.dbHelper.Status.Pending, myWeb.mnUserId);
                                 var oMembership = new Membership(ref myWeb);
@@ -604,7 +612,7 @@ namespace Protean
 
                         default:
                             {
-                              if (myWeb.moSession != null)
+                                if (myWeb.moSession != null)
                                     myWeb.moSession["nUserId"] = (object)myWeb.mnUserId;
 
                                 myWeb.moDbHelper.CommitLogToDB(Cms.dbHelper.ActivityType.Register, (int)myWeb.mnUserId, myWeb.moSession.SessionID, DateTime.Now, 0, 0, "First Logon");
@@ -615,10 +623,42 @@ namespace Protean
                     }
                     moMemProv.Activities.sendRegistrationAlert(ref myWeb, myWeb.mnUserId, false, cmdPrefix);
 
+                    long nAuthUsersGroup = Convert.ToInt64(myWeb.GetConfigItemAsInteger("AuthenticatedUsersGroupId", 0));
+
+                    if (nAuthUsersGroup != 0) { 
+                    // we want to sync the user to the messaging provider if we have one
+                        IMessagingProvider moMessaging = null;
+
+                        System.Collections.Specialized.NameValueCollection moMailConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/mailinglist");
+                        string sMessagingProvider = "";
+
+                        if (moMailConfig != null)
+                        {
+                            sMessagingProvider = moMailConfig["MessagingProvider"];
+                        }
+
+                        if (moMessaging is null & myWeb != null)
+                        {
+                            // myWeb IsNot Nothing prevents being called from bulk imports.
+                            Protean.Providers.Messaging.ReturnProvider RetMsgProv = new Protean.Providers.Messaging.ReturnProvider();
+                            moMessaging = RetMsgProv.Get(ref myWeb, sMessagingProvider);
+                        }
+                        if (moMessaging != null && moMessaging.AdminProcess != null)
+                        {
+                            try
+                            {
+                                moMessaging.AdminProcess.maintainUserInGroup(myWeb.mnUserId, nAuthUsersGroup, false);
+                            }
+                            catch (Exception ex)
+                            {
+                                cProcessInfo = ex.StackTrace;
+                            }
+                        }
+                    }
                 }
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "Logon", ex, ""));
+                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, cProcessInfo, ex, ""));
                 }
                 finally
                 {

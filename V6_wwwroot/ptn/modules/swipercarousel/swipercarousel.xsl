@@ -1,9 +1,101 @@
 ﻿<xsl:stylesheet version="1.0" exclude-result-prefixes="#default ms dt ew" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt" xmlns:dt="urn:schemas-microsoft-com:datatypes" xmlns="http://www.w3.org/1999/xhtml" xmlns:ew="urn:ew">
-  <xsl:template match="Content[@moduleType='SwiperCarousel']" mode="headerOnlyContentJS">
-    <style>
-      #scarousel-<xsl:value-of select="@id"/>{height:<xsl:value-of select="@heightxs"/>px}
-      @media(min-width:992px){#scarousel-<xsl:value-of select="@id"/>{height:<xsl:value-of select="@height"/>px}}
-    </style>
+  
+	<xsl:template match="Content[@moduleType='SwiperCarousel']" mode="headerOnlyContentJS">
+
+<xsl:variable name="h-xxl" select="@height"/>
+<xsl:variable name="h-xs" select="@heightxs"/>
+
+<!-- proportional scaling factors vs xxl (1320) -->
+<xsl:variable name="h-xl" select="round($h-xxl * 1140 div 1320)"/>
+<xsl:variable name="h-lg" select="round($h-xxl * 960 div 1320)"/>
+<xsl:variable name="h-md" select="round($h-xxl * 720 div 1320)"/>
+<xsl:variable name="h-sm" select="round($h-xxl * 540 div 1320)"/>
+
+
+<style>
+  /* xs */
+  #scarousel-<xsl:value-of select="@id"/> {
+    height: <xsl:value-of select="$h-xs"/>px;
+  }
+
+  /* sm ≥576px */
+  @media (min-width:576px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-sm"/>px;
+    }
+  }
+
+  /* md ≥768px */
+  @media (min-width:768px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-md"/>px;
+    }
+  }
+
+  /* lg ≥992px */
+  @media (min-width:992px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-lg"/>px;
+    }
+  }
+
+  /* xl ≥1200px */
+  @media (min-width:1200px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-xl"/>px;
+    }
+  }
+
+  /* xxl ≥1400px */
+  @media (min-width:1400px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-xxl"/>px;
+    }
+  }
+</style>
+
+
+<style>
+  /* xs */
+  #scarousel-<xsl:value-of select="@id"/> {
+    height: <xsl:value-of select="$h-xs"/>px;
+  }
+
+  /* sm ≥576px */
+  @media (min-width:576px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-sm"/>px;
+    }
+  }
+
+  /* md ≥768px */
+  @media (min-width:768px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-md"/>px;
+    }
+  }
+
+  /* lg ≥992px */
+  @media (min-width:992px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-lg"/>px;
+    }
+  }
+
+  /* xl ≥1200px */
+  @media (min-width:1200px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-xl"/>px;
+    }
+  }
+
+  /* xxl ≥1400px */
+  @media (min-width:1400px) {
+    #scarousel-<xsl:value-of select="@id"/> {
+      height: <xsl:value-of select="$h-xxl"/>px;
+    }
+  }
+</style>
 
   </xsl:template>
   <!--  ======================================================================================  -->
@@ -76,6 +168,9 @@
                   <xsl:with-param name="cHeightOptions" select="@cHeightOptions"/>
                   <xsl:with-param name="heading" select="$heading"/>
                   <xsl:with-param name="title" select="@title"/>
+					<xsl:with-param name="heightxxl" select="@height"/>
+					<xsl:with-param name="heightmd" select="@heightxs"/>
+					
                 </xsl:apply-templates>
               </xsl:when>
               <xsl:otherwise>
@@ -87,6 +182,7 @@
                 </xsl:apply-templates>
               </xsl:otherwise>
             </xsl:choose>
+			  <xsl:text> </xsl:text>
           </div>
           <xsl:if test="@bullets!='true'">
             <div class="swiper-pagination" id="swiper-pagination-{@id}">
@@ -110,6 +206,8 @@
     <xsl:param name="cHeightOptions"/>
     <xsl:param name="heading"/>
     <xsl:param name="title"/>
+	<xsl:param name="heightxxl"/>
+    <xsl:param name="heightmd"/>
     <xsl:choose>
       <xsl:when test="@linkSlide='true'">
         <div class="swiper-slide">
@@ -212,6 +310,7 @@
                 </div>
               </div>
             </xsl:if>
+			  <xsl:text> </xsl:text>
           </a>
         </div>
       </xsl:when>
@@ -224,29 +323,32 @@
             <xsl:text> </xsl:text>
           </div>
           <xsl:choose>
-            <xsl:when test="@height!=''">
+            <xsl:when test="$heightxxl!=''">
+		        <xsl:variable name="widthxxl" select="'1226'"/>
+				<xsl:variable name="widthmd" select="'992'"/>
               <xsl:call-template name="displayResponsiveImage">
                 <xsl:with-param name="crop" select="true()"/>
                 <xsl:with-param name="no-stretch" select="false()"/>
-                <xsl:with-param name="width" select="'2000'"/>
-                <xsl:with-param name="height" select="'@height'"/>
-                <xsl:with-param name="max-width-xs" select="'576'"/>
-                <xsl:with-param name="max-height-xs" select="'@heightxs'"/>
-                <xsl:with-param name="max-width-sm" select="'768'"/>
-                <xsl:with-param name="max-height-sm" select="'@heightxs'"/>
-                <xsl:with-param name="max-width-md" select="'992'"/>
-                <xsl:with-param name="max-height-md" select="'@heightxs'" />
-                <xsl:with-param name="max-width-lg" select="'1200'"/>
-                <xsl:with-param name="max-height-lg" select="'@height'" />
-                <xsl:with-param name="max-width-xl" select="'1400'"/>
-                <xsl:with-param name="max-height-xl" select="'@height'"/>
-                <xsl:with-param name="max-width-xxl" select="'2000'"/>
-                <xsl:with-param name="max-height-xxl" select="'@height'"/>
+                <xsl:with-param name="width" select="$widthxxl"/>
+                <xsl:with-param name="height" select="$heightxxl"/>
+                <xsl:with-param name="max-width-xs" select="format-number($widthmd * 0.8, '0')"/>
+                <xsl:with-param name="max-height-xs" select="format-number($heightmd * 0.8, '0')"/>
+                <xsl:with-param name="max-width-sm" select="format-number($widthmd * 0.75, '0')"/>
+                <xsl:with-param name="max-height-sm" select="format-number($heightmd * 0.75, '0')"/>
+                <xsl:with-param name="max-width-md" select="$widthmd"/>
+                <xsl:with-param name="max-height-md" select="$heightmd" />
+                <xsl:with-param name="max-width-lg" select="format-number($widthxxl * 0.7, '0')"/>
+                <xsl:with-param name="max-height-lg" select="format-number($heightxxl * 0.7, '0')" />
+                <xsl:with-param name="max-width-xl" select="$widthxxl"/>
+                <xsl:with-param name="max-height-xl" select="$heightxxl"/>
+                <xsl:with-param name="max-width-xxl" select="$widthxxl"/>
+                <xsl:with-param name="max-height-xxl" select="$heightxxl"/>
                 <xsl:with-param name="imageUrl" select="Images/img[@class='detail']/@src"/>
                 <xsl:with-param name="altText" select="Title/node()"/>
                 <xsl:with-param name="forceResize" select="true()"/>
                 <xsl:with-param name="class" select="'banner-background'"/>
                 <xsl:with-param name="style" select="''"/>
+			    <xsl:with-param name="quality" select="100"/>
               </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
@@ -356,6 +458,8 @@
                         <xsl:value-of select="@alignButton"/>
                       </xsl:attribute>
                       <xsl:value-of select="@linkText"/>
+
+						<xsl:text> </xsl:text>
                     </a>
                   </xsl:if>
                 </div>
@@ -491,6 +595,8 @@
                 </div>
               </div>
             </xsl:if>
+			  
+			  <xsl:text> </xsl:text>
           </a>
         </div>
       </xsl:when>

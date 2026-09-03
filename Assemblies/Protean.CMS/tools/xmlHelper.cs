@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
+﻿
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -8,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Web;
 using System.Xml;
 using System.Xml.XPath;
+using DocumentFormat.OpenXml.Features;
 using static Protean.stdTools;
 
 namespace Protean
@@ -32,9 +32,10 @@ namespace Protean
     public class XmlHelper
     {
 
-        public class Transform
+        public class Transform : IDisposable
         {
-#pragma warning disable 618
+            private bool disposedValue = false; // To detect redundant calls
+
             public Cms myWeb;
             private string msXslFile = "";
             private string msXslLastFile = "";
@@ -68,7 +69,7 @@ namespace Protean
                         {
                             goApp["XsltCompileVersion"] = "0";
                         }
-                        string sCompileVersion = Conversions.ToString(Operators.ConcatenateObject("v", goApp["XsltCompileVersion"]));
+                        string sCompileVersion = $"vg{goApp["XsltCompileVersion"]}";
                         msXslFile = value.Replace("/", @"\");
                         ClassName = msXslFile.Substring(msXslFile.LastIndexOf(@"\") + 1);
                         ClassName = ClassName.Replace(".", "_") + sCompileVersion;
@@ -79,7 +80,7 @@ namespace Protean
                             AssemblyPath = goServer.MapPath(compiledFolder) + ClassName + ".dll";
                             Type CalledType;
 
-                            if (Conversions.ToBoolean(goApp[ClassName]))
+                            if (Convert.ToBoolean(goApp[ClassName]))
                             {
                                 foreach (var ass in AppDomain.CurrentDomain.GetAssemblies())
                                 {
@@ -105,18 +106,21 @@ namespace Protean
 
                             else
                             {
-                                string compileResponse = CompileXSLTassembly(ClassName);
-                                if ((compileResponse ?? "") == (ClassName ?? ""))
-                                {
-                                    // Dim assemblyBuffer As Byte() = File.ReadAllBytes(assemblypath)
-                                    // assemblyInstance = xsltDomain.Load(assemblyBuffer)
-                                    assemblyInstance = Assembly.LoadFrom(AssemblyPath);
+                                // Compile the XSLT to assembly (will throw exception on failure)
+                                CompileXSLTassembly(ClassName);
+                                if (bError) {
+                                    // Re-throw the original compilation exception with full error details
+                                    if (transformException != null)
+                                    {
+                                        throw transformException;
+                                    }
+                                    else
+                                    {
+                                        throw new InvalidOperationException($"XSLT compilation or loading failed for: {msXslFile}");
+                                    }
                                 }
-                                else
-                                {
-                                    Information.Err().Raise(8000, msXslFile, compileResponse);
-                                    assemblyInstance = null;
-                                }
+                                // If we reach here, compilation succeeded - load the assembly
+                                assemblyInstance = Assembly.LoadFrom(AssemblyPath);
                             }
 
                             CalledType = assemblyInstance.GetType(ClassName, true);
@@ -153,11 +157,13 @@ namespace Protean
                         transformException = ex;
                         stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "XslFilePath.Set", ex, msXslFile, value, gbDebug);
                         bError = true;
-                        if (mbCompiled)
+                        // Only redirect in production mode; in debug mode, allow error details to be displayed
+                        if (mbCompiled && !gbDebug)  // Use gbDebug (global debug flag from stdTools)
                         {
                             Protean.Config.UpdateConfigValue(ref myWeb, "", "recompile", "recreate");
-                            myWeb.moResponse.Redirect("/");
+                            myWeb.moResponse.Redirect("/",false);
                         }
+                        // In debug mode (gbDebug == true), error details in myWeb.msException will be displayed to the browser
                     }
                 }
             }
@@ -310,8 +316,9 @@ namespace Protean
                 }
             }
 
-            public Transform(ref Cms aWeb, string sXslFile, bool bCompiled, long nTimeoutSec = 15000L, bool recompile = false)
+            public Transform(ref Cms aWeb, string sXslFile, bool bCompiled, long nTimeoutSec = 15000L, bool recompile = false, bool bDebug = false)
             {
+                mbDebug = bDebug;
                 string sProcessInfo = "";
                 try
                 {
@@ -332,7 +339,7 @@ namespace Protean
                     if (recompile)
                     {
 
-                        goApp["XsltCompileVersion"] = (Conversions.ToInteger(goApp["XsltCompileVersion"]) + 1).ToString();
+                        goApp["XsltCompileVersion"] = (Convert.ToInt16(goApp["XsltCompileVersion"]) + 1).ToString();
 
                     }
 
@@ -340,7 +347,17 @@ namespace Protean
                     // End If
 
                     XslFilePath = sXslFile;
-
+                    if (bError) {
+                        // Re-throw the original compilation exception with full error details
+                        if (transformException != null)
+                        {
+                            throw transformException;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException($"XSLT compilation or loading failed for: {sXslFile}");
+                        }
+                    }
                     string className = msXslFile.Substring(msXslFile.LastIndexOf(@"\") + 1);
                     className = className.Replace(".", "_");
 
@@ -371,27 +388,7 @@ namespace Protean
                 }
             }
 
-            public void Close()
-            {
-                Dispose();
-            }
-
-            public void Dispose()
-            {
-                string sProcessInfo = "";
-                try
-                {
-                    // AppDomain.Unload(xsltDomain)
-                    oStyle = null;
-                    oCStyle = null;
-                    xsltArgs = null;
-                }
-                catch (Exception ex)
-                {
-                    stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "Dispose", ex, msXslFile, sProcessInfo, mbDebug);
-
-                }
-            }
+          
 
 
             public delegate void ProcessDelegate(XmlDocument oXml, HttpResponse oResponse);
@@ -413,9 +410,9 @@ namespace Protean
                         if (res.IsCompleted == false)
                         {
                             d.EndInvoke((System.Runtime.Remoting.Messaging.AsyncResult)res);
-                            d = null;
-                            Information.Err().Raise(1010, "TranformXSL", "The XSL took longer than " + mnTimeoutSec / 1000d + " seconds to process");
+                            d = null; 
                             bError = true;
+                            throw new InvalidOperationException($"The XSL took longer than { mnTimeoutSec / 1000d }seconds to process");
                         }
                     }
                     d.EndInvoke((System.Runtime.Remoting.Messaging.AsyncResult)res);
@@ -441,9 +438,9 @@ namespace Protean
                         if (res.IsCompleted == false)
                         {
                             d.EndInvoke(ref oWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
-                            d = null;
-                            Information.Err().Raise(1010, "TranformXSL", "The XSL took longer than " + mnTimeoutSec / 1000d + " seconds to process");
+                            d = null; 
                             bError = true;
+                            throw new InvalidOperationException($"The XSL took longer than {mnTimeoutSec / 1000d} seconds to process");
                         }
                     }
                     d.EndInvoke(ref oWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
@@ -471,8 +468,8 @@ namespace Protean
                         {
                             d.EndInvoke(ref xWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
                             d = null;
-                            Information.Err().Raise(1010, "TranformXSL", "The XSL took longer than " + mnTimeoutSec / 1000d + " seconds to process");
                             bError = true;
+                            throw new InvalidOperationException($"The XSL took longer than { mnTimeoutSec / 1000d } seconds to process");
                         }
                     }
                     d.EndInvoke(ref xWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
@@ -503,7 +500,7 @@ namespace Protean
 
                             d.EndInvoke(ref oWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
                             d = null;
-                            Information.Err().Raise(1010, "TranformXSL", "The XSL took longer than " + mnTimeoutSec / 1000d + " seconds to process");
+                            throw new InvalidOperationException($"The XSL took longer than { mnTimeoutSec / 1000d } seconds to process");
                         }
                     }
                     d.EndInvoke(ref oWriter, (System.Runtime.Remoting.Messaging.AsyncResult)res);
@@ -555,12 +552,14 @@ namespace Protean
                 {
                     if (mbCompiled)
                     {
-                        var resolver = new XmlUrlResolver();
-                        resolver.Credentials = System.Net.CredentialCache.DefaultCredentials;
-
-                        var ws = oCStyle.OutputSettings.Clone();
+                        // Check if oCStyle was successfully initialized before attempting to use it
                         if (oCStyle != null)
                         {
+                            var resolver = new XmlUrlResolver();
+                            resolver.Credentials = System.Net.CredentialCache.DefaultCredentials;
+
+                            var ws = oCStyle.OutputSettings.Clone();
+
                             // load the pagexml into a reader
                             var oReader = new XmlTextReader(new StringReader(oXml.OuterXml));
                             var sWriter = new StringWriter();
@@ -582,6 +581,12 @@ namespace Protean
                             }
                             oReader.Close();
                             sWriter.Dispose();
+                        }
+                        else
+                        {
+                            // oCStyle is null - compilation or loading failed
+                            // Error details should already be in myWeb.msException
+                            oResponse.Write(myWeb.msException);
                         }
                     }
 
@@ -696,9 +701,9 @@ namespace Protean
                 for (int i = 0, loopTo = textIn.Length - 1; i <= loopTo; i++)
                 {
                     current = textIn[i];
-                    currenti = Strings.AscW(current);
+                    currenti = (char)current;
 
-                    if (currenti == Conversions.ToInteger("&H9") || currenti == Conversions.ToInteger("&HA") || currenti == Conversions.ToInteger("&HD") || currenti >= Conversions.ToInteger("&H20") && currenti <= Conversions.ToInteger("&HD7FF") || currenti >= Conversions.ToInteger("&HE000") && currenti <= Conversions.ToInteger("&HFFFD") || currenti >= Conversions.ToInteger("&H10000") && currenti <= Conversions.ToInteger("&H10FFFF"))
+                    if (currenti == Convert.ToInt16("&H9") || currenti == Convert.ToInt16("&HA") || currenti == Convert.ToInt16("&HD") || currenti >= Convert.ToInt16("&H20") && currenti <= Convert.ToInt16("&HD7FF") || currenti >= Convert.ToInt16("&HE000") && currenti <= Convert.ToInt16("&HFFFD") || currenti >= Convert.ToInt16("&H10000") && currenti <= Convert.ToInt16("&H10FFFF"))
                     {
                         textOut.Append(current);
                     }
@@ -877,6 +882,63 @@ namespace Protean
             }
 
 
+            /// <summary>
+            /// Compiles an XSLT stylesheet into a .NET assembly for improved transformation performance.
+            /// </summary>
+            /// <param name="classname">The class name to use for the compiled assembly (derived from XSLT filename)</param>
+            /// <returns>
+            /// Returns the <paramref name="classname"/> string on successful compilation, 
+            /// or <c>null</c> if compilation fails.
+            /// </returns>
+            /// <remarks>
+            /// <para><strong>CURRENT ERROR-HANDLING BEHAVIOR (BASELINE DOCUMENTATION):</strong></para>
+            /// <para>
+            /// When XSLT compilation fails, this method:
+            /// 1. Catches the exception (line 924)
+            /// 2. Calls <see cref="stdTools.returnException"/> to store error details in <c>myWeb.msException</c> (line 928)
+            /// 3. Sets <c>bError = true</c> (line 927)
+            /// 4. Returns <c>null</c> (line 929) ⚠️ <strong>ISSUE: This loses exception context</strong>
+            /// </para>
+            /// <para>
+            /// <strong>⚠️ KNOWN ISSUE:</strong> The calling code in <c>XslFilePath</c> property setter (line 108-119) 
+            /// receives <c>null</c> and throws a new <see cref="InvalidOperationException"/> with a null message (line 117),
+            /// which overwrites the original error details stored in <c>myWeb.msException</c>.
+            /// When <c>mbCompiled == true</c>, the code redirects to "/" (line 159), preventing error display even in debug mode.
+            /// </para>
+            /// <para><strong>DEPENDENCIES:</strong></para>
+            /// <list type="bullet">
+            ///   <item><c>myWeb.msException</c> - Stores exception information for error display</item>
+            ///   <item><c>bError</c> - Instance flag indicating error state</item>
+            ///   <item><c>transformException</c> - Instance field to store exceptions</item>
+            ///   <item><c>msXslFile</c> - Path to the XSLT file being compiled</item>
+            ///   <item><c>compiledFolder</c> - Output directory for compiled assemblies</item>
+            ///   <item><c>goApp["compileLock-{classname}"]</c> - Application-level compilation lock</item>
+            /// </list>
+            /// <para><strong>PROCESS FLOW:</strong></para>
+            /// <list type="number">
+            ///   <item>Determine compiler path based on <c>myWeb.bs5</c> flag</item>
+            ///   <item>Check for compilation lock in application state</item>
+            ///   <item>Execute xsltc.exe compiler as external process</item>
+            ///   <item>Read StandardOutput for compilation results</item>
+            ///   <item>Check output for "error" keyword</item>
+            ///   <item>On success: return classname; On failure: return null after logging exception</item>
+            /// </list>
+            /// </remarks>
+            /// <example>
+            /// <strong>Typical calling pattern (from XslFilePath property setter):</strong>
+            /// <code>
+            /// string compileResponse = CompileXSLTassembly(ClassName);
+            /// if ((compileResponse ?? "") == (ClassName ?? ""))
+            /// {
+            ///     assemblyInstance = Assembly.LoadFrom(AssemblyPath);
+            /// }
+            /// else
+            /// {
+            ///     // ⚠️ ISSUE: compileResponse is null, so this creates exception with null message
+            ///     throw new InvalidOperationException(compileResponse);
+            /// }
+            /// </code>
+            /// </example>
             public string CompileXSLTassembly(string classname)
             {
 
@@ -918,39 +980,214 @@ namespace Protean
                         process1.StartInfo.WorkingDirectory = cWorkingDirectory;
                         // Start the process
                         process1.Start();
+
+                        // Read both StandardOutput and StandardError
                         output = process1.StandardOutput.ReadToEnd();
+                        string errorOutput = process1.StandardError.ReadToEnd();
 
                         // Wait for process to finish
                         process1.WaitForExit();
 
+                        int exitCode = process1.ExitCode;
                         process1.Close();
 
                         goApp["compileLock-" + classname] = null;
 
+                        // Check if compilation failed based on exit code or error output
+                        bool compilationFailed = false;
+                        string compilationError = "";
+
+                        if (exitCode != 0)
+                        {
+                            compilationFailed = true;
+                            compilationError = $"XSLT Compiler exited with code {exitCode}.";
+                        }
+
+                        if (!string.IsNullOrEmpty(errorOutput))
+                        {
+                            compilationFailed = true;
+                            compilationError += (compilationError != "" ? "\n" : "") + "Error Output:\n" + errorOutput;
+                        }
+
+                        if (output.Contains("error") || output.Contains("Error"))
+                        {
+                            compilationFailed = true;
+                            compilationError += (compilationError != "" ? "\n" : "") + "Standard Output:\n" + output;
+                        }
+
+                        // Verify the DLL file was actually created
+                        string dllPath = Path.Combine(cWorkingDirectory, outFile);
+                        if (!File.Exists(dllPath))
+                        {
+                            compilationFailed = true;
+                            compilationError += (compilationError != "" ? "\n" : "") + $"Expected output file not created: {dllPath}";
+                            if (!string.IsNullOrEmpty(output))
+                            {
+                                compilationError += "\nCompiler Output:\n" + output;
+                            }
+                        }
+
+                        if (compilationFailed)
+                        {
+                            throw new Exception($"XSLT Compilation Failed for '{msXslFile}':\n{compilationError}");
+                        }
+
                     }
 
-                    if (output.Contains("error"))
-                    {
-                        throw new Exception(output);
-                        bError = true;
-                        return output;
-                    }
-                    else
-                    {
-                        return classname;
-                    }
+                    return classname;
                 }
 
                 catch (Exception ex)
                 {
                     goApp["compileLock-" + classname] = null;
                     bError = true;
+                    transformException = ex;  // Store exception for reference
                     stdTools.returnException(ref myWeb.msException, "Protean.XmlHelper.Transform", "CompileXSLTassembly", ex, msXslFile, sProcessInfo, mbDebug);
-                    return null;
+                    // Re-throw to preserve exception context and allow proper error handling up the call stack
+                    throw;
                 }
             }
 #pragma warning restore 618
 
+
+
+            #region IDisposable Implementation
+
+            protected virtual void Dispose(bool disposing)
+            {
+                if (!disposedValue)
+                {
+                    if (disposing)
+                    {
+                        try
+                        {
+                            // ====================
+                            // 1. DISPOSE MANAGED RESOURCES
+                            // ====================
+
+                            // XSLT Transform objects
+                            if (oStyle != null)
+                            {
+                                try
+                                {
+                                    oStyle = null; // XslTransform doesn't implement IDisposable
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing oStyle: {ex.Message}");
+                                }
+                            }
+
+                            if (oCStyle != null)
+                            {
+                                try
+                                {
+                                    oCStyle = null; // XslCompiledTransform doesn't implement IDisposable
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing oCStyle: {ex.Message}");
+                                }
+                            }
+
+                            // XSLT Arguments
+                            if (xsltArgs != null)
+                            {
+                                try
+                                {
+                                    xsltArgs.Clear();
+                                    xsltArgs = null;
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error disposing xsltArgs: {ex.Message}");
+                                }
+                            }
+
+                            // AppDomain (if created)
+                            if (xsltDomain != null)
+                            {
+                                try
+                                {
+                                    // Only unload if we created it and it's not the current domain
+                                    if (xsltDomain != AppDomain.CurrentDomain)
+                                    {
+                                        AppDomain.Unload(xsltDomain);
+                                    }
+                                    xsltDomain = null;
+                                }
+                                catch (Exception ex)
+                                {
+                                    System.Diagnostics.Debug.WriteLine(
+                                        $"Error unloading xsltDomain: {ex.Message}");
+                                }
+                            }
+
+                            // ====================
+                            // 2. CLEAR REFERENCES (NOT OWNED - DO NOT DISPOSE)
+                            // ====================
+
+                            // Parent reference - owned by parent Cms object
+                            myWeb = null;
+
+                            // Clear exception references
+                            transformException = null;
+                            currentError = null;
+
+                            // Clear path strings
+                            msXslFile = null;
+                            msXslLastFile = null;
+                            AssemblyPath = null;
+                            ClassName = null;
+                        }
+                        catch (Exception ex)
+                        {
+                            // Log disposal errors but don't throw
+                            System.Diagnostics.Debug.WriteLine(
+                                $"Error in Transform.Dispose: {ex.Message}");
+                        }
+                    }
+
+                    // Free unmanaged resources (if any)
+                    // No unmanaged resources to free
+
+                    disposedValue = true;
+                }
+            }
+
+            // Finalizer
+            ~Transform()
+            {
+                Dispose(false);
+            }
+
+            // Public Dispose method
+            public void Dispose()
+            {
+                Dispose(true);
+                GC.SuppressFinalize(this);
+            }
+
+            // Legacy Close() method for backward compatibility
+            public void Close()
+            {
+                // Simply call Dispose() - maintains backward compatibility
+                Dispose();
+            }
+
+            // Helper method to prevent use after disposal
+            protected void ThrowIfDisposed()
+            {
+                if (disposedValue)
+                {
+                    throw new ObjectDisposedException(GetType().Name);
+                }
+            }
+
+            #endregion
         }
 
 

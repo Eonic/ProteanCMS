@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
-using Protean.Providers.DiscountRule;
+﻿using Protean.Providers.DiscountRule;
 using System;
 using System.Collections;
 using System.Data;
@@ -16,7 +14,7 @@ namespace Protean
     {
         public partial class Cart
         {
-            public class Discount
+            public class Discount : IDisposable
             {
 
                 private System.Collections.Specialized.NameValueCollection moCartConfig;
@@ -69,7 +67,7 @@ namespace Protean
 
                         if (myWeb.HasSession)
                         {
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["mcCurrency"], "", false)))
+                            if (string.IsNullOrEmpty(Convert.ToString(myWeb.moSession["mcCurrency"])))
                             {
                                 // NB 19th Feb 2010 - Caused Consultant Portal to fall over here without these
                                 // additional checks?
@@ -81,22 +79,23 @@ namespace Protean
                                     }
                                 }
                             }
-                            if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["mcCurrency"], "", false)))
+                            if (string.IsNullOrEmpty(Convert.ToString(myWeb.moSession["mcCurrency"])))
                                 myWeb.moSession["mcCurrency"] = "GBP";
 
-                            mcCurrency = Conversions.ToString(myWeb.moSession["mcCurrency"]);
+                            mcCurrency = Convert.ToString(myWeb.moSession["mcCurrency"]);
                         }
 
                         if (moCartConfig != null)
                         {
-                            mbRoundUp = Strings.LCase(moCartConfig["Roundup"]) == "yes" | Strings.LCase(moCartConfig["Roundup"]) == "on";
-                            mbRoundDown = Conversions.ToBoolean(Interaction.IIf(Strings.LCase(moCartConfig["Roundup"]) == "down", true, false));
+                            mbRoundUp = string.Equals(Convert.ToString(moCartConfig["Roundup"]), "yes", StringComparison.OrdinalIgnoreCase)
+          || string.Equals(Convert.ToString(moCartConfig["Roundup"]), "on", StringComparison.OrdinalIgnoreCase);
+                            mbRoundDown = string.Equals(Convert.ToString(moCartConfig["Roundup"]), "down", StringComparison.OrdinalIgnoreCase);
                             mcPriceModOrder = moCartConfig["PriceModOrder"];
                             mcUnitModOrder = moCartConfig["UnitModOrder"];
                         }
 
-                        bIsCartOn = Strings.LCase(moConfig["Cart"]) == "on";
-                        bIsQuoteOn = Strings.LCase(moConfig["Quote"]) == "on";
+                        bIsCartOn = string.Equals(Convert.ToString(moConfig["Cart"]), "on", StringComparison.OrdinalIgnoreCase);
+                        bIsQuoteOn = string.Equals(Convert.ToString(moConfig["Quote"]), "on", StringComparison.OrdinalIgnoreCase);
 
                         mcModuleName = "Eonic.Discount";
                         myWeb.PerfMon.Log("Discount", "New-End");
@@ -121,12 +120,12 @@ namespace Protean
                         mbRoundUp = myCart.mbRoundup;
                         mbRoundDown = myCart.mbRoundDown;
 
-                        if (Strings.LCase(moConfig["Cart"]) == "on")
+                        if (Convert.ToString(moConfig["Cart"]).ToLower() == "on")
                         {
                             bIsCartOn = true;
                         }
 
-                        if (Strings.LCase(moConfig["Quote"]) == "on")
+                        if (Convert.ToString(moConfig["Quote"]).ToLower() == "on")
                         {
                             bIsQuoteOn = true;
                         }
@@ -210,7 +209,7 @@ namespace Protean
                             // '
                             if (oCartXML.Attributes["InvoiceDateTime"] != null)
                             {
-                                DiscountApplyDate = Conversions.ToDate(oCartXML.Attributes["InvoiceDateTime"].Value);
+                                DiscountApplyDate = Convert.ToDateTime(oCartXML.Attributes["InvoiceDateTime"].Value);
                             }
 
                             cCartItemIds = cCartItemIds.Remove(cCartItemIds.Length - 1);
@@ -321,7 +320,7 @@ namespace Protean
                                         oItemElmt.SetAttribute("unitSaving", 0.ToString());
                                         oItemElmt.SetAttribute("itemSaving", 0.ToString());
                                         oItemElmt.SetAttribute("discount", 0m.ToString("0.00"));
-                                        oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("price")) * Conversions.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
+                                        oItemElmt.SetAttribute("itemTotal", (Convert.ToDouble(oItemElmt.GetAttribute("price")) * Convert.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
                                     }
                                     oDsDiscounts = null;
                                 }
@@ -353,7 +352,7 @@ namespace Protean
                                 if (oDr.HasRows)
                                 {
                                     while (oDr.Read())
-                                        dDisountAmount = Conversions.ToDouble(oDr["nDiscountValue"]);
+                                        dDisountAmount = Convert.ToDouble(oDr["nDiscountValue"]);
                                 }
                             }
                             return (decimal)dDisountAmount;
@@ -367,7 +366,7 @@ namespace Protean
                                 oItemElmt.SetAttribute("unitSaving", 0.ToString());
                                 oItemElmt.SetAttribute("itemSaving", 0.ToString());
                                 oItemElmt.SetAttribute("discount", 0m.ToString("0.00"));
-                                oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("price")) * Conversions.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
+                                oItemElmt.SetAttribute("itemTotal", (Convert.ToDouble(oItemElmt.GetAttribute("price")) * Convert.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
 
                             }
                             return 0m;
@@ -433,7 +432,7 @@ namespace Protean
                                 oItemElmt.SetAttribute("unitSaving", 0.ToString());
                                 oItemElmt.SetAttribute("itemSaving", 0.ToString());
                                 oItemElmt.SetAttribute("discount", 0m.ToString("0.00"));
-                                oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("price")) * Conversions.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
+                                oItemElmt.SetAttribute("itemTotal", (Convert.ToDouble(oItemElmt.GetAttribute("price")) * Convert.ToDouble(oItemElmt.GetAttribute("quantity"))).ToString());
                             }
                             return oDiscountMessage;  // return cart early, no discount applied
                         }
@@ -471,7 +470,7 @@ namespace Protean
 
                                     bHasPromotionalDiscounts = true;
                                     string cDiscountUserCode = oItemElmt.GetAttribute("cDiscountUserCode").ToLower();
-                                    promoCodeType nDiscountCodeType = (promoCodeType)Conversions.ToInteger(oItemElmt.GetAttribute("nDiscountCodeType").ToLower());
+                                    promoCodeType nDiscountCodeType = (promoCodeType)Convert.ToInt16(oItemElmt.GetAttribute("nDiscountCodeType").ToLower());
 
                                     if (nDiscountCodeType == promoCodeType.MultiCode)
                                     {
@@ -508,7 +507,7 @@ namespace Protean
                                 string[] cPriceModifiers = new string[] { "Basic_Money", "Basic_Percent", "Break_Product" };
 
                                 if (!string.IsNullOrEmpty(mcPriceModOrder))
-                                    cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
+                                    cPriceModifiers = mcPriceModOrder.Split(',');
                                 int nPriceCount = 0;
                                 ApplicableProviderType.ApplyDiscount(ref oFinalDiscounts, ref nPriceCount, mbRoundUp, ref myCart, cPriceModifiers, ref nPromocodeApplyFlag, ref oCartXML);
 
@@ -522,7 +521,15 @@ namespace Protean
                                     {
                                         oCartXML.SetAttribute("showDiscountCodeBox", "true");
                                     }
-                                    double Total = Convert.ToDouble(oCartXML.SelectSingleNode("/Order/Item/@itemTotal")?.Value);
+                                    //for multiple items in cart, that time need sum of all item total to update order total in cart xml after discount applied.
+                                    double Total = 0;
+                                    var itemNodes = oCartXML.SelectNodes("/Order/Item");
+                                    foreach (XmlNode item in itemNodes)
+                                    {
+                                        double itemTotal = 0;
+                                        double.TryParse(item.Attributes["itemTotal"]?.Value, out itemTotal);
+                                        Total += itemTotal;
+                                    }
                                     myCart.updateTotals(ref oCartXML, Total, Convert.ToDouble(oCartXML.SelectSingleNode("/Order/@shippingCost")?.Value), oCartXML.SelectSingleNode("/Order/@shippingType")?.Value);
                                 }
                             }
@@ -617,13 +624,15 @@ namespace Protean
 
                 private string getUserGroupIDs()
                 {
+                    try
+                    {
 
-                    int nNonAuthenticatedUsersGroupId;
-                    int nAuthenticatedUsersGroupId;
-                    int nAllsersGroupId = 0;
+                        long nNonAuthenticatedUsersGroupId;
+                    long nAuthenticatedUsersGroupId;
+                    long nAllsersGroupId = 0;
                     var strGroupIds = new System.Text.StringBuilder();
-                    nNonAuthenticatedUsersGroupId = Conversions.ToInteger("0" + myWeb.moConfig["NonAuthenticatedUsersGroupId"]);
-                    nAuthenticatedUsersGroupId = Conversions.ToInteger("0" + myWeb.moConfig["AuthenticatedUsersGroupId"]);
+                    nNonAuthenticatedUsersGroupId = Convert.ToInt64("0" + myWeb.moConfig["NonAuthenticatedUsersGroupId"]);
+                    nAuthenticatedUsersGroupId = Convert.ToInt64("0" + myWeb.moConfig["AuthenticatedUsersGroupId"]);
 
                     // start by adding the all user group, 0
                     strGroupIds.Append(nAllsersGroupId.ToString());
@@ -659,7 +668,13 @@ namespace Protean
                     }
 
                     return strGroupIds.ToString();
-
+                    }
+                    // Thats all folks!
+                    catch (Exception ex)
+                    {
+                        stdTools.returnException(ref myWeb.msException, mcModuleName, "Discount_ApplyToCart", ex, "", "", gbDebug);
+                        return null;
+                    }
                 }
 
                 public decimal Discount_ApplyToCart(ref XmlElement oCartXML, XmlDocument oDiscountXml)
@@ -680,16 +695,16 @@ namespace Protean
                         var nLineTotalSaving = default(decimal);
                         foreach (XmlElement oItemElmt in oCartXML.SelectNodes("Item"))
                         {
-                            int nId = Conversions.ToInteger(oItemElmt.GetAttribute("id"));
+                            int nId = Convert.ToInt16(oItemElmt.GetAttribute("id"));
                             oPriceElmt = (XmlElement)oDiscountXml.SelectSingleNode("Discounts/Item[@id=" + nId + "]/DiscountPrice");
                             if (oPriceElmt != null)
                             {
 
                                 // NB 16/02/2010 added rounding
                                 decimal nNewUnitPrice = Round(oPriceElmt.GetAttribute("UnitPrice"), bForceRoundup: mbRoundUp);
-                                decimal nNewTotal = Conversions.ToDecimal(oPriceElmt.GetAttribute("Total"));
-                                decimal nUnitSaving = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitSaving"));
-                                nLineTotalSaving = Conversions.ToDecimal(oPriceElmt.GetAttribute("TotalSaving"));
+                                decimal nNewTotal = Convert.ToDecimal(oPriceElmt.GetAttribute("Total"));
+                                decimal nUnitSaving = Convert.ToDecimal(oPriceElmt.GetAttribute("UnitSaving"));
+                                nLineTotalSaving = Convert.ToDecimal(oPriceElmt.GetAttribute("TotalSaving"));
 
 
                                 // set up new attreibutes and change price
@@ -721,7 +736,7 @@ namespace Protean
 
                             foreach (XmlElement oDiscountItemTest in oDiscountXml.SelectNodes("Discounts/Item[@id=" + nId + "]/DiscountItem"))
                             {
-                                if (Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving")) <= Conversions.ToDecimal(oItemElmt.GetAttribute("itemTotal")))
+                                if (Convert.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving")) <= Convert.ToDecimal(oItemElmt.GetAttribute("itemTotal")))
                                 {
                                     oDiscountItemTest.SetAttribute("AppliedToCart", 1.ToString());
                                     oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountItemTest.CloneNode(true), true));
@@ -730,22 +745,22 @@ namespace Protean
                                     {
                                         oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountInfo.CloneNode(true), true));
                                     }
-                                    oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("itemTotal")) - Conversions.ToDouble(oDiscountItemTest.GetAttribute("TotalSaving"))).ToString());
-                                    nLineTotalSaving += Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
-                                    nTotalSaved += Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
+                                    oItemElmt.SetAttribute("itemTotal", (Convert.ToDouble(oItemElmt.GetAttribute("itemTotal")) - Convert.ToDouble(oDiscountItemTest.GetAttribute("TotalSaving"))).ToString());
+                                    nLineTotalSaving += Convert.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
+                                    nTotalSaved += Convert.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
                                 }
-                                else if (Information.IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")))
+                                else if (Tools.Number.IsNumeric(oDiscountItemTest.GetAttribute("nDiscountCat")))
                                 {
-                                    if (Conversions.ToDouble(oDiscountItemTest.GetAttribute("nDiscountCat")) == 4d)
+                                    if (Convert.ToDouble(oDiscountItemTest.GetAttribute("nDiscountCat")) == 4d)
                                     {
                                         if (nDelIDs[0] == 0)
                                         {
-                                            nDelIDs[0] = Conversions.ToInteger(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                            nDelIDs[0] = Convert.ToInt16(oDiscountItemTest.GetAttribute("nDiscountKey"));
                                         }
                                         else
                                         {
-                                            Array.Resize(ref nDelIDs, Information.UBound(nDelIDs) + 1 + 1);
-                                            nDelIDs[Information.UBound(nDelIDs)] = Conversions.ToInteger(oDiscountItemTest.GetAttribute("nDiscountKey"));
+                                            Array.Resize(ref nDelIDs, nDelIDs.Length + 1);
+                                            nDelIDs[nDelIDs.Length - 1] = Convert.ToInt16(oDiscountItemTest.GetAttribute("nDiscountKey"));
                                         }
                                     }
 
@@ -761,9 +776,9 @@ namespace Protean
                                         {
                                             oItemElmt.AppendChild(oItemElmt.OwnerDocument.ImportNode(oDiscountInfo.CloneNode(true), true));
                                         }
-                                        oItemElmt.SetAttribute("itemTotal", (Conversions.ToDouble(oItemElmt.GetAttribute("itemTotal")) - Conversions.ToDouble(oDiscountItemTest.GetAttribute("TotalSaving"))).ToString());
-                                        nLineTotalSaving += Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
-                                        nTotalSaved += Conversions.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
+                                        oItemElmt.SetAttribute("itemTotal", (Convert.ToDouble(oItemElmt.GetAttribute("itemTotal")) - Convert.ToDouble(oDiscountItemTest.GetAttribute("TotalSaving"))).ToString());
+                                        nLineTotalSaving += Convert.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
+                                        nTotalSaved += Convert.ToDecimal(oDiscountItemTest.GetAttribute("TotalSaving"));
                                     }
 
 
@@ -782,11 +797,15 @@ namespace Protean
                         if (!(nDelIDs[0] == 0))
                         {
                             int nIX;
-                            var loopTo = Information.UBound(nDelIDs);
+                            var loopTo = nDelIDs.Length - 1;
                             for (nIX = 0; nIX <= loopTo; nIX++)
                             {
-                                foreach (XmlElement nDelElmt in oCartXML.SelectNodes("descendant-or-self::DiscountItem[@nDiscountKey=" + nDelIDs[nIX] + "] | descendant-or-self::Discount[@nDiscountKey=" + nDelIDs[nIX] + "]"))
+                                foreach (XmlElement nDelElmt in oCartXML.SelectNodes(
+                                    "descendant-or-self::DiscountItem[@nDiscountKey=" + nDelIDs[nIX] + "] | " +
+                                    "descendant-or-self::Discount[@nDiscountKey=" + nDelIDs[nIX] + "]"))
+                                {
                                     nDelElmt.ParentNode.RemoveChild(nDelElmt);
+                                }
                             }
                         }
 
@@ -837,7 +856,7 @@ namespace Protean
                                 oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString());
                                 // oPriceElmt.SetAttribute("UnitPrice", oItemLoop.GetAttribute("price"))
                                 oPriceElmt.SetAttribute("Units", oItemLoop.GetAttribute("quantity"));
-                                oPriceElmt.SetAttribute("Total", ((double)nPrice * Conversions.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
+                                oPriceElmt.SetAttribute("Total", ((double)nPrice * Convert.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
                                 // oPriceElmt.SetAttribute("Total", oItemLoop.GetAttribute("price") * oItemLoop.GetAttribute("quantity"))
                                 oPriceElmt.SetAttribute("UnitSaving", 0.ToString());
                                 oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
@@ -849,15 +868,15 @@ namespace Protean
                                 oDiscountLoop = currentODiscountLoop;
                                 // now work out new unit prices etc
 
-                                decimal nNewPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
-                                AmountToDiscount = Conversions.ToDecimal(oDiscountLoop.GetAttribute("nDiscountValue"));
+                                decimal nNewPrice = Convert.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
+                                AmountToDiscount = Convert.ToDecimal(oDiscountLoop.GetAttribute("nDiscountValue"));
                                 if (!string.IsNullOrEmpty(oDiscountLoop.GetAttribute("nDiscountRemaining")))
                                 {
-                                    AmountToDiscount = Conversions.ToDecimal(oDiscountLoop.GetAttribute("nDiscountRemaining"));
+                                    AmountToDiscount = Convert.ToDecimal(oDiscountLoop.GetAttribute("nDiscountRemaining"));
                                 }
 
 
-                                nNewPrice = (decimal)((double)nNewPrice - (double)AmountToDiscount / Conversions.ToDouble(oItemLoop.GetAttribute("quantity")));
+                                nNewPrice = (decimal)((double)nNewPrice - (double)AmountToDiscount / Convert.ToDouble(oItemLoop.GetAttribute("quantity")));
 
                                 if (nNewPrice > 0m & bApplyOnTotal == false) // only apply it if its not gonna go below 0
                                 {
@@ -869,19 +888,19 @@ namespace Protean
                                     oPriceLine.SetAttribute("PriceOrder", nPriceCount.ToString());
                                     oPriceLine.SetAttribute("nDiscountKey", oDiscountLoop.GetAttribute("nDiscountKey"));
                                     oPriceLine.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                    oPriceLine.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
-                                    oPriceLine.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - (double)nNewPrice).ToString());
-                                    oPriceLine.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceLine.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceLine.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - (double)nNewPrice).ToString());
+                                    oPriceLine.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
 
                                     oPriceElmt.AppendChild(oPriceLine);
 
                                     // this works the overall price
                                     oPriceElmt.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                    oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
-                                    oPriceElmt.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
+                                    oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceElmt.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
 
                                     // we will always apply these
-                                    oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceElmt.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                                     foreach (XmlElement oDiscountElmt in oDiscountXML.SelectNodes("Discounts/Item/Discount[@nDiscountKey=" + oDiscountLoop.GetAttribute("nDiscountKey") + "]"))
                                     {
 
@@ -919,21 +938,21 @@ namespace Protean
                                     oPriceLine.SetAttribute("PriceOrder", nPriceCount.ToString());
                                     oPriceLine.SetAttribute("nDiscountKey", oDiscountLoop.GetAttribute("nDiscountKey"));
                                     oPriceLine.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                    oPriceLine.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceLine.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                                     oPriceLine.SetAttribute("UnitSaving", oPriceElmt.GetAttribute("UnitPrice"));
-                                    oPriceLine.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceLine.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
 
                                     oPriceElmt.AppendChild(oPriceLine);
 
                                     // this works the overall price
                                     oPriceElmt.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                    oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
-                                    oPriceElmt.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
-                                    oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceElmt.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
+                                    oPriceElmt.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
 
                                     // we will always apply these
                                     oDiscountLoop.SetAttribute("Applied", 1.ToString());
-                                    RemainingAmountToDiscount = RemainingAmountToDiscount + Conversions.ToDouble(oPriceLine.GetAttribute("TotalSaving"));
+                                    RemainingAmountToDiscount = RemainingAmountToDiscount + Convert.ToDouble(oPriceLine.GetAttribute("TotalSaving"));
                                     // set the discount remianing if this rule is available on other products..
                                     foreach (XmlElement oDiscountElmt in oDiscountXML.SelectNodes("Discounts/Item/Discount[@nDiscountKey=" + oDiscountLoop.GetAttribute("nDiscountKey") + "]"))
                                     {
@@ -950,13 +969,13 @@ namespace Protean
                                                 else
                                                 {
                                                     bApplyOnTotal = false;
-                                                    oDiscountElmt.SetAttribute("nDiscountRemaining", (Conversions.ToDouble(oDiscountLoop.GetAttribute("nDiscountValue")) - RemainingAmountToDiscount).ToString());
+                                                    oDiscountElmt.SetAttribute("nDiscountRemaining", (Convert.ToDouble(oDiscountLoop.GetAttribute("nDiscountValue")) - RemainingAmountToDiscount).ToString());
                                                 }
                                             }
                                         }
                                         else
                                         {
-                                            oDiscountElmt.SetAttribute("nDiscountRemaining", (Conversions.ToDouble(oDiscountLoop.GetAttribute("nDiscountValue")) - Conversions.ToDouble(oPriceLine.GetAttribute("TotalSaving"))).ToString());
+                                            oDiscountElmt.SetAttribute("nDiscountRemaining", (Convert.ToDouble(oDiscountLoop.GetAttribute("nDiscountValue")) - Convert.ToDouble(oPriceLine.GetAttribute("TotalSaving"))).ToString());
                                         }
                                     }
                                 }
@@ -978,7 +997,7 @@ namespace Protean
                                     oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
                                     if (moConfig["eShippingMethodId"] != null & moConfig["DefaultShippingMethodId"] != null)
                                     {
-                                        if (Operators.ConditionalCompareObjectEqual(oDs.Tables[0].Rows[0]["nShippingMethodId"], moConfig["eShippingMethodId"], false))
+                                        if (Equals(oDs.Tables[0].Rows[0]["nShippingMethodId"], moConfig["eShippingMethodId"]))
                                         {
                                             myCart.updateGCgetValidShippingOptionsDS(moConfig["DefaultShippingMethodId"]);
                                         }
@@ -1033,7 +1052,7 @@ namespace Protean
                                 oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString());
                                 // oPriceElmt.SetAttribute("UnitPrice", oItemLoop.GetAttribute("price"))
                                 oPriceElmt.SetAttribute("Units", oItemLoop.GetAttribute("quantity"));
-                                oPriceElmt.SetAttribute("Total", ((double)nPrice * Conversions.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
+                                oPriceElmt.SetAttribute("Total", ((double)nPrice * Convert.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
                                 // oPriceElmt.SetAttribute("Total", oItemLoop.GetAttribute("price") * oItemLoop.GetAttribute("quantity"))
                                 oPriceElmt.SetAttribute("UnitSaving", 0.ToString());
                                 oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
@@ -1046,15 +1065,15 @@ namespace Protean
                             {
                                 // now work out new unit prices etc
 
-                                decimal nNewPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
-                                AmountToDiscount = Conversions.ToDecimal(oDiscountLoop.GetAttribute("nDiscountValue"));
+                                decimal nNewPrice = Convert.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
+                                AmountToDiscount = Convert.ToDecimal(oDiscountLoop.GetAttribute("nDiscountValue"));
                                 if (!string.IsNullOrEmpty(oDiscountLoop.GetAttribute("nDiscountRemaining")))
                                 {
-                                    AmountToDiscount = Conversions.ToDecimal(oDiscountLoop.GetAttribute("nDiscountRemaining"));
+                                    AmountToDiscount = Convert.ToDecimal(oDiscountLoop.GetAttribute("nDiscountRemaining"));
                                 }
 
 
-                                nNewPrice = (decimal)((double)nNewPrice - (double)AmountToDiscount / Conversions.ToDouble(oItemLoop.GetAttribute("quantity")));
+                                nNewPrice = (decimal)((double)nNewPrice - (double)AmountToDiscount / Convert.ToDouble(oItemLoop.GetAttribute("quantity")));
 
                                 if (nNewPrice > 0m & bApplyOnTotal == false) // only apply it if its not gonna go below 0
                                 {
@@ -1066,19 +1085,19 @@ namespace Protean
                                     oPriceLine.SetAttribute("PriceOrder", nPriceCount.ToString());
                                     oPriceLine.SetAttribute("nDiscountKey", oDiscountLoop.GetAttribute("nDiscountKey"));
                                     oPriceLine.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                    oPriceLine.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
-                                    oPriceLine.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - (double)nNewPrice).ToString());
-                                    oPriceLine.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceLine.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceLine.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - (double)nNewPrice).ToString());
+                                    oPriceLine.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
 
                                     oPriceElmt.AppendChild(oPriceLine);
 
                                     // this works the overall price
                                     oPriceElmt.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                    oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
-                                    oPriceElmt.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
+                                    oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceElmt.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
 
                                     // we will always apply these
-                                    oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceElmt.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                                     foreach (XmlElement oDiscountElmt in oDiscountXML.SelectNodes("Discounts/Item/Discount[@nDiscountKey=" + oDiscountLoop.GetAttribute("nDiscountKey") + "]"))
                                     {
 
@@ -1117,21 +1136,21 @@ namespace Protean
                                     oPriceLine.SetAttribute("PriceOrder", nPriceCount.ToString());
                                     oPriceLine.SetAttribute("nDiscountKey", oDiscountLoop.GetAttribute("nDiscountKey"));
                                     oPriceLine.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                    oPriceLine.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceLine.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                                     oPriceLine.SetAttribute("UnitSaving", oPriceElmt.GetAttribute("UnitPrice"));
-                                    oPriceLine.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceLine.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
 
                                     oPriceElmt.AppendChild(oPriceLine);
 
                                     // this works the overall price
                                     oPriceElmt.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                    oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
-                                    oPriceElmt.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
-                                    oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                    oPriceElmt.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
+                                    oPriceElmt.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
 
                                     // we will always apply these
                                     oDiscountLoop.SetAttribute("Applied", 1.ToString());
-                                    RemainingAmountToDiscount = RemainingAmountToDiscount + Conversions.ToDouble(oPriceLine.GetAttribute("TotalSaving"));
+                                    RemainingAmountToDiscount = RemainingAmountToDiscount + Convert.ToDouble(oPriceLine.GetAttribute("TotalSaving"));
                                     // set the discount remianing if this rule is available on other products..
                                     foreach (XmlElement oDiscountElmt in oDiscountXML.SelectNodes("Discounts/Item/Discount[@nDiscountKey=" + oDiscountLoop.GetAttribute("nDiscountKey") + "]"))
                                     {
@@ -1148,13 +1167,13 @@ namespace Protean
                                                 else
                                                 {
                                                     bApplyOnTotal = false;
-                                                    oDiscountElmt.SetAttribute("nDiscountRemaining", (Conversions.ToDouble(oDiscountLoop.GetAttribute("nDiscountValue")) - RemainingAmountToDiscount).ToString());
+                                                    oDiscountElmt.SetAttribute("nDiscountRemaining", (Convert.ToDouble(oDiscountLoop.GetAttribute("nDiscountValue")) - RemainingAmountToDiscount).ToString());
                                                 }
                                             }
                                         }
                                         else
                                         {
-                                            oDiscountElmt.SetAttribute("nDiscountRemaining", (Conversions.ToDouble(oDiscountLoop.GetAttribute("nDiscountValue")) - Conversions.ToDouble(oPriceLine.GetAttribute("TotalSaving"))).ToString());
+                                            oDiscountElmt.SetAttribute("nDiscountRemaining", (Convert.ToDouble(oDiscountLoop.GetAttribute("nDiscountValue")) - Convert.ToDouble(oPriceLine.GetAttribute("TotalSaving"))).ToString());
                                         }
                                     }
                                 }
@@ -1193,7 +1212,7 @@ namespace Protean
                                 oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString());
                                 // oPriceElmt.SetAttribute("UnitPrice", oItemLoop.GetAttribute("price"))
                                 oPriceElmt.SetAttribute("Units", oItemLoop.GetAttribute("quantity"));
-                                oPriceElmt.SetAttribute("Total", ((double)nPrice * Conversions.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
+                                oPriceElmt.SetAttribute("Total", ((double)nPrice * Convert.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
                                 // oPriceElmt.SetAttribute("Total", oItemLoop.GetAttribute("price") * oItemLoop.GetAttribute("quantity"))
                                 oPriceElmt.SetAttribute("UnitSaving", 0.ToString());
                                 oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
@@ -1208,13 +1227,15 @@ namespace Protean
                                 // here we go through and find the biggest discount
                                 if (oPriceBreakElmt != null)
                                 {
-                                    if (Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceElmt.GetAttribute("Total"), false) <= 0 & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceBreakElmt.GetAttribute("nDiscountMinPrice"), false) > 0)
-
+                                    if (string.Compare(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceElmt.GetAttribute("Total"), StringComparison.OrdinalIgnoreCase) <= 0 &&
+     string.Compare(oTmpLoop.GetAttribute("nDiscountMinPrice"), oPriceBreakElmt.GetAttribute("nDiscountMinPrice"), StringComparison.OrdinalIgnoreCase) > 0)
+                                    {
                                         oPriceBreakElmt = oTmpLoop;
+                                    }
                                 }
-                                else if (Information.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinPrice")) & Information.IsNumeric(oPriceElmt.GetAttribute("Total")))
+                                else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinPrice")) & Tools.Number.IsNumeric(oPriceElmt.GetAttribute("Total")))
                                 {
-                                    if (Conversions.ToDecimal(oTmpLoop.GetAttribute("nDiscountMinPrice")) <= Conversions.ToDecimal(oPriceElmt.GetAttribute("Total")))
+                                    if (Convert.ToDecimal(oTmpLoop.GetAttribute("nDiscountMinPrice")) <= Convert.ToDecimal(oPriceElmt.GetAttribute("Total")))
                                     {
                                         oPriceBreakElmt = oTmpLoop;
                                     }
@@ -1222,12 +1243,20 @@ namespace Protean
 
                                 if (oQuantityBreakElmt != null)
                                 {
-                                    if (Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), false) <= 0 & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oQuantityBreakElmt.GetAttribute("nDiscountMinQuantity"), false) > 0)
-
+                                    if (string.Compare(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), StringComparison.OrdinalIgnoreCase) <= 0 &&
+    string.Compare(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oQuantityBreakElmt.GetAttribute("nDiscountMinQuantity"), StringComparison.OrdinalIgnoreCase) > 0)
+                                    {
                                         oQuantityBreakElmt = oTmpLoop;
+                                    }
                                 }
-                                else if (Information.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinQuantity")) & Operators.CompareString(oTmpLoop.GetAttribute("nDiscountMinQuantity"), oPriceElmt.GetAttribute("Units"), false) <= 0)
+                                else if (Tools.Number.IsNumeric(oTmpLoop.GetAttribute("nDiscountMinQuantity")) &&
+          string.Compare(oTmpLoop.GetAttribute("nDiscountMinQuantity"),
+                         oPriceElmt.GetAttribute("Units"),
+                         StringComparison.OrdinalIgnoreCase) <= 0)
+                                {
                                     oQuantityBreakElmt = oTmpLoop;
+                                }
+
                             }
 
                             // which is going to be the bigger discount
@@ -1235,7 +1264,7 @@ namespace Protean
                             XmlElement oHighestElmt = null;
                             decimal nCurrentSaving = 0m;
 
-                            long nUnits = Conversions.ToLong(oPriceElmt.GetAttribute("Units"));
+                            long nUnits = Convert.ToInt64(oPriceElmt.GetAttribute("Units"));
                             decimal nUnitPrice = 0m;
                             decimal nTotal = 0m;
                             decimal nUnitSaving = 0m;
@@ -1257,20 +1286,20 @@ namespace Protean
                             // now the actual test
                             if (oTestElmt != null)
                             {
-                                nUnitPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
+                                nUnitPrice = Convert.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
                                 // work out depending on value/percent
-                                if (Conversions.ToDouble(oTestElmt.GetAttribute("bDiscountIsPercent")) == 0d)
+                                if (Convert.ToDouble(oTestElmt.GetAttribute("bDiscountIsPercent")) == 0d)
                                 {
                                     nUnitPrice = (decimal)(nUnitPrice - Convert.ToDecimal(oTestElmt.GetAttribute("nDiscountValue")));
                                 }
                                 else
                                 {
-                                    nUnitPrice = Round((double)nUnitPrice * ((100d - Conversions.ToDouble(oTestElmt.GetAttribute("nDiscountValue"))) / 100d), bForceRoundup: mbRoundUp);
+                                    nUnitPrice = Round((double)nUnitPrice * ((100d - Convert.ToDouble(oTestElmt.GetAttribute("nDiscountValue"))) / 100d), bForceRoundup: mbRoundUp);
                                 }
                                 // make the totals
                                 nTotal = nUnitPrice * nUnits;
-                                nUnitSaving = (decimal)(Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - (double)nUnitPrice);
-                                nTotalSaving = (decimal)((double)nUnitSaving * Conversions.ToDouble(oPriceElmt.GetAttribute("Units")));
+                                nUnitSaving = (decimal)(Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - (double)nUnitPrice);
+                                nTotalSaving = (decimal)((double)nUnitSaving * Convert.ToDouble(oPriceElmt.GetAttribute("Units")));
                                 // if its higher than current we make that the item to use
                                 if (nTotalSaving > nCurrentSaving)
                                 {
@@ -1296,16 +1325,16 @@ namespace Protean
                             // this works the overall price
                             oPriceElmt.SetAttribute("UnitPrice", nUnitPrice.ToString());
                             oPriceElmt.SetAttribute("Total", (nUnitPrice * nUnits).ToString());
-                            oPriceElmt.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nUnitPrice).ToString());
-                            oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                            oPriceElmt.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nUnitPrice).ToString());
+                            oPriceElmt.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                             // this works the price out for this discount based on previous stuff
                             nPriceCount += 1;
                             oPriceLine.SetAttribute("PriceOrder", nPriceCount.ToString());
                             oPriceLine.SetAttribute("nDiscountKey", oHighestElmt.GetAttribute("nDiscountKey"));
                             oPriceLine.SetAttribute("UnitPrice", nUnitPrice.ToString());
                             oPriceLine.SetAttribute("Total", (nUnitPrice * nUnits).ToString());
-                            oPriceLine.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nUnitPrice).ToString());
-                            oPriceLine.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                            oPriceLine.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nUnitPrice).ToString());
+                            oPriceLine.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
 
                             oPriceElmt.AppendChild(oPriceLine);
                             // we will always apply these
@@ -1347,7 +1376,7 @@ namespace Protean
                                 oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString());
                                 // oPriceElmt.SetAttribute("UnitPrice", oItemLoop.GetAttribute("price"))
                                 oPriceElmt.SetAttribute("Units", oItemLoop.GetAttribute("quantity"));
-                                oPriceElmt.SetAttribute("Total", ((double)nPrice * Conversions.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
+                                oPriceElmt.SetAttribute("Total", ((double)nPrice * Convert.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
                                 // oPriceElmt.SetAttribute("Total", oItemLoop.GetAttribute("price") * oItemLoop.GetAttribute("quantity"))
                                 oPriceElmt.SetAttribute("UnitSaving", 0.ToString());
                                 oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
@@ -1356,8 +1385,8 @@ namespace Protean
                             foreach (XmlElement oDiscountLoop in oItemLoop.SelectNodes("Discount[@bDiscountIsPercent=1 and @nDiscountCat=1]"))
                             {
 
-                                decimal nNewPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
-                                nNewPrice = Round((double)nNewPrice * ((100d - Conversions.ToDouble(oDiscountLoop.GetAttribute("nDiscountValue"))) / 100d), bForceRoundup: mbRoundUp);
+                                decimal nNewPrice = Convert.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
+                                nNewPrice = Round((double)nNewPrice * ((100d - Convert.ToDouble(oDiscountLoop.GetAttribute("nDiscountValue"))) / 100d), bForceRoundup: mbRoundUp);
 
                                 var oPriceLine = oDiscountXML.CreateElement("DiscountPriceLine");
 
@@ -1365,17 +1394,17 @@ namespace Protean
                                 oPriceLine.SetAttribute("nDiscountKey", oDiscountLoop.GetAttribute("nDiscountKey"));
                                 oPriceLine.SetAttribute("PriceOrder", nPriceCount.ToString());
                                 oPriceLine.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                oPriceLine.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
-                                oPriceLine.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - (double)nNewPrice).ToString());
-                                oPriceLine.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                oPriceLine.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                oPriceLine.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - (double)nNewPrice).ToString());
+                                oPriceLine.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                                 oPriceElmt.AppendChild(oPriceLine);
 
                                 // this works the overall price
 
                                 oPriceElmt.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
-                                oPriceElmt.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
-                                oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                oPriceElmt.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
+                                oPriceElmt.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
 
                                 oDiscountLoop.SetAttribute("Applied", 1.ToString());
                                 nPromocodeApplyFlag = 1;
@@ -1417,7 +1446,7 @@ namespace Protean
                                 oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString());
                                 // oPriceElmt.SetAttribute("UnitPrice", oItemLoop.GetAttribute("price"))
                                 oPriceElmt.SetAttribute("Units", oItemLoop.GetAttribute("quantity"));
-                                oPriceElmt.SetAttribute("Total", ((double)nPrice * Conversions.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
+                                oPriceElmt.SetAttribute("Total", ((double)nPrice * Convert.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
                                 // oPriceElmt.SetAttribute("Total", oItemLoop.GetAttribute("price") * oItemLoop.GetAttribute("quantity"))
                                 oPriceElmt.SetAttribute("UnitSaving", 0.ToString());
                                 oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
@@ -1431,9 +1460,9 @@ namespace Protean
                                 int nTotalQOff; // total number of units we need to deduct
                                 int nQ; // Total Quanity
 
-                                nQX = Conversions.ToInteger(oDiscountLoop.GetAttribute("nDiscountMinQuantity"));
-                                nQY = Conversions.ToInteger(oDiscountLoop.GetAttribute("nDiscountValue"));
-                                nQ = Conversions.ToInteger(oItemLoop.GetAttribute("quantity"));
+                                nQX = Convert.ToInt16(oDiscountLoop.GetAttribute("nDiscountMinQuantity"));
+                                nQY = Convert.ToInt16(oDiscountLoop.GetAttribute("nDiscountValue"));
+                                nQ = Convert.ToInt16(oItemLoop.GetAttribute("quantity"));
                                 int nQtotal = nQ;
                                 string ItemId = oItemLoop.GetAttribute("contentId");
 
@@ -1442,10 +1471,10 @@ namespace Protean
                                 if (oItemLoop.SelectNodes("./preceding-sibling::Item[@contentId='" + ItemId + "' and Discount[@nDiscountCat=3 and not(@Applied='1')]]").Count > 0)
                                 {
                                     foreach (XmlElement preceedingItems in oItemLoop.SelectNodes("./preceding-sibling::Item[@contentId='" + ItemId + "' and Discount[@nDiscountCat=3 and not(@Applied='1')]]"))
-                                        nQtotal = (int)Math.Round(nQtotal + Conversions.ToDouble(preceedingItems.GetAttribute("quantity")));
+                                        nQtotal = (int)Math.Round(nQtotal + Convert.ToDouble(preceedingItems.GetAttribute("quantity")));
                                 }
 
-                                nTotalQOff = (int)Math.Round(Conversions.ToDouble(Strings.Split((nQtotal / (double)nQX).ToString(), ".")[0]) * (nQX - nQY));
+                                nTotalQOff = (int)Math.Round(Math.Floor(nQtotal / (double)nQX) * (nQX - nQY));
                                 if (nTotalQOff > 0)
                                 {
                                     var oDiscount = oDiscountXML.CreateElement("DiscountItem");
@@ -1454,8 +1483,8 @@ namespace Protean
                                     oDiscount.SetAttribute("oldUnits", oPriceElmt.GetAttribute("Units")); // Original Charged Units
                                     oDiscount.SetAttribute("Units", (nQ - nTotalQOff).ToString()); // Now charged Units
                                     oDiscount.SetAttribute("oldTotal", oPriceElmt.GetAttribute("Total")); // original total
-                                    oDiscount.SetAttribute("Total", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString()); // Now total
-                                    oDiscount.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("Total")) - Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString()); // total saving
+                                    oDiscount.SetAttribute("Total", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString()); // Now total
+                                    oDiscount.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("Total")) - Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) * (nQ - nTotalQOff)).ToString()); // total saving
 
                                     oItemLoop.AppendChild(oDiscount);
                                     // set previous items as applied...
@@ -1500,8 +1529,7 @@ namespace Protean
                         // now we have all the keys we can go though them and get the information we need
                         if (cIDs == ",")
                             return;
-                        cIDs = Strings.Right(cIDs, cIDs.Length - 1);
-                        cIDs = Strings.Left(cIDs, cIDs.Length - 1);
+                        cIDs = cIDs.Substring(1, cIDs.Length - 2);
                         string[] oIDs = cIDs.Split(',');
 
                         int nMinItems = 1;
@@ -1512,8 +1540,7 @@ namespace Protean
                         int nI;
 
                         // Step through each individual discount rule
-                        var loopTo = Information.UBound(oIDs);
-                        for (nI = 0; nI <= loopTo; nI++)
+                        for (nI = 0; nI < oIDs.Length; nI++)
                         {
                             //decimal nCheapestPrice = 0m; // records the cheapest price
                             //XmlElement oCheapestItem = null; // records the cheapest item
@@ -1528,17 +1555,17 @@ namespace Protean
                             int i = 0;
 
                             oCurDiscount = (XmlElement)oDiscXml.SelectSingleNode("Discounts/Item/Discount[@nDiscountKey=" + oIDs[nI] + "]");
-                            nDiscountValue = Conversions.ToDecimal(oCurDiscount.GetAttribute("nDiscountValue"));
-                            bDiscountIsPercent = Conversions.ToBoolean(oCurDiscount.GetAttribute("bDiscountIsPercent"));
+                            nDiscountValue = Convert.ToDecimal(oCurDiscount.GetAttribute("nDiscountValue"));
+                            bDiscountIsPercent = Convert.ToBoolean(oCurDiscount.GetAttribute("bDiscountIsPercent"));
                             // Set nMinItems
-                            if (Information.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinQuantity")))
-                                nMinItems = Conversions.ToInteger(oCurDiscount.GetAttribute("nDiscountMinQuantity"));
+                            if (Tools.Number.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinQuantity")))
+                                nMinItems = Convert.ToInt16(oCurDiscount.GetAttribute("nDiscountMinQuantity"));
                             // Set nDiscountMinPrice
-                            if (Information.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinPrice")))
-                                nDiscountMinPrice = Conversions.ToDecimal(oCurDiscount.GetAttribute("nDiscountMinPrice"));
+                            if (Tools.Number.IsNumeric(oCurDiscount.GetAttribute("nDiscountMinPrice")))
+                                nDiscountMinPrice = Convert.ToDecimal(oCurDiscount.GetAttribute("nDiscountMinPrice"));
                             // Set nDiscountMaxPrice
-                            if (Information.IsNumeric(oCurDiscount.SelectSingleNode("nDiscountMaxPrice").InnerText))
-                                nDiscountMaxPrice = Conversions.ToDecimal(oCurDiscount.SelectSingleNode("nDiscountMaxPrice").InnerText);
+                            if (Tools.Number.IsNumeric(oCurDiscount.SelectSingleNode("nDiscountMaxPrice").InnerText))
+                                nDiscountMaxPrice = Convert.ToDecimal(oCurDiscount.SelectSingleNode("nDiscountMaxPrice").InnerText);
 
                             var aPriceArray = new double[oDiscXml.SelectNodes("Discounts/Item[Discount/@nDiscountKey=" + oIDs[nI] + "]").Count];
                             // Step through each product in the cart associated with current rule
@@ -1562,7 +1589,7 @@ namespace Protean
                                     oPriceElmt.SetAttribute("OriginalUnitPrice", nCurrentUnitPrice.ToString());
                                     oPriceElmt.SetAttribute("UnitPrice", nCurrentUnitPrice.ToString());
                                     oPriceElmt.SetAttribute("Units", oItemLoop.GetAttribute("quantity"));
-                                    oPriceElmt.SetAttribute("Total", ((double)nCurrentUnitPrice * Conversions.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
+                                    oPriceElmt.SetAttribute("Total", ((double)nCurrentUnitPrice * Convert.ToDouble(oItemLoop.GetAttribute("quantity"))).ToString());
                                     // oPriceElmt.SetAttribute("Total", oItemLoop.GetAttribute("price") * oItemLoop.GetAttribute("quantity"))
                                     oPriceElmt.SetAttribute("UnitSaving", 0.ToString());
                                     oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
@@ -1570,16 +1597,16 @@ namespace Protean
                                 }
                                 else
                                 {
-                                    nCurrentUnitPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
+                                    nCurrentUnitPrice = Convert.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
                                 }
 
                                 // calculate the total value of items associated with this discount
                                 nValueOfItems = (decimal)(nValueOfItems + (decimal)nCurrentUnitPrice * Convert.ToDecimal(oPriceElmt.GetAttribute("Units")));
-                                nItemQty = (int)Math.Round(nItemQty + Conversions.ToDouble(oPriceElmt.GetAttribute("Units")));
+                                nItemQty = (int)Math.Round(nItemQty + Convert.ToDouble(oPriceElmt.GetAttribute("Units")));
 
                                 if (nCurrentUnitPrice > nDiscountMinPrice)
                                 {
-                                    nQualifyingItemsQty = (int)Math.Round(nQualifyingItemsQty + Conversions.ToDouble(oPriceElmt.GetAttribute("Units")));
+                                    nQualifyingItemsQty = (int)Math.Round(nQualifyingItemsQty + Convert.ToDouble(oPriceElmt.GetAttribute("Units")));
                                 }
                                 // create an array of prices to discount that we can sort
                                 aPriceArray[i] = (double)nCurrentUnitPrice;
@@ -1596,8 +1623,7 @@ namespace Protean
 
                                 decimal nLastPrice = 0m;
 
-                                var loopTo1 = Information.UBound(aPriceArray);
-                                for (i = 0; i <= loopTo1; i++)
+                                for (i = 0; i < aPriceArray.Length; i++)
                                 {
                                     // step through prices cheapest first
                                     if (aPriceArray[i] > (double)nLastPrice & aPriceArray[i] <= (double)nDiscountMaxPrice & itemsToDiscount > 0)
@@ -1606,25 +1632,25 @@ namespace Protean
                                         {
                                             oItemLoop = currentOItemLoop1;
 
-                                            nLastPrice = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
+                                            nLastPrice = Convert.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
                                             oPriceElmt = (XmlElement)oItemLoop.SelectSingleNode("DiscountPrice");
 
 
                                             long nDiscountNumber;
-                                            if (Conversions.ToDouble(oPriceElmt.GetAttribute("Units")) > itemsToDiscount)
+                                            if (Convert.ToDouble(oPriceElmt.GetAttribute("Units")) > itemsToDiscount)
                                             {
                                                 nDiscountNumber = itemsToDiscount;
                                             }
                                             else
                                             {
-                                                nDiscountNumber = Conversions.ToLong(oPriceElmt.GetAttribute("Units"));
+                                                nDiscountNumber = Convert.ToInt64(oPriceElmt.GetAttribute("Units"));
                                             }
 
                                             oDiscount = oDiscXml.CreateElement("DiscountItem");
                                             itemsToDiscount = (int)(itemsToDiscount - nDiscountNumber);
 
                                             // define the by Unit Discounted Price
-                                            decimal nUnitPriceOriginal = Conversions.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
+                                            decimal nUnitPriceOriginal = Convert.ToDecimal(oPriceElmt.GetAttribute("UnitPrice"));
                                             decimal nUnitPriceDiscounted;
                                             if (bDiscountIsPercent)
                                             {
@@ -1644,7 +1670,7 @@ namespace Protean
                                             // nUnitPriceDiscounted = Math.Round(nUnitPriceDiscounted, 2)
                                             nUnitPriceDiscounted = Round(nUnitPriceDiscounted, bForceRoundup: mbRoundUp);
 
-                                            int nUnitCount = Conversions.ToInteger(oPriceElmt.GetAttribute("Units"));
+                                            int nUnitCount = Convert.ToInt16(oPriceElmt.GetAttribute("Units"));
 
                                             if (nDiscountNumber > 0L)
                                             {
@@ -1663,7 +1689,7 @@ namespace Protean
                                                 } // Now charged Units
 
                                                 oDiscount.SetAttribute("oldTotal", oPriceElmt.GetAttribute("Total")); // original total
-                                                oDiscount.SetAttribute("Total", (Conversions.ToDouble(oPriceElmt.GetAttribute("Total")) - (double)nTotalSaving).ToString()); // Now total
+                                                oDiscount.SetAttribute("Total", (Convert.ToDouble(oPriceElmt.GetAttribute("Total")) - (double)nTotalSaving).ToString()); // Now total
                                                 oDiscount.SetAttribute("TotalSaving", nTotalSaving.ToString()); // total saving
                                             }
 
@@ -1713,12 +1739,11 @@ namespace Protean
                         }
                         if (cIDs == ",")
                             return;
-                        cIDs = Strings.Right(cIDs, cIDs.Length - 1);
-                        cIDs = Strings.Left(cIDs, cIDs.Length - 1);
-                        string[] oIds = Strings.Split(cIDs, ",");
+                        cIDs = cIDs.Substring(1); // Remove first character
+                        cIDs = cIDs.Substring(0, cIDs.Length - 1); // Remove last character
+                        string[] oIds = cIDs.Split(','); // Split by comma
                         int i = 0;
-                        var loopTo = Information.UBound(oIds);
-                        for (i = 0; i <= loopTo; i++)
+                        for (i = 0; i < oIds.Length; i++)
                         {
                             foreach (XmlElement currentODiscount1 in oDiscountXML.SelectNodes("descendant-or-self::Discount[@nDiscountKey=" + oIds[i] + "]"))
                             {
@@ -1740,24 +1765,24 @@ namespace Protean
                                         oPriceElmt.SetAttribute("UnitPrice", nPrice.ToString());
                                         // oPriceElmt.SetAttribute("UnitPrice", oItem.GetAttribute("price"))
                                         oPriceElmt.SetAttribute("Units", oItem.GetAttribute("quantity"));
-                                        oPriceElmt.SetAttribute("Total", ((double)nPrice * Conversions.ToDouble(oItem.GetAttribute("quantity"))).ToString());
+                                        oPriceElmt.SetAttribute("Total", ((double)nPrice * Convert.ToDouble(oItem.GetAttribute("quantity"))).ToString());
                                         // oPriceElmt.SetAttribute("Total", oItem.GetAttribute("price") * oItem.GetAttribute("quantity"))
                                         oPriceElmt.SetAttribute("UnitSaving", 0.ToString());
                                         oPriceElmt.SetAttribute("TotalSaving", 0.ToString());
                                         oItem.AppendChild(oPriceElmt);
                                     }
-                                    nTotalItems = (int)Math.Round(nTotalItems + Conversions.ToDouble(oPriceElmt.GetAttribute("Units")));
+                                    nTotalItems = (int)Math.Round(nTotalItems + Convert.ToDouble(oPriceElmt.GetAttribute("Units")));
                                     nTotalItemsValue = (decimal)(nTotalItemsValue + Convert.ToDecimal(oPriceElmt.GetAttribute("UnitPrice")) * Convert.ToDecimal(oPriceElmt.GetAttribute("Units")));
                                 }
                                 decimal nNewPrice = 0m;
 
 
                                 int nDQ = 0;
-                                if (Information.IsNumeric(oDiscount.GetAttribute("nDiscountMinQuantity")))
-                                    nDQ = Conversions.ToInteger(oDiscount.GetAttribute("nDiscountMinQuantity"));
+                                if (Tools.Number.IsNumeric(oDiscount.GetAttribute("nDiscountMinQuantity")))
+                                    nDQ = Convert.ToInt16(oDiscount.GetAttribute("nDiscountMinQuantity"));
                                 int nDT = 0;
-                                if (Information.IsNumeric(oDiscount.GetAttribute("nDiscountMinPrice")))
-                                    nDT = Conversions.ToInteger(oDiscount.GetAttribute("nDiscountMinPrice"));
+                                if (Tools.Number.IsNumeric(oDiscount.GetAttribute("nDiscountMinPrice")))
+                                    nDT = Convert.ToInt16(oDiscount.GetAttribute("nDiscountMinPrice"));
                                 if (nTotalItems >= nDQ & nDQ > 0 | nTotalItemsValue >= nDT & nDT > 0)
                                 {
                                     //int nDiscountedSoFar = 0;
@@ -1767,13 +1792,13 @@ namespace Protean
                                         // if its a percentage we can just discount them all since its a flat rate.
                                         oPriceElmt = (XmlElement)oItem.SelectSingleNode("DiscountPrice");
 
-                                        if (Conversions.ToDouble(oDiscount.GetAttribute("bDiscountIsPercent")) == 1d)
+                                        if (Convert.ToDouble(oDiscount.GetAttribute("bDiscountIsPercent")) == 1d)
                                         {
-                                            nNewPrice = Round(Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) / 100d * (100d - Conversions.ToDouble(oDiscount.GetAttribute("nDiscountValue"))), bForceRoundup: mbRoundUp);
+                                            nNewPrice = Round(Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) / 100d * (100d - Convert.ToDouble(oDiscount.GetAttribute("nDiscountValue"))), bForceRoundup: mbRoundUp);
                                         }
                                         else
                                         {
-                                            nNewPrice = (decimal)(Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - Conversions.ToDouble(oDiscount.GetAttribute("nDiscountValue")));
+                                            nNewPrice = (decimal)(Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - Convert.ToDouble(oDiscount.GetAttribute("nDiscountValue")));
                                         }
 
                                         var oPriceLine = oDiscountXML.CreateElement("DiscountPriceLine");
@@ -1781,17 +1806,17 @@ namespace Protean
                                         oPriceLine.SetAttribute("nDiscountKey", oDiscount.GetAttribute("nDiscountKey"));
                                         oPriceLine.SetAttribute("PriceOrder", nPriceCount.ToString());
                                         oPriceLine.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                        oPriceLine.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
-                                        oPriceLine.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - (double)nNewPrice).ToString());
-                                        oPriceLine.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                        oPriceLine.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                        oPriceLine.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitPrice")) - (double)nNewPrice).ToString());
+                                        oPriceLine.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                                         oPriceElmt.AppendChild(oPriceLine);
 
                                         // this works the overall price
 
                                         oPriceElmt.SetAttribute("UnitPrice", nNewPrice.ToString());
-                                        oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
-                                        oPriceElmt.SetAttribute("UnitSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
-                                        oPriceElmt.SetAttribute("TotalSaving", (Conversions.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Conversions.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                        oPriceElmt.SetAttribute("Total", ((double)nNewPrice * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
+                                        oPriceElmt.SetAttribute("UnitSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("OriginalUnitPrice")) - (double)nNewPrice).ToString());
+                                        oPriceElmt.SetAttribute("TotalSaving", (Convert.ToDouble(oPriceElmt.GetAttribute("UnitSaving")) * Convert.ToDouble(oPriceElmt.GetAttribute("Units"))).ToString());
                                     }
                                 }
                                 break;
@@ -1815,28 +1840,24 @@ namespace Protean
                     {
                         if (!(cPromotionalDiscounts == ","))
                         {
-                            string[] oIdArr = Strings.Split(cPromotionalDiscounts, ",");
-                            int i;
-                            var loopTo = Information.UBound(oIdArr);
-                            for (i = 0; i <= loopTo; i++)
+                            string[] oIdArr = cPromotionalDiscounts.Split(',');
+                            for (int i = 0; i < oIdArr.Length; i++)
                             {
                                 if (!string.IsNullOrEmpty(oIdArr[i]))
                                 {
-                                    myWeb.moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.CartDiscountRules, Cms.dbHelper.Status.Hidden, Conversions.ToLong(oIdArr[i]));
+                                    myWeb.moDbHelper.setObjectStatus(Cms.dbHelper.objectTypes.CartDiscountRules, Cms.dbHelper.Status.Hidden, Convert.ToInt64(oIdArr[i]));
                                 }
                             }
                         }
 
                         if (!(cVouchersUsed == ","))
                         {
-                            string[] oIdArr = Strings.Split(cVouchersUsed, ",");
-                            int i;
-                            var loopTo1 = Information.UBound(oIdArr);
-                            for (i = 0; i <= loopTo1; i++)
+                            string[] oIdArr = cVouchersUsed.Split(',');
+                            for (int i = 0; i < oIdArr.Length; i++)
                             {
                                 if (!string.IsNullOrEmpty(oIdArr[i]))
                                 {
-                                    myWeb.moDbHelper.UseCode(Conversions.ToInteger(oIdArr[i]), myWeb.mnUserId, myCart.mnCartId);
+                                    myWeb.moDbHelper.UseCode(Convert.ToInt16(oIdArr[i]), myWeb.mnUserId, myCart.mnCartId);
 
                                 }
                             }
@@ -1878,18 +1899,20 @@ namespace Protean
                     string cUserGroupIds = getUserGroupIDs(); // get the user groups
                     try
                     {
-                        if (myCart.mnProcessId > 4)
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                        if (myCart.mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
+                        
                         else if (myCart.mnCartId > 0)
                         {
                             sSql = "select * from tblCartOrder where nCartOrderKey=" + myCart.mnCartId;
                             oDs = myWeb.moDbHelper.getDataSetForUpdate(sSql, "Order", "Cart");
-                            sXmlContent = Conversions.ToString(Operators.ConcatenateObject(oDs.Tables[0].Rows[0]["cCartXml"], ""));
+                            sXmlContent = oDs.Tables[0].Rows[0]["cCartXml"]?.ToString() ?? "";
                             docOrder.LoadXml(sXmlContent);
                             // Dim OrderPaymentStatus As String = docOrder.SelectSingleNode("Order").Attributes("status").Value
-                            double orderTotal = Conversions.ToDouble(docOrder.SelectSingleNode("Order").Attributes["total"].Value);
+                            double orderTotal = Convert.ToDouble(docOrder.SelectSingleNode("Order").Attributes["total"].Value);
                             // check for quantity
                             int nItemCount = docOrder.SelectNodes("Order/Item").Count;
 
@@ -1962,12 +1985,7 @@ namespace Protean
                                 foreach (DataRow discountRow in oDsDiscounts.Tables["Discount"].Rows)
                                 {
                                     // Wrap Additional XML
-                                    string additionalInfo = Conversions.ToString(
-                                        Operators.AddObject(
-                                            Operators.AddObject("<additionalXml>", discountRow["cAdditionalXML"]),
-                                            "</additionalXml>"
-                                        )
-                                    );
+                                    string additionalInfo = "<additionalXml>" + (discountRow["cAdditionalXML"]?.ToString() ?? "") + "</additionalXml>";
 
                                     doc.LoadXml(additionalInfo);
 
@@ -1977,19 +1995,19 @@ namespace Protean
                                     XmlNode nodeMin = doc.SelectSingleNode("additionalXml/nMinimumOrderValue");
                                     if (nodeMin != null && !string.IsNullOrWhiteSpace(nodeMin.InnerText))
                                     {
-                                        minimumOrderTotal = Conversions.ToDouble("0" + nodeMin.InnerText);
+                                        minimumOrderTotal = Convert.ToDouble("0" + nodeMin.InnerText);
                                     }
 
                                     XmlNode nodeMax = doc.SelectSingleNode("additionalXml/nMaximumOrderValue");
                                     if (nodeMax != null && !string.IsNullOrWhiteSpace(nodeMax.InnerText))
                                     {
-                                        maximumOrderTotal = Conversions.ToDouble("0" + nodeMax.InnerText);
+                                        maximumOrderTotal = Convert.ToDouble("0" + nodeMax.InnerText);
                                     }
 
                                     XmlNode nodeMaxPrice = doc.SelectSingleNode("additionalXml/nDiscountMaxPrice");
                                     if (nodeMaxPrice != null && !string.IsNullOrWhiteSpace(nodeMaxPrice.InnerText))
                                     {
-                                        dMaxPrice = Conversions.ToDouble("0" + nodeMaxPrice.InnerText);
+                                        dMaxPrice = Convert.ToDouble("0" + nodeMaxPrice.InnerText);
                                     }
 
                                     XmlNode nodeApply = doc.SelectSingleNode("additionalXml/bApplyToOrder");
@@ -2015,13 +2033,13 @@ namespace Protean
                                     {
                                         if (dMaxPrice != 0d)
                                         {
-                                            nDiscountQuantity = Conversions.ToInteger("0" + discountRow["nDiscountMinQuantity"]);
-                                            dMinPrice = Conversions.ToDouble("0" + discountRow["nDiscountMinPrice"]);
+                                            nDiscountQuantity = Convert.ToInt16("0" + discountRow["nDiscountMinQuantity"]);
+                                            dMinPrice = Convert.ToDouble("0" + discountRow["nDiscountMinPrice"]);
 
                                             nCount = 0;
                                             foreach (XmlNode item in docOrder.SelectNodes("Order/Item"))
                                             {
-                                                itemCost = Conversions.ToDouble(item.Attributes["itemTotal"].Value);
+                                                itemCost = Convert.ToDouble(item.Attributes["itemTotal"].Value);
                                                 if (itemCost >= dMinPrice && itemCost <= dMaxPrice)
                                                 {
                                                     nCount++;
@@ -2058,7 +2076,7 @@ namespace Protean
                             {
 
                                 // load existing notes from Cart
-                                sXmlContent = Conversions.ToString(Operators.ConcatenateObject(oRow["cClientNotes"], ""));
+                                sXmlContent = oRow["cClientNotes"]?.ToString() ?? "";
                                 if (string.IsNullOrEmpty(sXmlContent))
                                 {
                                     sXmlContent = "<Notes><PromotionalCode/></Notes>";
@@ -2135,11 +2153,11 @@ namespace Protean
 
                             if (doc.InnerXml.Contains("nMinimumOrderValue"))
                             {
-                                minimumOrderTotal = Conversions.ToDouble("0" + doc.SelectSingleNode("additionalXml").SelectSingleNode("nMinimumOrderValue").InnerText);
+                                minimumOrderTotal = Convert.ToDouble("0" + doc.SelectSingleNode("additionalXml").SelectSingleNode("nMinimumOrderValue").InnerText);
                             }
                             if (doc.InnerXml.Contains("nMaximumOrderValue"))
                             {
-                                maximumOrderTotal = Conversions.ToDouble("0" + doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText);
+                                maximumOrderTotal = Convert.ToDouble("0" + doc.SelectSingleNode("additionalXml").SelectSingleNode("nMaximumOrderValue").InnerText);
                             }
                             // If (doc.InnerXml.Contains("nDiscountMaxPrice")) Then
                             // dMaxPrice = CDbl("0" & doc.SelectSingleNode("additionalXml").SelectSingleNode("nDiscountMaxPrice").InnerText)
@@ -2323,7 +2341,7 @@ namespace Protean
 
                                 myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-startGetDatasetXml");
 
-                                oXML.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
+                                oXML.InnerXml = oDS.GetXml().Replace("&gt;", ">").Replace("&lt;", "<");
                             }
 
                             myWeb.PerfMon.Log("Discount", "getAvailableDiscounts-endGetDatasetXml");
@@ -2346,9 +2364,9 @@ namespace Protean
 
                                 if (!string.IsNullOrEmpty(cContentId))
                                 {
-                                    if (Information.IsNumeric(cContentId))
+                                    if (Tools.Number.IsNumeric(cContentId))
                                     {
-                                        long nContentId = Conversions.ToLong(cContentId);
+                                        long nContentId = Convert.ToInt64(cContentId);
                                         // For Each oContentElmt In oRootElmt.SelectNodes("descendant-or-self::Content[@id=" & nContentId & "]")
                                         foreach (XmlElement currentOContentElmt1 in oRootElmt.SelectNodes("descendant-or-self::Content[@id=" + nContentId + " and not(ancestor::Discounts)]"))
                                         {
@@ -2383,12 +2401,11 @@ namespace Protean
 
                                 string[] cPriceModifiers = new string[] { "Basic_Money", "Basic_Percent", "Cheapest_Free" };
                                 if (!string.IsNullOrEmpty(mcPriceModOrder))
-                                    cPriceModifiers = Strings.Split(mcPriceModOrder, ",");
-                                int nI;
+                                    cPriceModifiers = mcPriceModOrder.Split(',');
+                               
                                 //int nPriceCount = 0;
                                 // this counts where we are on the prices, shows the order we done them in
-                                var loopTo = Information.UBound(cPriceModifiers);
-                                for (nI = 0; nI <= loopTo; nI++)
+                                for (int nI = 0; nI < cPriceModifiers.Length; nI++)
                                 {
                                     switch (cPriceModifiers[nI] ?? "")
                                     {
@@ -2458,8 +2475,8 @@ namespace Protean
                     try
                     {
                         int nDiscountID = 0;
-                        if (Information.IsNumeric(myWeb.moRequest.QueryString["DiscountID"]))
-                            nDiscountID = Conversions.ToInteger(myWeb.moRequest.QueryString["DiscountID"]);
+                        if (Tools.Number.IsNumeric(myWeb.moRequest.QueryString["DiscountID"]))
+                            nDiscountID = Convert.ToInt16(myWeb.moRequest.QueryString["DiscountID"]);
                         string sSQL;
                         DataSet oDS;
                         var oDiscounts = PageElmt.OwnerDocument.CreateElement("Discounts");
@@ -2476,7 +2493,7 @@ namespace Protean
                             oDC.ColumnMapping = MappingType.Attribute;
                         oDS.Tables["Discount"].Columns["cAdditionalXML"].ColumnMapping = MappingType.SimpleContent;
 
-                        oDiscounts.InnerXml = Strings.Replace(Strings.Replace(oDS.GetXml(), "&gt;", ">"), "&lt;", "<");
+                        oDiscounts.InnerXml = oDS.GetXml().Replace("&gt;", ">").Replace("&lt;", "<");
                         oDiscounts = (XmlElement)oDiscounts.FirstChild;
                         // now the contents
 
@@ -2501,7 +2518,7 @@ namespace Protean
                         foreach (XmlElement oTmp in oContent.SelectNodes("Content"))
                         {
                             // oTmp.InnerText = Replace(Replace(oTmp.InnerText, "&gt;", ">"), "&lt;", "<")
-                            int nDiscID = Conversions.ToInteger(oTmp.GetAttribute("nDiscountId"));
+                            int nDiscID = Convert.ToInt16(oTmp.GetAttribute("nDiscountId"));
                             oDisc = (XmlElement)oDiscounts.SelectSingleNode("Discount[@id=" + nDiscID + "]");
                             if (oDisc != null)
                             {
@@ -2532,7 +2549,8 @@ namespace Protean
                     string sPromoCode = "";
                     try
                     {
-                        if (myCart.mnProcessId > 4)
+                        string mcBlockCartUpdate = myCart.GetBlockCartUpdatesConfig();
+                        if (myCart.mnProcessId > 4 && !string.Equals(mcBlockCartUpdate?.Trim(), "off", StringComparison.OrdinalIgnoreCase))
                         {
                             return "";
                         }
@@ -2550,7 +2568,7 @@ namespace Protean
                                 {
                                     if (oRow["cClientNotes"] != DBNull.Value && !string.IsNullOrEmpty(oRow["cClientNotes"].ToString()))
                                     {
-                                        xmlDoc.LoadXml(Conversions.ToString(oRow["cClientNotes"]));
+                                        xmlDoc.LoadXml(Convert.ToString(oRow["cClientNotes"]));
                                         xmlNotes = (XmlElement)xmlDoc.SelectSingleNode("Notes/PromotionalCode");
                                     }
                                     oRow["cClientNotes"] = null;
@@ -2577,7 +2595,7 @@ namespace Protean
                 }
 
                 // update packaging from giftbox to standard when removing promocode
-                public void UpdatePackagingforRemovePromoCode(int CartId, string sPromoCode)
+                public void UpdatePackagingforRemovePromoCode(long CartId, string sPromoCode)
                 {
                     try
                     {
@@ -2634,8 +2652,8 @@ namespace Protean
                             if (!string.IsNullOrEmpty(mcGroups))
                             {
                                 string sGroups = mcGroups;
-                                sGroups = Strings.Replace(sGroups, " ", "_");
-                                cGroupXPath = "[self::" + Strings.Replace(sGroups, ",", " or self::") + "]";
+                                sGroups = sGroups.Replace(" ", "_");
+                                cGroupXPath = "[self::" + sGroups.Replace(",", " or self::") + "]";
                                 // Get the prices
                                 oPrices = oProd.SelectNodes("Content/Prices/*" + cGroupXPath);
                                 if (oDefaultPrice != null)
@@ -2643,10 +2661,10 @@ namespace Protean
                                     // Get the minimum price on offer
                                     foreach (XmlNode oPrice in oPrices)
                                     {
-                                        if (Information.IsNumeric(oPrice.InnerText))
+                                        if (Tools.Number.IsNumeric(oPrice.InnerText))
                                         {
-                                            if (Conversions.ToDouble(oPrice.InnerText) < nPrice & Conversions.ToDouble(oPrice.InnerText) > 0d | nPrice == 0d)
-                                                nPrice = Conversions.ToDouble(oPrice.InnerText);
+                                            if (Convert.ToDouble(oPrice.InnerText) < nPrice & Convert.ToDouble(oPrice.InnerText) > 0d | nPrice == 0d)
+                                                nPrice = Convert.ToDouble(oPrice.InnerText);
                                         }
                                     }
                                 }
@@ -2655,13 +2673,13 @@ namespace Protean
                         // Not logged on - ensure that the default price is returned, if applicable.
                         else if (oDefaultPrice != null)
                         {
-                            if (Information.IsNumeric(oDefaultPrice.InnerText))
-                                nPrice = Conversions.ToDouble(oDefaultPrice.InnerText);
+                            if (Tools.Number.IsNumeric(oDefaultPrice.InnerText))
+                                nPrice = Convert.ToDouble(oDefaultPrice.InnerText);
                         }
                         if (nPrice == 0d)
                         {
 
-                            string cCur = Conversions.ToString(myWeb.moSession["cCurrency"]); // moCartConfig("Currency")
+                            string cCur = Convert.ToString(myWeb.moSession["cCurrency"]); // moCartConfig("Currency")
                             if (string.IsNullOrEmpty(cCur))
                                 cCur = "GBP";
 
@@ -2670,8 +2688,8 @@ namespace Protean
                                 if ((oPriceElmt.GetAttribute("currency") ?? "") == (cCur ?? ""))
                                 {
                                     string cPrice = oPriceElmt.InnerText;
-                                    if (Information.IsNumeric(cPrice))
-                                        nPrice = Conversions.ToDouble(cPrice);
+                                    if (Tools.Number.IsNumeric(cPrice))
+                                        nPrice = Convert.ToDouble(cPrice);
                                     break;
                                 }
                             }
@@ -2707,17 +2725,22 @@ namespace Protean
                             cGroups += "default,all,Standard,standard";
                         else
                             cGroups += ",default,all,Standard,standard";
-                        cGroups = " and ( contains(@validGroup,'" + Strings.Replace(cGroups, ",", "') or contains(@validGroup,'");
+                        cGroups = " and ( contains(@validGroup,'" + cGroups.Replace(",", "') or contains(@validGroup,'") + "')";
                         cGroups += "') or not(@validGroup) or @validGroup='')";
 
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["mcCurrency"], "", false)))
+                        if (string.IsNullOrEmpty(myWeb.moSession["mcCurrency"] as string))
                         {
                             myWeb.moSession["mcCurrency"] = moCartConfig["currency"];
                         }
-                        if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(myWeb.moSession["mcCurrency"], "", false)))
-                            myWeb.moSession["mcCurrency"] = "GBP";
 
-                        string cxpath = Conversions.ToString(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject(Operators.ConcatenateObject("Content/Prices/Price[(@currency='", myWeb.moSession["mcCurrency"]), "') "), cGroups), " ][1]"));
+                        if (string.IsNullOrEmpty(myWeb.moSession["mcCurrency"] as string))
+                        {
+                            myWeb.moSession["mcCurrency"] = "GBP";
+                        }
+
+                        string cxpath = "Content/Prices/Price[(@currency='"
+                 + (myWeb.moSession["mcCurrency"]?.ToString() ?? "")
+                 + "') " + cGroups + " ][1]";
 
                         XmlElement oThePrice = (XmlElement)oDefaultPrice;
                         double nPrice = 0.0d;
@@ -2725,26 +2748,26 @@ namespace Protean
                         {
                             if (oThePrice != null)
                             {
-                                if (Information.IsNumeric(oThePrice.InnerText))
+                                if (Tools.Number.IsNumeric(oThePrice.InnerText))
                                 {
-                                    if (Conversions.ToDouble(oPNode.InnerText) < Conversions.ToDouble(oThePrice.InnerText))
+                                    if (Convert.ToDouble(oPNode.InnerText) < Convert.ToDouble(oThePrice.InnerText))
                                     {
                                         oThePrice = oPNode;
-                                        nPrice = Conversions.ToDouble(oThePrice.InnerText);
+                                        nPrice = Convert.ToDouble(oThePrice.InnerText);
                                     }
                                 }
                                 else
                                 {
                                     oThePrice = oPNode;
-                                    nPrice = Conversions.ToDouble(oThePrice.InnerText);
+                                    nPrice = Convert.ToDouble(oThePrice.InnerText);
                                 }
                             }
                             else
                             {
                                 oThePrice = oPNode;
-                                if (Information.IsNumeric(oThePrice.InnerText))
+                                if (Tools.Number.IsNumeric(oThePrice.InnerText))
                                 {
-                                    nPrice = Conversions.ToDouble(oThePrice.InnerText);
+                                    nPrice = Convert.ToDouble(oThePrice.InnerText);
                                 }
                             }
                         }
@@ -2773,7 +2796,7 @@ namespace Protean
                         else
                             cGroups += ",default,all,Standard,standard";
                         string cGroupsXp;
-                        cGroupsXp = " and ( contains(@validGroup,'" + Strings.Replace(cGroups, ",", "') or contains(@validGroup,'");
+                        cGroupsXp = " and ( contains(@validGroup,'" + cGroups.Replace(",", "') or contains(@validGroup,'") + "')";
                         cGroupsXp += "') or not(@validGroup) or @validGroup='')";
 
                         cGroupsXp = "";
@@ -2800,10 +2823,10 @@ namespace Protean
                                     // Check it allows strings to be used here
                                     if (!oPNode.InnerText.Equals(""))
                                     {
-                                        if (Information.IsNumeric(oPNode.InnerText))
+                                        if (Tools.Number.IsNumeric(oPNode.InnerText))
                                         {
-                                            oPNode.InnerText = Round(Conversions.ToDouble(oPNode.InnerText) - Conversions.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString();
-                                            oDiscountElmt.SetAttribute("saving", Round(Conversions.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString());
+                                            oPNode.InnerText = Round(Convert.ToDouble(oPNode.InnerText) - Convert.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString();
+                                            oDiscountElmt.SetAttribute("saving", Round(Convert.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString());
 
                                         }
                                     }
@@ -2815,10 +2838,10 @@ namespace Protean
                                 {
                                     if (!oPNode.InnerText.Equals(""))
                                     {
-                                        if (Information.IsNumeric(oPNode.InnerText))
+                                        if (Tools.Number.IsNumeric(oPNode.InnerText))
                                         {
-                                            oPNode.InnerText = Round(Conversions.ToDouble(oPNode.InnerText) - Conversions.ToDouble(oPNode.InnerText) / 100d * Conversions.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString();
-                                            oDiscountElmt.SetAttribute("saving", Round(Conversions.ToDouble(oPNode.InnerText) / 100d * Conversions.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString());
+                                            oPNode.InnerText = Round(Convert.ToDouble(oPNode.InnerText) - Convert.ToDouble(oPNode.InnerText) / 100d * Convert.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString();
+                                            oDiscountElmt.SetAttribute("saving", Round(Convert.ToDouble(oPNode.InnerText) / 100d * Convert.ToDouble(oDiscountElmt.GetAttribute("value")), bForceRoundup: mbRoundUp).ToString());
                                         }
                                     }
                                 }
@@ -2849,8 +2872,10 @@ namespace Protean
                             if (oDs.Tables["Groups"].Rows.Count > 0)
                             {
                                 foreach (DataRow oDr in oDs.Tables["Groups"].Rows)
-                                    cReturn = Conversions.ToString(Operators.ConcatenateObject(cReturn + ",", oDr["cDirName"]));
-                                cReturn = Strings.Mid(cReturn, 2);
+                                {
+                                    cReturn += "," + (oDr["cDirName"]?.ToString() ?? "");
+                                }
+                                cReturn = cReturn.Length > 1 ? cReturn.Substring(1) : "";
                             }
                         }
                         myWeb.PerfMon.Log("Discount", "getGroupsByName-end");
@@ -2865,9 +2890,79 @@ namespace Protean
 
                 #endregion
 
+                #region IDisposable Implementation
+
+                private bool disposedValue = false; // To detect redundant calls
+
+                // IDisposable
+                protected virtual void Dispose(bool disposing)
+                {
+                    if (!disposedValue)
+                    {
+                        if (disposing)
+                        {
+                            try
+                            {
+                                // ====================
+                                // NULL OUT REFERENCES (NOT OWNED - DO NOT DISPOSE)
+                                // ====================
+
+                                // myWeb is owned by parent/caller, just clear reference
+                                myWeb = null;
+
+                                // myCart is owned by parent/caller, just clear reference
+                                myCart = null;
+
+                                // Configuration references (owned by parent)
+                                moCartConfig = null;
+                                moConfig = null;
+
+                                // Clear string collections
+                                cPromotionalDiscounts = ",";
+                                cVouchersUsed = ",";
+                                mcGroups = null;
+                                mcCurrency = null;
+                                mcPriceModOrder = null;
+                                mcUnitModOrder = null;
+
+                                // Reset flags
+                                bHasPromotionalDiscounts = false;
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log disposal errors but don't throw
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error in Discount.Dispose: {ex.Message}");
+                            }
+                        }
+
+                        // Free unmanaged resources (if any)
+
+                        disposedValue = true;
+                    }
+                }
+
+                // Public Dispose method
+                public void Dispose()
+                {
+                    Dispose(true);
+                    GC.SuppressFinalize(this);
+                }
+
+                // Helper method to prevent use after disposal
+                protected void ThrowIfDisposed()
+                {
+                    if (disposedValue)
+                    {
+                        throw new ObjectDisposedException(GetType().Name);
+                    }
+                }
+
+                #endregion
 
                 ~Discount()
                 {
+                    Dispose(false);
                 }
             }
         }

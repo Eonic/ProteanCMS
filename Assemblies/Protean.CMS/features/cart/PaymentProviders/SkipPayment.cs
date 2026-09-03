@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic.CompilerServices;
-using System;
+﻿using System;
 using System.Xml;
 using static Protean.stdTools;
 
@@ -209,8 +208,8 @@ namespace Protean.Providers
                     try
                     {
 
-                        double nMaxAmt = Conversions.ToDouble("0" + configXml.SelectSingleNode("MaxValue").InnerText);
-                        double nMinAmt = Conversions.ToDouble("0" + configXml.SelectSingleNode("MinValue").InnerText);
+                        double nMaxAmt = Convert.ToDouble("0" + configXml.SelectSingleNode("MaxValue").InnerText);
+                        double nMinAmt = Convert.ToDouble("0" + configXml.SelectSingleNode("MinValue").InnerText);
 
                         if (nMaxAmt <= nPaymentAmount & nMinAmt >= nPaymentAmount)
                         {
@@ -269,6 +268,11 @@ namespace Protean.Providers
                     throw new NotImplementedException();
                 }
 
+                public bool CheckReceiptIdExists(string cReceiptId)
+                {
+                    throw new NotImplementedException();
+                }
+
                 public string UpdateOrderWithPaymentResponse(string AuthNumber, string validGroup = "")
                 {
                     throw new NotImplementedException();
@@ -280,6 +284,22 @@ namespace Protean.Providers
                 }
 
                 public XmlElement GetWalletPaymentDetails(XmlElement opElemt)
+                {
+                    //throw new NotImplementedException();
+                    return null;
+                }
+
+                public object ProcessGooglePayPayment(ref Cms myWeb, ref Cms.Cart oCart, ref XmlElement oOrder, string googlePayToken)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public object ValidateApplePayMerchant(string validationURL)
+                {
+                    throw new NotImplementedException();
+                }
+
+                public object ProcessApplePayPayment(XmlDocument orderXml, string applePayToken)
                 {
                     throw new NotImplementedException();
                 }

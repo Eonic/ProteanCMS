@@ -675,6 +675,7 @@
       <i class="fa fa-info-sign fa-2x float-start">
         <xsl:text> </xsl:text>
       </i>
+		<xsl:text> </xsl:text>
       <xsl:copy-of select="node()"/>
     </div>
   </xsl:template>
@@ -684,6 +685,7 @@
       <i class="fas fa-info-circle fa-2x float-start me-3">
         <xsl:text> </xsl:text>
       </i>
+		<xsl:text> </xsl:text>
       <xsl:copy-of select="node()"/>
     </div>
   </xsl:template>
@@ -736,16 +738,19 @@
               <i class="fa fa-check fa-2x float-start">
                 <xsl:text> </xsl:text>
               </i>
+				<xsl:text>&#160;&#160;&#160;</xsl:text>
             </xsl:when>
             <xsl:when test="$classVal!=''">
               <i class="fa fa-exclamation-triangle float-start">
                 <xsl:text> </xsl:text>
               </i>
+				<xsl:text>&#160;&#160;&#160;</xsl:text>
             </xsl:when>
             <xsl:otherwise>
               <i class="fa fa-exclamation-triangle float-start">
                 <xsl:text> </xsl:text>
               </i>
+				<xsl:text>&#160;&#160;&#160;</xsl:text>
             </xsl:otherwise>
           </xsl:choose>
           <span class="alert-msg">
@@ -820,7 +825,10 @@
                     </xsl:otherwise>
                   </xsl:choose>
                 </xsl:if>
-              </xsl:otherwise>
+				  <xsl:if test="ancestor::group[contains(@class,'form-floating')]">
+					  <xsl:text>form-floating </xsl:text>
+				  </xsl:if>
+			  </xsl:otherwise>
             </xsl:choose>
             <xsl:if test="not(contains(@class,'row'))">
               <xsl:value-of select="./@class"/>
@@ -914,14 +922,13 @@
         </xsl:apply-templates>
       </xsl:otherwise>
     </xsl:choose>
-
     <xsl:if test="not(contains(@class,'pickImage'))">
       <xsl:apply-templates select="self::node()[not(item[toggle]) and not(hint)]" mode="xform_legend"/>
     </xsl:if>
   </xsl:template>
 
 
-  <xsl:template match="input[contains(@class,'form-floating')] | textarea[contains(@class,'form-floating')]" mode="xform">
+  <xsl:template match="input[ancestor::group[contains(@class,'form-floating')]] | textarea[ancestor::group[contains(@class,'form-floating')]]" mode="xform">
     <xsl:param name="nolabel"/>
     <xsl:param name="dependantClass"/>
 
@@ -1434,6 +1441,9 @@
       <xsl:if test="contains(@class,'readonly') or contains(@class,'displayOnly') ">
         <xsl:attribute name="readonly">readonly</xsl:attribute>
       </xsl:if>
+		<xsl:if test="contains(@class,'disabled')">
+			<xsl:attribute name="disabled">disabled</xsl:attribute>
+		</xsl:if>
       <xsl:if test="contains(@autofocus,'autofocus')">
         <xsl:attribute name="autofocus">autofocus</xsl:attribute>
       </xsl:if>
@@ -1480,21 +1490,23 @@
         </xsl:attribute>
       </xsl:if>
     </input>
-    <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
-      <div class="invalid-feedback">
-        <xsl:value-of select="@data-fv-not-empty___message"/>
-      </div>
-    </xsl:if>
-    <xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
-      <div class="invalid-feedback">
-        This is required
-      </div>
-    </xsl:if>
-    <xsl:if test="alert">
-      <div class="invalid-feedback-server">
-        <xsl:copy-of select="alert/node()"/>
-      </div>
-    </xsl:if>
+	  <xsl:choose>
+		  <xsl:when test="alert">
+			  <div class="invalid-feedback">
+				  <xsl:apply-templates select="alert" mode="inlineAlert"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
+			  <div class="invalid-feedback">
+				  <xsl:value-of select="@data-fv-not-empty___message"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+			  <div class="invalid-feedback">
+				  This is required
+			  </div>
+		  </xsl:when>
+	  </xsl:choose>
   </xsl:template>
 
   <xsl:template match="*" mode="getRefOrBind">
@@ -1510,13 +1522,28 @@
       <xsl:value-of select="@bind"/>
     </xsl:if>
 
-    <!-- IF CHILD OF A HIDDEN CASE add ~inactive to the ref/bind/name -->
-    <xsl:variable name="caseId" select="ancestor::case[last()]/@id" />
-    <xsl:variable name="thisCaseValue" select="//toggle[@case=$caseId]/preceding-sibling::value/node()" />
-    <xsl:variable name="selectedValue" select="//toggle[@case=$caseId]/ancestor::select1/value" />
-    <xsl:if test="normalize-space($thisCaseValue)!=normalize-space($selectedValue)">
-      <xsl:text>~inactive</xsl:text>
-    </xsl:if>
+	<xsl:if test="ancestor::switch">
+	  <xsl:choose>
+		  <xsl:when test="ancestor::switch[@for!='']">
+			  <xsl:variable name="forId" select="ancestor::switch/@for"/>
+			  <xsl:variable name="caseId" select="ancestor::case[last()]/@id" />			  
+			  <xsl:variable name="selectedValue" select="$page/descendant-or-self::*[(self::select or self::select1) and @bind=$forId]/value" />
+			  <xsl:variable name="selectedCaseId" select="$page/descendant-or-self::*[(self::select or self::select1) and @bind=$forId]/item[value=$selectedValue]/toggle/@case" />
+			  <xsl:if test="normalize-space($caseId)!=normalize-space($selectedCaseId)">
+				  <xsl:text>~inactive</xsl:text>
+			  </xsl:if>
+		  </xsl:when>
+		  <xsl:otherwise>
+			  <!-- IF CHILD OF A HIDDEN CASE add ~inactive to the ref/bind/name -->
+			  <xsl:variable name="caseId" select="ancestor::case[last()]/@id" />
+			  <xsl:variable name="thisCaseValue" select="//toggle[@case=$caseId]/parent::item/value/node()" />
+			  <xsl:variable name="selectedValue" select="//toggle[@case=$caseId]/ancestor::*[self::select or self::select1]/value" />
+			  <xsl:if test="normalize-space($thisCaseValue)!=normalize-space($selectedValue)">
+				  <xsl:text>~inactive</xsl:text>
+			  </xsl:if>
+		  </xsl:otherwise>
+	  </xsl:choose>
+   </xsl:if>
   </xsl:template>
 
 
@@ -2174,6 +2201,13 @@
     <xsl:variable name="ref">
       <xsl:apply-templates select="." mode="getRefOrBind"/>
     </xsl:variable>
+	  <div>
+		  <xsl:attribute name="class">
+			  <xsl:text>input-group</xsl:text>
+			  <xsl:if test="alert">
+				  <xsl:text> is-invalid</xsl:text>
+			  </xsl:if>
+		  </xsl:attribute>
     <input type="password" name="{$ref}" id="{$ref}">
       <xsl:attribute name="class">
         <xsl:text>form-control</xsl:text>
@@ -2204,31 +2238,35 @@
           <xsl:text>required</xsl:text>
         </xsl:attribute>
       </xsl:if>
-      <xsl:if test="contains(@class,'strongPassword')">
-        <!--<a id="passwordPolicy" href="#">
-          <i class="fa fa-circle-info">
-            <xsl:text> </xsl:text>
-          </i>
-          <span class="visually-hidden"> view our password policy</span>
-        </a>-->
-        <button type="button" class="btn-clean password-policy-btn" data-bs-toggle="popover" title="Password Policy" data-bs-content="All passwords must be at least 6 characters long, include a combination of uppercase and lowercase letters, at least one number, and can contain special characters.">
-          <i class="fa fa-circle-info">
-            <xsl:text> </xsl:text>
-          </i>
-          <span class="visually-hidden"> view our password policy</span>
-        </button>
-      </xsl:if>
+
     </input>
-    <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
-      <div class="invalid-feedback">
-        <xsl:value-of select="@data-fv-not-empty___message"/>
-      </div>
-    </xsl:if>
-    <xsl:if test="alert">
-      <div class="invalid-feedback">
-        <xsl:copy-of select="alert/node()"/>
-      </div>
-    </xsl:if>
+		  <xsl:if test="contains(@class,'strongPassword')">
+           
+			  <button type="button" class="btn btn-default password-policy-btn" data-bs-toggle="popover" title="Password Policy" data-bs-content="All passwords must be at least 6 characters long, include a combination of uppercase and lowercase letters, at least one number, and can contain special characters.">
+				  <i class="fa-solid fa-circle-info">
+					  <xsl:text> </xsl:text>
+				  </i>
+				  <span class="visually-hidden"> view our password policy</span>
+			  </button>
+		  </xsl:if>
+		  </div>
+	  <xsl:choose>
+		  <xsl:when test="alert">
+			  <div class="invalid-feedback">
+				  <xsl:apply-templates select="alert" mode="inlineAlert"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
+			  <div class="invalid-feedback">
+				  <xsl:value-of select="@data-fv-not-empty___message"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+			  <div class="invalid-feedback">
+				  This is required
+			  </div>
+		  </xsl:when>
+	  </xsl:choose>
   </xsl:template>
   <!-- -->
   <xsl:template match="secret[contains(@class,'textbox')]" mode="xform_control">
@@ -2321,21 +2359,23 @@
       <xsl:text> </xsl:text>
     </textarea>
     <!--Space is required for XSLT compiled mode-->
-    <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
-      <div class="invalid-feedback">
-        <xsl:value-of select="@data-fv-not-empty___message"/>
-      </div>
-    </xsl:if>
-    <xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
-      <div class="invalid-feedback">
-        This is required
-      </div>
-    </xsl:if>
-    <xsl:if test="alert">
-      <div class="invalid-feedback-server">
-        <xsl:copy-of select="alert/node()"/>
-      </div>
-    </xsl:if>
+	  <xsl:choose>
+		  <xsl:when test="alert">
+			  <div class="invalid-feedback">
+				  <xsl:apply-templates select="alert" mode="inlineAlert"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
+			  <div class="invalid-feedback">
+				  <xsl:value-of select="@data-fv-not-empty___message"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+			  <div class="invalid-feedback">
+				  This is required
+			  </div>
+		  </xsl:when>
+	  </xsl:choose>
   </xsl:template>
   <!-- -->
   <xsl:template match="textarea[contains(@class,'readonly')]" mode="xform_control">
@@ -2370,7 +2410,9 @@
             <xsl:value-of select="@class"/>
           </xsl:otherwise>
         </xsl:choose>
-
+		  <xsl:if test="alert">
+			  <xsl:text> is-invalid</xsl:text>
+		  </xsl:if>
       </xsl:attribute>
       <xsl:variable name="targetId">
         <xsl:choose>
@@ -2448,21 +2490,24 @@
       </xsl:choose>
 
     </select>
-    <xsl:if test="@data-fv-not-empty___message!='' and not(alert)">
-      <div class="invalid-feedback">
-        <xsl:value-of select="@data-fv-not-empty___message"/>
-      </div>
-    </xsl:if>
-    <xsl:if test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
-      <div class="invalid-feedback">
-        This is required
-      </div>
-    </xsl:if>
-    <xsl:if test="alert">
-      <div class="invalid-feedback-server">
-        <xsl:copy-of select="alert/node()"/>
-      </div>
-    </xsl:if>
+   
+	 <xsl:choose>
+        <xsl:when test="alert">
+          <div class="invalid-feedback">
+			  <xsl:apply-templates select="alert" mode="inlineAlert"/>		  
+          </div>
+        </xsl:when>
+		  <xsl:when test="@data-fv-not-empty___message!='' and not(alert)">
+			  <div class="invalid-feedback">
+				  <xsl:value-of select="@data-fv-not-empty___message"/>
+			  </div>
+		  </xsl:when>
+		  <xsl:when test="not(@data-fv-not-empty___message!='') and contains(@class,'required')">
+			  <div class="invalid-feedback">
+				  This is required
+			  </div>
+		  </xsl:when>
+	  </xsl:choose>
   </xsl:template>
   <!-- -->
   <!-- ## Standard Select1 for Radio Buttons ########################################################### -->
@@ -3377,7 +3422,7 @@
       </xsl:when>
       <xsl:otherwise>
         <div class="input-group">
-          <input type="text" class="form-control" readonly="">
+          <input type="text" class="form-control">
             <xsl:for-each select="@*">
               <xsl:variable name="nodename" select="name()"/>
               <xsl:if test="starts-with($nodename,'data-fv')">

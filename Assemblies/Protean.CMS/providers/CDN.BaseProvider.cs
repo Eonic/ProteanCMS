@@ -15,10 +15,8 @@ using Protean.Providers.Payment;
 using System.Reflection;
 using static Protean.stdTools;
 using Protean.Tools;
-using Microsoft.VisualBasic.CompilerServices;
 using Microsoft.Ajax.Utilities;
 using System.Configuration.Provider;
-using Microsoft.VisualBasic;
 using System.Xml;
 
 

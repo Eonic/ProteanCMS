@@ -1,6 +1,4 @@
-﻿
-using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -35,9 +33,9 @@ namespace Protean
             {
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 // check for fullpath
-                if (!(Strings.InStr(ServiceUrl, "http") == 1))
+                if (!ServiceUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (Strings.LCase(goRequest.ServerVariables["HTTPS"]) == "on")
+                    if (string.Equals(goRequest.ServerVariables["HTTPS"], "on", StringComparison.OrdinalIgnoreCase))
                     {
                         ServiceUrl = "https://" + goRequest.ServerVariables["SERVER_NAME"] + ServiceUrl;
                     }
@@ -56,7 +54,7 @@ namespace Protean
 
                 HttpWebRequest serviceRequest = (HttpWebRequest)soapRequest;
 
-                soapBody = Strings.Replace(soapBody, "xmlns=\"\"", "");
+                soapBody = (soapBody ?? "").Replace("xmlns=\"\"", "");
                 serviceRequest.ContentLength = soapBody.Length;
                 serviceRequest.ContentType = "text/xml; charset=UTF-8";
                 serviceRequest.Accept = "text/xml";

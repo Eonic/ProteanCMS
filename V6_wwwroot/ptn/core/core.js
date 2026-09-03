@@ -1,4 +1,6 @@
 ﻿/*  ==  Scripts for Both the site and the admin system for all websites and themes  =====================  */
+// ensure jquery is global needed if bundled scripts are defered.
+window.$ = window.jQuery;
 
 var skipValidation = false;
 
@@ -658,7 +660,10 @@ function checkboxshowDependant(checkboxId, dependant, allDependants) {
 
 function showDependant(dependant, allDependants) {
 
-
+    // Guard clause: do nothing if dependant is undefined, null, or empty
+    if (!dependant) {
+        return;
+    }
 
     // Hide unwanted Dependants
     $("." + allDependants).addClass('hidden');
@@ -672,9 +677,10 @@ function showDependant(dependant, allDependants) {
     // Make all now hidden fields inactive so values are lost when submitted.
     $("." + allDependants).find(":input").not(':button').not(':submit').each(function () {
         var fieldName = $(this).attr('name');
-        var tempFieldName = fieldName + '~inactive';
-        //    alert("hide as " + tempFieldName);
-        $(this).attr('name', tempFieldName);
+        if (!fieldName.endsWith('~inactive')) {            
+            //    alert("hide as " + tempFieldName);
+            $(this).attr('name', fieldName + '~inactive');
+        }
         //   $(this).attr('id', $(this).attr('id') + '~inactive');
     });
 

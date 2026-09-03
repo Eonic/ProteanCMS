@@ -2,8 +2,6 @@
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Ajax.Utilities;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Protean.Tools.Integration.Twitter;
@@ -29,12 +27,9 @@ namespace Protean
 
             #region JSON Actions
 
-            public class JSONActions
+            public class JSONActions : Protean.rest.JSONActions
             {
 
-                public event OnErrorEventHandler OnError;
-
-                public delegate void OnErrorEventHandler(object sender, Tools.Errors.ErrorEventArgs e);
                 private const string mcModuleName = "Eonic.Content.JSONActions";
                 private System.Collections.Specialized.NameValueCollection moLmsConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/lms");
                 private System.Collections.Specialized.NameValueCollection moWebConfig = (System.Collections.Specialized.NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
@@ -43,13 +38,14 @@ namespace Protean
                 private Protean.Cms.Cart myCart;
                 public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
                 public string cleanUploadedPaths;
-                public JSONActions()
+                public JSONActions(Cms.dbHelper.utils.APILog ApiLog)
                 {
                     //string ctest = "this constructor is being hit"; // for testing
                     myWeb = new Cms();
                     myWeb.InitializeVariables();
                     myWeb.Open();
                     myCart = new Cms.Cart(ref myWeb);
+                    this.apiLog = ApiLog;
 
                 }
 
@@ -78,7 +74,8 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        // OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -89,11 +86,11 @@ namespace Protean
                     {
                         long newContentId = 0;
                         if (myApi.mbAdminMode)
-                        { 
+                        {
                             // Extract fields from JSON
                             long contentId = Convert.ToInt64(jObj["contentId"] ?? 0);
                             string contentType = Convert.ToString(jObj["contentType"]);
-                            string ContentName = Convert.ToString(jObj["ContentName"]);                           
+                            string ContentName = Convert.ToString(jObj["ContentName"]);
                             JArray values = (JArray)jObj["values"];
 
                             long pageId = Convert.ToInt64(jObj["pageId"] ?? 0);
@@ -148,7 +145,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs("Content.JsonActions", "UpdateContentValue", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs("Content.JsonActions", "UpdateContentValue", ex, ""));
                         return $"{{ \"error\": \"{ex.Message}\" }}";
                     }
                 }
@@ -180,8 +177,8 @@ namespace Protean
                             XmlNode node = oContentInstance.SelectSingleNode(xRootBriefPath + xpath);
                             if (node != null) node.InnerXml = value;
                             XmlNode node1 = oContentInstance.SelectSingleNode(xRootDetailPath + xpath);
-                            if (node1 != null) 
-                            { 
+                            if (node1 != null)
+                            {
                                 node1.InnerXml = value;
                             }
                             else
@@ -201,16 +198,16 @@ namespace Protean
                     try
                     {
                         string cSelectField = (string)jObj["cSchemaName"];
-                        
+
                         string[] bBox = Convert.ToString(jObj["bbox"]).SplitCommas();
-                        
+
                         string swLat = bBox[0];
                         string swLng = bBox[1];
                         string neLat = bBox[2];
                         string neLng = bBox[3];
 
                         SqlConnection oConn = myWeb.moDbHelper.oConn;
-                         oConn.Open(); 
+                        oConn.Open();
 
                         using (SqlCommand cmd = new SqlCommand("GetGeoContentIndex", oConn))
                         {
@@ -246,12 +243,12 @@ namespace Protean
                             string jsonreturn = JsonConvert.SerializeObject(items);
                             return jsonreturn;
                         }
-              
+
                     }
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -284,7 +281,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -311,15 +308,24 @@ namespace Protean
                             using (var oDre = myWeb.moDbHelper.getDataReaderDisposable(sSQL))  // Done by nita on 6/7/22
                             {
                                 while (oDre.Read())
-                                    cTmp = Conversions.ToString(cTmp + Operators.ConcatenateObject(oDre[0], ","));
+                                {
+                                    cTmp += (oDre[0]?.ToString() ?? "") + ",";
+                                }
                                 oDre.Close();
                             }
                             if (!string.IsNullOrEmpty(cTmp))
-                                cTmp = Strings.Left(cTmp, Strings.Len(cTmp) - 1);
+                                cTmp = cTmp.Substring(0, cTmp.Length - 1);
                         }
 
                         XmlElement searchResultXML;
-                        searchResultXML = myWeb.moDbHelper.RelatedContentSearch(Conversions.ToInteger(nRoot), cContentType, bChilds, cExpression, Conversions.ToInteger(nParId), Conversions.ToInteger(Interaction.IIf(Conversions.ToBoolean(bIgnoreParID), 0, nParId)), cTmp.Split(','), bIncRelated);
+                        short root = Convert.ToInt16(nRoot);
+                        short parId = Convert.ToInt16(nParId);
+
+                        bool ignorePar = false;
+                        bool.TryParse(bIgnoreParID, out ignorePar);
+
+                        short effectiveParId = ignorePar ? (short)0 : parId;
+                        searchResultXML = myWeb.moDbHelper.RelatedContentSearch(Convert.ToInt16(nRoot), cContentType, bChilds, cExpression, Convert.ToInt16(nParId), effectiveParId, cTmp.Split(','), bIncRelated);
 
                         string jsonString = JsonConvert.SerializeXmlNode(searchResultXML, Newtonsoft.Json.Formatting.Indented);
                         return jsonString.Replace("\"@", "\"_");
@@ -327,7 +333,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "SearchContent", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "SearchContent", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -340,6 +346,7 @@ namespace Protean
                     try
                     {
                         string SearchString = "";
+
                         int HitsLimit = 50;
                         string fuzzySearch = "";
                         if (searchFilter != null)
@@ -351,8 +358,10 @@ namespace Protean
                                 HitsLimit = (int)searchFilter["hitslimit"];
                             }
                         }
-
-
+                        if (myWeb.moConfig["EnableSearchStringLogging"] != null && myWeb.moConfig["EnableSearchStringLogging"].ToLower() == "on")
+                        {
+                            myWeb.moDbHelper.logActivity(dbHelper.ActivityType.Search, myApi.mnUserId, 0L, 0L, SearchString);
+                        }
                         var oSrch = new Cms.Search(ref myApi);
                         var oResultsXml = new XmlDocument();
                         oResultsXml.AppendChild(oResultsXml.CreateElement("Results"));
@@ -365,7 +374,7 @@ namespace Protean
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "SearchContent", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "SearchContent", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -384,21 +393,21 @@ namespace Protean
                                     break;
                                 }
                         }
-                        long nUserDirId = Conversions.ToLong("0" + jObj["userId"].ToString());
-                        long nPageId = Conversions.ToLong("0" + jObj["pageId"].ToString());
-                        long nArtId = Conversions.ToLong("0" + jObj["artId"].ToString());
+                        long nUserDirId = Convert.ToInt64("0" + jObj["userId"].ToString());
+                        long nPageId = Convert.ToInt64("0" + jObj["pageId"].ToString());
+                        long nArtId = Convert.ToInt64("0" + jObj["artId"].ToString());
 
                         if (myApi.mnUserId > 0)
                         {
                             myWeb.moDbHelper.logActivity(oActivityType, nUserDirId, nPageId, nArtId);
                         }
 
-                        return Conversions.ToString(true);
+                        return Convert.ToString(true);
                     }
 
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -458,7 +467,7 @@ namespace Protean
                                     {
                                         if (oRow["productId"] != null & !ReferenceEquals(oRow["productId"], DBNull.Value))
                                         {
-                                            oRow["url"] = myWeb.GetContentUrl(Conversions.ToLong(oRow["productId"]));
+                                            oRow["url"] = myWeb.GetContentUrl(Convert.ToInt64(oRow["productId"]));
                                         }
                                     }
                                 }
@@ -478,7 +487,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "GetCart", ex, ""));
                         return ex.Message;
                     }
 
@@ -498,7 +507,7 @@ namespace Protean
                         string uploadedfiles = string.Empty;
                         string JsonResult = string.Empty;
 
-                        string encryptedContentId = Conversions.ToString(myApi.moSession["contentId"]);  // rename this to contentId
+                        string encryptedContentId = Convert.ToString(myApi.moSession["contentId"]);  // rename this to contentId
                         string UploadDirPath = string.Empty;
 
                         if (jObj != null)
@@ -544,7 +553,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ReviewImagePath", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ReviewImagePath", ex, ""));
                         return ex.Message;
                     }
                 }
@@ -554,7 +563,7 @@ namespace Protean
                     {
                         if (moCtx.Session["lastUploadedFilePath"] != null)
                         {
-                            return Conversions.ToString(moCtx.Session["lastUploadedFilePath"]);
+                            return Convert.ToString(moCtx.Session["lastUploadedFilePath"]);
                         }
                         else
                         {
@@ -606,7 +615,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertXFormToJSON", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertXFormToJSON", ex, ""));
                         return JsonConvert.SerializeObject(new { error = ex.Message });
                     }
                 }
@@ -637,7 +646,7 @@ namespace Protean
                     }
                     catch (Exception ex)
                     {
-                        OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertJSONToXForm", ex, ""));
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "ConvertJSONToXForm", ex, ""));
                         return JsonConvert.SerializeObject(new { error = ex.Message });
                     }
                 }
@@ -659,123 +668,271 @@ namespace Protean
                 }
 
                 public string GetGoogleReviews(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject apiUrl)
+
                 {
+
                     string jsonResult = string.Empty;
+
                     XmlElement cReviewNode = myWeb.moPageXml.CreateElement("GoogleReview");
 
+                    DateTime oneYearAgo = DateTime.UtcNow.AddYears(-1);
+
                     try
+
                     {
+
                         if (moWebConfig["PlaceId"] != null && moWebConfig["PlaceId"] != "" &&
+
                             moWebConfig["GoogleReviewAPIKey"] != null && moWebConfig["GoogleReviewAPIKey"] != "")
+
                         {
+
                             string placeId = moWebConfig["PlaceId"].ToString();
+
                             string apiKey = moWebConfig["GoogleReviewAPIKey"].ToString();
+
+
+
+
 
                             string cUrl = $"https://maps.googleapis.com/maps/api/place/details/json?place_id={placeId}&fields=name,rating,user_ratings_total,reviews&key={apiKey}";
 
+
+
                             var request = WebRequest.Create(cUrl);
+
                             using (var response = request.GetResponse())
+
                             {
+
                                 if (response != null)
+
                                 {
+
                                     using (var content = response.GetResponseStream())
+
                                     using (var reader = new StreamReader(content))
+
                                     {
+
                                         var jsonString = reader.ReadToEnd();
+
                                         var json = JObject.Parse(jsonString);
 
+
+
                                         //  Add total review count
+
                                         var totalCount = json["result"]?["user_ratings_total"]?.ToString() ?? "0";
+
                                         XmlElement totalNode = myWeb.moPageXml.CreateElement("TotalReviewCount");
+
                                         totalNode.InnerText = totalCount;
+
                                         cReviewNode.AppendChild(totalNode);
 
+
+
                                         var avgRating = json["result"]?["rating"]?.ToString() ?? "0";
+
                                         XmlElement avgRatingNode = myWeb.moPageXml.CreateElement("AverageRating");
+
                                         avgRatingNode.InnerText = avgRating;
+
                                         cReviewNode.AppendChild(avgRatingNode);
 
+
+
                                         var allReviews = json["result"]?["reviews"];
+
                                         if (allReviews != null)
+
                                         {
+
                                             foreach (var r in allReviews)
+
                                             {
+
+                                                long unixTime = r["time"] != null ? Convert.ToInt64(r["time"]) : 0;
+
+                                                DateTime reviewDateTime = DateTimeOffset.FromUnixTimeSeconds(unixTime).UtcDateTime;
+
+
+
+
+
                                                 XmlElement cContentNode = myWeb.moPageXml.CreateElement("Content");
 
+
+
                                                 cContentNode.SetAttribute("name", r["author_name"]?.ToString() ?? "");
+
                                                 cContentNode.SetAttribute("type", "Review");
+
                                                 cContentNode.SetAttribute("status", "1");
+
                                                 cContentNode.SetAttribute("parId", myApi.mnPageId.ToString());
+
                                                 cContentNode.SetAttribute("showRelated", "Tag");
 
+
+
                                                 XmlElement reviewer = myWeb.moPageXml.CreateElement("Reviewer");
+
                                                 reviewer.InnerText = r["author_name"]?.ToString() ?? "";
 
+
+
+
+
                                                 XmlElement reviewDate = myWeb.moPageXml.CreateElement("ReviewDate");
-                                                reviewDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
 
-                                                XmlElement url = myWeb.moPageXml.CreateElement("Url");
-                                                url.InnerText = r["author_url"]?.ToString() ?? "";
+                                                if (reviewDateTime >= oneYearAgo)
 
-                                                XmlElement summary = myWeb.moPageXml.CreateElement("Summary");
-                                                summary.InnerText = r["text"]?.ToString() ?? "";
-
-                                                XmlElement description = myWeb.moPageXml.CreateElement("Description");
-                                                description.InnerText = r["text"]?.ToString() ?? "";
-
-                                                XmlElement rating = myWeb.moPageXml.CreateElement("Rating");
-                                                rating.InnerText = r["rating"]?.ToString() ?? "";
-
-                                                XmlElement images = myWeb.moPageXml.CreateElement("Images");
-                                                string profilePhotoUrl = r["profile_photo_url"]?.ToString();
-                                                if (!string.IsNullOrEmpty(profilePhotoUrl))
                                                 {
-                                                    XmlElement imgThumb = myWeb.moPageXml.CreateElement("img");
-                                                    imgThumb.SetAttribute("src", profilePhotoUrl);
-                                                    imgThumb.SetAttribute("width", "80");
-                                                    imgThumb.SetAttribute("height", "80");
-                                                    imgThumb.SetAttribute("class", "thumbnail");
-                                                    images.AppendChild(imgThumb);
+
+                                                    reviewDate.InnerText = r["relative_time_description"]?.ToString() ?? "";
+
                                                 }
 
+                                                else
+
+                                                {
+
+                                                    reviewDate.InnerText = "";   // hide date
+
+                                                }
+
+
+
+                                                XmlElement url = myWeb.moPageXml.CreateElement("Url");
+
+                                                url.InnerText = r["author_url"]?.ToString() ?? "";
+
+
+
+                                                XmlElement summary = myWeb.moPageXml.CreateElement("Summary");
+
+                                                summary.InnerText = r["text"]?.ToString() ?? "";
+
+
+
+                                                XmlElement description = myWeb.moPageXml.CreateElement("Description");
+
+                                                description.InnerText = r["text"]?.ToString() ?? "";
+
+
+
+                                                XmlElement rating = myWeb.moPageXml.CreateElement("Rating");
+
+                                                rating.InnerText = r["rating"]?.ToString() ?? "";
+
+
+
+                                                XmlElement images = myWeb.moPageXml.CreateElement("Images");
+
+                                                string profilePhotoUrl = r["profile_photo_url"]?.ToString();
+
+                                                if (!string.IsNullOrEmpty(profilePhotoUrl))
+
+                                                {
+
+                                                    XmlElement imgThumb = myWeb.moPageXml.CreateElement("img");
+
+                                                    imgThumb.SetAttribute("src", profilePhotoUrl);
+
+                                                    imgThumb.SetAttribute("width", "80");
+
+                                                    imgThumb.SetAttribute("height", "80");
+
+                                                    imgThumb.SetAttribute("class", "thumbnail");
+
+                                                    images.AppendChild(imgThumb);
+
+                                                }
+
+
+
                                                 cContentNode.AppendChild(reviewer);
+
                                                 cContentNode.AppendChild(reviewDate);
+
                                                 cContentNode.AppendChild(url);
+
                                                 cContentNode.AppendChild(summary);
+
                                                 cContentNode.AppendChild(description);
+
                                                 cContentNode.AppendChild(rating);
+
                                                 cContentNode.AppendChild(images);
+
                                                 cReviewNode.AppendChild(cContentNode);
+
                                             }
+
                                         }
 
+
+
                                         // ✅ Add rating limit
+
                                         XmlElement cRatingLimit = myWeb.moPageXml.CreateElement("RatingLimit");
+
                                         string limit = moWebConfig["ReviewRatingLimit"]?.ToString() ?? "0";
+
                                         cRatingLimit.SetAttribute("ratingLimit", limit);
+
                                         cReviewNode.AppendChild(cRatingLimit);
+
                                     }
+
                                 }
+
                             }
 
+
+
                             jsonResult = JsonConvert.SerializeXmlNode(cReviewNode, Newtonsoft.Json.Formatting.Indented);
+
                             jsonResult = jsonResult.Replace("\"@", "\"_");
+
                             return jsonResult;
+
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        jsonResult = JsonConvert.SerializeObject(new { error = ex.Message });
+
                     }
 
+                    catch (Exception ex)
+
+                    {
+
+                        jsonResult = JsonConvert.SerializeObject(new { error = ex.Message });
+
+                    }
+
+
+
                     return jsonResult;
+
                 }
 
 
-              
+                public void CleanDatabase(ref Protean.rest myApi, ref Newtonsoft.Json.Linq.JObject jObj)
+                {
+                    try
+                    {
+                        myWeb.moDbHelper.CleanDatabase();
+                    }
+                    catch (Exception ex) {
+                        RaiseOnError(new Tools.Errors.ErrorEventArgs(mcModuleName, "CleanDatabase", ex, ""));
+                        
+                    }
+                }
 
-                #endregion
             }
+            #endregion
+             
         }
 
     }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using System.Xml;
-using Microsoft.VisualBasic;
 
 namespace Protean
 {
@@ -36,7 +35,7 @@ namespace Protean
             {
                 string[] cRows = GetRows(cFileString);
                 int i;
-                var loopTo = Information.UBound(cRows);
+                var loopTo = cRows.Length - 1;
                 for (i = 0; i <= loopTo; i++)
                 {
                     if (i == 0 & bColumnNames)
@@ -62,7 +61,7 @@ namespace Protean
                 return null;
             try
             {
-                return Strings.Split(cFileString, Constants.vbCrLf);
+                return cFileString.Split(new[] { "\r\n" }, StringSplitOptions.None);
             }
             catch (Exception ex)
             {
@@ -78,16 +77,16 @@ namespace Protean
                 return null;
             try
             {
-                string[] cCols = Strings.Split(cRow, cDelimiter);
+                string[] cCols = cRow.Split(new[] { cDelimiter }, StringSplitOptions.None);
                 int i;
-                var loopTo = Information.UBound(cCols);
+                var loopTo = cCols.Length - 1;
                 for (i = 0; i <= loopTo; i++)
                 {
                     if (!((cCols[i] ?? "") == (cQualifier ?? "")) & cCols[i].Length > 0)
                     {
                         if ((cCols[i].Substring(0, 1) ?? "") == (cQualifier ?? ""))
                         {
-                            cCols[i] = Strings.Right(cCols[i], cCols[i].Length - 1);
+                            cCols[i] = cCols[i].Substring(1);
                         }
                     }
                     else
@@ -98,7 +97,7 @@ namespace Protean
                     {
                         if ((cCols[i].Substring(cCols[i].Length - 1, 1) ?? "") == (cQualifier ?? ""))
                         {
-                            cCols[i] = Strings.Left(cCols[i], cCols[i].Length - 1);
+                            cCols[i] = cCols[i].Substring(0, cCols[i].Length - 1);
                         }
                     }
                     else
@@ -123,7 +122,7 @@ namespace Protean
             try
             {
                 int i;
-                var loopTo = Information.UBound(cCols);
+                var loopTo = cCols.Length - 1;
                 for (i = 0; i <= loopTo; i++)
                     oTable.Columns.Add(new DataColumn(cCols[i]));
             }
@@ -141,7 +140,7 @@ namespace Protean
             try
             {
                 int i;
-                var loopTo = Information.UBound(cCols);
+                var loopTo = cCols.Length - 1;
                 for (i = 0; i <= loopTo; i++)
                 {
                     if (i >= oTable.Columns.Count)

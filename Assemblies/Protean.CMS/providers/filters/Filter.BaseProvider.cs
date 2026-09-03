@@ -2,18 +2,18 @@
 // $Library:     Protean.Providers.Filter.BaseProvider
 // $Revision:    3.1  
 // $Date:        2010-03-02
-// $Author:      Trevor Spink (trevor@eonic.co.uk)
-// &Website:     www.eonic.co.uk
-// &Licence:     All Rights Reserved.
+// $Author:      Trevor Spink (trevor@eonic.digital)
+// &Website:     eonic.digital
+// &Licence:     Apache-2.0 license
 // $Copyright:   Copyright (c) 2002 - 2010 Eonic Ltd.
 // ***********************************************************************
 
 using Protean.Providers.Membership;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Web.Configuration;
-
 using System.Xml;
 using static Protean.stdTools;
 
@@ -23,8 +23,8 @@ namespace Protean.Providers
     {
         public interface IFilterProvider
         {
-            void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql);
-            string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget);
+            void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Cms.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql);
+            string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Cms.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget);
             string GetFilterSQL(ref Cms aWeb);
 
             string ContentIndexDefinationName(ref Cms aWeb);
@@ -115,10 +115,19 @@ namespace Protean.Providers
                 return this;
             }
 
-            
 
-            public abstract void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql);
-            public abstract string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Protean.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget);
+
+
+            public virtual void AddControl(ref Cms aWeb, ref XmlElement FilterConfig, ref Cms.xForm oXform, ref XmlElement oFromGroup, ref XmlElement oContentNode, string cWhereSql)
+            {
+                throw new NotImplementedException();
+            }
+
+            public virtual string ApplyFilter(ref Cms aWeb, ref string cWhereSql, ref Cms.xForm oXform, ref XmlElement oFromGroup, ref XmlElement FilterConfig, ref string cFilterTarget)
+            {
+                throw new NotImplementedException();
+            }
+
             public abstract string GetFilterSQL(ref Cms aWeb);
 
             public abstract string ContentIndexDefinationName(ref Cms aWeb);
@@ -213,7 +222,6 @@ namespace Protean.Providers
                 }
                 aWeb.moSession["FilterList"] = filters;
             }
-
 
         }
     }

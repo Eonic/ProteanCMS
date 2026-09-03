@@ -514,7 +514,7 @@
 	</xsl:template>
 
 	<!-- Template for login, pick page-->
-	<xsl:template match="Content[@name='UserLogon']" mode="xform">
+	<xsl:template match="Content[@name='UserLogon' or @name='AdminLogon']" mode="xform">
 		<form method="{model/submission/@method}" action=""  novalidate="novalidate">
 			<xsl:attribute name="class">
 				<xsl:text>xform needs-validation</xsl:text>
@@ -545,7 +545,7 @@
 				<xsl:attribute name="enctype">multipart/form-data</xsl:attribute>
 			</xsl:if>
 			<xsl:for-each select="group">
-				<div class="admin-body {@class}">
+				<div class="admin-body {@class}">					
 					<xsl:apply-templates select="label" mode="legend"/>
 					<p>Welcome back, please sign in to your account</p>
 					<xsl:apply-templates select="parent::*/alert" mode="xform"/>						
@@ -1083,11 +1083,25 @@
 
 	<!-- TinyMCE configuration templates -->
 	<xsl:template match="textarea" mode="tinymceGeneralOptions">
+
+
+		<xsl:variable name="ewCmd" select="/Page/Request/QueryString/Item[@name='ewCmd']/node()"/>
+		
 		<xsl:text>script_url: '/ptn/libs/tinymce/tinymce.min.js',
 			mode: "exact",
 			theme: "silver",
-			width: "auto",
-			relative_urls: false,
+			width: "auto",</xsl:text>
+			<xsl:choose>
+						<xsl:when test="$ewCmd='EditMailContent'">
+							<xsl:text>
+							relative_urls: false,	
+							remove_script_host: false,
+							convert_urls: false,</xsl:text>
+						</xsl:when>
+				<xsl:otherwise>
+							<xsl:text>relative_urls: false,	</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose><xsl:text>
 			plugins: "table paste link image ptnimage media visualchars searchreplace emoticons anchor lists advlist code visualblocks contextmenu fullscreen searchreplace wordcount charmap",
 			entity_enconding: "numeric",
             image_advtab: true,
@@ -2446,7 +2460,8 @@
 		</xsl:choose>
 
 		<xsl:if test="not(contains(@search,'pick'))">
-			<div class="related-content-rows">
+			<xsl:if test="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]">
+				<div class="related-content-rows">
 				<xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
 					<xsl:sort select="@status" data-type="number" order="descending"/>
 					<xsl:sort select="@displayorder" data-type="number" order="ascending"/>
@@ -2454,7 +2469,9 @@
 					<xsl:with-param name="relationType" select="$relationType" />
 					<xsl:with-param name="relationDirection" select="$RelType" />
 				</xsl:apply-templates>
+				<xsl:text> </xsl:text>
 			</div>
+	</xsl:if>
 		</xsl:if>
 	</xsl:template>
 
@@ -2603,7 +2620,7 @@
 		</xsl:choose>
 
 		<xsl:if test="not(contains(@search,'pick'))">
-
+			<xsl:if test="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]">
 			<div class="related-content-rows">
 				<xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
 					<xsl:sort select="@status" data-type="number" order="descending"/>
@@ -2612,7 +2629,9 @@
 					<xsl:with-param name="relationType" select="$relationType" />
 					<xsl:with-param name="relationDirection" select="$RelType" />
 				</xsl:apply-templates>
+				<xsl:text> </xsl:text>
 			</div>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 
@@ -2741,8 +2760,9 @@
 		</xsl:choose>
 
 		<xsl:if test="not(contains(@search,'pick'))">
+			<xsl:if test="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]">
 
-			<div class="related-content-rows">
+				<div class="related-content-rows">
 				<xsl:apply-templates select="ancestor::Content/model/instance/ContentRelations/Content[@type=$contentType and (@rtype=$relationType or not(@rtype) or  @rtype='')]" mode="relatedRow">
 					<xsl:sort select="@status" data-type="number" order="descending"/>
 					<xsl:sort select="@displayorder" data-type="number" order="ascending"/>
@@ -2750,7 +2770,9 @@
 					<xsl:with-param name="relationType" select="$relationType" />
 					<xsl:with-param name="relationDirection" select="$RelType" />
 				</xsl:apply-templates>
+					<xsl:text> </xsl:text>
 			</div>
+			</xsl:if>
 		</xsl:if>
 	</xsl:template>
 
@@ -3379,6 +3401,59 @@
 		</xsl:if>
 	</xsl:template>
 
+	<xsl:template match="group[contains(@class,'DirButtons')]" mode="xform">
+		<xsl:param name="class"/>
+		<fieldset>
+			<xsl:if test=" @id!='' ">
+				<xsl:attribute name="id">
+					<xsl:value-of select="@id"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="$class!='' or @class!='' ">
+				<xsl:attribute name="class">
+					<xsl:value-of select="$class"/>
+					<xsl:if test="@class!=''">
+						<xsl:text> </xsl:text>
+						<xsl:value-of select="@class"/>
+					</xsl:if>
+					<xsl:for-each select="group">
+						<xsl:text> form-group li-</xsl:text>
+						<xsl:value-of select="./@class"/>
+					</xsl:for-each>
+					<xsl:if test="contains(@class,'inline-2-col') or contains(@class,'inline-3-col')">
+						<xsl:text> row</xsl:text>
+					</xsl:if>
+					<xsl:text> d-grid gap-1 h-100 align-items-start</xsl:text>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:apply-templates select="label[position()=1]" mode="legend"/>
+			<xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat |  alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+			<xsl:if test="count(submit) &gt; 0">
+				<xsl:choose>
+					<xsl:when test="contains(@class,'form-inline')">
+						<xsl:apply-templates select="submit" mode="xform"/>
+					</xsl:when>
+					<xsl:otherwise>
+							<xsl:if test="not(submit[contains(@class,'hide-required')])">
+								<xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
+									<span class="required">
+										<span class="req">
+											*<span class="visually-hidden"> (required)</span>
+										</span>
+										<xsl:text> </xsl:text>
+										<xsl:call-template name="msg_required"/>
+									</span>
+								</xsl:if>
+							</xsl:if>
+							<!-- For xFormQuiz change how these buttons work -->
+							<xsl:apply-templates select="submit" mode="xform"/>
+					</xsl:otherwise>
+				</xsl:choose>
+			</xsl:if>
+			<xsl:text> </xsl:text>
+		</fieldset>
+	</xsl:template>
+	
 
 	<xsl:template match="submit[contains(@class,'PermissionButton')]" mode="xform">
 		<xsl:variable name="class">
@@ -4074,34 +4149,34 @@
 			<xsl:for-each select="ms:node-set($filterButtons)/*/*">
 				<xsl:variable name="buttonName" select="node()"/>
 				<xsl:variable name="filterType" select="@filterType"/>
-
-				<div class="list-group-item row">
-					<div class="col-md-3">
+				<div class="list-group-item">
+					<div class="row">
+					<div class="col">
 						<label>
 							<xsl:value-of select="$buttonName"/>
 						</label>
 					</div>
-					<div class="col-md-6">
+					<div class="col">
 						<xsl:text> </xsl:text>
 					</div>
-					<div class="col-md-3">
+					<div class="col">
 						<xsl:text> </xsl:text>
 						<xsl:choose>
 							<xsl:when test="$thisGroup/ancestor::ContentDetail/Content/model/instance/ContentRelations/Content[@filterType=$filterType]">
 								<xsl:variable name="relatedContent" select="concat('FilterEdit_',$filterType)" />
 								<xsl:variable name="filterId" select="$thisGroup/ancestor::ContentDetail/Content/model/instance/ContentRelations/Content[@filterType=$filterType]/@id"/>
 
-								<button type="submit" name="{concat('FilterRemove_',$filterType)}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-danger pull-right">
-									<i class="fa fa-times">&#160;</i>&#160;Del
-								</button>
-								<button type="submit" name="{$relatedContent}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-primary pull-right">
+								<button type="submit" name="{$relatedContent}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-primary">
 									<i class="fa fa-edit">&#160;</i>&#160;Edit
+								</button>&#160;
+								<button type="submit" name="{concat('FilterRemove_',$filterType)}_{$filterId}" filtertype="{$buttonName}"  class="btn btn-sm btn-danger">
+									<i class="fa fa-times">&#160;</i>&#160;Del
 								</button>
 							</xsl:when>
 							<xsl:otherwise>
 								<xsl:variable name="relatedContent" select="concat('FilterAdd_',$filterType)" />
 								<xsl:variable name="FilterType" select="concat($relatedContent,'_1Way_~inactive')" />
-								<button type="submit" name="{$FilterType}" filtertype="{$buttonName}" class="btn btn-sm btn-primary pull-right">
+								<button type="submit" name="{$FilterType}" filtertype="{$buttonName}" class="btn btn-sm btn-primary">
 									<i class="fa fa-plus">&#160;</i>&#160;
 									Add
 								</button>
@@ -4109,7 +4184,7 @@
 						</xsl:choose>
 
 					</div>
-
+					</div>
 				</div>
 			</xsl:for-each>
 		</div>

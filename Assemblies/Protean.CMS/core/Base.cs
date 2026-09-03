@@ -4,12 +4,12 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Web.Configuration;
 using System.Xml;
-using Microsoft.VisualBasic;
+using static Protean.Env;
 
 namespace Protean
 {
 
-    public class Base
+    public class Base : IDisposable
     {
 
 
@@ -22,21 +22,20 @@ namespace Protean
 
         protected virtual void OnComponentError(object sender, Tools.Errors.ErrorEventArgs e)
         {
-            // deals with the error
-            // returnException(e.ModuleName, e.ProcedureName, e.Exception, mcEwSiteXsl, e.AddtionalInformation, gbDebug)
-            // close connection pooling
+            if (disposedValue)
+            {
+                return; // Don't process errors if disposed
+            }
+
             if (moDbHelper != null)
             {
                 try
                 {
                     moDbHelper.CloseConnection();
                 }
-                catch (Exception)
-                {
-
-                }
+                catch (Exception) { }
             }
-            // then raises a public event
+
             OnError?.Invoke(sender, e);
         }
 
@@ -64,14 +63,14 @@ namespace Protean
 
         public string mcPagePath;
         public string mcPageLayout;
-        public int mnPageId = 0;
-        public int mnArtId = 0;
-        public int mnUserId = 0;
+        public long mnPageId = 0;
+        public long mnArtId = 0;
+        public long mnUserId = 0;
 
         public bool mbAdminMode = false;
 
         //private bool mbSystemPage = false;
-       // private Cms.dbHelper.PermissionLevel mnUserPagePermission = Cms.dbHelper.PermissionLevel.Open;
+        // private Cms.dbHelper.PermissionLevel mnUserPagePermission = Cms.dbHelper.PermissionLevel.Open;
 
         public bool mbOutputXml = false;
 
@@ -94,7 +93,7 @@ namespace Protean
 
         // Application Level Properties   
         public NameValueCollection moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
-        // Public goApp As System.Web.HttpApplicationState
+        public IHttpApplicationState goApp;
         public System.Web.Caching.Cache goCache;
         public System.Web.HttpServerUtility goServer;
         public XmlElement goLangConfig = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/languages");
@@ -105,6 +104,7 @@ namespace Protean
 
         public bool mbPreview = false;
         public bool mbPreviewHidden = false;
+        public string sitename = "";
 
         public PerfLog PerfMon;
 
@@ -131,14 +131,18 @@ namespace Protean
                     moCtx = Context;
                 }
 
-                // goApp = moCtx.Application
+                //goApp = moCtx.Application;
                 moRequest = moCtx.Request;
                 moResponse = moCtx.Response;
                 moSession = moCtx.Session;
                 goServer = moCtx.Server;
                 goCache = moCtx.Cache;
 
-                PerfMon = new PerfLog("");
+                sitename = moRequest.ServerVariables["HTTP_HOST"];
+
+                goApp = new Protean.Framework.Adapters.FrameworkApplicationStateAdapter(sitename);
+
+                PerfMon = new PerfLog("", moCtx);
                 PerfMon.Log("Base", "New");
 
                 EnumberateFeatures();
@@ -146,8 +150,10 @@ namespace Protean
 
             catch (Exception ex)
             {
-                // returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
+               //  returnException(mcModuleName, "New", ex, "", sProcessInfo, gbDebug)
                 OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "New", ex, sProcessInfo));
+                Dispose();
+                throw;
             }
         }
 
@@ -157,56 +163,57 @@ namespace Protean
         {
             Features.Add("Lite", "Lite");
             Features.Add("Pro", "Pro");
-            if (Strings.LCase(moConfig["Cart"]) == "on")
+            
+            if (IsFeatureEnabled("Cart"))
             {
                 Features.Add("Cart", "Cart");
             }
-            if (Strings.LCase(moConfig["Quote"]) == "on")
+            if (IsFeatureEnabled("Quote"))
             {
                 Features.Add("Quote", "Quote");
             }
-            if (Strings.LCase(moConfig["Membership"]) == "on")
+            if (IsFeatureEnabled("Membership"))
             {
                 Features.Add("Membership", "Membership");
             }
-            if (Strings.LCase(moConfig["MailingList"]) == "on")
+            if (IsFeatureEnabled("MailingList"))
             {
                 Features.Add("MailingList", "MailingList");
             }
-            if (Strings.LCase(moConfig["Search"]) == "on" | Strings.LCase(moConfig["SiteSearch"]) == "on")
+            if (IsFeatureEnabled("Search") || IsFeatureEnabled("SiteSearch"))
             {
                 Features.Add("Search", "Search");
             }
-            if (Strings.LCase(moConfig["VersionControl"]) == "on")
+            if (IsFeatureEnabled("VersionControl"))
             {
                 Features.Add("VersionControl", "VersionControl");
             }
-            if (Strings.LCase(moConfig["Import"]) == "on")
+            if (IsFeatureEnabled("Import"))
             {
                 Features.Add("Import", "Import");
             }
-            if (Strings.LCase(moConfig["Sync"]) == "on")
+            if (IsFeatureEnabled("Sync"))
             {
                 Features.Add("Sync", "Sync");
             }
-            if (Strings.LCase(moConfig["MemberCodes"]) == "on")
+            if (IsFeatureEnabled("MemberCodes"))
             {
                 Features.Add("MemberCodes", "MemberCodes");
             }
-            if (Strings.LCase(moConfig["Subscriptions"]) == "on")
+            if (IsFeatureEnabled("Subscriptions"))
             {
                 Features.Add("Subscriptions", "Subscriptions");
             }
-            if (Strings.LCase(moConfig["Scheduler"]) == "on")
+            if (IsFeatureEnabled("Scheduler"))
             {
                 Features.Add("Scheduler", "Scheduler");
             }
-            if (Strings.LCase(moConfig["ActivityLogging"]) == "on" | Strings.LCase(moConfig["ActivityReporting"]) == "on")
+            if (IsFeatureEnabled("ActivityLogging") || IsFeatureEnabled("ActivityReporting"))
             {
                 Features.Add("ActivityLogging", "ActivityLogging");
                 Features.Add("ActivityReporting", "ActivityReporting");
             }
-            if (Strings.LCase(moConfig["PageVersions"]) == "on")
+            if (IsFeatureEnabled("PageVersions"))
             {
                 Features.Add("PageVersions", "PageVersions");
             }
@@ -218,20 +225,122 @@ namespace Protean
             {
                 Features.Add("Themes", "Themes");
             }
-
         }
 
-        private bool disposedValue = false;        // To detect redundant calls
-
-        // IDisposable
-        protected virtual void Dispose(bool disposing)
+        /// <summary>
+        /// Checks if a feature is enabled in the configuration.
+        /// Performs null-safe, case-insensitive comparison without allocations.
+        /// </summary>
+        /// <param name="featureName">The feature name to check in moConfig</param>
+        /// <returns>True if the feature config value equals "on" (case-insensitive), false otherwise</returns>
+        private bool IsFeatureEnabled(string featureName)
         {
-
-            disposedValue = true;
+            string value = moConfig?[featureName];
+            return value != null && string.Equals(value, "on", StringComparison.OrdinalIgnoreCase);
         }
 
+        private bool disposedValue = false;
+
+        // ✅ Add public Dispose() method
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        // ✅ Complete the protected Dispose(bool) pattern
+        public virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)  // ✅ Now checks the flag
+            {
+                if (disposing)
+                {
+                    try
+                    {
+                        // 1. Unsubscribe event handlers FIRST
+                        if (OnError != null)
+                        {
+                            foreach (var handler in OnError.GetInvocationList())
+                            {
+                                OnError -= (OnErrorEventHandler)handler;
+                            }
+                        }
+
+                        // 2. Dispose database helper (CRITICAL)
+                        if (_moDbHelper != null)
+                        {
+                            try
+                            {
+                                _moDbHelper.CloseConnection(true);
+                                if (_moDbHelper is IDisposable disposableHelper)
+                                {
+                                    disposableHelper.Dispose();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log but don't throw in Dispose
+                                System.Diagnostics.Debug.WriteLine(
+                                    $"Error disposing moDbHelper: {ex.Message}");
+                            }
+                            finally
+                            {
+                                _moDbHelper = null;
+                            }
+                        }
+
+                        // 3. Dispose PerfMon if it implements IDisposable
+                        if (PerfMon is IDisposable disposablePerfMon)
+                        {
+                            disposablePerfMon.Dispose();
+                        }
+                        PerfMon = null;
+
+                        // 4. Clear large collections
+                        Features?.Clear();
+                        Features = null;
+
+                        // 5. Null out context references
+                        moCtx = null;
+                        moRequest = null;
+                        moResponse = null;
+                        moSession = null;
+                        goServer = null;
+                        goCache = null;
+                        moConfig = null;
+                        goLangConfig = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log disposal errors but don't throw
+                        System.Diagnostics.Debug.WriteLine(
+                            $"Error in Base.Dispose: {ex.Message}");
+                    }
+                }
+
+                // Free unmanaged resources here if any exist
+
+                disposedValue = true;
+            }
+        }
+
+        // ✅ Remove empty finalizer OR implement properly if unmanaged resources exist
+        // If no unmanaged resources, delete this:
+        // ~Base() { }
+
+        // ✅ OR if keeping finalizer, implement properly:
         ~Base()
         {
+            Dispose(false);
+        }
+
+        // ✅ Add helper method to prevent use after disposal
+        protected void ThrowIfDisposed()
+        {
+            if (disposedValue)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
         }
     }
 }

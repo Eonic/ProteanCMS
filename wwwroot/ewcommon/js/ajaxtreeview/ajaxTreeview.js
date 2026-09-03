@@ -435,7 +435,7 @@ Original preload function has been kept but is unused.
         checkChildren: function () {
             $(this).find('li').each(function () {
                 var thisParentId = $(this).data('tree-parent');
-
+                var myTreeRoot = $('#MenuTree');
                 if ($(this).prevAll('li[data-tree-parent="' + thisParentId + '"]').length === 0) {
                     //if first amoung siblings
                     if ($(this).prev('li[id="node' + thisParentId + '"]').length === 0) {

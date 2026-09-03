@@ -1,8 +1,8 @@
-﻿Imports System.Xml
+Imports System.Xml
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.53.0"
+    Public Shared ewAssemblyVersion As String = "6.1.59.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.1.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
@@ -14,7 +14,6 @@ Public Class CustomActions
     Public Shared WebGreaseAssemblyVersion As String = "1.6.5135.21930"
     Public Shared AdvancedStringBuilderVersion As String = "0.1.1.0"
     Public Shared JsonAssemblyVersion As String = "13.0.3.0" '"8.0.1.19229""
-    Public Shared YUIAssemblyVersion As String = "1.9.23.0"
     Public Shared MicrosoftAjaxAssemblyVersion As String = "1.14.0.0"
     Public Shared AjaxMinAssemblyVersion As String = "5.14.5506.26196"
     Public Shared ECMAAssemblyVersion As String = "1.0.1.0"
@@ -27,8 +26,8 @@ Public Class CustomActions
     Public Shared ClearScriptAssemblyVersion As String = "5.5.6.0"
     Public Shared MicrosoftClearScriptV8AssemblyVersion As String = "7.5.0.0"
     Public Shared AlphaFSAssemblyVersion As String = "2.2.0.0"
-    Public Shared MagickNETCoreAssemblyVersion As String = "14.9.0.0"
-    Public Shared MagickNETAssemblyVersion As String = "14.9.0.0"
+    Public Shared MagickNETCoreAssemblyVersion As String = "14.16.0.0"
+    Public Shared MagickNETAssemblyVersion As String = "14.16.0.0"
     Public Shared GoogleProtoBufAssemblyVersion As String = "3.20.1.0"
     Public Shared SharpZipLibAssemblyVersion As String = "1.4.2.13"
     Public Shared SystemBuffersVersion As String = "4.0.5.0"
@@ -46,7 +45,7 @@ Public Class CustomActions
     Public Shared SystemConfigurationManager As String = "9.0.0.10"
 
     Public Shared SystemNumericsVectorsVersion As String = "4.1.6.0"
-    Public Shared AngleSharpVersion As String = "1.3.0.0"
+    Public Shared AngleSharpVersion As String = "1.5.0.0"
     Public Shared PreMailerVersion As String = "2.7.2.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
     Public Shared iTextSharpVersion As String = "3.7.4.0"
@@ -57,11 +56,58 @@ Public Class CustomActions
     Public Shared MicrosoftIdentityClientVersion As String = "4.78.0.0"
     Public Shared MicrosoftIdentityModelAbstractionsVersion As String = "8.14.0.0"
     Public Shared SelectHtmlToPDF As String = "25.2.0.0"
+    Public Shared SystemDataOleDbVersion As String = "10.0.0.8"
+    Public Shared SystemIOPackagingVersion As String = "8.0.0.1"
     '  Public Shared SystemWebAdaptors As String = "2.0.0.0"
 
 
     'do not use as no SNK - Public Shared ImazenWebPVersion As String = "10.0.1.0"
-    Public Shared installFolder As String = "C:\Program Files\Eonic Digital LLP\ProteanCMS into GAC " & ewAssemblyVersion.Trim("0").Trim(".") & " (64bit)"
+
+    ''' <summary>
+    ''' Strips trailing zero-value components from a dotted version string (e.g. "6.1.54.0" -> "6.1.54"),
+    ''' always leaving at least one component. Unlike String.Trim(Char), this operates on whole
+    ''' version segments rather than individual characters, so values like "10.0.0.0" or "6.0.54.0"
+    ''' are handled correctly instead of having significant leading/trailing digits stripped.
+    ''' </summary>
+    Private Shared Function FormatVersionForFolderName(ByVal version As String) As String
+        Dim parts() As String = version.Split("."c)
+        Dim lastSignificant As Integer = parts.Length - 1
+        While lastSignificant > 0 AndAlso parts(lastSignificant) = "0"
+            lastSignificant -= 1
+        End While
+        Return String.Join(".", parts, 0, lastSignificant + 1)
+    End Function
+
+    Public Shared installFolder As String = "C:\Program Files\Eonic Digital LLP\ProteanCMS into GAC " & FormatVersionForFolderName(ewAssemblyVersion) & " (64bit)"
+
+    ''' <summary>
+    ''' Resolves a writable log file path. Prefers CommonApplicationData\ProteanCMS so the
+    ''' installer isn't dependent on the C: drive existing or being writable; falls back to
+    ''' the system temp folder if that location can't be created/accessed.
+    ''' </summary>
+    Private Shared Function GetInstallLogPath(ByVal fileName As String) As String
+        Try
+            Dim logDir As String = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ProteanCMS")
+            If Not System.IO.Directory.Exists(logDir) Then
+                System.IO.Directory.CreateDirectory(logDir)
+            End If
+            Return System.IO.Path.Combine(logDir, fileName)
+        Catch
+            Return System.IO.Path.Combine(System.IO.Path.GetTempPath(), fileName)
+        End Try
+    End Function
+
+    ''' <summary>
+    ''' Writes install diagnostics to disk without ever throwing itself, so a logging
+    ''' failure can't mask or replace the original error being reported.
+    ''' </summary>
+    Private Shared Sub LogInstallError(ByVal fileName As String, ByVal message As String)
+        Try
+            My.Computer.FileSystem.WriteAllText(GetInstallLogPath(fileName), message, True)
+        Catch
+            ' Swallow - logging must never throw.
+        End Try
+    End Sub
 
     <CustomAction()>
     Public Shared Function LoadGuide(ByVal session As Session) As ActionResult
@@ -80,7 +126,11 @@ Public Class CustomActions
             Return ActionResult.Success
 
         Catch ex As Exception
-            Dim errorstr As String = ex.InnerException.StackTrace
+            Dim errorstr As String = ex.Message & ex.StackTrace
+            If Not ex.InnerException Is Nothing Then
+                errorstr = errorstr & ex.InnerException.Message & ex.InnerException.StackTrace
+            End If
+            LogInstallError("installError.txt", errorstr)
             System.Diagnostics.Process.Start("https://www.proteancms.com/Documentation?page=ProteanCMS%20Wiki%20Home")
             Return ActionResult.Failure
         End Try
@@ -240,7 +290,6 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "System.Net.FtpClient, Version=" & SystemNetFTPClientAssemblyVersion & ", Culture=neutral, PublicKeyToken=fa4be07daa57c2b7")
                     UpdateAssemblyRef(oAssembliesSect, "TidyHTML5Managed, Version=" & TidyHTML5ManagedAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     UpdateAssemblyRef(oAssembliesSect, "Protean.AppStart, Version=" & ptnAppStartAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
-                    UpdateAssemblyRef(oAssembliesSect, "TidyHTML5Managed, Version=" & TidyHTML5ManagedAssemblyVersion & ", Culture=neutral, PublicKeyToken=0e5e11efc3341916")
                     UpdateAssemblyRef(oAssembliesSect, "ICSharpCode.SharpZipLib, Version=" & SharpZipLibAssemblyVersion & ", Culture=neutral, PublicKeyToken=1b03e6acf1164f73")
                     ' UpdateAssemblyRef(oAssembliesSect, "Google.Protobuf, Version=" & GoogleProtoBufAssemblyVersion & ", Culture=neutral, PublicKeyToken=a7d26565bac4d604")
                     UpdateAssemblyRef(oAssembliesSect, "Magick.NET.Core, Version=" & MagickNETCoreAssemblyVersion & ", Culture=neutral, PublicKeyToken=2004825badfa91ec")
@@ -284,6 +333,8 @@ Public Class CustomActions
                     UpdateAssemblyRef(oAssembliesSect, "Microsoft.IdentityModel.Abstractions, Version=" & MicrosoftIdentityModelAbstractionsVersion & ", Culture=neutral, PublicKeyToken=31bf3856ad364e35")
                     UpdateAssemblyRef(oAssembliesSect, "Select.HtmlToPDF, Version=" & SelectHtmlToPDF & ", Culture=neutral, PublicKeyToken=e0ae9f6e27a97018")
                     UpdateAssemblyRef(oAssembliesSect, "System.Configuration.ConfigurationManager, Version=" & SystemConfigurationManager & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "System.Data.OleDb, Version=" & SystemDataOleDbVersion & ", Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
+                    UpdateAssemblyRef(oAssembliesSect, "System.IO.Packaging, Version=" & SystemIOPackagingVersion & ", Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
 
                     UpdateAssemblyRef(oAssembliesSect, "netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51")
 
@@ -405,126 +456,6 @@ Public Class CustomActions
             Next
 
 
-            '' and the WebService Bindings....
-
-            ''    <bindings>
-            ''        <basicHttpBinding>
-            ''            <binding name="ewAdminProxySoap" closeTimeout="00:01:00" openTimeout="00:01:00"
-            ''                receiveTimeout="00:10:00" sendTimeout="00:01:00" allowCookies="false"
-            ''                bypassProxyOnLocal="false" hostNameComparisonMode="StrongWildcard"
-            ''                maxBufferSize="65536" maxBufferPoolSize="524288" maxReceivedMessageSize="65536"
-            ''                messageEncoding="Text" textEncoding="utf-8" transferMode="Buffered"
-            ''                useDefaultWebProxy="true">
-            ''                <readerQuotas maxDepth="32" maxStringContentLength="8192" maxArrayLength="16384"
-            ''                    maxBytesPerRead="4096" maxNameTableCharCount="16384" />
-            ''                <security mode="None">
-            ''                    <transport clientCredentialType="None" proxyCredentialType="None"
-            ''                        realm="" />
-            ''                    <message clientCredentialType="UserName" algorithmSuite="Default" />
-            ''                </security>
-            ''            </binding>
-            ''            <binding name="PayPalAPISoapBinding" closeTimeout="00:01:00"
-            ''                openTimeout="00:01:00" receiveTimeout="00:10:00" sendTimeout="00:01:00"
-            ''                allowCookies="false" bypassProxyOnLocal="false" hostNameComparisonMode="StrongWildcard"
-            ''                maxBufferSize="65536" maxBufferPoolSize="524288" maxReceivedMessageSize="65536"
-            ''                messageEncoding="Text" textEncoding="utf-8" transferMode="Buffered"
-            ''                useDefaultWebProxy="true">
-            ''                <readerQuotas maxDepth="32" maxStringContentLength="8192" maxArrayLength="16384"
-            ''                    maxBytesPerRead="4096" maxNameTableCharCount="16384" />
-            ''                <security mode="Transport">
-            ''                    <transport clientCredentialType="None" proxyCredentialType="None"
-            ''                        realm="" />
-            ''                    <message clientCredentialType="UserName" algorithmSuite="Default" />
-            ''                </security>
-            ''            </binding>
-            ''            <binding name="PayPalAPIAASoapBinding" closeTimeout="00:01:00"
-            ''                openTimeout="00:01:00" receiveTimeout="00:10:00" sendTimeout="00:01:00"
-            ''                allowCookies="false" bypassProxyOnLocal="false" hostNameComparisonMode="StrongWildcard"
-            ''                maxBufferSize="65536" maxBufferPoolSize="524288" maxReceivedMessageSize="65536"
-            ''                messageEncoding="Text" textEncoding="utf-8" transferMode="Buffered"
-            ''                useDefaultWebProxy="true">
-            ''                <readerQuotas maxDepth="32" maxStringContentLength="8192" maxArrayLength="16384"
-            ''                    maxBytesPerRead="4096" maxNameTableCharCount="16384" />
-            ''                <security mode="Transport">
-            ''                    <transport clientCredentialType="None" proxyCredentialType="None"
-            ''                        realm="" />
-            ''                    <message clientCredentialType="UserName" algorithmSuite="Default" />
-            ''                </security>
-            ''            </binding>
-            ''            <binding name="PayPalAPISoapBinding1" closeTimeout="00:01:00"
-            ''                openTimeout="00:01:00" receiveTimeout="00:10:00" sendTimeout="00:01:00"
-            ''                allowCookies="false" bypassProxyOnLocal="false" hostNameComparisonMode="StrongWildcard"
-            ''                maxBufferSize="65536" maxBufferPoolSize="524288" maxReceivedMessageSize="65536"
-            ''                messageEncoding="Text" textEncoding="utf-8" transferMode="Buffered"
-            ''                useDefaultWebProxy="true">
-            ''                <readerQuotas maxDepth="32" maxStringContentLength="8192" maxArrayLength="16384"
-            ''                    maxBytesPerRead="4096" maxNameTableCharCount="16384" />
-            ''                <security mode="None">
-            ''                    <transport clientCredentialType="None" proxyCredentialType="None"
-            ''                        realm="" />
-            ''                    <message clientCredentialType="UserName" algorithmSuite="Default" />
-            ''                </security>
-            ''            </binding>
-            ''            <binding name="PayPalAPIAASoapBinding1" closeTimeout="00:01:00"
-            ''                openTimeout="00:01:00" receiveTimeout="00:10:00" sendTimeout="00:01:00"
-            ''                allowCookies="false" bypassProxyOnLocal="false" hostNameComparisonMode="StrongWildcard"
-            ''                maxBufferSize="65536" maxBufferPoolSize="524288" maxReceivedMessageSize="65536"
-            ''                messageEncoding="Text" textEncoding="utf-8" transferMode="Buffered"
-            ''                useDefaultWebProxy="true">
-            ''                <readerQuotas maxDepth="32" maxStringContentLength="8192" maxArrayLength="16384"
-            ''                    maxBytesPerRead="4096" maxNameTableCharCount="16384" />
-            ''                <security mode="None">
-            ''                    <transport clientCredentialType="None" proxyCredentialType="None"
-            ''                        realm="" />
-            ''                    <message clientCredentialType="UserName" algorithmSuite="Default" />
-            ''                </security>
-            ''            </binding>
-            ''            <binding name="SECCardServiceSoapBinding" closeTimeout="00:01:00"
-            ''                openTimeout="00:01:00" receiveTimeout="00:10:00" sendTimeout="00:01:00"
-            ''                allowCookies="false" bypassProxyOnLocal="false" hostNameComparisonMode="StrongWildcard"
-            ''                maxBufferSize="65536" maxBufferPoolSize="524288" maxReceivedMessageSize="65536"
-            ''                messageEncoding="Text" textEncoding="utf-8" transferMode="Buffered"
-            ''                useDefaultWebProxy="true">
-            ''                <readerQuotas maxDepth="32" maxStringContentLength="8192" maxArrayLength="16384"
-            ''                    maxBytesPerRead="4096" maxNameTableCharCount="16384" />
-            ''                <security mode="Transport">
-            ''                    <transport clientCredentialType="None" proxyCredentialType="None"
-            ''                        realm="" />
-            ''                    <message clientCredentialType="UserName" algorithmSuite="Default" />
-            ''                </security>
-            ''            </binding>
-            ''            <binding name="SECCardServiceSoapBinding1" closeTimeout="00:01:00"
-            ''                openTimeout="00:01:00" receiveTimeout="00:10:00" sendTimeout="00:01:00"
-            ''                allowCookies="false" bypassProxyOnLocal="false" hostNameComparisonMode="StrongWildcard"
-            ''                maxBufferSize="65536" maxBufferPoolSize="524288" maxReceivedMessageSize="65536"
-            ''                messageEncoding="Text" textEncoding="utf-8" transferMode="Buffered"
-            ''                useDefaultWebProxy="true">
-            ''                <readerQuotas maxDepth="32" maxStringContentLength="8192" maxArrayLength="16384"
-            ''                    maxBytesPerRead="4096" maxNameTableCharCount="16384" />
-            ''                <security mode="None">
-            ''                    <transport clientCredentialType="None" proxyCredentialType="None"
-            ''                        realm="" />
-            ''                    <message clientCredentialType="UserName" algorithmSuite="Default" />
-            ''                </security>
-            ''            </binding>
-            ''        </basicHttpBinding>
-            ''    </bindings>
-            ''    <client>
-            ''        <endpoint address="http://www.eonicweb.net/ewAdminProxy.asmx"
-            ''            binding="basicHttpBinding" bindingConfiguration="ewAdminProxySoap"
-            ''            contract="eonicweb.com.ewAdminProxySoap" name="ewAdminProxySoap" />
-            ''        <endpoint address="https://api.sandbox.paypal.com/2.0/" binding="basicHttpBinding"
-            ''            bindingConfiguration="PayPalAPISoapBinding" contract="PayPalAPI.PayPalAPIInterface"
-            ''            name="PayPalAPI" />
-            ''        <endpoint address="https://api-aa.sandbox.paypal.com/2.0/" binding="basicHttpBinding"
-            ''            bindingConfiguration="PayPalAPIAASoapBinding" contract="PayPalAPI.PayPalAPIAAInterface"
-            ''            name="PayPalAPIAA" />
-            ''        <endpoint address="https://www.secpay.com/java-bin/services/SECCardService"
-            ''            binding="basicHttpBinding" bindingConfiguration="SECCardServiceSoapBinding"
-            ''            contract="Paypoint.SECVPN" name="SECCardService" />
-            ''    </client>
-            ''</system.serviceModel>
-
             Dim configFile As New System.Configuration.ConfigurationFileMap(FilePath)
             Dim config As System.Configuration.Configuration = System.Web.Configuration.WebConfigurationManager.OpenMappedMachineConfiguration(configFile)
 
@@ -612,6 +543,8 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "Microsoft.IdentityModel.Abstractions", "31bf3856ad364e35", MicrosoftIdentityModelAbstractionsVersion)
             UpdateDependantAssembly(oSectXml, "Select.HtmlToPDF", "e0ae9f6e27a97018", SelectHtmlToPDF)
             UpdateDependantAssembly(oSectXml, "System.Configuration.ConfigurationManager", "cc7b13ffcd2ddd51", SystemConfigurationManager)
+            UpdateDependantAssembly(oSectXml, "System.Data.OleDb", "cc7b13ffcd2ddd51", SystemDataOleDbVersion, "10.0.0.8", SystemDataOleDbVersion)
+            UpdateDependantAssembly(oSectXml, "System.IO.Packaging", "b03f5f7f11d50a3a", SystemIOPackagingVersion, "8.0.0.1", SystemIOPackagingVersion)
 
 
 
@@ -668,7 +601,7 @@ Public Class CustomActions
                 '    sm = Nothing
                 'Else
                 '    Try
-                '        System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=system.webServer/handlers-is-missing")
+                '        System.Diagnostics.Process.Start("https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=system.webServer/handlers-is-missing")
                 '    Catch ex As Exception
                 '        'do nuffing
                 '    End Try
@@ -676,18 +609,18 @@ Public Class CustomActions
 
             Else
                 Try
-                    System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=cannot-get-appHostConfig")
+                    System.Diagnostics.Process.Start("https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=cannot-get-appHostConfig")
                 Catch ex As Exception
                     'do nuffing
                 End Try
             End If
             Try
-                System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS")
+                System.Diagnostics.Process.Start("https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS")
             Catch ex As Exception
                 'do nuffing
             End Try
             'MyBase.Install(savedState)
-            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errstr, True)
+            LogInstallError("ProteanInstallLog.txt", errstr)
             Return ActionResult.Success
 
 
@@ -699,9 +632,9 @@ Public Class CustomActions
                 errorstr = errorstr + ex.InnerException.Message & ex.InnerException.StackTrace
             End If
 
-            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errorstr, True)
+            LogInstallError("ProteanInstallLog.txt", errorstr)
             Try
-                System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS-troubleshoot")
+                System.Diagnostics.Process.Start("https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS-troubleshoot")
             Catch ex2 As Exception
                 'do nuffing
             End Try
@@ -719,6 +652,18 @@ Public Class CustomActions
 
         Try
 
+            'Resolve the actual install location for this run. TARGETDIR is passed in via
+            'CustomActionData (set by ProteanInstallActionsFinal_SetCAData in Product.wxs)
+            'because this custom action executes deferred, and deferred custom actions cannot
+            'read session properties directly - falls back to the computed 'installFolder'
+            'constant only if CustomActionData wasn't supplied.
+            Dim targetDir As String = installFolder
+            If session IsNot Nothing AndAlso session.CustomActionData IsNot Nothing Then
+                Dim targetDirFromSession As String = session.CustomActionData("TARGETDIR")
+                If Not String.IsNullOrEmpty(targetDirFromSession) Then
+                    targetDir = targetDirFromSession.TrimEnd("\"c)
+                End If
+            End If
 
             'Move files to correct folders in GAC
             Dim GACFolder As String = "C:\Windows\Microsoft.NET\assembly\GAC_MSIL"
@@ -727,47 +672,47 @@ Public Class CustomActions
 
             ' If Not System.IO.File.Exists(GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll") Then
             ' System.IO.Directory.CreateDirectory(GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\")
-            ' System.IO.File.Move(installFolder & "\Libraries\NewtonSoft.Json.dll", GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll")
+            ' System.IO.File.Move(targetDir & "\Libraries\NewtonSoft.Json.dll", GACFolder & "\NewtonSoft.Json\v4.0_13.0.2.0__30ad4fe6b2a6aeed\NewtonSoft.Json.dll")
             '   End If
 
-            If System.IO.Directory.Exists(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\") Then
+            If System.IO.Directory.Exists(targetDir & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\") Then
                 '64bit files
                 If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll") Then
-                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll")
+                    System.IO.File.Move(targetDir & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll")
                 End If
                 If Not System.IO.File.Exists(System32Folder & "\v8-x64.dll") Then
-                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll", System32Folder & "\v8-x64.dll")
+                    System.IO.File.Move(targetDir & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-x64.dll", System32Folder & "\v8-x64.dll")
                 End If
                 If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll") Then
-                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll")
+                    System.IO.File.Move(targetDir & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll")
                 End If
                 If Not System.IO.File.Exists(System32Folder & "\v8-base-x64.dll") Then
-                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll", System32Folder & "\v8-base-x64.dll")
+                    System.IO.File.Move(targetDir & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-x64.dll", System32Folder & "\v8-base-x64.dll")
                 End If
                 If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-64.dll") Then
-                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-64.dll")
+                    System.IO.File.Move(targetDir & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-64.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-64.dll")
                 End If
                 '32bit files
                 If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll") Then
-                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll")
+                    System.IO.File.Move(targetDir & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll")
                 End If
                 If Not System.IO.File.Exists(System32Folder & "\v8-ia32.dll") Then
-                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll", System32Folder & "\v8-ia32.dll")
+                    System.IO.File.Move(targetDir & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-ia32.dll", System32Folder & "\v8-ia32.dll")
                 End If
                 If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll") Then
-                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll")
+                    System.IO.File.Move(targetDir & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll")
                 End If
                 If Not System.IO.File.Exists(System32Folder & "\v8-base-ia32.dll") Then
-                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll", System32Folder & "\v8-base-ia32.dll")
+                    System.IO.File.Move(targetDir & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\v8-base-ia32.dll", System32Folder & "\v8-base-ia32.dll")
                 End If
                 If Not System.IO.File.Exists(GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-32.dll") Then
-                    System.IO.File.Move(installFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-32.dll")
+                    System.IO.File.Move(targetDir & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-32.dll", GACFolder & "\ClearScript\v4.0_" & ClearScriptAssemblyVersion & "__935d0c957da47c73\ClearScriptV8-32.dll")
                 End If
             End If
             '  If System.IO.Directory.Exists(GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\") Then
             '   If Not System.IO.File.Exists(GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll") Then
-            '    System.IO.File.Move(installFolder & "\tidy.x64.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll")
-            '            System.IO.File.Move(installFolder & "\tidy.x86.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x86.dll")
+            '    System.IO.File.Move(targetDir & "\tidy.x64.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x64.dll")
+            '            System.IO.File.Move(targetDir & "\tidy.x86.dll", GACFolder & "\TidyHTML5Managed\v4.0_1.1.5.0__0e5e11efc3341916\tidy.x86.dll")
             '   End If
             '  End If
 
@@ -782,9 +727,9 @@ Public Class CustomActions
                 errorstr = errorstr + ex.InnerException.Message & ex.InnerException.StackTrace
             End If
 
-            My.Computer.FileSystem.WriteAllText("c:\\ProteanInstallLog.txt", errorstr, True)
+            LogInstallError("ProteanInstallLog.txt", errorstr)
             Try
-                '  System.Diagnostics.Process.Start("IExplore.exe", "https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS-troubleshoot")
+                '  System.Diagnostics.Process.Start("https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS-troubleshoot")
             Catch ex2 As Exception
                 'do nuffing
             End Try
@@ -824,8 +769,11 @@ Public Class CustomActions
             Next
 
         Catch ex As Exception
-            Dim errorstr As String = ex.InnerException.StackTrace
-            My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
+            Dim errorstr As String = ex.Message & ex.StackTrace
+            If Not ex.InnerException Is Nothing Then
+                errorstr = errorstr & ex.InnerException.Message & ex.InnerException.StackTrace
+            End If
+            LogInstallError("installError.txt", errorstr)
         End Try
 
     End Sub
@@ -840,8 +788,11 @@ Public Class CustomActions
             End If
 
         Catch ex As Exception
-            Dim errorstr As String = ex.InnerException.StackTrace
-            My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
+            Dim errorstr As String = ex.Message & ex.StackTrace
+            If Not ex.InnerException Is Nothing Then
+                errorstr = errorstr & ex.InnerException.Message & ex.InnerException.StackTrace
+            End If
+            LogInstallError("installError.txt", errorstr)
         End Try
 
     End Sub
@@ -875,8 +826,11 @@ Public Class CustomActions
             End If
 
         Catch ex As Exception
-            Dim errorstr As String = ex.InnerException.StackTrace
-            My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
+            Dim errorstr As String = ex.Message & ex.StackTrace
+            If Not ex.InnerException Is Nothing Then
+                errorstr = errorstr & ex.InnerException.Message & ex.InnerException.StackTrace
+            End If
+            LogInstallError("installError.txt", errorstr)
         End Try
 
     End Sub
@@ -900,8 +854,11 @@ Public Class CustomActions
             End If
 
         Catch ex As Exception
-            Dim errorstr As String = ex.InnerException.StackTrace
-            My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
+            Dim errorstr As String = ex.Message & ex.StackTrace
+            If Not ex.InnerException Is Nothing Then
+                errorstr = errorstr & ex.InnerException.Message & ex.InnerException.StackTrace
+            End If
+            LogInstallError("installError.txt", errorstr)
         End Try
 
     End Sub
@@ -923,8 +880,11 @@ Public Class CustomActions
 
 
         Catch ex As Exception
-            Dim errorstr As String = ex.InnerException.StackTrace
-            My.Computer.FileSystem.WriteAllText("C:\installError.txt", errorstr, True)
+            Dim errorstr As String = ex.Message & ex.StackTrace
+            If Not ex.InnerException Is Nothing Then
+                errorstr = errorstr & ex.InnerException.Message & ex.InnerException.StackTrace
+            End If
+            LogInstallError("installError.txt", errorstr)
         End Try
 
     End Sub
@@ -956,7 +916,11 @@ Public Class CustomActions
             Next
 
         Catch ex As Exception
-            Dim errorstr As String = ex.InnerException.StackTrace
+            Dim errorstr As String = ex.Message & ex.StackTrace
+            If Not ex.InnerException Is Nothing Then
+                errorstr = errorstr & ex.InnerException.Message & ex.InnerException.StackTrace
+            End If
+            LogInstallError("installError.txt", errorstr)
         End Try
 
     End Sub

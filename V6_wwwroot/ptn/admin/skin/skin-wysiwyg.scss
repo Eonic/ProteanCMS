@@ -154,6 +154,7 @@
         margin-bottom: -28px;
         //margin-top:4px;
         z-index: 10;
+        pointer-events: none;
     }
 
     .not-over-content {
@@ -167,8 +168,13 @@
         z-index: 2;
     }
 
+    .ui-draggable-handle {
+        pointer-events: auto;
+    }
+
     .ptn-edit > .btn-default, .ptn-edit > .btn-primary, .ptn-edit > .dropdown > .btn-primary, .ptn-edit > .dropdown .dropdown-menu a {
         font-family: $admin-header-font;
+        pointer-events: auto;
 
         i {
             font-size: 13px !important;
@@ -303,7 +309,11 @@
 
     .editable > div.ptn-edit.options {
         position: relative;
+        pointer-events: none; /* let clicks pass through */
         z-index: 3;
+        a, button {
+            pointer-events: auto; /* re-enable clicks on links */
+        }
     }
 
     .accordion-module .editable > div.ptn-edit.options {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ID="0944b315-5099-48c2-b66a-45eec6db978c" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://ws.epostcode.com/uk/postcodeservices13.asmx" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="postcodeservices13.wsdl" MetadataType="Wsdl" ID="58cdaa68-0a25-4962-8eba-90d1fbe9fb21" SourceId="1" SourceUrl="http://ws.epostcode.com/uk/postcodeservices13.asmx?wsdl" />
+    <MetadataFile FileName="PostcodeUtilities.xsd" MetadataType="Schema" ID="ecad72bb-08b2-4c7b-bb5e-ee29c6573f5c" SourceId="1" SourceUrl="http://ws.epostcode.com/uk/postcodeservices13.asmx?schema=PostcodeUtilities" />
+    <MetadataFile FileName="postcodeservices13.disco" MetadataType="Disco" ID="38a3bc29-c71b-477f-92b0-09dc2aa5703c" SourceId="1" SourceUrl="http://ws.epostcode.com/uk/postcodeservices13.asmx?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

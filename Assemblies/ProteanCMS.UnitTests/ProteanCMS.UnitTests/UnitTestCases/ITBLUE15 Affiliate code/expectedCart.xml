@@ -1,0 +1,68 @@
+<Order cartId="1048742" session="bargdoru4nyq0kcp3xgkwfql" statusId="1" status="Unknown Process ID" itemCount="2" weight="0" orderType="" BlockCartUpdate="off" complete="True" bDiscountIsPercent="1" discountTotal="18.75" showDiscountCodeBox="true" shippingType="65" shippingCost="3.95" shippingDesc="First Class (Royal Mail)-" ReceiptType="0" totalNet="110.20" vatRate="0" vatAmt="0" total="110.20" currency="" currencySymbol="£" errorMsg="0" cmd="Cart" sessionId="bargdoru4nyq0kcp3xgkwfql" siteUrl="https://demo2019.intotheblue.co.uk/" cartUrl="https://demo2019.intotheblue.co.uk/">
+	<Item id="3023457" contentId="25212" price="63.75" taxRate="0" quantity="1" shippingLevel="-1" discount="11.25" weight="0" parId="" originalPrice="75.00" itemTotal="63.75" unitSaving="11.25" itemSaving="11.25">
+		<Name>Quad Safari</Name>
+		
+		<nItemOptGrpIdx>0</nItemOptGrpIdx>
+		<nItemOptIdx>0</nItemOptIdx>
+		<nParentId>0</nParentId>
+		<contentType>SKU</contentType>
+		<ProductStatus>1</ProductStatus>
+		<nShippingGroup/>
+		<nshippingType/>
+		
+		<Discount nDiscountKey="538" nDiscountForeignRef="" cDiscountName="ITBLUE15 Affiliate code" cDiscountCode="ITBLUE15" bDiscountIsPercent="1" nDiscountValue="15" nDiscountMinPrice="" nDiscountMinQuantity="1" nDiscountCat="1"  nDiscountCodeType="1" cDiscountUserCode="ITBLUE15" Applied="1" AppliedToCart="1">
+			<cDescription>
+				<p>ITBLUE15 Affiliate code</p>
+			</cDescription>
+			<cTerms/>
+			<Images>
+				<img src="" width="" height="" class="thumbnail" alt=""/>
+				<img src="" width="" height="" class="display" alt=""/>
+				<img src="" width="" height="" class="detail" alt=""/>
+			</Images>
+			<bFreeGiftBox/>
+			<bApplyToOrder/>
+			<nMinimumOrderValue>1</nMinimumOrderValue>
+			<nMaximumOrderValue>258</nMaximumOrderValue>
+		</Discount>
+		<DiscountPrice OriginalUnitPrice="75.00" UnitPrice="63.75" Units="1" Total="63.75" UnitSaving="11.25" TotalSaving="11.25">
+			<DiscountPriceLine nDiscountKey="538" PriceOrder="1" UnitPrice="63.75" Total="63.75" UnitSaving="11.25" TotalSaving="0"/>
+		</DiscountPrice>
+	</Item>
+	<Item id="3023459" contentId="89716" price="42.50" taxRate="0" quantity="1" shippingLevel="-1" discount="7.50" weight="0" parId="" originalPrice="50.00" itemTotal="42.50" unitSaving="7.50" itemSaving="7.50">
+		<Name>Abyss Abseiling</Name>
+		
+		<nItemOptGrpIdx>0</nItemOptGrpIdx>
+		<nItemOptIdx>0</nItemOptIdx>
+		<nParentId>0</nParentId>
+		<contentType>SKU</contentType>
+		<ProductStatus>1</ProductStatus>
+		<nShippingGroup/>
+		<nshippingType/>
+		
+		<Discount nDiscountKey="538" nDiscountForeignRef="" cDiscountName="ITBLUE15 Affiliate code" cDiscountCode="ITBLUE15" bDiscountIsPercent="1" nDiscountValue="15" nDiscountMinPrice="" nDiscountMinQuantity="1" nDiscountCat="1" nDiscountCodeType="1" cDiscountUserCode="ITBLUE15" Applied="1" AppliedToCart="1">
+			<cDescription>
+				<p>ITBLUE15 Affiliate code</p>
+			</cDescription>
+			<cTerms/>
+			<Images>
+				<img src="" width="" height="" class="thumbnail" alt=""/>
+				<img src="" width="" height="" class="display" alt=""/>
+				<img src="" width="" height="" class="detail" alt=""/>
+			</Images>
+			<bFreeGiftBox/>
+			<bApplyToOrder/>
+			<nMinimumOrderValue>1</nMinimumOrderValue>
+			<nMaximumOrderValue>258</nMaximumOrderValue>
+		</Discount>
+		<DiscountPrice OriginalUnitPrice="50.00" UnitPrice="42.50" Units="1" Total="42.5" UnitSaving="7.5" TotalSaving="7.5">
+			<DiscountPriceLine nDiscountKey="538" PriceOrder="2" UnitPrice="42.50" Total="42.5" UnitSaving="7.5" TotalSaving="0"/>
+		</DiscountPrice>
+	</Item>
+	<Shipping>
+		<Name>First Class (Royal Mail)</Name>
+		<Carrier/>
+		<DeliveryTime>Immediate</DeliveryTime>
+	</Shipping>
+
+</Order>

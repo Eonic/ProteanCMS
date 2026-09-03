@@ -10,7 +10,7 @@
 				<cContentName/>
 				<cContentSchemaName>Module</cContentSchemaName>
 				<cContentXmlBrief>
-					<Content position="" moduleType="FormattedText" box="" title="" link="" linkType="internal" linkText="Read more" linkBox="" imagePosition="below" char80Layout="center"/>
+					<Content position="" moduleType="FormattedText" box="" title="" link="" linkType="internal" linkText="Read more" linkBox="" imagePosition="below" char80Layout="center" heading="h2"/>
 				</cContentXmlBrief>
 				<cContentXmlDetail/>
 				<nAuditId/>
@@ -41,6 +41,8 @@
 			<bind id="bLinkBox" nodeset="@linkBox" required="false()" type="string"/>
 			<bind id="accessibleText" nodeset="@accessibleText" required="false()" type="string"/>
 			<bind id="panelImage" nodeset="@panelImage" required="false()" type="string" />
+			<bind id="panelAltText" nodeset="@panelAltText" required="false()" type="string" />
+      <bind id="panelImageWidth" nodeset="@panelImageWidth" required="false()" type="string" />
 			<bind id="imagePosition" nodeset="@imagePosition" required="false()" type="string" />
 			<bind id="maxWidth" nodeset="@maxWidth" required="false()" type="string" />
 			<bind id="padding" nodeset="@padding" required="false()" type="string" />
@@ -102,6 +104,14 @@
 				<group>
 					<input bind="panelImage" class="pickImageFile label-border-top bs-only">
 						<label>Choose Image</label>
+						<value></value>
+					</input>
+					<input bind="panelAltText" class="label-border-top bs-only">
+						<label>Alt text for image</label>
+						<value></value>
+					</input>
+					<input bind="panelImageWidth" class="label-border-top bs-only">
+						<label>Width of image</label>
 						<value></value>
 					</input>
 					<select1 bind="imagePosition" appearance="full" class="inline-items">

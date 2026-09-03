@@ -1,7 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using Microsoft.VisualBasic;
-using Microsoft.VisualBasic.CompilerServices;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -429,7 +427,7 @@ namespace Protean.Tools
                     for (int ii = 0, loopTo = afieldsTitles.Count() - 1; ii <= loopTo; ii++)
                     {
                         string _fName = "";
-                        _fName = afieldsTitles[ii].Replace(Conversions.ToString(_separator), "");
+                        _fName = afieldsTitles[ii].Replace(System.Convert.ToString(_separator), "");
                         _fName = _fName.Replace("\"", "");
                         _fName = _fName.Replace("?", "");
                         _fName = string.Concat(_fName.Where(c => !char.IsWhiteSpace(c)));
@@ -444,7 +442,7 @@ namespace Protean.Tools
                 while (!sr.EndOfStream)
                 {
                     sLine = sr.ReadLine();
-                    sLine = sLine.Replace(Constants.vbCrLf, "");
+                    sLine = sLine.Replace("\r\n", "").Replace("\n", "").Replace("\r", "");
 
                     // get the number of seps in line 1
                     if (nSepCount == 0)
@@ -461,8 +459,8 @@ namespace Protean.Tools
                             break;
                         }
 
-                        sLine = Conversions.ToString(Operators.AddObject(sLine, nextLine));
-                        sLine = sLine.Replace(Constants.vbCrLf, "");
+                        sLine = $"{sLine}{nextLine.ToString()}";
+                        sLine = sLine.Replace("\r\n", "").Replace("\n", "").Replace("\r", "");
                     }
 
                     if (sLine is null)
@@ -503,9 +501,9 @@ namespace Protean.Tools
                                     {
                                         XmlElement wtf1 = (XmlElement)rowElmt.SelectSingleNode("*[position() = " + (long)(ii + 1) + "]");
                                     }
-                                    else if (Conversions.ToBoolean(_fValue.ToString().StartsWith("<")))
+                                    else if (System.Convert.ToBoolean(_fValue.ToString().StartsWith("<")))
                                     {
-                                        rowElmt.SelectSingleNode("*[position() = " + (long)(ii + 1) + "]").InnerXml = Text.tidyXhtmlFrag(Conversions.ToString(_fValue), true, true);
+                                        rowElmt.SelectSingleNode("*[position() = " + (long)(ii + 1) + "]").InnerXml = Text.tidyXhtmlFrag(System.Convert.ToString(_fValue), true, true);
                                         bHasHtml = true;
                                     }
                                     else
@@ -568,12 +566,12 @@ namespace Protean.Tools
                 int countDoubleQuotes = sLine.Split('\"').Length - 1;
                 if (countDoubleQuotes > 0)
                 {
-                    object result = countDoubleQuotes % 2;
-                    if (Conversions.ToBoolean(Operators.ConditionalCompareObjectGreater(result, 0, false))) // Odd number of quotes ..consider next line
+                    int remainder = countDoubleQuotes % 2;
+                    if (remainder > 0) // Odd number of quotes ..consider next line
                     {
                         return true;
                     }
-                    else if (Conversions.ToBoolean(Operators.ConditionalCompareObjectEqual(result, 0, false))) // Even number of quotes but number of fields are less than expected..consider next line
+                    else if (remainder == 0) // Even number of quotes but number of fields are less than expected..consider next line
                     {
                         var csvPreservingQuotedStrings = new Regex(string.Format(@"(?:^|{0})(\""(?:[^\""]+|\""\"")*\""|[^{0}]*)", _separator));
                         if (csvPreservingQuotedStrings.Matches(sLine).Count - 1 < nSepCount)
@@ -655,10 +653,9 @@ namespace Protean.Tools
                             if (oResource is string)
                             {
                                 // Expected input is a filepath in the form of a string
-                                if (!Conversions.ToBoolean(Operators.AndObject(Operators.ConditionalCompareObjectNotEqual(oResource, "", false), File.Exists(Conversions.ToString(oResource)))))
+                                var path = System.Convert.ToString(oResource).Replace(" ", "-");
+                                if (string.IsNullOrEmpty(path) || !File.Exists(path))
                                     bCheck = false;
-
-
                             }
                             else if (oResource is StreamReader)
                             {
@@ -815,7 +812,7 @@ namespace Protean.Tools
             var ds = new DataSet();
             try
             {
-                var spreadsheetDocument = SpreadsheetDocument.Open(filename, false);
+                var spreadsheetDocument = SpreadsheetDocument.Open(filename.Replace(" ","-"), false);
                 var workbookPart = spreadsheetDocument.WorkbookPart;
                 var sheetcollection = spreadsheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
                 int sheetCount = 0;
@@ -946,7 +943,8 @@ namespace Protean.Tools
                 // For letters
                 if (char.IsLetter(columnName[position]))
                 {
-                    columnIndex += factor * (Strings.AscW(columnName[position]) - Strings.AscW('A') + 1) - 1;
+                    // Calculate zero-based column index from column letters (e.g. A -> 0, B -> 1, Z -> 25, AA -> 26)
+                    columnIndex += factor * ((columnName[position] - 'A' + 1)) - 1;
                     factor *= 26;
                 }
             }
