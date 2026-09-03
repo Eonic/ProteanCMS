@@ -2,7 +2,7 @@ Imports System.Xml
 
 Public Class CustomActions
 
-    Public Shared ewAssemblyVersion As String = "6.1.54.0"
+    Public Shared ewAssemblyVersion As String = "6.1.59.0"
     Public Shared ptnAppStartAssemblyVersion As String = "6.1.1.0"
     Public Shared bundleAssemblyVersion As String = "1.14.1.0"
     Public Shared bundleLessAssemblyVersion As String = "1.14.0.0"
@@ -45,7 +45,7 @@ Public Class CustomActions
     Public Shared SystemConfigurationManager As String = "9.0.0.10"
 
     Public Shared SystemNumericsVectorsVersion As String = "4.1.6.0"
-    Public Shared AngleSharpVersion As String = "1.3.0.0"
+    Public Shared AngleSharpVersion As String = "1.5.0.0"
     Public Shared PreMailerVersion As String = "2.7.2.0"
     Public Shared QRCoderVersion As String = "1.6.0.0"
     Public Shared iTextSharpVersion As String = "3.7.4.0"
@@ -543,8 +543,8 @@ Public Class CustomActions
             UpdateDependantAssembly(oSectXml, "Microsoft.IdentityModel.Abstractions", "31bf3856ad364e35", MicrosoftIdentityModelAbstractionsVersion)
             UpdateDependantAssembly(oSectXml, "Select.HtmlToPDF", "e0ae9f6e27a97018", SelectHtmlToPDF)
             UpdateDependantAssembly(oSectXml, "System.Configuration.ConfigurationManager", "cc7b13ffcd2ddd51", SystemConfigurationManager)
-            UpdateDependantAssembly(oSectXml, "System.Data.OleDb", "cc7b13ffcd2ddd51", SystemDataOleDbVersion)
-            UpdateDependantAssembly(oSectXml, "System.IO.Packaging", "b03f5f7f11d50a3a", SystemIOPackagingVersion)
+            UpdateDependantAssembly(oSectXml, "System.Data.OleDb", "cc7b13ffcd2ddd51", SystemDataOleDbVersion, "10.0.0.8", SystemDataOleDbVersion)
+            UpdateDependantAssembly(oSectXml, "System.IO.Packaging", "b03f5f7f11d50a3a", SystemIOPackagingVersion, "8.0.0.1", SystemIOPackagingVersion)
 
 
 

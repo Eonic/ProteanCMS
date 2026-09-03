@@ -39,6 +39,11 @@
             Specifies that the method should be handled by an event remover.
             </summary>
         </member>
+        <member name="F:AngleSharp.Attributes.Accessors.Method">
+            <summary>
+            Specifies that the getter only property should be handled by a method.
+            </summary>
+        </member>
         <member name="T:AngleSharp.Attributes.DomAccessorAttribute">
             <summary>
             This attribute decorates official DOM objects as specified by the W3C.
@@ -950,6 +955,13 @@
             documents.
             </summary>
         </member>
+        <member name="P:AngleSharp.BrowsingContext.IsFrame">
+             <summary>
+             Determines if the current context is for a frame rather than
+             a window. Useful for properly determining the proper target
+             for `_top` and `_parent`.
+            </summary>
+        </member>
         <member name="P:AngleSharp.BrowsingContext.SessionHistory">
             <summary>
             Gets the session history of the given browsing context, if any.
@@ -980,6 +992,15 @@
             </summary>
             <param name="name">The name of the child context, if any.</param>
             <param name="security">The security flags to apply.</param>
+            <returns></returns>
+        </member>
+        <member name="M:AngleSharp.BrowsingContext.CreateChild(System.String,AngleSharp.Browser.Sandboxes,System.Boolean)">
+            <summary>
+            Creates a new named browsing context as child of the given parent.
+            </summary>
+            <param name="name">The name of the child context, if any.</param>
+            <param name="security">The security flags to apply.</param>
+            <param name="isFrameContext">Whether the child context is for a frame.</param>
             <returns></returns>
         </member>
         <member name="M:AngleSharp.BrowsingContext.FindChild(System.String)">
@@ -1434,6 +1455,13 @@
         <member name="M:AngleSharp.Common.BaseTokenizer.Append(System.Char)">
             <summary>
             Appends the given character to the buffer.
+            </summary>
+        </member>
+        <member name="M:AngleSharp.Common.BaseTokenizer.ScanDataText">
+            <summary>
+            Scans ahead in the underlying source for plain text runs,
+            bulk-appending characters until a DataText terminator is found.
+            Returns the next character that needs per-char handling.
             </summary>
         </member>
         <member name="T:AngleSharp.Common.IBindable">
@@ -6847,6 +6875,11 @@
             http://www.w3.org/TR/html5/scripting-1.html#prepare-a-script
             </summary>
         </member>
+        <member name="T:AngleSharp.Html.Dom.HtmlSelectedContentElement">
+            <summary>
+            Represents the HTML selectedcontent element.
+            </summary>
+        </member>
         <member name="T:AngleSharp.Html.Dom.HtmlSelectElement">
             <summary>
             Represents the select element.
@@ -8642,6 +8675,18 @@
             </summary>
             <param name="token">The passed token.</param>
         </member>
+        <member name="M:AngleSharp.Html.Parser.HtmlDomBuilder`2.InButtonInSelect(AngleSharp.Html.Parser.Tokens.Struct.StructHtmlToken@)">
+            <summary>
+            Intermediate step - as long as customizable select is not finished.
+            </summary>
+            <param name="token">The passed token.</param>
+        </member>
+        <member name="M:AngleSharp.Html.Parser.HtmlDomBuilder`2.InOptionInSelect(AngleSharp.Html.Parser.Tokens.Struct.StructHtmlToken@)">
+            <summary>
+            Intermediate step - as long as customizable select is not finished.
+            </summary>
+            <param name="token">The passed token.</param>
+        </member>
         <member name="M:AngleSharp.Html.Parser.HtmlDomBuilder`2.InSelectInTable(AngleSharp.Html.Parser.Tokens.Struct.StructHtmlToken@)">
             <summary>
             See 8.2.5.4.17 The "in select in table" insertion mode.
@@ -8910,6 +8955,11 @@
             </summary>
             <param name="tagName">The tag name to check.</param>
             <returns>True if it is in scope, otherwise false.</returns>
+        </member>
+        <member name="M:AngleSharp.Html.Parser.HtmlDomBuilder`2.IsHtmlTip(AngleSharp.Html.Construction.IConstructableElement)">
+            <summary>
+            Checks if the given element is actually an HTML Text Insertation Point.
+            </summary>
         </member>
         <member name="M:AngleSharp.Html.Parser.HtmlDomBuilder`2.IsCustomElementEverywhere(AngleSharp.Common.StringOrMemory)">
             <summary>
@@ -12706,6 +12756,11 @@
             The indeterminate pseudo class.
             </summary>
         </member>
+        <member name="F:AngleSharp.Css.PseudoClassNames.Open">
+            <summary>
+            The open pseudo class.
+            </summary>
+        </member>
         <member name="F:AngleSharp.Css.PseudoClassNames.PlaceholderShown">
             <summary>
             The placeholder-shown pseudo class.
@@ -12899,6 +12954,21 @@
         <member name="F:AngleSharp.Css.PseudoElementNames.Content">
             <summary>
             The content pseudo element.
+            </summary>
+        </member>
+        <member name="F:AngleSharp.Css.PseudoElementNames.Checkmark">
+            <summary>
+            The checkmark pseudo element.
+            </summary>
+        </member>
+        <member name="F:AngleSharp.Css.PseudoElementNames.PickerIcon">
+            <summary>
+            The picker-icon pseudo element.
+            </summary>
+        </member>
+        <member name="F:AngleSharp.Css.PseudoElementNames.Picker">
+            <summary>
+            The picker pseudo element function.
             </summary>
         </member>
         <member name="F:AngleSharp.Css.PseudoElementNames.Separator">
@@ -14104,6 +14174,42 @@
             Loading is complete.
             </summary>
         </member>
+        <member name="T:AngleSharp.Dom.DomElementExtensions">
+            <summary>
+            Element extensions exposed to DOM.
+            </summary>
+        </member>
+        <member name="M:AngleSharp.Dom.DomElementExtensions.GetAttributeNode(AngleSharp.Dom.IElement,System.String)">
+            <summary>
+            Returns the named attribute on the specified element.
+            </summary>
+            <param name="element">
+            Current element
+            </param>
+            <param name="name">
+            The name of the attribute you want to get.
+            </param>
+            <returns>
+            Named attribute or null if it doesn't exist.
+            </returns>
+        </member>
+        <member name="M:AngleSharp.Dom.DomElementExtensions.GetAttributeNode(AngleSharp.Dom.IElement,System.String,System.String)">
+            <summary>
+            Returns the named attribute on the specified element.
+            </summary>
+            <param name="element">
+            Current element
+            </param>
+            <param name="namespaceUri">
+            A string specifying the namespace of the attribute.
+            </param>
+            <param name="localName">
+            The name of the attribute you want to get.
+            </param>
+            <returns>
+            Named attribute or null if it doesn't exist.
+            </returns>
+        </member>
         <member name="T:AngleSharp.Dom.DomError">
             <summary>
             A collection of official DOM error codes.
@@ -14407,6 +14513,13 @@
             <param name="element">The element to check.</param>
             <param name="name">The pseudo element's name.</param>
             <returns>True if the element is a pseudo element, otherwise false.</returns>
+        </member>
+        <member name="M:AngleSharp.Dom.ElementExtensions.IsOpen(AngleSharp.Dom.IElement)">
+            <summary>
+            Checks if the element is currently open.
+            </summary>
+            <param name="element">The element to check.</param>
+            <returns>True if the element is currently open, otherwise false.</returns>
         </member>
         <member name="M:AngleSharp.Dom.ElementExtensions.IsChecked(AngleSharp.Dom.IElement)">
             <summary>
@@ -21575,6 +21688,16 @@
             <param name="selector">A selector object.</param>
             <param name="result">A reference to the list where to store the results.</param>
         </member>
+        <member name="M:AngleSharp.Dom.QueryExtensions.QuerySelectorAll``1(``0,AngleSharp.Css.Dom.ISelector,AngleSharp.Dom.IElement,System.Collections.Generic.List{AngleSharp.Dom.IElement})">
+            <summary>
+            Returns a list of the elements within the document (using depth-first pre-order traversal
+            of the document's nodes) that match the specified group of selectors.
+            </summary>
+            <param name="elements">The elements to take as source.</param>
+            <param name="selector">A selector object.</param>
+            <param name="scope">The optional scope element.</param>
+            <param name="result">A reference to the list where to store the results.</param>
+        </member>
         <member name="M:AngleSharp.Dom.QueryExtensions.Contains(AngleSharp.Dom.ITokenList,System.String[])">
             <summary>
             Returns true if the underlying string contains all of the tokens, otherwise false.
@@ -22233,6 +22356,11 @@
             </summary>
         </member>
         <member name="F:AngleSharp.Dom.TagNames.Select">
+            <summary>
+            The select tag.
+            </summary>
+        </member>
+        <member name="F:AngleSharp.Dom.TagNames.SelectedContent">
             <summary>
             The select tag.
             </summary>
@@ -24390,6 +24518,12 @@
             Creates a new cookie service for non-persistent cookies.
             </summary>
         </member>
+        <member name="M:AngleSharp.Io.MemoryCookieProvider.#ctor(System.Net.CookieContainer)">
+            <summary>
+            Creates a new cookie service with a specific <see cref="T:System.Net.CookieContainer"/>.
+            </summary>
+            <param name="container">The cookie container to associate with this cookie service.</param>
+        </member>
         <member name="P:AngleSharp.Io.MemoryCookieProvider.Container">
             <summary>
             Gets the associated cookie container.
@@ -26047,6 +26181,11 @@
             Represents the foreign object element of the SVG DOM.
             </summary>
         </member>
+        <member name="T:AngleSharp.Svg.Dom.SvgStyleElement">
+            <summary>
+            Represents the SVG style element.
+            </summary>
+        </member>
         <member name="T:AngleSharp.Svg.Dom.SvgSvgElement">
             <summary>
             Represents the svg element of the SVG DOM.
@@ -26076,6 +26215,26 @@
         <member name="T:AngleSharp.Svg.Dom.ISvgForeignObjectElement">
             <summary>
             Represents the foreignobject SVG element.
+            </summary>
+        </member>
+        <member name="T:AngleSharp.Svg.Dom.ISvgStyleElement">
+            <summary>
+            Represents a style SVG element.
+            </summary>
+        </member>
+        <member name="P:AngleSharp.Svg.Dom.ISvgStyleElement.IsDisabled">
+            <summary>
+            Gets or sets if the style is enabled or disabled.
+            </summary>
+        </member>
+        <member name="P:AngleSharp.Svg.Dom.ISvgStyleElement.Media">
+            <summary>
+            Gets or sets the use with one or more target media.
+            </summary>
+        </member>
+        <member name="P:AngleSharp.Svg.Dom.ISvgStyleElement.Type">
+            <summary>
+            Gets or sets the content type of the style sheet language.
             </summary>
         </member>
         <member name="T:AngleSharp.Svg.Dom.ISvgSvgElement">
@@ -26117,6 +26276,11 @@
         </member>
         <member name="P:AngleSharp.Text.CharArrayTextSource.Text">
             <ihneritdoc />
+        </member>
+        <member name="P:AngleSharp.Text.CharArrayTextSource.Array">
+            <summary>
+            Gets the underlying character array.
+            </summary>
         </member>
         <member name="P:AngleSharp.Text.CharArrayTextSource.Item(System.Int32)">
             <ihneritdoc />
@@ -26459,6 +26623,11 @@
         </member>
         <member name="P:AngleSharp.Text.ReadOnlyMemoryTextSource.Text">
             <ihneritdoc />
+        </member>
+        <member name="P:AngleSharp.Text.ReadOnlyMemoryTextSource.Memory">
+            <summary>
+            Gets the underlying memory buffer.
+            </summary>
         </member>
         <member name="P:AngleSharp.Text.ReadOnlyMemoryTextSource.Item(System.Int32)">
             <ihneritdoc />
