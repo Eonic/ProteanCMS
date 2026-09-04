@@ -9818,7 +9818,7 @@ namespace Protean
             }
 
 
-            public string CreateLibraryImages(int savedId, string cRelatedLibraryImage, string cSkipAttribute, string cRelatedImageType = "")
+            public string CreateLibraryImages(long savedId, string cRelatedLibraryImage, string cSkipAttribute, string cRelatedImageType = "")
             {
                 try
                 {
@@ -11800,7 +11800,7 @@ namespace Protean
                         }
                         else
                         {
-                            cSubquerySQL = $"SELECT DISTINCT c.nContentKey AS id FROM tblContent c INNER JOIN tblContentLocation l ON c.nContentKey = l.nContentId WHERE ({sWhere}) AND NOT(c.nContentKey IN (0,{nIgnoreID})) AND l.nStructId IN ({cLocations})  UNION SELECT DISTINCT child.nContentKey AS id FROM tblContent parent INNER JOIN tblContentLocation l  ON parent.nContentKey = l.nContentId INNER JOIN tblContentRelation cr ON parent.nContentKey = cr.nContentParentId INNER JOIN tblContent child ON child.nContentKey = cr.nContentChildId WHERE ({sWhere.Replace("cContentSchemaName", "child.cContentSchemaName")}) AND NOT(child.nContentKey IN (0,{nIgnoreID})) AND l.nStructId IN ({cLocations})";
+                            cSubquerySQL = $"SELECT DISTINCT c.nContentKey AS id FROM tblContent c INNER JOIN tblContentLocation l ON c.nContentKey = l.nContentId WHERE ({sWhere}) AND NOT(c.nContentKey IN (0,{nIgnoreID})) AND l.nStructId IN ({cLocations})  UNION SELECT DISTINCT child.nContentKey AS id FROM tblContent parent INNER JOIN tblContentLocation l  ON parent.nContentKey = l.nContentId INNER JOIN tblContentRelation cr ON parent.nContentKey = cr.nContentParentId INNER JOIN tblContent child ON child.nContentKey = cr.nContentChildId INNER JOIN tblAudit pa ON pa.nAuditKey = parent.nAuditId AND pa.nStatus = 1 WHERE ({sWhere.Replace("cContentSchemaName", "child.cContentSchemaName")}) AND NOT(child.nContentKey IN (0,{nIgnoreID})) AND l.nStructId IN ({cLocations})";
 
                         }
 

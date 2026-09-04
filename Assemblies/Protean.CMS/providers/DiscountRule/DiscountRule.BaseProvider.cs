@@ -215,7 +215,22 @@ namespace Protean.Providers
                         foreach (XmlNode item in cartItems)
                         {
                             string parentId = item.SelectSingleNode("nParentId")?.InnerText ?? "0";
-                            if (parentId == "0") eligibleItems.Add(item);
+                            string discountContentId = discountEl.GetAttribute("nContentId");
+                            string itemContentId = item.Attributes["contentId"]?.Value ?? "";
+                            if (parentId == "0")
+                            {
+                                if (!string.IsNullOrEmpty(discountContentId))
+                                {
+                                    if (itemContentId == discountContentId)
+                                    {
+                                        eligibleItems.Add(item);
+                                    }
+                                }
+                                else
+                                {
+                                    eligibleItems.Add(item);
+                                }
+                            }
                         }
                     }
                 }

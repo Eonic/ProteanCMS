@@ -493,7 +493,7 @@ namespace Protean
                                         // then use setObjectInstance, get the new id and related to the savedId setcontentrelation(newid,savedid).
                                         if (!string.IsNullOrEmpty(oRelatedLibraryImages.GetAttribute("skipFirst")) & !string.IsNullOrEmpty(oRelatedLibraryImages.GetAttribute("type")))
                                         {
-                                            CreateLibraryImages((int)savedId, oRelatedLibraryImages.InnerText, oRelatedLibraryImages.GetAttribute("skipFirst"), oRelatedLibraryImages.GetAttribute("type"));
+                                            CreateLibraryImages((long)savedId, oRelatedLibraryImages.InnerText, oRelatedLibraryImages.GetAttribute("skipFirst"), oRelatedLibraryImages.GetAttribute("type"));
                                         }
 
                                     }

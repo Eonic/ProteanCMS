@@ -725,7 +725,7 @@ namespace Protean
                     {
                         if (myApi.mbAdminMode)
                         {
-                            JsonResult = myWeb.moDbHelper.CreateLibraryImages(Convert.ToInt16(nContentId), cRelatedLibraryImages, cSkipAttribute, "LibraryImage");
+                            JsonResult = myWeb.moDbHelper.CreateLibraryImages(Convert.ToInt64(nContentId), cRelatedLibraryImages, cSkipAttribute, "LibraryImage");
                         }
 
                         return JsonResult;
