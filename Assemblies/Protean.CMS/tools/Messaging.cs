@@ -144,6 +144,7 @@ namespace Protean
         public void addAttachment(string fileLocation, bool deleteAfterAttach = false)
         {
             string cProcessInfo = "emailCart";
+
             try
             {
                 if (!string.IsNullOrEmpty(fileLocation))
@@ -151,7 +152,7 @@ namespace Protean
                     // check if filesystem path allready supplied
                     if (!fileLocation.Contains(@":\"))
                     {
-                        fileLocation = goServer.MapPath("/") + fileLocation.Replace("/","\\");
+                        fileLocation = goServer.MapPath("/") + @"..\imports\" + fileLocation.Replace("/","\\");
                     }
                     fileLocation = fileLocation.Replace(@"\\", @"\");
 
@@ -518,7 +519,7 @@ namespace Protean
 
                 // is there's no HTML, set is as plain text
                 int nHtmlPos = messagePlainText.LastIndexOf("<html", messagePlainText.Length - 1);
-                if (nHtmlPos <= 0)
+                if (nHtmlPos < 0)
                 {
                     mbIsBodyHtml = false;
                 }
@@ -810,7 +811,7 @@ namespace Protean
                         oMailn.Headers.Set("Content-Type", "text/plain");
                         // moCtx.Response.ContentType = "text/plain"
 
-                        if (messageHtml.LastIndexOf("<html", messageHtml.Length - 1) > 0)
+                        if (messageHtml.LastIndexOf("<html", messageHtml.Length - 1) >= 0)
                         {
                             var htmlView = AlternateView.CreateAlternateViewFromString(messageHtml, new System.Net.Mime.ContentType("text/html; charset=UTF-8"));
                             oMailn.AlternateViews.Add(htmlView);
@@ -1000,14 +1001,24 @@ namespace Protean
                             string cActivityDetail = "";
                             try
                             {
-                                XmlElement oBodyElmt = (XmlElement)oEmailXmlDoc.SelectSingleNode("html/body");
-                                if (!string.IsNullOrEmpty(oBodyElmt.InnerText))
+                                XmlElement oBodyElmt = null;
+                                if (oEmailXmlDoc != null)
                                 {
-                                    cActivityDetail = oBodyElmt.InnerText;
+                                    oBodyElmt = (XmlElement)oEmailXmlDoc.SelectSingleNode("html/body");
+
+                                    if (!string.IsNullOrEmpty(oBodyElmt.InnerText))
+                                    {
+                                        cActivityDetail = oBodyElmt.InnerText;
+                                    }
+                                    else
+                                    {
+                                        cActivityDetail = oMailn.Body;
+                                    }
                                 }
                                 else
                                 {
                                     cActivityDetail = oMailn.Body;
+
                                 }
                             }
                             catch (Exception)

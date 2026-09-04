@@ -3,11 +3,11 @@
   "WorkspaceRootPath": "D:\\HostingSpaces\\ProteanCMS\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Protean.Providers.Messaging.CampaignMonitor||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
+      "AbsoluteMoniker": "D:0:0:{82A71EA1-4DD3-4481-AEAE-33925F40EE7C}|Assemblies\\ProteanCMS.Installer.Actions\\ProteanCMS.Installer.Actions.vbproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\proteancms.installer.actions\\customaction.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
+      "RelativeMoniker": "D:0:0:{82A71EA1-4DD3-4481-AEAE-33925F40EE7C}|Assemblies\\ProteanCMS.Installer.Actions\\ProteanCMS.Installer.Actions.vbproj|solutionrelative:assemblies\\proteancms.installer.actions\\customaction.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{82A71EA1-4DD3-4481-AEAE-33925F40EE7C}|Assemblies\\ProteanCMS.Installer.Actions\\ProteanCMS.Installer.Actions.vbproj|d:\\hostingspaces\\proteancms\\assemblies\\proteancms.installer.actions\\customaction.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}",
-      "RelativeMoniker": "D:0:0:{82A71EA1-4DD3-4481-AEAE-33925F40EE7C}|Assemblies\\ProteanCMS.Installer.Actions\\ProteanCMS.Installer.Actions.vbproj|solutionrelative:assemblies\\proteancms.installer.actions\\customaction.vb||{2C015C70-C72C-11D0-88C3-00A0C9110049}"
+      "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Protean.Providers.Messaging.CampaignMonitor||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CB4BD400-FB8D-4B71-858F-AE4DD4E53489}|GACInstaller\\ProteanCMS.Installer.wixproj|D:\\HostingSpaces\\ProteanCMS\\GACInstaller\\Product.wxs||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
@@ -26,9 +26,6 @@
     },
     {
       "AbsoluteMoniker": "D:0:0:{0E651D1D-2D1E-0FC9-2636-FE58F78936C0}|..\\ProteanCMS Addons\\Providers\\Messaging\\CampaignMonitor\\Protean.Providers.Messaging.CampaignMonitor.csproj|d:\\hostingspaces\\proteancms addons\\providers\\messaging\\campaignmonitor\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|d:\\hostingspaces\\proteancms\\assemblies\\protean.cms\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
     }
   ],
   "DocumentGroupContainers": [
@@ -37,7 +34,7 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 682,
+          "DockedWidth": 1172,
           "SelectedChildIndex": 86,
           "Children": [
             {
@@ -365,6 +362,10 @@
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 4,
               "Title": "Protean.CMS",
@@ -373,8 +374,7 @@
               "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\Protean.CMS.csproj",
               "RelativeToolTip": "Assemblies\\Protean.CMS\\Protean.CMS.csproj",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-09-03T08:00:48.429Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T08:00:48.429Z"
             },
             {
               "$type": "Document",
@@ -386,8 +386,7 @@
               "RelativeToolTip": "Assemblies\\Protean.Tools\\Properties\\AssemblyInfo.cs",
               "ViewState": "AgIAABoAAAAAnJmZmZkOwCUAAAArAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-09-03T08:00:10.695Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T08:00:10.695Z"
             },
             {
               "$type": "Document",
@@ -399,8 +398,7 @@
               "RelativeToolTip": "GACInstaller\\Product.wxs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
-              "WhenOpened": "2026-09-03T07:59:46.832Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-03T07:59:46.832Z"
             },
             {
               "$type": "Document",
@@ -412,25 +410,24 @@
               "RelativeToolTip": "Assemblies\\Protean.CMS\\packages.config",
               "ViewState": "AgIAACgAAAAAAAAAAAAhwAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
-              "WhenOpened": "2026-09-02T14:39:11.199Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-09-02T14:39:11.199Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "CustomAction.vb",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS.Installer.Actions\\CustomAction.vb",
               "RelativeDocumentMoniker": "Assemblies\\ProteanCMS.Installer.Actions\\CustomAction.vb",
               "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\ProteanCMS.Installer.Actions\\CustomAction.vb",
               "RelativeToolTip": "Assemblies\\ProteanCMS.Installer.Actions\\CustomAction.vb",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAA3AAAAAAAAAA==",
+              "ViewState": "AgIAAKsBAAAA2JmZmZnRv3QBAAC3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003361|",
               "WhenOpened": "2026-09-02T14:04:37.571Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "Protean.Providers.Messaging.CampaignMonitor",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS Addons\\Providers\\Messaging\\CampaignMonitor\\Protean.Providers.Messaging.CampaignMonitor.csproj",
               "RelativeDocumentMoniker": "..\\ProteanCMS Addons\\Providers\\Messaging\\CampaignMonitor\\Protean.Providers.Messaging.CampaignMonitor.csproj",
@@ -443,7 +440,7 @@
           ]
         },
         {
-          "DockedWidth": 76,
+          "DockedWidth": 111,
           "SelectedChildIndex": -1,
           "Children": [
             {
@@ -480,11 +477,11 @@
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+              "Name": "ST:1:0:{90243340-bd7a-11d0-93ef-00a0c90f2734}"
             },
             {
               "$type": "Bookmark",
-              "Name": "ST:1:0:{90243340-bd7a-11d0-93ef-00a0c90f2734}"
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             }
           ]
         }

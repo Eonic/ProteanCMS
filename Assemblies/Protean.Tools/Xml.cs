@@ -216,6 +216,32 @@ namespace Protean.Tools
                     shtml = shtml.Replace(" Xml:lang=\"\"", "");
                     shtml = shtml.Replace(" xml:lang=\"\"", "");
 
+                    // HTML output (xsl:output method="html") does not self-close void elements
+                    // (e.g. <meta>, <br>, <img>), which makes the markup invalid XML. Auto-close
+                    // them here so LoadXml doesn't throw on unclosed tags.
+                    string regexOfVoidElements = @"<(area|base|br|col|embed|hr|img|input|link|meta|param|source|track|wbr)((?:[^>""']|""[^""]*""|'[^']*')*?)\s*(?<!/)>";
+                    shtml = Regex.Replace(shtml, regexOfVoidElements, "<$1$2 />", RegexOptions.IgnoreCase);
+
+                    // XML only recognizes &amp; &lt; &gt; &apos; &quot; as entities, but HTML output
+                    // uses named entities such as &nbsp;. Convert any remaining named entity (that
+                    // isn't already one of the valid XML ones or a numeric reference) to its numeric
+                    // form so LoadXml doesn't reject it as an undeclared entity.
+                    shtml = Regex.Replace(shtml, @"&(?!amp;|lt;|gt;|apos;|quot;|#\d+;|#x[0-9a-fA-F]+;)([a-zA-Z][a-zA-Z0-9]*);", m =>
+                    {
+                        string entityName = m.Groups[1].Value;
+                        string original = "&" + entityName + ";";
+                        string decoded = System.Net.WebUtility.HtmlDecode(original);
+
+                        if (decoded.Length == 0 || decoded == original)
+                            return m.Value;
+
+                        var sb = new StringBuilder();
+                        foreach (char c in decoded)
+                            sb.Append("&#").Append((int)c).Append(';');
+
+                        return sb.ToString();
+                    });
+
                     oXmlDoc.LoadXml(shtml);
 
                     return oXmlDoc;

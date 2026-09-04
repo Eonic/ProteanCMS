@@ -384,6 +384,63 @@ Public Class CustomActions
                 oHandler.SetAttribute("type", "BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973c344c93aac60d")
                 oHandler.SetAttribute("validate", "True")
 
+                'IIS 7+ Integrated Pipeline dispatches requests based on system.webServer/handlers,
+                'not system.web/httpHandlers, so the handlers must be registered here too or the
+                'asset handlers (Less/Sass/Scss) will never actually be invoked under Integrated mode.
+                Dim owebServerHandlers As XmlElement = webConfig.SelectSingleNode("/configuration/system.webServer/handlers")
+                If owebServerHandlers Is Nothing Then
+                    Dim osystemWebServer As XmlElement = webConfig.SelectSingleNode("/configuration/system.webServer")
+                    If osystemWebServer Is Nothing Then
+                        osystemWebServer = webConfig.CreateElement("system.webServer")
+                        webConfig.DocumentElement.AppendChild(osystemWebServer)
+                    End If
+                    owebServerHandlers = webConfig.CreateElement("handlers")
+                    osystemWebServer.AppendChild(owebServerHandlers)
+                End If
+
+                Dim oWsHandler As XmlElement
+                If owebServerHandlers.SelectSingleNode("add[@name='LessAssetHandler']") Is Nothing Then
+                    oWsHandler = webConfig.CreateElement("add")
+                    owebServerHandlers.AppendChild(oWsHandler)
+                Else
+                    oWsHandler = owebServerHandlers.SelectSingleNode("add[@name='LessAssetHandler']")
+                End If
+                oWsHandler.SetAttribute("name", "LessAssetHandler")
+                oWsHandler.SetAttribute("path", "*.less")
+                oWsHandler.SetAttribute("verb", "GET")
+                oWsHandler.SetAttribute("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973c344c93aac60d")
+                oWsHandler.SetAttribute("resourceType", "Unspecified")
+                oWsHandler.SetAttribute("requireAccess", "Script")
+                oWsHandler.SetAttribute("preCondition", "integratedMode")
+
+                If owebServerHandlers.SelectSingleNode("add[@name='SassAssetHandler']") Is Nothing Then
+                    oWsHandler = webConfig.CreateElement("add")
+                    owebServerHandlers.AppendChild(oWsHandler)
+                Else
+                    oWsHandler = owebServerHandlers.SelectSingleNode("add[@name='SassAssetHandler']")
+                End If
+                oWsHandler.SetAttribute("name", "SassAssetHandler")
+                oWsHandler.SetAttribute("path", "*.sass")
+                oWsHandler.SetAttribute("verb", "GET")
+                oWsHandler.SetAttribute("type", "BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973c344c93aac60d")
+                oWsHandler.SetAttribute("resourceType", "Unspecified")
+                oWsHandler.SetAttribute("requireAccess", "Script")
+                oWsHandler.SetAttribute("preCondition", "integratedMode")
+
+                If owebServerHandlers.SelectSingleNode("add[@name='ScssAssetHandler']") Is Nothing Then
+                    oWsHandler = webConfig.CreateElement("add")
+                    owebServerHandlers.AppendChild(oWsHandler)
+                Else
+                    oWsHandler = owebServerHandlers.SelectSingleNode("add[@name='ScssAssetHandler']")
+                End If
+                oWsHandler.SetAttribute("name", "ScssAssetHandler")
+                oWsHandler.SetAttribute("path", "*.scss")
+                oWsHandler.SetAttribute("verb", "GET")
+                oWsHandler.SetAttribute("type", "BundleTransformer.SassAndScss.HttpHandlers.SassAndScssAssetHandler, BundleTransformer.SassAndScss, Version=" & bundleSassAssemblyVersion & ", Culture=neutral, PublicKeyToken=973c344c93aac60d")
+                oWsHandler.SetAttribute("resourceType", "Unspecified")
+                oWsHandler.SetAttribute("requireAccess", "Script")
+                oWsHandler.SetAttribute("preCondition", "integratedMode")
+
                 'add Bundle Transformer config
                 'quick fiddle to avoid namespace
                 Dim obt As XmlElement = webConfig.SelectSingleNode("/configuration/*[local-name() = 'bundleTransformer']")
@@ -561,59 +618,6 @@ Public Class CustomActions
             Catch ex As Exception
                 'do nuffing
             End Try
-            'Add the AssetHandler for .Less
-            Dim sm As New Microsoft.Web.Administration.ServerManager
-
-            '    Dim appHostConfig As Microsoft.Web.Administration.Configuration = sm.GetApplicationHostConfiguration()
-            'get default config section
-            Dim webDefaultLocationConfig As Microsoft.Web.Administration.Configuration = sm.GetWebConfiguration("")
-
-            If Not webDefaultLocationConfig Is Nothing Then
-
-                'Dim handlerSection As Microsoft.Web.Administration.ConfigurationElement = webDefaultLocationConfig.GetSection("system.webServer/handlers")
-
-                'If handlerSection Is Nothing Then
-
-                '    Dim handlerCollection As Microsoft.Web.Administration.ConfigurationElementCollection = handlerSection.GetCollection()
-
-                '    Dim handlerElmt As Microsoft.Web.Administration.ConfigurationElement
-                '    Dim lessHandlerElmt As Microsoft.Web.Administration.ConfigurationElement = Nothing
-
-                '    For Each handlerElmt In handlerCollection
-                '        If handlerElmt.GetAttribute("name").Value = "LessAssetHandler" Then
-                '            lessHandlerElmt = handlerElmt
-                '        End If
-                '    Next
-                '    If lessHandlerElmt Is Nothing Then
-                '        lessHandlerElmt = handlerCollection.CreateElement("add")
-                '        lessHandlerElmt.SetAttributeValue("name", "LessAssetHandler")
-                '        lessHandlerElmt.SetAttributeValue("path", "*.less")
-                '        lessHandlerElmt.SetAttributeValue("verb", "GET")
-                '        lessHandlerElmt.SetAttributeValue("resourceType", "Unspecified")
-                '        lessHandlerElmt.SetAttributeValue("requireAccess", "Script")
-                '        lessHandlerElmt.SetAttributeValue("preCondition", "integratedMode")
-                '        handlerCollection.AddAt(0, lessHandlerElmt)
-                '    End If
-
-                '    lessHandlerElmt.SetAttributeValue("type", "BundleTransformer.Less.HttpHandlers.LessAssetHandler, BundleTransformer.Less, Version=" & bundleLessAssemblyVersion & ", Culture=neutral, PublicKeyToken=973C344C93AAC60D")
-
-                '    sm.CommitChanges()
-                '    sm = Nothing
-                'Else
-                '    Try
-                '        System.Diagnostics.Process.Start("https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=system.webServer/handlers-is-missing")
-                '    Catch ex As Exception
-                '        'do nuffing
-                '    End Try
-                'End If
-
-            Else
-                Try
-                    System.Diagnostics.Process.Start("https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS/setting-up-less?error=cannot-get-appHostConfig")
-                Catch ex As Exception
-                    'do nuffing
-                End Try
-            End If
             Try
                 System.Diagnostics.Process.Start("https://www.ProteanCMS.com/Support/Web-Designers-Guide/Installing-ProteanCMS")
             Catch ex As Exception

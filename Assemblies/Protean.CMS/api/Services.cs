@@ -366,6 +366,7 @@ namespace Protean
                 //string cleanPathName = fsh.UploadRequest(moCtx, cAttachmentFilePath);
                 var oMsg = new Messaging(ref myWeb.msException);
 
+                
 
                 if (cAttachmentFilePath != "")
                 {

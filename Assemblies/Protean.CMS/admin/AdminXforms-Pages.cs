@@ -570,7 +570,7 @@ namespace Protean
                                 // Else
                                 // nCopyType = False
                                 // End If
-                                moDbHelper.copyPageContent(pgid, nNewPgid, Convert.ToBoolean(goRequest["nCopyType"]), (Cms.dbHelper.CopyContentType)Convert.ToInt16(goRequest["nCopyContent"]));
+                                moDbHelper.copyPageContent(pgid, nNewPgid, Convert.ToBoolean(Convert.ToInt16(goRequest["nCopyType"])), (Cms.dbHelper.CopyContentType)Convert.ToInt16(goRequest["nCopyContent"]));
                             }
 
                         }
