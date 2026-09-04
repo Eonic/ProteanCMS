@@ -9826,7 +9826,7 @@ namespace Protean
             }
 
 
-            public string CreateLibraryImages(int savedId, string cRelatedLibraryImage, string cSkipAttribute, string cRelatedImageType = "")
+            public string CreateLibraryImages(long savedId, string cRelatedLibraryImage, string cSkipAttribute, string cRelatedImageType = "")
             {
                 try
                 {
