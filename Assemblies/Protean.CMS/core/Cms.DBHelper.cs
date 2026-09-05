@@ -1617,6 +1617,7 @@ namespace Protean
                         // get the last in line
                         sPath = aPath[aPath.Length - 1];
                         ItemIdPath = aPath.Length > 1 ? aPath[aPath.Length - 2] : "";
+                        
                         if (ItemIdPath.EndsWith("-"))
                         {
                             nArtId = Convert.ToInt64(ItemIdPath.Replace("-", ""));
@@ -1634,6 +1635,7 @@ namespace Protean
                         case "ContentType/ContentName":
                             {
 
+                                
                                 string[] prefixs = myWeb.moConfig["DetailPrefix"].Split(',');
                                 string thisPrefix = "";
                                 string thisContentType = "";
@@ -1832,7 +1834,12 @@ namespace Protean
                                             ItemIdPath = nArtId + "-/";
                                         }
 
-                                        redirectUrl += $"/{thisPrefix}/{ItemIdPath}{sPath.ToString().Replace(" ", "-").Trim('-')}/";
+                                        if (ItemIdPath == thisPrefix) {
+                                            redirectUrl += $"/{thisPrefix}/{sPath.ToString().Replace(" ", "-").Trim('-')}/";
+                                        }
+                                        else {
+                                            redirectUrl += $"/{thisPrefix}/{ItemIdPath}{sPath.ToString().Replace(" ", "-").Trim('-')}/";
+                                        }
 
                                         char[] charsToTrim = { '/' };
                                         myWeb.mcOriginalURL = myWeb.mcOriginalURL.TrimEnd(charsToTrim);

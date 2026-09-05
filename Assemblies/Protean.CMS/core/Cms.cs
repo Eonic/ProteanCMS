@@ -3608,6 +3608,40 @@ namespace Protean
                                                 if (gbVersionControl)
                                                     mnUserPagePermission = Cms.dbHelper.PermissionLevel.AddUpdateOwn;
 
+                                                // Sending Alert Emails to the user and admin if the content is successfully submitted.
+
+                                                Messaging msg = new Messaging();
+
+                                                foreach (XmlNode emailNode in moAdXfm.Instance.SelectNodes("ConfirmEmail")) {
+
+                                                    string XsltPath = emailNode.SelectSingleNode("EmailXslt")?.InnerText;
+                                                    string fromName = emailNode.SelectSingleNode("FromName")?.InnerText;
+                                                    string fromEmail = emailNode.SelectSingleNode("FromEmail")?.InnerText;
+                                                    string toName = emailNode.SelectSingleNode("ToName")?.InnerText;
+                                                    string toEmail = emailNode.SelectSingleNode("ToEmail")?.InnerText;
+                                                    string ccEmail = emailNode.SelectSingleNode("CcEmail")?.InnerText;
+                                                    string bccEmail = emailNode.SelectSingleNode("BccEmail")?.InnerText;
+                                                    string SubjectLine = emailNode.SelectSingleNode("SubjectLine")?.InnerText;
+                                                    try
+                                                    {
+                                                        XmlElement contentXml = moDbHelper.GetContentDetailXml(Convert.ToInt32(moRequest["contentParId"]));
+                                                        if (contentXml != null) {
+                                                            moAdXfm.Instance.AppendChild(contentXml);
+                                                        }
+                                                        Cms.dbHelper argodbHelper = moDbHelper;
+
+                                                        msg.emailer(moAdXfm.Instance, XsltPath, fromName, fromEmail, toEmail, SubjectLine, ref argodbHelper, null, null, toName, ccEmail, bccEmail);
+
+                                                    }
+                                                    catch (Exception ex)
+                                                    {
+                                                        OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetAjaxXML", ex, "Error mapping xslt path"));
+                                                    }
+                                                   
+
+                                                }
+                                                msg = null;
+
                                                 if (!string.IsNullOrEmpty(moRequest["showParent"]))
                                                 {
                                                     BuildPageContentDetailXml(oPageElmt, Convert.ToInt64(moRequest["contentParId"]));
