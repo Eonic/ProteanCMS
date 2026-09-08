@@ -1670,7 +1670,145 @@ namespace Protean
             }
 
         }
+        public static string tidyXhtmlDoc(string shtml, bool bReturnNumbericEntities = false, bool bEncloseText = true, string removeTags = "")
+        {
 
+            // PerfMon.Log("Web", "tidyXhtmlFrag")
+            // string sProcessInfo = "tidyXhtmlFrag";
+            string sTidyXhtml = "";
+            int crResult = 0;
+            bool bRetryWithEscapedTags = false;
+
+            if (!(removeTags == ""))
+                shtml = removeTagFromXml(shtml, removeTags);
+
+            string originalHtml = shtml; // Keep original for retry
+            TidyManaged.Document oTdyManaged;
+
+            try
+            {
+                // clear some nasties I haven't allready captured.
+                shtml = shtml.Replace("&amp;nbsp;", "&#160;");
+                shtml = Regex.Replace(shtml, "<\\?xml.*\\?>", "", RegexOptions.IgnoreCase);
+
+                //temp fix for dirty VMH data
+                shtml = shtml.Replace(":=", "=");
+
+            RetryWithEscaping:
+
+                oTdyManaged = TidyManaged.Document.FromString(shtml);
+                oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.No;
+                oTdyManaged.MakeClean = true;
+                oTdyManaged.DropFontTags = true;
+                //oTdyManaged.ErrorBuffer = true;
+                oTdyManaged.ShowWarnings = true;
+                oTdyManaged.OutputXhtml = true;
+                oTdyManaged.MakeBare = true;//removed word tags
+                oTdyManaged.CleanWord2000 = true;//removed word tags
+
+                // oTdyManaged.InputCharacterEncoding = TidyManaged.EncodingType.Latin1;
+
+                oTdyManaged.CharacterEncoding = TidyManaged.EncodingType.Utf8;
+
+
+
+                if (bReturnNumbericEntities)
+                {
+                    oTdyManaged.OutputNumericEntities = true;
+                }
+
+                // CleanAndRepair returns status: <0 = error, 0 = no warnings/errors, >0 = warnings
+                crResult = oTdyManaged.CleanAndRepair();
+
+                try
+                {
+                    // Only call Save if CleanAndRepair succeeded (result >= 0)
+                    if (crResult >= 0)
+                    {
+                        // Some versions of TidyManaged have issues with the internal state
+                        try
+                        {
+                            sTidyXhtml = oTdyManaged.Save();
+                        }
+                        catch (InvalidOperationException ioEx)
+                        {
+                            // TidyManaged internal state issue - try to extract content using the underlying buffer
+                            // This happens when CleanAndRepair succeeds but Save() still thinks it hasn't been called
+                            try
+                            {
+                                // Try to write to a memory stream instead
+                                using (var memStream = new System.IO.MemoryStream())
+                                {
+                                    oTdyManaged.Save(memStream);
+                                    memStream.Position = 0;
+                                    using (var reader = new System.IO.StreamReader(memStream, System.Text.Encoding.UTF8))
+                                    {
+                                        sTidyXhtml = reader.ReadToEnd();
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                // If we haven't tried escaping unknown tags yet, do that now
+                                if (!bRetryWithEscapedTags)
+                                {
+                                    bRetryWithEscapedTags = true;
+                                    oTdyManaged.Dispose();
+                                    // Escape unknown/non-standard HTML tags that might be causing issues
+                                    shtml = EscapeUnknownHtmlTags(originalHtml);
+                                    goto RetryWithEscaping;
+                                }
+
+                                // If even that fails, return an error comment
+                                sTidyXhtml = "<!-- HTML Tidy Error: Unable to save cleaned document despite successful repair (code: " + crResult + "). Error: " + ioEx.Message.Replace("<", "&lt;").Replace(">", "&gt;") + " -->";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // CleanAndRepair failed - try with escaped tags if we haven't already
+                        if (!bRetryWithEscapedTags)
+                        {
+                            bRetryWithEscapedTags = true;
+                            oTdyManaged.Dispose();
+                            shtml = EscapeUnknownHtmlTags(originalHtml);
+                            goto RetryWithEscaping;
+                        }
+
+                        sTidyXhtml = "<!-- HTML Tidy Error: CleanAndRepair failed with code " + crResult + " -->";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Try with escaped tags if we haven't already
+                    if (!bRetryWithEscapedTags)
+                    {
+                        bRetryWithEscapedTags = true;
+                        oTdyManaged.Dispose();
+                        shtml = EscapeUnknownHtmlTags(originalHtml);
+                        goto RetryWithEscaping;
+                    }
+
+                    sTidyXhtml = "<!-- HTML Tidy Error: " + ex.Message.Replace("<", "&lt;").Replace(">", "&gt;") + " (Result code: " + crResult + ") -->";
+                }
+
+                oTdyManaged.Dispose();
+                oTdyManaged = null/* TODO Change to default(_) if this is not a reference type */;
+                // End Using
+
+                return sTidyXhtml;
+            }
+            catch (Exception ex)
+            {
+                // It is the desired behaviour for this to return nothing if not valid html don't turn this on apart from in development.            Return Nothing
+                return crResult + " - " + ex.Message + ex.StackTrace;
+            }
+            // Return Nothing
+            finally
+            {
+                sTidyXhtml = null;
+            }
+        }
         public static string tidyXhtmlFrag(string shtml, bool bReturnNumbericEntities = false, bool bEncloseText = true, string removeTags = "")
         {
 

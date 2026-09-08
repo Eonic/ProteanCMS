@@ -58,6 +58,7 @@ Public Class CustomActions
     Public Shared SelectHtmlToPDF As String = "25.2.0.0"
     Public Shared SystemDataOleDbVersion As String = "10.0.0.8"
     Public Shared SystemIOPackagingVersion As String = "8.0.0.1"
+    ' not yet Public Shared TidyNetStandard As String = "8.0.0.1"
     '  Public Shared SystemWebAdaptors As String = "2.0.0.0"
 
 

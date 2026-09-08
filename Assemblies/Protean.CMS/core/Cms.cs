@@ -3624,6 +3624,7 @@ namespace Protean
                                                     string SubjectLine = emailNode.SelectSingleNode("SubjectLine")?.InnerText;
                                                     try
                                                     {
+                                                        moAdXfm.Instance.SelectSingleNode("tblContent/nContentKey").InnerText = nContentId.ToString();
                                                         XmlElement contentXml = moDbHelper.GetContentDetailXml(Convert.ToInt32(moRequest["contentParId"]));
                                                         if (contentXml != null) {
                                                             moAdXfm.Instance.AppendChild(contentXml);

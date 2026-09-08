@@ -525,6 +525,8 @@ namespace Protean
                 }
 
                 // lets get the subjectline form the html title
+
+                messageHtml = stdTools.tidyXhtmlDoc(messageHtml, true);
                 var oEmailXmlDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
                 if (oEmailXmlDoc != null)
                 {
@@ -1453,6 +1455,8 @@ namespace Protean
                                 sWriter.Close();
                                 sWriter = null;
 
+
+                                sMessage = stdTools.tidyXhtmlDoc(sMessage, true);
                                 oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sMessage);
                             }
 
@@ -1838,6 +1842,7 @@ namespace Protean
                 // Lets get the title and override the one provided
                 var oXml = new XmlDocument();
 
+                sEmailBody = stdTools.tidyXhtmlDoc(sEmailBody, true);
                 oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sEmailBody);
                 if (oXml != null)
                 {
