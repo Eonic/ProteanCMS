@@ -21,10 +21,6 @@
       "AbsoluteMoniker": "D:0:0:{00000000-0000-0000-0000-000000000000}|\u003CSolution\u003E|Protean.CMS||{04B8AB82-A572-4FEF-95CE-5222444B6B64}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|D:\\HostingSpaces\\ProteanCMS\\assemblies\\protean.cms\\packages.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{B8C13866-2804-4975-83A4-4F76296248F5}|Assemblies\\Protean.CMS\\Protean.CMS.csproj|solutionrelative:assemblies\\protean.cms\\packages.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{0E651D1D-2D1E-0FC9-2636-FE58F78936C0}|..\\ProteanCMS Addons\\Providers\\Messaging\\CampaignMonitor\\Protean.Providers.Messaging.CampaignMonitor.csproj|d:\\hostingspaces\\proteancms addons\\providers\\messaging\\campaignmonitor\\||{B270807C-D8C6-49EB-8EBE-8E8D566637A1}|5e9a8ac2-4f34-4521-858f-4c248ba31532"
     }
   ],
@@ -35,7 +31,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 1172,
-          "SelectedChildIndex": 86,
+          "SelectedChildIndex": 85,
           "Children": [
             {
               "$type": "Bookmark",
@@ -399,18 +395,6 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAYAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
               "WhenOpened": "2026-09-03T07:59:46.832Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "packages.config",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\packages.config",
-              "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\packages.config",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\packages.config",
-              "RelativeToolTip": "Assemblies\\Protean.CMS\\packages.config",
-              "ViewState": "AgIAACgAAAAAAAAAAAAhwAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
-              "WhenOpened": "2026-09-02T14:39:11.199Z"
             },
             {
               "$type": "Document",
