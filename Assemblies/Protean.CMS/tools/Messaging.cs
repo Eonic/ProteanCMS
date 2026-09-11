@@ -526,7 +526,7 @@ namespace Protean
 
                 // lets get the subjectline form the html title
 
-                messageHtml = stdTools.tidyXhtmlDoc(messageHtml, true);
+                messageHtml = stdTools.tidyXhtmlEmailDoc(messageHtml, true);
                 var oEmailXmlDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
                 if (oEmailXmlDoc != null)
                 {
@@ -1456,7 +1456,7 @@ namespace Protean
                                 sWriter = null;
 
 
-                                sMessage = stdTools.tidyXhtmlDoc(sMessage, true);
+                                sMessage = stdTools.tidyXhtmlEmailDoc(sMessage, true);
                                 oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sMessage);
                             }
 
@@ -1746,7 +1746,7 @@ namespace Protean
                     oEmail = new MailMessage();
                     oEmail.IsBodyHtml = true;
 
-                    if ((goConfig["overrideFromEmail"]).ToLower() == "on")
+                    if (goConfig["overrideFromEmail"]?.ToLower() == "on")
                     {
                         oEmail.From = new MailAddress(goConfig["ServerSenderEmail"], cFromName);
                     }
@@ -1766,9 +1766,9 @@ namespace Protean
                     {
                         hostUrl = urlScheme + hostUrl;
                     }
-                    InlineResult preMailerResult = PreMailer.Net.PreMailer.MoveCssInline(Convert.ToString(new Uri(hostUrl)), Convert.ToBoolean(emailStructure["EmailBody"]));
-                    string sEmailBody = preMailerResult.Html;
 
+                    InlineResult preMailerResult = PreMailer.Net.PreMailer.MoveCssInline(new Uri(hostUrl), emailStructure["EmailBody"].ToString());
+                    string sEmailBody = preMailerResult.Html;
 
                     oEmail.Body = sEmailBody;
                     oEmail.To.Add(new MailAddress(cRepientMail.Trim()));
@@ -1842,7 +1842,7 @@ namespace Protean
                 // Lets get the title and override the one provided
                 var oXml = new XmlDocument();
 
-                sEmailBody = stdTools.tidyXhtmlDoc(sEmailBody, true);
+                sEmailBody = stdTools.tidyXhtmlEmailDoc(sEmailBody, true);
                 oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sEmailBody);
                 if (oXml != null)
                 {

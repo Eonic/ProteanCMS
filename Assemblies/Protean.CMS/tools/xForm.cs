@@ -1524,6 +1524,7 @@ namespace Protean
                                 // get our bind node
                                 foreach (XmlElement oBindNode in model.SelectNodes("descendant-or-self::bind[@id='" + sBind + "']"))
                                 {
+                                    sAttribute = "";
                                     oBindElmt = oBindNode;
                                     sDataType = oBindElmt.GetAttribute("type");
                                     string submittedValue = "" + goRequest[sRequest];
@@ -1538,6 +1539,7 @@ namespace Protean
                                             sAttribute = nodesetVal4.Substring(1);
 
                                         }
+                                        
                                         sXpath = getBindXpath(ref oBindElmt);
                                         sXpath = Tools.Xml.addNsToXpath(sXpath, ref nsMgr);
 

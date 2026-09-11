@@ -61,28 +61,58 @@
 					<span>Content</span>
 				</label>
 				<group ref="Content" class="Content">
-					<label>FAQ Name *</label>
+					<label>FAQ Question *</label>
 					<input bind="cContentSourceName" class="required long">
 					</input>
 				</group>
-				<group ref="Content" class="Content">					
-					<input bind="cContactName" class="required">
-						<label>Contact Name</label>
-					</input>					
-					<input bind="cContactEmail" class="required">
-						<label>Contact Email</label>
-					</input>
-				</group>
+			
 				<group ref="Content" class="Content">
-					<label>FAQ Topics</label>
+					<label>FAQ Question</label>
 					<textarea bind="cContentStrapline" class="TextArea xhtml" rows="6" cols="70">
 					</textarea>
 				</group>
 
 				<group ref="Content" class="Content">
-					<label>FAQ Article</label>
+					<label>FAQ Answer</label>
 					<textarea bind="cContentBody" class="TextArea xhtml" rows="15" cols="70">
 					</textarea>
+				</group>
+				<group ref="Content" class="form-2-col">
+					<input bind="cContactName" class="required">
+						<label>Contact Name</label>
+					</input>
+					<input bind="cContactEmail" class="required">
+						<label>Contact Email</label>
+					</input>
+				</group>
+				<group ref="Content" class="Content">
+				<select1 bind="nStatus" appearance="full" class="vshort inline-items">
+					<label>Status</label>
+					<item>
+						<label>Hidden</label>
+						<value>0</value>
+					</item>
+					<item>
+						<label>Live</label>
+						<value>1</value>
+					</item>
+					<item>
+						<label>Superceeded</label>
+						<value>2</value>
+					</item>
+					<item>
+						<label>Awaiting Approval</label>
+						<value>3</value>
+					</item>
+					<item>
+						<label>In Progress</label>
+						<value>4</value>
+					</item>
+					<item>
+						<label>Rejected</label>
+						<value>5</value>
+					</item>
+				</select1>
 				</group>
 			</group>
 			<group>
@@ -103,11 +133,18 @@
 			</group>
 			<group>
 				<label>
-					<i class="fas fa-tachometer-alt"> </i>
+					<i class="fas fa-paperclip"> </i>
 					<span class="space"> </span>
-					<span>Animate</span>
+					<span>Related Content</span>
 				</label>
-				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='animate']"/>
+				<group>
+					<relatedContent search="find add" type="NewsArticle" relationType="NewsArticle" direction="2way" class="form-section-wrapper">
+						<label>Related Articles</label>
+					</relatedContent>
+					<relatedContent search="find add" type="Product" relationType="" direction="2way" class="form-section-wrapper">
+						<label>Related Products</label>
+					</relatedContent>
+				</group>
 			</group>
 			<group>
 				<label>
@@ -115,12 +152,28 @@
 					<span class="space"> </span>
 					<span>Advanced Settings</span>
 				</label>
-				<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
-				<group>
+				<group ref="Settings" class="leftSettings form-2-col">
+					<input bind="nContentKey" class="hidden">
+						<label>ContentId</label>
+					</input>
+					<input bind="dPublishDate" class="calendar short">
+						<label>Publish Date</label>
+					</input>
+					<input bind="dExpireDate" class="calendar short">
+						<label>Expire Date</label>
+					</input>
+				
 					<input bind="cDescription" class="short">
 						<label>Change Notes</label>
 					</input>
-
+					<input bind="cMetaTitle" class="short">
+						<label>Meta Title</label>
+						<help>Google typically displays the first 50–60 characters of a title tag. If you keep your titles under 60 characters, our research suggests that you can expect about 90% of your titles to display properly. There's no exact character limit, because characters can vary in width and Google's display titles max out (currently) at 600 pixels.</help>
+					</input>
+					<input bind="cMetaDescription" class="short">
+						<label>Meta Description</label>
+						<help>Meta descriptions can be any length, but Google generally truncates snippets to ~155–160 characters. It's best to keep meta descriptions long enough that they're sufficiently descriptive, so we recommend descriptions between 50–160 characters. Keep in mind that the "optimal" length will vary depending on the situation, and your primary goal should be to provide value and drive clicks.</help>
+					</input>
 				</group>
 			</group>
 		</group>

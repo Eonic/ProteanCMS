@@ -1,4 +1,7 @@
-﻿using System;
+﻿//using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Ajax.Utilities;
+using Protean.Tools;
+using System;
 using System.Collections;
 using System.Data;
 using System.Diagnostics;
@@ -10,10 +13,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Windows;
+using System.Windows.Controls;
 using System.Xml;
-//using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.Ajax.Utilities;
-using Protean.Tools;
+using TidyManaged;
 
 namespace Protean
 {
@@ -1670,7 +1672,52 @@ namespace Protean
             }
 
         }
-        public static string tidyXhtmlDoc(string shtml, bool bReturnNumbericEntities = false, bool bEncloseText = true, string removeTags = "")
+
+        /// <summary>
+        /// Replaces any non-ASCII character with its numeric HTML entity equivalent
+        /// (e.g. "£" -> "&#163;"). This is needed because TidyManaged marshals html
+        /// strings to native code as ANSI, which silently corrupts non-ASCII characters
+        /// into "?" before Tidy has a chance to process them. Numeric entities are pure
+        /// ASCII, so they survive that marshaling untouched and Tidy/HTML renderers will
+        /// resolve them back to the correct character.
+        /// </summary>
+        private static string EncodeNonAsciiToNumericEntities(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            var sb = new StringBuilder(input.Length);
+            int i = 0;
+            while (i < input.Length)
+            {
+                char c = input[i];
+
+                if (c <= 127)
+                {
+                    sb.Append(c);
+                    i++;
+                    continue;
+                }
+
+                // Combine surrogate pairs into their full code point so astral-plane
+                // characters (emoji, etc.) encode to a single correct entity instead
+                // of two malformed ones.
+                if (char.IsHighSurrogate(c) && i + 1 < input.Length && char.IsLowSurrogate(input[i + 1]))
+                {
+                    int codePoint = char.ConvertToUtf32(c, input[i + 1]);
+                    sb.Append("&#").Append(codePoint).Append(';');
+                    i += 2;
+                }
+                else
+                {
+                    sb.Append("&#").Append((int)c).Append(';');
+                    i++;
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static string tidyXhtmlEmailDoc(string shtml, bool bReturnNumbericEntities = false, bool bEncloseText = true, string removeTags = "")
         {
 
             // PerfMon.Log("Web", "tidyXhtmlFrag")
@@ -1696,17 +1743,31 @@ namespace Protean
 
             RetryWithEscaping:
 
+                // TidyManaged marshals the html string to native code as ANSI (via
+                // tidyParseString P/Invoke), which silently mangles any non-ASCII
+                // character (e.g. "£") into "?" before Tidy even sees it - this
+                // happens regardless of CharacterEncoding/InputCharacterEncoding
+                // settings. Encode non-ASCII characters as numeric HTML entities
+                // first so they survive the ANSI marshaling intact.
+                shtml = EncodeNonAsciiToNumericEntities(shtml);
+
                 oTdyManaged = TidyManaged.Document.FromString(shtml);
                 oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.No;
-                oTdyManaged.MakeClean = true;
-                oTdyManaged.DropFontTags = true;
+                oTdyManaged.MakeClean = false;
+                oTdyManaged.IndentWithTabs = true;
+                oTdyManaged.DropFontTags = false;
+                oTdyManaged.DropEmptyParagraphs = false;
+                oTdyManaged.MergeDivs = AutoBool.No;
+                oTdyManaged.MergeSpans = AutoBool.No;
+                oTdyManaged.UseLogicalEmphasis = false;
                 //oTdyManaged.ErrorBuffer = true;
                 oTdyManaged.ShowWarnings = true;
                 oTdyManaged.OutputXhtml = true;
-                oTdyManaged.MakeBare = true;//removed word tags
-                oTdyManaged.CleanWord2000 = true;//removed word tags
+                oTdyManaged.QuoteAmpersands = true;   // escape stray & as &amp;
+                oTdyManaged.OutputNumericEntities = true;
+                oTdyManaged.CleanWord2000 = false;//removed word tags
 
-                // oTdyManaged.InputCharacterEncoding = TidyManaged.EncodingType.Latin1;
+                oTdyManaged.InputCharacterEncoding = TidyManaged.EncodingType.Utf8;
 
                 oTdyManaged.CharacterEncoding = TidyManaged.EncodingType.Utf8;
 
@@ -1725,18 +1786,30 @@ namespace Protean
                     // Only call Save if CleanAndRepair succeeded (result >= 0)
                     if (crResult >= 0)
                     {
-                        // Some versions of TidyManaged have issues with the internal state
+                        // Use the stream-based Save overload with explicit UTF-8 decoding.
+                        // The parameterless Save() marshals the native buffer back with
+                        // Marshal.PtrToStringAnsi internally, which mangles multi-byte UTF-8
+                        // sequences (e.g. the pound sign "£") into "?" regardless of the
+                        // CharacterEncoding/InputCharacterEncoding settings above.
                         try
                         {
-                            sTidyXhtml = oTdyManaged.Save();
+                            using (var memStream = new System.IO.MemoryStream())
+                            {
+                                oTdyManaged.Save(memStream);
+                                memStream.Position = 0;
+                                using (var reader = new System.IO.StreamReader(memStream, System.Text.Encoding.UTF8))
+                                {
+                                    sTidyXhtml = reader.ReadToEnd();
+                                }
+                            }
                         }
                         catch (InvalidOperationException ioEx)
                         {
-                            // TidyManaged internal state issue - try to extract content using the underlying buffer
-                            // This happens when CleanAndRepair succeeds but Save() still thinks it hasn't been called
+                            // TidyManaged internal state issue - this happens when
+                            // CleanAndRepair succeeded but Save() still thinks it hasn't been called
                             try
                             {
-                                // Try to write to a memory stream instead
+                                // Retry the stream-based save once more
                                 using (var memStream = new System.IO.MemoryStream())
                                 {
                                     oTdyManaged.Save(memStream);
@@ -1957,15 +2030,17 @@ namespace Protean
             // Define standard HTML tags that should NOT be escaped
             var standardTags = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
-                "a", "abbr", "address", "area", "article", "aside", "audio", "b", "base", "bdi", "bdo", "blockquote",
-                "body", "br", "button", "canvas", "caption", "cite", "code", "col", "colgroup", "data", "datalist",
-                "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption",
-                "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hr", "html", "i",
-                "iframe", "img", "input", "ins", "kbd", "label", "legend", "li", "link", "main", "map", "mark", "meta",
-                "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "picture",
-                "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small",
-                "source", "span", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "template",
-                "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "video", "wbr"
+     "a", "abbr", "acronym", "address", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo",
+    "bgsound", "big", "blink", "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code",
+    "col", "colgroup", "data", "datalist", "dd", "del", "details", "dfn", "dialog", "dir", "div", "dl", "dt", "em",
+    "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "h1", "h2", "h3",
+    "h4", "h5", "h6", "head", "header", "hr", "html", "i", "iframe", "image", "img", "input", "ins", "isindex",
+    "kbd", "label", "legend", "li", "link", "listing", "main", "map", "marquee", "mark", "menu", "meta", "meter",
+    "multicol", "nav", "nobr", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param",
+    "picture", "plaintext", "pre", "progress", "q", "rb", "rp", "rt", "rtc", "ruby", "s", "samp", "script", "section",
+    "select", "small", "source", "spacer", "span", "strike", "strong", "style", "sub", "summary", "sup", "table",
+    "tbody", "td", "template", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul",
+    "var", "video", "wbr", "xmp"
             };
 
             // Regex to find all tags (opening and closing)

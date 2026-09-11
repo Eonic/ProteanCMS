@@ -2466,7 +2466,7 @@ namespace Protean
                 messageHtml = sWriter.ToString();
                 sWriter.Close();
 
-                messageHtml = stdTools.tidyXhtmlDoc(messageHtml, true);
+                messageHtml = stdTools.tidyXhtmlEmailDoc(messageHtml, true);
                 var xMailingListDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
                 var xListElement = xMailingListDoc.DocumentElement;
                 valDict = XmltoDictionary(xListElement, true);

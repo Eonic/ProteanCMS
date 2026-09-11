@@ -1,4 +1,5 @@
 ﻿
+using AngleSharp.Io;
 using Protean.Providers.Membership;
 using System;
 using System.Collections;
@@ -2749,9 +2750,11 @@ namespace Protean
                                 }
                                 if (mbPreview == false & !string.IsNullOrEmpty(moRequest["verId"]))
                                 {
-                                    if ((Tools.Encryption.RC4.Decrypt(moRequest["previewKey"], moConfig["SharedKey"]) ?? "") == (moRequest["verId"] ?? ""))
-                                    {
-                                        validatedVersion = Convert.ToInt64(moRequest["verId"]);
+                                    if (moConfig["SharedKey"] != null) {
+                                        if ((Tools.Encryption.RC4.Decrypt(moRequest["previewKey"], moConfig["SharedKey"]) ?? "") == (moRequest["verId"] ?? ""))
+                                        {
+                                            validatedVersion = Convert.ToInt64(moRequest["verId"]);
+                                        }
                                     }
                                 }
                                 Boolean ignoreContentStatus = false;
@@ -3360,7 +3363,8 @@ namespace Protean
 
                 // make sure each requests gets a new one.
                 moResponse.Expires = 0;
-
+                gnResponseCode = 200;
+                moResponse.StatusCode = (int)gnResponseCode;
                 moResponse.HeaderEncoding = System.Text.Encoding.UTF8;
                 moResponse.ContentEncoding = System.Text.Encoding.UTF8;
                 // Default Content type returned to be XHTML (to clear warning on XHTML validator)
@@ -3612,7 +3616,8 @@ namespace Protean
 
                                                 Messaging msg = new Messaging();
 
-                                                foreach (XmlNode emailNode in moAdXfm.Instance.SelectNodes("ConfirmEmail")) {
+                                                foreach (XmlNode emailNode in moAdXfm.Instance.SelectNodes("tblContent/ConfirmEmail"))
+                                                {
 
                                                     string XsltPath = emailNode.SelectSingleNode("EmailXslt")?.InnerText;
                                                     string fromName = emailNode.SelectSingleNode("FromName")?.InnerText;
@@ -3625,24 +3630,44 @@ namespace Protean
                                                     try
                                                     {
                                                         moAdXfm.Instance.SelectSingleNode("tblContent/nContentKey").InnerText = nContentId.ToString();
-                                                        XmlElement contentXml = moDbHelper.GetContentDetailXml(Convert.ToInt32(moRequest["contentParId"]));
-                                                        if (contentXml != null) {
-                                                            moAdXfm.Instance.AppendChild(contentXml);
+                                                        if (moRequest["contentParId"] != null) {
+                                                            XmlElement contentXml = moDbHelper.GetContentDetailXml(Convert.ToInt32(moRequest["contentParId"]));
+                                                            contentXml.SetAttribute("url", GetContentUrl(Convert.ToInt64(moRequest["contentParId"])));
+                                                            
+                                                            if (contentXml != null)
+                                                            {
+                                                                moAdXfm.Instance.AppendChild(contentXml);
+                                                            }
                                                         }
                                                         Cms.dbHelper argodbHelper = moDbHelper;
 
-                                                        msg.emailer(moAdXfm.Instance, XsltPath, fromName, fromEmail, toEmail, SubjectLine, ref argodbHelper, null, null, toName, ccEmail, bccEmail);
+                                                        string SuccessMessage = "Content Saved";
 
+                                                        object MailResponse = msg.emailer(moAdXfm.Instance, XsltPath, fromName, fromEmail, toEmail, SubjectLine, ref argodbHelper, SuccessMessage, null, toName, ccEmail, bccEmail);
+
+                                                        if (MailResponse == SuccessMessage)
+                                                        {
+                                                            //do nothing
+                                                        }
+                                                        else
+                                                        {
+                                                            //insert error message on form
+
+                                                            moAdXfm.valid = false;
+                                                        }
                                                     }
                                                     catch (Exception ex)
                                                     {
                                                         OnComponentError(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "GetAjaxXML", ex, "Error mapping xslt path"));
                                                     }
-                                                   
+
 
                                                 }
                                                 msg = null;
+                                            }
 
+                                            if (moAdXfm.valid)
+                                            {
                                                 if (!string.IsNullOrEmpty(moRequest["showParent"]))
                                                 {
                                                     BuildPageContentDetailXml(oPageElmt, Convert.ToInt64(moRequest["contentParId"]));
@@ -3654,7 +3679,6 @@ namespace Protean
 
                                                 ClearPageCache();
                                             }
-
                                             else
                                             {
                                                 // lets add the form to Content Detail
@@ -3723,7 +3747,14 @@ namespace Protean
                                 moDbHelper.mnUserId = 0L;
                             }
                             // Production request: Add a menu to everything
-                            oPageElmt.AppendChild(GetStructureXML((long)mnUserId));
+                            try
+                            {
+                                oPageElmt.AppendChild(GetStructureXML((long)mnUserId));
+                            }
+                            catch (Exception)
+                            {
+
+                            }
                             break;
                         }
 
