@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl">
 
 	<xsl:template match="Content[@type='CookieFirst']" mode="headerOnlyContentJS">
-		<xsl:if test="not($adminMode)">
+		<xsl:if test="not($adminMode) or ($productionMode!='demo')">
 			<script>
 				window.dataLayer = window.dataLayer || [];
 				function gtag(){dataLayer.push(arguments);}
@@ -11,7 +11,7 @@
 				ad_storage: 'denied',
 				ad_user_data: 'denied',
 				ad_personalization: 'denied',
-				analytics_storage: 'denied',
+				analytics_storage: 'denied',1	12`	`
 				wait_for_update: 500
 				});
 			</script>

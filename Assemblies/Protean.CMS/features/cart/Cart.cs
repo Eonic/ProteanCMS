@@ -2561,7 +2561,6 @@ namespace Protean
                 double nPayableAmount;
                 double vatAmt;
                 double shipCost;
-                var nCheckPrice = default(double);
                 long nStatusId = 0;
                 XmlElement oCheckPrice;
                 // We need to read this value from somewhere so we can change where vat is added
@@ -2676,6 +2675,8 @@ namespace Protean
                         var revisedPrice = default(double);
                         foreach (DataRow currentORow in oDs.Tables["Item"].Rows)
                         {
+
+                            var nCheckPrice = default(double);
                             oRow = currentORow;
                             double Discount = 0d;
                             if (!oItemList.ContainsValue(oRow["contentId"]))

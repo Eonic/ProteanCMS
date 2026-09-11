@@ -1,4 +1,4 @@
-CREATE PROCEDURE [dbo].[spGetPagesByParentPageId]    
+CREATE OR ALTER PROCEDURE [dbo].[spGetPagesByParentPageId]    
     @PageId INT = NULL,              
     @whereSql VARCHAR(MAX) = '',            
     @FilterTarget NVARCHAR(10) = ''            
