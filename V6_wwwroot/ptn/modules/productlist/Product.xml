@@ -202,9 +202,9 @@
 			<!-- End of Column 1-->
 			<group class="xFormContainer">
 				<label>
-					<i class="fas fa-pen"> </i>
+					<i class="fa-solid fa-box"> </i>
 					<span class="space"> </span>
-					<span>Content</span>
+					<span>Product Details</span>
 				</label>
 				<group class="horizontal-form mt-3">
 					<input bind="cContentProductName" class="required long">
@@ -380,6 +380,16 @@
 			
 						</group>
 				<group>
+					
+				</group>
+			</group>
+			<group>
+				<label>
+					<i class="fa-solid fa-barcode"> </i>
+					<span class="space"> </span>
+					<span>Product SKU's</span>
+				</label>
+				<group>
 					<group class="form-section-wrapper horizontal-form">
 						<label>Product Variations</label>
 						<select1 bind="cSkuOptions" appearance="full" class="">
@@ -420,7 +430,7 @@
 								<toggle case="cSkuOptions_2" event="DOMActivate"/>
 							</item>
 						</select1>
-						
+
 						<switch class="disable" for="cSkuOptions">
 							<case id="cSkuOptions_0"/>
 							<case id="cSkuOptions_1">
@@ -516,6 +526,20 @@
 			</group>
 			<group>
 				<label>
+					<i class="fa-solid fa-layer-group"> </i>
+					<span class="space"> </span>
+					<span>Product Groups</span>
+				</label>
+				<group>
+					<group class="form-section-wrapper horizontal-form">
+					<select bind="nProductGroups" class="ewQuery list-vertical" query="ProductGroups" appearance="full">
+						<label>Product Groups</label>
+					</select>
+					</group>
+				</group>
+			</group>
+			<group>
+				<label>
 					<i class="fas fa-image"> </i>
 					<span class="space"> </span>
 					<span>Images &amp; Video</span>
@@ -594,9 +618,6 @@
 							<value>0</value>
 						</item>
 					</select1>
-					<select bind="nProductGroups" class="ewQuery list-vertical" query="ProductGroups" appearance="full">
-						<label>Product Groups</label>
-					</select>
 				</group>
 			</group>
 		</group>

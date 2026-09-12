@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl">
 
 	<xsl:template match="Content[@type='CookieFirst']" mode="headerOnlyContentJS">
-		<xsl:if test="not($adminMode) or ($productionMode!='demo')">
+		<xsl:if test="not($adminMode)">
 			<script>
 				window.dataLayer = window.dataLayer || [];
 				function gtag(){dataLayer.push(arguments);}

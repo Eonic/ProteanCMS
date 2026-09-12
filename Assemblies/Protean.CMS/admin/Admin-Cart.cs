@@ -10,6 +10,9 @@
 
 //using Microsoft.VisualBasic;
 //using Microsoft.VisualBasic.CompilerServices;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
 using Protean.Tools;
@@ -642,7 +645,7 @@ namespace Protean
                         oDS.Tables["ProductCategory"].Columns["cCatSchemaName"].ColumnMapping = MappingType.Attribute;
                         oDS.Tables["ProductCategory"].Columns["cCatForeignRef"].ColumnMapping = MappingType.Attribute;
                     }
-                    cSql = "SELECT c.nContentKey AS id, c.cContentForiegnRef AS ref, c.cContentName AS name, c.cContentSchemaName AS type, c.cContentXmlBrief AS content, tblCartCatProductRelations.nCatProductRelKey AS relid, tblCartCatProductRelations.nCatId AS catid FROM tblContent c INNER JOIN tblCartCatProductRelations ON c.nContentKey = tblCartCatProductRelations.nContentId " + "WHERE (tblCartCatProductRelations.nCatId Is not Null) order by nDisplayOrder";
+                    cSql = "SELECT    c.nContentKey AS id,    c.cContentForiegnRef AS ref,    c.cContentName AS name,    c.cContentSchemaName AS type,    c.cContentXmlBrief AS content,    ccpr.nCatProductRelKey AS relid,    ccpr.nCatId AS catid,    (        SELECT TOP(1) relc.cContentName        FROM tblContentRelation rel        INNER JOIN tblContent relc          ON relc.nContentKey = rel.nContentParentId     WHERE rel.nContentChildId = c.nContentKey        ORDER BY relc.nContentKey  ) AS relname FROM tblContent c INNER JOIN tblCartCatProductRelations ccpr    ON c.nContentKey = ccpr.nContentId WHERE ccpr.nCatId IS NOT NULL ORDER BY ccpr.nDisplayOrder; ";
                     myWeb.moDbHelper.addTableToDataSet(ref oDS, cSql, "Content");
 
                     if (oDS.Tables.Count == 2)

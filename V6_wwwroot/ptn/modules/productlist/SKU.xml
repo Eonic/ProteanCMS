@@ -110,6 +110,9 @@
 				<bind id="cAvailability" nodeset="Availability" required="false()" type="string"/>
 			</bind>
 		</bind>
+		<bind nodeset="ProductGroups">
+			<bind id="nProductGroups" nodeset="@ids" required="false()" type="string"/>
+		</bind>
 	</model>
 
 	<group ref="EditContent" >
@@ -118,9 +121,9 @@
 
 			<group>
 				<label>
-					<i class="fas fa-pen"> </i>
+					<i class="fa-solid fa-box"> </i>
 					<span class="space"> </span>
-					<span>Content</span>
+					<span>SKU Details</span>
 				</label>
 				<group>
 					<group class="row">
@@ -224,7 +227,20 @@
 					</group>
 				</group>
 			</group>
-
+			<group>
+				<label>
+					<i class="fa-solid fa-layer-group"> </i>
+					<span class="space"> </span>
+					<span>Product Groups</span>
+				</label>
+				<group>
+					<group class="form-section-wrapper horizontal-form">
+						<select bind="nProductGroups" class="ewQuery list-vertical" query="ProductGroups" appearance="full">
+							<label>Product Groups</label>
+						</select>
+					</group>
+				</group>
+			</group>
 			<group>
 				<label>
 					<i class="fas fa-image"> </i>

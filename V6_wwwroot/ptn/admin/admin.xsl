@@ -3414,12 +3414,36 @@
                         <tr>
                           <td> </td>
                           <td colspan="3">
-                            <strong>
+							  <xsl:choose>
+								  <xsl:when test="@type='Product'">
+									  <i class="fa-solid fa-box" alt="product">&#160;</i>&#160;
+								  </xsl:when>
+								  <xsl:when test="@type='SKU'">
+									  <i class="fa-solid fa-barcode" alt="sku">&#160;</i>&#160;
+								  </xsl:when>
+								  <xsl:when test="@type='Ticket'">
+									  <i class="fa-solid fa-ticket" alt="sku">&#160;</i>&#160;
+								  </xsl:when>
+								  <xsl:when test="@type='Subscription'">
+									  <i class="fa-solid fa-user-group" alt="sku">&#160;</i>&#160;
+								  </xsl:when>
+								  <xsl:when test="@type='Module'">
+									  <i class="fa-solid fa-hand-holding-dollar" alt="sku">&#160;</i>&#160;
+								  </xsl:when>
+							  </xsl:choose><xsl:if test="@relname!=''">                                 
+                                  <xsl:value-of select="@relname"/>
+                                  &#160;
+							  </xsl:if>
+							  <strong>
                               <xsl:value-of select="@name"/>
                             </strong>
+							  <xsl:if test="StockCode!=''">
+								  &#160;<small>[<xsl:value-of select="StockCode"/>]</small>
+							  </xsl:if>
                           </td>
                           <td>
                             <span class="edit-option-links-blue">
+								
                               <a href="{$appPath}?ewCmd=RemoveProductGroupsProduct&amp;GroupId={../@nCatKey}&amp;RelId={@relid}" class="btn btn-xs btn-danger">
                                 <i class="fas fa-minus-circle fa-white">
                                   <xsl:text> </xsl:text>
