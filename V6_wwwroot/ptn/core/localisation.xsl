@@ -334,14 +334,21 @@
     </xsl:choose>
   </xsl:template>
 
-	<!-- 1013 User account has been disabled -->
+	<!-- 1022 User account has been disabled -->
 	<xsl:template match="span[@class='msg-1022']" mode="term">
 		<xsl:choose>
 			<xsl:when test="$lang='en-pr'">Tha deckswab has been banished</xsl:when>
 			<xsl:otherwise>There was a problem activating your account</xsl:otherwise>
 		</xsl:choose>
 	</xsl:template>
-
+	<!-- 1023 This password must be stronger -->
+		<xsl:template match="span[@class='msg-1023']" mode="term">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">This password must be stronger</xsl:when>
+			<xsl:otherwise>All passwords must be at least 6 characters long, include a combination of uppercase and lowercase letters, at least one number, and can contain special characters.</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+	
   <!-- 1020 This user has been added -->
   <xsl:template match="span[@class='msg-1029']" mode="term">
     <xsl:choose>

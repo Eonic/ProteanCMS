@@ -7254,8 +7254,14 @@ $(document).ready(function () {
                   Edit
                 </a>
                 <xsl:apply-templates select="Contact[@type='Delivery Address']" mode="cart"/>
+				  <xsl:if test="Notes/node() !=''">
+					  <div class="alert alert-info">
+						  <small>Notes from customer:</small> <br/><xsl:value-of select="Notes"/>
+					  </div>
+				  </xsl:if>
               </div>
             </xsl:if>
+			 
             <xsl:if test="DeliveryDetails">
               <div id="carrier-info" class="col-lg-3">
                 <h4>Shipping Details</h4>
@@ -11125,6 +11131,14 @@ $(document).ready(function () {
 							</span>
 						</a>
 					</xsl:if>
+
+					<xsl:if test="@Used_ref='0'">
+						<a href="/?ewCmd=MemberCodes&amp;pgid=1&amp;id={$page/@artid}&amp;subCmd=DeleteCode&amp;subcodeid={@id}">
+							<span class="btn btn-outline-danger btn-sm mt-1">
+								<i class="fa fa-trash fa-white">&#160;</i>&#160;Delete Code
+							</span>
+						</a>
+					</xsl:if>
 				</td>
 		</tr>
 	</xsl:template>
@@ -11561,15 +11575,30 @@ $(document).ready(function () {
         <xsl:value-of select="@versionid"/>
       </xsl:if>
     </xsl:variable>
+	  
+	  
     <td class="btn-group">
 
+		<xsl:choose>
+			<xsl:when test="@type='FAQ'">
+				<a href="{$appPath}?ewCmd=Normal&amp;artid={@ContentId}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+					<i class="fa fa-eye">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>Preview
+				</a>
 
-      <a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-primary" title="Click here to edit this content">
-        <i class="fa fa-eye">
-          <xsl:text> </xsl:text>
-        </i>
-        <xsl:text> </xsl:text>Preview
-      </a>
+			</xsl:when>
+			<xsl:otherwise>
+				<a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-primary" title="Click here to edit this content">
+					<i class="fa fa-eye">
+						<xsl:text> </xsl:text>
+					</i>
+					<xsl:text> </xsl:text>Preview
+				</a>
+
+			</xsl:otherwise>
+		</xsl:choose>
 
       <a href="{$appPath}?ewCmd=ContentVersions&amp;id={@id}{$versionId}" class="btn btn-xs btn-primary" title="Click here to edit this content">
         <i class="fa fa-history">

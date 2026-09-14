@@ -38,8 +38,11 @@
 				<Description/>
 				<Quantity/>
 				<Unit_Price/>
+				<AddOn_Name/>
+				<AddOn_Price/>
 				<Net_Line label="Net (line)"/>
 				<Discount_Line label="Discount (line)"/>
+				<Payment-Ref/>
 			</Item>
 		</xsl:variable>
 		<xsl:apply-templates select="ms:node-set($orderDownloadHeader)" mode="reportHeaderRow"/>
@@ -144,12 +147,24 @@
 				<Unit_Price>
 					<xsl:value-of select="$unitPrice"/>
 				</Unit_Price>
+				<AddOn_Name>
+					<xsl:for-each select="Item">
+						<xsl:value-of select="@name"/>
+						<xsl:if test="position() != last()">,</xsl:if>
+					</xsl:for-each>
+				</AddOn_Name>
+				<AddOn_Price>
+					<xsl:value-of select="sum(Item/@price)"/>
+				</AddOn_Price>
 				<Net_Line label="Net (line)">
 					<xsl:value-of select="$linePrice"/>
 				</Net_Line>
 				<Discount_Line label="Discount (line)">
 					<xsl:value-of select="$lineDiscount"/>
 				</Discount_Line>
+				<Payment-Ref>
+					<xsl:value-of select="PaymentDetails/@provider"/>-<xsl:value-of select="PaymentDetails/@ref"/>
+				</Payment-Ref>
 			</Item>
 		</xsl:variable>
 		<xsl:apply-templates select="ms:node-set($orderItem)/*/*" mode="reportCell"/>

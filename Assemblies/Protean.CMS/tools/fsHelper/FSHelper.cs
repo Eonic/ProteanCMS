@@ -1619,7 +1619,7 @@ namespace Protean
                     }
 
                     string fullName = Path.GetFileName(Convert.ToString(file.FileName)).Replace("'", "");
-                    statuses.Add(new FilesStatus(fullName.Replace(" ", "-"), Convert.ToInt16(file.ContentLength)));
+                    statuses.Add(new FilesStatus(fullName.Replace(" ", "-"), Convert.ToInt64(file.ContentLength)));
                     context.Server.MapPath("/");
                     // We will add one node in ReviewFeedback.xml form and use it instead of config key = context.Request.Form("reviewimagepath")
                     if (!string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]) && !string.IsNullOrEmpty(context.Request.Form["cImageBasePath"]))
@@ -2199,7 +2199,7 @@ namespace Protean
             }
         }
         private string m_type;
-        public int size
+        public long size
         {
             get
             {
@@ -2210,7 +2210,7 @@ namespace Protean
                 m_size = value;
             }
         }
-        private int m_size;
+        private long m_size;
         public string progress
         {
             get
@@ -2290,15 +2290,15 @@ namespace Protean
 
         public FilesStatus(FileInfo fileInfo)
         {
-            SetValues(fileInfo.Name, (int)fileInfo.Length);
+            SetValues(fileInfo.Name, (long)fileInfo.Length);
         }
 
-        public FilesStatus(string fileName, int fileLength)
+        public FilesStatus(string fileName, long fileLength)
         {
             SetValues(fileName, fileLength);
         }
 
-        private void SetValues(string fileName, int fileLength)
+        private void SetValues(string fileName, long fileLength)
         {
             name = fileName;
             type = "image/png";

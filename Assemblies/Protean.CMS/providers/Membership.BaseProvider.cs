@@ -533,12 +533,18 @@ namespace Protean.Providers
                                 base.validate();
                                 if (base.valid)
                                 {
-
-                                    // changed to get from instance rather than direct from querysting / form.
                                     string username = base.Instance.SelectSingleNode("user/username").InnerText;
                                     string password = base.Instance.SelectSingleNode("user/password").InnerText;
+                                    if (myWeb.mnUserId > 0)
+                                    {
+                                        // overiden Xform allready logged on user. 
+                                        sValidResponse = myWeb.mnUserId.ToString();
+                                    }
+                                    else {
+                                        // changed to get from instance rather than direct from querysting / form.
 
-                                    sValidResponse = moDbHelper.validateUser(username, password);
+                                        sValidResponse = moDbHelper.validateUser(username, password);
+                                    }
 
                                     if (Tools.Number.IsNumeric(sValidResponse))
                                     {
@@ -3043,12 +3049,12 @@ namespace Protean.Providers
                         {
                             XmlElement oUserEmail;
                             XmlElement oUserElmt;
-                            XmlElement oElmtPwd = myWeb.moPageXml.CreateElement("Password");
-                            oElmtPwd.InnerText = moRequest["cDirPassword"];
+                        
+
+
                             if (myWeb.bs5)
                             {
                                 oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
-                                oUserElmt.AppendChild(oElmtPwd);
                                 XmlElement emailRoot = oUserElmt.OwnerDocument.CreateElement("MessageBody");
                                 emailRoot.AppendChild(oUserElmt.CloneNode(true));
                                 emailRoot.SetAttribute("id", "UserRegistration");
@@ -3059,8 +3065,15 @@ namespace Protean.Providers
                             {
                                 oUserElmt = myWeb.moDbHelper.GetUserXML(mnUserId);
                                 oUserEmail = (XmlElement)oUserElmt.SelectSingleNode("Email");
+                            }
+
+                            if (moConfig["MembershipEncryption"] == "" | moConfig["MembershipEncryption"] == "plaintext")
+                            {
+                                XmlElement oElmtPwd = myWeb.moPageXml.CreateElement("Password");
+                                oElmtPwd.InnerText = moRequest["cDirPassword"];
                                 oUserElmt.AppendChild(oElmtPwd);
                             }
+
                             if (clearUserId)
                                 mnUserId = 0; // clear user Id so we don't stay logged on
 
@@ -3073,6 +3086,7 @@ namespace Protean.Providers
                                 recipientEmail = oUserEmail.InnerText;
                             string SubjectLine = "Your Registration Details";
                             var oMsg = new Protean.Messaging(ref myWeb.msException);
+                            //oMsg.mbLogEmail = false; We are logging because we are not saving passwords anymore
 
                             oUserElmt.SetAttribute("Url", myWeb.mcPageURL);
                             oUserElmt.SetAttribute("activateCmd", cmdPrefix + "ActivateAccount");

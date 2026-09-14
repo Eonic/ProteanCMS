@@ -822,8 +822,10 @@ namespace Protean
 
                             if (!string.IsNullOrEmpty(mcReEstablishSession))
                             {
-                                sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + myWeb.moRequest["CartId"] + "And cCartSessionId Like '%" + mcReEstablishSession + "'";
-                                // sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + mnCartId + "And cCartSessionId Like '%" + mcSessionId + "'";
+                                if (mnCartId == 0) {
+                                    mnCartId = Convert.ToInt64(myWeb.moRequest["CartId"]);
+                                }
+                                sSql = "select * from tblCartOrder where not(nCartStatus IN (6,9,13,14)) and nCartOrderKey = " + mnCartId + " and cCartSessionId Like '%" + mcReEstablishSession + "'";
                             }
                             else
                             {
@@ -2338,14 +2340,30 @@ namespace Protean
                             {
                                 bOptOut = Convert.ToBoolean(oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email/@optOut").InnerText);
                             }
-
-                            foreach (XmlAttribute Attribute in oCartElmt.Attributes)
+                            else
                             {
-                                if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
+                                if (myWeb.moDbHelper.checkTableColumnExists("tblOptOutAddresses", "nOptOutKey"))
                                 {
-                                    valDict.Add(Attribute.Name, Attribute.Value);
+                                    if (!string.IsNullOrEmpty(Email))
+                                    {
+                                        string cSQL = $"Select EmailAddress FROM tblOptOutAddresses WHERE (EmailAddress = '{Email}')";
+                                        string cSQLStatusCheck = $"Select top 1 nStatus FROM tblOptOutAddresses WHERE (EmailAddress = '{Email}') order by dOptOut desc";
+
+                                        bool bstatus = Convert.ToBoolean(moDBHelper.ExeProcessSqlScalar(cSQLStatusCheck));
+                                        bOptOut = bstatus;
+                                    }
+                                      
+                                   
+
                                 }
                             }
+                                foreach (XmlAttribute Attribute in oCartElmt.Attributes)
+                                {
+                                    if (!"errorMsg,hideDeliveryAddress,orderType,statusId,complete".Contains(Attribute.Name))
+                                    {
+                                        valDict.Add(Attribute.Name, Attribute.Value);
+                                    }
+                                }
                             string[] fullName = Name.Split(' ');
                             string firstName = "";
                             string lastName = "";
@@ -2447,6 +2465,8 @@ namespace Protean
                 }
                 messageHtml = sWriter.ToString();
                 sWriter.Close();
+
+                messageHtml = stdTools.tidyXhtmlEmailDoc(messageHtml, true);
                 var xMailingListDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
                 var xListElement = xMailingListDoc.DocumentElement;
                 valDict = XmltoDictionary(xListElement, true);

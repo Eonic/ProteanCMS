@@ -8,6 +8,7 @@
 // $Copyright:   Copyright (c) 2002 - 2026 Eonic Digital Group Ltd.
 // ***********************************************************************
 
+
 using Protean.Providers.Authentication;
 using Protean.Providers.Membership;
 using Protean.Providers.Messaging;
@@ -27,9 +28,9 @@ using System.Xml;
 using static Protean.Cms;
 using static Protean.Cms.dbHelper;
 using static Protean.Cms.dbImport;
+using static Protean.Env;
 using static Protean.stdTools;
 using static Protean.Tools.Xml;
-using static Protean.Env;
 
 namespace Protean
 {
@@ -1616,6 +1617,7 @@ namespace Protean
                         // get the last in line
                         sPath = aPath[aPath.Length - 1];
                         ItemIdPath = aPath.Length > 1 ? aPath[aPath.Length - 2] : "";
+                        
                         if (ItemIdPath.EndsWith("-"))
                         {
                             nArtId = Convert.ToInt64(ItemIdPath.Replace("-", ""));
@@ -1633,6 +1635,7 @@ namespace Protean
                         case "ContentType/ContentName":
                             {
 
+                                
                                 string[] prefixs = myWeb.moConfig["DetailPrefix"].Split(',');
                                 string thisPrefix = "";
                                 string thisContentType = "";
@@ -1831,7 +1834,12 @@ namespace Protean
                                             ItemIdPath = nArtId + "-/";
                                         }
 
-                                        redirectUrl += $"/{thisPrefix}/{ItemIdPath}{sPath.ToString().Replace(" ", "-").Trim('-')}/";
+                                        if (ItemIdPath == thisPrefix) {
+                                            redirectUrl += $"/{thisPrefix}/{sPath.ToString().Replace(" ", "-").Trim('-')}/";
+                                        }
+                                        else {
+                                            redirectUrl += $"/{thisPrefix}/{ItemIdPath}{sPath.ToString().Replace(" ", "-").Trim('-')}/";
+                                        }
 
                                         char[] charsToTrim = { '/' };
                                         myWeb.mcOriginalURL = myWeb.mcOriginalURL.TrimEnd(charsToTrim);
@@ -14242,6 +14250,7 @@ namespace Protean
                 }
             }
 
+           
             public void SaveCartStatus(long CartId, int StatusId)
             {
                 try
@@ -14254,7 +14263,6 @@ namespace Protean
                     stdTools.returnException(ref myWeb.msException, mcModuleName, "SaveCartStatus", ex, "", "", gbDebug);
                 }
             }
-
             public void UpdateSellerNotes(long CartId, string TransactionDetails)
             {
                 string sSql = "";
@@ -14795,7 +14803,7 @@ namespace Protean
                 }
             }
 
-            public int SetContact(ref Cms.model.Contact contact)
+            public long SetContact(ref Cms.model.Contact contact)
             {
                 if (contact.nContactKey > 0)
                 {
@@ -14809,7 +14817,7 @@ namespace Protean
                 return default;
             }
 
-            public int AddContact(ref Cms.model.Contact contact)
+            public long AddContact(ref Cms.model.Contact contact)
             {
                 PerfMonLog("DBHelper", "AddContact ([args])");
                 string sSql;
@@ -14828,13 +14836,13 @@ namespace Protean
 
                     }
 
-                    return Convert.ToInt16(nId);
+                    return Convert.ToInt64(nId);
                 }
 
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "AddContact", ex, cProcessInfo));
-                    return Convert.ToInt16(false);
+                    return Convert.ToInt64(false);
                 }
             }
 

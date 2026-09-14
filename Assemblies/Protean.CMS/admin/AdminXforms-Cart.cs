@@ -1775,12 +1775,18 @@ namespace Protean
                         {
                             case "AddSelected":
                                 {
-                                    moDbHelper.saveDiscountProdGroupRelation((int)id, goRequest["Groups"]);
+                                    if (!string.IsNullOrWhiteSpace(goRequest["Groups"]))
+                                    {
+                                        moDbHelper.saveDiscountProdGroupRelation((int)id, goRequest["Groups"]);
+                                    }
                                     break;
                                 }
                             case "RemoveSelected":
                                 {
-                                    moDbHelper.saveDiscountProdGroupRelation((int)id, goRequest["Items"], false);
+                                    if (!string.IsNullOrWhiteSpace(goRequest["Items"]))
+                                    {
+                                        moDbHelper.saveDiscountProdGroupRelation((int)id, goRequest["Items"], false);
+                                    }
                                     break;
                                 }
                         }

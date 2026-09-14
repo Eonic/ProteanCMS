@@ -447,7 +447,7 @@ namespace Protean
 
                             if (!bUseEmail & string.IsNullOrEmpty(sEmail) | Tools.Text.IsEmail(sEmail))
                             {
-                                moDbHelper.logActivity(Cms.dbHelper.ActivityType.SubmitVote, (long)mnUserId, (long)mnPageId, (long)Convert.ToInt16(sPollId), (long)Convert.ToInt16(sResult), sEmail);
+                                moDbHelper.logActivity(Cms.dbHelper.ActivityType.SubmitVote, (long)mnUserId, (long)mnPageId, (long)Convert.ToInt64(sPollId), (long)Convert.ToInt64(sResult), sEmail);
 
                                 if (bUseCookies)
                                 {

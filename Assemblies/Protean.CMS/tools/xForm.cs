@@ -1330,7 +1330,7 @@ namespace Protean
                         case "strongpassword":
                             {
                                 if (!strongPassword(sValue + ""))
-                                    cReturn = "<span class=\"msg-1005\">This password must be stronger</span>";
+                                    cReturn = "<span class=\"msg-1023\">This password must be stronger</span>";
                                 break;
                             }
                         case "fileupload":
@@ -1524,6 +1524,7 @@ namespace Protean
                                 // get our bind node
                                 foreach (XmlElement oBindNode in model.SelectNodes("descendant-or-self::bind[@id='" + sBind + "']"))
                                 {
+                                    sAttribute = "";
                                     oBindElmt = oBindNode;
                                     sDataType = oBindElmt.GetAttribute("type");
                                     string submittedValue = "" + goRequest[sRequest];
@@ -1538,6 +1539,7 @@ namespace Protean
                                             sAttribute = nodesetVal4.Substring(1);
 
                                         }
+                                        
                                         sXpath = getBindXpath(ref oBindElmt);
                                         sXpath = Tools.Xml.addNsToXpath(sXpath, ref nsMgr);
 

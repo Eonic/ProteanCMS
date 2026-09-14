@@ -26,6 +26,8 @@ namespace Protean
         public string msGnuPassphrase = "";
         public bool mbIsBodyHtml = true;
         public static string msException = "";
+        public bool mbLogEmail = false;
+
 
         public System.Web.HttpContext moCtx = System.Web.HttpContext.Current;
 
@@ -53,6 +55,11 @@ namespace Protean
                 goResponse = moCtx.Response;
                 goSession = moCtx.Session;
                 goServer = moCtx.Server;
+
+               if (goConfig["LogEmail"].ToLower() == "on")
+               {
+                   mbLogEmail = true;
+               }
             }
         }
         public Messaging(ref string sException)
@@ -62,6 +69,10 @@ namespace Protean
             goSession = moCtx.Session;
             goServer = moCtx.Server;
             msException = sException;
+            if (goConfig["LogEmail"].ToLower() == "on")
+            {
+                mbLogEmail = true;
+            }
         }
 
         public string Language
@@ -133,6 +144,7 @@ namespace Protean
         public void addAttachment(string fileLocation, bool deleteAfterAttach = false)
         {
             string cProcessInfo = "emailCart";
+
             try
             {
                 if (!string.IsNullOrEmpty(fileLocation))
@@ -140,7 +152,7 @@ namespace Protean
                     // check if filesystem path allready supplied
                     if (!fileLocation.Contains(@":\"))
                     {
-                        fileLocation = goServer.MapPath("/") + fileLocation.Replace("/","\\");
+                        fileLocation = goServer.MapPath("/") + @"..\imports\" + fileLocation.Replace("/","\\");
                     }
                     fileLocation = fileLocation.Replace(@"\\", @"\");
 
@@ -507,12 +519,14 @@ namespace Protean
 
                 // is there's no HTML, set is as plain text
                 int nHtmlPos = messagePlainText.LastIndexOf("<html", messagePlainText.Length - 1);
-                if (nHtmlPos <= 0)
+                if (nHtmlPos < 0)
                 {
                     mbIsBodyHtml = false;
                 }
 
                 // lets get the subjectline form the html title
+
+                messageHtml = stdTools.tidyXhtmlEmailDoc(messageHtml, true);
                 var oEmailXmlDoc = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(messageHtml);
                 if (oEmailXmlDoc != null)
                 {
@@ -799,7 +813,7 @@ namespace Protean
                         oMailn.Headers.Set("Content-Type", "text/plain");
                         // moCtx.Response.ContentType = "text/plain"
 
-                        if (messageHtml.LastIndexOf("<html", messageHtml.Length - 1) > 0)
+                        if (messageHtml.LastIndexOf("<html", messageHtml.Length - 1) >= 0)
                         {
                             var htmlView = AlternateView.CreateAlternateViewFromString(messageHtml, new System.Net.Mime.ContentType("text/html; charset=UTF-8"));
                             oMailn.AlternateViews.Add(htmlView);
@@ -982,21 +996,31 @@ namespace Protean
                         }
                     }
 
-                    if ((goConfig["LogEmail"]).ToLower() == "on")
+                    if (mbLogEmail)
                     {
                         try
                         {
                             string cActivityDetail = "";
                             try
                             {
-                                XmlElement oBodyElmt = (XmlElement)oEmailXmlDoc.SelectSingleNode("html/body");
-                                if (!string.IsNullOrEmpty(oBodyElmt.InnerText))
+                                XmlElement oBodyElmt = null;
+                                if (oEmailXmlDoc != null)
                                 {
-                                    cActivityDetail = oBodyElmt.InnerText;
+                                    oBodyElmt = (XmlElement)oEmailXmlDoc.SelectSingleNode("html/body");
+
+                                    if (!string.IsNullOrEmpty(oBodyElmt.InnerText))
+                                    {
+                                        cActivityDetail = oBodyElmt.InnerText;
+                                    }
+                                    else
+                                    {
+                                        cActivityDetail = oMailn.Body;
+                                    }
                                 }
                                 else
                                 {
                                     cActivityDetail = oMailn.Body;
+
                                 }
                             }
                             catch (Exception)
@@ -1431,6 +1455,8 @@ namespace Protean
                                 sWriter.Close();
                                 sWriter = null;
 
+
+                                sMessage = stdTools.tidyXhtmlEmailDoc(sMessage, true);
                                 oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sMessage);
                             }
 
@@ -1720,7 +1746,7 @@ namespace Protean
                     oEmail = new MailMessage();
                     oEmail.IsBodyHtml = true;
 
-                    if ((goConfig["overrideFromEmail"]).ToLower() == "on")
+                    if (goConfig["overrideFromEmail"]?.ToLower() == "on")
                     {
                         oEmail.From = new MailAddress(goConfig["ServerSenderEmail"], cFromName);
                     }
@@ -1740,9 +1766,9 @@ namespace Protean
                     {
                         hostUrl = urlScheme + hostUrl;
                     }
-                    InlineResult preMailerResult = PreMailer.Net.PreMailer.MoveCssInline(Convert.ToString(new Uri(hostUrl)), Convert.ToBoolean(emailStructure["EmailBody"]));
-                    string sEmailBody = preMailerResult.Html;
 
+                    InlineResult preMailerResult = PreMailer.Net.PreMailer.MoveCssInline(new Uri(hostUrl), emailStructure["EmailBody"].ToString());
+                    string sEmailBody = preMailerResult.Html;
 
                     oEmail.Body = sEmailBody;
                     oEmail.To.Add(new MailAddress(cRepientMail.Trim()));
@@ -1816,6 +1842,7 @@ namespace Protean
                 // Lets get the title and override the one provided
                 var oXml = new XmlDocument();
 
+                sEmailBody = stdTools.tidyXhtmlEmailDoc(sEmailBody, true);
                 oXml = Protean.Tools.Xml.HtmlConverter.htmlToXmlDoc(sEmailBody);
                 if (oXml != null)
                 {

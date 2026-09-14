@@ -413,6 +413,11 @@
 										<xsl:with-param name="buttonTitle">Continue</xsl:with-param>
 									</xsl:apply-templates>
 								</div>
+
+								<div id='digital-wallets-buttons-container' >
+									<xsl:apply-templates select="Wallets/Wallet" mode="Wallet"/>
+								</div>
+								
 							</div>
 						</div>
 
@@ -841,7 +846,7 @@
 					<div class="modal-dialog" role="document">
 						<div class="modal-content">
 							<div class="modal-header">
-								<h3 class="modal-title">Create new account</h3>
+								<h4 class="modal-title">Create new account</h4>
 								<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
 									<xsl:text> </xsl:text>
 								</button>
@@ -905,6 +910,10 @@
 			};
 			});
 		</script>
+	</xsl:template>
+
+	<xsl:template match="Cart[Order[@cmd='Logon']]" mode="cartJS">
+		<xsl:apply-templates select="Order/Wallets/Wallet" mode="walletJS"/>
 	</xsl:template>
 
 	<xsl:template match="Order[@cmd='Logon']" mode="orderProcessSkipButton">

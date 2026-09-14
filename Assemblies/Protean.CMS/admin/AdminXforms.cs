@@ -591,7 +591,8 @@ namespace Protean
                 // Dim oSubjectElmt As XmlElement = MyBase.Instance.SelectSingleNode("cSubject")
                 // 'get the email addresses for these groups
 
-                // Dim bResult As Boolean = oMessaging.SendMailToList_Queued(nPageId, moMailConfig("MailingXsl"), oGroupElmt.InnerText, oFromEmailElmt.InnerText, oFromNameElmt.InnerText, oSubjectElmt.InnerText)
+                // Dim bResult As Boolean = oMessaging.
+                // ToList_Queued(nPageId, moMailConfig("MailingXsl"), oGroupElmt.InnerText, oFromEmailElmt.InnerText, oFromNameElmt.InnerText, oSubjectElmt.InnerText)
 
 
                 // ' Log the result

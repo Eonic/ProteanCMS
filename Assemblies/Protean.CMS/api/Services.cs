@@ -242,8 +242,8 @@ namespace Protean
                     // using multiple addresses here
                     if (recipientEmail.Contains(cSeperator))
                     {
-                        string[] oTos = (recipientEmail ?? "").Split('/');
-                        string[] oModes = (Mode ?? "").Split('/');
+                        string[] oTos = (recipientEmail ?? "").Split(Convert.ToChar(cSeperator));
+                        string[] oModes = (Mode ?? "").Split(Convert.ToChar(cSeperator));
                         int i;
                         var loopTo = oTos.Length - 1;
                         for (i = 0; i <= loopTo; i++)
@@ -366,6 +366,7 @@ namespace Protean
                 //string cleanPathName = fsh.UploadRequest(moCtx, cAttachmentFilePath);
                 var oMsg = new Messaging(ref myWeb.msException);
 
+                
 
                 if (cAttachmentFilePath != "")
                 {

@@ -1,4 +1,7 @@
-﻿using System;
+﻿//using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Ajax.Utilities;
+using Protean.Tools;
+using System;
 using System.Collections;
 using System.Data;
 using System.Diagnostics;
@@ -10,10 +13,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Windows;
+using System.Windows.Controls;
 using System.Xml;
-//using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.Ajax.Utilities;
-using Protean.Tools;
+using TidyManaged;
 
 namespace Protean
 {
@@ -201,7 +203,7 @@ namespace Protean
 
                     strErrorHtml = exceptionReport(oException, vstrModuleName + "." + vstrRoutineName, vstrFurtherInfo, httpContext);
                     strMessageHtml = "<div style=\"font-family:Verdana,Tahoma,Arial\"><h2>Unfortunately this site has experienced an error.</h2>" + "<h3>We take all errors very seriously.</h3>" + "<p>" + "This error has been recorded and details sent to <a href=\"http://eonic.com\">Eonic</a> who provide technical support for this website." + "</p>" + "<p>" + "Eonic welcome any feedback that helps us improve our service and that of our clients, please email any supporting information you might have as to how this error arose to <a href=\"mailto:support@eonic.co.uk\">support@eonic.co.uk</a> or alternatively you are welcome call us on +44 (0)1892 534044 between 9.30am and 5.00pm GMT." + "</p>" + "<p>Please contact the owner of this website for any enquiries specific to the products and services outlined within this site.</p>" + "<a href=\"javascript:history.back();\">Click Here to return to the previous page.</a></div>";
-
+                 
                     try
                     {
                         // bDebug = True
@@ -366,11 +368,19 @@ namespace Protean
 
                                             // Move the content up a level.
                                             foreach (XmlNode oContent in oExceptionXml.SelectNodes("/Page/Contents/Content")) {
-                                                foreach (XmlNode oAttr in oContent.SelectSingleNode("Content/*")) {
-                                                    XmlElement oContentElmt = (XmlElement)oContent;
-                                                    oContentElmt.SetAttribute(oAttr.Name, oAttr.Value);
+                                                //foreach (XmlNode oAttr in oContent.SelectSingleNode("Content/*")) {
+                                                //    XmlElement oContentElmt = (XmlElement)oContent;
+                                                //    oContentElmt.SetAttribute(oAttr.Name, oAttr.Value);
+                                                //}
+                                                // oContent.InnerXml = oContent.SelectSingleNode("Content").InnerXml;
+
+                                                XmlNode innerContent = oContent.SelectSingleNode("Content");
+                                                foreach (XmlAttribute attr in innerContent.Attributes)
+                                                {
+                                                    ((XmlElement)oContent).SetAttribute(attr.Name, attr.Value);
                                                 }
-                                                oContent.InnerXml = oContent.SelectSingleNode("Content").InnerXml;
+                                                oContent.InnerXml = innerContent.InnerXml;
+                                               
                                             }
 
                                         }
@@ -1663,6 +1673,215 @@ namespace Protean
 
         }
 
+        /// <summary>
+        /// Replaces any non-ASCII character with its numeric HTML entity equivalent
+        /// (e.g. "£" -> "&#163;"). This is needed because TidyManaged marshals html
+        /// strings to native code as ANSI, which silently corrupts non-ASCII characters
+        /// into "?" before Tidy has a chance to process them. Numeric entities are pure
+        /// ASCII, so they survive that marshaling untouched and Tidy/HTML renderers will
+        /// resolve them back to the correct character.
+        /// </summary>
+        private static string EncodeNonAsciiToNumericEntities(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            var sb = new StringBuilder(input.Length);
+            int i = 0;
+            while (i < input.Length)
+            {
+                char c = input[i];
+
+                if (c <= 127)
+                {
+                    sb.Append(c);
+                    i++;
+                    continue;
+                }
+
+                // Combine surrogate pairs into their full code point so astral-plane
+                // characters (emoji, etc.) encode to a single correct entity instead
+                // of two malformed ones.
+                if (char.IsHighSurrogate(c) && i + 1 < input.Length && char.IsLowSurrogate(input[i + 1]))
+                {
+                    int codePoint = char.ConvertToUtf32(c, input[i + 1]);
+                    sb.Append("&#").Append(codePoint).Append(';');
+                    i += 2;
+                }
+                else
+                {
+                    sb.Append("&#").Append((int)c).Append(';');
+                    i++;
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static string tidyXhtmlEmailDoc(string shtml, bool bReturnNumbericEntities = false, bool bEncloseText = true, string removeTags = "")
+        {
+
+            // PerfMon.Log("Web", "tidyXhtmlFrag")
+            // string sProcessInfo = "tidyXhtmlFrag";
+            string sTidyXhtml = "";
+            int crResult = 0;
+            bool bRetryWithEscapedTags = false;
+
+            if (!(removeTags == ""))
+                shtml = removeTagFromXml(shtml, removeTags);
+
+            string originalHtml = shtml; // Keep original for retry
+            TidyManaged.Document oTdyManaged;
+
+            try
+            {
+                // clear some nasties I haven't allready captured.
+                shtml = shtml.Replace("&amp;nbsp;", "&#160;");
+                shtml = Regex.Replace(shtml, "<\\?xml.*\\?>", "", RegexOptions.IgnoreCase);
+
+                //temp fix for dirty VMH data
+                shtml = shtml.Replace(":=", "=");
+
+            RetryWithEscaping:
+
+                // TidyManaged marshals the html string to native code as ANSI (via
+                // tidyParseString P/Invoke), which silently mangles any non-ASCII
+                // character (e.g. "£") into "?" before Tidy even sees it - this
+                // happens regardless of CharacterEncoding/InputCharacterEncoding
+                // settings. Encode non-ASCII characters as numeric HTML entities
+                // first so they survive the ANSI marshaling intact.
+                shtml = EncodeNonAsciiToNumericEntities(shtml);
+
+                oTdyManaged = TidyManaged.Document.FromString(shtml);
+                oTdyManaged.OutputBodyOnly = TidyManaged.AutoBool.No;
+                oTdyManaged.MakeClean = false;
+                oTdyManaged.IndentWithTabs = true;
+                oTdyManaged.DropFontTags = false;
+                oTdyManaged.DropEmptyParagraphs = false;
+                oTdyManaged.MergeDivs = AutoBool.No;
+                oTdyManaged.MergeSpans = AutoBool.No;
+                oTdyManaged.UseLogicalEmphasis = false;
+                //oTdyManaged.ErrorBuffer = true;
+                oTdyManaged.ShowWarnings = true;
+                oTdyManaged.OutputXhtml = true;
+                oTdyManaged.QuoteAmpersands = true;   // escape stray & as &amp;
+                oTdyManaged.OutputNumericEntities = true;
+                oTdyManaged.CleanWord2000 = false;//removed word tags
+
+                oTdyManaged.InputCharacterEncoding = TidyManaged.EncodingType.Utf8;
+
+                oTdyManaged.CharacterEncoding = TidyManaged.EncodingType.Utf8;
+
+
+
+                if (bReturnNumbericEntities)
+                {
+                    oTdyManaged.OutputNumericEntities = true;
+                }
+
+                // CleanAndRepair returns status: <0 = error, 0 = no warnings/errors, >0 = warnings
+                crResult = oTdyManaged.CleanAndRepair();
+
+                try
+                {
+                    // Only call Save if CleanAndRepair succeeded (result >= 0)
+                    if (crResult >= 0)
+                    {
+                        // Use the stream-based Save overload with explicit UTF-8 decoding.
+                        // The parameterless Save() marshals the native buffer back with
+                        // Marshal.PtrToStringAnsi internally, which mangles multi-byte UTF-8
+                        // sequences (e.g. the pound sign "£") into "?" regardless of the
+                        // CharacterEncoding/InputCharacterEncoding settings above.
+                        try
+                        {
+                            using (var memStream = new System.IO.MemoryStream())
+                            {
+                                oTdyManaged.Save(memStream);
+                                memStream.Position = 0;
+                                using (var reader = new System.IO.StreamReader(memStream, System.Text.Encoding.UTF8))
+                                {
+                                    sTidyXhtml = reader.ReadToEnd();
+                                }
+                            }
+                        }
+                        catch (InvalidOperationException ioEx)
+                        {
+                            // TidyManaged internal state issue - this happens when
+                            // CleanAndRepair succeeded but Save() still thinks it hasn't been called
+                            try
+                            {
+                                // Retry the stream-based save once more
+                                using (var memStream = new System.IO.MemoryStream())
+                                {
+                                    oTdyManaged.Save(memStream);
+                                    memStream.Position = 0;
+                                    using (var reader = new System.IO.StreamReader(memStream, System.Text.Encoding.UTF8))
+                                    {
+                                        sTidyXhtml = reader.ReadToEnd();
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                                // If we haven't tried escaping unknown tags yet, do that now
+                                if (!bRetryWithEscapedTags)
+                                {
+                                    bRetryWithEscapedTags = true;
+                                    oTdyManaged.Dispose();
+                                    // Escape unknown/non-standard HTML tags that might be causing issues
+                                    shtml = EscapeUnknownHtmlTags(originalHtml);
+                                    goto RetryWithEscaping;
+                                }
+
+                                // If even that fails, return an error comment
+                                sTidyXhtml = "<!-- HTML Tidy Error: Unable to save cleaned document despite successful repair (code: " + crResult + "). Error: " + ioEx.Message.Replace("<", "&lt;").Replace(">", "&gt;") + " -->";
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // CleanAndRepair failed - try with escaped tags if we haven't already
+                        if (!bRetryWithEscapedTags)
+                        {
+                            bRetryWithEscapedTags = true;
+                            oTdyManaged.Dispose();
+                            shtml = EscapeUnknownHtmlTags(originalHtml);
+                            goto RetryWithEscaping;
+                        }
+
+                        sTidyXhtml = "<!-- HTML Tidy Error: CleanAndRepair failed with code " + crResult + " -->";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Try with escaped tags if we haven't already
+                    if (!bRetryWithEscapedTags)
+                    {
+                        bRetryWithEscapedTags = true;
+                        oTdyManaged.Dispose();
+                        shtml = EscapeUnknownHtmlTags(originalHtml);
+                        goto RetryWithEscaping;
+                    }
+
+                    sTidyXhtml = "<!-- HTML Tidy Error: " + ex.Message.Replace("<", "&lt;").Replace(">", "&gt;") + " (Result code: " + crResult + ") -->";
+                }
+
+                oTdyManaged.Dispose();
+                oTdyManaged = null/* TODO Change to default(_) if this is not a reference type */;
+                // End Using
+
+                return sTidyXhtml;
+            }
+            catch (Exception ex)
+            {
+                // It is the desired behaviour for this to return nothing if not valid html don't turn this on apart from in development.            Return Nothing
+                return crResult + " - " + ex.Message + ex.StackTrace;
+            }
+            // Return Nothing
+            finally
+            {
+                sTidyXhtml = null;
+            }
+        }
         public static string tidyXhtmlFrag(string shtml, bool bReturnNumbericEntities = false, bool bEncloseText = true, string removeTags = "")
         {
 
@@ -1811,15 +2030,17 @@ namespace Protean
             // Define standard HTML tags that should NOT be escaped
             var standardTags = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase)
             {
-                "a", "abbr", "address", "area", "article", "aside", "audio", "b", "base", "bdi", "bdo", "blockquote",
-                "body", "br", "button", "canvas", "caption", "cite", "code", "col", "colgroup", "data", "datalist",
-                "dd", "del", "details", "dfn", "dialog", "div", "dl", "dt", "em", "embed", "fieldset", "figcaption",
-                "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "head", "header", "hr", "html", "i",
-                "iframe", "img", "input", "ins", "kbd", "label", "legend", "li", "link", "main", "map", "mark", "meta",
-                "meter", "nav", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param", "picture",
-                "pre", "progress", "q", "rp", "rt", "ruby", "s", "samp", "script", "section", "select", "small",
-                "source", "span", "strong", "style", "sub", "summary", "sup", "table", "tbody", "td", "template",
-                "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "u", "ul", "var", "video", "wbr"
+     "a", "abbr", "acronym", "address", "area", "article", "aside", "audio", "b", "base", "basefont", "bdi", "bdo",
+    "bgsound", "big", "blink", "blockquote", "body", "br", "button", "canvas", "caption", "center", "cite", "code",
+    "col", "colgroup", "data", "datalist", "dd", "del", "details", "dfn", "dialog", "dir", "div", "dl", "dt", "em",
+    "embed", "fieldset", "figcaption", "figure", "font", "footer", "form", "frame", "frameset", "h1", "h2", "h3",
+    "h4", "h5", "h6", "head", "header", "hr", "html", "i", "iframe", "image", "img", "input", "ins", "isindex",
+    "kbd", "label", "legend", "li", "link", "listing", "main", "map", "marquee", "mark", "menu", "meta", "meter",
+    "multicol", "nav", "nobr", "noframes", "noscript", "object", "ol", "optgroup", "option", "output", "p", "param",
+    "picture", "plaintext", "pre", "progress", "q", "rb", "rp", "rt", "rtc", "ruby", "s", "samp", "script", "section",
+    "select", "small", "source", "spacer", "span", "strike", "strong", "style", "sub", "summary", "sup", "table",
+    "tbody", "td", "template", "textarea", "tfoot", "th", "thead", "time", "title", "tr", "track", "tt", "u", "ul",
+    "var", "video", "wbr", "xmp"
             };
 
             // Regex to find all tags (opening and closing)

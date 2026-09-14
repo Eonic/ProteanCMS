@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Security;
@@ -987,7 +988,7 @@ namespace Protean
 
                                 if (oElmt.GetAttribute("type") == "Module")
                                 {
-                                      cIndexDetailSubTypes = cIndexDetailTypes;
+                                      cIndexDetailSubTypes = cIndexDetailTypes.Replace(" ","");
                                 }
                                 else {
                                     indexContentDetail(ref oPage, ref oPageElmt, oElmt, ref myWeb, ref nIndexed, ref oElmtURL, ref itemContentCount);
@@ -1086,6 +1087,59 @@ namespace Protean
                 }
             }
 
+            // Regex-based fallback used instead of feeding the whole rendered page straight into
+            // XmlDocument.LoadXml. Some XSL templates (e.g. harbours.xsl) can emit HTML that is not
+            // well-formed XML (unclosed <div>s, inconsistent self-closing <meta>/<link> tags, or even
+            // a stray duplicated <html> document appended after the real one). Rather than trying to
+            // parse the entire malformed page, we pull out just the <head> and first <body>...</body>
+            // sections with regex, normalize the meta/link tags within <head>, and rebuild a minimal
+            // guaranteed-well-formed <html><head>...</head><body>...</body></html> shell. This keeps
+            // all the existing XPath/XmlElement based extraction (indexMeta, canonical link lookup,
+            // body.InnerXml, etc.) working unchanged.
+            private static string ExtractHeadAndBodyAsXml(string html)
+            {
+                if (string.IsNullOrEmpty(html))
+                    return "<html><head></head><body></body></html>";
+
+                string headContent = "";
+                string bodyContent = "";
+
+                var headMatch = Regex.Match(html, "<head\\b[^>]*>(.*?)</head>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                if (headMatch.Success)
+                    headContent = headMatch.Groups[1].Value;
+
+                // Only take the FIRST <body>...</body> - guards against a duplicated/appended document.
+                var bodyMatch = Regex.Match(html, "<body\\b[^>]*>(.*?)</body>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+                if (bodyMatch.Success)
+                    bodyContent = bodyMatch.Groups[1].Value;
+
+                headContent = NormalizeVoidTags(headContent, "meta", "link", "base");
+
+                return "<html><head>" + headContent + "</head><body>" + bodyContent + "</body></html>";
+            }
+
+            // Normalizes HTML "void" elements (meta/link/base) so they are consistently self-closed and
+            // strips any orphan closing tags (e.g. "<meta ...>...</meta>") that would otherwise unbalance
+            // the resulting document when loaded via XmlDocument.LoadXml.
+            private static string NormalizeVoidTags(string fragment, params string[] tagNames)
+            {
+                if (string.IsNullOrEmpty(fragment))
+                    return fragment;
+
+                foreach (var tagName in tagNames)
+                {
+                    // Remove any closing tags for this element - void elements shouldn't have them.
+                    fragment = Regex.Replace(fragment, "</" + tagName + "\\s*>", "", RegexOptions.IgnoreCase);
+
+                    // Ensure every opening tag is self-closed.
+                    fragment = Regex.Replace(fragment, "<" + tagName + "\\b([^>]*?)/?>",
+                        m => "<" + tagName + m.Groups[1].Value.TrimEnd() + " />",
+                        RegexOptions.IgnoreCase);
+                }
+
+                return fragment;
+            }
+
             public void indexContentDetail(ref oPage oPage, ref XmlElement oPageElmt, XmlElement oElmt, ref Cms myWeb, ref int nIndexed, ref XmlElement oElmtURL, ref long itemContentCount) {
                 string cProcessInfo;
                 string cPageExtract = "";
@@ -1148,9 +1202,11 @@ namespace Protean
                     {
                         try
                         {
-                            oPageXml.LoadXml(cPageHtml);
+                                //oPageXml.LoadXml(ExtractHeadAndBodyAsXml(cPageHtml));
 
-                            if (!(oElmt.GetAttribute("type") == "Document"))
+                                oPageXml.LoadXml(cPageHtml);
+
+                                if (!(oElmt.GetAttribute("type") == "Document"))
                             {
                                 oElmtRules = (XmlElement)oPageXml.SelectSingleNode("/html/head/meta[@name='ROBOTS']");
                                 cRules = "";

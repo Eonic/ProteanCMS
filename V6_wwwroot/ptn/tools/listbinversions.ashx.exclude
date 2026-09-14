@@ -1,0 +1,76 @@
+<%@ WebHandler Language="C#" Class="ListBinVersions" %>
+
+using System;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using System.Text;
+using System.Web;
+
+public class ListBinVersions : IHttpHandler
+{
+    public void ProcessRequest(HttpContext context)
+    {
+        context.Response.ContentType = "text/plain";
+
+        var binPath = context.Server.MapPath("~/bin");
+        var sb = new StringBuilder();
+
+        sb.AppendLine("Bin folder: " + binPath);
+        sb.AppendLine();
+
+        var files = Directory.GetFiles(binPath, "*.dll", SearchOption.TopDirectoryOnly)
+                              .OrderBy(f => Path.GetFileName(f), StringComparer.OrdinalIgnoreCase);
+
+        foreach (var file in files)
+        {
+            string fileName = Path.GetFileName(file);
+            string assemblyVersion = "N/A";
+            string fileVersion = "N/A";
+            string publicKeyToken = "N/A";
+            string error = null;
+
+            try
+            {
+                var name = AssemblyName.GetAssemblyName(file);
+                assemblyVersion = name.Version != null ? name.Version.ToString() : "N/A";
+
+                var tokenBytes = name.GetPublicKeyToken();
+                publicKeyToken = (tokenBytes != null && tokenBytes.Length > 0)
+                    ? string.Concat(tokenBytes.Select(b => b.ToString("x2")))
+                    : "null";
+            }
+            catch (Exception ex)
+            {
+                error = ex.Message;
+            }
+
+            try
+            {
+                var fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(file);
+                fileVersion = fvi.FileVersion ?? "N/A";
+            }
+            catch
+            {
+                // ignore, keep N/A
+            }
+
+            sb.AppendLine(fileName);
+            sb.AppendLine("    AssemblyVersion : " + assemblyVersion);
+            sb.AppendLine("    FileVersion     : " + fileVersion);
+            sb.AppendLine("    PublicKeyToken  : " + publicKeyToken);
+            if (error != null)
+            {
+                sb.AppendLine("    Error           : " + error);
+            }
+            sb.AppendLine();
+        }
+
+        context.Response.Write(sb.ToString());
+    }
+
+    public bool IsReusable
+    {
+        get { return false; }
+    }
+}

@@ -4845,11 +4845,7 @@
 						<xsl:with-param name="name">ExitModal</xsl:with-param>
 						<xsl:with-param name="type">Module</xsl:with-param>
 					</xsl:call-template>
-					<xsl:call-template name="editNamedContent">
-						<xsl:with-param name="desc">Critical Path CSS</xsl:with-param>
-						<xsl:with-param name="name">criticalPathCSS</xsl:with-param>
-						<xsl:with-param name="type">PlainText</xsl:with-param>
-					</xsl:call-template>
+					
 					<xsl:call-template name="editNamedContent">
 						<xsl:with-param name="desc">Meta Refresh</xsl:with-param>
 						<xsl:with-param name="name">metaRefresh</xsl:with-param>
@@ -4902,6 +4898,11 @@
 						<xsl:with-param name="desc">Organisation</xsl:with-param>
 						<xsl:with-param name="name">MetaOrganisation</xsl:with-param>
 						<xsl:with-param name="type">Organisation</xsl:with-param>
+					</xsl:call-template>
+        <xsl:call-template name="editNamedContent">
+						<xsl:with-param name="desc">Critical Path CSS</xsl:with-param>
+						<xsl:with-param name="name">criticalPathCSS</xsl:with-param>
+						<xsl:with-param name="type">PlainText</xsl:with-param>
 					</xsl:call-template>
 				</table>
 			</div>

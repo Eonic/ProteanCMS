@@ -119,7 +119,7 @@ namespace Protean
                                         foreach (XmlElement oElmt in base.Instance.SelectNodes("tblSubscription/cSubXml/Content/UserGroups/Group[@id!='']"))
                                         {
                                             int nGrpID = Convert.ToInt16(oElmt.Attributes["id"].Value);
-                                            myWeb.moDbHelper.saveDirectoryRelations((long)Convert.ToInt16(base.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText), nGrpID.ToString());
+                                            myWeb.moDbHelper.saveDirectoryRelations((long)Convert.ToInt64(base.Instance.SelectSingleNode("tblSubscription/nDirId").InnerText), nGrpID.ToString());
                                         }
                                     }
                                 }

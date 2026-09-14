@@ -75,12 +75,12 @@
       <tr>
         <td colspan="2" align="left" style="text-align:left !important;">
           <font face="verdana">
-            <xsl:if test="/Page/Contents/Content[@name='cartMessage'] or Notes">
+            <xsl:if test="/Page/Contents/Content[@name='cartMessage'] or Notes/node()!=''">
               <h3>Additional Information</h3>
               <font size="2">
                 <xsl:copy-of select="/Page/Contents/Content[@name='cartMessage']/node()" />
                 <br />
-                <xsl:copy-of select="Notes/Notes" />
+                <xsl:copy-of select="Notes/node()" />
                 <br />
                 <xsl:value-of select="/Page/Contents/Content[@name='cartTerms']"/>
               </font>

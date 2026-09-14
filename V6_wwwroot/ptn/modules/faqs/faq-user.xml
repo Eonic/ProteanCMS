@@ -31,6 +31,19 @@
 				<nStatus>4</nStatus>
 				<cDescription/>
 			</tblContent>
+
+			<ConfirmEmail>
+				<ToName/>
+				<ToEmail/>
+				<FromEmail/>
+				<FromName/>
+				<CcName/>
+				<CcEmail/>
+				<BccName/>
+				<BccEmail/>
+				<SubjectLine>Thank you for your question</SubjectLine>
+				<EmailXslt>/ptn/email/pendingContentNotification.xsl</EmailXslt>
+			</ConfirmEmail>
 		</instance>
 		<submission id="AddFAQ" action="" method="post" event="return form_check(this)"/>
 		<bind nodeset="tblContent">
