@@ -10,7 +10,7 @@ using Exception = System.Exception;
 
 namespace Protean.Tools
 {
-    public partial class Image
+    public partial class Image : IDisposable
     {
         #region Declarations
         private string cLocation; // Location of the file to load
@@ -73,9 +73,19 @@ namespace Protean.Tools
             }
         }
 
+        // Kept as the pre-existing public API; delegates to Dispose() so both remain
+        // valid ways to release the underlying native bitmaps. This method (like
+        // Dispose()) intentionally leaves the object usable afterward - existing code
+        // reuses an Image instance across ReLoad()/Resize()/Save() calls, and the
+        // null-checks below already make repeated calls safe/idempotent.
         public void Close()
         {
-            // closes
+            Dispose();
+        }
+
+        public void Dispose()
+        {
+            // disposes the underlying native bitmaps deterministically
             try
             {
                 if (oCanvas != null)
@@ -93,15 +103,10 @@ namespace Protean.Tools
                     oSourceImg.Dispose();
                     oSourceImg = null;
                 }
-
             }
             catch (Exception ex)
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Close", ex, ""));
-            }
-            finally
-            {
-
             }
         }
 
@@ -114,8 +119,15 @@ namespace Protean.Tools
                 {
                     throw new FileNotFoundException($"Image file not found: {cLocation}", cLocation);
                 }
-                
+
+                // Dispose any previously loaded bitmap before replacing it so native memory
+                // is released deterministically instead of waiting on the GC finalizer.
+                var oldImg = oImg;
+
                 oImg = SKBitmap.Decode(cLocation);  // ✅ SkiaSharp method
+
+                oldImg?.Dispose();
+
                 if (oImg == null)
                 {
                     throw new InvalidOperationException($"Failed to decode image: {cLocation}");
@@ -573,6 +585,9 @@ namespace Protean.Tools
                     return oImage;
                 }
 
+                // Dispose the previously held source copy before replacing it so native
+                // memory is released deterministically instead of waiting on the GC finalizer.
+                oSourceImg?.Dispose();
                 oSourceImg = oImage.Copy();
 
                 if (oSourceImg == null)
@@ -619,10 +634,22 @@ namespace Protean.Tools
                     oImg = resizedBitmap;
                 }
 
+                // The caller's original bitmap (oImage) has now been fully copied/consumed;
+                // dispose it deterministically rather than leaving it for the GC finalizer.
+                if (!ReferenceEquals(oImage, oImg))
+                {
+                    oImage.Dispose();
+                }
+
                 // Add crop if needed
                 if (bCrop)
                 {
+                    var preCropImg = oImg;
                     oImg = CropImage(oImg);
+                    if (!ReferenceEquals(preCropImg, oImg))
+                    {
+                        preCropImg.Dispose();
+                    }
                 }
 
                 return oImg;
@@ -779,7 +806,17 @@ namespace Protean.Tools
             }
         }
 
-        public async void TinyCompress(string filepathFrom, string filepathTo)
+        // Public sync entry point kept for the existing (non-async) call site in
+        // CompressImage. All actual awaiting happens once here rather than being
+        // scattered across multiple blocking .GetAwaiter().GetResult() calls inside
+        // the async body, which previously risked deadlocking on any thread with a
+        // captured SynchronizationContext (e.g. classic ASP.NET request threads).
+        public void TinyCompress(string filepathFrom, string filepathTo)
+        {
+            TinyCompressAsync(filepathFrom, filepathTo).GetAwaiter().GetResult();
+        }
+
+        private async Task TinyCompressAsync(string filepathFrom, string filepathTo)
         {
             string cProcessInfo = "";
             try
@@ -787,8 +824,7 @@ namespace Protean.Tools
                 Tinify.Key = TinifyKey;
                 try
                 {
-
-                    bool bIsValid = Tinify.Validate().GetAwaiter().GetResult();
+                    bool bIsValid = await Tinify.Validate().ConfigureAwait(false);
                     if (bIsValid == true)
                     {
                         cProcessInfo = "Key Validation Succeeded";
@@ -800,24 +836,20 @@ namespace Protean.Tools
                 }
 
                 var compressionsThisMonth = TinifyAPI.Tinify.CompressionCount;
-                Task<TinifyAPI.Source> tinifyImg = TinifyAPI.Tinify.FromFile(filepathFrom);
-                var newImage = tinifyImg.GetAwaiter().GetResult();
+                var newImage = await TinifyAPI.Tinify.FromFile(filepathFrom).ConfigureAwait(false);
                 if (newImage != null)
                 {
-                    newImage.ToFile(filepathTo).GetAwaiter().GetResult();
+                    await newImage.ToFile(filepathTo).ConfigureAwait(false);
                 }
                 else
                 {
                     cProcessInfo = "Compression Failed" + filepathFrom;
                 }
             }
-
             catch (Exception ex)
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TinyCompress", ex, cProcessInfo));
             }
-
-
         }
 
         public long CompressImage(FileInfo imgfileInfo, bool lossless, short Quality = 0, string fileSuffix = "")
@@ -1131,6 +1163,10 @@ namespace Protean.Tools
                     reflectedImage.Dispose();
                 }
 
+                // _image is the previous oImg; dispose it now that the new bitmap has
+                // been fully drawn, rather than leaving it for the GC finalizer.
+                _image.Dispose();
+
                 oImg = newImage;
                 return oImg;
             }
@@ -1303,6 +1339,10 @@ namespace Protean.Tools
                     }
                 }
 
+                // Dispose the previous oImg now that its pixels have been fully drawn
+                // into bmPhoto, rather than leaving it for the GC finalizer.
+                oImg.Dispose();
+
                 oImg = bmPhoto;
                 return oImg;
             }
@@ -1391,6 +1431,14 @@ namespace Protean.Tools
                             }
                         }
                     }
+                }
+
+                // Dispose the previous oImg field (if different from the caller-supplied
+                // oImgParam) now that bmPhoto holds the fully drawn result, rather than
+                // leaving it for the GC finalizer.
+                if (this.oImg != null && !ReferenceEquals(this.oImg, oImgParam) && !ReferenceEquals(this.oImg, bmPhoto))
+                {
+                    this.oImg.Dispose();
                 }
 
                 this.oImg = bmPhoto;
