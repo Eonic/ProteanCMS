@@ -11,7 +11,7 @@
 				ad_storage: 'denied',
 				ad_user_data: 'denied',
 				ad_personalization: 'denied',
-				analytics_storage: 'denied',1	12`	`
+				analytics_storage: 'denied',
 				wait_for_update: 500
 				});
 			</script>

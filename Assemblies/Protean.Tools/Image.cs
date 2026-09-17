@@ -574,7 +574,7 @@ namespace Protean.Tools
                 }
 
                 oSourceImg = oImage.Copy();
-                
+
                 if (oSourceImg == null)
                 {
                     OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImageResize", 
@@ -582,27 +582,42 @@ namespace Protean.Tools
                     return oImage;
                 }
 
-                // Create new bitmap with target dimensions
-                var resizedBitmap = new SKBitmap(nWidth, nHeight, oImage.ColorType, oImage.AlphaType);
-
-                using (var canvas = new SKCanvas(resizedBitmap))
-                using (var paint = new SKPaint())
+                // A single bicubic pass straight from a large source down to a much smaller
+                // thumbnail under-samples the source pixels (the classic minification problem),
+                // which produces aliasing/pixelation regardless of the sampler used. Step the
+                // image down by halving repeatedly until it is within 2x of the target size,
+                // then do a final high quality pass to the exact target dimensions. This is
+                // the standard fix for pixelated/aliased thumbnails when shrinking by a large factor.
+                using (var stepped = DownscaleProgressively(oSourceImg, nWidth, nHeight))
                 {
-                    // High quality settings
-                    paint.IsAntialias = true;
-                    paint.FilterQuality = SKFilterQuality.High;
+                    // Create new bitmap with target dimensions
+                    var resizedBitmap = new SKBitmap(nWidth, nHeight, oImage.ColorType, oImage.AlphaType);
 
-                    // Clear canvas with white background (for JPEGs that don't support transparency)
-                    canvas.Clear(SKColors.White);
+                    using (var canvas = new SKCanvas(resizedBitmap))
+                    using (var paint = new SKPaint())
+                    using (var sourceImage = SKImage.FromBitmap(stepped))
+                    {
+                        // High quality settings.
+                        // NOTE: SKPaint.FilterQuality is obsolete in current SkiaSharp and is no
+                        // longer honored by DrawBitmap, which caused visible pixelation. Use an
+                        // explicit SKSamplingOptions with a cubic resampler instead (via DrawImage),
+                        // which produces much smoother results for both up- and down-scaling.
+                        paint.IsAntialias = true;
+                        var samplingOptions = new SKSamplingOptions(SKCubicResampler.Mitchell);
 
-                    // Draw resized image
-                    canvas.DrawBitmap(oSourceImg,
-                        new SKRect(0, 0, oSourceImg.Width, oSourceImg.Height),
-                        new SKRect(0, 0, nWidth, nHeight),
-                        paint);
+                        // Clear canvas with white background (for JPEGs that don't support transparency)
+                        canvas.Clear(SKColors.White);
+
+                        // Draw resized image
+                        canvas.DrawImage(sourceImage,
+                            new SKRect(0, 0, stepped.Width, stepped.Height),
+                            new SKRect(0, 0, nWidth, nHeight),
+                            samplingOptions,
+                            paint);
+                    }
+
+                    oImg = resizedBitmap;
                 }
-
-                oImg = resizedBitmap;
 
                 // Add crop if needed
                 if (bCrop)
@@ -616,6 +631,55 @@ namespace Protean.Tools
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImageResize", ex, ""));
                 return oImage;
+            }
+        }
+
+        /// <summary>
+        /// Shrinks <paramref name="source"/> in halving steps until it is within 2x of the
+        /// requested target dimensions. Returns a new bitmap that the caller must dispose;
+        /// if no stepping is required, returns a copy of <paramref name="source"/> so the
+        /// caller always owns (and can dispose) the returned instance.
+        /// Downscaling directly from a large source to a much smaller target in a single
+        /// pass under-samples the source pixels, causing aliasing/pixelation even with a
+        /// high quality resampler. Stepping down by no more than 2x per pass keeps enough
+        /// source detail averaged into each destination pixel at every stage.
+        /// </summary>
+        private SKBitmap DownscaleProgressively(SKBitmap source, int targetWidth, int targetHeight)
+        {
+            var current = source.Copy();
+
+            try
+            {
+                while (current.Width > targetWidth * 2 && current.Height > targetHeight * 2)
+                {
+                    int nextWidth = Math.Max(targetWidth, current.Width / 2);
+                    int nextHeight = Math.Max(targetHeight, current.Height / 2);
+
+                    var next = new SKBitmap(nextWidth, nextHeight, current.ColorType, current.AlphaType);
+
+                    using (var canvas = new SKCanvas(next))
+                    using (var paint = new SKPaint { IsAntialias = true })
+                    using (var stepImage = SKImage.FromBitmap(current))
+                    {
+                        var samplingOptions = new SKSamplingOptions(SKCubicResampler.Mitchell);
+                        canvas.Clear(SKColors.White);
+                        canvas.DrawImage(stepImage,
+                            new SKRect(0, 0, current.Width, current.Height),
+                            new SKRect(0, 0, nextWidth, nextHeight),
+                            samplingOptions,
+                            paint);
+                    }
+
+                    current.Dispose();
+                    current = next;
+                }
+
+                return current;
+            }
+            catch
+            {
+                current.Dispose();
+                throw;
             }
         }
 
@@ -939,7 +1003,7 @@ namespace Protean.Tools
                 using (var paint = new SKPaint())
                 {
                     paint.IsAntialias = true;
-                    paint.FilterQuality = SKFilterQuality.High;
+                    var samplingOptions = new SKSamplingOptions(SKCubicResampler.Mitchell);
 
                     // Clear canvas with white background (for JPEGs that don't support transparency)
                     canvas.Clear(SKColors.White);
@@ -971,7 +1035,10 @@ namespace Protean.Tools
                         sourceRect = new SKRect(nNewW, 0, nNewW + srcWidth, srcHeight);
                     }
 
-                    canvas.DrawBitmap(oImage, sourceRect, destRect, paint);
+                    using (var sourceImage = SKImage.FromBitmap(oImage))
+                    {
+                        canvas.DrawImage(sourceImage, sourceRect, destRect, samplingOptions, paint);
+                    }
                 }
 
                 return cropped;
