@@ -10,7 +10,7 @@ using Exception = System.Exception;
 
 namespace Protean.Tools
 {
-    public partial class Image : IDisposable
+    public partial class Image
     {
         #region Declarations
         private string cLocation; // Location of the file to load
@@ -73,19 +73,9 @@ namespace Protean.Tools
             }
         }
 
-        // Kept as the pre-existing public API; delegates to Dispose() so both remain
-        // valid ways to release the underlying native bitmaps. This method (like
-        // Dispose()) intentionally leaves the object usable afterward - existing code
-        // reuses an Image instance across ReLoad()/Resize()/Save() calls, and the
-        // null-checks below already make repeated calls safe/idempotent.
         public void Close()
         {
-            Dispose();
-        }
-
-        public void Dispose()
-        {
-            // disposes the underlying native bitmaps deterministically
+            // closes
             try
             {
                 if (oCanvas != null)
@@ -103,10 +93,15 @@ namespace Protean.Tools
                     oSourceImg.Dispose();
                     oSourceImg = null;
                 }
+
             }
             catch (Exception ex)
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "Close", ex, ""));
+            }
+            finally
+            {
+
             }
         }
 
@@ -119,15 +114,8 @@ namespace Protean.Tools
                 {
                     throw new FileNotFoundException($"Image file not found: {cLocation}", cLocation);
                 }
-
-                // Dispose any previously loaded bitmap before replacing it so native memory
-                // is released deterministically instead of waiting on the GC finalizer.
-                var oldImg = oImg;
-
+                
                 oImg = SKBitmap.Decode(cLocation);  // ✅ SkiaSharp method
-
-                oldImg?.Dispose();
-
                 if (oImg == null)
                 {
                     throw new InvalidOperationException($"Failed to decode image: {cLocation}");
@@ -585,11 +573,8 @@ namespace Protean.Tools
                     return oImage;
                 }
 
-                // Dispose the previously held source copy before replacing it so native
-                // memory is released deterministically instead of waiting on the GC finalizer.
-                oSourceImg?.Dispose();
                 oSourceImg = oImage.Copy();
-
+                
                 if (oSourceImg == null)
                 {
                     OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImageResize", 
@@ -597,59 +582,38 @@ namespace Protean.Tools
                     return oImage;
                 }
 
-                // A single bicubic pass straight from a large source down to a much smaller
-                // thumbnail under-samples the source pixels (the classic minification problem),
-                // which produces aliasing/pixelation regardless of the sampler used. Step the
-                // image down by halving repeatedly until it is within 2x of the target size,
-                // then do a final high quality pass to the exact target dimensions. This is
-                // the standard fix for pixelated/aliased thumbnails when shrinking by a large factor.
-                using (var stepped = DownscaleProgressively(oSourceImg, nWidth, nHeight))
+                // Create new bitmap with target dimensions
+                var resizedBitmap = new SKBitmap(nWidth, nHeight, oImage.ColorType, oImage.AlphaType);
+
+                using (var canvas = new SKCanvas(resizedBitmap))
+                using (var paint = new SKPaint())
+                using (var sourceImage = SKImage.FromBitmap(oSourceImg))
                 {
-                    // Create new bitmap with target dimensions
-                    var resizedBitmap = new SKBitmap(nWidth, nHeight, oImage.ColorType, oImage.AlphaType);
+                    // High quality settings.
+                    // NOTE: SKPaint.FilterQuality is obsolete in current SkiaSharp and is no
+                    // longer honored by DrawBitmap, which caused visible pixelation. Use an
+                    // explicit SKSamplingOptions with a cubic resampler instead (via DrawImage),
+                    // which produces much smoother results for both up- and down-scaling.
+                    paint.IsAntialias = true;
+                    var samplingOptions = new SKSamplingOptions(SKCubicResampler.CatmullRom);
 
-                    using (var canvas = new SKCanvas(resizedBitmap))
-                    using (var paint = new SKPaint())
-                    using (var sourceImage = SKImage.FromBitmap(stepped))
-                    {
-                        // High quality settings.
-                        // NOTE: SKPaint.FilterQuality is obsolete in current SkiaSharp and is no
-                        // longer honored by DrawBitmap, which caused visible pixelation. Use an
-                        // explicit SKSamplingOptions with a cubic resampler instead (via DrawImage),
-                        // which produces much smoother results for both up- and down-scaling.
-                        paint.IsAntialias = true;
-                        var samplingOptions = new SKSamplingOptions(SKCubicResampler.Mitchell);
+                    // Clear canvas with white background (for JPEGs that don't support transparency)
+                    canvas.Clear(SKColors.White);
 
-                        // Clear canvas with white background (for JPEGs that don't support transparency)
-                        canvas.Clear(SKColors.White);
-
-                        // Draw resized image
-                        canvas.DrawImage(sourceImage,
-                            new SKRect(0, 0, stepped.Width, stepped.Height),
-                            new SKRect(0, 0, nWidth, nHeight),
-                            samplingOptions,
-                            paint);
-                    }
-
-                    oImg = resizedBitmap;
+                    // Draw resized image
+                    canvas.DrawImage(sourceImage,
+                        new SKRect(0, 0, oSourceImg.Width, oSourceImg.Height),
+                        new SKRect(0, 0, nWidth, nHeight),
+                        samplingOptions,
+                        paint);
                 }
 
-                // The caller's original bitmap (oImage) has now been fully copied/consumed;
-                // dispose it deterministically rather than leaving it for the GC finalizer.
-                if (!ReferenceEquals(oImage, oImg))
-                {
-                    oImage.Dispose();
-                }
+                oImg = resizedBitmap;
 
                 // Add crop if needed
                 if (bCrop)
                 {
-                    var preCropImg = oImg;
                     oImg = CropImage(oImg);
-                    if (!ReferenceEquals(preCropImg, oImg))
-                    {
-                        preCropImg.Dispose();
-                    }
                 }
 
                 return oImg;
@@ -658,55 +622,6 @@ namespace Protean.Tools
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "ImageResize", ex, ""));
                 return oImage;
-            }
-        }
-
-        /// <summary>
-        /// Shrinks <paramref name="source"/> in halving steps until it is within 2x of the
-        /// requested target dimensions. Returns a new bitmap that the caller must dispose;
-        /// if no stepping is required, returns a copy of <paramref name="source"/> so the
-        /// caller always owns (and can dispose) the returned instance.
-        /// Downscaling directly from a large source to a much smaller target in a single
-        /// pass under-samples the source pixels, causing aliasing/pixelation even with a
-        /// high quality resampler. Stepping down by no more than 2x per pass keeps enough
-        /// source detail averaged into each destination pixel at every stage.
-        /// </summary>
-        private SKBitmap DownscaleProgressively(SKBitmap source, int targetWidth, int targetHeight)
-        {
-            var current = source.Copy();
-
-            try
-            {
-                while (current.Width > targetWidth * 2 && current.Height > targetHeight * 2)
-                {
-                    int nextWidth = Math.Max(targetWidth, current.Width / 2);
-                    int nextHeight = Math.Max(targetHeight, current.Height / 2);
-
-                    var next = new SKBitmap(nextWidth, nextHeight, current.ColorType, current.AlphaType);
-
-                    using (var canvas = new SKCanvas(next))
-                    using (var paint = new SKPaint { IsAntialias = true })
-                    using (var stepImage = SKImage.FromBitmap(current))
-                    {
-                        var samplingOptions = new SKSamplingOptions(SKCubicResampler.Mitchell);
-                        canvas.Clear(SKColors.White);
-                        canvas.DrawImage(stepImage,
-                            new SKRect(0, 0, current.Width, current.Height),
-                            new SKRect(0, 0, nextWidth, nextHeight),
-                            samplingOptions,
-                            paint);
-                    }
-
-                    current.Dispose();
-                    current = next;
-                }
-
-                return current;
-            }
-            catch
-            {
-                current.Dispose();
-                throw;
             }
         }
 
@@ -806,17 +721,7 @@ namespace Protean.Tools
             }
         }
 
-        // Public sync entry point kept for the existing (non-async) call site in
-        // CompressImage. All actual awaiting happens once here rather than being
-        // scattered across multiple blocking .GetAwaiter().GetResult() calls inside
-        // the async body, which previously risked deadlocking on any thread with a
-        // captured SynchronizationContext (e.g. classic ASP.NET request threads).
-        public void TinyCompress(string filepathFrom, string filepathTo)
-        {
-            TinyCompressAsync(filepathFrom, filepathTo).GetAwaiter().GetResult();
-        }
-
-        private async Task TinyCompressAsync(string filepathFrom, string filepathTo)
+        public async void TinyCompress(string filepathFrom, string filepathTo)
         {
             string cProcessInfo = "";
             try
@@ -824,7 +729,8 @@ namespace Protean.Tools
                 Tinify.Key = TinifyKey;
                 try
                 {
-                    bool bIsValid = await Tinify.Validate().ConfigureAwait(false);
+
+                    bool bIsValid = Tinify.Validate().GetAwaiter().GetResult();
                     if (bIsValid == true)
                     {
                         cProcessInfo = "Key Validation Succeeded";
@@ -836,20 +742,24 @@ namespace Protean.Tools
                 }
 
                 var compressionsThisMonth = TinifyAPI.Tinify.CompressionCount;
-                var newImage = await TinifyAPI.Tinify.FromFile(filepathFrom).ConfigureAwait(false);
+                Task<TinifyAPI.Source> tinifyImg = TinifyAPI.Tinify.FromFile(filepathFrom);
+                var newImage = tinifyImg.GetAwaiter().GetResult();
                 if (newImage != null)
                 {
-                    await newImage.ToFile(filepathTo).ConfigureAwait(false);
+                    newImage.ToFile(filepathTo).GetAwaiter().GetResult();
                 }
                 else
                 {
                     cProcessInfo = "Compression Failed" + filepathFrom;
                 }
             }
+
             catch (Exception ex)
             {
                 OnError?.Invoke(this, new Protean.Tools.Errors.ErrorEventArgs(mcModuleName, "TinyCompress", ex, cProcessInfo));
             }
+
+
         }
 
         public long CompressImage(FileInfo imgfileInfo, bool lossless, short Quality = 0, string fileSuffix = "")
@@ -1163,10 +1073,6 @@ namespace Protean.Tools
                     reflectedImage.Dispose();
                 }
 
-                // _image is the previous oImg; dispose it now that the new bitmap has
-                // been fully drawn, rather than leaving it for the GC finalizer.
-                _image.Dispose();
-
                 oImg = newImage;
                 return oImg;
             }
@@ -1339,10 +1245,6 @@ namespace Protean.Tools
                     }
                 }
 
-                // Dispose the previous oImg now that its pixels have been fully drawn
-                // into bmPhoto, rather than leaving it for the GC finalizer.
-                oImg.Dispose();
-
                 oImg = bmPhoto;
                 return oImg;
             }
@@ -1431,14 +1333,6 @@ namespace Protean.Tools
                             }
                         }
                     }
-                }
-
-                // Dispose the previous oImg field (if different from the caller-supplied
-                // oImgParam) now that bmPhoto holds the fully drawn result, rather than
-                // leaving it for the GC finalizer.
-                if (this.oImg != null && !ReferenceEquals(this.oImg, oImgParam) && !ReferenceEquals(this.oImg, bmPhoto))
-                {
-                    this.oImg.Dispose();
                 }
 
                 this.oImg = bmPhoto;
