@@ -209,12 +209,19 @@ namespace Protean
                                 XmlElement nodeToUpdate = (XmlElement)origInstance.SelectSingleNode("/instance/" + updXpath);
                                 if (nodeToUpdate != null)
                                 {
-                                    if (oUpdElmt.InnerText.Trim() != "surgicalIgnore")
-                                    {
-                                        nodeToUpdate.InnerText = oUpdElmt.InnerText;
+                                    //if contains Xml do the whole node
+                                    if (oUpdElmt.FirstChild != null) {
+                                        nodeToUpdate.InnerXml = oUpdElmt.InnerXml;
                                     }
-                                    foreach (XmlAttribute att in oUpdElmt.Attributes)
-                                        nodeToUpdate.SetAttribute(att.Name, att.Value);
+                                    else
+                                    {
+                                        if (oUpdElmt.InnerText.Trim() != "surgicalIgnore")
+                                        {
+                                            nodeToUpdate.InnerText = oUpdElmt.InnerText;
+                                        }
+                                        foreach (XmlAttribute att in oUpdElmt.Attributes)
+                                            nodeToUpdate.SetAttribute(att.Name, att.Value);
+                                    }
                                 }
                                 else
                                 {

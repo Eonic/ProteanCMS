@@ -587,18 +587,24 @@ namespace Protean.Tools
 
                 using (var canvas = new SKCanvas(resizedBitmap))
                 using (var paint = new SKPaint())
+                using (var sourceImage = SKImage.FromBitmap(oSourceImg))
                 {
-                    // High quality settings
+                    // High quality settings.
+                    // NOTE: SKPaint.FilterQuality is obsolete in current SkiaSharp and is no
+                    // longer honored by DrawBitmap, which caused visible pixelation. Use an
+                    // explicit SKSamplingOptions with a cubic resampler instead (via DrawImage),
+                    // which produces much smoother results for both up- and down-scaling.
                     paint.IsAntialias = true;
-                    paint.FilterQuality = SKFilterQuality.High;
+                    var samplingOptions = new SKSamplingOptions(SKCubicResampler.CatmullRom);
 
                     // Clear canvas with white background (for JPEGs that don't support transparency)
                     canvas.Clear(SKColors.White);
 
                     // Draw resized image
-                    canvas.DrawBitmap(oSourceImg,
+                    canvas.DrawImage(sourceImage,
                         new SKRect(0, 0, oSourceImg.Width, oSourceImg.Height),
                         new SKRect(0, 0, nWidth, nHeight),
+                        samplingOptions,
                         paint);
                 }
 
@@ -939,7 +945,7 @@ namespace Protean.Tools
                 using (var paint = new SKPaint())
                 {
                     paint.IsAntialias = true;
-                    paint.FilterQuality = SKFilterQuality.High;
+                    var samplingOptions = new SKSamplingOptions(SKCubicResampler.Mitchell);
 
                     // Clear canvas with white background (for JPEGs that don't support transparency)
                     canvas.Clear(SKColors.White);
@@ -971,7 +977,10 @@ namespace Protean.Tools
                         sourceRect = new SKRect(nNewW, 0, nNewW + srcWidth, srcHeight);
                     }
 
-                    canvas.DrawBitmap(oImage, sourceRect, destRect, paint);
+                    using (var sourceImage = SKImage.FromBitmap(oImage))
+                    {
+                        canvas.DrawImage(sourceImage, sourceRect, destRect, samplingOptions, paint);
+                    }
                 }
 
                 return cropped;

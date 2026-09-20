@@ -1339,15 +1339,22 @@ namespace Protean
             public string GetContentIdFromFref(string fRef)
             {
 
-                long ids;
-                myWeb.moDbHelper.ResetConnection(myWeb.moDbHelper.DatabaseConnectionString);
-                ids = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Content, fRef);
-
-                if (!(ids == 0L))
+                try
                 {
-                    return ids.ToString();
+                    long ids;
+                    myWeb.moDbHelper.ResetConnection(myWeb.moDbHelper.DatabaseConnectionString);
+                    ids = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.Content, fRef);
+
+                    if (!(ids == 0L))
+                    {
+                        return ids.ToString();
+                    }
+                    else
+                    {
+                        return "";
+                    }
                 }
-                else
+                catch (Exception)
                 {
                     return "";
                 }
@@ -1357,14 +1364,21 @@ namespace Protean
             public string GetProductGroupIdFromFref(string fRef)
             {
 
-                long ids;
-                myWeb.moDbHelper.ResetConnection(myWeb.moDbHelper.DatabaseConnectionString);
-                ids = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.CartProductCategories, fRef);
-                if (!(ids == 0L))
+                try
                 {
-                    return ids.ToString();
+                    long ids;
+                    myWeb.moDbHelper.ResetConnection(myWeb.moDbHelper.DatabaseConnectionString);
+                    ids = myWeb.moDbHelper.getObjectByRef(Cms.dbHelper.objectTypes.CartProductCategories, fRef);
+                    if (!(ids == 0L))
+                    {
+                        return ids.ToString();
+                    }
+                    else
+                    {
+                        return "";
+                    }
                 }
-                else
+                catch (Exception)
                 {
                     return "";
                 }

@@ -806,104 +806,121 @@ namespace Protean.Tools
             return default;
         }
 
+        private string GetUniqueColumnName(DataTable dt, string columnName)
+        {
+            if (!dt.Columns.Contains(columnName))
+            {
+                return columnName;
+            }
+
+            int suffix = 1;
+            string candidate;
+            do
+            {
+                suffix += 1;
+                candidate = columnName + " " + suffix;
+            }
+            while (dt.Columns.Contains(candidate));
+
+            return candidate;
+        }
+
+        private void EnsureColumnCapacity(DataTable dt, int columnIndex)
+        {
+            while (dt.Columns.Count <= columnIndex)
+            {
+                dt.Columns.Add(GetUniqueColumnName(dt, "extra" + (dt.Columns.Count + 1)));
+            }
+        }
+
         private DataSet ReadExcelFile(string filename)
         {
-            string cProcessInfo;
             var ds = new DataSet();
             try
             {
-                var spreadsheetDocument = SpreadsheetDocument.Open(filename.Replace(" ","-"), false);
-                var workbookPart = spreadsheetDocument.WorkbookPart;
-                var sheetcollection = spreadsheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
-                int sheetCount = 0;
-                foreach (var myWorksheet in sheetcollection)
+                using (var spreadsheetDocument = SpreadsheetDocument.Open(filename.Replace(" ","-"), false))
                 {
-                    var dt = new DataTable();
-                    string relationshipId = myWorksheet.Id.Value;
-                    WorksheetPart worksheetPart = (WorksheetPart)spreadsheetDocument.WorkbookPart.GetPartById(relationshipId);
-                    var sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
-                    var rowcollection = sheetData.Descendants<Row>();
-                    if (!(rowcollection.Count() == 0))
+                    var workbookPart = spreadsheetDocument.WorkbookPart;
+                    var sheetcollection = spreadsheetDocument.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>();
+                    int sheetCount = 0;
+                    foreach (var myWorksheet in sheetcollection)
                     {
-                        // TS - First row on second worksheet is empty so stepping on one
-                        // For Each cell As Cell In rowcollection.ElementAt(0)
-                        long colCount = 1L;
-                        // create rows using first line
-                        if (sheetCount > 0)
+                        var dt = new DataTable();
+                        string relationshipId = myWorksheet.Id.Value;
+                        WorksheetPart worksheetPart = (WorksheetPart)spreadsheetDocument.WorkbookPart.GetPartById(relationshipId);
+                        var sheetData = worksheetPart.Worksheet.Elements<SheetData>().First();
+                        var rowcollection = sheetData.Descendants<Row>().ToList();
+                        if (!(rowcollection.Count == 0))
                         {
-                            dt.Columns.Add("column" + colCount);
-                        }
-
-                        foreach (Cell cell in rowcollection.ElementAt(0)) // rowcollection.ElementAt(sheetCount)
-                        {
-                            string rowName = GetValueOfCell(spreadsheetDocument, cell);
-                            if ((rowName ?? "") == (string.Empty ?? ""))
-                            {
-                                dt.Columns.Add("column" + colCount);
-                            }
-                            else
-                            {
-                                dt.Columns.Add(rowName);
-                            }
-
-                            colCount = colCount + 1L;
-                        }
-                        // add some spare columns incase not all are titled.
-                        dt.Columns.Add("spare" + (colCount + 1L).ToString());
-                        dt.Columns.Add("spare" + (colCount + 2L).ToString());
-                        dt.Columns.Add("spare" + (colCount + 3L).ToString());
-                        dt.Columns.Add("spare" + (colCount + 4L).ToString());
-                        dt.Columns.Add("spare" + (colCount + 5L).ToString());
-                        foreach (Row row in rowcollection)
-                        {
-                            var temprow = dt.NewRow();
-                            int columnIndex = 0;
-                            foreach (Cell cell in row.Descendants<Cell>())
+                            // Build header columns based on each header cell's actual column reference (e.g. A1, B1, ...)
+                            // so that blank/omitted leading or interior header cells (which Excel drops from the sparse
+                            // row XML) don't shift subsequent column names out of alignment with their data.
+                            long colCount = 1L;
+                            int headerColumnIndex = 0;
+                            foreach (Cell cell in rowcollection[0])
                             {
                                 int cellColumnIndex = GetColumnIndex(GetColumnName(cell.CellReference));
-                                if (columnIndex < cellColumnIndex)
+                                while (headerColumnIndex < cellColumnIndex)
                                 {
-                                    do
-                                    {
-                                        try
-                                        {
-                                            temprow[columnIndex] = string.Empty;
-                                        }
-                                        catch (Exception)
-                                        {
-                                            cProcessInfo = "Not found " + columnIndex;
-                                        }
-
-                                        columnIndex += 1;
-                                    }
-                                    while (columnIndex < cellColumnIndex);
+                                    dt.Columns.Add(GetUniqueColumnName(dt, "column" + colCount));
+                                    colCount = colCount + 1L;
+                                    headerColumnIndex += 1;
                                 }
 
-                                string cellVal = GetValueOfCell(spreadsheetDocument, cell);
-                                try
+                                string rowName = GetValueOfCell(spreadsheetDocument, cell);
+                                if ((rowName ?? "") == (string.Empty ?? ""))
                                 {
-                                    temprow[columnIndex] = cellVal;
+                                    dt.Columns.Add(GetUniqueColumnName(dt, "column" + colCount));
                                 }
-                                catch (Exception)
+                                else
                                 {
-                                    cProcessInfo = "Not found " + columnIndex;
+                                    dt.Columns.Add(GetUniqueColumnName(dt, rowName));
                                 }
 
-                                columnIndex += 1;
+                                colCount = colCount + 1L;
+                                headerColumnIndex += 1;
                             }
+                            // add some spare columns incase not all are titled.
+                            dt.Columns.Add(GetUniqueColumnName(dt, "spare" + (colCount + 1L).ToString()));
+                            dt.Columns.Add(GetUniqueColumnName(dt, "spare" + (colCount + 2L).ToString()));
+                            dt.Columns.Add(GetUniqueColumnName(dt, "spare" + (colCount + 3L).ToString()));
+                            dt.Columns.Add(GetUniqueColumnName(dt, "spare" + (colCount + 4L).ToString()));
+                            dt.Columns.Add(GetUniqueColumnName(dt, "spare" + (colCount + 5L).ToString()));
+                            foreach (Row row in rowcollection)
+                            {
+                                var temprow = dt.NewRow();
+                                int columnIndex = 0;
+                                foreach (Cell cell in row.Descendants<Cell>())
+                                {
+                                    int cellColumnIndex = GetColumnIndex(GetColumnName(cell.CellReference));
+                                    if (columnIndex < cellColumnIndex)
+                                    {
+                                        do
+                                        {
+                                            EnsureColumnCapacity(dt, columnIndex);
+                                            temprow[columnIndex] = string.Empty;
+                                            columnIndex += 1;
+                                        }
+                                        while (columnIndex < cellColumnIndex);
+                                    }
 
-                            dt.Rows.Add(temprow);
+                                    string cellVal = GetValueOfCell(spreadsheetDocument, cell);
+                                    EnsureColumnCapacity(dt, columnIndex);
+                                    temprow[columnIndex] = cellVal;
+
+                                    columnIndex += 1;
+                                }
+
+                                dt.Rows.Add(temprow);
+                            }
+                            // Here remove header row
+                            dt.Rows.RemoveAt(0);
+                            ds.Tables.Add(dt);
                         }
-                        // Here remove header row
-                        dt.Rows.RemoveAt(0);
-                        ds.Tables.Add(dt);
-                    }
 
-                    sheetCount = sheetCount + 1;
+                        sheetCount = sheetCount + 1;
+                    }
                 }
-                // End Using
-                //spreadsheetDocument.Close();
-                spreadsheetDocument = null;
                 return ds;
             }
             catch (Exception ex)

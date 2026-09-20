@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;// Used for Httputility.UrlEncode
 using System.Web.Configuration;
 using System.Xml;
@@ -52,6 +53,69 @@ namespace Protean
             private void _OnError(object sender, Tools.Errors.ErrorEventArgs e)
             {
                 OnError?.Invoke(sender, e);
+            }
+
+            #endregion
+
+            #region Page-Level Location Locking
+
+            // Bulk imports run many products/objects in parallel via the ThreadPool, but products
+            // destined for the same page (nStructId) all read/write the same tblContentLocation rows
+            // (and ReorderContent re-numbers every sibling row on that page). Without serializing per
+            // page, concurrent threads can lock those rows in different orders and deadlock (SQL 1205).
+            // Different pages are completely independent, so we only lock per-nStructId rather than
+            // globally, preserving parallelism across the bulk of the import.
+            private static readonly System.Collections.Concurrent.ConcurrentDictionary<long, object> maPageLocks = new System.Collections.Concurrent.ConcurrentDictionary<long, object>();
+
+            private static object GetPageLock(long nStructId)
+            {
+                return maPageLocks.GetOrAdd(nStructId, _ => new object());
+            }
+
+            #endregion
+
+            #region Transient Error Retry
+
+            // SQL Server error numbers that typically indicate a transient condition
+            // (deadlock, timeout, connection drop, throttling) rather than a genuine failure,
+            // and are therefore safe to retry a small number of times with a short backoff.
+            private static readonly int[] maTransientSqlErrorNumbers = new[] { 1205, -2, 4060, 40197, 40501, 40613, 10928, 10929, 10053, 10054, 10060, 40143, 233 };
+
+            private static bool IsTransientSqlException(Exception ex)
+            {
+                var sqlEx = ex as SqlException;
+                if (sqlEx is null)
+                    return false;
+
+                foreach (SqlError err in sqlEx.Errors)
+                {
+                    if (Array.IndexOf(maTransientSqlErrorNumbers, err.Number) >= 0)
+                        return true;
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// Executes <paramref name="action"/>, automatically retrying a small number of times with a
+            /// short backoff if it fails with a transient SQL error (deadlock, timeout, connection drop, etc).
+            /// Non-transient exceptions and retries-exhausted failures are rethrown to the caller so that a
+            /// genuine failure is never silently mistaken for a valid/empty result.
+            /// </summary>
+            private static T ExecuteWithTransientRetry<T>(string cProcName, Func<T> action, int nMaxAttempts = 3)
+            {
+                int attempt = 0;
+                while (true)
+                {
+                    attempt += 1;
+                    try
+                    {
+                        return action();
+                    }
+                    catch (Exception ex) when (attempt < nMaxAttempts && IsTransientSqlException(ex))
+                    {
+                        Thread.Sleep(150 * attempt);
+                    }
+                }
             }
 
             #endregion
@@ -4496,10 +4560,8 @@ namespace Protean
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, cProcName, ex, cProcessInfo));
-
+                    throw;
                 }
-
-                return default;
 
             }
 
@@ -4555,24 +4617,27 @@ namespace Protean
                         }
                     }
 
-                    using (var oDr = getDataReaderDisposable(sSql))  // Done by nita on 6/7/22
+                    string sSqlLocal = sSql;
+                    return ExecuteWithTransientRetry(cProcName, () =>
                     {
-                        if (oDr is null)
-                            return 0L;
-                        while (oDr.Read())
-                            nId = Convert.ToString(oDr[0]);
+                        using (var oDr = getDataReaderDisposable(sSqlLocal))  // Done by nita on 6/7/22
+                        {
+                            if (oDr is null)
+                                return 0L;
+                            string localId = "0";
+                            while (oDr.Read())
+                                localId = Convert.ToString(oDr[0]);
 
-                        return Convert.ToInt64(nId);
-                    }
+                            return Convert.ToInt64(localId);
+                        }
+                    });
                 }
 
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, cProcName, ex, cProcessInfo));
-
+                    throw;
                 }
-
-                return default;
 
             }
 
@@ -5598,6 +5663,11 @@ namespace Protean
                 string cProcessInfo = "";
                 try
                 {
+                    // Serialize reordering for this page across threads: this method reads every
+                    // sibling location/relation row for nPgId and then updates them one-by-one, which
+                    // deadlocks if two bulk-import threads do this for the same page concurrently.
+                    lock (GetPageLock(nPgId))
+                    {
 
                     // Lets go and get the content type
                     sSql = "Select cContentSchemaName from tblContent where nContentKey = " + nContentId;
@@ -5786,6 +5856,7 @@ namespace Protean
                             }
                     }
                     string sXml = oDs.GetXml();
+                    }
                 }
                 // This won't work as we are drawing from 2 tables
                 // updateDataset(oDs, getTable(objectType))
@@ -6061,65 +6132,70 @@ namespace Protean
                 if (nStructId == 0L | nContentId == 0L)
                     return default;
 
-                string sSql;
-                DataSet oDs;
-                DataRow oRow;
-                long nId;
                 string cProcessInfo = "";
-                bool bReorderLocations = false;
                 try
                 {
-                    // does this content relationship exist?
-                    sSql = $"select * from tblContentLocation where nStructId = {nStructId} and nContentId = {nContentId}";
-                    oDs = getDataSetForUpdate(sSql, "ContentLocation", "Location");
-                    if (oDs.Tables["ContentLocation"].Rows.Count == 0)
+                    // Serialize all location writes/reordering for this page across threads to avoid
+                    // deadlocks when multiple bulk-import threads target the same page concurrently.
+                    lock (GetPageLock(nStructId))
                     {
-                        oRow = oDs.Tables["ContentLocation"].NewRow();
-                        oRow["nStructId"] = nStructId;
-                        oRow["nContentId"] = nContentId;
-                        oRow["bPrimary"] = bPrimary;
-                        oRow["bCascade"] = bCascade;
-                        oRow["nDisplayOrder"] = nDisplayOrder;
-                        if (!string.IsNullOrEmpty(cPosition))
+                        return ExecuteWithTransientRetry(cProcName: "setContentLocation", action: () =>
                         {
-                            oRow["cPosition"] = cPosition;
-                        }
-                        oRow["nAuditId"] = getAuditId();
-                        oDs.Tables["ContentLocation"].Rows.Add(oRow);
-                        bReorderLocations = true;
-                    }
-                    else
-                    {
-                        oRow = oDs.Tables["ContentLocation"].Rows[0];
-                        oRow.BeginEdit();
-                        // if we are allready primary then leave it.. Unless we need for force it as in External Syncronisation XSLT
-                        if (bOveridePrimary)
-                        {
-                            oRow["bPrimary"] = bPrimary;
-                        }
-                        if (bUpdatePosition & !string.IsNullOrEmpty(cPosition))
-                        {
-                            oRow["cPosition"] = cPosition;
-                        }
-                        oRow["bCascade"] = bCascade;
-                        oRow.EndEdit();
-                        // update the audit table
-                    }
-
-                    updateDataset(ref oDs, "ContentLocation", false);
-                    nId = Convert.ToInt64(ExeProcessSqlScalar(sSql));
-
-                    if (bReorderLocations)
-                    {
-                        if (myWeb != null)
-                        {
-                            if (!string.IsNullOrEmpty(myWeb.mcBehaviourNewContentOrder))
+                            // does this content relationship exist?
+                            string sSqlLocal = $"select * from tblContentLocation where nStructId = {nStructId} and nContentId = {nContentId}";
+                            var oDsLocal = getDataSetForUpdate(sSqlLocal, "ContentLocation", "Location");
+                            bool bReorder = false;
+                            DataRow oRowLocal;
+                            if (oDsLocal.Tables["ContentLocation"].Rows.Count == 0)
                             {
-                                ReorderContent(nStructId, nContentId, myWeb.mcBehaviourNewContentOrder);
+                                oRowLocal = oDsLocal.Tables["ContentLocation"].NewRow();
+                                oRowLocal["nStructId"] = nStructId;
+                                oRowLocal["nContentId"] = nContentId;
+                                oRowLocal["bPrimary"] = bPrimary;
+                                oRowLocal["bCascade"] = bCascade;
+                                oRowLocal["nDisplayOrder"] = nDisplayOrder;
+                                if (!string.IsNullOrEmpty(cPosition))
+                                {
+                                    oRowLocal["cPosition"] = cPosition;
+                                }
+                                oRowLocal["nAuditId"] = getAuditId();
+                                oDsLocal.Tables["ContentLocation"].Rows.Add(oRowLocal);
+                                bReorder = true;
                             }
-                        }
+                            else
+                            {
+                                oRowLocal = oDsLocal.Tables["ContentLocation"].Rows[0];
+                                oRowLocal.BeginEdit();
+                                // if we are allready primary then leave it.. Unless we need for force it as in External Syncronisation XSLT
+                                if (bOveridePrimary)
+                                {
+                                    oRowLocal["bPrimary"] = bPrimary;
+                                }
+                                if (bUpdatePosition & !string.IsNullOrEmpty(cPosition))
+                                {
+                                    oRowLocal["cPosition"] = cPosition;
+                                }
+                                oRowLocal["bCascade"] = bCascade;
+                                oRowLocal.EndEdit();
+                                // update the audit table
+                            }
+
+                            updateDataset(ref oDsLocal, "ContentLocation", false);
+                            long nIdLocal = Convert.ToInt64(ExeProcessSqlScalar(sSqlLocal));
+
+                            if (bReorder)
+                            {
+                                if (myWeb != null)
+                                {
+                                    if (!string.IsNullOrEmpty(myWeb.mcBehaviourNewContentOrder))
+                                    {
+                                        ReorderContent(nStructId, nContentId, myWeb.mcBehaviourNewContentOrder);
+                                    }
+                                }
+                            }
+                            return nIdLocal;
+                        });
                     }
-                    return nId;
                 }
                 catch (Exception ex)
                 {
@@ -6137,31 +6213,36 @@ namespace Protean
                 if (nStructId == 0L | nContentId == 0L)
                     return default;
 
-                string sSql;
-                string nId;
                 string cProcessInfo = "";
                 try
                 {
-                    // does this content relationship exist?
-                    sSql = $"select * from tblContentLocation where nStructId = {nStructId} and nContentId = {nContentId}";
-                    nId = ExeProcessSqlScalar(sSql);
-
-
-                    if (Convert.ToDouble(nId) == 0d)
+                    // Serialize location writes for this page across threads to avoid deadlocks
+                    // when multiple bulk-import threads target the same page concurrently.
+                    lock (GetPageLock(nStructId))
                     {
-                        int primaryVal = bPrimary ? 1 : 0;
-                        int cascadeVal = bCascade ? 1 : 0;
-                        long auditId = getAuditId();
-                        sSql = $"INSERT INTO tblContentLocation (nStructId, nContentId, bPrimary, bCascade, nDisplayOrder, nAuditId) VALUES ({nStructId}, {nContentId}, {primaryVal}, {cascadeVal}, 0, {auditId});select scope_identity()";
-                    }
-                    else
-                    {
-                        int cascadeVal = bCascade ? 1 : 0;
-                        sSql = $"UPDATE tblContentLocation SET nStructId = {nStructId}, nContentId = {nContentId}, bCascade = {cascadeVal}, nDisplayOrder = 0 WHERE nContentLocationKey = {nId}";
-                    }
+                        return ExecuteWithTransientRetry(cProcName: "setContentLocation2", action: () =>
+                        {
+                            // does this content relationship exist?
+                            string sSqlLocal = $"select * from tblContentLocation where nStructId = {nStructId} and nContentId = {nContentId}";
+                            string nIdLocal = ExeProcessSqlScalar(sSqlLocal);
 
-                    nId = ExeProcessSqlScalar(sSql);
-                    return Convert.ToInt16(nId);
+                            if (Convert.ToDouble(nIdLocal) == 0d)
+                            {
+                                int primaryVal = bPrimary ? 1 : 0;
+                                int cascadeVal = bCascade ? 1 : 0;
+                                long auditId = getAuditId();
+                                sSqlLocal = $"INSERT INTO tblContentLocation (nStructId, nContentId, bPrimary, bCascade, nDisplayOrder, nAuditId) VALUES ({nStructId}, {nContentId}, {primaryVal}, {cascadeVal}, 0, {auditId});select scope_identity()";
+                            }
+                            else
+                            {
+                                int cascadeVal = bCascade ? 1 : 0;
+                                sSqlLocal = $"UPDATE tblContentLocation SET nStructId = {nStructId}, nContentId = {nContentId}, bCascade = {cascadeVal}, nDisplayOrder = 0 WHERE nContentLocationKey = {nIdLocal}";
+                            }
+
+                            nIdLocal = ExeProcessSqlScalar(sSqlLocal);
+                            return Convert.ToInt16(nIdLocal);
+                        });
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -6176,33 +6257,41 @@ namespace Protean
             {
                 PerfMonLog("DBHelper", "ResetContentPositions");
                 string cProcessInfo = "";
-                string sSql;
                 try
                 {
-                    for (int row = 0, loopTo = positionReMap.GetUpperBound(1); row <= loopTo; row++)
+                    // Serialize position updates for this page across threads to avoid deadlocks
+                    // when multiple bulk-import threads target the same page concurrently.
+                    lock (GetPageLock(pageId))
                     {
-                        object oldId = positionReMap[0, row];
-                        object newId = positionReMap[1, row];
-                        sSql = $"select cPosition from tblContentLocation where nStructId = {pageId} and  nContentId={newId}";
-                        string cPosition = ExeProcessSqlScalar(sSql);
-                        if (cPosition != null)
+                        return ExecuteWithTransientRetry<object>(cProcName: "ResetContentPositions", action: () =>
                         {
-                            for (int row2 = 0, loopTo1 = positionReMap.GetUpperBound(1); row2 <= loopTo1; row2++)
+                            string sSqlLocal;
+                            for (int row = 0, loopTo = positionReMap.GetUpperBound(1); row <= loopTo; row++)
                             {
-                                if (cPosition.EndsWith("-" + positionReMap[0, row2].ToString()))
+                                object oldId = positionReMap[0, row];
+                                object newId = positionReMap[1, row];
+                                sSqlLocal = $"select cPosition from tblContentLocation where nStructId = {pageId} and  nContentId={newId}";
+                                string cPosition = ExeProcessSqlScalar(sSqlLocal);
+                                if (cPosition != null)
                                 {
-                                    cPosition = cPosition.Replace("-" + positionReMap[0, row2].ToString(), "-" + positionReMap[1, row2].ToString());
+                                    for (int row2 = 0, loopTo1 = positionReMap.GetUpperBound(1); row2 <= loopTo1; row2++)
+                                    {
+                                        if (cPosition.EndsWith("-" + positionReMap[0, row2].ToString()))
+                                        {
+                                            cPosition = cPosition.Replace("-" + positionReMap[0, row2].ToString(), "-" + positionReMap[1, row2].ToString());
+                                        }
+                                    }
+                                    sSqlLocal = $"update tblContentLocation set cPosition = '{cPosition}' where nStructId = {pageId} and  nContentId={newId}";
+                                    ExeProcessSql(sSqlLocal);
                                 }
                             }
-                            sSql = $"update tblContentLocation set cPosition = '{cPosition}' where nStructId = {pageId} and  nContentId={newId}";
-                            ExeProcessSql(sSql);
-                        }
+                            return null;
+                        });
                     }
-                    return null;
                 }
                 catch (Exception ex)
                 {
-                    OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "ResetContentPositions", ex, cProcessInfo));
+
                     return null;
                 }
 
@@ -9970,27 +10059,37 @@ namespace Protean
                 // Dim oDr As SqlDataReader
                 try
                 {
-                    string nID = ""; // myWeb.moDbHelper.getKeyByNameAndSchema(Cms.dbHelper.objectTypes.ContentStructure, "", cStructName)
-
                     // oDr = getDataReader("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")
-                    using (var oDr = getDataReaderDisposable($"select nStructKey from tblContentStructure where cStructForiegnRef like '{SqlFmt(cStructFRef)}'"))  // Done by nita on 6/7/22
+                    return ExecuteWithTransientRetry("setContentLocationByRef", () =>
                     {
-                        long lastloc = 0;
-
-                        while (oDr.Read())
+                        using (var oDr = getDataReaderDisposable($"select nStructKey from tblContentStructure where cStructForiegnRef like '{SqlFmt(cStructFRef)}'"))  // Done by nita on 6/7/22
                         {
-                            nID = Convert.ToString(oDr["nStructKey"]);
-                            if (string.IsNullOrEmpty(nID))
-                                nID = 0.ToString();
-                            lastloc = setContentLocation( Convert.ToInt64(nID), nContentId, bPrimary == 1,  Convert.ToBoolean(bCascade), false);
+                            long lastloc = 0;
+                            string nID;
+                            bool bFoundPage = false;
+
+                            while (oDr.Read())
+                            {
+                                bFoundPage = true;
+                                nID = Convert.ToString(oDr["nStructKey"]);
+                                if (string.IsNullOrEmpty(nID))
+                                    nID = 0.ToString();
+                                lastloc = setContentLocation( Convert.ToInt64(nID), nContentId, bPrimary == 1,  Convert.ToBoolean(bCascade), false);
+                            }
+
+                            if (!bFoundPage)
+                            {
+                                logActivity(ActivityType.ValidationError, mnUserId, 0L, nContentId, $"setContentLocationByRef: no page found for foreignRef '{cStructFRef}' (nContentId={nContentId}) - location not set");
+                            }
+
+                            return lastloc;
                         }
-                        return lastloc;
-                    }
+                    });
                 }
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "setContentLocationByRef", ex, cProcessInfo));
-                    return 0;
+                    throw;
                 }
                 finally
                 {
@@ -10010,30 +10109,41 @@ namespace Protean
                 // Dim oDr As SqlDataReader
                 try
                 {
-                    string nID = ""; // myWeb.moDbHelper.getKeyByNameAndSchema(Cms.dbHelper.objectTypes.ContentStructure, "", cStructName)
-                                     // nID = getObjectByRef(Cms.dbHelper.objectTypes.ContentStructure, cStructFRef)
-                                     // A site may have multiple pasges with the same Fref
-                                     // oDr = getDataReader("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")
-                    using (var oDr = getDataReaderDisposable($"select nStructKey from tblContentStructure where cStructForiegnRef like '{SqlFmt(cStructFRef)}'"))  // Done by nita on 6/7/22
+                    // nID = getObjectByRef(Cms.dbHelper.objectTypes.ContentStructure, cStructFRef)
+                    // A site may have multiple pasges with the same Fref
+                    // oDr = getDataReader("select nStructKey from tblContentStructure where cStructForiegnRef like '" & SqlFmt(cStructFRef) & "'")
+                    return ExecuteWithTransientRetry("setContentLocationByRef", () =>
                     {
-                        long lastloc = 0;
-                        if (oDr != null)
+                        using (var oDr = getDataReaderDisposable($"select nStructKey from tblContentStructure where cStructForiegnRef like '{SqlFmt(cStructFRef)}'"))  // Done by nita on 6/7/22
                         {
-                            while (oDr.Read())
+                            long lastloc = 0;
+                            string nID;
+                            bool bFoundPage = false;
+                            if (oDr != null)
                             {
-                                nID = Convert.ToString(oDr["nStructKey"]);
-                                if (string.IsNullOrEmpty(nID))
-                                    nID = 0.ToString();
-                                lastloc = setContentLocation( Convert.ToInt64(nID), nContentId, bPrimary == 1, Convert.ToBoolean(bCascade),  false, cPosition, false, nDisplayOrder);
+                                while (oDr.Read())
+                                {
+                                    bFoundPage = true;
+                                    nID = Convert.ToString(oDr["nStructKey"]);
+                                    if (string.IsNullOrEmpty(nID))
+                                        nID = 0.ToString();
+                                    lastloc = setContentLocation( Convert.ToInt64(nID), nContentId, bPrimary == 1, Convert.ToBoolean(bCascade),  false, cPosition, false, nDisplayOrder);
+                                }
                             }
+
+                            if (!bFoundPage)
+                            {
+                                logActivity(ActivityType.ValidationError, mnUserId, 0L, nContentId, $"setContentLocationByRef: no page found for foreignRef '{cStructFRef}' (nContentId={nContentId}, cPosition='{cPosition}') - location not set");
+                            }
+
+                            return lastloc;
                         }
-                        return lastloc;
-                    }
+                    });
                 }
                 catch (Exception ex)
                 {
                     OnError?.Invoke(this, new Tools.Errors.ErrorEventArgs(mcModuleName, "setContentLocationByRef", ex, cProcessInfo));
-                    return 0;
+                    throw;
                 }
                 finally
                 {
