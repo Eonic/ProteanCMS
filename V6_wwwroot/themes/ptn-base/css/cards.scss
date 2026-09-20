@@ -124,10 +124,14 @@
         }
     }
 
+    .g-2 .card {
+        margin-bottom: 2rem;
+    }
+
     div[class*='border-'] {
         .btn-custom {
             background: $btn-color;
-            color:color-contrast($btn-color);
+            color: color-contrast($btn-color);
         }
     }
 
