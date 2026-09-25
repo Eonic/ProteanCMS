@@ -244,7 +244,14 @@ namespace Protean.Tools
                         return sb.ToString();
                     });
 
-                    oXmlDoc.LoadXml(shtml);
+                    // Some upstream generators (e.g. HTML Tidy) can emit a document that already
+                    // has its own <html>/</html> tags, or that is missing the opening <html> tag
+                    // while still retaining the closing </html> tag. Strip any existing html tags
+                    // before wrapping so we don't end up with an orphaned/duplicate closing tag.
+                    string regexOfHtmlTag = @"</?html[^>]*>";
+                    shtml = Regex.Replace(shtml, regexOfHtmlTag, string.Empty, RegexOptions.IgnoreCase).Trim();
+
+                    oXmlDoc.LoadXml("<html>" + shtml + "</html>");
 
                     return oXmlDoc;
                 }

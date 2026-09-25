@@ -1509,6 +1509,7 @@ namespace Protean
                     }
                 }
                 if (!string.IsNullOrEmpty(moConfig["DetailPathType"]))
+                if (!string.IsNullOrEmpty(moConfig["DetailPathType"]))
                 {
                     if (moConfig["TrailingSlash"] == "on")
                     {

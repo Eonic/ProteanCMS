@@ -1390,7 +1390,7 @@ namespace Protean
 
                 string ids;
                 myWeb.moDbHelper.ResetConnection(myWeb.moDbHelper.DatabaseConnectionString);
-                ids = myWeb.moDbHelper.insertProductGroupRelation((Int16)ProductId, ProductGroupId.ToString());
+                ids = myWeb.moDbHelper.insertProductGroupRelation(ProductId, ProductGroupId.ToString());
                 return ids;
 
             }

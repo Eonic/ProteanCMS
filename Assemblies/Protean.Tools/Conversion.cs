@@ -297,14 +297,26 @@ namespace Protean.Tools
                 if ((oInput).ToString().EndsWith(".xlsx"))
                 {
 
-                    oOutputXml.LoadXml(GetXML(oInput.ToString()));
+                    string cXml = GetXML(oInput.ToString());
+                    if (string.IsNullOrEmpty(cXml))
+                    {
+                        SetStatus(Status.Failed, StatusReason.InputSourceNotValidorEmpty);
+                        return;
+                    }
+                    oOutputXml.LoadXml(cXml);
                     this.oOutputXml = oOutputXml.DocumentElement;
                 }
 
                 else if ((oInput).ToString().EndsWith(".csv"))
                 {
 
-                    oOutputXml.LoadXml(GetXML(oInput.ToString()));
+                    string cXml = GetXML(oInput.ToString());
+                    if (string.IsNullOrEmpty(cXml))
+                    {
+                        SetStatus(Status.Failed, StatusReason.InputSourceNotValidorEmpty);
+                        return;
+                    }
+                    oOutputXml.LoadXml(cXml);
                     this.oOutputXml = oOutputXml.DocumentElement;
                 }
                 else
@@ -374,7 +386,7 @@ namespace Protean.Tools
 
             catch (Exception ex)
             {
-                ErrorMsg = ex.Message + " - " + ex.InnerException.Message;
+                ErrorMsg = ex.Message + (ex.InnerException != null ? " - " + ex.InnerException.Message : "");
                 SetStatus(Status.Failed, StatusReason.Undefined);
             }
 

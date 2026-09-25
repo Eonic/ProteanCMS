@@ -237,9 +237,9 @@ namespace Protean
                             // save the origional instance
                             nId = Convert.ToInt64(modbhelper.setObjectInstance(oObjType, origInstance.DocumentElement, nId));
                             // run instance extras on update like relate and locate etc.
+                            bool bResetLocations = Convert.ToBoolean(importStateObj.bResetLocations);
                             if (Convert.ToBoolean(importStateObj.oInstance.GetAttribute("update").Contains("locate")))
-                            {
-                                bool bResetLocations = Convert.ToBoolean(importStateObj.bResetLocations);
+                            {                           
                                 if (Convert.ToBoolean(importStateObj.oInstance.GetAttribute("update").Contains("relocate")))
                                 {
                                     bResetLocations = true;
@@ -273,10 +273,10 @@ namespace Protean
                                             bResetLocations = true;
                                         }
                                     }
-
-                                }
-                                modbhelper.processInstanceExtras(nId, (XmlElement)importStateObj.oInstance, bResetLocations, Convert.ToBoolean(importStateObj.bOrphan));
+                                }                           
                             }
+
+                            modbhelper.processInstanceExtras(nId, (XmlElement)importStateObj.oInstance, bResetLocations, Convert.ToBoolean(importStateObj.bOrphan));
                         }
                         else
                         {

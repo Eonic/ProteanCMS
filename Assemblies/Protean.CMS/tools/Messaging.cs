@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Mail;
+using System.ServiceModel;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Xml;
@@ -143,7 +144,7 @@ namespace Protean
 
         public void addAttachment(string fileLocation, bool deleteAfterAttach = false)
         {
-            string cProcessInfo = "emailCart";
+            string cProcessInfo = "addAttachment";
 
             try
             {
@@ -165,6 +166,14 @@ namespace Protean
                         Attachments = new System.Collections.ObjectModel.Collection<object>();
                     }
                     Attachments.Add(oAtt);
+
+                    // file is locked currently by the attachment so we can't delete it until the email is sent. We need to delete it after the email is sent.
+                    // if (deleteAfterAttach) {
+                    //     if (File.Exists(fileLocation))
+                    //     {
+                    //         File.Delete(fileLocation);
+                    //     }
+                    //  }
                 }
             }
 
@@ -299,20 +308,20 @@ namespace Protean
                 if (!string.IsNullOrEmpty(fileLocation))
                 {
 
+                    // check if filesystem path allready supplied
+                    if (!fileLocation.Contains(@":\"))
+                    {
+                        fileLocation = goServer.MapPath("/") + @"..\imports\" + fileLocation.Replace("/", "\\");
+                    }
+                    fileLocation = fileLocation.Replace(@"\\", @"\");
+
                     if (Attachments != null)
                     {
                         Attachments.Clear();
                     }
 
                     Protean.fsHelper fsh = new fsHelper();
-
-                    if (fileLocation.Contains(@":\") == false){
-                        fileLocation = goServer.MapPath("/") + fileLocation;
-                    }
-
-
                     fsh.DeleteFile(fileLocation);
-
                 }
             }
 

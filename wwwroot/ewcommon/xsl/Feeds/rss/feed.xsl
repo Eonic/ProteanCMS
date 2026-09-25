@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"  xmlns:date= "http://exslt.org/dates-and-times"  extension-element-prefixes="date" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:ew="urn:ew">
-  <xsl:import href="../../../../ewcommon_v5-1/xsl/tools/Functions.xsl"/>
-  <xsl:import href="../../../../ewcommon_v5-1/xsl/localisation/SystemTranslations.xsl"/>
+  <xsl:import href="../../tools/Functions.xsl"/>
+  <xsl:import href=../../localisation/SystemTranslations.xsl"/>
 
 
   <xsl:output method="xml" omit-xml-declaration="no" indent="yes"/>

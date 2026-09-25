@@ -480,10 +480,9 @@ namespace Protean
                                             }
                                         }
                                     }
-                                    foreach (XmlElement currentORelation1 in oInstance.SelectNodes("ProductGroups"))
+                                    foreach (XmlElement oProductGroup in oInstance.SelectNodes("ProductGroups"))
                                     {
-                                        oRelation = currentORelation1;
-                                        insertProductGroupRelation((int)savedId, oRelation.GetAttribute("ids"));
+                                        insertProductGroupRelation(savedId, oProductGroup.GetAttribute("ids"));
                                     }
                                     foreach (XmlElement oRelatedLibraryImages in oInstance.SelectNodes("RelatedLibraryImages"))
                                     {

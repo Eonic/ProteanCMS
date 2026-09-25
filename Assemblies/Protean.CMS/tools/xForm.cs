@@ -1754,16 +1754,18 @@ namespace Protean
                                                                     string cFinalFullSavePath = oFs.getUniqueFilename(cFullPath + cSavePath + Filename);
                                                                     oFile.SaveAs(cFinalFullSavePath);
 
+                                                                    int index = cFinalFullSavePath.LastIndexOf('/');
+                                                                    string savedFileName = index >= 0 ? cFinalFullSavePath.Substring(index + 1) : cFinalFullSavePath;
+
                                                                    XmlElement thisNode = (XmlElement)oInstance.SelectSingleNode(sXpath, nsMgr);
                                                                     thisNode.SetAttribute("uploadPath", cFullPath + cSavePath);
                                                                     thisNode.SetAttribute("filename", Filename);
                                                                    // thisNode.InnerText = cFullPath + cSavePath + Filename;
-                                                                    thisNode.InnerText = Filename;
-                                                                    cFinalFullSavePath.Replace(cFullPath, "");
-
+                                                                    thisNode.InnerText = savedFileName;
+                                                                  
                                                                     // Working on the assumption that only one file has been submitted, then store this in a session object
                                                                     if (goSession != null)
-                                                                        goSession["formFileUploaded"] = cFinalFullSavePath.Replace(cFullPath, "");
+                                                                        goSession["formFileUploaded"] = cFinalFullSavePath.Replace(cFullPath.Replace("\\", "/"), "");
                                                                 }
                                                                 else
                                                                 {

@@ -680,7 +680,8 @@ namespace Protean
             public enum CodeType
             {
                 Membership = 1,
-                Discount = 2
+                Discount = 2,
+                Activation = 3
             }
 
             public enum PageVersionType
@@ -12196,7 +12197,7 @@ namespace Protean
             }
 
 
-            public string insertProductGroupRelation(int nProductId, string sGroupIds)
+            public string insertProductGroupRelation(long nProductId, string sGroupIds)
             {
                 PerfMonLog("DBHelper", "insertProductGroupRelation");
                 string cProcessInfo = "insertProductGroupRelation";
