@@ -16,20 +16,20 @@
   <xsl:template match="*[ancestor::Page[@cssFramework='bs3' or @adminMode='true']]" mode="siteBGStyles">
     <xsl:param name="value" />
     <!-- EXAMPLE BESPOKE BOX-->
-    <option value="bg-primary text-white">
-      <xsl:if test="$value='bg-primary text-white'">
+    <option value="bg-primary ">
+      <xsl:if test="$value='bg-primary '">
         <xsl:attribute name="selected">selected</xsl:attribute>
       </xsl:if>
       <xsl:text>Brand colour background</xsl:text>
     </option>
-    <option value="bg-secondary text-white">
-      <xsl:if test="$value='bg-secondary text-white'">
+    <option value="bg-secondary ">
+      <xsl:if test="$value='bg-secondary'">
         <xsl:attribute name="selected">selected</xsl:attribute>
       </xsl:if>
       <xsl:text>Secondary colour background</xsl:text>
     </option>
-    <option value="bg-info text-white">
-      <xsl:if test="$value='bg-info text-white'">
+    <option value="bg-info ">
+      <xsl:if test="$value='bg-info'">
         <xsl:attribute name="selected">selected</xsl:attribute>
       </xsl:if>
       <xsl:text>Info colour background</xsl:text>
