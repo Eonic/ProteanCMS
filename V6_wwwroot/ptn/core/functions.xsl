@@ -5166,10 +5166,10 @@
         </xsl:for-each>
       </xsl:variable>
       <a href="?{$qs}&amp;sortCol={$sortCol}&amp;sortDir=ascending" aria-label="Sort Ascending">
-        <img  src="/ewcommon/images/sortDown.gif" width="11" height="7" class="down" />
+		  <i class="fa-regular fa-angle-down">&#160;</i>
       </a>
       <a href="?{$qs}&amp;sortCol={$sortCol}&amp;sortDir=descending" aria-label="Sort Descending">
-        <img  src="/ewcommon/images/sortUp.gif" width="11" height="7" class="up" />
+		  <i class="fa-regular fa-angle-up">&#160;</i>
       </a>
     </div>
   </xsl:template>

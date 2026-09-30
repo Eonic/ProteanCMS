@@ -11484,7 +11484,7 @@ $(document).ready(function () {
       <div class="row">
 
         <div class="col-md-9">
-          <xsl:apply-templates select="ContentDetail/Content/GenericReport" mode="reportDetail"/>
+          <xsl:apply-templates select="ContentDetail/Content/GenericReport" mode="VersionControlreportDetail"/>
         </div>
         <div class="col-md-3">
           <div class="card">
@@ -11501,10 +11501,108 @@ $(document).ready(function () {
   </xsl:template>
   <!-- -->
 
-  <xsl:template match="Pending" mode="reportDetailListHeader">
+
+	<!-- REPORT:  Generic Report Detail -->
+	<xsl:template match="GenericReport" mode="VersionControlreportDetail">
+
+		<xsl:variable name="order">
+			<xsl:choose>
+				<xsl:when test="/Page/Request//Item[@name='sortDir']/node()">
+					<xsl:value-of select="/Page/Request//Item[@name='sortDir']/node()"/>
+				</xsl:when>
+				<xsl:otherwise>ascending</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="sortCol" select="/Page/Request//Item[@name='sortCol']/node()"/>
+		<div class="card">
+			
+			<table cellpadding="0" class="table " id="sort_{$sortCol}">
+				<xsl:variable name="scName">
+					<xsl:apply-templates select="*[1]/*[number($sortCol)]" mode="getContectNodeName"/>
+				</xsl:variable>
+				<xsl:variable name="sortCells" select="*[not(contains(name(),'Selector'))]/*[number($sortCol)]"/>
+				<xsl:variable name="isNumeric">
+					<xsl:if test="count($sortCells)=count($sortCells[number(.)=number(.)])">true</xsl:if>
+				</xsl:variable>
+				<xsl:variable name="datatype">
+					<xsl:choose>
+						<xsl:when test="$isNumeric='true'">number</xsl:when>
+						<xsl:otherwise>text</xsl:otherwise>
+					</xsl:choose>
+				</xsl:variable>
+				<thead class="card-header">
+                     <xsl:apply-templates select="*[1]" mode="VersionsReportDetailListHeader"/>
+				</thead>
+				<tbody class="card-body" >
+				<xsl:choose>
+					<xsl:when test="(*[1]/*[number($sortCol)]//LastName and *[1]/*[number($sortCol)]//FirstName) and $scName!='Username'">
+						<xsl:apply-templates select="*" mode="reportDetailList">
+							<xsl:sort select="*[number($sortCol)]//LastName"  order="{$order}"/>
+							<xsl:sort select="*[number($sortCol)]//FirstName"  order="{$order}"/>
+						</xsl:apply-templates>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:apply-templates select="*" mode="reportDetailList">
+							<xsl:sort select="*[number($sortCol)]" order="{$order}" data-type="{$datatype}"/>
+						</xsl:apply-templates>
+					</xsl:otherwise>
+				</xsl:choose>
+					</tbody>
+				<!--xsl:if test="count(*[not(contains(name(),'Selector'))])=0 and name()!='summary'">
+				<tr>
+					<td>&#160;</td>
+				</tr>
+			</xsl:if-->
+			</table>
+
+			<!-- <xsl:apply-templates select="." mode="reportError"/> -->
+		</div>
+	</xsl:template>
+
+	<xsl:template match="VersionName" mode="reportHeader">
+
+	</xsl:template>
+
+	<xsl:template match="VersionName" mode="reportCell">
+		
+	</xsl:template>
+
+	<xsl:template match="Metadata" mode="reportHeader">
+
+	</xsl:template>
+
+	<xsl:template match="cContentName" mode="reportHeader">
+		<th>
+			Description
+		</th>
+	</xsl:template>
+
+	<xsl:template match="cParContentName" mode="reportHeader">
+		<th>
+			View Product
+		</th>
+	</xsl:template>
+
+	<xsl:template match="cParContentName" mode="reportCell">
+		<td>
+			<a href="?artId={parent::*/@ContentId}"><xsl:value-of select="."/></a>
+		</td>
+	</xsl:template>
+
+
+	<xsl:template match="Pending" mode="VersionsReportDetailListHeader">
+		<tr>
+			<th>&#160;</th>
+			<xsl:apply-templates select="*" mode="reportHeader">
+				<xsl:with-param name="sort">none</xsl:with-param>
+			</xsl:apply-templates>
+		</tr>
+	</xsl:template>
+
+	<xsl:template match="Pending" mode="reportDetailListHeader">
     <tr>
-      <td>&#160;</td>
-      <xsl:apply-templates select="*" mode="reportHeader"/>
+      <th>&#160;</th>
+		<xsl:apply-templates select="*" mode="reportHeader"/>
     </tr>
   </xsl:template>
 
@@ -11598,11 +11696,8 @@ $(document).ready(function () {
         <xsl:text>&amp;verId=</xsl:text>
         <xsl:value-of select="@versionid"/>
       </xsl:if>
-    </xsl:variable>
-	  
-	  
+    </xsl:variable> 	  
     <td class="btn-group">
-
 		<xsl:choose>
 			<xsl:when test="@type='FAQ'">
 				<a href="{$appPath}?ewCmd=Normal&amp;artid={@ContentId}" class="btn btn-xs btn-primary" title="Click here to edit this content">
@@ -11611,7 +11706,6 @@ $(document).ready(function () {
 					</i>
 					<xsl:text> </xsl:text>Preview
 				</a>
-
 			</xsl:when>
 			<xsl:otherwise>
 				<a href="{$appPath}?ewCmd=PreviewOn&amp;pgid={@pageid}&amp;artid={@id}{$versionId}" class="btn btn-xs btn-primary" title="Click here to edit this content">
@@ -11620,10 +11714,8 @@ $(document).ready(function () {
 					</i>
 					<xsl:text> </xsl:text>Preview
 				</a>
-
 			</xsl:otherwise>
 		</xsl:choose>
-
       <a href="{$appPath}?ewCmd=ContentVersions&amp;id={@id}{$versionId}" class="btn btn-xs btn-primary" title="Click here to edit this content">
         <i class="fa fa-history">
           <xsl:text> </xsl:text>

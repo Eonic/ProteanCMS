@@ -271,7 +271,7 @@ namespace Protean
                         string cSubject = moCartConfig["OrderEmailSubject"];
                         if (string.IsNullOrEmpty(cSubject))
                             cSubject = "Website Order";
-
+                        string bccCustomerEmail = moCartConfig["CustomerEmailBCC"];
                         string CustomerEmailTemplatePath = "/xsl/Cart/mailOrderCustomer.xsl";
                         string MerchantEmailTemplatePath = "/xsl/Cart/mailOrderMerchant.xsl";
                         if (myWeb.bs5)
@@ -289,7 +289,7 @@ namespace Protean
                         }
 
                         // send to customer
-                        sMessageResponse = Convert.ToString(emailCart(ref oCartElmt, CustomerEmailTemplatePath, moCartConfig["MerchantName"], moCartConfig["MerchantEmail"], oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, cSubject, cAttachementTemplatePath: moCartConfig["CustomerAttachmentTemplatePath"], cCCEmail: ccCustomerEmail));
+                        sMessageResponse = Convert.ToString(emailCart(ref oCartElmt, CustomerEmailTemplatePath, moCartConfig["MerchantName"], moCartConfig["MerchantEmail"], oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, cSubject, cAttachementTemplatePath: moCartConfig["CustomerAttachmentTemplatePath"], cBCCEmail: bccCustomerEmail, cCCEmail: ccCustomerEmail));
 
                         // Send to merchant
                         sMessageResponse = Convert.ToString(emailCart(ref oCartElmt, MerchantEmailTemplatePath, oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/GivenName").InnerText, oCartElmt.FirstChild.SelectSingleNode("Contact[@type='Billing Address']/Email").InnerText, moCartConfig["MerchantEmail"], cSubject, false, moCartConfig["MerchantAttachmentTemplatePath"], moCartConfig["MerchantEmailBcc"]));

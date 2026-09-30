@@ -1763,6 +1763,10 @@ namespace Protean
                 //oTdyManaged.ErrorBuffer = true;
                 oTdyManaged.ShowWarnings = true;
                 oTdyManaged.OutputXhtml = true;
+                // Prevent Tidy from wrapping <script>/<style> content (e.g. embedded JSON)
+                // in "//<![CDATA[ ... //]]>" style comments. This wrapping is a legacy
+                // protection for old non-JS-aware/XML browsers and isn't needed here.
+                oTdyManaged.WrapScriptLiterals = false;
                 oTdyManaged.QuoteAmpersands = true;   // escape stray & as &amp;
                 oTdyManaged.OutputNumericEntities = true;
                 oTdyManaged.CleanWord2000 = false;//removed word tags
@@ -1869,6 +1873,12 @@ namespace Protean
                 oTdyManaged = null/* TODO Change to default(_) if this is not a reference type */;
                 // End Using
 
+                // libtidy has no config option to suppress this - "wrap-script-literals"
+                // (WrapScriptLiterals) only controls line-wrapping of long lines, not the
+                // CDATA wrapping itself, which is hardcoded whenever XHTML/XML output is
+                // requested. Strip it back out so embedded JSON round-trips untouched.
+                sTidyXhtml = StripTidyScriptStyleCdataWrappers(sTidyXhtml);
+
                 return sTidyXhtml;
             }
             catch (Exception ex)
@@ -1882,6 +1892,33 @@ namespace Protean
                 sTidyXhtml = null;
             }
         }
+
+        // Removes the "//<![CDATA[ ... //]]>" (script) and "/*<![CDATA[*/ ... /*]]>*/" (style)
+        // comment-wrapped CDATA markers that libtidy inserts around <script>/<style> content
+        // when producing XHTML/XML output. The wrapped content itself (e.g. embedded JSON) is
+        // preserved as-is; only the wrapper markers are removed.
+        private static string StripTidyScriptStyleCdataWrappers(string html)
+        {
+            if (string.IsNullOrEmpty(html))
+                return html;
+
+            // Script-style wrapper: //<![CDATA[ ... //]]>  (optionally preceded by //<!-- and followed by //-->)
+            html = Regex.Replace(html, @"//<!--\s*//<!\[CDATA\[", "", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"//\]\]>\s*//-->", "", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"//<!\[CDATA\[", "", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"//\]\]>", "", RegexOptions.IgnoreCase);
+
+            // Style wrapper: /*<![CDATA[*/ ... /*]]>*/
+            html = Regex.Replace(html, @"/\*<!\[CDATA\[\*/", "", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"/\*\]\]>\*/", "", RegexOptions.IgnoreCase);
+
+            // Fallback: any remaining bare CDATA markers Tidy may have inserted without comment guards
+            html = Regex.Replace(html, @"<!\[CDATA\[", "", RegexOptions.IgnoreCase);
+            html = Regex.Replace(html, @"\]\]>", "", RegexOptions.IgnoreCase);
+
+            return html;
+        }
+
         public static string tidyXhtmlFrag(string shtml, bool bReturnNumbericEntities = false, bool bEncloseText = true, string removeTags = "")
         {
 

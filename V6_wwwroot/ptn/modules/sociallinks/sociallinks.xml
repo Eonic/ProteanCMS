@@ -41,7 +41,7 @@
       <bind id="spacing" nodeset="@spacing" required="false()" type="string"/>
       <bind id="spacing-unit" nodeset="@spacing-unit" required="false()" type="string"/>
       <bind id="layout" nodeset="@layout" required="false()" type="string"/>
-      <!--<bind id="cIconSet" nodeset="@iconSet" required="false()" type="string"/>-->
+      <bind id="cIconSet" nodeset="@iconSet" required="false()" type="string"/>
       <bind id="cAlign" nodeset="@align" required="true()" type="string"/>
       <bind id="cBlank" nodeset="@blank" required="true()" type="string"/>
       <bind id="uploadSprite" nodeset="@uploadSprite" required="false()" type="string" />
@@ -94,7 +94,7 @@
               </select1>
             </group>
           </group>
-          <!--<select1 bind="cIconSet" appearance="minimal" class="vshort">
+          <select1 bind="cIconSet" appearance="minimal" class="vshort">
 							<label>Icon Set</label>
 							<item>
 								<label>Default Icons</label>
@@ -108,6 +108,10 @@
 								<label>Circle Icons</label>
 								<value>icons-circle</value>
 							</item>
+			              <item>
+				              <label>Circle Thin Icons</label>
+				              <value>icons-circle-thin</value>
+			              </item>
 							<item>
 								<label>Squared Images</label>
 								<value>default</value>
@@ -120,7 +124,7 @@
 								<label>Plain Icons</label>
 								<value>plain</value>
 							</item>
-						</select1>-->
+						</select1>
         </group>
         <group class="row">
           <div>All web links require the https:// prefix</div>

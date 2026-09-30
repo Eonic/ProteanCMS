@@ -4328,7 +4328,7 @@ namespace Protean
                     //string cSql = "";
                     // string sContent = "";
                     string dLastRun = "";
-                    string cFilterSql = "";
+                    string cFilterSql = " ORDER BY Created_Date DESC";
 
                     var oDS = new DataSet();
 
