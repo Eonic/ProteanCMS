@@ -7776,6 +7776,7 @@
         </xsl:if>
         <xsl:apply-templates select="ms:node-set($contentList)/*" mode="displayBriefGallery">
           <xsl:with-param name="sortBy" select="@sortBy"/>
+			<xsl:with-param name="pos" select="position()"/>
         </xsl:apply-templates>
         <xsl:text> </xsl:text>
       </div>
