@@ -415,6 +415,7 @@
     <Compile Include="framework\handlers\DeliverAjaxElmt.cs" />
     <Compile Include="framework\handlers\DeliverExcel.cs" />
     <Compile Include="framework\handlers\DeliverExport.cs" />
+    <Compile Include="framework\handlers\Setup.cs" />
     <Compile Include="framework\handlers\DeliverPageAsPdf.cs" />
     <Compile Include="framework\handlers\DeliverPageAsync.cs" />
     <Compile Include="framework\handlers\docDownload.cs" />
@@ -514,6 +515,8 @@
     <None Include="packages.config" />
     <None Include="providers\Streaming.BaseProvider.cs" />
     <Compile Include="setup\Setup.cs" />
+    <Compile Include="setup\SetupFileStructure.cs" />
+    <Compile Include="setup\SetupXforms.cs" />
     <Compile Include="setup\Tests.cs" />
     <Compile Include="tools\Configuration.cs" />
     <Compile Include="tools\CssWebClient.cs" />
