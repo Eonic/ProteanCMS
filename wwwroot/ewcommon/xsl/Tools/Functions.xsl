@@ -7885,7 +7885,6 @@
                   <xsl:with-param name="imageUrl" select="$newSrc-xxs-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
-				  <xsl:with-param name="noLazy" select="$noLazy"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
@@ -7893,7 +7892,6 @@
                   <xsl:with-param name="imageUrl" select="$newSrc-xs-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
-				  <xsl:with-param name="noLazy" select="$noLazy"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
@@ -7901,7 +7899,6 @@
                   <xsl:with-param name="imageUrl" select="$newSrc-sm-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
-				   <xsl:with-param name="noLazy" select="$noLazy"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
@@ -7909,7 +7906,6 @@
                   <xsl:with-param name="imageUrl" select="$newSrc-md-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
-				 <xsl:with-param name="noLazy" select="$noLazy"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="'image/webp'"/>
@@ -7917,7 +7913,6 @@
                   <xsl:with-param name="imageUrl" select="$newSrc-lg-webp"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
-				 <xsl:with-param name="noLazy" select="$noLazy"/>
                 </xsl:call-template>
                 <!--JPG/PNG/GIF Images-->
                 <xsl:call-template name="sourceTag">
@@ -7926,7 +7921,6 @@
                   <xsl:with-param name="imageUrl" select="$newSrc-xxs"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
-				 <xsl:with-param name="noLazy" select="$noLazy"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
@@ -7934,7 +7928,6 @@
                   <xsl:with-param name="imageUrl" select="$newSrc-xs"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
-				  <xsl:with-param name="noLazy" select="$noLazy"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
@@ -7942,7 +7935,6 @@
                   <xsl:with-param name="imageUrl" select="$newSrc-sm"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
-				  <xsl:with-param name="noLazy" select="$noLazy"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
@@ -7950,7 +7942,6 @@
                   <xsl:with-param name="imageUrl" select="$newSrc-md"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
-				  <xsl:with-param name="noLazy" select="$noLazy"/>
                 </xsl:call-template>
                 <xsl:call-template name="sourceTag">
                   <xsl:with-param name="type" select="$imageType"/>
@@ -7958,7 +7949,6 @@
                   <xsl:with-param name="imageUrl" select="$newSrc-lg"/>
                   <xsl:with-param name="class" select="$class"/>
                   <xsl:with-param name="style" select="$style"/>
-				  <xsl:with-param name="noLazy" select="$noLazy"/>
                 </xsl:call-template>
                 <!--FALLBACK IMAGE TAG-->
                 <xsl:variable name="imageSize">
@@ -8163,16 +8153,16 @@
   </xsl:template>
 
 
-  <!--<xsl:template name="sourceTag">
+<xsl:template name="sourceTag">
     <xsl:param name="type"/>
     <xsl:param name="media"/>
     <xsl:param name="class"/>
     <xsl:param name="style"/>
     <xsl:param name="imageUrl"/>
     <xsl:param name="imageRetinaUrl"/>
-    --><!--New image tags--><!--
+    <!--New image tags-->
     <source type="{$type}" media="{$media}">
-      --><!--
+      <!--
 	<xsl:choose>
         <xsl:when test="$lazy='on'">
           <xsl:attribute name="data-srcset">
@@ -8188,7 +8178,7 @@
           </xsl:attribute>
         </xsl:otherwise>
       </xsl:choose>
-        --><!--
+        -->
       <xsl:attribute name="srcset">
         <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
         <xsl:if test="imageRetinaUrl!=''">
@@ -8197,7 +8187,7 @@
           <xsl:text> 2x</xsl:text>
         </xsl:if>
       </xsl:attribute>
-      --><!--
+      <!--
       <xsl:attribute name="class">
         <xsl:if test="$class!=''">
           <xsl:value-of select="$class" />
@@ -8213,57 +8203,11 @@
           <xsl:value-of select="$style" />
         </xsl:attribute>
       </xsl:if>
-      --><!--
+      -->
     </source>
-  </xsl:template>-->
+  </xsl:template>
 	
-	<xsl:template name="sourceTag">
-  <xsl:param name="type"/>
-  <xsl:param name="media"/>
-  <xsl:param name="class"/>
-  <xsl:param name="style"/>
-  <xsl:param name="imageUrl"/>
-  <xsl:param name="imageRetinaUrl"/>
-  <xsl:param name="noLazy"/>
-
-  <source type="{$type}" media="{$media}">
-
-    <xsl:choose>
-
-      <!-- Lazy-load responsive source images -->
-      <xsl:when test="$lazy='on' and not($noLazy)">
-        <xsl:attribute name="data-srcset">
-          <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
-
-          <xsl:if test="$imageRetinaUrl!=''">
-            <xsl:text> 1x, </xsl:text>
-            <xsl:value-of select="ew:replacestring($imageRetinaUrl,' ','%20')"/>
-            <xsl:text> 2x</xsl:text>
-          </xsl:if>
-        </xsl:attribute>
-
-        <xsl:attribute name="srcset">
-          <xsl:value-of select="$lazyplaceholder"/>
-        </xsl:attribute>
-      </xsl:when>
-
-      <!-- Images explicitly marked as noLazy load normally -->
-      <xsl:otherwise>
-        <xsl:attribute name="srcset">
-          <xsl:value-of select="ew:replacestring($imageUrl,' ','%20')"/>
-
-          <xsl:if test="$imageRetinaUrl!=''">
-            <xsl:text> 1x, </xsl:text>
-            <xsl:value-of select="ew:replacestring($imageRetinaUrl,' ','%20')"/>
-            <xsl:text> 2x</xsl:text>
-          </xsl:if>
-        </xsl:attribute>
-      </xsl:otherwise>
-
-    </xsl:choose>
-
-  </source>
-</xsl:template>
+	
 
   <xsl:template match="Content | MenuItem | Discount | productDetail" mode="getThCrop">
     <xsl:value-of select="false()"/>

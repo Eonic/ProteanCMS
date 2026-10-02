@@ -6457,12 +6457,28 @@ namespace Protean
                         // Get Related Items
                         XmlElement argoPageDetail = null;
                         int nCount = 0;
-                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail, cAdditionalColumns: cAdditionalColumn);
+                        myWeb.GetPageContentFromSelect(cWhereSql, ref nCount, bIgnorePermissionsCheck: myWeb.mbAdminMode, nReturnRows: 0, cOrderBy: cOrderBy, oContentsNode: ref oContent, cAdditionalJoins: cAdditionalJoin, oPageDetail: ref argoPageDetail, cAdditionalColumns: cAdditionalColumn, distinct:true);
+                        //foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
+                        //{
+                        //    XmlElement xmloContentElmt = oContentElmt;
+                        //    addRelatedContent(ref xmloContentElmt, Convert.ToInt32(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                        //}
+
+                        HashSet<int> processedContentIds = new HashSet<int>();
+
                         foreach (XmlElement oContentElmt in oContent.SelectNodes("Content"))
                         {
+                            int contentId = Convert.ToInt32(oContentElmt.GetAttribute("id"));
+
+                            if (!processedContentIds.Add(contentId))
+                            {
+                                continue;
+                            }
+
                             XmlElement xmloContentElmt = oContentElmt;
-                            addRelatedContent(ref xmloContentElmt, Convert.ToInt32(oContentElmt.GetAttribute("id")), myWeb.mbAdminMode);
+                            addRelatedContent( ref xmloContentElmt,  contentId, myWeb.mbAdminMode);
                         }
+                        PerfMonLog("DBHelper","Unique products processed: " + processedContentIds.Count);
                     }
                 }
 

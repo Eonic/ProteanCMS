@@ -4259,7 +4259,11 @@ namespace Protean
                         }
                        // sSql += "group by  c.nContentKey, dbo.fxn_getContentParents(c.nContentKey), cContentForiegnRef , cContentName, c.cContentSchemaName, CAST(cContentXmlBrief AS varchar(max)), a.nStatus,a.dpublishDate, a.dExpireDate, a.dUpdateDate, a.nInsertDirId,CL.cPosition ";
                         sSql = sSql + " ORDER BY ";
-                        sSql += cOrderBy;
+                        //sSql += cOrderBy;                      
+
+                        string orderBySql = cOrderBy.Trim().TrimEnd(',');
+
+                        sSql += orderBySql + ", ";
 
                         //this code is checking  if input cOrderby parameter is already contains nStatus field, then removing it from default column list
                         // in order by clause.
