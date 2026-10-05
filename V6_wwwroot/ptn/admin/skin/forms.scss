@@ -76,9 +76,9 @@ form.xform {
         font-weight: 300;
     }
 
-    label.form-label {
-        font-weight: 400;
-    }
+        label.form-label {
+            font-weight: 400;
+        }
 
     .readonlyvalue {
         margin-left: 5px;
@@ -163,9 +163,9 @@ form.xform {
             padding: 0.375rem 0.375rem;
         }
 
-        input[type=number]::-webkit-inner-spin-button {
-            opacity: 1;
-        }
+            input[type=number]::-webkit-inner-spin-button {
+                opacity: 1;
+            }
     }
 
     .nav-link label {
@@ -195,9 +195,9 @@ form.xform {
         width: initial;
     }
 
-    .form-inline input.form-control.short-input {
-        width: 80px;
-    }
+        .form-inline input.form-control.short-input {
+            width: 80px;
+        }
 
     .tab-content {
         margin-top: -30px;
@@ -251,6 +251,56 @@ form.xform {
         }
     }
 }
+
+
+/* Remove jQuery UI sprite and text */
+.ui-datepicker .ui-icon {
+    background: none !important;
+    text-indent: 0 !important;
+    overflow: visible !important;
+    width: auto !important;
+    height: auto !important;
+    display: inline-block;
+}
+
+/* Hide Prev/Next text */
+.ui-datepicker .ui-datepicker-prev span,
+.ui-datepicker .ui-datepicker-next span {
+    font-size: 0;
+    line-height: 0;
+}
+
+/* Previous month */
+.ui-datepicker .ui-icon-circle-triangle-w::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    content: "\f100"; /* fa-angles-left */
+    font-size: 14px;
+    line-height: 1;
+}
+
+/* Next month */
+.ui-datepicker .ui-icon-circle-triangle-e::before {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    content: "\f101"; /* fa-angles-right */
+    font-size: 14px;
+    line-height: 1;
+}
+.ui-datepicker .ui-datepicker-prev,
+.ui-datepicker .ui-datepicker-next {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+    .ui-datepicker .ui-datepicker-prev:hover,
+    .ui-datepicker .ui-datepicker-next:hover {
+        background: #ffffff;
+        border-radius: .25rem;
+    }
+
+
 .xform#UserLogon {
     margin-right: auto;
     margin-left: auto;
