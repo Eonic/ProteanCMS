@@ -1160,7 +1160,7 @@ namespace Protean
 
                     if (!string.IsNullOrEmpty(oOrderField))
                     {
-                        cSQL += " ORDER BY " + oOrderField + " " + cOrderDirection;
+                        cSQL += " ORDER BY " + oOrderField + " " + cOrderDirection + ", c.nContentKey"; ;
                     }
 
                     if (!string.IsNullOrEmpty(fullSQL))
