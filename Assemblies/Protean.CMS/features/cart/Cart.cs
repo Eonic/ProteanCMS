@@ -581,9 +581,20 @@ namespace Protean
                 try
                 {
 
+
+
                     if (moCartConfig != null)
                     {
 
+                        // allow for 30 mins timeout for restore cart / added for Lloyds Cardnet
+                        if ((myWeb.moRequest["ewCmd"]?.ToLower() ?? "") == "choosepaymentshippingoption")
+                        {
+                            if ((myWeb.moRequest["SessionId"]?.ToString() ?? "") != "")
+                            {
+                                myWeb.RestoreRedirectSession(myWeb.moRequest["SessionId"], 1800, true);
+                            }
+                        }
+                        
                         if (myWeb.mnUserId > 0 & !string.IsNullOrEmpty(myWeb.moConfig["SecureMembershipAddress"]))
                         {
                             mcSiteURL = myWeb.moConfig["SecureMembershipAddress"] + moConfig["ProjectPath"] + "/";
@@ -1839,6 +1850,7 @@ namespace Protean
                         case "Confirm":  // and confirm terms and conditions
                             {
                                 mnProcessId = 4;
+
 
                                 GetCart(ref oElmt);
 

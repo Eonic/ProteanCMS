@@ -179,6 +179,8 @@ namespace Protean
 
         public string defaultProductTypes = "Product,SKU,Ticket";
 
+        public int restoreRedirectTimeoutSec = 10; // redirect timeout of 10 seconds for restore redirect
+
         public virtual Protean.ExternalSynchronisation oSync
         {
             [MethodImpl(MethodImplOptions.Synchronized)]
@@ -1647,7 +1649,7 @@ namespace Protean
 
                                 if (moRequest["SessionId"] != null)
                                 {
-                                    RestoreRedirectSession(moRequest["SessionId"], 5, true);
+                                    RestoreRedirectSession(moRequest["SessionId"], restoreRedirectTimeoutSec, true);
                                 }
 
                                 if (mbAdminMode)
@@ -1885,7 +1887,7 @@ namespace Protean
                                                 if (moRequest["recompile"] == "del")
                                                 {
 
-                                                    if (RestoreRedirectSession(moRequest["SessionId"], 10, true) == true)
+                                                    if (RestoreRedirectSession(moRequest["SessionId"], restoreRedirectTimeoutSec, true) == true)
                                                     {
                                                         // Protean.Config.UpdateConfigValue(Me, "", "recompile", "false")
                                                         XmlHelper.Transform oTransformClear = new XmlHelper.Transform();
