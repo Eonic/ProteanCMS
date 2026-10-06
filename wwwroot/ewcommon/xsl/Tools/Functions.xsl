@@ -6912,7 +6912,10 @@
           <xsl:if test="@icon!=''">
             <i>
               <xsl:attribute name="class">
-                <xsl:text>fa fa-3x center-block </xsl:text>
+				  <xsl:if test="not(starts-with(@icon, 'fas'))">
+					  <xsl:text>fa </xsl:text>
+				  </xsl:if>
+                <xsl:text>fa-3x center-block </xsl:text>
                 <xsl:value-of select="@icon"/>
               </xsl:attribute>
               <xsl:text> </xsl:text>
@@ -6939,7 +6942,10 @@
           <xsl:if test="@icon!=''">
             <i>
               <xsl:attribute name="class">
-                <xsl:text>fa center-block </xsl:text>
+				  <xsl:if test="not(starts-with(@icon, 'fas'))">
+					  <xsl:text>fa </xsl:text>
+				  </xsl:if>
+                <xsl:text>center-block </xsl:text>
                 <xsl:value-of select="@icon"/>
               </xsl:attribute>
               <xsl:text> </xsl:text>
@@ -6966,7 +6972,9 @@
           <xsl:if test="@icon!=''">
             <i>
               <xsl:attribute name="class">
-                <xsl:text>fa </xsl:text>
+				  <xsl:if test="not(starts-with(@icon, 'fas'))">
+					  <xsl:text>fa </xsl:text>
+				  </xsl:if>
                 <xsl:value-of select="@icon"/>
               </xsl:attribute>
               <xsl:text> </xsl:text>
@@ -6990,7 +6998,9 @@
         <xsl:if test="@icon!=''">
           <i>
             <xsl:attribute name="class">
-              <xsl:text>fa </xsl:text>
+           		<xsl:if test="not(starts-with(@icon, 'fas'))">
+					<xsl:text>fa </xsl:text>
+				</xsl:if>
               <xsl:value-of select="@icon"/>
             </xsl:attribute>
             <xsl:text> </xsl:text>
