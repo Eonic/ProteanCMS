@@ -116,9 +116,9 @@ header {
     }
 
     a, button, .btn {
-        &:focus-visible {
+      /*  &:focus-visible {
             box-shadow: 0 0 0 $focus-ring-width rgba($header-color, $focus-ring-opacity);
-        }
+        }*/
     }
 
     &.header-one-line {
@@ -159,9 +159,9 @@ header {
         a {
             @include focus-visible-offset();
 
-            &:focus-visible {
+           /* &:focus-visible {
                 box-shadow: 0 0 0 $focus-ring-width $focus-ring-color;
-            }
+            }*/
         }
     }
 
@@ -847,7 +847,7 @@ header {
 
 
                 i {
-                    box-shadow: 0 0 0 $focus-ring-width rgba($link-color, $focus-ring-opacity);
+                    //box-shadow: 0 0 0 $focus-ring-width rgba($link-color, $focus-ring-opacity);
                 }
             }
 
@@ -985,8 +985,8 @@ header {
 
     &:focus-visible {
         border-radius: 3px;
-        box-shadow: 0 0 0 0.25rem rgba(23, 43, 84, 0.25);
-        outline:none;
+     //   box-shadow: 0 0 0 0.25rem rgba(23, 43, 84, 0.25);
+    //    outline:none;
     }
 
     &:hover,

@@ -225,12 +225,12 @@ a {
     text-decoration-thickness: 0px;
     text-decoration-color: rgba($link-color,0.4);
 
-    &:focus-visible {
+    /*&:focus-visible {
         outline: none;
         box-shadow: 0 0 0 $focus-ring-width $focus-ring-color;
         display: inline-block;
         border-radius: 3px;
-    }
+    }*/
 }
 
 strong, b {
