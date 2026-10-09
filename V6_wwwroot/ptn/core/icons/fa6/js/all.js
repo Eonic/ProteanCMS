@@ -3376,7 +3376,7 @@
       }
     };
   var lt = {
-      "Font Awesome 6 Free": {
+      $font-awesome-version: {
         900: "fas",
         400: "far"
       },

@@ -3,7 +3,7 @@
 
 $fa-css-prefix            : fa !default;
 $fa-style                 : 900 !default;
-$fa-style-family          : "Font Awesome 6 Free" !default;
+$fa-style-family          : $font-awesome-version !default;
 
 $fa-icon-property         : --fa;
 $fa-duotone-icon-property : --fa--fa;

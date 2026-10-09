@@ -272,7 +272,7 @@ form.xform {
 
 /* Previous month */
 .ui-datepicker .ui-icon-circle-triangle-w::before {
-    font-family: "Font Awesome 6 Free";
+    font-family: $font-awesome-version;
     font-weight: 900;
     content: "\f100"; /* fa-angles-left */
     font-size: 14px;
@@ -281,7 +281,7 @@ form.xform {
 
 /* Next month */
 .ui-datepicker .ui-icon-circle-triangle-e::before {
-    font-family: "Font Awesome 6 Free";
+    font-family: $font-awesome-version;
     font-weight: 900;
     content: "\f101"; /* fa-angles-right */
     font-size: 14px;
@@ -325,7 +325,7 @@ form.xform {
     }
 
     .input-containing:has(> #cUserName):before, .input-group:has(> #cUserName):before {
-        font-family: "Font Awesome 6 Free";
+        font-family: $font-awesome-version;
         content: "\f0e0";
         font-weight: 900;
         -moz-osx-font-smoothing: grayscale;
@@ -341,7 +341,7 @@ form.xform {
     }
 
     .secret-group:has(> #cPassword):before, .input-group:has(> #cPassword):before {
-        font-family: "Font Awesome 6 Free";
+        font-family: $font-awesome-version;
         content: "\f023";
         font-weight: 900;
         -moz-osx-font-smoothing: grayscale;
@@ -357,7 +357,7 @@ form.xform {
     }
 
     button[name="UserLogon"]:after {
-        font-family: "Font Awesome 6 Free";
+        font-family: $font-awesome-version;
         content: '\f2f6';
         font-weight: 900;
         padding-left: 5px;
@@ -573,7 +573,7 @@ form.xform {
         }*/
         &:after {
             content: '\f078';
-            font-family: 'Font Awesome 6 Free';
+            font-family: $font-awesome-version;
             font-weight: 900;
             position: absolute;
             top: 11px;
@@ -618,7 +618,7 @@ form.xform {
         //@extend .btn-info;
         &:before {
             content: '\f0c7';
-            font-family: 'Font Awesome 6 Free';
+            font-family: $font-awesome-version;
             font-weight: 900;
             margin-right: 8px;
         }
@@ -1333,7 +1333,7 @@ form .form-actions .required {
             }
 
             &:before {
-                font-family: 'Font Awesome 6 Free';
+                font-family: $font-awesome-version;
                 padding-right: 5px;
             }
         }

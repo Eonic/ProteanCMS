@@ -1540,8 +1540,9 @@ namespace Protean
             {
                 int nDuration = 0;
                 int nUserId = 0;
-                object sSql = "select top 1 nUserDirId, datediff(SS,getdate(),dDateTime) as Duration from tblActivityLog where cSessionId='" + sSessionId + "' order by dDateTime desc";
-                using (var oDr = moDbHelper.getDataReaderDisposable(Convert.ToString(sSql)))
+                string sSql = "select top 1 nUserDirId, datediff(SS,getdate(),dDateTime) as Duration from tblActivityLog where cSessionId=@sessionId order by dDateTime desc";
+                var sqlParams = new System.Collections.Hashtable { { "@sessionId", sSessionId ?? string.Empty } };
+                using (var oDr = moDbHelper.getDataReaderDisposable(sSql, System.Data.CommandType.Text, sqlParams))
                 {
                     if (oDr != null)
                     {

@@ -3091,8 +3091,33 @@
 
 	<xsl:template match="item" mode="xform_PickIcon">
 		<xsl:param name="ref"/>
-		<div data-value="{value/node()}">
-			<i class="fa {value/node()} fa-lg">
+		<div data-value="{value/node()}" test="test">
+			<xsl:if test="@data-icon!=''">
+				<xsl:attribute name="data-icon">
+					<xsl:value-of select="@data-icon"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@data-style!=''">
+				<xsl:attribute name="data-style">
+					<xsl:value-of select="@data-style"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@data-styles!=''">
+				<xsl:attribute name="data-styles">
+					<xsl:value-of select="@data-styles"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@data-label!=''">
+				<xsl:attribute name="data-label">
+					<xsl:value-of select="@data-label"/>
+				</xsl:attribute>
+			</xsl:if>
+			<xsl:if test="@data-terms!=''">
+				<xsl:attribute name="data-terms">
+					<xsl:value-of select="@data-terms"/>
+				</xsl:attribute>
+			</xsl:if>
+			<i class="{value/node()} fa-lg">
 				<xsl:text> </xsl:text>
 			</i>
 		</div>

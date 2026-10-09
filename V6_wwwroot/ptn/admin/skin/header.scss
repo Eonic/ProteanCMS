@@ -147,7 +147,7 @@ body.normalMode, #adminLayout {
 
             &:before {
                 content: '\f063';
-                font-family: 'Font Awesome 6 Free';
+                font-family: $font-awesome-version;
                 font-weight: 900;
                 padding-right: 6px;
             }

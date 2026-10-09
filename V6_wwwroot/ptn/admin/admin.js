@@ -1508,6 +1508,80 @@ function afterLoad() { // After the content from the user guide is loaded
     });
 
 
+    /* PICK ICON FILTERING (style + text filter, matching icon name/label/data-terms)
+    * =============================================================================== */
+
+    $(document).ready(function () {
+        $('div.bfh-selectbox.pickIcon').each(function () {
+            var $box = $(this),
+                styles = [],
+                $toolbar,
+                $textFilter,
+                $styleFilter;
+
+            $box.find('[role=option] li > a[data-option]').each(function () {
+                var $a = $(this),
+                    style = String($a.attr('data-style') || '').toLowerCase();
+
+                if (style && $.inArray(style, styles) === -1) {
+                    styles.push(style);
+                }
+            });
+
+            if (styles.length === 0) {
+                return;
+            }
+
+            styles.sort();
+
+            $textFilter = $('<input type="text" class="bfh-selectbox-filter form-control" placeholder="Search icons...">');
+            $styleFilter = $('<select class="bfh-selectbox-style-filter form-control"><option value="">All styles</option></select>');
+
+            $.each(styles, function (i, style) {
+                $styleFilter.append($('<option/>').attr('value', style).text(style));
+            });
+
+            $toolbar = $('<div class="bfh-selectbox-filter-container"></div>')
+                .append($textFilter)
+                .append($styleFilter);
+
+            $box.find('.bfh-selectbox-options').prepend($toolbar);
+
+            function applyIconFilters() {
+                var text = $.trim($textFilter.val().toLowerCase()),
+                    style = $styleFilter.val();
+
+                $box.find('[role=option] li').each(function () {
+                    var $li = $(this),
+                        $a = $li.children('a'),
+                        matchesText = true,
+                        matchesStyle = true;
+
+                    if (text) {
+                        matchesText =
+                            String($a.attr('data-icon') || '').toLowerCase().indexOf(text) !== -1 ||
+                            String($a.attr('data-label') || '').toLowerCase().indexOf(text) !== -1 ||
+                            String($a.attr('data-terms') || '').toLowerCase().indexOf(text) !== -1;
+                    }
+
+                    if (style) {
+                        matchesStyle = (',' + String($a.attr('data-styles') || '').toLowerCase() + ',').indexOf(',' + style + ',') !== -1;
+                    }
+
+                    $li.toggle(matchesText && matchesStyle);
+                });
+            }
+
+            $toolbar.on('click.pickIconFilter mousedown.pickIconFilter', function (e) {
+                e.stopPropagation();
+            });
+
+            $textFilter.on('input.pickIconFilter propertychange.pickIconFilter', applyIconFilters);
+            $styleFilter.on('change.pickIconFilter', applyIconFilters);
+        });
+    });
+
+
     /* APPLY TO STANDARD SELECTBOX ELEMENTS
     * =================================== */
 

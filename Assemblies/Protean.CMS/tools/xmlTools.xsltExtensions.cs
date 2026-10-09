@@ -2885,6 +2885,11 @@ namespace Protean
                                 string iconPath = "/ewcommon/icons/icons.xml";
                                 if (myWeb.bs5)
                                     iconPath = "/ptn/core/icons/icons.xml";
+                                
+                                string addonIconPath = "/ptn-addons/core/icons/icons.xml";
+                                if (File.Exists(goServer.MapPath(addonIconPath))) {
+                                    iconPath = addonIconPath;
+                                }
 
                                 if (File.Exists(goServer.MapPath(iconPath)))
                                 {

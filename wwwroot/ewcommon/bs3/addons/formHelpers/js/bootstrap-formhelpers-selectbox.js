@@ -40,9 +40,29 @@
     initSelectBox: function () {
       var options;
 
+      // Guard against double-initialization: once this element has been
+      // converted to the li/a options markup, re-running this against the
+      // generated wrapper divs (bfh-selectbox-options, listbox, etc.) would
+      // destroy the options and any data-* metadata already captured.
+      if (this.$element.data('bfhselectbox-initialized')) {
+        return;
+      }
+      this.$element.data('bfhselectbox-initialized', true);
+
       options = '';
       this.$element.find('div').each(function() {
-        options = options + '<li><a tabindex="-1" href="#" data-option="' + $(this).data('value') + '">' + $(this).html() + '</a></li>';
+        var $source = $(this),
+            $a = $('<a tabindex="-1" href="#"></a>').attr('data-option', $source.data('value')).html($source.html()),
+            attrs = this.attributes,
+            i;
+
+        for (i = 0; i < attrs.length; i++) {
+          if (attrs[i].name.indexOf('data-') === 0 && attrs[i].name !== 'data-value') {
+            $a.attr(attrs[i].name, attrs[i].value);
+          }
+        }
+
+        options = options + '<li>' + $('<div></div>').append($a).html() + '</li>';
       });
 
       this.$element.html(
