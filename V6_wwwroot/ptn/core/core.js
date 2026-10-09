@@ -677,7 +677,7 @@ function showDependant(dependant, allDependants) {
     // Make all now hidden fields inactive so values are lost when submitted.
     $("." + allDependants).find(":input").not(':button').not(':submit').each(function () {
         var fieldName = $(this).attr('name');
-        if (!fieldName.endsWith('~inactive')) {            
+        if (fieldName && !fieldName.endsWith('~inactive')) {            
             //    alert("hide as " + tempFieldName);
             $(this).attr('name', fieldName + '~inactive');
         }
@@ -701,11 +701,15 @@ function showDependant(dependant, allDependants) {
         // Find all inactive inputs, and re-activate,
         $("#" + sDependant).find(":input").not(':button').not(':submit').each(function () {
             var fieldName = $(this).attr('name');
-            var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-            $(this).attr('name', tempFieldName);
+            if (fieldName) {
+                var tempFieldName = fieldName.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+                $(this).attr('name', tempFieldName);
+            }
             var fieldId = $(this).attr('id');
-            var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
-            $(this).attr('id', tempFieldId);
+            if (fieldId) {
+                var tempFieldId = fieldId.replace(/~inactive/gi, ''); /* g-  required for global replace, i - required for case-insesitivity */
+                $(this).attr('id', tempFieldId);
+            }
         });
         $("#" + sDependant).prepareXform();
         $("#" + sDependant).trigger('bespokeXform');
