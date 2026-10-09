@@ -1,4 +1,7 @@
-﻿@import "../libs/bs5/scss/functions";
+﻿$fa-font-path: "../core/icons/fa6/webfonts";
+$font-awesome-version: 'Font Awesome 6 Free';
+
+@import "../libs/bs5/scss/functions";
 @import "../libs/bs5/scss/variables";
 @import "../libs/bs5/scss/variables-dark";
 @import "../libs/bs5/scss/maps";
