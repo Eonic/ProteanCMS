@@ -754,6 +754,94 @@ $.fn.prepareAdminXform = function () {
         return new bootstrap.Popover(popoverTriggerEl)
     })
 
+    //---------------------- Icon Picker (bfh-selectbox.pickIcon) ----------------------------
+    // Controls are rendered dynamically (AJAX forms), so document.ready never sees them.
+    // initSelectBox must run here, scoped to this container, after the markup exists.
+
+    if ($(this).find('div.bfh-selectbox').exists()) {
+        $(this).find('div.bfh-selectbox').each(function () {
+            var $selectbox = $(this);
+
+            $selectbox.bfhselectbox($selectbox.data());
+        });
+    }
+
+  
+
+    if ($(this).find('div.bfh-selectbox.pickIcon').exists()) {
+        $(this).find('div.bfh-selectbox.pickIcon').each(function () {
+            var $box = $(this),
+                styles = [],
+                $toolbar,
+                $textFilter,
+                $styleFilter;
+
+            if ($box.data('pickIconFilterInitialized')) {
+                return;
+            }
+            $box.data('pickIconFilterInitialized', true);
+
+            $box.find('[role=option] li > a[data-option]').each(function () {
+                var $a = $(this),
+                    style = String($a.attr('data-style') || '').toLowerCase();
+
+                if (style && $.inArray(style, styles) === -1) {
+                    styles.push(style);
+                }
+            });
+
+            if (styles.length === 0) {
+                return;
+            }
+
+            styles.sort();
+
+            $textFilter = $('<input type="text" class="pickIcon-filter form-control" placeholder="Search icons...">');
+            $styleFilter = $('<select class="bfh-selectbox-style-filter form-control"><option value="">All styles</option></select>');
+
+            $.each(styles, function (i, style) {
+                $styleFilter.append($('<option/>').attr('value', style).text(style));
+            });
+
+            $toolbar = $('<div class="bfh-selectbox-filter-container"></div>')
+                .append($textFilter)
+                .append($styleFilter);
+
+            $box.find('.bfh-selectbox-options').prepend($toolbar);
+
+            function applyIconFilters() {
+                var text = $.trim($textFilter.val().toLowerCase()),
+                    style = $styleFilter.val();
+
+                $box.find('[role=option] li').each(function () {
+                    var $li = $(this),
+                        $a = $li.children('a'),
+                        matchesText = true,
+                        matchesStyle = true;
+
+                    if (text) {
+                        matchesText =
+                            String($a.attr('data-icon') || '').toLowerCase().indexOf(text) !== -1 ||
+                            String($a.attr('data-label') || '').toLowerCase().indexOf(text) !== -1 ||
+                            String($a.attr('data-terms') || '').toLowerCase().indexOf(text) !== -1;
+                    }
+
+                    if (style) {
+                        matchesStyle = String($a.attr('data-style') || '').toLowerCase() === style;
+                    }
+
+                    $li.toggle(matchesText && matchesStyle);
+                });
+            }
+
+            $toolbar.on('click.pickIconFilter mousedown.pickIconFilter', function (e) {
+                e.stopPropagation();
+            });
+
+            $textFilter.on('input.pickIconFilter propertychange.pickIconFilter', applyIconFilters);
+            $styleFilter.on('change.pickIconFilter', applyIconFilters);
+        });
+    }
 
 };
 
@@ -1212,7 +1300,18 @@ function afterLoad() { // After the content from the user guide is loaded
 
             options = '';
             this.$element.children('div').each(function () {
-                options = options + '<li><a tabindex="-1" href="#" data-option="' + $(this).data('value') + '">' + $(this).html() + '</a></li>';
+                var $source = $(this),
+                    $a = $('<a tabindex="-1" href="#"></a>').attr('data-option', $source.data('value')).html($source.html()),
+                    attrs = this.attributes,
+                    i;
+
+                for (i = 0; i < attrs.length; i++) {
+                    if (attrs[i].name.indexOf('data-') === 0 && attrs[i].name !== 'data-value') {
+                        $a.attr(attrs[i].name, attrs[i].value);
+                    }
+                }
+
+                options = options + '<li>' + $('<div></div>').append($a).html() + '</li>';
             });
 
             this.$element.html(
@@ -1485,6 +1584,10 @@ function afterLoad() { // After the content from the user guide is loaded
                     html = '';
                 }
 
+                if ($el.hasClass('pickIcon') && val) {
+                    html = html + ' <span class="pickIcon-selected-label">' + val + '</span>';
+                }
+
                 $el.find('input[type="hidden"]').val(val);
                 $el.find('.bfh-selectbox-option').html(html);
             } else if (origHook) {
@@ -1492,94 +1595,6 @@ function afterLoad() { // After the content from the user guide is loaded
             }
         }
     };
-
-
-    /* SELECTBOX DATA-API
-    * ============== */
-
-    $(document).ready(function () {
-        $('div.bfh-selectbox').each(function () {
-            var $selectbox;
-
-            $selectbox = $(this);
-
-            $selectbox.bfhselectbox($selectbox.data());
-        });
-    });
-
-
-    /* PICK ICON FILTERING (style + text filter, matching icon name/label/data-terms)
-    * =============================================================================== */
-
-    $(document).ready(function () {
-        $('div.bfh-selectbox.pickIcon').each(function () {
-            var $box = $(this),
-                styles = [],
-                $toolbar,
-                $textFilter,
-                $styleFilter;
-
-            $box.find('[role=option] li > a[data-option]').each(function () {
-                var $a = $(this),
-                    style = String($a.attr('data-style') || '').toLowerCase();
-
-                if (style && $.inArray(style, styles) === -1) {
-                    styles.push(style);
-                }
-            });
-
-            if (styles.length === 0) {
-                return;
-            }
-
-            styles.sort();
-
-            $textFilter = $('<input type="text" class="bfh-selectbox-filter form-control" placeholder="Search icons...">');
-            $styleFilter = $('<select class="bfh-selectbox-style-filter form-control"><option value="">All styles</option></select>');
-
-            $.each(styles, function (i, style) {
-                $styleFilter.append($('<option/>').attr('value', style).text(style));
-            });
-
-            $toolbar = $('<div class="bfh-selectbox-filter-container"></div>')
-                .append($textFilter)
-                .append($styleFilter);
-
-            $box.find('.bfh-selectbox-options').prepend($toolbar);
-
-            function applyIconFilters() {
-                var text = $.trim($textFilter.val().toLowerCase()),
-                    style = $styleFilter.val();
-
-                $box.find('[role=option] li').each(function () {
-                    var $li = $(this),
-                        $a = $li.children('a'),
-                        matchesText = true,
-                        matchesStyle = true;
-
-                    if (text) {
-                        matchesText =
-                            String($a.attr('data-icon') || '').toLowerCase().indexOf(text) !== -1 ||
-                            String($a.attr('data-label') || '').toLowerCase().indexOf(text) !== -1 ||
-                            String($a.attr('data-terms') || '').toLowerCase().indexOf(text) !== -1;
-                    }
-
-                    if (style) {
-                        matchesStyle = (',' + String($a.attr('data-styles') || '').toLowerCase() + ',').indexOf(',' + style + ',') !== -1;
-                    }
-
-                    $li.toggle(matchesText && matchesStyle);
-                });
-            }
-
-            $toolbar.on('click.pickIconFilter mousedown.pickIconFilter', function (e) {
-                e.stopPropagation();
-            });
-
-            $textFilter.on('input.pickIconFilter propertychange.pickIconFilter', applyIconFilters);
-            $styleFilter.on('change.pickIconFilter', applyIconFilters);
-        });
-    });
 
 
     /* APPLY TO STANDARD SELECTBOX ELEMENTS
