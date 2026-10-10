@@ -33,6 +33,10 @@
       </xsl:when>
       <xsl:otherwise> row-cols-auto</xsl:otherwise>
     </xsl:choose>
+    <xsl:if test="@gutter and @gutter!=''">
+      <xsl:text> gutter-set </xsl:text>
+      <xsl:value-of select="@gutter"/>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="*" mode="responsiveColumns-bs5">
