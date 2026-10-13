@@ -2239,6 +2239,10 @@
         <xsl:value-of select="@cols"/>
       </xsl:if>
       <xsl:value-of select="$class"/>
+      <xsl:if test="@gutter and @gutter!=''">
+        <xsl:text> gutter-set g-</xsl:text>
+        <xsl:value-of select="@gutter"/>
+      </xsl:if>
     </xsl:attribute>
   </xsl:template>
 
