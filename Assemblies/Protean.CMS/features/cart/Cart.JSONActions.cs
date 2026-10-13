@@ -101,6 +101,10 @@ namespace Protean
                             argoCartElmt = (XmlElement)CartXml.FirstChild;
                             myCart.GetCart(ref argoCartElmt);
                         }
+
+
+                        myCart.GetWalletDetails(ref argoCartElmt);
+                      
                         CartXml = updateCartforJSON(CartXml);
 
                         string jsonString = JsonConvert.SerializeXmlNode(CartXml, Newtonsoft.Json.Formatting.Indented);
