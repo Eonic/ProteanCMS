@@ -101,9 +101,21 @@
               </xsl:apply-templates>
               <xsl:if test="Title/node()!='' or Body/node()!=''">
                 <div class="caption">
-                  <h4>
-                    <xsl:value-of select="Title/node()"/>
-                  </h4>
+                  <xsl:choose>
+                    <xsl:when test="$heading=''">
+                      <h4>
+                        <xsl:value-of select="Title/node()"/>
+                      </h4>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:element name="{$heading}">
+                        <xsl:attribute name="class">
+                          <xsl:text>title</xsl:text>
+                        </xsl:attribute>
+                        <xsl:value-of select="Title/node()"/>
+                      </xsl:element>
+                    </xsl:otherwise>
+                  </xsl:choose>
                   <xsl:apply-templates select="Body/node()" mode="cleanXhtml" />
                 </div>
               </xsl:if>

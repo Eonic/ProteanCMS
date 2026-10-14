@@ -209,7 +209,27 @@
           <xsl:with-param name="sortBy" select="$sortBy"/>
         </xsl:apply-templates>
         <div class="lIinner">
+          <!--<xsl:if test="DisplayName[@icon!=''] or DisplayName[@uploadIcon!='']">
+            <span class="menu-link-with-icon">
+              <xsl:if test="DisplayName[@icon!='']">
+                <i>
+                  <xsl:attribute name="class">
+                    <xsl:text>fa </xsl:text>
+                    <xsl:value-of select="DisplayName/@icon"/>
+                  </xsl:attribute>
+                  <xsl:text> </xsl:text>
+                </i>
+                <span class="space">&#160;</span>
+              </xsl:if>
+              <xsl:if test="DisplayName[@uploadIcon!='']">
+                <span class="nav-icon">
+                  <img src="{DisplayName/@uploadIcon}" alt="icon"/>
+                </span>
+              </xsl:if>
+            </span>
+          </xsl:if>-->
           <xsl:if test="$imagePosition='below'">
+           
             <xsl:choose>
               <xsl:when test="$no-heading-content='true'">
                 <span class="title">

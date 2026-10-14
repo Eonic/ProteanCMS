@@ -16,7 +16,7 @@
 				<xsl:variable name="title">
 					<xsl:apply-templates select="//MenuItem[@id=$pageId]" mode="getTitleAttr" />
 				</xsl:variable>
-        <a href="{$href}" title="{$title}">
+        <a href="{$href}">
 					<figure>
 						<xsl:choose>
 							<xsl:when test="img[contains(@src,'.svg')]">
@@ -53,7 +53,7 @@
 				</a>
 			</xsl:when>
 			<xsl:when test="@externalLink!=''">
-				<a href="{@externalLink}" title="Go to {@externalLink}">
+				<a href="{@externalLink}">
 					<xsl:if test="not(contains(@externalLink,/Page/Request/ServerVariables/Item[@name='SERVER_NAME']/node())) and contains(@externalLink,'http')">
 						<xsl:attribute name="rel">external</xsl:attribute>
 						<!-- All browsers open rel externals as new windows anyway. Target not a valid attribute -->
