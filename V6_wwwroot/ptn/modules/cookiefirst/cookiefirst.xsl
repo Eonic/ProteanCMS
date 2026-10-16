@@ -2,7 +2,7 @@
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl">
 
 	<xsl:template match="Content[@type='CookieFirst']" mode="headerOnlyContentJS">
-		<xsl:if test="not($adminMode)">
+		<xsl:if test="not($adminMode) and $Environment='live'">
 			<script>
 				window.dataLayer = window.dataLayer || [];
 				function gtag(){dataLayer.push(arguments);}
@@ -21,7 +21,7 @@
 	</xsl:template>
 
 	<xsl:template match="Content[@type='FreeCookieConsent']" mode="contentJS">
-		<xsl:if test="not($adminMode)">
+		<xsl:if test="not($adminMode) and $Environment='live'">
 
 			<div id="cookiefirst-policy-page">&#160;</div>
 			<!--

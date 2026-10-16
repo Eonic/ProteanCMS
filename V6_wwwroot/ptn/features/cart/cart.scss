@@ -386,3 +386,30 @@
 .order-detail-container .cart-item div{
     display:inline-block;
 }
+
+.EcommerceListOrders {
+    .order-status {
+        display: inline-block;
+        width: 10%;
+    }
+
+    .order-description {
+        display: inline-block;
+        width: 30%;
+    }
+
+    .order-price {
+        display: inline-block;
+        width: 10%;
+    }
+
+    .order-date {
+        display: inline-block;
+        width: 10%;
+    }
+
+    .order-view {
+        display: inline-block;
+        width: 10%;
+    }
+}

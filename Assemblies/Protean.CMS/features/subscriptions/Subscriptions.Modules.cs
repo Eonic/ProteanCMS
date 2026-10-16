@@ -101,8 +101,8 @@ namespace Protean
                                         var oSubForm = new Subscriptions.Forms(ref myWeb);
                                         var confSubForm = oSubForm.xFrmConfirmSubscription(Convert.ToInt64(myWeb.moRequest["subId"]));
 
-                                        XmlElement oSubmitBtn = (XmlElement)confSubForm.SelectSingleNode("group/submit");
-                                        string buttonRef = oSubmitBtn.GetAttribute("ref");
+                                       // XmlElement oSubmitBtn = (XmlElement)confSubForm.SelectSingleNode("descendant-or-self::submit[@submission='EditSubscription']");
+                                       // string buttonRef = oSubmitBtn.GetAttribute("ref");
 
                                         if (bPaymentMethodUpdated)
                                         {
@@ -257,7 +257,7 @@ namespace Protean
                             if (myWeb.mnUserId > 0)
                             {
 
-                                sSql = "select a.nStatus as status, nSubKey as id, cSubName as name, cSubXml, dStartDate, a.dPublishDate, a.dExpireDate, nPeriod as period, cPeriodUnit as periodUnit, nValueNet as value, cRenewalStatus as renewalStatus, pay.nPayMthdKey as paymentMethodId, pay.cPayMthdProviderName as providerName, pay.cPayMthdProviderRef as providerRef, pay.cPayMthdDetailXml" + " from tblSubscription sub INNER JOIN tblAudit a ON sub.nAuditId = a.nAuditKey " + " LEFT OUTER JOIN tblCartPaymentMethod pay on pay.nPayMthdKey = sub.nPaymentMethodId " + " where sub.nDirId = " + myWeb.mnUserId;
+                                sSql = "select a.nStatus as status, nSubKey as id, cSubName as name, cSubXml, dStartDate, a.dPublishDate, a.dExpireDate, nPeriod as period, cPeriodUnit as periodUnit, nValueNet as value, cRenewalStatus as renewalStatus, pay.nPayMthdKey as paymentMethodId, pay.cPayMthdProviderName as providerName, pay.cPayMthdProviderRef as providerRef, pay.cPayMthdDetailXml" + " from tblSubscription sub INNER JOIN tblAudit a ON sub.nAuditId = a.nAuditKey " + " LEFT OUTER JOIN tblCartPaymentMethod pay on pay.nPayMthdKey = sub.nPaymentMethodId " + " where sub.nDirId = " + myWeb.mnUserId + " order by dStartDate desc, a.nStatus asc";
                                 object cmd = myWeb.moRequest["subCmd"];
                             logicstart:
                                 ;
@@ -333,7 +333,7 @@ namespace Protean
                                         oElmt.SetAttribute("providerRef", oDr["providerRef"].ToString());
 
 
-                                        if (!string.IsNullOrEmpty(oDr["providerName"].ToString()))
+                                        if (!string.IsNullOrEmpty(oDr["providerName"].ToString()) && oDr["renewalStatus"].ToString() != "Cancelled")
                                         {
                                             //var oPayProv = new Providers.Payment.BaseProvider(ref myWeb, oDr["providerName"].ToString());
                                             Protean.Providers.Payment.ReturnProvider oPayProv = new Protean.Providers.Payment.ReturnProvider();

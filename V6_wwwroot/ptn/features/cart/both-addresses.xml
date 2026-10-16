@@ -63,7 +63,7 @@
 			<cartCmd/>
 			<cIsDelivery>false</cIsDelivery>
 		</instance>
-		<submission id="contact" action="" method="POST" event="return form_check(this);" />
+		<submission id="contact" action="" method="POST"/>
 		<bind id="cartCmd" nodeset="cartCmd" required="false()" type="string" />
 
 		<bind nodeset="tblCartContact[@type='Billing Address']">

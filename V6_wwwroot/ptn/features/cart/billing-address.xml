@@ -33,7 +33,7 @@
       <cartCmd/>
       <cIsDelivery />
     </instance>
-    <submission id="SubmitBilling" action="" method="POST" event="return form_check(this);" />
+    <submission id="SubmitBilling" action="" method="POST"/>
     <bind id="cartCmd" nodeset="tblCartContact/cartCmd" required="false()" type="string" />
     <bind id="cContactType" nodeset="tblCartContact/cContactType" required="false()" type="string" />
     <bind id="cContactName" nodeset="tblCartContact/cContactName" required="true()" type="string" />

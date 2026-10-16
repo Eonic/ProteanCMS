@@ -639,6 +639,10 @@ $.fn.prepareXform = function () {
 
 function validateForm(event){
 
+        // "form" is not a global - it must be the form this listener is
+        // attached to, i.e. the element the submit event fired on.
+        var form = event.currentTarget;
+
         if (!form.checkValidity()) {
             event.preventDefault();
             event.stopPropagation();

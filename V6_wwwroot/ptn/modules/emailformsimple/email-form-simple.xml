@@ -31,7 +31,7 @@
 									<imgVerification />
 								</emailer>
 							</instance>
-							<submission method="post" action="/ptn/tools/Services.asmx" SOAPAction="http://www.eonic.co.uk/ewcommon/Services/emailer" id="mailFormSimple" event="return form_check(this);" />
+							<submission method="post" action="/ptn/tools/Services.asmx" SOAPAction="http://www.eonic.co.uk/ewcommon/Services/emailer" id="mailFormSimple" />
 							<bind id="emailer" nodeset="emailer">
 								<bind id="oBodyXML" nodeset="oBodyXML/Items">
 									<bind id="Name" nodeset="Name" required="true()" type="string" />

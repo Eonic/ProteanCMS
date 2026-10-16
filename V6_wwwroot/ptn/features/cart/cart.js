@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
 
-    $(".pay-button").hide();
+    $(".cart-summary .pay-button").hide();
 
     if ($("form#contact").exists()) {
 

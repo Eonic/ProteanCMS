@@ -35,7 +35,7 @@
 									<imgVerification />
 								</emailer>
 							</instance>
-							<submission method="post" action="/ptn/tools/Services.asmx" SOAPAction="http://www.eonic.co.uk/ewcommon/Services/emailer" id="mailForm" event="return form_check(this);" />
+							<submission method="post" action="/ptn/tools/Services.asmx" SOAPAction="http://www.eonic.co.uk/ewcommon/Services/emailer" id="mailForm"/>
 							<bind id="emailer" nodeset="emailer">
 								<bind id="oBodyXML" nodeset="oBodyXML/Items">
 									<bind id="FirstName" nodeset="FirstName" required="true()" type="string" />
@@ -143,6 +143,7 @@
 			<bind id="cInstanceItems" nodeset="ews2:oBodyXML" required="false()" type="string"/>
 		</bind>
 		<bind id="cSubmissionId"  nodeset="tblContent/cContentXmlBrief/Content/model/submission/@id" required="true()" type="string"/>
+		<bind id="cSubmissionEvent"  nodeset="tblContent/cContentXmlBrief/Content/model/submission/@event" required="false()" type="string"/>
 		<bind id="cBinds" nodeset="tblContent/cContentXmlBrief/Content/model/bind/bind[@id='oBodyXML']" required="false()" type="string"/>
 		<bind id="cControls" nodeset="tblContent/cContentXmlBrief/Content/group" required="false()" type="string"/>
 		<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::bind[@nodeset='tblContent/cContentXmlBrief/Content']"/>
@@ -305,6 +306,10 @@
 
 
 					<ewInclude filePath="/ptn/core/modules/genericmodule.xml" xPath="descendant-or-self::group[@id='publish']"/>
+
+					<input bind="cSubmissionEvent" class="long">
+						<label>Submission Event Script</label>
+					</input>
 				</group>
 
 			</group>

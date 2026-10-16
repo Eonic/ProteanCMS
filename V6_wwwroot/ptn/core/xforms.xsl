@@ -213,7 +213,8 @@
       </xsl:if>
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
       <xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat |  alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
-      <xsl:if test="count(submit) &gt; 0">
+      
+		<xsl:if test="count(submit) &gt; 0">
         <xsl:choose>
           <xsl:when test="contains(@class,'form-inline')">
             <xsl:apply-templates select="submit" mode="xform"/>
