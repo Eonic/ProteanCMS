@@ -104,6 +104,14 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+    <xsl:variable name="heading">
+      <xsl:choose>
+        <xsl:when test="@heading">
+          <xsl:value-of select="@heading"/>
+        </xsl:when>
+        <xsl:otherwise>h3</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
 		<!-- Output Module -->
 		<div class="swiper-container content-carousel GalleryImageList Grid">
 			<div class="swiper" data-autoplay="{@autoplay}" data-autoplayspeed="{@autoPlaySpeed}" data-id="{@id}" data-xscol="{@xsCol}" data-smcol="{@smCol}" data-mdcol="{@mdCol}" data-lgcol="{@lgCol}" data-xlcol="{@xlCol}" data-xxlcol="{@cols}">
@@ -136,6 +144,7 @@
 						<xsl:with-param name="alignment" select="@alignment"/>
 						<xsl:with-param name="alignmentV" select="@alignmentV"/>
 						<xsl:with-param name="class" select="'swiper-slide'"/>
+            <xsl:with-param name="heading" select="$heading"/>
 					</xsl:apply-templates>
 				</div>
 				<xsl:if test="@carouselBullets='true'">

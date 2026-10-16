@@ -116,7 +116,7 @@ header {
     }
 
     a, button, .btn {
-      /*  &:focus-visible {
+        /*  &:focus-visible {
             box-shadow: 0 0 0 $focus-ring-width rgba($header-color, $focus-ring-opacity);
         }*/
     }
@@ -131,7 +131,7 @@ header {
 
         .navbar-content {
             flex-wrap: nowrap;
-            flex-grow:2;
+            flex-grow: 2;
         }
 
         .main-nav ul.navbar-nav {
@@ -147,6 +147,7 @@ header {
     .header-inner {
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
+        position: relative;
     }
 
     .module.nobox {
@@ -158,8 +159,7 @@ header {
 
         a {
             @include focus-visible-offset();
-
-           /* &:focus-visible {
+            /* &:focus-visible {
                 box-shadow: 0 0 0 $focus-ring-width $focus-ring-color;
             }*/
         }
