@@ -166,7 +166,7 @@
 
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
 
-      <xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+      <xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
       <xsl:if test="count(submit) &gt; 0">
         <xsl:if test="not(submit[contains(@class,'hide-required')])">
           <xsl:if test="ancestor::group/descendant-or-self::*[contains(@class,'required')]">
@@ -212,7 +212,7 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
-      <xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat |  alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+      <xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
       
 		<xsl:if test="count(submit) &gt; 0">
         <xsl:choose>
@@ -264,7 +264,7 @@
         </xsl:attribute>
       </xsl:if>
       <xsl:apply-templates select="label[position()=1]" mode="legend"/>
-      <xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
+      <xsl:apply-templates select="input | secret | select | select1 | switch | range | textarea | upload | group | repeat | hint | help | alert | div | repeat | relatedContent | label[position()!=1] | trigger | script" mode="control-outer"/>
       <div class="form-group input-containing ">
         <div class="control-wrapper input-wrapper appearance- ">
           <xsl:apply-templates select="submit" mode="xform"/>
@@ -831,6 +831,7 @@
 				  </xsl:if>
 			  </xsl:otherwise>
             </xsl:choose>
+			
             <xsl:if test="not(contains(@class,'row'))">
               <xsl:value-of select="./@class"/>
             </xsl:if>

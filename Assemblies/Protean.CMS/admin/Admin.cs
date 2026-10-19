@@ -4241,7 +4241,10 @@ namespace Protean
                                     if (cOppMode == "import")
                                     {
                                         // here we go lets do the do...!! whoah!
-                                        myWeb.moDbHelper.importObjects((XmlElement)oPreviewElmt2.FirstChild);
+                                       string ImportMsg = myWeb.moDbHelper.importObjects((XmlElement)oPreviewElmt2.FirstChild);
+
+
+                                       moAdXfm.addNote(ref moAdXfm.moXformElmt, Protean.xForm.noteTypes.Alert, ImportMsg);
 
                                     }
 

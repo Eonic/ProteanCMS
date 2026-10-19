@@ -1186,7 +1186,7 @@ namespace Protean
                                     {
                                         valid = true;
                                         //XmlNode argoNode = (XmlNode)this.moXformElmt;
-                                        base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse + " - File Imported");
+                                        base.addNote(ref moXformElmt, Protean.xForm.noteTypes.Alert, sValidResponse + " - File Uploaded");
                                         //this.moXformElmt = (XmlElement)argoNode;
                                         valid = true;
                                     }

@@ -299,7 +299,7 @@ namespace Protean
 
                     // make a new web but going to have to overide some stuff
                     // and double override to be sure
-
+                    cProcessInfo = "Loading File " + goServer.MapPath(cPageXsl);
                     string styleFile = goServer.MapPath(cPageXsl);
                     // PerfMon.Log("Web", "ReturnPageHTML - loaded Style")
                     var oTransform = new Protean.XmlHelper.Transform();
