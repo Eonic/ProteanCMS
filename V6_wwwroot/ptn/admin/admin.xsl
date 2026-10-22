@@ -2589,7 +2589,7 @@
                   </i><xsl:text> </xsl:text>Show
                 </a>
                 <!--span class="hidden"> | </span-->
-                <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="text-danger plain-link btn-del" title="Click here to delete this page">
+                <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}&amp;parid={parent::*/@id}" class="text-danger plain-link btn-del" title="Click here to delete this page">
                   <i class="fas fa-trash-alt">
                     <xsl:text> </xsl:text>
                   </i><xsl:text> </xsl:text>Delete
@@ -9672,7 +9672,7 @@ $(document).ready(function () {
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Page Layout
               </a>
-              <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={$pageId}" class="btn btn-sm btn-outline-danger">
+              <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={$pageId}&amp;parid={parent::*/@id}" class="btn btn-sm btn-outline-danger">
                 <i class="fas fa-trash-alt fa-white">
                   <xsl:text> </xsl:text>
                 </i><xsl:text> </xsl:text>Delete
@@ -11860,7 +11860,7 @@ $(document).ready(function () {
                     </i><xsl:text> </xsl:text>New Version
                   </a>
                   <xsl:if test="@primaryId!=@id">
-                    <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}" class="btn btn-xs btn-danger" title="Click here to delete this page">
+                    <a href="{$appPath}?ewCmd=DeletePage&amp;pgid={@id}&amp;parid={parent::*/@id}" class="btn btn-xs btn-danger" title="Click here to delete this page">
                       <i class="fa fa-remove fa-white">
                         <xsl:text> </xsl:text>
                       </i><xsl:text> </xsl:text>Delete

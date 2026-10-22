@@ -2180,7 +2180,15 @@ namespace Protean
                                 oPageDetail.AppendChild(moAdXfm.xFrmDeletePage(Convert.ToInt64(myWeb.moRequest["pgid"])));
                                 if (moAdXfm.valid)
                                 {
-                                    myWeb.msRedirectOnEnd = "?ewCmd=EditStructure&pgid=" + mnAdminTopLevel;
+                                    long deletedParent = Convert.ToInt64("0" + myWeb.moRequest["parid"]);
+
+                                    if (deletedParent == 0)
+                                    {
+                                        deletedParent = Convert.ToInt64(mnAdminTopLevel);
+                                    }
+                                
+
+                                    myWeb.msRedirectOnEnd = "?ewCmd=EditStructure&pgid=" + deletedParent.ToString();
 
                                     // mcEwCmd = myWeb.moSession("ewCmd")
                                     // sAdminLayout = ""
