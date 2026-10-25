@@ -159,7 +159,11 @@ namespace Protean
                     XmlElement oSub = (XmlElement)oOptXform.model.SelectSingleNode("submission");
                     if (oSub is null)
                     {
-                        cEvent = "return form_check(this);";
+                        if (myWeb.bs3)
+                        {
+                            //We don't need this on v6 sites
+                            cEvent = "return form_check(this);";
+                        }
                     }
                     else
                     {

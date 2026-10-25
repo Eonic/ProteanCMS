@@ -953,7 +953,10 @@ namespace Protean
                             myCart.updateGCgetValidShippingOptionsDS(ShippingType);
                         }
 
-                        myWeb.moDbHelper.savePayment(nCartId, 0L, sProviderName, sAuthNo, sProviderName, oDetailXml, DateTime.Now, false, dAmount);
+
+                        long nPaymentid = myWeb.moDbHelper.savePayment(nCartId, 0L, sProviderName, sAuthNo, sProviderName, oDetailXml, DateTime.Now, false, dAmount);
+                        myWeb.moSession["paymentRecieved"] = nPaymentid;
+
                         myWeb.moDbHelper.SaveCartStatus(nCartId, (int)Cart.cartProcess.Complete);
 
                         XmlElement argoCartElmt = (XmlElement)CartXml.FirstChild;

@@ -206,7 +206,6 @@
 				<div class="col-lg-4">
 					<div class="card cart-address-card mb-0">
 						<div class="card-body">
-
 							<h2>Contact Details</h2>
 							<p>
 								<xsl:value-of select="GivenName"/>
@@ -259,7 +258,7 @@
 								<i class="fa fa-pencil me-1">
 									<xsl:text> </xsl:text>
 								</i>
-								<xsl:call-template name="term4022"/>
+								<xsl:call-template name="term4022a"/>
 								<xsl:text> </xsl:text>
 							</a>
 						</xsl:if>
@@ -267,8 +266,8 @@
 				</div>
 			</div>
 		</div>
-
 	</xsl:template>
+	
 	<xsl:template match="Contact" mode="contact-card">
 		<xsl:param name="parentURL"/>
 		<xsl:param name="cartType"/>
@@ -400,6 +399,9 @@
 					<form method="post" id="cart" class="ewXform">
 						<div class="basket card rhs-cart-card ">
 							<div class="card-body">
+							<h4 class="card-title">
+								<xsl:call-template name="term4031a" />
+							</h4>
 								<xsl:if test="@cmd='Add' or @cmd='Cart'">
 									<xsl:apply-templates select="." mode="suggestedItems"/>
 								</xsl:if>
@@ -448,51 +450,16 @@
 	<!--############################## Order Procees - Billing ################################-->
 	<!--#-->
 	<xsl:template match="Order[@cmd='Billing' or @cmd='Delivery']" mode="orderProcessTitle">
-
+		<h1>
+			<xsl:call-template name="term4031" />
+		</h1>
 	</xsl:template>
 
 	<xsl:template match="Order[@cmd='Billing' or @cmd='Delivery']" mode="orderProcess">
 		<xsl:apply-templates select="." mode="orderProcessTitle"/>
-		<xsl:apply-templates select="." mode="orderErrorReports"/>
-
-		<!--<div id="template_1_Column" class="template template_1_Column container">
-			<h1>
-				<xsl:call-template name="term4031" />
-			</h1>
-			<div class="row">
-				<div class="col-lg-8">
-					<xsl:apply-templates select="." mode="orderEditAddresses"/>
-				</div>
-				<div class="col-lg-4">
-					<div class="card">
-						<div class="card-body">
-									<xsl:for-each select="Item">
-									<div class="clearfix cart-item">
-										<xsl:apply-templates select="." mode="orderItem">
-											<xsl:with-param name="editQty" select="false()"/>
-											<xsl:with-param name="showImg" select="'true'"/>
-											<xsl:with-param name="cartThumbWidth" select="'50'"/>
-											<xsl:with-param name="cartThumbHeight" select="'50'"/>											
-										</xsl:apply-templates>
-									</div>
-								</xsl:for-each>
-								<hr/>
-								<xsl:apply-templates select="." mode="orderTotals"/>	
-						</div>
-					</div>
-							
-							
-				</div>
-			</div>
-			
-		</div>-->
-
-		
+		<xsl:apply-templates select="." mode="orderErrorReports"/>	
 		<div class="row">
 			<div class="col-lg-8">
-				<h1>
-					<xsl:call-template name="term4031" />
-				</h1>
 				<xsl:apply-templates select="." mode="orderEditAddresses"/>
 			</div>
 			<div class="col-lg-4">
@@ -505,6 +472,9 @@
 				</xsl:if>
 				<div class="card checkout-card rhs-cart-card ">
 					<div class="card-body">
+						<h4 class="card-title">
+							<xsl:call-template name="term4031a" />
+						</h4>
 						<xsl:for-each select="Item">
 							<div class="clearfix cart-item">
 								<xsl:apply-templates select="." mode="orderItem">
@@ -1071,7 +1041,7 @@
 	<!--############################## Order Process - Choose Payment / Shipping Options ################################-->
 	<!--#-->
 	<xsl:template match="Order[@cmd='ChoosePaymentShippingOption']" mode="orderProcessTitle">
-
+		<h1>Review Your Order</h1>
 	</xsl:template>
 
 	<xsl:template match="Order[@cmd='ChoosePaymentShippingOption']" mode="orderProcess">
@@ -1079,7 +1049,6 @@
 		<xsl:apply-templates select="." mode="orderErrorReports"/>
 		<div class="row">
 			<div class="col-lg-8">
-				<h1>Review Your Order</h1>
 				<div class="cartBox check-address">
 					<xsl:apply-templates select="." mode="orderAddresses"/>
 				</div>
@@ -1089,6 +1058,9 @@
 				<div class="cart-summary">
 					<div class="card cartBox payment-tcs rhs-cart-card ">
 						<div class="card-body">
+							<h4 class="card-title">
+								<xsl:call-template name="term4031a" />
+							</h4>
 							<xsl:apply-templates select="." mode="orderItems">
 								<xsl:with-param name="editQty">false</xsl:with-param>
 								<xsl:with-param name="showImg" select="'true'"/>
@@ -2200,7 +2172,10 @@
 					<xsl:when test="group[div/tblCartContact/cContactType/node()='Delivery Address']">
 						<div class="card">
 							<div class="card-body">
-								<h4 class="card-title">Billing Address</h4>
+								<h4 class="card-title">
+									<xsl:call-template name="term4033" />
+									
+								</h4>
 								<xsl:apply-templates select="group[div/tblCartContact/cContactType/node()='Billing Address']" mode="xform"/>
 							</div>
 						</div>
@@ -2210,7 +2185,9 @@
 									<span class="pull-right">
 									<xsl:apply-templates select="submit" mode="xform"/>
 										</span>
-									<h4 class="card-title">Delivery Addresses</h4>
+									<h4 class="card-title">
+										<xsl:call-template name="term4034" />
+									</h4>
 								</div>
 								<ul class="list-group list-group-flush">
 									<xsl:if test="group[@class='collection-options']">

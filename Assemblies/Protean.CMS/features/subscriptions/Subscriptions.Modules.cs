@@ -278,6 +278,12 @@ namespace Protean
                                             oSubs.CancelSubscription(Convert.ToInt16(myWeb.moRequest["subId"]));
                                             break;
                                         }
+                                    case "cancelRenewal":
+                                        {
+                                            var oSubs = new Subscriptions(ref myWeb);
+                                            oSubs.ExpireSubscription(Convert.ToInt16(myWeb.moRequest["subId"]));
+                                            break;
+                                        }
                                     case "edit":
                                         {
                                             myWeb.moContentDetail = myWeb.moPageXml.CreateElement("ContentDetail");

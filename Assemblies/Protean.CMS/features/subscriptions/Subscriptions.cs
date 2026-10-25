@@ -1140,7 +1140,7 @@ namespace Protean
                             delayStart = SubPrices.GetAttribute("delayStart");
                             vatAmt = (double)Round(repeatPrice * (VatRate / 100d), bForceRoundup: mbRoundup);
                         }
-                        repeatPrice = Math.Round(repeatPrice + vatAmt, 1, MidpointRounding.AwayFromZero);
+                        repeatPrice = Math.Round(repeatPrice + vatAmt, 2, MidpointRounding.AwayFromZero);
                         oCartXml.SetAttribute("repeatPrice", repeatPrice.ToString());
                         vatAmt = Math.Round(vatAmt, 2, MidpointRounding.AwayFromZero);
                         oCartXml.SetAttribute("repeatVAT", vatAmt.ToString("F2", CultureInfo.InvariantCulture));
@@ -2146,7 +2146,9 @@ namespace Protean
 
                         myWeb.moDbHelper.setObjectInstance(Cms.dbHelper.objectTypes.Subscription, SubInstance.DocumentElement);
 
+                       
                         ExpireSubscriptionGroups(nId);
+                       
 
                         // Email the site owner to inform of cancelation !!!
                         if (!string.IsNullOrEmpty(oSubConfig["CancellationXSL"]) & bEmailCustomer)

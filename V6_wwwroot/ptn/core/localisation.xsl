@@ -3494,6 +3494,17 @@
     </xsl:choose>
   </xsl:template>
 
+	<xsl:template name="term4022a">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>Edit</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Edit Address Details</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
+
   <xsl:template name="term4023">
     <xsl:choose>
       <xsl:when test="$lang='en-pr'">
@@ -3601,6 +3612,17 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+	<xsl:template name="term4031a">
+		<xsl:choose>
+			<xsl:when test="$lang='en-pr'">
+				<xsl:text>Order Details</xsl:text>
+			</xsl:when>
+			<xsl:otherwise>
+				<xsl:text>Order Details</xsl:text>
+			</xsl:otherwise>
+		</xsl:choose>
+	</xsl:template>
 
   <xsl:template name="term4032">
     <xsl:choose>
