@@ -6,6 +6,9 @@
         color: color-contrast($color);
     }
 
+    a:focus-visible {
+        outline-color: color-contrast($color);
+    }
     a:not(.btn) {
         color: color-contrast($color);
     }
@@ -139,6 +142,16 @@
     @include bg-card-border;
 }
 
+.linked-card {
+    &:focus-within {
+        outline: 1px dashed #037DBA;
+        outline-offset: 5px;
+    }
+    .stretched-link:focus-visible,
+    a:focus-visible {
+        outline: 0;
+    }
+}
 /*############### MISC #################*/
 .alert {
     margin-bottom: $grid-gutter-height;

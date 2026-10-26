@@ -63,7 +63,9 @@
         }
 
         &:focus-visible {
-            box-shadow: 0 0 0 $focus-ring-width rgba($footer-link, $focus-ring-opacity);
+            //box-shadow: 0 0 0 $focus-ring-width rgba($footer-link, $focus-ring-opacity);
+           outline-color:$footer-outline-color;
+           box-shadow:none;
         }
     }
 

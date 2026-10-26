@@ -109,13 +109,14 @@ $nav-breakpoint: lg;
 $fixed-height-xs: 100px;
 $fixed-height-lg: 100px;
 $header-btn-style: btn-outline-primary;
+$header-outline-color: $secondary;
 
 /*##################### FOOTER #######################*/
 $footer-bg: $dark;
 $footer-color: #fff;
 $footer-link: #fff;
 $footer-link-hover: $nav-link-hover-color;
-
+$footer-outline-color: #fff;
 /*###################### FORMS #######################*/
 $input-border-color: #919191;
 $form-check-input-border: 1px solid $input-border-color;

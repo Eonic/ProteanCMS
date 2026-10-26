@@ -4,6 +4,12 @@
         margin: 0 auto;
     }
 }
+
+.nav-link:focus-visible {
+    outline: 1px dashed;
+    box-shadow:none;
+}
+
 .main-nav {
     @include media-breakpoint-up($nav-breakpoint) {
         .nav-link {
@@ -12,6 +18,11 @@
             position: relative;
             font-weight:400;
             text-transform:uppercase;
+
+            &:focus-visible {
+                outline: 1px dashed $header-outline-color;
+                outline-offset: 5px;
+            }
 
             &:focus-within {
                 padding: calc($nav-padding-y + 5px) 5px !important;
@@ -94,6 +105,12 @@ header.header-menu-right {
 
     .header-above {
         background: $header-above;
+        a {
+
+            &:focus-visible {
+                outline-offset: 0;
+            }
+        }
 
         .container-fluid,
         .container {
@@ -148,6 +165,12 @@ header {
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
         position: relative;
+        a, button {
+
+            &:focus-visible {
+                outline-color: $header-outline-color;
+            }
+        }
     }
 
     .module.nobox {
@@ -274,9 +297,9 @@ header {
                     color: $nav-link-hover-color;
                 }
 
-                &:focus {
-                    border-radius: 3px;
-                    box-shadow: 0 0 0 $focus-ring-width $focus-ring-opacity;
+                &:focus-visible {
+                   // border-radius: 3px;
+                    //box-shadow: 0 0 0 $focus-ring-width $focus-ring-opacity;
 
                     span {
                         padding: $focus-ring-offset;
@@ -701,7 +724,7 @@ header {
     }
 
     &:focus-visible {
-        border-radius: 3px;
+       // border-radius: 3px;
     }
 }
 .logged-in-icon {
@@ -1007,6 +1030,10 @@ header {
 
     @include media-breakpoint-up($nav-breakpoint) {
         padding-left: 0.5rem;
+            a:focus-visible {
+                outline-color: $header-outline-color ;
+                box-shadow: none;
+            }
     }
 
     a {

@@ -55,6 +55,7 @@ body {
 .v-align-center {
     align-self: center;
 }
+
 .module-FormattedText.v-align-center {
     align-self: center;
     justify-content: center;
@@ -224,13 +225,27 @@ a {
     text-underline-offset: 0.2rem;
     text-decoration-thickness: 0px;
     text-decoration-color: rgba($link-color,0.4);
-
     /*&:focus-visible {
         outline: none;
         box-shadow: 0 0 0 $focus-ring-width $focus-ring-color;
         display: inline-block;
         border-radius: 3px;
     }*/
+    &:focus-visible {
+        outline: 1px dashed $primary;
+        box-shadow: none;
+    }
+
+    outline-offset: 2px;
+}
+
+.stretched-link:focus-visible {
+    outline: none;
+}
+
+.btn:focus-visible {
+    outline: 1px dashed $primary;
+    box-shadow:none;
 }
 
 strong, b {
@@ -288,7 +303,7 @@ h1, h2, h3, h4 {
     }
 
     .btn {
-        margin:0 5px;
+        margin: 0 5px;
     }
 }
 
@@ -319,6 +334,10 @@ h1, h2, h3, h4 {
 
     &:hover {
         transform: scale(1.04);
+    }
+
+    &:focus-visible {
+        outline: 1px dashed #037DBA;
     }
 }
 
@@ -444,10 +463,9 @@ section {
         }
     }
 
-   
-        display: flex;
-        justify-content: stretch;
-    
+    display: flex;
+    justify-content: stretch;
+
 
     > .container {
         display: flex;
@@ -496,6 +514,10 @@ section:not(.bg-light) .bg-light {
 
 @mixin section-contrast($color: $dark) {
     color: color-contrast($color);
+
+    a:focus-visible {
+        outline-color: color-contrast($color);
+    }
 
     a:not(.btn),
     .title a {
@@ -612,10 +634,10 @@ section.stretchBG {
         margin: 0;
     }
 
-    .row > * {
-        margin: 0;
-        padding: 0;
-    }
+        .row > * {
+            margin: 0;
+            padding: 0;
+        }
 
     .module {
         height: 100%;
@@ -811,13 +833,13 @@ section.stretchBG {
             }
         }
 
-        .breadcrumb-item.active {
-            color: color-contrast($basic-banner-bg);
-        }
+            .breadcrumb-item.active {
+                color: color-contrast($basic-banner-bg);
+            }
 
-        .breadcrumb-item + .breadcrumb-item::before {
-            color: color-contrast($basic-banner-bg);
-        }
+            .breadcrumb-item + .breadcrumb-item::before {
+                color: color-contrast($basic-banner-bg);
+            }
     }
 
     a {
@@ -960,11 +982,11 @@ section.stretchBG {
 div[class$="List"] {
     //@include listItem-spacing;
     .list-image-link {
-       // overflow: hidden;
+        // overflow: hidden;
     }
 
     .btn-custom {
-       // margin-top: 1rem;
+        // margin-top: 1rem;
         border-color: $btn-list-btn;
     }
     /*.btn-custom {
@@ -1097,6 +1119,23 @@ div[class$="List"] {
 }
 
 .linked-listItem {
+    &:focus-within {
+        .lIinner {
+            outline: 1px dashed #037DBA;
+            outline-offset: 5px;
+
+            a, button {
+                &:focus-visible {
+                    outline:none;
+                }
+            }
+        }
+    }
+
+    a:focus-visible {
+        box-shadow: none;
+    }
+
     .lIinner img {
         transition: all ease 0.4s;
     }
@@ -1157,9 +1196,9 @@ div[class$="List"] {
             transition: all ease 0.4s;
         }
 
-        img:hover {
-            transform: scale(1.04);
-        }
+            img:hover {
+                transform: scale(1.04);
+            }
     }
 
     img.thumbnail {
@@ -1279,6 +1318,11 @@ div[class$="List"] {
 .LinkListSimple {
     margin-left: -1rem;
     margin-right: -1rem;
+
+    .nav-link:hover,
+    .nav-link:focus {
+        color: darken($link-color,10%);
+    }
 }
 
 .SubPageListSimple {
