@@ -26,9 +26,13 @@
     </xsl:if>
 
     <xsl:if test="descendant-or-self::textarea[contains(@class,'xhtml')]">
+		<xsl:variable name="linklisttext">
+			<xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')][1]" mode="tinymcelinklist"/>
+		</xsl:variable>
+		<xsl:if test="$linklisttext!=''">
       <script type="text/javascript">
-        var tinymcelinklist = <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')][1]" mode="tinymcelinklist"/>;
-      </script>
+        var tinymcelinklist = <xsl:copy-of select="$linklisttext"/>;
+      </script></xsl:if>
     </xsl:if>
 
     <xsl:apply-templates select="descendant-or-self::textarea[contains(@class,'xhtml')]" mode="xform_control_script"/>

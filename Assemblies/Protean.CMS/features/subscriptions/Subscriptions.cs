@@ -3068,6 +3068,23 @@ namespace Protean
 
                                     XmlElement PaymentOptionsSelect = (XmlElement)this.moXformElmt.SelectSingleNode("descendant-or-self::select1[@bind='cPaymentMethod']");
 
+                                                                  
+                                    DateTime dRenewalDate = Convert.ToDateTime(this.Instance.SelectSingleNode("tblSubscription/dExpireDate").InnerText);
+                                    double nFirstPayment = 0d;
+                                    var RandGen = new Random();
+
+                                    myWeb.moCart.Order = new Models.Order(ref myWeb.moPageXml) { 
+                                        TransactionRef = "SUB" + Convert.ToDouble(this.Instance.SelectSingleNode("tblSubscription/nSubKey").InnerText) + "-" + Convert.ToDouble("0" + this.Instance.SelectSingleNode("tblSubscription/nPaymentMethodId").InnerText) + "-" + RandGen.Next(1000, 9999).ToString(),
+                                        firstPayment = nFirstPayment,
+                                        repeatPayment = Convert.ToDouble(this.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText),
+                                        delayStart = false, // IIf(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/@delayStart").InnerText = "true", True, False)
+                                        startDate = dRenewalDate,
+                                        repeatInterval = this.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Duration/Unit").InnerText,
+                                        repeatLength = Convert.ToInt16(this.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/Duration/Length").InnerText)
+                                     };
+                                     
+                                    myWeb.moCart.Order.SetAddress(this.Instance.SelectSingleNode("Contact/cContactName").InnerText, this.Instance.SelectSingleNode("Contact/cContactEmail").InnerText, this.Instance.SelectSingleNode("Contact/cContactTel").InnerText, this.Instance.SelectSingleNode("Contact/cContactTelCountryCode").InnerText, this.Instance.SelectSingleNode("Contact/cContactCompany").InnerText, this.Instance.SelectSingleNode("Contact/cContactAddress").InnerText, this.Instance.SelectSingleNode("Contact/cContactCity").InnerText, this.Instance.SelectSingleNode("Contact/cContactState").InnerText, this.Instance.SelectSingleNode("Contact/cContactZip").InnerText, this.Instance.SelectSingleNode("Contact/cContactCountry").InnerText);
+
                                     double PaymentAmount = Convert.ToDouble("0" + this.Instance.SelectSingleNode("tblSubscription/nValueNet").InnerText);
                                     string PaymentMethod = "0" + this.Instance.SelectSingleNode("tblCartPaymentMethod/cPayMthdProviderName").InnerText;
 

@@ -97,6 +97,8 @@ namespace Protean
                             {
                                 case var @case when @case == "":
                                     {
+
+
                                         // Confirm Subscription Details Form
                                         var oSubForm = new Subscriptions.Forms(ref myWeb);
                                         var confSubForm = oSubForm.xFrmConfirmSubscription(Convert.ToInt64(myWeb.moRequest["subId"]));
@@ -111,6 +113,10 @@ namespace Protean
                                         }
 
                                         SelectedPaymentMethod = myWeb.moRequest["ewSubmit"];
+                                        if (SelectedPaymentMethod == null) {
+                                            SelectedPaymentMethod = myWeb.moRequest["submit"];
+                                        }
+
                                         if (SelectedPaymentMethod == "Update Payment Details")
                                         {
                                             SelectedPaymentMethod = myWeb.moRequest["cPaymentMethod"];
@@ -121,10 +127,10 @@ namespace Protean
                                         {
                                             oSubForm.updateInstanceFromRequest();
                                             oSubForm.validate();
-                                            DateTime dRenewalDate = Convert.ToDateTime(oSubForm.Instance.SelectSingleNode("tblSubscription/dExpireDate").InnerText);
-                                            double nFirstPayment = 0d;
+                                            DateTime dRenewalDate = myWeb.moCart.Order.startDate;
+                                            Double nFirstPayment = myWeb.moCart.Order.firstPayment;
 
-                                            if (dRenewalDate < DateTime.Now)
+                                            if (myWeb.moCart.Order.startDate < DateTime.Now)
                                             {
                                                 nFirstPayment = Convert.ToDouble(oSubForm.Instance.SelectSingleNode("tblSubscription/cSubXml/Content/SubscriptionPrices/Price[@type='sale']").InnerText);
                                                 var oSub = new Subscriptions();
@@ -210,7 +216,7 @@ namespace Protean
                                             myWeb.moDbHelper.ExeProcessSql("update tblSubscription set nPaymentMethodId=" + pseudoCart.mnPaymentId + "where nSubKey = " + myWeb.moRequest["subId"]);
                                             myWeb.moCart.mcCartCmd = "";
                                             myWeb.moCart.mbBlockCartCmd = true;
-                                            ewCmd = "";
+                                            ewCmd = "UpdateSubscription";
                                             bPaymentMethodUpdated = true;
                                             goto processFlow;
                                         }

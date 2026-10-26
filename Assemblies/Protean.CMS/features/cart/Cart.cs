@@ -43,6 +43,8 @@ namespace Protean
 
             public XmlDocument moPageXml;
 
+            public Protean.Models.Order Order;
+
             public string mcModuleName = "Protean.Cms.Cart";
 
             // Session EonicWeb Details

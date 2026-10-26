@@ -157,7 +157,7 @@ namespace Protean.Models
             }
             set
             {
-                string sTransactionRef = value;
+                sTransactionRef = value;
                 OrderElmt.SetAttribute("transactionRef", sTransactionRef);
             }
         }
