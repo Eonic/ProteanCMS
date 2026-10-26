@@ -4373,12 +4373,13 @@
 			</xsl:choose>
 		</input>
 
-		<input type="hidden" name="{$ref}-CountryCode" id="{$ref}-CountryCode">
+		<input type="hidden" name="{$ref}-CountryCode" id="{$ref}-CountryCode" value="+44">
+			<xsl:text> </xsl:text>
 		</input>
 
 	</xsl:template>
 
-	<xsl:template match="Content[descendant::input[contains(@class,'telephone')]]" mode="contentJS">
+	<!--xsl:template match="Content[descendant::input[contains(@class,'telephone')]]" mode="contentJS">
 		<link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css">
 			<xsl:text> </xsl:text>
 		</link>
@@ -4387,11 +4388,8 @@
 		</script>
 
 		<script type="text/javascript" defer="defer">
-
-
-			
-			window.addEventListener("load", function() {
-			
+		
+			window.addEventListener("load", function() {			
 			<xsl:for-each select="descendant::input[contains(@class,'telephone')]">
 				<xsl:variable name="ref">
 					<xsl:apply-templates select="." mode="getRefOrBind"/>
@@ -4408,16 +4406,57 @@
 
 				telinput.addEventListener("countrychange", function() {
 				var countryCode = $("div.iti__selected-dial-code")[0].innerText;
-				$(".<xsl:value-of select="$ref"/>-CountryCode").val(countryCode);
+				$(".<xsl:value-of select="$ref"/>-CountryCode").attr("value",countryCode);
 				});
-
-
 			</xsl:for-each>
 			});
 
 
 		</script>
 
+	</xsl:template-->
+
+
+	<xsl:template match="input[contains(@class,'telephone')]" mode="xform_control_script">
+		<link rel="stylesheet" href="/ewcommon/js/intlTelInput/css/intlTelInput.css">
+			<xsl:text> </xsl:text>
+		</link>
+		<script src="/ewcommon/js/intlTelInput/js/intlTelInput.js" defer="defer" >
+			<xsl:text> </xsl:text>
+		</script>
+
+		<script type="text/javascript" defer="defer">
+
+
+
+			window.addEventListener("load", function() {
+
+				<xsl:variable name="ref">
+					<xsl:apply-templates select="." mode="getRefOrBind"/>
+				</xsl:variable>
+			const telinput = document.querySelector("#<xsl:value-of select="$ref"/>-temp");
+
+
+			$("#<xsl:value-of select="$ref"/>-CountryCode").attr("value",'+44');
+
+			window.intlTelInput(telinput, {
+			initialCountry: "gb",
+			preferredCountries: ["gb"],
+			separateDialCode: true,
+			utilsScript: "/ewcommon/js/intlTelInput/js/utils.js",
+			hiddenInput: "<xsl:value-of select="$ref"/>"
+			});
+
+			telinput.addEventListener("countrychange", function() {
+				var countryCode = $("div.iti__selected-dial-code")[0].innerText;
+					$("#<xsl:value-of select="$ref"/>-CountryCode").attr("value",countryCode);
+				});
+			});
+
+
+		</script>
+
 	</xsl:template>
+	
 
 </xsl:stylesheet>

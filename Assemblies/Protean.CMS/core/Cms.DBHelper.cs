@@ -3046,7 +3046,7 @@ namespace Protean
                         case objectTypes.Subscription:
                             {
                                 var oXML = new XmlDocument();
-                                sSql = $"SELECT cSubscriptionXML, nUserId FROM tblSubscription WHERE nSubKey = {nId}";
+                                sSql = $"SELECT cSubXML, nDirId FROM tblSubscription WHERE nSubKey = {nId}";
                                 var nSubUserId = default(int);
                                 using (var oDr = getDataReaderDisposable(sSql))
                                 {

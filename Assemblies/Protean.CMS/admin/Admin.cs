@@ -3386,6 +3386,7 @@ namespace Protean
 
                         case "Subscriptions":
                         case "EditUserSubscription":
+                        case "DeleteUserSubscription":
                         case "AddSubscriptionGroup":
                         case "EditSubscriptionGroup":
                         case "AddSubscription":
@@ -5902,7 +5903,7 @@ from tblContentIndexDef";
 
                     case "EditUserSubscription":
                         {
-                            oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmEditUserSubscription(Convert.ToInt16(myWeb.moRequest["id"])), true));
+                            oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmEditUserSubscription(Convert.ToInt16(myWeb.moRequest["subId"])), true));
                             if (oADX.valid)
                             {
                                 cCmd = "ManageUserSubscription";
@@ -5912,6 +5913,16 @@ from tblContentIndexDef";
                             {
                                 sAdminLayout = "AdminXForm";
                             }
+
+                            break;
+                        }
+
+                    case "DeleteUserSubscription":
+                        {
+
+                            myWeb.moDbHelper.DeleteObject(dbHelper.objectTypes.Subscription, Convert.ToInt64(myWeb.moRequest["subId"]));
+
+                            myWeb.msRedirectOnEnd = "/?ewCmd=Profile&DirType=User&id=" + myWeb.moRequest["userId"];
 
                             break;
                         }

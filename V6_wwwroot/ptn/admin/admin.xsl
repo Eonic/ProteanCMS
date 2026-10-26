@@ -5361,6 +5361,7 @@ $(document).ready(function () {
 
   <xsl:template match="Page[@layout='Profile']" mode="Admin">
     <xsl:for-each select="ContentDetail/User">
+		<xsl:variable name="userId" select="@id"/>
       <div id="template_ListDirectory" class="container-fluid">
         <div class="btn-group-spaced mb-1">
           <a href="{$appPath}?ewCmd=EditDirItem&amp;DirType=User&amp;id={@id}" class="btn btn-sm btn-outline-primary">
@@ -5532,9 +5533,15 @@ $(document).ready(function () {
                   </td>
                   <td colspan="3">
 
-                    <a href="{$appPath}?ewCmd=ManageUserSubscription&amp;id={@nSubKey}"  class="btn btn-primary btn-sm">
+                    <a href="{$appPath}?ewCmd=ManageUserSubscription&amp;subId={@nSubKey}&amp;userId={$userId}"  class="btn btn-primary btn-sm">
                       <i class="fa fa-edit">&#160;</i>&#160;Manage
                     </a>
+					  <xsl:if test="@cRenewalStatus='Cancelled'">
+						  &#160;
+						  <a href="{$appPath}?ewCmd=DeleteUserSubscription&amp;subId={@nSubKey}&amp;userId={$userId}"  class="btn btn-danger btn-sm">
+							  <i class="fa-solid fa-trash">&#160;</i>&#160;Delete
+						  </a>
+					  </xsl:if>
                     <!--a href="{$appPath}?ewCmd=CancelSubscription&amp;subId={nSubKey/node()}&amp;id={/Page/Request/QueryString/Item[@name='id']/node()}"  class="btn btn-danger btn-sm">
                   <i class="fa fa-edit">&#160;</i>&#160;Cancel
                 </a-->
