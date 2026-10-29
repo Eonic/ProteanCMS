@@ -170,7 +170,6 @@ namespace Protean
                                                 ContentDetailElmt.AppendChild(confSubForm);
                                             }
                                         }
-
                                         else
                                         {
                                             ContentDetailElmt.AppendChild(confSubForm);
@@ -231,8 +230,19 @@ namespace Protean
 
                                 case "UpdateSubscription":
                                     {
-                                        // Save updated subscription details
-                                        ContentDetailElmt.SetAttribute("status", "SubscriptionUpdated");
+                                        XmlElement ContentNode = ContentDetailElmt.OwnerDocument.CreateElement("Content");
+                                        ContentNode.SetAttribute("type", "xform");
+                                        ContentNode.SetAttribute("name", "SubscriptionNewPaymentDetails");
+                                        ContentNode.SetAttribute("status", "SubscriptionUpdated");
+                           
+                                        XmlElement AlertNode = ContentDetailElmt.OwnerDocument.CreateElement("div");
+                                        AlertNode.SetAttribute("class", "alert alert-success");
+                                        AlertNode.InnerText = "Payment Method Updated";
+                                        ContentNode.AppendChild(AlertNode);
+                                        ContentNode.SetAttribute("status", "SubscriptionUpdated");
+
+                                        ContentDetailElmt.AppendChild(ContentNode);
+
                                         break;
                                     }
                                     // Cancel old method

@@ -117,6 +117,7 @@ body.normalMode, #adminLayout {
         padding: 2px 10px;
         font-size: 14px;
         margin: 5px;
+        color: $admin-header-color-link;
     }
 
     .preview {
@@ -226,15 +227,15 @@ body.normalMode, #adminLayout {
             }
         }
 
-        ul.department-menu-dd {
-            column-count: 2;
-            background: #212529;
-            padding-bottom: 5px;
+            ul.department-menu-dd {
+                column-count: 2;
+                background: #212529;
+                padding-bottom: 5px;
 
-            li a {
-                display: inline-block;
+                li a {
+                    display: inline-block;
+                }
             }
-        }
 
 
         a#logoff {
@@ -328,10 +329,10 @@ body.normalMode, #adminLayout {
                 line-height: 22px;
             }
 
-            a:hover, a:focus, a.show {
-                background-color: $admin-header-bg;
-                color: #fff;
-            }
+                a:hover, a:focus, a.show {
+                    background-color: $admin-header-bg;
+                    color: #fff;
+                }
 
             .on, .active {
                 background-color: $admin-header-bg;
