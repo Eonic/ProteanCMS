@@ -3,7 +3,35 @@
   "WorkspaceRootPath": "D:\\HostingSpaces\\ProteanCMS\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|d:\\hostingspaces\\proteancms\\v6_wwwroot\\ptn\\core\\functions.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|d:\\hostingspaces\\proteancms\\v6_wwwroot\\themes\\ptn-base\\css\\custom.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\themes\\ptn-base\\css\\custom.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\themes\\ptn-base\\css\\minimal-skin.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\themes\\ptn-base\\css\\minimal-skin.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\themes\\ptn-base\\css\\utilities.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\themes\\ptn-base\\css\\utilities.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\themes\\ptn-base\\css\\footer.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\themes\\ptn-base\\css\\footer.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\themes\\ptn-base\\css\\variables.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\themes\\ptn-base\\css\\variables.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\protean.web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\protean.web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\ptn\\core\\functions.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
       "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\ptn\\core\\functions.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
@@ -31,16 +59,8 @@
       "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\ptn\\core\\modules\\image\\image.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
-      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\themes\\ptn-base\\css\\cards.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
       "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\themes\\ptn-base\\css\\cards.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\themes\\ptn-base\\css\\custom.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}",
-      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\themes\\ptn-base\\css\\custom.scss||{181FE41B-5A5D-479F-9F8F-BF665F4EBC2A}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\ptn\\core\\modules\\columns\\columns-bs5.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
@@ -83,10 +103,6 @@
       "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\themes\\ptn-base\\js\\accessible-bootstrap-hover-dropdown.js||{14D17961-FE51-464D-9111-C4AF11D7D99A}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\protean.web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\protean.web.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|D:\\HostingSpaces\\ProteanCMS\\v6_wwwroot\\ptn\\admin\\admin.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
       "RelativeMoniker": "D:0:0:{F029CDA1-F973-463A-BA08-6FCBA7C77919}|D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot|solutionrelative:v6_wwwroot\\ptn\\admin\\admin.xsl||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
@@ -102,7 +118,7 @@
       "DocumentGroups": [
         {
           "DockedHeight": 385,
-          "SelectedChildIndex": 82,
+          "SelectedChildIndex": 78,
           "Children": [
             {
               "$type": "Bookmark",
@@ -418,55 +434,68 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "custom.scss",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\custom.scss",
+              "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\css\\custom.scss",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\custom.scss",
+              "RelativeToolTip": "V6_wwwroot\\themes\\ptn-base\\css\\custom.scss",
+              "ViewState": "AgIAANkAAAAAAAAAAAAowPcAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002663|",
+              "WhenOpened": "2026-05-03T07:50:51.103Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "minimal-skin.scss",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\minimal-skin.scss",
+              "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\css\\minimal-skin.scss",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\minimal-skin.scss",
+              "RelativeToolTip": "V6_wwwroot\\themes\\ptn-base\\css\\minimal-skin.scss",
+              "ViewState": "AgIAABUAAAAAAAAAAAAYwCsAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002663|",
+              "WhenOpened": "2026-10-26T09:56:13.499Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "SubPageList.xsl",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\subpagelist\\SubPageList.xsl",
-              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\modules\\subpagelist\\SubPageList.xsl",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\subpagelist\\SubPageList.xsl",
-              "RelativeToolTip": "V6_wwwroot\\ptn\\modules\\subpagelist\\SubPageList.xsl",
-              "ViewState": "AgIAAMoAAAAAAAAAAAAAAOUAAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
-              "WhenOpened": "2026-10-14T06:28:57.226Z"
+              "Title": "utilities.scss",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\utilities.scss",
+              "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\css\\utilities.scss",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\utilities.scss",
+              "RelativeToolTip": "V6_wwwroot\\themes\\ptn-base\\css\\utilities.scss",
+              "ViewState": "AgIAABYAAAAAAAAAAAAYwCwAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002663|",
+              "WhenOpened": "2026-10-26T09:56:04.714Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "News.xsl",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\news\\News.xsl",
-              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\modules\\news\\News.xsl",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\news\\News.xsl",
-              "RelativeToolTip": "V6_wwwroot\\ptn\\modules\\news\\News.xsl",
-              "ViewState": "AgIAAC4AAAAAAAAAAAAhwGoAAAAbAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
-              "WhenOpened": "2026-10-14T06:11:59.393Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "LibraryImage.xsl",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\galleryimagelist\\LibraryImage.xsl",
-              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\modules\\galleryimagelist\\LibraryImage.xsl",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\galleryimagelist\\LibraryImage.xsl",
-              "RelativeToolTip": "V6_wwwroot\\ptn\\modules\\galleryimagelist\\LibraryImage.xsl",
-              "ViewState": "AgIAAOMAAAAAAAAAAAAAAPUAAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
-              "WhenOpened": "2026-10-14T06:11:44.051Z"
+              "Title": "footer.scss",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\footer.scss",
+              "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\css\\footer.scss",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\footer.scss",
+              "RelativeToolTip": "V6_wwwroot\\themes\\ptn-base\\css\\footer.scss",
+              "ViewState": "AgIAACsAAAAAAAAAAAAYwEEAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002663|",
+              "WhenOpened": "2026-10-26T09:19:48.134Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 5,
-              "Title": "GalleryImageList.xsl",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\galleryimagelist\\GalleryImageList.xsl",
-              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\modules\\galleryimagelist\\GalleryImageList.xsl",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\galleryimagelist\\GalleryImageList.xsl",
-              "RelativeToolTip": "V6_wwwroot\\ptn\\modules\\galleryimagelist\\GalleryImageList.xsl",
-              "ViewState": "AgIAAF4AAAAAAAAAAAAAAHAAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
-              "WhenOpened": "2026-10-14T06:11:18.487Z"
+              "Title": "variables.scss",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\variables.scss",
+              "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\css\\variables.scss",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\variables.scss",
+              "RelativeToolTip": "V6_wwwroot\\themes\\ptn-base\\css\\variables.scss",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAAAHYAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002663|",
+              "WhenOpened": "2026-10-26T09:17:20.604Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
               "Title": "functions.xsl",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\functions.xsl",
               "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\functions.xsl",
@@ -474,12 +503,11 @@
               "RelativeToolTip": "V6_wwwroot\\ptn\\core\\functions.xsl",
               "ViewState": "AgIAAAAAAAAAAAAAAAAhwGUpAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
-              "WhenOpened": "2026-03-20T11:42:41.905Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-03-20T11:42:41.905Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 8,
               "Title": "layouts.xsl",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\layouts.xsl",
               "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\layouts.xsl",
@@ -491,7 +519,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 13,
               "Title": "image.xsl",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\modules\\image\\image.xsl",
               "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\modules\\image\\image.xsl",
@@ -503,7 +531,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 16,
               "Title": "AutoColumn.xml",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\modules\\columns\\AutoColumn.xml",
               "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\modules\\columns\\AutoColumn.xml",
@@ -515,7 +543,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 18,
               "Title": "LinkList.xsl",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\linklist\\LinkList.xsl",
               "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\modules\\linklist\\LinkList.xsl",
@@ -527,19 +555,31 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 3,
               "Title": "header-nav.scss",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss",
               "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss",
               "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss",
               "RelativeToolTip": "V6_wwwroot\\themes\\ptn-base\\css\\header-nav.scss",
-              "ViewState": "AgIAAHsAAAAAAAAAAAAhwJQAAAAfAAAAAAAAAA==",
+              "ViewState": "AgIAAMACAAAAAAAAAAAYwNYCAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002663|",
               "WhenOpened": "2026-10-07T06:43:34.027Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 12,
+              "Title": "GalleryImageList.xsl",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\galleryimagelist\\GalleryImageList.xsl",
+              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\modules\\galleryimagelist\\GalleryImageList.xsl",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\galleryimagelist\\GalleryImageList.xsl",
+              "RelativeToolTip": "V6_wwwroot\\ptn\\modules\\galleryimagelist\\GalleryImageList.xsl",
+              "ViewState": "AgIAAF4AAAAAAAAAAAAAAHAAAAATAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
+              "WhenOpened": "2026-10-14T06:11:18.487Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
               "Title": "cards.scss",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\cards.scss",
               "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\css\\cards.scss",
@@ -552,6 +592,54 @@
             {
               "$type": "Document",
               "DocumentIndex": 10,
+              "Title": "LibraryImage.xsl",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\galleryimagelist\\LibraryImage.xsl",
+              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\modules\\galleryimagelist\\LibraryImage.xsl",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\galleryimagelist\\LibraryImage.xsl",
+              "RelativeToolTip": "V6_wwwroot\\ptn\\modules\\galleryimagelist\\LibraryImage.xsl",
+              "ViewState": "AgIAAOMAAAAAAAAAAAAAAPUAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
+              "WhenOpened": "2026-10-14T06:11:44.051Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "protean.web.config",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\protean.web.config",
+              "RelativeDocumentMoniker": "V6_wwwroot\\protean.web.config",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\protean.web.config",
+              "RelativeToolTip": "V6_wwwroot\\protean.web.config",
+              "ViewState": "AgIAABUAAAAAAAAAAAAAAC0AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
+              "WhenOpened": "2026-03-04T17:52:30.49Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "News.xsl",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\news\\News.xsl",
+              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\modules\\news\\News.xsl",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\news\\News.xsl",
+              "RelativeToolTip": "V6_wwwroot\\ptn\\modules\\news\\News.xsl",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAhwGoAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
+              "WhenOpened": "2026-10-14T06:11:59.393Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "SubPageList.xsl",
+              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\subpagelist\\SubPageList.xsl",
+              "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\modules\\subpagelist\\SubPageList.xsl",
+              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\modules\\subpagelist\\SubPageList.xsl",
+              "RelativeToolTip": "V6_wwwroot\\ptn\\modules\\subpagelist\\SubPageList.xsl",
+              "ViewState": "AgIAAMoAAAAAAAAAAAAAAOUAAAAWAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003586|",
+              "WhenOpened": "2026-10-14T06:28:57.226Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
               "Title": "columns-bs5.xsl",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\core\\modules\\columns\\columns-bs5.xsl",
               "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\core\\modules\\columns\\columns-bs5.xsl",
@@ -563,7 +651,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 17,
               "Title": "custom-box-styles.xsl",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\custom-box-styles.xsl",
               "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\custom-box-styles.xsl",
@@ -575,7 +663,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 19,
               "Title": "Cms.cs",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\core\\Cms.cs",
               "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\core\\Cms.cs",
@@ -588,7 +676,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 20,
               "Title": "stdTools.cs",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\tools\\stdTools.cs",
               "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\tools\\stdTools.cs",
@@ -601,7 +689,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 21,
               "Title": "carousels.scss",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\carousels.scss",
               "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\css\\carousels.scss",
@@ -613,19 +701,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "custom.scss",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\custom.scss",
-              "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\css\\custom.scss",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\css\\custom.scss",
-              "RelativeToolTip": "V6_wwwroot\\themes\\ptn-base\\css\\custom.scss",
-              "ViewState": "AgIAAM0AAAAAAAAAAAAWwOIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.002663|",
-              "WhenOpened": "2026-05-03T07:50:51.103Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 23,
               "Title": "shared.xsl",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\shared.xsl",
               "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\shared.xsl",
@@ -637,7 +713,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 22,
               "Title": "header.xsl",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\layout-templates\\header.xsl",
               "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\layout-templates\\header.xsl",
@@ -649,7 +725,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 24,
               "Title": "accessible-bootstrap-hover-dropdown.js",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\themes\\ptn-base\\js\\accessible-bootstrap-hover-dropdown.js",
               "RelativeDocumentMoniker": "V6_wwwroot\\themes\\ptn-base\\js\\accessible-bootstrap-hover-dropdown.js",
@@ -661,7 +737,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 25,
               "Title": "admin.xsl",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\ptn\\admin\\admin.xsl",
               "RelativeDocumentMoniker": "V6_wwwroot\\ptn\\admin\\admin.xsl",
@@ -673,7 +749,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 26,
               "Title": "AdminXforms-Pages.cs",
               "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\Assemblies\\Protean.CMS\\admin\\AdminXforms-Pages.cs",
               "RelativeDocumentMoniker": "Assemblies\\Protean.CMS\\admin\\AdminXforms-Pages.cs",
@@ -682,18 +758,6 @@
               "ViewState": "AgIAAO8AAAAAAAAAAAAkwA0BAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-14T13:19:33.6Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 20,
-              "Title": "protean.web.config",
-              "DocumentMoniker": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\protean.web.config",
-              "RelativeDocumentMoniker": "V6_wwwroot\\protean.web.config",
-              "ToolTip": "D:\\HostingSpaces\\ProteanCMS\\V6_wwwroot\\protean.web.config",
-              "RelativeToolTip": "V6_wwwroot\\protean.web.config",
-              "ViewState": "AgIAABUAAAAAAAAAAAAAAC4AAAAhAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
-              "WhenOpened": "2026-03-04T17:52:30.49Z"
             }
           ]
         },
