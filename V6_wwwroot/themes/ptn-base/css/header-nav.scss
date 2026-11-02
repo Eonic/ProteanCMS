@@ -25,10 +25,10 @@
             }
 
             &:focus-within {
-                padding: calc($nav-padding-y + 5px) 5px !important;
+               /* padding: calc($nav-padding-y + 5px) 5px !important;
                 margin: -5px;
                 margin-left: calc(#{$nav-padding-x} - 5px);
-                margin-right: calc(#{$nav-padding-x} - 5px);
+                margin-right: calc(#{$nav-padding-x} - 5px);*/
             }
 
             &:before {
