@@ -663,6 +663,7 @@ namespace Protean
                         // ========================================
                         // Prepare variables for SQL composition (used only if form submitted and valid)
                         string whereSQL = string.Empty;
+                        string withPrefixSQL = string.Empty;
                         string orderBySql = string.Empty;
                         string groupBySql = string.Empty;
                         string cCssClassName = "hidden";
@@ -859,15 +860,28 @@ namespace Protean
                                         }
                                         else
                                         {
+                                            withPrefixSQL = " ;WITH PageHierarchy AS (SELECT nStructKey, 0 AS Level FROM tblContentStructure cs WITH (NOLOCK) " +
+                                                "WHERE cs.nStructKey = " + parentPageId + "  UNION ALL " + 
+                                                "SELECT cs.nStructKey, ph.Level + 1 FROM tblContentStructure cs WITH (NOLOCK)" +
+                                                "INNER JOIN tblAudit ca WITH (NOLOCK) ON ca.nAuditKey = cs.nAuditId AND ca.nStatus = 1 "+
+                                                "INNER JOIN PageHierarchy ph ON cs.nStructParId = ph.nStructKey WHERE ph.Level < 20)";
+
                                             // Include child pages (hierarchical filter)
-                                            whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' And nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" + parentPageId + "))" + whereSQL;
+                                            whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' AND nStructId IN (SELECT nStructKey FROM PageHierarchy)" + whereSQL;
                                         }
 
                                     }
                                     else
                                     {
                                         // Default: Include child pages
-                                        whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' And nStructId IN (select nStructKey from tblContentStructure where nStructParId in (" + parentPageId + "))" + whereSQL;
+                                        withPrefixSQL = ";WITH PageHierarchy AS (SELECT nStructKey, 0 AS Level FROM tblContentStructure cs WITH (NOLOCK) " +
+                                              "WHERE cs.nStructKey = " + parentPageId + "  UNION  FROM tblContentStructure cs WITH (NOLOCK)" +
+                                              "INNER JOIN tblAudit ca WITH (NOLOCK) ON ca.nAuditKey = cs.nAuditId AND ca.nStatus = 1 " +
+                                              "INNER JOIN PageHierarchy ph ON cs.nStructParId = ph.nStructKey WHERE ph.Level < 20)";
+
+                                        // Include child pages (hierarchical filter)
+                                        whereSQL = " c.cContentSchemaName='" + cFilterTarget + "' AND nStructId IN (SELECT nStructKey FROM PageHierarchy)" + whereSQL;
+
                                     }
                                 }
                             }
@@ -904,7 +918,7 @@ namespace Protean
                                     else
                                     {
                                         // Default sort by status only
-                                        cOrderBySql = " a.nStatus desc";
+                                        cOrderBySql = " a.nStatus desc, ";
                                     }
 
 
@@ -929,7 +943,7 @@ namespace Protean
                                 // - cAdditionalColumns: Additional SELECT columns needed for ORDER BY
                                 // - cGroupBySql: GROUP BY clause (if any provider specified one)
                                 myWeb.GetPageContentFromSelect(whereSQL, ref nCount, oContentsNode: ref oContentNode, oPageDetail: ref argoPageDetail,
-                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns,cGroupBySql: cGroupBySql);
+                                cShowSpecificContentTypes: cFilterTarget, bIgnorePermissionsCheck: true, distinct: bDistinct, cOrderBy: cOrderBySql, cAdditionalJoins: cAdditionalJoins, cAdditionalColumns: cAdditionalColumns,cGroupBySql: cGroupBySql, WithPrefixSql: withPrefixSQL);
 
                                 // Handle no results case
                                 // Add "Clear Filters" button to allow user to reset and try again

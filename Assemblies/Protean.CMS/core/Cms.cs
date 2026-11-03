@@ -4062,7 +4062,7 @@ namespace Protean
         /// <param name="bShowContentDetails"></param>
         ///
 
-        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string cGroupBySql="")
+        public void GetPageContentFromSelect(string sWhereSql, ref int nCount, ref XmlElement oContentsNode, ref XmlElement oPageDetail, bool bPrimaryOnly = false, bool bIgnorePermissionsCheck = false, int nReturnRows = 0, string cOrderBy = "type, cl.nDisplayOrder", string cAdditionalJoins = "", bool bContentDetail = false, long pageNumber = 0L, bool distinct = false, string cShowSpecificContentTypes = "", bool ignoreActiveAndDate = false, long nStartPos = 0L, long nItemCount = 0L, bool bShowContentDetails = true, string cAdditionalColumns = "", string cGroupBySql="", string WithPrefixSql="")
         {
             PerfMon.Log("Web", "GetPageContentFromSelect");
             XmlElement oRoot;
@@ -4131,7 +4131,7 @@ namespace Protean
 
 
 
-                sSql = "SET ARITHABORT ON ";
+                sSql = "SET ARITHABORT ON " + WithPrefixSql;
                 //sSql = sSql + " SELECT  c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, cContentForiegnRef as ref, cContentName as name, c.cContentSchemaName as type, ";
 
                 sSql = sSql + " SELECT " + (distinct ? "DISTINCT " : "") + sTopSql + " c.nContentKey as id, dbo.fxn_getContentParents(c.nContentKey) as parId, c.cContentForiegnRef as ref, c.cContentName as name, c.cContentSchemaName as type, ";
@@ -4275,7 +4275,7 @@ namespace Protean
                 if (oContentsNode != null)
                 {
                     // Quick call to get the total number of records
-                    string cSQL = "SET ARITHABORT ON ";
+                    string cSQL = "SET ARITHABORT ON"  + WithPrefixSql;
                     cSQL += "Select COUNT(distinct c.nContentKey) FROM tblContent AS c with(NOLOCK) INNER JOIN ";
                     cSQL += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                     cSQL += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";
