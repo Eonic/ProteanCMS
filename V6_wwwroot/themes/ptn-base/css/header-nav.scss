@@ -7,7 +7,7 @@
 
 .nav-link:focus-visible {
     outline: 1px dashed;
-    box-shadow:none;
+    box-shadow: none;
 }
 
 .main-nav {
@@ -16,8 +16,8 @@
             padding: $nav-padding-y 0 !important;
             margin: 0 $nav-padding-x;
             position: relative;
-            font-weight:400;
-            text-transform:uppercase;
+            font-weight: 400;
+            text-transform: uppercase;
 
             &:focus-visible {
                 outline: 1px dashed $header-outline-color;
@@ -25,7 +25,7 @@
             }
 
             &:focus-within {
-               /* padding: calc($nav-padding-y + 5px) 5px !important;
+                /* padding: calc($nav-padding-y + 5px) 5px !important;
                 margin: -5px;
                 margin-left: calc(#{$nav-padding-x} - 5px);
                 margin-right: calc(#{$nav-padding-x} - 5px);*/
@@ -59,7 +59,7 @@
         }
     }
 }
-    
+
 /*############### HEADER LAYOUT #################*/
 //Specific Layout Settings
 .header-menu-below {
@@ -105,6 +105,7 @@ header.header-menu-right {
 
     .header-above {
         background: $header-above;
+
         a {
 
             &:focus-visible {
@@ -165,6 +166,7 @@ header {
         padding-top: 0.5rem;
         padding-bottom: 0.5rem;
         position: relative;
+
         a, button {
 
             &:focus-visible {
@@ -207,8 +209,18 @@ header {
     .navbar-toggler {
         border: 0;
         padding: 1rem 0 1rem 1rem;
-        margin: -0.1rem -0.2rem;
+        margin: 0;
         color: $header-color;
+
+        &:focus {
+            box-shadow: none;
+        }
+
+        &:focus-visible {
+            outline-width: 1px;
+            outline-style: dashed;
+            outline-offset: -3px;
+        }
     }
 }
 
@@ -298,13 +310,13 @@ header {
                 }
 
                 &:focus-visible {
-                   // border-radius: 3px;
+                    // border-radius: 3px;
                     //box-shadow: 0 0 0 $focus-ring-width $focus-ring-opacity;
 
                     span {
                         padding: $focus-ring-offset;
                         margin: -#{$focus-ring-offset};
-                        display:block;
+                        display: block;
                     }
                 }
             }
@@ -530,6 +542,10 @@ header {
                 &.on {
                     color: $mobile-dd-active;
                 }
+
+                &:focus-visible {
+                    outline-style: dashed;
+                }
             }
 
             a {
@@ -610,8 +626,9 @@ header {
                 top: 0px;
                 z-index: 1010;
 
-                &:focus {
-                    outline: 1px solid;
+                &:focus-visible {
+                    outline: 1px dashed;
+                    outline-offset: -3px;
                 }
 
                 &:after {
@@ -724,9 +741,10 @@ header {
     }
 
     &:focus-visible {
-       // border-radius: 3px;
+        // border-radius: 3px;
     }
 }
+
 .logged-in-icon {
     //color: $secondary;
 
@@ -740,6 +758,7 @@ header {
         bottom: -1px;
     }
 }
+
 #Login {
     form .principle {
         float: right;
@@ -847,32 +866,32 @@ header {
         }
 
 
-            button:hover,
-            button:focus-visible,
-            button:active,
-            button.btn-outline-primary:hover,
-            button.btn-outline-primary:focus-visible,
-            button.btn-outline-primary:active {
-                background: transparent;
-                box-shadow: none;
+        button:hover,
+        button:focus-visible,
+        button:active,
+        button.btn-outline-primary:hover,
+        button.btn-outline-primary:focus-visible,
+        button.btn-outline-primary:active {
+            background: transparent;
+            box-shadow: none;
 
-                i {
-                    background: $link-color;
-                    color: #fff;
-                    border-radius: 100px;
-                    padding: 7px;
-                    margin: -7px;
-                }
+            i {
+                background: $link-color;
+                color: #fff;
+                border-radius: 100px;
+                padding: 7px;
+                margin: -7px;
             }
+        }
 
-            button:focus-visible,
-            button.btn-outline-primary:focus-visible {
+        button:focus-visible,
+        button.btn-outline-primary:focus-visible {
 
 
-                i {
-                    //box-shadow: 0 0 0 $focus-ring-width rgba($link-color, $focus-ring-opacity);
-                }
+            i {
+                //box-shadow: 0 0 0 $focus-ring-width rgba($link-color, $focus-ring-opacity);
             }
+        }
 
         button,
         button.btn-outline-primary {
@@ -996,6 +1015,7 @@ header {
     margin: 0 ($header-spacing/2);
     @include search-simple;
 }
+
 .header-above .search-wrapper {
     // @include search-tint;
     @include search-small;
@@ -1008,8 +1028,8 @@ header {
 
     &:focus-visible {
         border-radius: 3px;
-     //   box-shadow: 0 0 0 0.25rem rgba(23, 43, 84, 0.25);
-    //    outline:none;
+        //   box-shadow: 0 0 0 0.25rem rgba(23, 43, 84, 0.25);
+        //    outline:none;
     }
 
     &:hover,
@@ -1030,10 +1050,11 @@ header {
 
     @include media-breakpoint-up($nav-breakpoint) {
         padding-left: 0.5rem;
-            a:focus-visible {
-                outline-color: $header-outline-color ;
-                box-shadow: none;
-            }
+
+        a:focus-visible {
+            outline-color: $header-outline-color;
+            box-shadow: none;
+        }
     }
 
     a {
@@ -1044,7 +1065,7 @@ header {
         display: flex;
         align-items: center;
         margin: 1px;
-        text-transform:uppercase;
+        text-transform: uppercase;
     }
 }
 
@@ -1095,6 +1116,7 @@ header {
         opacity: 1;
     }
 }
+
 .tab-pane {
     @include media-breakpoint-up(lg) {
         background: $light;
