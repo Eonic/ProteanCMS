@@ -87,20 +87,22 @@
                       <xsl:apply-templates select="Menu/MenuItem/MenuItem[@name!='Info Menu' and @name!='Footer' and not(DisplayName/@featuredLink='true')]" mode="mainmenu"/>
                     </xsl:otherwise>
                   </xsl:choose>
-                  <li class="nav-item">
-                    <a class="nav-link xs-only">
-                      <xsl:attribute name="href">
+                  <xsl:if test="$membership='on'">
+                    <li class="nav-item">
+                      <a class="nav-link xs-only">
+                        <xsl:attribute name="href">
+                          <xsl:choose>
+                            <xsl:when test="/Page/User">/My-Account</xsl:when>
+                            <xsl:otherwise>/Login</xsl:otherwise>
+                          </xsl:choose>
+                        </xsl:attribute>
                         <xsl:choose>
-                          <xsl:when test="/Page/User">/My-Account</xsl:when>
-                          <xsl:otherwise>/Login</xsl:otherwise>
+                          <xsl:when test="/Page/User">My Account</xsl:when>
+                          <xsl:otherwise>Log in</xsl:otherwise>
                         </xsl:choose>
-                      </xsl:attribute>
-                      <xsl:choose>
-                        <xsl:when test="/Page/User">My Account</xsl:when>
-                        <xsl:otherwise>Log in</xsl:otherwise>
-                      </xsl:choose>
-                    </a>
-                  </li>
+                      </a>
+                    </li>
+                  </xsl:if>
                 </ul>
                 <!--INFO NAV-->
                 <xsl:if test="Menu/MenuItem/MenuItem[@name='Info Menu']/MenuItem and not($currentPage/DisplayName[@nonav='true']) and not($cartPage)">

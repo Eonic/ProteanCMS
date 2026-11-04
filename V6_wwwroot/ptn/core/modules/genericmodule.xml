@@ -64,6 +64,7 @@
       <bind id="title-margin" nodeset="@title-margin" required="false()" type="string"/>
       <bind id="class-name" nodeset="@class-name" required="false()" type="string"/>
       <bind id="custom-css" nodeset="@custom-css" required="false()" type="string"/>
+      <bind id="custom-xs" nodeset="@custom-xs" required="false()" type="string"/>
       <bind id="gutter" nodeset="@gutter" required="false()" type="string"/>
 
     </bind>
@@ -871,6 +872,9 @@
           <group class="col-lg-8">
             <textarea bind="custom-css" class="short">
               <label>custom css</label>
+            </textarea>
+            <textarea bind="custom-xs" class="short">
+              <label>custom css override for mobile</label>
             </textarea>
           </group>
         </group>
