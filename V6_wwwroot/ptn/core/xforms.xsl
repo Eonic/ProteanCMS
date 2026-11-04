@@ -106,7 +106,10 @@
   <xsl:template match="Content | div[@class='xform']" mode="xform">
     <form method="{model/submission/@method}" action="" novalidate="novalidate">
       <xsl:attribute name="class">
-        <xsl:text>xform needs-validation</xsl:text>
+        <xsl:text>xform</xsl:text>
+		  <xsl:if test="model/submission[not(contains(@class,'no-client-side-validation'))]">
+		    <xsl:text> needs-validation</xsl:text>
+		  </xsl:if> 
         <xsl:if test="model/submission/@class!=''">
           <xsl:text> </xsl:text>
           <xsl:value-of select="model/submission/@class"/>

@@ -84,6 +84,11 @@ form.xform {
         margin-left: 5px;
     }
 
+    input.readonly {
+        color: $admin-gray;
+        background: $admin-light-gray;
+    }
+
     .inline-select > legend {
         font-size: 1rem;
     }
@@ -250,8 +255,6 @@ form.xform {
             }
         }
     }
-
-
 }
 
     form.xform {

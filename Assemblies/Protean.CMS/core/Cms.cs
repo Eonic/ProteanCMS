@@ -4275,7 +4275,7 @@ namespace Protean
                 if (oContentsNode != null)
                 {
                     // Quick call to get the total number of records
-                    string cSQL = "SET ARITHABORT ON"  + WithPrefixSql;
+                    string cSQL = "SET ARITHABORT ON "  + WithPrefixSql;
                     cSQL += "Select COUNT(distinct c.nContentKey) FROM tblContent AS c with(NOLOCK) INNER JOIN ";
                     cSQL += "tblAudit AS a ON c.nAuditId = a.nAuditKey LEFT OUTER JOIN ";
                     cSQL += "tblContentLocation AS CL ON c.nContentKey = CL.nContentId ";

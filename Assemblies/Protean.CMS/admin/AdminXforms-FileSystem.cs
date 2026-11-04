@@ -687,12 +687,13 @@ namespace Protean
                         base.submission("imageDetailsForm", "", "post", "form_check(this);passImgToForm('" + cTargetForm + "','" + cTargetFeild + "');return(false);");
 
                         oFrmElmt = base.addGroup(ref base.moXformElmt, "Image Details", "", "Please enter image description");
+                               
 
-                        base.addInput(ref oFrmElmt, "cName", true, "Class", "readonly");
-                        XmlElement argoBindParent = null;
-                        base.addBind("cName", "img/@class", oBindParent: ref argoBindParent, "true()");
+                        base.addInput(ref oFrmElmt, "cDesc", true, "Description (alt tag)");
+                        XmlElement argoBindParent4 = null;
+                        base.addBind("cDesc", "img/@alt", oBindParent: ref argoBindParent4, "false()");
 
-                        base.addInput(ref oFrmElmt, "cPathName", true, "Path Name");
+                        base.addInput(ref oFrmElmt, "cPathName", true, "Image Path");
                         XmlElement argoBindParent1 = null;
                         base.addBind("cPathName", "img/@src", oBindParent: ref argoBindParent1, "true()");
 
@@ -704,10 +705,9 @@ namespace Protean
                         XmlElement argoBindParent3 = null;
                         base.addBind("nHeight", "img/@height", oBindParent: ref argoBindParent3, "true()");
 
-                        base.addInput(ref oFrmElmt, "cDesc", true, "Alt Description");
-                        XmlElement argoBindParent4 = null;
-                        base.addBind("cDesc", "img/@alt", oBindParent: ref argoBindParent4, "false()");
-
+                        base.addInput(ref oFrmElmt, "cName", true, "Class", "readonly");
+                        XmlElement argoBindParent = null;
+                        base.addBind("cName", "img/@class", oBindParent: ref argoBindParent, "true()");
 
                         base.addSubmit(ref oFrmElmt, "", "Add Image", "ewSubmit");
 
