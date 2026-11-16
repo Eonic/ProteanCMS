@@ -42,33 +42,56 @@ namespace Protean.Providers
             }
 
 
+            protected override string DefaultJwksUri
+            {
+                get { return "https://www.googleapis.com/oauth2/v3/certs"; }
+            }
+
+            protected override bool IsValidDefaultIssuer(string issuer)
+            {
+                return issuer == "https://accounts.google.com" || issuer == "accounts.google.com";
+            }
+
             public IauthenticaitonProvider Initiate(ref Cms myWeb)
             {               
                 return this;
             }
 
-            //public new string GetAuthenticationURL(string ProviderName)
-            //{
-            //    string gcEwBaseUrl = moCartConfig["SecureURL"].TrimEnd('/');
-            //    return GetSamlLoginUrl(base.config["ssoUrl"].ToString(), "ProteanCMS", gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
-            //}
+            public XmlElement GetLogonBtn(ref XmlElement oContextNode, string mode = "signin")
+            {
 
-            //public new long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response)
-            //{
-            //    XmlDocument xmlDoc = ParseSaml(request["SAMLResponse"]);
-            //    string issuer = ExtractIssuer(xmlDoc);
-            //    if (issuer.Contains("accounts.google.com"))
-            //    {
-            //        string samlUserEmail = ExtractEmail(xmlDoc);
-            //        return ValidateUser(samlUserEmail);
-            //    }
-            //    else {
-            //        return 0;
-            //    }  
-                
-            //}
+                XmlElement thisButton = base.GetLogonBtn(ref oContextNode, mode);
 
-            
-        }
+                thisButton.SetAttribute("data-clientid", base.config["clientId"]);
+
+                return thisButton;
+
+            }
+
+
+
+                //public new string GetAuthenticationURL(string ProviderName)
+                //{
+                //    string gcEwBaseUrl = moCartConfig["SecureURL"].TrimEnd('/');
+                //    return GetSamlLoginUrl(base.config["ssoUrl"].ToString(), "ProteanCMS", gcEwBaseUrl + _myWeb.mcOriginalURL, ProviderName);
+                //}
+
+                //public new long CheckAuthenticationResponse(HttpRequest request, HttpSessionState session, HttpResponse response)
+                //{
+                //    XmlDocument xmlDoc = ParseSaml(request["SAMLResponse"]);
+                //    string issuer = ExtractIssuer(xmlDoc);
+                //    if (issuer.Contains("accounts.google.com"))
+                //    {
+                //        string samlUserEmail = ExtractEmail(xmlDoc);
+                //        return ValidateUser(samlUserEmail);
+                //    }
+                //    else {
+                //        return 0;
+                //    }  
+
+                //}
+
+
+            }
     }
 }

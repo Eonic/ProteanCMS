@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.5.0\build\Microsoft.ClearScript.V8.Native.win-x64.props" Condition="Exists('..\..\packages\Microsoft.ClearScript.V8.Native.win-x64.7.5.0\build\Microsoft.ClearScript.V8.Native.win-x64.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -218,6 +218,7 @@
       <HintPath>..\NonNuget\SoundInTheory.DynamicImage.Extensions.Pdf.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Buffers, Version=4.0.5.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Buffers.4.6.1\lib\net462\System.Buffers.dll</HintPath>
     </Reference>
@@ -412,6 +413,7 @@
     <Compile Include="features\cart\Cart-address.cs" />
     <Compile Include="features\membership\Membership.Modules.cs" />
     <Compile Include="framework\adapters\ApplicationAdapter.cs" />
+    <Compile Include="framework\adapters\HttpRequestAdapter.cs" />
     <Compile Include="framework\handlers\DeliverAjaxElmt.cs" />
     <Compile Include="framework\handlers\DeliverExcel.cs" />
     <Compile Include="framework\handlers\DeliverExport.cs" />
@@ -423,7 +425,9 @@
     <Compile Include="framework\handlers\UploadFiles.cs" />
     <Compile Include="model\APILog.cs" />
     <Compile Include="model\Contact.cs" />
+    <Compile Include="providers\Authentication\Authentication.Apple.cs" />
     <Compile Include="providers\Authentication\Authentication.Facebook.cs" />
+    <Compile Include="providers\Authentication\Authentication.LinkedAccounts.cs" />
     <Compile Include="providers\Authentication\Authentication.Microsoft.cs" />
     <Compile Include="providers\Authentication\Authentication.Google.cs" />
     <Compile Include="providers\Authentication\Authentication.BaseProvider.cs" />

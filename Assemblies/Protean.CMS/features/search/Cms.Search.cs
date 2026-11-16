@@ -520,7 +520,8 @@ namespace Protean
                         if (pageSize == 0)
                             pageSize = 300;
                     }
-                    cQuery = CleanSearchString(cQuery);
+                    // keep hyphens so product codes such as TRBMVI-0090LFC stay as one term (matches the indexed token)
+                    cQuery = CleanSearchString(cQuery, cPunctuation: ",&+:;\"");
 
                     if (!cQuery.Equals(""))
                     {
@@ -528,9 +529,7 @@ namespace Protean
                         // do the actual search
                         var dateStart = DateTime.Now;
                         DateTime dateFinish;
-                        var oIndexDir = new DirectoryInfo(mcIndexFolder);
-                        var fsDir = FSDirectory.Open(oIndexDir);
-                        var searcher = new IndexSearcher(fsDir, true);
+                        var searcher = GetSharedSearcher(mcIndexFolder);
 
                         // check whether logged in user is csuser and skip checking status
                         bool bShowHiddenForUser = false; // set for normal user default value
@@ -559,10 +558,6 @@ namespace Protean
                             pageSize = Convert.ToInt32("0" + myWeb.moConfig["SiteSearchDefaultHitsLimit"] ?? "");
                             if (pageSize == 0)
                                 pageSize = 300;
-                        }
-                        else
-                        {
-                            _includeFuzzySearch = true;
                         }
 
                         _overrideQueryBuilder = myWeb.moRequest["overrideQueryBuilder"] == "true";
@@ -947,7 +942,8 @@ namespace Protean
 
                     int resultsCount = 0;
                     var resultsXML = moContextNode.OwnerDocument.CreateElement("Content");
-                    cQuery = CleanSearchString(cQuery);
+                    // keep hyphens so product codes such as TRBMVI-0090LFC stay as one term (matches the indexed token)
+                    cQuery = CleanSearchString(cQuery, cPunctuation: ",&+:;\"");
 
                     if (!cQuery.Equals(""))
                     {
@@ -955,9 +951,7 @@ namespace Protean
                         // do the actual search
                         var dateStart = DateTime.Now;
                         DateTime dateFinish;
-                        var oIndexDir = new DirectoryInfo(mcIndexFolder);
-                        var fsDir = FSDirectory.Open(oIndexDir);
-                        var searcher = new IndexSearcher(fsDir, true);
+                        var searcher = GetSharedSearcher(mcIndexFolder);
 
                         // Check for settings
                         if (myAPI.moRequest["fuzzy"] == "on")
@@ -1028,6 +1022,7 @@ namespace Protean
                         // Log the search
                         if (_logSearches)
                         {
+                            myAPI.moDbHelper = new dbHelper(myWeb);
                             myAPI.moDbHelper.logActivity((_includeFuzzySearch)? dbHelper.ActivityType.FuzzySearch: dbHelper.ActivityType.Search, myAPI.mnUserId, 0, 0, results.TotalHits, cQuery);
                         }
 
@@ -2466,6 +2461,7 @@ namespace Protean
                             {
                                 if (!bShowHiddenForUser)
                                 {
+                                    queryToBeParsed.Insert(0, "(").Append(")");
                                     queryToBeParsed.Append(" AND ");
                                     queryTerms = ParseKeywordsAndPhrases("1");
                                     BuildLuceneKeywordQuery(ref queryToBeParsed, queryTerms, "status", 1, _includeFuzzySearch);
@@ -2483,7 +2479,7 @@ namespace Protean
                     if (moConfig["SiteWildCardSearch"] == "on")
                     {
                         parser.AllowLeadingWildcard = true;
-                        keywordQuery = parser.Parse($"*{keywordsToSearch}*");
+                        keywordQuery = parser.Parse("*" + QueryParser.Escape((keywordsToSearch ?? "").Trim()).ToLowerInvariant() + "*");
                     }
                     else
                     {
@@ -2495,13 +2491,16 @@ namespace Protean
                     {
 
                         booleanQ.Add(keywordQuery, Occur.SHOULD);
-                        booleanQ.Add(new PrefixQuery(new Term("qsname", keywords)), Occur.SHOULD);
+                        booleanQ.Add(new PrefixQuery(new Term("qsname", (keywords ?? "").Replace("\"", "").Trim().ToLowerInvariant())), Occur.SHOULD);
                         queryBuilder.Add(booleanQ, Occur.MUST);
                     }
                     else
                     {
                         booleanQ.Add(keywordQuery, Occur.MUST);
-                        booleanQ.Add(new PrefixQuery(new Term("qsnoname", keywords)), Occur.MUST_NOT);
+                        // qsnoname is an untokenized lowercased field; strip quotes and lowercase so the prefix can actually match
+                        string noNameTerm = (keywords ?? "").Replace("\"", "").Trim().ToLowerInvariant();
+                        if (!string.IsNullOrEmpty(noNameTerm))
+                            booleanQ.Add(new PrefixQuery(new Term("qsnoname", noNameTerm)), Occur.MUST_NOT);
                         queryBuilder.Add(booleanQ, Occur.MUST);
                     }
 
@@ -2693,6 +2692,56 @@ namespace Protean
             }
 
 
+            private static readonly object _searcherLock = new object();
+            private static readonly Dictionary<string, IndexSearcher> _searchers = new Dictionary<string, IndexSearcher>();
+
+            /// <summary>
+            /// Returns a shared read-only searcher for the index folder, reopening it only when the index has changed.
+            /// The previous searcher is closed after a delay so in-flight requests can finish with it.
+            /// </summary>
+            private static IndexSearcher GetSharedSearcher(string indexFolder)
+            {
+                lock (_searcherLock)
+                {
+                    IndexSearcher current;
+                    if (_searchers.TryGetValue(indexFolder, out current))
+                    {
+                        bool isCurrent = false;
+                        try
+                        {
+                            isCurrent = current.IndexReader.IsCurrent();
+                        }
+                        catch (Exception)
+                        {
+                            isCurrent = false;
+                        }
+                        if (isCurrent)
+                            return current;
+                    }
+
+                    var fsDir = FSDirectory.Open(new DirectoryInfo(indexFolder));
+                    var fresh = new IndexSearcher(fsDir, true);
+                    _searchers[indexFolder] = fresh;
+
+                    if (current != null)
+                    {
+                        var old = current;
+                        System.Threading.Tasks.Task.Delay(TimeSpan.FromSeconds(60)).ContinueWith(t =>
+                        {
+                            try
+                            {
+                                old.Close();
+                            }
+                            catch (Exception)
+                            {
+                                // already closed
+                            }
+                        });
+                    }
+                    return fresh;
+                }
+            }
+
             private void BuildLuceneKeywordQuery(ref StringBuilder queryBuilder, string[] keywords, string fieldName = "", int boostBase = 1, bool includeFuzzySearch = false)
             {
 
@@ -2742,6 +2791,25 @@ namespace Protean
                                 queryBuilder.Append(fieldName).Append(":");
                             queryBuilder.Append(keyword);
                             queryBuilder.Append("^").Append((boostBase + 1).ToString());
+                        }
+                        queryBuilder.Append(") ");
+                    }
+
+                    // Text query 2b - prefix match, so a code such as TRBMVI matches the single token trbmvi-0090lfc
+                    // (StandardAnalyzer keeps hyphenated alphanumeric codes as one token)
+                    if (keywords.Length > 0 && Array.TrueForAll(keywords, k => Regex.IsMatch(k, @"^[A-Za-z0-9][A-Za-z0-9\\-]{2,}$")))
+                    {
+                        queryBuilder.Append(" OR (");
+                        firstItem = true;
+                        foreach (string keyword in keywords)
+                        {
+                            if (!firstItem)
+                                queryBuilder.Append(" AND ");
+                            else
+                                firstItem = false;
+                            if (!string.IsNullOrEmpty(fieldName))
+                                queryBuilder.Append(fieldName).Append(":");
+                            queryBuilder.Append(keyword.ToLowerInvariant()).Append("*^").Append(boostBase.ToString());
                         }
                         queryBuilder.Append(") ");
                     }

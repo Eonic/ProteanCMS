@@ -342,7 +342,7 @@ namespace Protean.Providers
                         {
                             if (oAuthProviders.Count() > 0)
                             {
-                                base.addDiv(ref oFrmElmt, "", "separator");
+                                base.addDiv(ref oFrmElmt, "OR", "separator");
                                 foreach (IauthenticaitonProvider authProvider in oAuthProviders)
                                 {
                                     Boolean bUse = false;
@@ -357,7 +357,10 @@ namespace Protean.Providers
                                     if (bUse)
                                     {
                                         string provName = authProvider.config["name"];
-                                        XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign in with " + provName, "AuthProvider", btnClass + " btn-" + provName.ToLower(), btnIcon, provName.ToLower());
+                                        XmlElement thisBtn = authProvider.GetLogonBtn(ref oFrmElmt);
+
+
+                                       // XmlElement thisBtn = base.addSubmit(ref oFrmElmt, "AuthProvider", "Sign in with " + provName, "AuthProvider", btnClass + " btn-" + provName.ToLower(), btnIcon, provName.ToLower());
                                         thisBtn.SetAttribute("icon-left", "fab fa-" + provName.ToLower());
                                     }
                                 }
@@ -430,83 +433,45 @@ namespace Protean.Providers
                         }
                         else
                         {
-                            // Check for SAML response                          
-
+                            // Check for SAML / OAuth2 response
                             if (oAuthProviders != null && oAuthProviders.Any())
                             {
-                                string samlResponse = myWeb.moRequest["SAMLResponse"];
-                                string relayState = myWeb.moRequest["RelayState"];                                 
-                                string keyUrl = string.Empty;
-                                if (myWeb.moRequest["RelayState"] != null && myWeb.moRequest["RelayState"].Contains("|"))
+                                foreach (IauthenticaitonProvider authProvider in oAuthProviders)
                                 {
-                                    string relayStateRaw = myWeb.moRequest["RelayState"];
-                                    var parts = relayStateRaw.Split('|');
-                                    relayState = parts[0];
-                                    keyUrl = parts[1];
-                                }
-
-                                if (!string.IsNullOrEmpty(samlResponse))
-                                {
-                                    XmlDocument xmlDoc = new XmlDocument();
-                                    xmlDoc.PreserveWhitespace = true;
-                                    xmlDoc.LoadXml(Encoding.UTF8.GetString(Convert.FromBase64String(samlResponse)));
-
-                                    //checking for each provider
-                                    foreach (IauthenticaitonProvider authProvider in oAuthProviders)
+                                    string keyUrl;
+                                    sValidResponse = authProvider.ProcessAuthenticationResponse(FormName, out keyUrl);
+                                    if (string.IsNullOrEmpty(sValidResponse))
                                     {
-                                        string issuer = authProvider.ExtractIssuer(xmlDoc);
-                                        Boolean bUse = false;
-                                        string providerKey = authProvider.config["name"].ToLower();
-                                        if (FormName == "AdminLogon" && authProvider.config["scope"].ToString() == "admin")
+                                        continue;
+                                    }
+                                    if (Tools.Number.IsNumeric(sValidResponse))
+                                    {
+                                        myWeb.mnUserId = Convert.ToInt32(sValidResponse);
+                                        moDbHelper.mnUserId = Convert.ToInt64(sValidResponse);
+                                        valid = true;
+                                        if (goSession != null)
                                         {
-                                            bUse = true;
-                                        }
-                                        if (bUse && myWeb.moRequest["SAMLResponse"] != null && authProvider.config["entityId"] != null
-                                            && providerKey == relayState.ToLower()
-                                            && authProvider.config["entityId"].ToString().Equals(issuer, StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            //long userid = authProvider.CheckAuthenticationResponse(myWeb.moRequest, myWeb.moSession, myWeb.moResponse);
-                                            samlUserEmail = authProvider.ExtractEmail(xmlDoc);
-
-
-                                            if (samlUserEmail != string.Empty)
+                                            goSession["nUserId"] = sValidResponse;
+                                            XmlElement UserXml = myWeb.GetUserXML();
+                                            if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
                                             {
-                                                //update Authprovider in existing tblDirectory against email address
-                                                string sSql = "update tblDirectory set cDirPassword ='" + authProvider.name + "' where cDirName = '" + samlUserEmail + "' or cDirEmail = '" + samlUserEmail + "' AND cDirEmail != ''";
-                                                sValidResponse = moDbHelper.ExeProcessSql(sSql).ToString();
-
-                                                sValidResponse = moDbHelper.validateUser(samlUserEmail, authProvider.name); // Password as a Provider name here
-                                                if (Tools.Number.IsNumeric(sValidResponse))
-                                                {
-                                                    myWeb.mnUserId = Convert.ToInt32(sValidResponse);
-                                                    moDbHelper.mnUserId = Convert.ToInt64(sValidResponse);
-                                                    valid = true;
-                                                    if (goSession != null)
-                                                    {
-                                                        goSession["nUserId"] = sValidResponse;
-                                                        XmlElement UserXml = myWeb.GetUserXML();
-                                                        if (!string.IsNullOrEmpty(UserXml.GetAttribute("defaultCurrency")))
-                                                        {
-                                                            goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
-                                                        }
-                                                    }
-                                                   // If Intranet User logged in from outside the intranet then log them out again.
-                                                    if (!string.IsNullOrEmpty(keyUrl))
-                                                    {
-                                                        GenerateAuthenticatedRedirect(samlUserEmail, keyUrl);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    //user not present in proteanCms                                               
-                                                    base.valid = false;
-                                                    base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
-                                                }
+                                                goSession["cCurrency"] = UserXml.GetAttribute("defaultCurrency");
                                             }
                                         }
+                                        if (!string.IsNullOrEmpty(keyUrl))
+                                        {
+                                            GenerateAuthenticatedRedirect(myWeb.GetUserXML().GetAttribute("email"), keyUrl);
+                                        }
                                     }
+                                    else
+                                    {
+                                        base.valid = false;
+                                        base.addNote(ref oFrmElmt, Protean.xForm.noteTypes.Alert, sValidResponse, true);
+                                    }
+                                    break;
                                 }
                             }
+
 
 
                             if (base.isSubmitted())
@@ -1368,6 +1333,7 @@ namespace Protean.Providers
                             // lets add the groups to the instance
                             oGrpElmt = moDbHelper.getGroupsInstance(id, parId);
                             base.Instance.InsertAfter(oGrpElmt, base.Instance.LastChild);
+                            if (id > 0L && id == myWeb.mnUserId && (cDirectorySchemaName ?? "") == "User") { Protean.Providers.Authentication.LinkedAccounts.AddToForm(myWeb, this, id); }
 
                             if (cDirectorySchemaName == "User")
                             {

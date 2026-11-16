@@ -117,7 +117,7 @@ namespace Protean
             NameValueCollection ServerVariables { get; }
 
             // Raw Collections
-            NameValueCollection QueryString { get; }
+            NameValueCollection QueryString { get; set; }
             NameValueCollection FormCollection { get; }
             // NameValueCollection RawHeaders { get; }
             IEnumerable<KeyValuePair<string, string>> RawCookies { get; }

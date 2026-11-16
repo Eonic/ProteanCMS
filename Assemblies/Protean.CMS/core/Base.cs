@@ -94,6 +94,7 @@ namespace Protean
         // Application Level Properties   
         public NameValueCollection moConfig = (NameValueCollection)WebConfigurationManager.GetWebApplicationSection("protean/web");
         public IHttpApplicationState goApp;
+        public IHttpRequest envRequest;
         public System.Web.Caching.Cache goCache;
         public System.Web.HttpServerUtility goServer;
         public XmlElement goLangConfig = (XmlElement)WebConfigurationManager.GetWebApplicationSection("protean/languages");
@@ -141,6 +142,8 @@ namespace Protean
                 sitename = moRequest.ServerVariables["HTTP_HOST"];
 
                 goApp = new Protean.Framework.Adapters.FrameworkApplicationStateAdapter(sitename);
+                envRequest = new Protean.Framework.Adapters.FrameworkHttpRequestAdapter(moRequest);
+
 
                 PerfMon = new PerfLog("", moCtx);
                 PerfMon.Log("Base", "New");

@@ -5342,6 +5342,18 @@ namespace Protean
                     newElem2.InnerText = moRequest.QueryString[Convert.ToString(item)];
                     newElem.AppendChild(newElem2);
                 }
+                // Bring in the QueryString from the envRequest (if it exists)
+                if (!(envRequest is null)) { 
+                    foreach (var currentItem1 in envRequest.QueryString)
+                    {
+                        item = currentItem1;
+                        newElem2 = moPageXml.CreateElement("Item");
+                        newElem2.SetAttribute("name", Convert.ToString(item));
+                        newElem2.InnerText = envRequest.QueryString[Convert.ToString(item)];
+                        newElem.AppendChild(newElem2);
+                    }
+                }
+
                 root.AppendChild(newElem);
 
                 // Bring in the Form
@@ -5439,7 +5451,7 @@ namespace Protean
                     }
                     // Please never add any setting here you do not want to be publicly accessible.
                     object s = "web.Cart;web.Membership;web.Search;web.DescriptiveContentURLs;web.BaseUrl;web.SiteName;web.SiteLogo;web.GoogleAnalyticsUniversalID;web.GoogleGA4MeasurementID;web.GoogleTagManagerID;web.GoogleAPIKey;web.PayPalTagManagerID;web.ScriptAtBottom;web.debug;cart.SiteURL;web.ImageRootPath;web.DocRootPath;web.MediaRootPath;web.menuNoReload;web.RootPageId;web.MenuTreeDepth;";
-                    s = s + $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;web.ReCaptchaKeyV3;web.ReCaptchaVersion;";
+                    s = s + $"web.{platform}ProductName;web.{platform}CMSName;web.{platform}AdminSystemName;web.{platform}Copyright;web.{platform}SupportTelephone;web.{platform}Website;web.{platform}SupportEmail;web.{platform}Logo;web.websitecreditURL;web.websitecreditText;web.websitecreditLogo;web.GoogleTagManagerID;web.GoogleOptimizeID;web.FeedOptimiseID;web.FacebookPixelId;web.BingTrackingID;web.ReCaptchaKey;web.EnableWebP;web.EnableRetina;web.ReCaptchaKeyV3;web.ReCaptchaVersion;web.ReCaptchaVersion;web.Environment;";
                     s = s + "theme.BespokeBoxStyles;theme.BespokeBackgrounds;theme.BespokeTextClasses;";
                     s = s + moConfig["XmlSettings"] + ";";
 

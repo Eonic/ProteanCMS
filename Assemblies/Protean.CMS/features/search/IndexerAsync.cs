@@ -489,7 +489,7 @@ namespace Protean
 
                     var maxLen = new IndexWriter.MaxFieldLength(10000);
 
-                    oIndexWriter = new IndexWriter(indexDir, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_CURRENT), bCreate, maxLen); // create the index writer
+                    oIndexWriter = new IndexWriter(indexDir, new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29), bCreate, maxLen); // create the index writer
 
                     // TS added to limit memory usage
                     oIndexWriter.SetRAMBufferSizeMB(500d);
@@ -1445,7 +1445,7 @@ namespace Protean
                     oDoc.Add(new Field("artid", nContentId.ToString(), Field.Store.YES, Field.Index.NOT_ANALYZED));
 
                     oDoc.Add(new Field("url", cURL, Field.Store.YES, Field.Index.NOT_ANALYZED)); // url of the page (simple)
-                    oDoc.Add(new Field("name", cPageTitle, Field.Store.YES, Field.Index.NOT_ANALYZED)); // the name of the page
+                    oDoc.Add(new Field("name", cPageTitle, Field.Store.YES, Field.Index.ANALYZED));
                     oDoc.Add(new Field("contenttype", cContentType, Field.Store.YES, Field.Index.NOT_ANALYZED));  // the type of the content
 
 

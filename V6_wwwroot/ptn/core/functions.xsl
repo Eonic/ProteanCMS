@@ -4867,6 +4867,15 @@
                   </xsl:when>
                   <xsl:otherwise>
                     <xsl:choose>
+						<xsl:when test="starts-with($link,'/')">
+							<xsl:attribute name="class">
+								<xsl:text>btn btn-custom</xsl:text>
+								<xsl:value-of select="class"/>
+							</xsl:attribute>
+							<xsl:attribute name="href">
+								<xsl:value-of select="$link"/>
+							</xsl:attribute>
+						</xsl:when>
                       <xsl:when test="contains($link,'#')">
                         <xsl:attribute name="class">
                           <xsl:text>btn btn-custom scroll-to-anchor </xsl:text>

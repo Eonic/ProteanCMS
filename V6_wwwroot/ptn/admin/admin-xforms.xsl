@@ -1265,8 +1265,9 @@
 		+ "h1[style|class],h2[style|class],h3[style|class],h4[style|class],h5[style|class],h6[style|class],"
 		+ "ol[style|class],ul[style|class],li[style|class],div[align|style|class|id],span[style|class|id],"
 		+ "thead[style|class],tbody[style|class],tr[class],dd[style|class],dl[style|class],dt[style|class],"
-		+ "sup,sub,pre,address,strong,b,em,i[class],u,s,hr,blockquote,br,"
-		+ "cite[class|id|title],code[class|title],samp,iframe[width|height|src|frameborder|allowfullscreen]"
+		+ "sup,sub,pre,address,strong,b,em,i[class],u,s,hr,blockquote[class|style|id],br,"
+		+ "cite[class|id|title],code[class|title],samp,iframe[width|height|src|frameborder|allowfullscreen],"
+		+ "svg[xmlns|width|height|viewBox|fill|stroke|stroke-width|class|style|role|aria-hidden],g[fill|stroke|stroke-width|transform|class|style],circle[cx|cy|r|fill|stroke|stroke-width|opacity|class|style],ellipse[cx|cy|rx|ry|fill|stroke|stroke-width|opacity|class|style],rect[x|y|width|height|rx|ry|fill|stroke|stroke-width|opacity|class|style],line[x1|y1|x2|y2|fill|stroke|stroke-width|class|style],polyline[points|fill|stroke|stroke-width|class|style],polygon[points|fill|stroke|stroke-width|class|style],path[d|fill|stroke|stroke-width|opacity|class|style],defs,symbol[id|viewBox],use[href|x|y|width|height],linearGradient[id|x1|y1|x2|y2],radialGradient[id|cx|cy|r],stop[offset|stop-color|stop-opacity],title,desc"
 	</xsl:template>
 
 	<!-- TinyMCE minimal configuration -->

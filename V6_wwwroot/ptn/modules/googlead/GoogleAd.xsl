@@ -8,8 +8,7 @@
 	</xsl:template>
 
 	<xsl:template match="Content[@type='Module' and @moduleType='GoogleAd']" mode="defineslot">
-		<xsl:text>
-var mapping_</xsl:text>
+		<xsl:text>var mapping_</xsl:text>
 		<xsl:value-of select="translate(@adPlacement,'-','_')"/>
 		<xsl:text> =
     googletag.sizeMapping()
@@ -63,7 +62,7 @@ googletag.defineSlot('</xsl:text>
 <script><xsl:text>
 setTimeout(function () {
   console.log("trigger");
-initialiseAds();
+//initialiseAds();
 }, 1000);
 
 window.addEventListener("cf_consent", function(event) {
@@ -80,7 +79,7 @@ window.addEventListener("cf_consent", function(event) {
             analytics_storage: 'granted'
         });
 
-        initialiseAds();
+       // initialiseAds();
     }
 
 });

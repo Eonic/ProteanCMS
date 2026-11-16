@@ -1784,6 +1784,12 @@ namespace Protean
                                 else
                                 {
                                     // We don't have an article id so we need to find it based on the final string in the path.
+                                    if (aPath.Length > 2)
+                                    {
+                                        sPath = aPath[1];
+                                        // ad the remaining items as request variables.
+                                        myWeb.envRequest.QueryString.Add("DetailExt1", aPath[2]);
+                                    }
                                     var loopTo2 = prefixs.Length - 1;
                                     for (i = 0; i <= loopTo2; i++)
                                     {
