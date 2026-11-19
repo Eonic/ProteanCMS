@@ -101,9 +101,14 @@ namespace Protean.Tools
         }
 
 
+       // public static string HtmlHeaderDateTime(this DateTime date)
+      //  {
+      //      return date.ToString("ddd") + ", " + date.ToString("dd MM yyyy HH:mm:ss") + " GMT";
+     //   }
+
         public static string HtmlHeaderDateTime(this DateTime date)
         {
-            return date.ToString("ddd") + ", " + date.ToString("dd MM yyyy HH:mm:ss") + " GMT";
+            return date.ToUniversalTime().ToString("r", System.Globalization.CultureInfo.InvariantCulture);
         }
 
 

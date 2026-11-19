@@ -1949,6 +1949,7 @@ namespace Protean
                                                 }
                                           
                                             PerfMon.Log("Web", "GetPageHTML-loadxsl3");
+                                            moResponse.AddHeader("Last-Modified", Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate ?? DateTime.Now));
                                             if (bPageCache)
                                             {
 
@@ -2130,8 +2131,6 @@ namespace Protean
                                             }
                                             else
                                             {
-                                                DateTime UpdatedTime = mdPageUpdateDate ?? DateTime.Now;
-                                                moResponse.AddHeader("Last-Modified", Tools.Text.HtmlHeaderDateTime(UpdatedTime) + ",");
                                                 PerfMon.Log("Web", "GetPageHTML-startxsl");
 
                                                 oTransform.ProcessTimed(moPageXml, ref moResponse);
@@ -2196,7 +2195,9 @@ namespace Protean
                                 }
 
                                 short filelen = (short)(goServer.MapPath("/" + gcProjectPath).Length + sServeFile.Length);
-                                DateTime UpdatedTime = mdPageUpdateDate ?? DateTime.Now;
+                                moResponse.ContentType = "text/html";
+                                moResponse.Charset = "utf-8";
+                                DateTime UpdatedTime = Alphaleonis.Win32.Filesystem.File.GetCreationTimeUtc(@"\\?\" + goServer.MapPath("/" + gcProjectPath) + sServeFile);
                                 moResponse.AddHeader("Last-Modified", Tools.Text.HtmlHeaderDateTime(UpdatedTime));
                                 PerfMon.Log("Web", "GetPageHTML - serve cached file");
                                 if (filelen > 260)
@@ -7132,6 +7133,8 @@ namespace Protean
                             absolutePath, 
                             cBody, 
                             System.Text.Encoding.UTF8);
+                        // creation time holds the content last-modified date; write time is used for cache expiry
+                        Alphaleonis.Win32.Filesystem.File.SetCreationTimeUtc(absolutePath, (mdPageUpdateDate ?? DateTime.Now).ToUniversalTime());
                         PerfMon.Log(mcModuleName, "SavePage - end file write");
                     }
                     else

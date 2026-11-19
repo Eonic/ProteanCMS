@@ -603,6 +603,7 @@ namespace Protean
                                             else
                                             {
                                                 // ✅ SYNC: Transform to HTML (CPU-bound, no async benefit)
+                                                moResponse.AddHeader("Last-Modified", Tools.Text.HtmlHeaderDateTime(mdPageUpdateDate ?? DateTime.Now));
                                                 string html = TransformPageHTML();
 
                                                 if (bPageCache)
@@ -679,7 +680,9 @@ namespace Protean
                                 }
 
                                 short filelen = (short)(goServer.MapPath("/" + gcProjectPath).Length + sServeFile.Length);
-                                DateTime UpdatedTime = mdPageUpdateDate ?? DateTime.Now;
+                                moResponse.ContentType = "text/html";
+                                moResponse.Charset = "utf-8";
+                                DateTime UpdatedTime = Alphaleonis.Win32.Filesystem.File.GetCreationTimeUtc(@"\\?\" + goServer.MapPath("/" + gcProjectPath) + sServeFile);
                                 moResponse.AddHeader("Last-Modified", Tools.Text.HtmlHeaderDateTime(UpdatedTime));
 
                                 PerfMon.Log("Web", "GetPageHTML - serve cached file");
