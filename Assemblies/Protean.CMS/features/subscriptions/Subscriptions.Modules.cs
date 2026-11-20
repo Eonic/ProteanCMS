@@ -273,7 +273,7 @@ namespace Protean
                             if (myWeb.mnUserId > 0)
                             {
 
-                                sSql = "select a.nStatus as status, nSubKey as id, cSubName as name, cSubXml, dStartDate, a.dPublishDate, a.dExpireDate, nPeriod as period, cPeriodUnit as periodUnit, nValueNet as value, cRenewalStatus as renewalStatus, pay.nPayMthdKey as paymentMethodId, pay.cPayMthdProviderName as providerName, pay.cPayMthdProviderRef as providerRef, pay.cPayMthdDetailXml" + " from tblSubscription sub INNER JOIN tblAudit a ON sub.nAuditId = a.nAuditKey " + " LEFT OUTER JOIN tblCartPaymentMethod pay on pay.nPayMthdKey = sub.nPaymentMethodId " + " where sub.nDirId = " + myWeb.mnUserId + " order by dStartDate desc, a.nStatus asc";
+                                sSql = "select a.nStatus as status, nSubKey as id, cSubName as name, cSubXml, dStartDate, a.dPublishDate, a.dExpireDate, nPeriod as period, cPeriodUnit as periodUnit, nValueNet as value, cRenewalStatus as renewalStatus, pay.nPayMthdKey as paymentMethodId, pay.cPayMthdProviderName as providerName, pay.cPayMthdProviderRef as providerRef, pay.cPayMthdDetailXml" + " from tblSubscription sub INNER JOIN tblAudit a ON sub.nAuditId = a.nAuditKey " + " LEFT OUTER JOIN tblCartPaymentMethod pay on pay.nPayMthdKey = sub.nPaymentMethodId " + " where sub.nDirId = " + myWeb.mnUserId ;
                                 object cmd = myWeb.moRequest["subCmd"];
                             logicstart:
                                 ;
@@ -332,6 +332,8 @@ namespace Protean
                                             break;
                                         }
                                 }
+
+                                sSql = sSql + " order by dStartDate desc, a.nStatus asc";
 
 
                                 if (listSubs)

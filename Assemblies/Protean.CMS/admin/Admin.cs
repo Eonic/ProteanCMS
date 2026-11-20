@@ -5903,7 +5903,7 @@ from tblContentIndexDef";
 
                     case "EditUserSubscription":
                         {
-                            oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmEditUserSubscription(Convert.ToInt16(myWeb.moRequest["subId"])), true));
+                            oPageDetail.AppendChild(oPageDetail.OwnerDocument.ImportNode(oADX.xFrmEditUserSubscription(Convert.ToInt16(myWeb.moRequest["id"])), true));
                             if (oADX.valid)
                             {
                                 cCmd = "ManageUserSubscription";
