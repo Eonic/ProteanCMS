@@ -88,6 +88,7 @@
 					</xsl:if>
 				</xsl:if>
 				<div class="media-inner">
+					<div class="matchHeight">
 					<xsl:if test="$itemLayout='float-img'">
 						<xsl:if test="Images/img/@src!=''">
 							<xsl:choose>
@@ -219,6 +220,7 @@
 					<xsl:if test="Profile/node()!=''">
 						<xsl:apply-templates select="Profile/node()" mode="cleanXhtml"/>
 					</xsl:if>
+						</div>
 					<xsl:if test="not(@noLink='true')">
 						<div class="entryFooter">
 							
