@@ -13621,4 +13621,306 @@ $(document).ready(function () {
 	</xsl:template>
 
 
+	<xsl:template match="Page[@layout='SEOReport']" mode="Admin">
+		<div class="page-header" style="margin-top:20px;">
+			<table>
+				<thead>
+					<th style="width:10%;"></th>
+					<th style="width:20%;">Page</th>
+					<th style="width:27%;">Page Title</th>
+					<th style="width:25%;">Meta Description</th>
+					<th style="width:10%;">Page Name</th>
+					<th style="width:10%;">Display Name</th>
+					<th style="width:20%;"></th>
+				</thead>
+			</table>
+		</div>
+		<div id="tpltSEOReport">
+			<ul id="MenuTree" class="list-group">
+				<xsl:apply-templates select="ContentDetail/Menu/MenuItem" mode="seoreport">
+					<xsl:with-param name="level">1</xsl:with-param>
+				</xsl:apply-templates>
+				<xsl:apply-templates select="Menu/MenuItem/MenuItem[DisplayName/@siteTemplate='micro']" mode="seoreport">
+					<xsl:with-param name="level">1</xsl:with-param>
+				</xsl:apply-templates>
+			</ul>
+		</div>
+	</xsl:template>
+
+	<xsl:template match="MenuItem" mode="seoreport">
+		<xsl:param name="level"/>
+
+		<xsl:variable name="thislevel">
+			<xsl:value-of select="$level"/>
+		</xsl:variable>
+
+		<xsl:variable name="siteRoot">
+			<xsl:call-template name="getSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'RootPageId'"/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:variable name="getMenuLevelDepth">
+			<xsl:call-template name="getSettings">
+				<xsl:with-param name="sectionName" select="'web'"/>
+				<xsl:with-param name="valueName" select="'MenuTreeDepth'"/>
+			</xsl:call-template>
+		</xsl:variable>
+
+		<xsl:variable name="menuLevelDepth">
+			<xsl:choose>
+				<xsl:when test="$getMenuLevelDepth = ''">
+					<xsl:value-of select="'0'"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$getMenuLevelDepth"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="pageTitleId">
+			<xsl:choose>
+				<xsl:when test="string-length(PageTitle/@id) &gt; 0">
+					<xsl:value-of select="PageTitle/@id"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>0</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="metaId">
+			<xsl:choose>
+				<xsl:when test="string-length(MetaDescription/@id) &gt; 0">
+					<xsl:value-of select="MetaDescription/@id"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>0</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+
+		<xsl:variable name="itemId">
+			<xsl:choose>
+				<xsl:when test="string-length(@id) &gt; 0">
+					<xsl:value-of select="@id"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:text>0</xsl:text>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="pageidValue">
+			<xsl:choose>
+				<xsl:when test="$pageTitleId = 0">
+					<xsl:value-of select="$itemId"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$pageTitleId"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:variable name="metaidValue">
+			<xsl:choose>
+				<xsl:when test="$metaId = 0">
+					<xsl:value-of select="$itemId"/>
+				</xsl:when>
+				<xsl:otherwise>
+					<xsl:value-of select="$metaId"/>
+				</xsl:otherwise>
+			</xsl:choose>
+		</xsl:variable>
+		<xsl:if test="not($level=2 and DisplayName/@siteTemplate='micro')">
+
+			<li id="node{@id}" data-tree-level="{$thislevel}">
+				<xsl:attribute name="data-tree-parent">
+					<xsl:if test="not(DisplayName/@siteTemplate='micro' and $thislevel='1')">
+						<xsl:value-of select="./parent::MenuItem/@id"/>
+					</xsl:if>
+				</xsl:attribute>
+				<xsl:attribute name="class">
+					<xsl:if test="@cloneparent &gt; 0 and not(@cloneparent=@id)">
+						<xsl:text>clone context</xsl:text>
+						<xsl:value-of select="@cloneparent"/>
+					</xsl:if>
+					<xsl:text> list-group-item level-</xsl:text>
+					<xsl:value-of select="$thislevel"/>
+					<xsl:if test="MenuItem"> expandable</xsl:if>
+				</xsl:attribute>
+				<table xmlns="http://www.w3.org/1999/xhtml">
+					<tbody>
+						<tr>
+							<td>
+								<div class="pageCell">
+									<xsl:variable name="pageLink">
+										<xsl:apply-templates select="." mode="getHref" />
+										<xsl:text>&amp;ewCmd=Normal</xsl:text>
+										<xsl:if test="@cloneparent &gt; 0">
+											<xsl:text>&amp;context=</xsl:text>
+											<xsl:value-of select="@cloneparent"/>
+										</xsl:if>
+									</xsl:variable>
+									<xsl:variable name="displayName">
+										<xsl:apply-templates select="." mode="getDisplayName" />
+									</xsl:variable>
+									<a href="{$pageLink}" title="{@name}" name="{@id}">
+										<xsl:choose>
+											<xsl:when test="DisplayName/@siteTemplate='micro' or parent::Menu">
+												<i class="fa fa-home fa-lg status activeParent" xmlns="http://www.w3.org/1999/xhtml">
+													&#160;
+												</i>
+												<span class="pageName">
+													&#160;
+													<xsl:value-of select="@name"/>
+												</span>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:apply-templates select="." mode="status_legend"/>
+												<span class="pageName">
+													<xsl:value-of select="$displayName"/>
+												</span>
+											</xsl:otherwise>
+										</xsl:choose>
+									</a>
+								</div>
+							</td>
+							<div>
+								<xsl:variable name="fullPageTitleContent" select="PageTitle/node()"></xsl:variable>
+								<xsl:variable name="fullMetaDescriptionContent" select="MetaDescription/node()"></xsl:variable>
+
+								<td style="width:30%;">
+
+									<div id="title-display-{$pageidValue}">
+										<xsl:choose>
+											<xsl:when test="/PageTitle!='' or string-length(PageTitle/node()) &gt; 50">
+												<div id="title-display-{$pageidValue}" data-bs-toggle="popover" data-bs-placement="top" title="{$fullPageTitleContent}">
+													<xsl:value-of select="substring(PageTitle/node(),0,50)"/>...
+												</div>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:copy-of select="PageTitle/node()"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</div>
+									<input type="text" class="form-control page-title-input hidden" id="title-input-{$pageidValue}" value="{PageTitle}" />
+
+								</td>
+								<td style="width:30%;">
+									<div id="MetaDescription-display-{$metaidValue}">
+										<xsl:choose>
+											<xsl:when test="/MetaDescription!='' or string-length(MetaDescription/node()) &gt; 50">
+												<div id="MetaDescription-display-{$metaidValue}" data-bs-toggle="popover" data-bs-placement="top" title="{$fullMetaDescriptionContent}">
+													<xsl:value-of select="substring(MetaDescription/node(),0,50)"/>...
+												</div>
+											</xsl:when>
+											<xsl:otherwise>
+												<xsl:copy-of select="MetaDescription/node()"/>
+											</xsl:otherwise>
+										</xsl:choose>
+									</div>
+									<input type="text" class="form-control meta-desc-input hidden" id="description-input-{$metaidValue}" value="{MetaDescription}" />
+								</td>
+
+								<td style="width:10%;">
+									<div id="cPageName-{@id}">
+										<xsl:value-of select="@name"/>
+									</div>
+									<input type="text" class="form-control pagename-input hidden" id="pagename-input-{@id}" value="{@name}" />
+								</td>
+								<td style="width:10%;">
+									<div id="cDisplayName-{@id}">
+										<xsl:value-of select="DisplayName/node()"/>
+									</div>
+									<input type="text" class="form-control displayname-input hidden" id="displayname-input-{@id}" value="{DisplayName/node()}" />
+								</td>
+								<!--span class="hidden"> | </span-->
+								<xsl:if test="@id!=$siteRoot">
+									<td style="width:30%;">
+
+										<button class="btn btn-xs btn-primary" id="Edit-btn-{@id}" onclick="editTitle({$pageTitleId}, {$metaId},{$itemId})">
+											<i class="fa fa-pencil fa-white">
+												<xsl:text> </xsl:text>
+											</i><xsl:text> </xsl:text>Edit
+										</button>
+										<button class="btn btn-xs btn-success hidden" id="save-btn-{@id}" onclick="saveTitle({$pageTitleId}, {$metaId},{$itemId})">
+											<i class="fa fa-save">
+												<xsl:text> </xsl:text>
+											</i><xsl:text> </xsl:text>Save
+										</button>
+									</td>
+								</xsl:if>
+							</div>
+						</tr>
+					</tbody>
+				</table>
+			</li>
+
+			<!--Expand to Level XSL variant-->
+			<xsl:if test="$menuLevelDepth &gt; 0">
+				<xsl:if test="/Page/Request/QueryString/Item[@name='ewCmd']='EditPage' or 'HidePage' or 'ShowPage' or 'CopyPage'">
+					<xsl:if test="descendant-or-self::MenuItem">
+						<xsl:if test="$level &lt; $menuLevelDepth">
+							<xsl:if test="MenuItem">
+
+								<xsl:apply-templates select="MenuItem" mode="seoreport">
+									<xsl:with-param name="level">
+										<xsl:value-of select="$level + 1"/>
+									</xsl:with-param>
+								</xsl:apply-templates>
+
+							</xsl:if>
+						</xsl:if>
+					</xsl:if>
+				</xsl:if>
+			</xsl:if>
+
+			<xsl:if test="$menuLevelDepth = 0">
+				<xsl:choose>
+					<xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd']='AddPage'">
+						<xsl:if test="descendant-or-self::MenuItem[@id=/Page/Request/QueryString/Item[@name='parId']]/@id">
+							<xsl:if test="MenuItem">
+
+								<xsl:apply-templates select="MenuItem" mode="seoreport">
+									<xsl:with-param name="level">
+										<xsl:value-of select="$thislevel + 1"/>
+									</xsl:with-param>
+								</xsl:apply-templates>
+
+							</xsl:if>
+						</xsl:if>
+					</xsl:when>
+
+					<xsl:when test="/Page/Request/QueryString/Item[@name='ewCmd']='EditPage' or 'HidePage' or 'ShowPage' or 'CopyPage'">
+						<xsl:if test="descendant-or-self::MenuItem[@id=/Page/Request/QueryString/Item[@name='pgid']]/@id">
+							<xsl:if test="MenuItem"></xsl:if>
+
+							<xsl:apply-templates select="MenuItem" mode="seoreport">
+								<xsl:with-param name="level">
+									<xsl:value-of select="$thislevel + 1"/>
+								</xsl:with-param>
+							</xsl:apply-templates>
+
+						</xsl:if>
+					</xsl:when>
+					<xsl:otherwise>
+						<xsl:if test="descendant-or-self::MenuItem[@id=/Page/@id]/@id">
+							<xsl:if test="MenuItem">
+								<xsl:apply-templates select="MenuItem" mode="seoreport">
+									<xsl:with-param name="level">
+										<xsl:value-of select="$thislevel + 1"/>
+									</xsl:with-param>
+								</xsl:apply-templates>
+							</xsl:if>
+						</xsl:if>
+					</xsl:otherwise>
+				</xsl:choose>
+
+
+			</xsl:if>
+
+		</xsl:if>
+	</xsl:template>
+
+
 </xsl:stylesheet>

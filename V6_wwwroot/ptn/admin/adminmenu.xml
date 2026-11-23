@@ -186,6 +186,7 @@
         <MenuItem name="Install New Theme" cmd="InstallTheme" display="true" icon="fa-arrow-down"/>
       </MenuItem>
 		<MenuItem name="Filter Indexes" cmd="FilterIndex" display="true" feature="FilterIndex" icon="fa-solid fa-filter"/>
+		<MenuItem name="Page Titles and Descriptions" cmd="SEOReport" display="true" feature="SEOReport" icon="fa-sign-in"/>
 		<MenuItem name="Recycle App" cmd="ResetWebConfig" display="true" feature="ResetWebConfig" icon="fa-solid fa-arrows-rotate"/>
 
 	</MenuItem>
