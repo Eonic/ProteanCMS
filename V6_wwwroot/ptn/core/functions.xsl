@@ -4798,6 +4798,7 @@
     <xsl:param name="tabindex"/>
     <div class="morelink">
       <span>
+
         <a href="{$link}" class="btn btn-custom" itemprop="mainEntityOfPage">
           <xsl:if test="not(substring($link,1,1)='/') and ((contains($link,'http://') or contains($link,'tel:')) and $linkType='external')">
             <xsl:attribute name="rel">external</xsl:attribute>
@@ -4963,6 +4964,7 @@
   <!-- -->
   <xsl:template match="Content[@type='Link']" mode="moreLink">
     <xsl:param name="link"/>
+	  <xsl:param name="linkText"/>
     <xsl:param name="altText"/>
     <xsl:param name="stretchLink"/>
     <xsl:param name="tabindex"/>
@@ -4987,17 +4989,26 @@
             <xsl:choose>
               <xsl:when test="contains($link,'www.') or contains($link,'WWW.') or contains($link,'http://') or contains($link,'HTTP://')">
                 <xsl:choose>
+					<xsl:when test="$linkText!=''">
+						<xsl:value-of select="$linkText"/>
+					</xsl:when>
                   <xsl:when test="string-length($altText) &gt; 70">
                     <xsl:value-of select="substring($altText,1,60)"/> ......
                   </xsl:when>
                   <xsl:otherwise>
                     <xsl:value-of select="$altText"/>
-
                   </xsl:otherwise>
                 </xsl:choose>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:call-template name="term2042" />
+				  <xsl:choose>
+					  <xsl:when test="$linkText!=''">
+						  <xsl:value-of select="$linkText"/>
+					  </xsl:when>
+					  <xsl:otherwise>
+						  <xsl:call-template name="term2042" />""
+					  </xsl:otherwise>
+				  </xsl:choose>
                 <xsl:text> </xsl:text>
                 <span class="visually-hidden">
                   <xsl:text>about </xsl:text>

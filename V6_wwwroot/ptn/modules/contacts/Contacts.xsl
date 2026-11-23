@@ -11,6 +11,7 @@
 		<xsl:param name="linked"/>
 		<xsl:param name="heading"/>
 		<xsl:param name="title"/>
+		<xsl:param name="itemLayout"/>
 		<!-- contactBrief -->
 		<xsl:variable name="parentURL">
 			<xsl:apply-templates select="self::Content" mode="getHref">
@@ -50,6 +51,9 @@
 				</xsl:otherwise>
 			</xsl:choose>
 		</xsl:variable>
+		<xsl:variable name="displayName">
+			<xsl:apply-templates select="." mode="getDisplayName"/>
+		</xsl:variable>
 		<div class="{$classValues}">
 			<xsl:apply-templates select="." mode="themeModuleExtrasListItem">
 				<xsl:with-param name="parentId" select="$parentId"/>
@@ -60,28 +64,53 @@
 				<xsl:with-param name="sortBy" select="$sortBy"/>
 			</xsl:apply-templates>
 			<div class="lIinner">
-				<xsl:if test="Images/img/@src!=''">
-					<xsl:choose>
-						<xsl:when test="@noLink='true'">
-              <span class="list-image-span">
-                <xsl:apply-templates select="." mode="displayThumbnail">
-                  <xsl:with-param name="crop" select="$cropSetting" />
-                  <xsl:with-param name="class">list-image</xsl:with-param>
-                </xsl:apply-templates>
-              </span>
-						</xsl:when>
-						<xsl:otherwise>
-							<a href="{$parentURL}" title="View more details on {GivenName/node()} {Surname/node()}" class="list-image-link">
-								<xsl:apply-templates select="." mode="displayThumbnail">
-									<xsl:with-param name="crop" select="$cropSetting" />
-									<xsl:with-param name="no-strecth" select="false()" />
-									<xsl:with-param name="class">list-image</xsl:with-param>
-								</xsl:apply-templates>
-							</a>
-						</xsl:otherwise>
-					</xsl:choose>
+				<xsl:if test="$itemLayout!='float-img'">
+					<xsl:if test="Images/img/@src!=''">
+						<xsl:choose>
+							<xsl:when test="@noLink='true'">
+								<span class="list-image-span">
+									<xsl:apply-templates select="." mode="displayThumbnail">
+										<xsl:with-param name="crop" select="$cropSetting" />
+										<xsl:with-param name="class">list-image</xsl:with-param>
+									</xsl:apply-templates>
+								</span>
+							</xsl:when>
+							<xsl:otherwise>
+								<a href="{$parentURL}" title="View more details on {GivenName/node()} {Surname/node()}" class="list-image-link">
+									<xsl:apply-templates select="." mode="displayThumbnail">
+										<xsl:with-param name="crop" select="$cropSetting" />
+										<xsl:with-param name="no-strecth" select="false()" />
+										<xsl:with-param name="class">list-image</xsl:with-param>
+									</xsl:apply-templates>
+								</a>
+							</xsl:otherwise>
+						</xsl:choose>
+					</xsl:if>
 				</xsl:if>
 				<div class="media-inner">
+					<xsl:if test="$itemLayout='float-img'">
+						<xsl:if test="Images/img/@src!=''">
+							<xsl:choose>
+								<xsl:when test="@noLink='true'">
+									<span class="list-image-span float-img">
+										<xsl:apply-templates select="." mode="displayThumbnail">
+											<xsl:with-param name="crop" select="$cropSetting" />
+											<xsl:with-param name="class">list-image</xsl:with-param>
+										</xsl:apply-templates>
+									</span>
+								</xsl:when>
+								<xsl:otherwise>
+									<a href="{$parentURL}" title="View more details on {GivenName/node()} {Surname/node()}" class="list-image-link float-img">
+										<xsl:apply-templates select="." mode="displayThumbnail">
+											<xsl:with-param name="crop" select="$cropSetting" />
+											<xsl:with-param name="no-strecth" select="false()" />
+											<xsl:with-param name="class">list-image</xsl:with-param>
+										</xsl:apply-templates>
+									</a>
+								</xsl:otherwise>
+							</xsl:choose>
+						</xsl:if>
+					</xsl:if>
 					<xsl:choose>
 						<xsl:when test="$title!='' and $heading!=''">
 							<xsl:variable name="headingNo" select="substring-after($heading,'h')"/>
@@ -137,13 +166,24 @@
 							</xsl:choose>
 						</xsl:otherwise>
 					</xsl:choose>
+
+
+					
 					<xsl:if test="Title/node()!=''">
 						<h4 class="job-title">
 							<xsl:apply-templates select="Title" mode="displayBrief"/>
 						</h4>
 					</xsl:if>
+					<xsl:if test="$linked!='true'">
+					<xsl:apply-templates  select="." mode="social-links">
+						<xsl:with-param name="myName" select="$displayName"/>
+						<xsl:with-param name="iconSet" select="'icons-square'"/>
+						<xsl:with-param name="align" select="right"/>
+						<xsl:with-param name="icon-size" select="'fa-2x'"/>
+					</xsl:apply-templates>
 
-					<dl class="clearfix dl-horizontal">
+					</xsl:if>
+					<dl class="dl-horizontal">
 						<xsl:if test="Telephone/node()!=''">
 							<dt class="tel">
 								<xsl:call-template name="term2007" />
@@ -333,6 +373,111 @@
 		</div>
 	</xsl:template>
 
+
+	<xsl:template match="Content[@type='Contact']" mode="social-links">
+
+			<xsl:param name="myName"/>
+			<xsl:param name="iconSet"/>
+			<xsl:param name="align"/>
+			<xsl:param name="icon-size"/>
+		
+			<span class="socialLinks iconset-{$iconSet} align-{$align}">
+				<xsl:if test="@facebookURL!=''">
+					<a href="{@facebookURL}" aria-label="{$myName} on Facebook" class="social-id-fb">
+						<xsl:attribute name="target">_blank</xsl:attribute>
+						<i>
+							<xsl:attribute name="class">
+								<xsl:text>fa-brands fa-facebook </xsl:text>
+								<xsl:value-of select="$icon-size"/>
+							</xsl:attribute>
+							<span class="visually-hidden">
+								<xsl:value-of select="$myName"/> on Facebook
+							</span>
+						</i>
+					</a>
+				</xsl:if>
+				<xsl:if test="@twitterURL!=''">
+					<a href="{@twitterURL}" target="_blank" aria-label="{$myName} on Twitter" class="social-id-tw">
+						<i>
+							<xsl:attribute name="class">
+								<xsl:text>fa-brands fa-x-twitter </xsl:text>
+								<xsl:value-of select="$icon-size"/>
+							</xsl:attribute>
+							<span class="visually-hidden">
+								<xsl:value-of select="$myName"/> on X
+							</span>
+						</i>
+					</a>
+				</xsl:if>
+				<xsl:if test="@linkedInURL!=''">
+					<a href="{@linkedInURL}" target="_blank" aria-label="{$myName} on LinkedIn" class="social-id-li">
+						<i>
+							<xsl:attribute name="class">
+								<xsl:text>fa-brands fa-linkedin </xsl:text>
+								<xsl:value-of select="$icon-size"/>
+							</xsl:attribute>
+							<span class="visually-hidden">
+								<xsl:value-of select="$myName"/> on LinkedIn
+							</span>
+						</i>
+					</a>
+				</xsl:if>
+				<xsl:if test="@pinterestURL!=''">
+					<a href="{@pinterestURL}" target="_blank" aria-label="{$myName} on Pinterest" class="social-id-pi">
+						<i>
+							<xsl:attribute name="class">
+								<xsl:text>fa-brands fa-pinterest </xsl:text>
+								<xsl:value-of select="$icon-size"/>
+							</xsl:attribute>
+							<span class="visually-hidden">
+								<xsl:value-of select="$myName"/> on Pintrest
+							</span>
+						</i>
+					</a>
+				</xsl:if>
+				<xsl:if test="@youtubeURL!=''">
+					<a href="{@youtubeURL}" target="_blank" aria-label="{$myName} on Youtube" class="social-id-yt">
+						<i>
+							<xsl:attribute name="class">
+								<xsl:text>fa-brands fa-youtube </xsl:text>
+								<xsl:value-of select="$icon-size"/>
+							</xsl:attribute>
+							<span class="visually-hidden">
+								<xsl:value-of select="$myName"/> on Youtube
+							</span>
+						</i>
+					</a>
+				</xsl:if>
+				<xsl:if test="@instagramURL!=''">
+					<a href="{@instagramURL}" target="_blank" aria-label="{$myName} on Instagram" class="social-id-ig">
+						<i>
+							<xsl:attribute name="class">
+								<xsl:text>fa-brands fa-instagram </xsl:text>
+								<xsl:value-of select="$icon-size"/>
+							</xsl:attribute>
+							<span class="visually-hidden">
+								<xsl:value-of select="$myName"/> on Instagram
+							</span>
+						</i>
+					</a>
+				</xsl:if>
+				<xsl:if test="@blueSkyURL!=''">
+					<a href="{@blueSkyURL}" target="_blank" aria-label="{$myName} on Bluesky" class="social-id-bs">
+						<i>
+							<xsl:attribute name="class">
+								<xsl:text>fa-brands  fa-bluesky </xsl:text>
+								<xsl:value-of select="$icon-size"/>
+							</xsl:attribute>
+							<span class="visually-hidden">
+								<xsl:value-of select="$myName"/> on BlueSky
+							</span>
+						</i>
+					</a>
+				</xsl:if>
+			</span>
+		
+	</xsl:template>
+
 	<!-- Contact Brief -->
 	<xsl:template match="Content[@type='Contact']" mode="displayAuthorBrief">
 		<xsl:param name="sortBy"/>
@@ -381,6 +526,9 @@
 	<!-- Contact Detail -->
 	<xsl:template match="Content[@type='Contact']" mode="ContentDetail">
 		<xsl:variable name="thisURL" select="/Page/Menu/descendant-or-self::MenuItem[@id=/Page/@id]/@url"></xsl:variable>
+		<xsl:variable name="displayName">
+			<xsl:apply-templates select="." mode="getDisplayName"/>
+		</xsl:variable>
 		<div class="detail contact">
 			<xsl:apply-templates select="." mode="inlinePopupOptions">
 				<xsl:with-param name="class" select="'detail contact'"/>
@@ -507,6 +655,13 @@
 								</span>
 							</h2>
 						</xsl:if>
+						<xsl:apply-templates  select="." mode="social-links">
+							<xsl:with-param name="myName" select="$displayName"/>
+							<xsl:with-param name="iconSet" select="'icons-square'"/>
+							<xsl:with-param name="align" select="right"/>
+							<xsl:with-param name="icon-size" select="'fa-2x'"/>
+						</xsl:apply-templates>
+						
 						<xsl:apply-templates select="Description/node()" mode="cleanXhtml"/>
 					</div>
 					<xsl:choose>
@@ -553,9 +708,6 @@
 					</div>
 				</div>
 			</div>
-
-
-
 		</div>
 	</xsl:template>
 </xsl:stylesheet>

@@ -365,6 +365,7 @@
 							<xsl:apply-templates select="." mode="displayTags"/>
 							<xsl:apply-templates select="." mode="moreLink">
 								<xsl:with-param name="link" select="$linkURL"/>
+								<xsl:with-param name="linkText" select="@linkText"/>
 								<xsl:with-param name="stretchLink" select="$linked"/>
 								<xsl:with-param name="linkType" select="Url/@type"/>
 								<xsl:with-param name="altText">

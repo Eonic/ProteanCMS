@@ -39,12 +39,13 @@
 		<bind id="dPublishDate" nodeset="tblContent/dPublishDate" required="false()" type="string"/>
 		<bind id="dExpireDate" nodeset="tblContent/dExpireDate" required="false()" type="string"/>
 		<bind nodeset="tblContent/cContentXmlBrief/Content">
+			<bind id="cContentLinkText" nodeset="@linkText" required="false()" type="string"/>
 			<bind id="cContentLinkTitle" nodeset="Name" required="true()" type="string"/>
 			<bind id="cContentBody" nodeset="Body" required="false()" type="string"/>
 			<bind id="cContentURL" nodeset="Url" required="false()" type="string"/>
 			<bind nodeset="Url">
 				<bind id="cLinkType" nodeset="@type" required="false()" type="string"/>
-				<bind id="cLinkTarget" nodeset="@target" required="false()" type="string"/>
+				<bind id="cLinkTarget" nodeset="@target" required="false()" type="string"/>				
 			</bind>
 			<bind id="cContentID" nodeset="@InPageID" required="false()" type="string"/>
 			<bind id="cContentCategory" nodeset="Category" required="false()" type="string"/>
@@ -114,6 +115,9 @@
 								</input>
 							</case>
 						</switch>
+						<input bind="cContentLinkText" class="required short">
+							<label>Link Text</label>
+						</input>
 					</group>
 				</group>
 			</group>
