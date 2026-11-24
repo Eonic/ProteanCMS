@@ -5533,7 +5533,7 @@ $(document).ready(function () {
                   </td>
                   <td colspan="3">
 
-                    <a href="{$appPath}?ewCmd=ManageUserSubscription&amp;subId={@nSubKey}&amp;userId={$userId}"  class="btn btn-primary btn-sm">
+                    <a href="{$appPath}?ewCmd=ManageUserSubscription&amp;id={@nSubKey}&amp;userId={$userId}"  class="btn btn-primary btn-sm">
                       <i class="fa fa-edit">&#160;</i>&#160;Manage
                     </a>
 					  <xsl:if test="@cRenewalStatus='Cancelled'">

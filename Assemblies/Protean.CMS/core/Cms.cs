@@ -5335,16 +5335,10 @@ namespace Protean
 
                 // Bring in the QueryString
                 newElem = moPageXml.CreateElement("QueryString");
-                foreach (var currentItem1 in moRequest.QueryString)
-                {
-                    item = currentItem1;
-                    newElem2 = moPageXml.CreateElement("Item");
-                    newElem2.SetAttribute("name", Convert.ToString(item));
-                    newElem2.InnerText = moRequest.QueryString[Convert.ToString(item)];
-                    newElem.AppendChild(newElem2);
-                }
+
                 // Bring in the QueryString from the envRequest (if it exists)
-                if (!(envRequest is null)) { 
+                if (!(envRequest is null))
+                {
                     foreach (var currentItem1 in envRequest.QueryString)
                     {
                         item = currentItem1;
@@ -5354,6 +5348,17 @@ namespace Protean
                         newElem.AppendChild(newElem2);
                     }
                 }
+
+                foreach (var currentItem1 in moRequest.QueryString)
+                {
+                    item = currentItem1;
+                    if (newElem.SelectSingleNode("Item[@name='" + Convert.ToString(item) + "']") is null) {
+                        newElem2 = moPageXml.CreateElement("Item");
+                        newElem2.SetAttribute("name", Convert.ToString(item));
+                        newElem2.InnerText = moRequest.QueryString[Convert.ToString(item)];
+                        newElem.AppendChild(newElem2);
+                    }
+                }              
 
                 root.AppendChild(newElem);
 
