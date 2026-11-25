@@ -13497,6 +13497,39 @@ namespace Protean
 
 
 
+            /// <summary>
+            /// Content keys of the nearest items for a schema, using the content index definitions SchemaName-Lat and SchemaName-Long. Nearest first.
+            /// </summary>
+            public List<long> FindNearestContentKeys(string schemaName, double latitude, double longitude, int count = 1)
+            {
+                var keys = new List<long>();
+                var parameters = new Hashtable
+                {
+                    { "@SchemaName", schemaName },
+                    { "@latitude", latitude },
+                    { "@longitude", longitude },
+                    { "@count", count }
+                };
+                DataSet ds = GetDataSet("spFindIndexNearest", "Nearest", "", parameters: parameters, querytype: CommandType.StoredProcedure);
+                if (ds != null && ds.Tables.Count > 0)
+                {
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        keys.Add(Convert.ToInt64(row["nContentKey"]));
+                    }
+                }
+                return keys;
+            }
+
+            /// <summary>
+            /// Content key of the single nearest item for a schema, or 0 when none is indexed.
+            /// </summary>
+            public long FindNearestContentKey(string schemaName, double latitude, double longitude)
+            {
+                List<long> keys = FindNearestContentKeys(schemaName, latitude, longitude, 1);
+                return keys.Count > 0 ? keys[0] : 0;
+            }
+
             public DataSet getDataSetForUpdate(string sSql, string tableName, string datasetName = "", string cConn = "")
             {
                 DataSet getDataSetForUpdateRet = default;

@@ -385,8 +385,6 @@
 	</xsl:template>
 
 	<xsl:template match="Order[@cmd='Add' or @cmd='Cart' or @cmd='Confirm']" mode="orderProcess">
-
-
 		<div class="cart-btns-btm clearfix">
 			<div class="row">
 				<div class="col-lg-8">
@@ -394,6 +392,11 @@
 					<xsl:apply-templates select="." mode="orderProcessTitle"/>
 					<xsl:apply-templates select="." mode="orderErrorReports"/>
 					<xsl:apply-templates select="." mode="orderAddresses"/>
+					<form method="post" id="cart" class="ewXform">
+						<xsl:apply-templates select="." mode="orderItems">
+							<xsl:with-param name="editQty">true</xsl:with-param>
+						</xsl:apply-templates>
+					</form>
 				</div>
 				<div class="col-lg-4">
 					<form method="post" id="cart" class="ewXform">
@@ -748,8 +751,6 @@
 					<xsl:apply-templates select="." mode="orderItems">
 						<xsl:with-param name="editQty">true</xsl:with-param>
 					</xsl:apply-templates>
-
-
 				</form>
 				<xsl:if test="@showDiscountCodeBox='true'">
 					<div class="row">

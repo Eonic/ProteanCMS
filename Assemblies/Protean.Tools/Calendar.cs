@@ -75,7 +75,7 @@ namespace Protean.Tools
                     // Find or set up the year node
                     if (oYear == null)
                         oYear = CreateDatePeriodElement(ref oCalendar, dCurrentDate, DatePeriod.Year);
-                    else if (!oYear.GetAttribute("index").Equals(dCurrentDate.Year))
+                    else if (!oYear.GetAttribute("index").Equals(dCurrentDate.Year.ToString()))
                         oYear = CreateDatePeriodElement(ref oCalendar, dCurrentDate, DatePeriod.Year);
 
                     // Add the month node

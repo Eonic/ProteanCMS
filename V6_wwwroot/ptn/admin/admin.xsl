@@ -13519,7 +13519,7 @@ $(document).ready(function () {
 						Schema Name
 					</th>
 					<th colspan="2">
-						Defination
+						Definition Name
 					</th>
 					<th colspan="2">
 						Xpath

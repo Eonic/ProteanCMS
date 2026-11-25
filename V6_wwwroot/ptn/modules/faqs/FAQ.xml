@@ -78,10 +78,10 @@
 					</textarea>
 				</group>
 				<group ref="Content" class="form-2-col">
-					<input bind="cContactName" class="required">
+					<input bind="cContactName" class="">
 						<label>Contact Name</label>
 					</input>
-					<input bind="cContactEmail" class="required">
+					<input bind="cContactEmail" class="">
 						<label>Contact Email</label>
 					</input>
 				</group>
