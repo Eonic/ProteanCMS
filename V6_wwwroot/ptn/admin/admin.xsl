@@ -8903,10 +8903,16 @@ $(document).ready(function () {
               </thead>
               <tbody>
                 <xsl:for-each select="/Page/Menu[@id='Newsletter']/MenuItem/MenuItem">
+
+					<xsl:sort data-type="number" select="@id" order="descending"/>
                   <xsl:sort select="Sent"/>
                   <tr>
                     <td>
                       <xsl:value-of select="@name"/>
+						<br/>
+						<small>
+							<strong>Subject:&#160;</strong> <xsl:value-of select="DisplayName/node()"/>
+						</small>
                     </td>
                     <td>
                       <span class="btn-group-spaced">
@@ -8936,9 +8942,11 @@ $(document).ready(function () {
                     </td>
                   </tr>
                   <xsl:for-each select="/Page/Menu[@id='Newsletter']/MenuItem/MenuItem/MenuItem">
+					  <xsl:sort data-type="number" select="@id" order="ascending"/>
                     <tr>
                       <td>
-                        &#160;&#160;&#160;<xsl:value-of select="@name"/>
+                        &#160;&#160;&#160;<xsl:value-of select="@name"/><br/>
+						 <small> <xsl:value-of select="DisplayName/node()"/></small>
                       </td>
                       <td>
                         <a href="/{$appPath}?ewCmd=NormalMail&amp;pgId={@id}&amp;parId={$MailRoot}" class="btn btn-primary">View / Edit</a>

@@ -71,7 +71,6 @@
         </xsl:if>
         <xsl:if test="/Page/@adminMode">
           <xsl:apply-templates select="." mode="commonStyle"/>
-          <xsl:apply-templates select="." mode="js"/>
         </xsl:if>
         <xsl:apply-templates select="." mode="emailStyle"/>
       </head>
@@ -80,7 +79,6 @@
   </xsl:template>
 
   <xsl:template match="Page" mode="commonStyle">
-    <link rel="stylesheet" type="text/css" href="/ptn/css/base-bs.less"/>
     <xsl:apply-templates select="." mode="adminStyle"/>
     <link rel="stylesheet" type="text/css" href="/ptn/admin/admin-wysiwyg.scss"/>
     <xsl:apply-templates select="." mode="siteStyle"/>
@@ -524,8 +522,6 @@
   <xsl:template match="Content[@type='Module']" mode="moduleTitle">
     <xsl:value-of select="@title"/>
   </xsl:template>
-
-  
 
   <!-- ## Generic displayBrief   #####################################################################   -->
   <xsl:template match="Content" mode="displayBrief">
